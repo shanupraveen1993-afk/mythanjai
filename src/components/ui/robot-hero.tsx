@@ -6,7 +6,7 @@ import { Environment, ContactShadows, Html } from "@react-three/drei";
 import * as THREE from "three";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { PiShoppingBagBold } from "react-icons/pi";
-import { ArrowRight, Loader2, Phone, CheckCircle } from "lucide-react";
+import { ArrowRight, Loader2, Phone, CheckCircle, Megaphone, Wrench, Store } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 
 class HeartCurve extends THREE.Curve<THREE.Vector3> {
@@ -897,12 +897,11 @@ export function RobotHero({
             </p>
           </div>
         </div>
-
-        {/* Center: What the App Does (Clever Value Cards) */}
+        {/* Center: What the App Does (Clever Value Cards with premium icons) */}
         <div className="w-full max-w-[320px] flex flex-col gap-3.5 my-6 text-left animate-scale-up">
           <div className="flex gap-4 items-center bg-slate-50 border border-slate-100 rounded-2xl p-3.5 shadow-3xs">
-            <div className="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center text-yellow-600 text-lg shrink-0">
-              📢
+            <div className="w-11 h-11 rounded-xl bg-slate-900 text-yellow-400 flex items-center justify-center shadow-sm shrink-0">
+              <Megaphone className="w-5 h-5 text-yellow-400" />
             </div>
             <div>
               <h4 className="font-heading font-black text-xs text-slate-900 uppercase tracking-wider">Buy & Sell Notice</h4>
@@ -911,8 +910,8 @@ export function RobotHero({
           </div>
 
           <div className="flex gap-4 items-center bg-slate-50 border border-slate-100 rounded-2xl p-3.5 shadow-3xs">
-            <div className="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center text-yellow-600 text-lg shrink-0">
-              🛠️
+            <div className="w-11 h-11 rounded-xl bg-slate-900 text-yellow-400 flex items-center justify-center shadow-sm shrink-0">
+              <Wrench className="w-5 h-5 text-yellow-400" />
             </div>
             <div>
               <h4 className="font-heading font-black text-xs text-slate-900 uppercase tracking-wider">Helper Directory</h4>
@@ -921,8 +920,8 @@ export function RobotHero({
           </div>
 
           <div className="flex gap-4 items-center bg-slate-50 border border-slate-100 rounded-2xl p-3.5 shadow-3xs">
-            <div className="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center text-yellow-600 text-lg shrink-0">
-              🏪
+            <div className="w-11 h-11 rounded-xl bg-slate-900 text-yellow-400 flex items-center justify-center shadow-sm shrink-0">
+              <Store className="w-5 h-5 text-yellow-400" />
             </div>
             <div>
               <h4 className="font-heading font-black text-xs text-slate-900 uppercase tracking-wider">Local Offers</h4>
@@ -998,12 +997,37 @@ export function RobotHero({
                 <p className="text-[11px] text-slate-400 font-bold uppercase tracking-widest mt-2.5">
                   verified local board
                 </p>
+                {/* Trending Search Shortcuts */}
+                <div className="flex flex-wrap items-center gap-2 mt-3 select-none pointer-events-auto">
+                  <span className="text-[10px] text-slate-400 font-black uppercase tracking-wider mr-1">Trending:</span>
+                  <span onClick={() => onCategoryClick?.("classifieds")} className="px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-slate-100 hover:bg-yellow-400 hover:text-slate-955 text-slate-600 transition-all cursor-pointer border border-slate-200/50 shadow-3xs font-bold">Plots for Sale</span>
+                  <span onClick={() => onCategoryClick?.("services")} className="px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-slate-100 hover:bg-yellow-400 hover:text-slate-955 text-slate-600 transition-all cursor-pointer border border-slate-200/50 shadow-3xs font-bold">Plumbers</span>
+                  <span onClick={() => onCategoryClick?.("shops")} className="px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-slate-100 hover:bg-yellow-400 hover:text-slate-955 text-slate-600 transition-all cursor-pointer border border-slate-200/50 shadow-3xs font-bold">Showrooms</span>
+                </div>
               </div>
             </div>
 
             <p className="text-base text-slate-500 max-w-sm leading-relaxed font-semibold">
               Thanjavur's smart local noticeboard directory. Scan visiting cards with AI, explore plot offers, and search helper service trades.
             </p>
+
+            {/* Social Proof & Local Engagement Stats Bar */}
+            <div className="flex items-center gap-6 py-3 border-y border-slate-100 w-full max-w-sm">
+              <div>
+                <span className="block text-xl font-black text-slate-900 leading-none">1,240+</span>
+                <span className="text-[9px] text-slate-400 font-extrabold uppercase tracking-wider mt-1 block">Local Listings</span>
+              </div>
+              <div className="h-8 border-l border-slate-200" />
+              <div>
+                <span className="block text-xl font-black text-slate-900 leading-none">48</span>
+                <span className="text-[9px] text-slate-400 font-extrabold uppercase tracking-wider mt-1 block">Active Services</span>
+              </div>
+              <div className="h-8 border-l border-slate-200" />
+              <div>
+                <span className="block text-xl font-black text-slate-900 leading-none">100%</span>
+                <span className="text-[9px] text-slate-400 font-extrabold uppercase tracking-wider mt-1 block">Verified Users</span>
+              </div>
+            </div>
 
             <div className="flex flex-row gap-3 w-full">
               <button
