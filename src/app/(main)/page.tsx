@@ -56,7 +56,7 @@ export default function HomeLandingPage() {
   };
 
   return (
-    <div className="w-full flex flex-col bg-slate-50 text-slate-800 min-h-screen font-sans">
+    <div className="w-full flex flex-col bg-white text-slate-800 min-h-screen font-sans">
       
       {/* ==========================================
           HERO SECTION: 3D INTERACTIVE ROBOT HERO
@@ -87,7 +87,7 @@ export default function HomeLandingPage() {
       {/* ==========================================
           PORTAL CONTENT: DIRECTORY SEGMENT LINKS Noticeboard
           ========================================== */}
-      <div className="w-full max-w-7xl mx-auto px-6 py-8 flex flex-col gap-8 bg-slate-50">
+      <div className="hidden md:flex w-full max-w-7xl mx-auto px-6 py-8 flex-col gap-8 bg-white">
 
         {/* Section Heading & Branding Emblem */}
         <div className="flex flex-col items-center text-center gap-4 max-w-xl mx-auto">

@@ -130,38 +130,40 @@ function MainLayoutContent({
           />
         </div>
       ) : (
-        <div className="flex flex-col h-screen w-full relative bg-slate-50">
-          {/* Top Header Section */}
-          <TopHeader
-            selectedArea={selectedArea}
-            onAreaChange={handleAreaChange}
-            onSignInClick={() => setIsSignInOpen(true)}
-            onPostClick={() => {
-              const currentTab = getActiveTab();
-              let targetPath = "/classifieds";
-              if (currentTab === "services") targetPath = "/services";
-              else if (currentTab === "shops") targetPath = "/shops";
-              else if (currentTab === "offers") targetPath = "/shops";
+        <div className="flex flex-col h-screen w-full relative bg-white">
+          {/* Top Header Section (Hidden on mobile for home onboarding page) */}
+          <div className={pathname === "/" ? "hidden md:block" : ""}>
+            <TopHeader
+              selectedArea={selectedArea}
+              onAreaChange={handleAreaChange}
+              onSignInClick={() => setIsSignInOpen(true)}
+              onPostClick={() => {
+                const currentTab = getActiveTab();
+                let targetPath = "/classifieds";
+                if (currentTab === "services") targetPath = "/services";
+                else if (currentTab === "shops") targetPath = "/shops";
+                else if (currentTab === "offers") targetPath = "/shops";
 
-              const currentParams = new URLSearchParams(searchParams.toString());
+                const currentParams = new URLSearchParams(searchParams.toString());
 
-              if (!profile?.isVerified) {
-                setIsSignInOpen(true);
-                currentParams.set("auth", "popup");
-                currentParams.set("redirect", `${targetPath}?create=true`);
-                router.push(`${targetPath}?${currentParams.toString()}`);
-              } else {
-                currentParams.set("create", "true");
-                router.push(`${targetPath}?${currentParams.toString()}`);
-              }
-            }}
-            activeTab={getActiveTab()}
-            onTabChange={handleTabChange}
-          />
+                if (!profile?.isVerified) {
+                  setIsSignInOpen(true);
+                  currentParams.set("auth", "popup");
+                  currentParams.set("redirect", `${targetPath}?create=true`);
+                  router.push(`${targetPath}?${currentParams.toString()}`);
+                } else {
+                  currentParams.set("create", "true");
+                  router.push(`${targetPath}?${currentParams.toString()}`);
+                }
+              }}
+              activeTab={getActiveTab()}
+              onTabChange={handleTabChange}
+            />
+          </div>
 
           {/* Main Scrollable Content Panel */}
           <main className="flex-1 overflow-y-auto no-scrollbar">
-            <div className="w-full max-w-5xl mx-auto px-4 py-4 md:py-8 pb-24 md:pb-8">
+            <div className={pathname === "/" ? "w-full" : "w-full max-w-5xl mx-auto px-4 py-4 md:py-8 pb-24 md:pb-8"}>
               {children}
             </div>
           </main>
