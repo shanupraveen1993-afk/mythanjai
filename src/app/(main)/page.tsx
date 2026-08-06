@@ -87,7 +87,7 @@ export default function HomeLandingPage() {
       {/* ==========================================
           PORTAL CONTENT: DIRECTORY SEGMENT LINKS Noticeboard
           ========================================== */}
-      <div className="hidden md:flex w-full max-w-7xl mx-auto px-6 py-8 flex-col gap-8 bg-white">
+      <div className="flex w-full max-w-7xl mx-auto px-5 md:px-6 py-8 flex-col gap-8 bg-white">
 
         {/* Section Heading & Branding Emblem */}
         <div className="flex flex-col items-center text-center gap-4 max-w-xl mx-auto">

@@ -878,7 +878,7 @@ export function RobotHero({
       {/* ==========================================
           1. MOBILE VIEWPORT PORTION (True App Onboarding Feel)
           ========================================== */}
-      <div className="flex md:hidden flex-col items-center justify-start z-10 px-5 w-full flex-1 text-center select-none pointer-events-auto pb-8 overflow-y-auto">
+      <div className="flex md:hidden flex-col items-center justify-between z-10 px-5 w-full flex-1 text-center select-none pointer-events-auto pb-8 overflow-y-auto">
         
         {/* Onboarding Header branding */}
         <div className="flex flex-col items-center gap-1.5 mt-5">
@@ -900,25 +900,7 @@ export function RobotHero({
           </div>
         </div>
 
-        {/* 2 CTA Buttons on top of the content */}
-        <div className="w-full max-w-[320px] flex flex-col gap-2.5 mt-5">
-          <button
-            onClick={onCtaClick}
-            className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-950 font-black text-xs uppercase tracking-wider transition-all shadow-md shadow-yellow-500/20 border-0 text-center flex items-center justify-center gap-2 cursor-pointer"
-          >
-            <span>{ctaText === "Verified" ? "Go to Profile" : "Register / Sign In"}</span>
-            <ArrowRight className="w-4 h-4 text-slate-955" />
-          </button>
-          
-          <button
-            onClick={() => onCategoryClick?.("classifieds")}
-            className="w-full py-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider transition-all shadow-md text-center cursor-pointer border-0"
-          >
-            Explore Noticeboard
-          </button>
-        </div>
-
-        {/* What to Explore Section (Segment Previews) */}
+        {/* What to Explore Section (Segment Previews in the middle) */}
         <div className="w-full max-w-[320px] flex flex-col gap-4 mt-6 text-left">
           <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
             <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Browse Channels</span>
@@ -1005,6 +987,24 @@ export function RobotHero({
               ))}
             </div>
           </div>
+        </div>
+
+        {/* 2 CTA Buttons at the bottom of the fold */}
+        <div className="w-full max-w-[320px] flex flex-col gap-2.5 mt-6 pb-2">
+          <button
+            onClick={onCtaClick}
+            className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs uppercase tracking-wider transition-all shadow-md shadow-yellow-500/20 border-0 text-center flex items-center justify-center gap-2 cursor-pointer animate-scale-up"
+          >
+            <span>{ctaText === "Verified" ? "Go to Profile" : "Register / Sign In"}</span>
+            <ArrowRight className="w-4 h-4 text-slate-955" />
+          </button>
+          
+          <button
+            onClick={() => onCategoryClick?.("classifieds")}
+            className="w-full py-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider transition-all shadow-md text-center cursor-pointer border-0"
+          >
+            Explore Noticeboard
+          </button>
         </div>
       </div>
 
