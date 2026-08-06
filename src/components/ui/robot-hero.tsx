@@ -836,45 +836,39 @@ export function RobotHero({
   return (
     <section
       ref={containerRef}
-      className="relative w-full min-h-[680px] md:h-screen flex flex-col bg-slate-50 text-slate-800"
+      className="relative w-full min-h-[480px] md:h-[490px] flex flex-col bg-slate-50 text-slate-800"
     >
       {/* Light subtle gold halo radial glow behind the robot on the right side */}
       <div className="absolute top-0 right-0 w-full md:w-[55%] h-full z-0 bg-[radial-gradient(circle_at_50%_50%,rgba(250,204,21,0.04)_0%,transparent_60%)] pointer-events-none" />
 
       {/* 1. TOP HEADER: Category selector pill tags & Centered alerts ticker */}
-      <div className="w-full max-w-7xl mx-auto px-6 pt-10 flex flex-col items-center gap-4.5 z-20 pointer-events-auto select-none">
+      <div className="w-full max-w-7xl mx-auto px-6 pt-6 flex flex-col items-center gap-3.5 z-20 pointer-events-auto select-none">
         
-        {/* Three Category Segments floating independently */}
+        {/* Three Category Segments as clean, static buttons */}
         <div className="flex flex-wrap items-center justify-center gap-3">
-          <motion.button 
+          <button 
             onClick={() => onCategoryClick?.("classifieds")} 
-            animate={{ y: [0, -4, 0] }}
-            transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
-            className="px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-wider text-slate-700 hover:text-yellow-600 transition-all cursor-pointer bg-white hover:bg-slate-100 border border-slate-200 shadow-xs select-none text-center"
+            className="px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-wider text-slate-700 hover:text-yellow-600 transition-all cursor-pointer bg-white hover:bg-slate-100 border border-slate-200 shadow-3xs select-none text-center"
           >
             Buy & Sell
-          </motion.button>
-          <motion.button 
+          </button>
+          <button 
             onClick={() => onCategoryClick?.("services")} 
-            animate={{ y: [0, -3.5, 0] }}
-            transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut", delay: 0.25 }}
-            className="px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-wider text-slate-700 hover:text-yellow-600 transition-all cursor-pointer bg-white hover:bg-slate-100 border border-slate-200 shadow-xs select-none text-center"
+            className="px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-wider text-slate-700 hover:text-yellow-600 transition-all cursor-pointer bg-white hover:bg-slate-100 border border-slate-200 shadow-3xs select-none text-center"
           >
             Services
-          </motion.button>
-          <motion.button 
+          </button>
+          <button 
             onClick={() => onCategoryClick?.("shops")} 
-            animate={{ y: [0, -4, 0] }}
-            transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-            className="px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-wider text-slate-700 hover:text-yellow-600 transition-all cursor-pointer bg-white hover:bg-slate-100 border border-slate-200 shadow-xs select-none text-center"
+            className="px-6 py-2 rounded-full text-[10px] font-black uppercase tracking-wider text-slate-700 hover:text-yellow-600 transition-all cursor-pointer bg-white hover:bg-slate-100 border border-slate-200 shadow-3xs select-none text-center"
           >
             Recent Offer
-          </motion.button>
+          </button>
         </div>
 
         {/* Horizontal Ticker alert looping marquee content */}
         {alerts.length > 0 && (
-          <div className="w-full bg-slate-900 border border-slate-800 text-yellow-500 rounded-2xl py-3 px-4.5 shadow-md flex items-center justify-between text-xs font-black select-none max-w-2xl mx-auto tracking-wide">
+          <div className="w-full bg-slate-900 border border-slate-800 text-yellow-500 rounded-2xl py-2.5 px-4.5 shadow-md flex items-center justify-between text-xs font-black select-none max-w-2xl mx-auto tracking-wide">
             <div className="flex items-center gap-2 overflow-hidden w-full">
               <span className="bg-yellow-500 text-slate-950 font-black text-[9px] px-2 py-0.5 rounded-md uppercase shrink-0">
                 LIVE UPDATE
@@ -899,40 +893,40 @@ export function RobotHero({
       </div>
 
       {/* 2. MAIN SPLIT PORTION */}
-      <div className="flex-1 w-full max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between z-10 pointer-events-none mt-4 pb-12">
+      <div className="flex-1 w-full max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between z-10 pointer-events-none mt-2 pb-6">
         
         {/* LEFT BRANDING PANEL: Big Logo, Branding Title, actions */}
-        <div className="w-full md:w-[45%] flex flex-col items-center md:items-start text-center md:text-left gap-6 pointer-events-auto mt-6 md:mt-0 select-none">
-          <div className="flex flex-col gap-4 items-center md:items-start">
+        <div className="w-full md:w-[45%] flex flex-col items-center md:items-start text-center md:text-left gap-5 pointer-events-auto mt-4 md:mt-0 select-none">
+          <div className="flex flex-col gap-3.5 items-center md:items-start">
             {/* Logo box */}
-            <div className="w-20 h-20 rounded-2xl bg-white border border-slate-200 flex items-center justify-center overflow-hidden shadow-sm shrink-0">
+            <div className="w-16 h-16 rounded-2xl bg-white border border-slate-200 flex items-center justify-center overflow-hidden shadow-3xs shrink-0">
               <img 
                 src="/namma_thanjai_logo.png" 
                 alt="namma thanjai app icon logo" 
-                className="w-18.5 h-18.5 object-contain shrink-0" 
+                className="w-14.5 h-14.5 object-contain shrink-0" 
               />
             </div>
             {/* App name */}
             <div>
-              <h1 className="font-heading font-black text-4xl md:text-5xl text-slate-900 tracking-tight leading-none uppercase">
+              <h1 className="font-heading font-black text-3xl md:text-4xl text-slate-900 tracking-tight leading-none uppercase">
                 namma<br className="hidden md:block"/> thanjavur<span className="text-yellow-500">.</span>
               </h1>
-              <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-2">
+              <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-1.5">
                 verified local board
               </p>
             </div>
           </div>
 
-          <p className="text-sm text-slate-500 max-w-sm leading-relaxed font-semibold">
+          <p className="text-xs text-slate-500 max-w-sm leading-relaxed font-semibold">
             Thanjavur's smart local noticeboard directory. Scan visiting cards with AI, explore plot offers, and search helper service trades.
           </p>
 
           {/* Action buttons */}
-          <div className="w-full flex flex-col sm:flex-row items-center gap-3 mt-1">
+          <div className="w-full flex flex-col sm:flex-row items-center gap-3 mt-0.5">
             {/* Explore Button (Secondary - Glassmorphism) */}
             <button
               onClick={() => onCategoryClick?.("classifieds")}
-              className="w-full sm:w-auto px-10 py-3.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs uppercase tracking-wider transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer shadow-md select-none text-center font-bold"
+              className="w-full sm:w-auto px-9 py-3 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs uppercase tracking-wider transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer shadow-md select-none text-center font-bold"
             >
               Explore
             </button>
@@ -940,7 +934,7 @@ export function RobotHero({
             {/* Register Button (Primary - Gold-Yellow) */}
             <button
               onClick={onCtaClick}
-              className="w-full sm:w-auto px-10 py-3.5 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-950 font-black text-xs uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-yellow-500/10 border-0 select-none text-center flex items-center justify-center gap-2 font-bold"
+              className="w-full sm:w-auto px-9 py-3 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-950 font-black text-xs uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-yellow-500/10 border-0 select-none text-center flex items-center justify-center gap-2 font-bold"
             >
               <span>{ctaText === "Verified" ? "Profile" : "Register"}</span>
               <ArrowRight className="w-4 h-4 text-slate-950" />
@@ -949,7 +943,7 @@ export function RobotHero({
         </div>
 
         {/* RIGHT INTERACTIVE MOUSE-FOLLOWING 3D CANVAS */}
-        <div className="w-full md:w-[50%] h-[350px] md:h-full relative pointer-events-auto flex items-center justify-center">
+        <div className="w-full md:w-[50%] h-[270px] md:h-full relative pointer-events-auto flex items-center justify-center">
           
           {/* Scrolling category words behind the robot on the right side */}
           <div className="absolute left-0 right-0 pointer-events-none overflow-hidden flex justify-center z-0 top-[28%] md:top-[26%]">
@@ -960,7 +954,7 @@ export function RobotHero({
                 animate={{ opacity: 0.05, y: 0 }}
                 exit={{ opacity: 0, y: 12 }}
                 transition={{ duration: 0.5, ease: "easeInOut" }}
-                className="font-sans font-black select-none whitespace-nowrap text-slate-950 uppercase tracking-widest text-3xl text-center"
+                className="font-sans font-black select-none whitespace-nowrap text-slate-950 uppercase tracking-widest text-2.5xl text-center"
               >
                 {words[wordIndex]}
               </motion.h2>
@@ -973,7 +967,7 @@ export function RobotHero({
             className="w-full h-full relative cursor-pointer z-10"
             title="Tap the robot to spin categories!"
           >
-            <Canvas shadows camera={{ position: [0, 0.2, 5.5], fov: 38 }}>
+            <Canvas shadows camera={{ position: [0, 0.1, 4.8], fov: 38 }}>
               <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
 
               <directionalLight
