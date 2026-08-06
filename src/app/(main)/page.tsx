@@ -61,7 +61,7 @@ export default function HomeLandingPage() {
       {/* ==========================================
           HERO SECTION: 3D INTERACTIVE ROBOT HERO
           ========================================== */}
-      <div className="w-full min-h-[480px] md:h-[490px] relative">
+      <div className="w-full h-dvh min-h-[700px] relative">
         <RobotHero
           backgroundText="NAMMA THANJAI"
           navItemsLeft={[]}
