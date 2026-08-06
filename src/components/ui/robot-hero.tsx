@@ -837,138 +837,82 @@ export function RobotHero({
   return (
     <section
       ref={containerRef}
-      className="relative w-full min-h-[720px] md:h-screen flex flex-col bg-slate-50 text-slate-800"
+      className="relative w-full min-h-[820px] md:h-screen flex flex-col bg-slate-50 text-slate-800 py-6 md:py-8 justify-between overflow-hidden"
     >
-      {/* Light subtle gold halo radial glow behind the robot on the right side */}
-      <div className="absolute top-0 right-0 w-full md:w-[55%] h-full z-0 bg-[radial-gradient(circle_at_50%_50%,rgba(250,204,21,0.05)_0%,transparent_60%)] pointer-events-none" />
+      {/* Light radial glow centered behind the robot */}
+      <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_60%,rgba(250,204,21,0.04)_0%,transparent_60%)] pointer-events-none" />
 
-      {/* 1. TOP HEADER: Category selector pill tags & Centered alerts ticker */}
-      <div className="w-full max-w-7xl mx-auto px-6 pt-10 flex flex-col items-center gap-5 z-20 pointer-events-auto select-none">
+      {/* Main stacked vertical wrapper */}
+      <div className="w-full max-w-2xl mx-auto px-6 flex flex-col items-center gap-5 md:gap-6 z-10 pointer-events-auto text-center select-none">
         
-        {/* Three Category Segments as clean, static buttons */}
-        <div className="flex flex-wrap items-center justify-center gap-3">
+        {/* 1. LOGO: white container without border */}
+        <div className="w-16 h-16 md:w-20 md:h-20 rounded-2xl md:rounded-3xl bg-white flex items-center justify-center overflow-hidden shadow-xs shrink-0 mt-2">
+          <img 
+            src="/namma_thanjai_logo.png" 
+            alt="namma thanjai app logo" 
+            className="w-14 h-14 md:w-18.5 md:h-18.5 object-contain" 
+          />
+        </div>
+
+        {/* 2. TITLE (Number 10) & Description */}
+        <div className="flex flex-col items-center gap-1.5 md:gap-2">
+          <h1 className="font-heading font-black text-3.5xl md:text-5xl text-slate-900 tracking-tight leading-none uppercase">
+            namma thanjavur<span className="text-yellow-500">.</span>
+          </h1>
+          <p className="text-[9px] md:text-[10px] text-slate-400 font-bold uppercase tracking-widest">
+            verified local board
+          </p>
+          <p className="text-xs md:text-sm text-slate-500 max-w-md leading-relaxed font-semibold mt-1">
+            Thanjavur's smart local noticeboard directory. Scan visiting cards with AI, explore plot offers, and search helper service trades.
+          </p>
+        </div>
+
+        {/* 3. THREE BUTTONS (Categories) */}
+        <div className="flex flex-wrap items-center justify-center gap-2.5">
           <button 
             onClick={() => onCategoryClick?.("classifieds")} 
-            className="px-7 py-3 rounded-full text-[11px] font-black uppercase tracking-wider text-slate-800 hover:text-yellow-600 transition-all cursor-pointer bg-white hover:bg-slate-100 border-2 border-slate-200/90 shadow-md select-none text-center font-bold"
+            className="px-5 md:px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-wider text-slate-700 hover:text-yellow-600 transition-all cursor-pointer bg-white hover:bg-slate-100 border border-slate-200 shadow-3xs text-center font-bold"
           >
             Buy & Sell
           </button>
           <button 
             onClick={() => onCategoryClick?.("services")} 
-            className="px-7 py-3 rounded-full text-[11px] font-black uppercase tracking-wider text-slate-800 hover:text-yellow-600 transition-all cursor-pointer bg-white hover:bg-slate-100 border-2 border-slate-200/90 shadow-md select-none text-center font-bold"
+            className="px-5 md:px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-wider text-slate-700 hover:text-yellow-600 transition-all cursor-pointer bg-white hover:bg-slate-100 border border-slate-200 shadow-3xs text-center font-bold"
           >
             Services
           </button>
           <button 
             onClick={() => onCategoryClick?.("shops")} 
-            className="px-7 py-3 rounded-full text-[11px] font-black uppercase tracking-wider text-slate-800 hover:text-yellow-600 transition-all cursor-pointer bg-white hover:bg-slate-100 border-2 border-slate-200/90 shadow-md select-none text-center font-bold"
+            className="px-5 md:px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-wider text-slate-700 hover:text-yellow-600 transition-all cursor-pointer bg-white hover:bg-slate-100 border border-slate-200 shadow-3xs text-center font-bold"
           >
             Recent Offer
           </button>
         </div>
 
-        {/* Horizontal Ticker alert looping marquee content (Hidden on mobile) */}
-        {alerts.length > 0 && (
-          <div className="hidden md:flex w-full bg-slate-950 border-2 border-slate-900 text-yellow-500 rounded-3xl py-3.5 px-6 shadow-xl items-center justify-between text-xs font-black select-none max-w-2xl mx-auto tracking-wide">
-            <div className="flex items-center gap-2.5 overflow-hidden w-full">
-              <span className="bg-yellow-500 text-slate-950 font-black text-[9px] px-2 py-0.5 rounded-md uppercase shrink-0">
-                LIVE UPDATE
-              </span>
-              <div className="relative h-4 flex-1 overflow-hidden">
-                <AnimatePresence mode="wait">
-                  <motion.span
-                    key={activeAlertIdx}
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -15 }}
-                    transition={{ duration: 0.35 }}
-                    className="absolute left-0 text-slate-100 truncate w-full font-bold"
-                  >
-                    {alerts[activeAlertIdx]}
-                  </motion.span>
-                </AnimatePresence>
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* 2. MAIN SPLIT PORTION */}
-      <div className="flex-1 w-full max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between z-10 pointer-events-none mt-4 pb-14">
-        
-        {/* LEFT BRANDING PANEL: Big Logo, Branding Title, actions */}
-        <div className="w-full md:w-[45%] flex flex-col items-center md:items-start text-center md:text-left gap-4 md:gap-7 pointer-events-auto mt-6 md:mt-0 select-none">
-          <div className="flex flex-col gap-3 md:gap-5 items-center md:items-start">
-            {/* Logo box */}
-            <div className="w-14 h-14 md:w-24 md:h-24 rounded-2xl md:rounded-3xl bg-white border-2 border-slate-200 flex items-center justify-center overflow-hidden shadow-md shrink-0">
-              <img 
-                src="/namma_thanjai_logo.png" 
-                alt="namma thanjai app icon logo" 
-                className="w-12 h-12 md:w-22 md:h-22 object-contain shrink-0" 
-              />
-            </div>
-            {/* App name */}
-            <div>
-              <h1 className="font-heading font-black text-3xl md:text-6xl text-slate-900 tracking-tight leading-none uppercase">
-                namma<br className="hidden md:block"/> thanjavur<span className="text-yellow-500">.</span>
-              </h1>
-              <p className="text-[10px] md:text-[11px] text-slate-400 font-bold uppercase tracking-widest mt-1.5 md:mt-2.5">
-                verified local board
-              </p>
-            </div>
-          </div>
-
-          <p className="text-xs md:text-base text-slate-500 max-w-sm leading-relaxed font-semibold">
-            Thanjavur's smart local noticeboard directory. Scan visiting cards with AI, explore plot offers, and search helper service trades.
-          </p>
-
-          {/* Action buttons - Side by Side on Mobile */}
-          <div className="w-full flex flex-row justify-center md:justify-start gap-2.5 mt-1">
-            {/* Explore Button */}
-            <button
-              onClick={() => onCategoryClick?.("classifieds")}
-              className="flex-1 sm:flex-none px-4 md:px-12 py-3 md:py-4 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-black text-[10px] md:text-xs uppercase tracking-wider transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer shadow-lg select-none text-center"
-            >
-              Explore
-            </button>
-
-            {/* Register Button */}
-            <button
-              onClick={onCtaClick}
-              className="flex-1 sm:flex-none px-4 md:px-12 py-3 md:py-4 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-950 font-black text-[10px] md:text-xs uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-yellow-500/20 border-0 select-none text-center flex items-center justify-center gap-1.5"
-            >
-              <span>{ctaText === "Verified" ? "Profile" : "Register"}</span>
-              <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
-            </button>
-          </div>
-        </div>
-
-        {/* RIGHT INTERACTIVE MOUSE-FOLLOWING 3D CANVAS */}
-        <div className="w-full md:w-[50%] h-[240px] md:h-full relative pointer-events-auto flex items-center justify-center">
-          
-          {/* Scrolling category words behind the robot on the right side */}
+        {/* 4. MASCOT (Robot 3D canvas) */}
+        <div className="w-full h-[220px] md:h-[280px] relative flex items-center justify-center mt-1">
+          {/* Scrolling category words behind the robot */}
           <div className="absolute left-0 right-0 pointer-events-none overflow-hidden flex justify-center z-0 top-[28%] md:top-[26%]">
             <AnimatePresence mode="wait">
               <motion.h2
                 key={wordIndex}
                 initial={{ opacity: 0, y: -12 }}
-                animate={{ opacity: 0.05, y: 0 }}
+                animate={{ opacity: 0.04, y: 0 }}
                 exit={{ opacity: 0, y: 12 }}
                 transition={{ duration: 0.5, ease: "easeInOut" }}
-                className="font-sans font-black select-none whitespace-nowrap text-slate-950 uppercase tracking-widest text-3.5xl text-center"
+                className="font-sans font-black select-none whitespace-nowrap text-slate-950 uppercase tracking-widest text-2.5xl md:text-3.5xl text-center"
               >
                 {words[wordIndex]}
               </motion.h2>
             </AnimatePresence>
           </div>
 
-          {/* Interactive model click/touch Canvas */}
           <div 
             onClick={handleRobotTap} 
             className="w-full h-full relative cursor-pointer z-10"
             title="Tap the robot to spin categories!"
           >
-            <Canvas shadows camera={{ position: [0, 0.15, 5.0], fov: 38 }}>
+            <Canvas shadows camera={{ position: [0, 0.12, 4.6], fov: 38 }}>
               <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
 
               <directionalLight
@@ -976,7 +920,7 @@ export function RobotHero({
                 intensity={entorno.luzPrincipal}
                 color={entorno.luzPrincipalColor}
                 castShadow
-                shadow-mapSize={[2048, 2048]}
+                shadow-mapSize={[1024, 1024]}
                 shadow-bias={-0.0005}
               >
                 <orthographicCamera
@@ -998,7 +942,7 @@ export function RobotHero({
                   position={[0, -0.79, 0]}
                   opacity={entorno.sombraOpacidad}
                   scale={15}
-                  resolution={1024}
+                  resolution={512}
                   blur={entorno.sombraBlur}
                   far={2.5}
                   color="#000000"
@@ -1031,6 +975,48 @@ export function RobotHero({
             </Canvas>
           </div>
         </div>
+
+        {/* 5. TWO CTA BUTTONS */}
+        <div className="w-full flex flex-row justify-center gap-3 mt-1.5 max-w-sm mx-auto">
+          <button
+            onClick={() => onCategoryClick?.("classifieds")}
+            className="flex-1 px-5 md:px-8 py-3.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-black text-[10px] md:text-xs uppercase tracking-wider transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer shadow-md select-none text-center"
+          >
+            Explore
+          </button>
+          <button
+            onClick={onCtaClick}
+            className="flex-1 px-5 md:px-8 py-3.5 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-[10px] md:text-xs uppercase tracking-wider transition-all cursor-pointer shadow-md shadow-yellow-500/10 border-0 select-none text-center flex items-center justify-center gap-1.5"
+          >
+            <span>{ctaText === "Verified" ? "Profile" : "Register"}</span>
+            <ArrowRight className="w-3.5 h-3.5 text-slate-955" />
+          </button>
+        </div>
+
+        {/* 6. LIVE UPDATE TICKER (Short form, visible on both mobile and desktop below the robot) */}
+        {alerts.length > 0 && (
+          <div className="w-full bg-slate-950 text-yellow-500 rounded-2xl py-2.5 px-4 shadow-md flex items-center justify-between text-[11px] font-black select-none max-w-md mx-auto tracking-wide mt-2 border border-slate-900">
+            <div className="flex items-center gap-2 overflow-hidden w-full">
+              <span className="bg-yellow-500 text-slate-955 font-black text-[8px] px-1.5 py-0.5 rounded-md uppercase shrink-0">
+                LIVE
+              </span>
+              <div className="relative h-4 flex-1 overflow-hidden">
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={activeAlertIdx}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -12 }}
+                    transition={{ duration: 0.35 }}
+                    className="absolute left-0 text-slate-100 truncate w-full font-bold text-left"
+                  >
+                    {alerts[activeAlertIdx]}
+                  </motion.span>
+                </AnimatePresence>
+              </div>
+            </div>
+          </div>
+        )}
 
       </div>
     </section>
