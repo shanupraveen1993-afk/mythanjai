@@ -878,16 +878,18 @@ export function RobotHero({
       {/* ==========================================
           1. MOBILE VIEWPORT PORTION (True App Onboarding Feel)
           ========================================== */}
-      <div className="flex md:hidden flex-col items-center justify-between z-10 px-6 w-full flex-1 text-center select-none pointer-events-auto pb-6">
+      <div className="flex md:hidden flex-col items-center justify-start z-10 px-5 w-full flex-1 text-center select-none pointer-events-auto pb-8 overflow-y-auto">
         
         {/* Onboarding Header branding */}
-        <div className="flex flex-col items-center gap-2 mt-6">
+        <div className="flex flex-col items-center gap-1.5 mt-5">
           {/* Circular shadow logo */}
-          <img 
-            src="/namma_thanjai_logo.png" 
-            alt="namma thanjai mobile app logo" 
-            className="w-18 h-18 rounded-full bg-white shadow-md p-2 shrink-0 object-contain" 
-          />
+          <div className="w-16 h-16 rounded-full bg-white shadow-md p-1.5 flex items-center justify-center shrink-0">
+            <img 
+              src="/namma_thanjai_logo.png" 
+              alt="namma thanjai mobile app logo" 
+              className="w-full h-full object-contain rounded-full" 
+            />
+          </div>
           <div className="flex flex-col items-center">
             <h1 className="font-heading font-black text-3.5xl text-slate-900 tracking-tight leading-none uppercase">
               namma thanjavur<span className="text-yellow-500">.</span>
@@ -897,57 +899,112 @@ export function RobotHero({
             </p>
           </div>
         </div>
-        {/* Center: What the App Does (Clever Value Cards with premium icons) */}
-        <div className="w-full max-w-[320px] flex flex-col gap-3.5 my-6 text-left animate-scale-up">
-          <div className="flex gap-4 items-center bg-slate-50 border border-slate-100 rounded-2xl p-3.5 shadow-3xs">
-            <div className="w-11 h-11 rounded-xl bg-slate-900 text-yellow-400 flex items-center justify-center shadow-sm shrink-0">
-              <Megaphone className="w-5 h-5 text-yellow-400" />
-            </div>
-            <div>
-              <h4 className="font-heading font-black text-xs text-slate-900 uppercase tracking-wider">Buy & Sell Notice</h4>
-              <p className="text-[10px] text-slate-500 mt-0.5 font-semibold leading-normal">Scan business cards with AI to post deals instantly.</p>
-            </div>
-          </div>
 
-          <div className="flex gap-4 items-center bg-slate-50 border border-slate-100 rounded-2xl p-3.5 shadow-3xs">
-            <div className="w-11 h-11 rounded-xl bg-slate-900 text-yellow-400 flex items-center justify-center shadow-sm shrink-0">
-              <Wrench className="w-5 h-5 text-yellow-400" />
-            </div>
-            <div>
-              <h4 className="font-heading font-black text-xs text-slate-900 uppercase tracking-wider">Helper Directory</h4>
-              <p className="text-[10px] text-slate-500 mt-0.5 font-semibold leading-normal">Connect directly with verified local tradespeople.</p>
-            </div>
-          </div>
-
-          <div className="flex gap-4 items-center bg-slate-50 border border-slate-100 rounded-2xl p-3.5 shadow-3xs">
-            <div className="w-11 h-11 rounded-xl bg-slate-900 text-yellow-400 flex items-center justify-center shadow-sm shrink-0">
-              <Store className="w-5 h-5 text-yellow-400" />
-            </div>
-            <div>
-              <h4 className="font-heading font-black text-xs text-slate-900 uppercase tracking-wider">Local Offers</h4>
-              <p className="text-[10px] text-slate-500 mt-0.5 font-semibold leading-normal">Explore local showrooms and active discounts in town.</p>
-            </div>
-          </div>
-        </div>
-
-        {/* Bottom Onboarding CTA sequence */}
-        <div className="w-full flex flex-col items-center gap-3 max-w-[320px] mx-auto">
-          {/* Primary Highlighted Register Button */}
+        {/* 2 CTA Buttons on top of the content */}
+        <div className="w-full max-w-[320px] flex flex-col gap-2.5 mt-5">
           <button
             onClick={onCtaClick}
-            className="w-full py-4 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-950 font-black text-xs uppercase tracking-wider transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer shadow-lg shadow-yellow-500/25 border-0 text-center flex items-center justify-center gap-2"
+            className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-950 font-black text-xs uppercase tracking-wider transition-all shadow-md shadow-yellow-500/20 border-0 text-center flex items-center justify-center gap-2 cursor-pointer"
           >
             <span>{ctaText === "Verified" ? "Go to Profile" : "Register / Sign In"}</span>
-            <ArrowRight className="w-4 h-4 text-slate-950" />
+            <ArrowRight className="w-4 h-4 text-slate-955" />
           </button>
-
-          {/* Secondary Outline/Explore Button */}
+          
           <button
             onClick={() => onCategoryClick?.("classifieds")}
-            className="w-full py-4 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider transition-all shadow-md text-center cursor-pointer border-0"
+            className="w-full py-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider transition-all shadow-md text-center cursor-pointer border-0"
           >
             Explore Noticeboard
           </button>
+        </div>
+
+        {/* What to Explore Section (Segment Previews) */}
+        <div className="w-full max-w-[320px] flex flex-col gap-4 mt-6 text-left">
+          <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Browse Channels</span>
+            <span className="text-[9px] font-bold text-yellow-600 uppercase tracking-wider bg-yellow-500/10 px-2 py-0.5 rounded-md">Live Directory</span>
+          </div>
+
+          {/* Segment 1: Classifieds */}
+          <div className="bg-slate-50 border border-slate-200/60 rounded-2.5xl p-4 flex flex-col gap-2.5 transition-all active:scale-[0.99]">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-slate-900 text-yellow-400 flex items-center justify-center shadow-xs shrink-0">
+                <Megaphone className="w-4 h-4 text-yellow-400" />
+              </div>
+              <div>
+                <h4 className="font-heading font-black text-xs text-slate-900 uppercase tracking-wider leading-none">Classified Noticeboard</h4>
+                <p className="text-[9px] text-slate-400 font-bold uppercase mt-1">Real Estate & Offers</p>
+              </div>
+            </div>
+            <p className="text-[10px] text-slate-500 leading-relaxed font-semibold">
+              Find land plots, houses for rent, vehicle listings, and post your visiting cards with AI scanning.
+            </p>
+            <div className="flex flex-wrap gap-1.5 mt-1">
+              {["Plots", "Houses", "Rentals", "Cards"].map((tag) => (
+                <span 
+                  key={tag} 
+                  onClick={() => onCategoryClick?.("classifieds")} 
+                  className="px-2 py-1 bg-white border border-slate-200 text-slate-600 text-[9px] font-bold rounded-md uppercase tracking-wider cursor-pointer hover:bg-yellow-500 hover:text-slate-950 transition-colors"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Segment 2: Helpers */}
+          <div className="bg-slate-50 border border-slate-200/60 rounded-2.5xl p-4 flex flex-col gap-2.5 transition-all active:scale-[0.99]">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-slate-900 text-yellow-400 flex items-center justify-center shadow-xs shrink-0">
+                <Wrench className="w-4 h-4 text-yellow-400" />
+              </div>
+              <div>
+                <h4 className="font-heading font-black text-xs text-slate-900 uppercase tracking-wider leading-none">Trades & Helpers</h4>
+                <p className="text-[9px] text-slate-400 font-bold uppercase mt-1">On-Demand Directory</p>
+              </div>
+            </div>
+            <p className="text-[10px] text-slate-500 leading-relaxed font-semibold">
+              Direct connection with local tradespeople for plumbing, electrical fixes, driving, and teaching.
+            </p>
+            <div className="flex flex-wrap gap-1.5 mt-1">
+              {["Plumbers", "Electricians", "Carpenters", "Taxi"].map((tag) => (
+                <span 
+                  key={tag} 
+                  onClick={() => onCategoryClick?.("services")} 
+                  className="px-2 py-1 bg-white border border-slate-200 text-slate-600 text-[9px] font-bold rounded-md uppercase tracking-wider cursor-pointer hover:bg-yellow-500 hover:text-slate-955 transition-colors"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          {/* Segment 3: Showrooms */}
+          <div className="bg-slate-50 border border-slate-200/60 rounded-2.5xl p-4 flex flex-col gap-2.5 transition-all active:scale-[0.99]">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-slate-900 text-yellow-400 flex items-center justify-center shadow-xs shrink-0">
+                <Store className="w-4 h-4 text-yellow-400" />
+              </div>
+              <div>
+                <h4 className="font-heading font-black text-xs text-slate-900 uppercase tracking-wider leading-none">Shops & Showrooms</h4>
+                <p className="text-[9px] text-slate-400 font-bold uppercase mt-1">Town Offers & Deals</p>
+              </div>
+            </div>
+            <p className="text-[10px] text-slate-500 leading-relaxed font-semibold">
+              Discover local clothing showrooms, jewellery shops, electronics outlets, and active city discounts.
+            </p>
+            <div className="flex flex-wrap gap-1.5 mt-1">
+              {["Showrooms", "Offers", "Malls", "Jewellery"].map((tag) => (
+                <span 
+                  key={tag} 
+                  onClick={() => onCategoryClick?.("shops")} 
+                  className="px-2 py-1 bg-white border border-slate-200 text-slate-600 text-[9px] font-bold rounded-md uppercase tracking-wider cursor-pointer hover:bg-yellow-500 hover:text-slate-955 transition-colors"
+                >
+                  {tag}
+                </span>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
 
