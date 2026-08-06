@@ -623,9 +623,15 @@ function RobotPrototype({
         />
       </mesh>
 
-      {/* Chest App Logo Decal Badge */}
+      {/* Chest App Logo Decal Badge Background Container */}
+      <mesh position={[0, 0.05, 0.44]} rotation={[0, 0, 0]}>
+        <circleGeometry args={[0.13, 32]} />
+        <meshBasicMaterial color="#ffffff" toneMapped={false} />
+      </mesh>
+
+      {/* Chest App Logo Decal Badge Emblem */}
       <mesh position={[0, 0.05, 0.441]} rotation={[0, 0, 0]}>
-        <planeGeometry args={[0.22, 0.22]} />
+        <planeGeometry args={[0.20, 0.20]} />
         <meshBasicMaterial map={logoTexture} transparent={true} toneMapped={false} />
       </mesh>
 
@@ -837,60 +843,38 @@ export function RobotHero({
   return (
     <section
       ref={containerRef}
-      className="relative w-full min-h-[580px] md:h-screen flex flex-col bg-slate-50 text-slate-800 py-6 md:py-10 justify-between overflow-hidden"
+      className="relative w-full min-h-[580px] md:h-screen flex flex-col bg-white text-slate-800 py-6 md:py-10 justify-between overflow-hidden"
     >
       {/* Light radial glow centered behind the robot on desktop, or full screen on mobile */}
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_60%,rgba(250,204,21,0.04)_0%,transparent_60%)] pointer-events-none" />
 
       {/* ==========================================
-          1. MOBILE VIEWPORT PORTION (Tightly Packed, No Empty Spaces)
+          1. MOBILE VIEWPORT PORTION (True App Onboarding Feel)
           ========================================== */}
-      <div className="flex md:hidden flex-col items-center gap-3.5 z-10 px-6 w-full text-center select-none pointer-events-auto">
-        {/* Logo with clean white circular background and shadow */}
-        <img 
-          src="/namma_thanjai_logo.png" 
-          alt="namma thanjai mobile app logo" 
-          className="w-14 h-14 rounded-full bg-white shadow-md p-1.5 shrink-0 object-contain mt-1" 
-        />
-
-        {/* Branding Title (Number 10) & Desc */}
-        <div className="flex flex-col items-center gap-1">
-          <h1 className="font-heading font-black text-3.2xl text-slate-900 tracking-tight leading-none uppercase">
-            namma thanjavur<span className="text-yellow-500">.</span>
-          </h1>
-          <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-0.5">
-            verified local board
-          </p>
-          <p className="text-xs text-slate-500 max-w-sm font-semibold leading-relaxed mt-1">
-            Thanjavur's smart local noticeboard directory. Scan visiting cards with AI, explore plot offers, and search helper service trades.
-          </p>
+      <div className="flex md:hidden flex-col items-center justify-between z-10 px-6 w-full flex-1 text-center select-none pointer-events-auto pb-6">
+        
+        {/* Onboarding Header branding */}
+        <div className="flex flex-col items-center gap-2 mt-4">
+          {/* Circular shadow logo */}
+          <img 
+            src="/namma_thanjai_logo.png" 
+            alt="namma thanjai mobile app logo" 
+            className="w-16 h-16 rounded-full bg-white shadow-md p-1.5 shrink-0 object-contain" 
+          />
+          <div className="flex flex-col items-center">
+            <h1 className="font-heading font-black text-3.5xl text-slate-900 tracking-tight leading-none uppercase">
+              namma thanjavur<span className="text-yellow-500">.</span>
+            </h1>
+            <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-1">
+              verified local board
+            </p>
+          </div>
         </div>
 
-        {/* Three buttons */}
-        <div className="flex flex-wrap items-center justify-center gap-2 mt-0.5">
-          <button 
-            onClick={() => onCategoryClick?.("classifieds")} 
-            className="px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-wider text-slate-700 hover:text-yellow-600 transition-all bg-white hover:bg-slate-100 border border-slate-200 shadow-3xs font-bold"
-          >
-            Buy & Sell
-          </button>
-          <button 
-            onClick={() => onCategoryClick?.("services")} 
-            className="px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-wider text-slate-700 hover:text-yellow-600 transition-all bg-white hover:bg-slate-100 border border-slate-200 shadow-3xs font-bold"
-          >
-            Services
-          </button>
-          <button 
-            onClick={() => onCategoryClick?.("shops")} 
-            className="px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-wider text-slate-700 hover:text-yellow-600 transition-all bg-white hover:bg-slate-100 border border-slate-200 shadow-3xs font-bold"
-          >
-            Recent Offer
-          </button>
-        </div>
-
-        {/* Robot 3D Canvas */}
-        <div className="w-full h-[200px] relative flex items-center justify-center mt-0.5">
-          <div className="absolute left-0 right-0 pointer-events-none overflow-hidden flex justify-center z-0 top-[28%]">
+        {/* Center: Giant interactive 3D robot mascot */}
+        <div className="w-full h-[320px] relative flex items-center justify-center">
+          {/* Scrolling category words behind the robot */}
+          <div className="absolute left-0 right-0 pointer-events-none overflow-hidden flex justify-center z-0 top-[26%]">
             <AnimatePresence mode="wait">
               <motion.h2
                 key={wordIndex}
@@ -898,14 +882,14 @@ export function RobotHero({
                 animate={{ opacity: 0.04, y: 0 }}
                 exit={{ opacity: 0, y: 12 }}
                 transition={{ duration: 0.5, ease: "easeInOut" }}
-                className="font-sans font-black select-none whitespace-nowrap text-slate-950 uppercase tracking-widest text-2.2xl text-center"
+                className="font-sans font-black select-none whitespace-nowrap text-slate-950 uppercase tracking-widest text-2.5xl text-center"
               >
                 {words[wordIndex]}
               </motion.h2>
             </AnimatePresence>
           </div>
           <div onClick={handleRobotTap} className="w-full h-full relative cursor-pointer z-10">
-            <Canvas shadows camera={{ position: [0, 0.12, 4.5], fov: 38 }}>
+            <Canvas shadows camera={{ position: [0, 0.12, 4.4], fov: 38 }}>
               <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
               <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} castShadow shadow-mapSize={[512, 512]} shadow-bias={-0.0005} />
               <directionalLight position={[-5, 2, -5]} intensity={entorno.luzRelleno} color={entorno.luzRellenoColor} />
@@ -918,47 +902,25 @@ export function RobotHero({
           </div>
         </div>
 
-        {/* Two CTA Buttons */}
-        <div className="w-full flex flex-row justify-center gap-2.5 max-w-[290px] mx-auto mt-0.5">
-          <button
-            onClick={() => onCategoryClick?.("classifieds")}
-            className="flex-1 px-4 py-3 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-black text-[10px] uppercase tracking-wider transition-all select-none text-center shadow-md"
-          >
-            Explore
-          </button>
+        {/* Bottom Onboarding CTA sequence */}
+        <div className="w-full flex flex-col items-center gap-3.5 max-w-[310px] mx-auto mt-2">
+          {/* Primary Highlighted Register Button */}
           <button
             onClick={onCtaClick}
-            className="flex-1 px-4 py-3 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-[10px] uppercase tracking-wider transition-all select-none text-center shadow-md flex items-center justify-center gap-1.5"
+            className="w-full py-4 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-950 font-black text-xs uppercase tracking-wider transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer shadow-lg shadow-yellow-500/20 border-0 select-none text-center flex items-center justify-center gap-2"
           >
-            <span>{ctaText === "Verified" ? "Profile" : "Register"}</span>
-            <ArrowRight className="w-3.5 h-3.5 text-slate-955" />
+            <span>{ctaText === "Verified" ? "Go to Profile" : "Register / Get Started"}</span>
+            <ArrowRight className="w-4 h-4 text-slate-950" />
+          </button>
+
+          {/* Secondary subtle guest link */}
+          <button
+            onClick={() => onCategoryClick?.("classifieds")}
+            className="text-slate-500 hover:text-slate-800 font-black text-[11px] uppercase tracking-wider py-1.5 transition-colors cursor-pointer select-none"
+          >
+            Explore Noticeboard
           </button>
         </div>
-
-        {/* Live Update Ticker below robot/CTA */}
-        {alerts.length > 0 && (
-          <div className="w-full bg-slate-950 text-yellow-500 rounded-2xl py-2 px-3.5 shadow-md flex items-center justify-between text-[10px] font-black select-none max-w-[290px] mx-auto tracking-wide mt-1.5 border border-slate-900">
-            <div className="flex items-center gap-2 overflow-hidden w-full">
-              <span className="bg-yellow-500 text-slate-955 font-black text-[8px] px-1.5 py-0.5 rounded-md uppercase shrink-0">
-                LIVE
-              </span>
-              <div className="relative h-4 flex-1 overflow-hidden">
-                <AnimatePresence mode="wait">
-                  <motion.span
-                    key={activeAlertIdx}
-                    initial={{ opacity: 0, y: 12 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -12 }}
-                    transition={{ duration: 0.35 }}
-                    className="absolute left-0 text-slate-100 truncate w-full font-bold text-left"
-                  >
-                    {alerts[activeAlertIdx]}
-                  </motion.span>
-                </AnimatePresence>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
 
       {/* ==========================================
