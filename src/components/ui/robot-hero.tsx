@@ -1114,7 +1114,7 @@ export function RobotHero({
                   animate={{ opacity: 0.08, y: 0 }}
                   exit={{ opacity: 0, y: 12 }}
                   transition={{ duration: 0.5, ease: "easeInOut" }}
-                  className="font-sans font-black select-none whitespace-nowrap text-slate-950 uppercase tracking-widest text-5xl md:text-7xl text-center"
+                  className="font-sans font-black select-none whitespace-nowrap text-slate-950 uppercase tracking-wider text-3xl md:text-5xl text-center"
                 >
                   {words[wordIndex]}
                 </motion.h2>
