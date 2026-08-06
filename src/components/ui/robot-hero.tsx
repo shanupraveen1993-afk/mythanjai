@@ -1,13 +1,15 @@
 "use client";
 
 import React, { useMemo, useRef, useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Canvas, useFrame, useThree, useLoader } from "@react-three/fiber";
 import { Environment, ContactShadows, Html } from "@react-three/drei";
 import * as THREE from "three";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { PiShoppingBagBold } from "react-icons/pi";
-import { ArrowRight, Loader2, Phone, CheckCircle, Megaphone, Wrench, Store } from "lucide-react";
+import { ArrowRight, Loader2, Phone, CheckCircle, Megaphone, Wrench, Store, Search, MapPin, Sparkles } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
+import { TANJORE_LOCALITIES, TanjoreLocality } from "@/lib/constants";
 
 class HeartCurve extends THREE.Curve<THREE.Vector3> {
   constructor() {
@@ -802,6 +804,22 @@ export function RobotHero({
   activeAlertIdx = 0,
 }: RobotHeroProps = {}) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
+  const [searchTab, setSearchTab] = useState<"classifieds" | "services" | "shops">("classifieds");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchLocality, setSearchLocality] = useState<TanjoreLocality | "All Areas">("All Areas");
+
+  const handleSearchSubmit = () => {
+    const currentParams = new URLSearchParams();
+    if (searchLocality !== "All Areas") {
+      currentParams.set("area", searchLocality);
+    }
+    if (searchQuery.trim()) {
+      currentParams.set("q", searchQuery.trim());
+    }
+    router.push(`/${searchTab}?${currentParams.toString()}`);
+  };
+
   const { profile, updatePhone } = useAuth();
   const [mobileNumber, setMobileNumber] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
@@ -876,132 +894,175 @@ export function RobotHero({
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_60%,rgba(250,204,21,0.04)_0%,transparent_60%)] pointer-events-none" />
 
       {/* ==========================================
-          1. MOBILE VIEWPORT PORTION (True App Onboarding Feel)
+          1. MOBILE VIEWPORT PORTION (Sleek Real-Estate App Style Onboarding)
           ========================================== */}
       <div className="flex md:hidden flex-col items-center justify-between z-10 px-5 w-full flex-1 text-center select-none pointer-events-auto pb-8 overflow-y-auto">
         
-        {/* Onboarding Header branding */}
+        {/* Onboarding Header branding: White container with logo, NO borders */}
         <div className="flex flex-col items-center gap-1.5 mt-5">
-          {/* Circular shadow logo */}
-          <div className="w-16 h-16 rounded-full bg-white shadow-md p-1.5 flex items-center justify-center shrink-0">
+          <div className="w-16 h-16 rounded-2xl bg-white shadow-md p-2 flex items-center justify-center shrink-0">
             <img 
               src="/namma_thanjai_logo.png" 
-              alt="namma thanjai mobile app logo" 
-              className="w-full h-full object-contain rounded-full" 
+              alt="namma thanjai app logo" 
+              className="w-full h-full object-contain" 
             />
           </div>
-          <div className="flex flex-col items-center">
-            <h1 className="font-heading font-black text-3.5xl text-slate-900 tracking-tight leading-none uppercase">
+          <div className="flex flex-col items-center mt-1">
+            <h1 className="font-heading font-black text-2xl text-slate-900 tracking-tight leading-none uppercase">
               namma thanjavur<span className="text-yellow-500">.</span>
             </h1>
-            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1.5">
+            <p className="text-[9px] text-slate-400 font-extrabold uppercase tracking-widest mt-1">
               verified local board
             </p>
           </div>
         </div>
 
-        {/* What to Explore Section (Segment Previews in the middle) */}
-        <div className="w-full max-w-[320px] flex flex-col gap-4 mt-6 text-left">
-          <div className="flex items-center justify-between border-b border-slate-100 pb-1.5">
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Browse Channels</span>
-            <span className="text-[9px] font-bold text-yellow-600 uppercase tracking-wider bg-yellow-500/10 px-2 py-0.5 rounded-md">Live Directory</span>
-          </div>
-
-          {/* Segment 1: Classifieds */}
-          <div className="bg-slate-50 border border-slate-200/60 rounded-2.5xl p-4 flex flex-col gap-2.5 transition-all active:scale-[0.99]">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-slate-900 text-yellow-400 flex items-center justify-center shadow-xs shrink-0">
-                <Megaphone className="w-4 h-4 text-yellow-400" />
-              </div>
-              <div>
-                <h4 className="font-heading font-black text-xs text-slate-900 uppercase tracking-wider leading-none">Classified Noticeboard</h4>
-                <p className="text-[9px] text-slate-400 font-bold uppercase mt-1">Real Estate & Offers</p>
-              </div>
-            </div>
-            <p className="text-[10px] text-slate-500 leading-relaxed font-semibold">
-              Find land plots, houses for rent, vehicle listings, and post your visiting cards with AI scanning.
-            </p>
-            <div className="flex flex-wrap gap-1.5 mt-1">
-              {["Plots", "Houses", "Rentals", "Cards"].map((tag) => (
-                <span 
-                  key={tag} 
-                  onClick={() => onCategoryClick?.("classifieds")} 
-                  className="px-2 py-1 bg-white border border-slate-200 text-slate-600 text-[9px] font-bold rounded-md uppercase tracking-wider cursor-pointer hover:bg-yellow-500 hover:text-slate-950 transition-colors"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Segment 2: Helpers */}
-          <div className="bg-slate-50 border border-slate-200/60 rounded-2.5xl p-4 flex flex-col gap-2.5 transition-all active:scale-[0.99]">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-slate-900 text-yellow-400 flex items-center justify-center shadow-xs shrink-0">
-                <Wrench className="w-4 h-4 text-yellow-400" />
-              </div>
-              <div>
-                <h4 className="font-heading font-black text-xs text-slate-900 uppercase tracking-wider leading-none">Trades & Helpers</h4>
-                <p className="text-[9px] text-slate-400 font-bold uppercase mt-1">On-Demand Directory</p>
-              </div>
-            </div>
-            <p className="text-[10px] text-slate-500 leading-relaxed font-semibold">
-              Direct connection with local tradespeople for plumbing, electrical fixes, driving, and teaching.
-            </p>
-            <div className="flex flex-wrap gap-1.5 mt-1">
-              {["Plumbers", "Electricians", "Carpenters", "Taxi"].map((tag) => (
-                <span 
-                  key={tag} 
-                  onClick={() => onCategoryClick?.("services")} 
-                  className="px-2 py-1 bg-white border border-slate-200 text-slate-600 text-[9px] font-bold rounded-md uppercase tracking-wider cursor-pointer hover:bg-yellow-500 hover:text-slate-955 transition-colors"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
-          </div>
-
-          {/* Segment 3: Showrooms */}
-          <div className="bg-slate-50 border border-slate-200/60 rounded-2.5xl p-4 flex flex-col gap-2.5 transition-all active:scale-[0.99]">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-slate-900 text-yellow-400 flex items-center justify-center shadow-xs shrink-0">
-                <Store className="w-4 h-4 text-yellow-400" />
-              </div>
-              <div>
-                <h4 className="font-heading font-black text-xs text-slate-900 uppercase tracking-wider leading-none">Shops & Showrooms</h4>
-                <p className="text-[9px] text-slate-400 font-bold uppercase mt-1">Town Offers & Deals</p>
-              </div>
-            </div>
-            <p className="text-[10px] text-slate-500 leading-relaxed font-semibold">
-              Discover local clothing showrooms, jewellery shops, electronics outlets, and active city discounts.
-            </p>
-            <div className="flex flex-wrap gap-1.5 mt-1">
-              {["Showrooms", "Offers", "Malls", "Jewellery"].map((tag) => (
-                <span 
-                  key={tag} 
-                  onClick={() => onCategoryClick?.("shops")} 
-                  className="px-2 py-1 bg-white border border-slate-200 text-slate-600 text-[9px] font-bold rounded-md uppercase tracking-wider cursor-pointer hover:bg-yellow-500 hover:text-slate-955 transition-colors"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
+        {/* Number 10 Badge below logo */}
+        <div className="flex flex-col items-center mt-3">
+          <div className="bg-yellow-500/10 border border-yellow-500/25 px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-3xs">
+            <span className="text-yellow-600 font-sans font-black text-xs leading-none">10+</span>
+            <span className="text-[8px] text-slate-700 font-extrabold uppercase tracking-wider leading-none">Verified active trades & listings channels</span>
           </div>
         </div>
 
-        {/* 2 CTA Buttons at the bottom of the fold */}
-        <div className="w-full max-w-[320px] flex flex-col gap-2.5 mt-6 pb-2">
+        {/* Three Buttons (Tab filters: Noticeboard, Helpers, Shops) */}
+        <div className="grid grid-cols-3 gap-1.5 w-full max-w-[320px] mt-4 bg-slate-100 p-1 rounded-2xl border border-slate-200/60">
           <button
-            onClick={onCtaClick}
-            className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs uppercase tracking-wider transition-all shadow-md shadow-yellow-500/20 border-0 text-center flex items-center justify-center gap-2 cursor-pointer animate-scale-up"
+            type="button"
+            onClick={() => setSearchTab("classifieds")}
+            className={`py-2 px-1 rounded-xl text-[9px] font-black uppercase tracking-wider transition-all text-center ${searchTab === "classifieds" ? "bg-white text-slate-900 shadow-3xs" : "text-slate-500 hover:text-slate-900"}`}
           >
-            <span>{ctaText === "Verified" ? "Go to Profile" : "Register / Sign In"}</span>
+            📢 Ads
+          </button>
+          <button
+            type="button"
+            onClick={() => setSearchTab("services")}
+            className={`py-2 px-1 rounded-xl text-[9px] font-black uppercase tracking-wider transition-all text-center ${searchTab === "services" ? "bg-white text-slate-900 shadow-3xs" : "text-slate-500 hover:text-slate-900"}`}
+          >
+            🛠️ Helpers
+          </button>
+          <button
+            type="button"
+            onClick={() => setSearchTab("shops")}
+            className={`py-2 px-1 rounded-xl text-[9px] font-black uppercase tracking-wider transition-all text-center ${searchTab === "shops" ? "bg-white text-slate-900 shadow-3xs" : "text-slate-500 hover:text-slate-900"}`}
+          >
+            🏪 Shops
+          </button>
+        </div>
+
+        {/* Free-Form Search Card (NoBroker / 99acres style) */}
+        <div className="w-full max-w-[320px] bg-white border border-slate-200/90 shadow-md rounded-2.5xl p-4 mt-3 flex flex-col gap-3">
+          <div className="flex flex-col gap-1 text-left">
+            <span className="text-[8px] text-slate-400 font-extrabold uppercase tracking-wider leading-none">Find anything in town</span>
+            <h3 className="text-2xs font-black text-slate-800 leading-tight">
+              {searchTab === "classifieds" && "Find Lands, House Rentals, Motors & Electronics"}
+              {searchTab === "services" && "Hire Plumbers, Electricians, Carpentry Helpers"}
+              {searchTab === "shops" && "Explore Showrooms, Cafe & Supermarket Deals"}
+            </h3>
+          </div>
+
+          <div className="flex flex-col gap-2.5">
+            {/* Locality Select */}
+            <div className="flex items-center gap-2 bg-slate-50 border border-slate-200/80 rounded-xl px-3 py-2 text-left">
+              <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
+              <select
+                value={searchLocality}
+                onChange={(e) => setSearchLocality(e.target.value as any)}
+                className="w-full bg-transparent text-[11px] font-bold text-slate-700 focus:outline-none cursor-pointer"
+              >
+                <option value="All Areas">All Areas (Thanjavur)</option>
+                {TANJORE_LOCALITIES.map((loc) => (
+                  <option key={loc} value={loc}>{loc}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Query Input */}
+            <div className="flex items-center gap-2 bg-slate-50 border border-slate-200/80 rounded-xl px-3 py-2 text-left">
+              <Search className="w-4 h-4 text-slate-400 shrink-0" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={
+                  searchTab === "classifieds" 
+                    ? "Try 'plot west main', 'rent room'..." 
+                    : searchTab === "services" 
+                    ? "Try 'plumber', 'mechanic'..." 
+                    : "Try 'cafe', 'textile offer'..."
+                }
+                className="w-full bg-transparent text-[11px] font-bold text-slate-700 placeholder-slate-400 focus:outline-none"
+              />
+            </div>
+
+            {/* Search Action */}
+            <button
+              type="button"
+              onClick={handleSearchSubmit}
+              className="w-full py-2.5 rounded-xl bg-yellow-500 hover:bg-yellow-600 text-slate-950 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-xs cursor-pointer border-0"
+            >
+              <Search className="w-3.5 h-3.5 text-slate-955" />
+              <span>Search Noticeboard</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Mascot Robot below the search card */}
+        <div 
+          onClick={handleRobotTap} 
+          className="w-full h-[140px] relative flex items-center justify-center mt-3 cursor-pointer z-10"
+        >
+          <Canvas shadows camera={{ position: [0, 0.12, 3.6], fov: 38 }}>
+            <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
+            <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} castShadow shadow-mapSize={[512, 512]} shadow-bias={-0.0005} />
+            <Environment preset="studio" blur={0.5} />
+            <ResponsiveGroup scale={scale * 0.75}>
+              <ContactShadows position={[0, -0.79, 0]} opacity={entorno.sombraOpacidad} scale={10} resolution={256} blur={entorno.sombraBlur} far={2.5} color="#000000" />
+              <RobotPrototype neckParams={{ baseR: 0.215, baseH: -0.05, midR: 0.28, midH: 0.02, lipBottomR: 0.295, lipBottomH: 0.045, lipTopR: 0.27, lipTopH: 0.055, innerR: 0.1, innerDropH: 0.0 }} bodyParams={{ bodyBevelR: 0.235, bodyBevelY: 0.34, bodyBevelT: 0.025 }} color={color} pantallaColor={pantallaColor} pantallaBrillo={pantallaBrillo} blinkCycle={blinkCycle} metalness={metalness} />
+            </ResponsiveGroup>
+          </Canvas>
+        </div>
+
+        {/* Live Alerts scrolling ticker below the robot */}
+        {alerts.length > 0 && (
+          <div className="w-full bg-slate-950 text-yellow-500 rounded-xl py-2 px-4 shadow-sm flex items-center justify-between text-[10px] font-black select-none max-w-[320px] mx-auto tracking-wide mt-2 border border-slate-900">
+            <div className="flex items-center gap-2 overflow-hidden w-full text-left">
+              <span className="bg-yellow-500 text-slate-955 font-black text-[7px] px-1.5 py-0.5 rounded-sm uppercase shrink-0 animate-pulse">
+                LIVE
+              </span>
+              <div className="relative h-4 flex-1 overflow-hidden">
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={activeAlertIdx}
+                    initial={{ opacity: 0, y: 12 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -12 }}
+                    transition={{ duration: 0.35 }}
+                    className="absolute left-0 text-slate-100 truncate w-full font-bold text-left"
+                  >
+                    {alerts[activeAlertIdx]}
+                  </motion.span>
+                </AnimatePresence>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Two CTA Buttons at the bottom of mobile onboarding */}
+        <div className="w-full max-w-[320px] flex flex-col gap-2 mt-4 pb-1">
+          <button
+            type="button"
+            onClick={onCtaClick}
+            className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs uppercase tracking-wider transition-all shadow-md shadow-yellow-500/15 border-0 text-center flex items-center justify-center gap-2 cursor-pointer"
+          >
+            <span>{ctaText === "Verified" ? "Profile" : "Register Helper/Ad"}</span>
             <ArrowRight className="w-4 h-4 text-slate-955" />
           </button>
           
           <button
+            type="button"
             onClick={() => onCategoryClick?.("classifieds")}
-            className="w-full py-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider transition-all shadow-md text-center cursor-pointer border-0"
+            className="w-full py-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider transition-all shadow-sm text-center cursor-pointer border-0"
           >
             Explore Noticeboard
           </button>
@@ -1038,66 +1099,137 @@ export function RobotHero({
 
         {/* Split row content */}
         <div className="flex-1 flex flex-row items-center justify-between gap-12 mt-6 pb-6">
-          {/* Left panel branding */}
-          <div className="w-[45%] flex flex-col items-start gap-7">
-            <div className="flex flex-col gap-5 items-start">
-              {/* Logo with clean white circular background and shadow */}
-              <img 
-                src="/namma_thanjai_logo.png" 
-                alt="namma thanjai logo" 
-                className="w-24 h-24 rounded-full bg-white shadow-lg p-2.5 shrink-0 object-contain" 
-              />
-              <div>
-                <h1 className="font-heading font-black text-6xl text-slate-900 tracking-tight leading-none uppercase">
-                  namma<br/> thanjavur<span className="text-yellow-500">.</span>
+          {/* Left panel branding & Free-Form Search card */}
+          <div className="w-[45%] flex flex-col items-start gap-5">
+            
+            {/* Logo container: White circular wrapper, NO borders */}
+            <div className="flex items-center gap-4">
+              <div className="w-20 h-20 rounded-full bg-white shadow-lg p-2 flex items-center justify-center shrink-0 object-contain">
+                <img 
+                  src="/namma_thanjai_logo.png" 
+                  alt="namma thanjai logo" 
+                  className="w-full h-full object-contain" 
+                />
+              </div>
+              <div className="text-left">
+                <h1 className="font-heading font-black text-4xl text-slate-900 tracking-tight leading-none uppercase">
+                  namma thanjavur<span className="text-yellow-500">.</span>
                 </h1>
-                <p className="text-[11px] text-slate-400 font-bold uppercase tracking-widest mt-2.5">
+                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1.5">
                   verified local board
                 </p>
-                {/* Trending Search Shortcuts */}
-                <div className="flex flex-wrap items-center gap-2 mt-3 select-none pointer-events-auto">
-                  <span className="text-[10px] text-slate-400 font-black uppercase tracking-wider mr-1">Trending:</span>
-                  <span onClick={() => onCategoryClick?.("classifieds")} className="px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-slate-100 hover:bg-yellow-400 hover:text-slate-955 text-slate-600 transition-all cursor-pointer border border-slate-200/50 shadow-3xs font-bold">Plots for Sale</span>
-                  <span onClick={() => onCategoryClick?.("services")} className="px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-slate-100 hover:bg-yellow-400 hover:text-slate-955 text-slate-600 transition-all cursor-pointer border border-slate-200/50 shadow-3xs font-bold">Plumbers</span>
-                  <span onClick={() => onCategoryClick?.("shops")} className="px-3 py-1.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-slate-100 hover:bg-yellow-400 hover:text-slate-955 text-slate-600 transition-all cursor-pointer border border-slate-200/50 shadow-3xs font-bold">Showrooms</span>
-                </div>
               </div>
             </div>
 
-            <p className="text-base text-slate-500 max-w-sm leading-relaxed font-semibold">
+            {/* Number 10 indicator */}
+            <div className="bg-yellow-500/10 border border-yellow-500/25 px-4 py-2 rounded-full flex items-center gap-2 shadow-3xs">
+              <span className="text-yellow-600 font-sans font-black text-sm leading-none">10+</span>
+              <span className="text-[10px] text-slate-700 font-extrabold uppercase tracking-wider leading-none">Verified active trades & listings channels</span>
+            </div>
+
+            <p className="text-sm text-slate-500 max-w-sm leading-relaxed font-semibold text-left">
               Thanjavur's smart local noticeboard directory. Scan visiting cards with AI, explore plot offers, and search helper service trades.
             </p>
 
-            {/* Social Proof & Local Engagement Stats Bar */}
-            <div className="flex items-center gap-6 py-3 border-y border-slate-100 w-full max-w-sm">
-              <div>
-                <span className="block text-xl font-black text-slate-900 leading-none">1,240+</span>
-                <span className="text-[9px] text-slate-400 font-extrabold uppercase tracking-wider mt-1 block">Local Listings</span>
+            {/* Three Tab Buttons for desktop search */}
+            <div className="grid grid-cols-3 gap-2 w-full max-w-md bg-slate-100 p-1.5 rounded-2xl border border-slate-200/80">
+              <button
+                type="button"
+                onClick={() => setSearchTab("classifieds")}
+                className={`py-2.5 px-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all text-center ${searchTab === "classifieds" ? "bg-white text-slate-900 shadow-2xs" : "text-slate-500 hover:text-slate-900"}`}
+              >
+                📢 Buy & Sell
+              </button>
+              <button
+                type="button"
+                onClick={() => setSearchTab("services")}
+                className={`py-2.5 px-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all text-center ${searchTab === "services" ? "bg-white text-slate-900 shadow-2xs" : "text-slate-500 hover:text-slate-900"}`}
+              >
+                🛠️ Local Helpers
+              </button>
+              <button
+                type="button"
+                onClick={() => setSearchTab("shops")}
+                className={`py-2.5 px-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all text-center ${searchTab === "shops" ? "bg-white text-slate-900 shadow-2xs" : "text-slate-500 hover:text-slate-900"}`}
+              >
+                🏪 Shop Deals
+              </button>
+            </div>
+
+            {/* Realistic Search Card Component */}
+            <div className="w-full max-w-md bg-white border border-slate-200/90 shadow-lg rounded-3xl p-5 flex flex-col gap-4">
+              <div className="flex flex-col gap-1 text-left">
+                <span className="text-[9px] text-slate-400 font-extrabold uppercase tracking-wider leading-none">Instant search engine</span>
+                <h3 className="text-sm font-black text-slate-800 leading-tight">
+                  {searchTab === "classifieds" && "Find Lands, House Rentals, Motors & Electronics"}
+                  {searchTab === "services" && "Hire Plumbers, Electricians, Carpentry Helpers"}
+                  {searchTab === "shops" && "Explore Showrooms, Cafe & Supermarket Deals"}
+                </h3>
               </div>
-              <div className="h-8 border-l border-slate-200" />
-              <div>
-                <span className="block text-xl font-black text-slate-900 leading-none">48</span>
-                <span className="text-[9px] text-slate-400 font-extrabold uppercase tracking-wider mt-1 block">Active Services</span>
-              </div>
-              <div className="h-8 border-l border-slate-200" />
-              <div>
-                <span className="block text-xl font-black text-slate-900 leading-none">100%</span>
-                <span className="text-[9px] text-slate-400 font-extrabold uppercase tracking-wider mt-1 block">Verified Users</span>
+
+              <div className="flex flex-col gap-3">
+                <div className="grid grid-cols-2 gap-3">
+                  {/* Locality Dropdown */}
+                  <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-200/80 rounded-xl px-3.5 py-2.5 text-left">
+                    <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
+                    <select
+                      value={searchLocality}
+                      onChange={(e) => setSearchLocality(e.target.value as any)}
+                      className="w-full bg-transparent text-[11px] font-bold text-slate-700 focus:outline-none cursor-pointer"
+                    >
+                      <option value="All Areas">All Areas (Thanjavur)</option>
+                      {TANJORE_LOCALITIES.map((loc) => (
+                        <option key={loc} value={loc}>{loc}</option>
+                      ))}
+                    </select>
+                  </div>
+
+                  {/* Free-form Text Query Input */}
+                  <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-200/80 rounded-xl px-3.5 py-2.5 text-left">
+                    <Search className="w-4 h-4 text-slate-400 shrink-0" />
+                    <input
+                      type="text"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      placeholder={
+                        searchTab === "classifieds" 
+                          ? "e.g. plot, car..." 
+                          : searchTab === "services" 
+                          ? "e.g. plumber..." 
+                          : "e.g. cafe, discount..."
+                      }
+                      className="w-full bg-transparent text-[11px] font-bold text-slate-700 placeholder-slate-400 focus:outline-none"
+                    />
+                  </div>
+                </div>
+
+                {/* Search Button */}
+                <button
+                  type="button"
+                  onClick={handleSearchSubmit}
+                  className="w-full py-3.5 rounded-xl bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer border-0"
+                >
+                  <Search className="w-4 h-4 text-slate-955" />
+                  <span>Search Local Directory</span>
+                </button>
               </div>
             </div>
 
-            <div className="flex flex-row gap-3 w-full">
+            {/* Quick Action CTAs */}
+            <div className="flex flex-row gap-3 w-full max-w-md">
               <button
+                type="button"
                 onClick={() => onCategoryClick?.("classifieds")}
-                className="px-12 py-4 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider transition-all hover:scale-[1.03] active:scale-[0.97] shadow-lg text-center"
+                className="flex-1 py-3.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider transition-all hover:scale-[1.03] active:scale-[0.97] shadow-md text-center cursor-pointer border-0"
               >
                 Explore Noticeboard
               </button>
               <button
+                type="button"
                 onClick={onCtaClick}
-                className="px-12 py-4 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-950 font-black text-xs uppercase tracking-wider transition-all hover:scale-[1.03] active:scale-[0.97] shadow-lg shadow-yellow-500/20 border-0 text-center flex items-center justify-center gap-2"
+                className="flex-1 py-3.5 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-950 font-black text-xs uppercase tracking-wider transition-all hover:scale-[1.03] active:scale-[0.97] shadow-lg shadow-yellow-500/20 border-0 text-center flex items-center justify-center gap-2 cursor-pointer"
               >
-                <span>{ctaText === "Verified" ? "Profile" : "Register"}</span>
+                <span>{ctaText === "Verified" ? "Profile" : "Register Helper/Ad"}</span>
                 <ArrowRight className="w-4 h-4 text-slate-955" />
               </button>
             </div>
@@ -1114,7 +1246,7 @@ export function RobotHero({
                   animate={{ opacity: 0.08, y: 0 }}
                   exit={{ opacity: 0, y: 12 }}
                   transition={{ duration: 0.5, ease: "easeInOut" }}
-                  className="font-sans font-black select-none whitespace-nowrap text-slate-950 uppercase tracking-wider text-3xl md:text-5xl text-center"
+                  className="font-sans font-black select-none whitespace-nowrap text-slate-955 uppercase tracking-wider text-3xl md:text-5xl text-center"
                 >
                   {words[wordIndex]}
                 </motion.h2>
@@ -1137,8 +1269,8 @@ export function RobotHero({
 
         {/* Bottom Ticker Alert (Short form) */}
         {alerts.length > 0 && (
-          <div className="w-full bg-slate-950 text-yellow-500 rounded-2xl py-2.5 px-5 shadow-lg flex items-center justify-between text-xs font-black select-none max-w-lg mx-auto tracking-wide border border-slate-900">
-            <div className="flex items-center gap-2.5 overflow-hidden w-full">
+          <div className="w-full bg-slate-955 text-yellow-500 rounded-2xl py-2.5 px-5 shadow-lg flex items-center justify-between text-xs font-black select-none max-w-lg mx-auto tracking-wide border border-slate-900">
+            <div className="flex items-center gap-2.5 overflow-hidden w-full text-left">
               <span className="bg-yellow-500 text-slate-955 font-black text-[8px] px-2 py-0.5 rounded-md uppercase shrink-0 animate-pulse">
                 LIVE
               </span>
