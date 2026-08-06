@@ -79,6 +79,8 @@ export default function HomeLandingPage() {
           color="#eab308" // Vibrant warm gold-yellow chassis
           pantallaColor="#fbbf24" // Bright yellow display screen
           pantallaBrillo={1.6}
+          alerts={alerts}
+          activeAlertIdx={activeAlertIdx}
         />
       </div>
 
@@ -86,29 +88,6 @@ export default function HomeLandingPage() {
           PORTAL CONTENT: DIRECTORY SEGMENT LINKS Noticeboard
           ========================================== */}
       <div className="w-full max-w-7xl mx-auto px-6 py-20 flex flex-col gap-12 bg-slate-50">
-        
-        {/* Ticker Row */}
-        <div className="w-full bg-slate-900 border border-slate-800 text-yellow-500 rounded-2xl py-3.5 px-4.5 shadow-md flex items-center justify-between text-xs font-black select-none max-w-4xl mx-auto tracking-wide">
-          <div className="flex items-center gap-2 overflow-hidden w-full">
-            <span className="bg-yellow-500 text-slate-950 font-black text-[9px] px-2 py-0.5 rounded-md uppercase shrink-0">
-              LIVE UPDATE
-            </span>
-            <div className="relative h-4 flex-1 overflow-hidden">
-              <AnimatePresence mode="wait">
-                <motion.span
-                  key={activeAlertIdx}
-                  initial={{ opacity: 0, y: 15 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -15 }}
-                  transition={{ duration: 0.35 }}
-                  className="absolute left-0 text-slate-100 truncate w-full font-bold"
-                >
-                  {alerts[activeAlertIdx]}
-                </motion.span>
-              </AnimatePresence>
-            </div>
-          </div>
-        </div>
 
         {/* Section Heading & Branding Emblem */}
         <div className="flex flex-col items-center text-center gap-4 max-w-xl mx-auto">

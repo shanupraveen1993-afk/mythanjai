@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useMemo, useRef, useState, useEffect } from "react";
-import { Canvas, useFrame, useThree } from "@react-three/fiber";
+import { Canvas, useFrame, useThree, useLoader } from "@react-three/fiber";
 import { Environment, ContactShadows, Html } from "@react-three/drei";
 import * as THREE from "three";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
@@ -595,6 +595,8 @@ function RobotPrototype({
     });
   }, []);
 
+  const logoTexture = useLoader(THREE.TextureLoader, "/namma_thanjai_logo.png");
+
   if (!textures.colorMap) return null;
 
   return (
@@ -618,6 +620,12 @@ function RobotPrototype({
           metalness={metalness}
           envMapIntensity={0.0}
         />
+      </mesh>
+
+      {/* Chest App Logo Decal Badge */}
+      <mesh position={[0, 0.05, 0.441]} rotation={[0, 0, 0]}>
+        <planeGeometry args={[0.22, 0.22]} />
+        <meshBasicMaterial map={logoTexture} transparent={true} toneMapped={false} />
       </mesh>
 
       {bodyParams.bodyBevelT > 0 && (
@@ -703,7 +711,6 @@ function RobotPrototype({
 export interface NavItem {
   label: string;
   href: string;
-  target?: string;
 }
 
 export interface RobotHeroProps {
@@ -718,6 +725,8 @@ export interface RobotHeroProps {
   pantallaBrillo?: number;
   blinkCycle?: number;
   metalness?: number;
+  alerts?: string[];
+  activeAlertIdx?: number;
 }
 
 function AntennaNavbar({
@@ -739,9 +748,7 @@ function AntennaNavbar({
             onClick={() => window.location.href = "/"}
             className="flex items-center gap-2 cursor-pointer select-none"
           >
-            <div className="w-7 h-7 rounded-lg bg-yellow-50 flex items-center justify-center border border-yellow-250 overflow-hidden shrink-0 shadow-xs">
-              <img src="/namma_thanjai_logo.png" alt="namma thanjai app logo" className="w-5.5 h-5.5 object-contain" />
-            </div>
+            <img src="/namma_thanjai_logo.png" alt="namma thanjai app logo" className="w-8.5 h-8.5 object-contain shrink-0 rounded-lg shadow-xs" />
             <div className="flex items-center gap-0.5">
               <span className="font-sans font-black tracking-tight text-slate-900 text-sm">
                 namma thanjai
@@ -783,6 +790,8 @@ export function RobotHero({
   pantallaBrillo = 1.2,
   blinkCycle = 3.0,
   metalness = 0.0,
+  alerts = [],
+  activeAlertIdx = 0,
 }: RobotHeroProps = {}) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [wordIndex, setWordIndex] = useState(0);
@@ -812,189 +821,222 @@ export function RobotHero({
   };
 
   const entorno = {
-    fondoArriba: "#0a0f1d",
-    fondoMedio: "#020617",
-    fondoAbajo: "#090d16",
-    luzAmbiente: 0.85,
-    luzPrincipal: 0.0,
-    luzPrincipalColor: "#00ffe2",
-    luzRelleno: 0.0,
-    luzRellenoColor: "#dbdbdb",
-    sombraOpacidad: 0.85,
-    sombraBlur: 1.7,
+    fondoArriba: "#f8fafc",
+    fondoMedio: "#f1f5f9",
+    fondoAbajo: "#e2e8f0",
+    luzAmbiente: 0.95,
+    luzPrincipal: 0.3,
+    luzPrincipalColor: "#ffffff",
+    luzRelleno: 0.1,
+    luzRellenoColor: "#ffffff",
+    sombraOpacidad: 0.12,
+    sombraBlur: 1.5,
   };
 
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-dvh min-h-[600px] overflow-hidden"
-      style={{
-        background: `linear-gradient(to bottom, ${entorno.fondoArriba} 0%, ${entorno.fondoArriba} 55%, ${entorno.fondoMedio} 65%, ${entorno.fondoAbajo} 100%)`,
-      }}
+      className="relative w-full min-h-[680px] md:h-screen flex flex-col bg-slate-50 text-slate-800"
     >
-      {/* Premium subtle gold halo radial glow behind the robot */}
-      <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_40%,rgba(250,204,21,0.06)_0%,transparent_60%)] pointer-events-none" />
+      {/* Light subtle gold halo radial glow behind the robot on the right side */}
+      <div className="absolute top-0 right-0 w-full md:w-[55%] h-full z-0 bg-[radial-gradient(circle_at_50%_50%,rgba(250,204,21,0.04)_0%,transparent_60%)] pointer-events-none" />
 
-      <div
-        className="absolute left-0 right-0 pointer-events-none overflow-hidden flex justify-center"
-        style={{ zIndex: 0, top: "22%" }}
-      >
-        <AnimatePresence mode="wait">
-          <motion.h1
-            key={wordIndex}
-            initial={{ opacity: 0, y: -15 }}
-            animate={{ opacity: 0.18, y: 0 }}
-            exit={{ opacity: 0, y: 15 }}
-            transition={{ duration: 0.5, ease: "easeInOut" }}
-            className="font-sans font-black select-none whitespace-nowrap"
-            style={{
-              color: "#ffffff",
-              letterSpacing: "0.18em",
-              fontSize: "clamp(1.5rem, 6vw, 3.5rem)",
-              lineHeight: 1,
-              position: "absolute",
-              textShadow: "0 0 40px rgba(255,255,255,0.08)",
-            }}
+      {/* 1. TOP HEADER: Category selector pill tags & Centered alerts ticker */}
+      <div className="w-full max-w-7xl mx-auto px-6 pt-10 flex flex-col items-center gap-4.5 z-20 pointer-events-auto select-none">
+        
+        {/* Three Category Segments floating independently */}
+        <div className="flex flex-wrap items-center justify-center gap-3">
+          <motion.button 
+            onClick={() => onCategoryClick?.("classifieds")} 
+            animate={{ y: [0, -4, 0] }}
+            transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
+            className="px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-wider text-slate-700 hover:text-yellow-600 transition-all cursor-pointer bg-white hover:bg-slate-100 border border-slate-200 shadow-xs select-none text-center"
           >
-            {words[wordIndex]}
-          </motion.h1>
-        </AnimatePresence>
-      </div>
-
-      <div 
-        onClick={handleRobotTap} 
-        className="absolute inset-0 z-10 cursor-pointer"
-        title="Tap the robot to spin categories!"
-      >
-        <Canvas shadows camera={{ position: [0, 0.2, 6], fov: 40 }}>
-          <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
-
-          <directionalLight
-            position={[0, 6, 3]}
-            intensity={entorno.luzPrincipal}
-            color={entorno.luzPrincipalColor}
-            castShadow
-            shadow-mapSize={[2048, 2048]}
-            shadow-bias={-0.0005}
+            Buy & Sell
+          </motion.button>
+          <motion.button 
+            onClick={() => onCategoryClick?.("services")} 
+            animate={{ y: [0, -3.5, 0] }}
+            transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut", delay: 0.25 }}
+            className="px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-wider text-slate-700 hover:text-yellow-600 transition-all cursor-pointer bg-white hover:bg-slate-100 border border-slate-200 shadow-xs select-none text-center"
           >
-            <orthographicCamera
-              attach="shadow-camera"
-              args={[-1.5, 1.5, 1.5, -1.5, 0.1, 20]}
-            />
-          </directionalLight>
+            Services
+          </motion.button>
+          <motion.button 
+            onClick={() => onCategoryClick?.("shops")} 
+            animate={{ y: [0, -4, 0] }}
+            transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+            className="px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-wider text-slate-700 hover:text-yellow-600 transition-all cursor-pointer bg-white hover:bg-slate-100 border border-slate-200 shadow-xs select-none text-center"
+          >
+            Recent Offer
+          </motion.button>
+        </div>
 
-          <directionalLight
-            position={[-5, 2, -5]}
-            intensity={entorno.luzRelleno}
-            color={entorno.luzRellenoColor}
-          />
-
-          <Environment preset="studio" blur={0.5} />
-
-          <ResponsiveGroup scale={scale}>
-            <ContactShadows
-              position={[0, -0.79, 0]}
-              opacity={entorno.sombraOpacidad}
-              scale={15}
-              resolution={1024}
-              blur={entorno.sombraBlur}
-              far={2.5}
-              color="#000000"
-            />
-            <RobotPrototype
-              neckParams={{
-                baseR: 0.215,
-                baseH: -0.05,
-                midR: 0.28,
-                midH: 0.02,
-                lipBottomR: 0.295,
-                lipBottomH: 0.045,
-                lipTopR: 0.27,
-                lipTopH: 0.055,
-                innerR: 0.1,
-                innerDropH: 0.0,
-              }}
-              bodyParams={{
-                bodyBevelR: 0.235,
-                bodyBevelY: 0.34,
-                bodyBevelT: 0.025,
-              }}
-              color={color}
-              pantallaColor={pantallaColor}
-              pantallaBrillo={pantallaBrillo}
-              blinkCycle={blinkCycle}
-              metalness={metalness}
-            />
-          </ResponsiveGroup>
-        </Canvas>
-      </div>
-      <div className="absolute inset-0 z-20 pointer-events-none flex flex-col justify-between py-10">
-        {/* Category segments row at the top of the hero section */}
-        <div className="w-full max-w-xl mx-auto px-4 flex flex-col items-center gap-4 pointer-events-auto">
-          {/* Logo / Branding */}
-          <div className="flex items-center gap-2.5 select-none">
-            <img 
-              src="/namma_thanjai_logo.png" 
-              alt="namma thanjai logo" 
-              className="w-11 h-11 object-contain shrink-0 rounded-xl shadow-md border border-white/10" 
-            />
-            <span className="font-heading font-black text-base tracking-tight text-white uppercase drop-shadow-sm">
-              namma thanjai<span className="text-yellow-500 font-extrabold">.</span>
-            </span>
+        {/* Horizontal Ticker alert looping marquee content */}
+        {alerts.length > 0 && (
+          <div className="w-full bg-slate-900 border border-slate-800 text-yellow-500 rounded-2xl py-3 px-4.5 shadow-md flex items-center justify-between text-xs font-black select-none max-w-2xl mx-auto tracking-wide">
+            <div className="flex items-center gap-2 overflow-hidden w-full">
+              <span className="bg-yellow-500 text-slate-950 font-black text-[9px] px-2 py-0.5 rounded-md uppercase shrink-0">
+                LIVE UPDATE
+              </span>
+              <div className="relative h-4 flex-1 overflow-hidden">
+                <AnimatePresence mode="wait">
+                  <motion.span
+                    key={activeAlertIdx}
+                    initial={{ opacity: 0, y: 15 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -15 }}
+                    transition={{ duration: 0.35 }}
+                    className="absolute left-0 text-slate-100 truncate w-full font-bold"
+                  >
+                    {alerts[activeAlertIdx]}
+                  </motion.span>
+                </AnimatePresence>
+              </div>
+            </div>
           </div>
- 
-          {/* 3 Category Segments floating independently */}
-          <div className="flex flex-wrap items-center justify-center gap-3">
-            <motion.button 
-              onClick={() => onCategoryClick?.("classifieds")} 
-              animate={{ y: [0, -5.5, 0] }}
-              transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
-              className="px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-wider text-slate-200 hover:text-yellow-400 transition-all cursor-pointer bg-white/5 backdrop-blur-md border border-white/10 shadow-md hover:scale-[1.03] active:scale-[0.97] select-none text-center"
+        )}
+      </div>
+
+      {/* 2. MAIN SPLIT PORTION */}
+      <div className="flex-1 w-full max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between z-10 pointer-events-none mt-4 pb-12">
+        
+        {/* LEFT BRANDING PANEL: Big Logo, Branding Title, actions */}
+        <div className="w-full md:w-[45%] flex flex-col items-center md:items-start text-center md:text-left gap-6 pointer-events-auto mt-6 md:mt-0 select-none">
+          <div className="flex flex-col gap-4 items-center md:items-start">
+            {/* Logo box */}
+            <div className="w-20 h-20 rounded-2xl bg-white border border-slate-200 flex items-center justify-center overflow-hidden shadow-sm shrink-0">
+              <img 
+                src="/namma_thanjai_logo.png" 
+                alt="namma thanjai app icon logo" 
+                className="w-18.5 h-18.5 object-contain shrink-0" 
+              />
+            </div>
+            {/* App name */}
+            <div>
+              <h1 className="font-heading font-black text-4xl md:text-5xl text-slate-900 tracking-tight leading-none uppercase">
+                namma<br className="hidden md:block"/> thanjavur<span className="text-yellow-500">.</span>
+              </h1>
+              <p className="text-xs text-slate-400 font-bold uppercase tracking-widest mt-2">
+                verified local board
+              </p>
+            </div>
+          </div>
+
+          <p className="text-sm text-slate-500 max-w-sm leading-relaxed font-semibold">
+            Thanjavur's smart local noticeboard directory. Scan visiting cards with AI, explore plot offers, and search helper service trades.
+          </p>
+
+          {/* Action buttons */}
+          <div className="w-full flex flex-col sm:flex-row items-center gap-3 mt-1">
+            {/* Explore Button (Secondary - Glassmorphism) */}
+            <button
+              onClick={() => onCategoryClick?.("classifieds")}
+              className="w-full sm:w-auto px-10 py-3.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-extrabold text-xs uppercase tracking-wider transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer shadow-md select-none text-center font-bold"
             >
-              Buy & Sell
-            </motion.button>
-            <motion.button 
-              onClick={() => onCategoryClick?.("services")} 
-              animate={{ y: [0, -4.5, 0] }}
-              transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut", delay: 0.25 }}
-              className="px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-wider text-slate-200 hover:text-yellow-400 transition-all cursor-pointer bg-white/5 backdrop-blur-md border border-white/10 shadow-md hover:scale-[1.03] active:scale-[0.97] select-none text-center"
+              Explore
+            </button>
+
+            {/* Register Button (Primary - Gold-Yellow) */}
+            <button
+              onClick={onCtaClick}
+              className="w-full sm:w-auto px-10 py-3.5 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-950 font-black text-xs uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-yellow-500/10 border-0 select-none text-center flex items-center justify-center gap-2 font-bold"
             >
-              Services
-            </motion.button>
-            <motion.button 
-              onClick={() => onCategoryClick?.("shops")} 
-              animate={{ y: [0, -5.0, 0] }}
-              transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-              className="px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-wider text-slate-200 hover:text-yellow-400 transition-all cursor-pointer bg-white/5 backdrop-blur-md border border-white/10 shadow-md hover:scale-[1.03] active:scale-[0.97] select-none text-center"
-            >
-              Recent Offer
-            </motion.button>
+              <span>{ctaText === "Verified" ? "Profile" : "Register"}</span>
+              <ArrowRight className="w-4 h-4 text-slate-950" />
+            </button>
           </div>
         </div>
 
-        {/* Responsive, side-by-side CTA Button Row with Independent Floating Animations */}
-        <div className="w-full max-w-xl mx-auto px-6 pb-14 flex flex-col sm:flex-row items-center justify-center gap-4.5 pointer-events-auto">
-          {/* Explore Button (Secondary - Glassmorphism) */}
-          <motion.button
-            onClick={() => onCategoryClick?.("classifieds")}
-            animate={{ y: [0, -4, 0] }}
-            transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut" }}
-            className="w-full sm:w-auto px-12 py-3.5 rounded-full bg-white/5 backdrop-blur-md hover:bg-white/10 text-white font-extrabold text-xs uppercase tracking-wider border border-white/10 transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer shadow-md select-none text-center font-bold"
-          >
-            Explore
-          </motion.button>
+        {/* RIGHT INTERACTIVE MOUSE-FOLLOWING 3D CANVAS */}
+        <div className="w-full md:w-[50%] h-[350px] md:h-full relative pointer-events-auto flex items-center justify-center">
+          
+          {/* Scrolling category words behind the robot on the right side */}
+          <div className="absolute left-0 right-0 pointer-events-none overflow-hidden flex justify-center z-0 top-[28%] md:top-[26%]">
+            <AnimatePresence mode="wait">
+              <motion.h2
+                key={wordIndex}
+                initial={{ opacity: 0, y: -12 }}
+                animate={{ opacity: 0.05, y: 0 }}
+                exit={{ opacity: 0, y: 12 }}
+                transition={{ duration: 0.5, ease: "easeInOut" }}
+                className="font-sans font-black select-none whitespace-nowrap text-slate-950 uppercase tracking-widest text-3xl text-center"
+              >
+                {words[wordIndex]}
+              </motion.h2>
+            </AnimatePresence>
+          </div>
 
-          {/* Register Button (Primary - Gold-Yellow) */}
-          <motion.button
-            onClick={onCtaClick}
-            animate={{ y: [0, -4, 0] }}
-            transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
-            className="w-full sm:w-auto px-12 py-3.5 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-950 font-black text-xs uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-yellow-500/10 border-0 select-none text-center flex items-center justify-center gap-2 font-bold"
+          {/* Interactive model click/touch Canvas */}
+          <div 
+            onClick={handleRobotTap} 
+            className="w-full h-full relative cursor-pointer z-10"
+            title="Tap the robot to spin categories!"
           >
-            <span>{ctaText === "Verified" ? "Profile" : "Register"}</span>
-            <ArrowRight className="w-4 h-4 text-slate-950" />
-          </motion.button>
+            <Canvas shadows camera={{ position: [0, 0.2, 5.5], fov: 38 }}>
+              <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
+
+              <directionalLight
+                position={[0, 6, 3]}
+                intensity={entorno.luzPrincipal}
+                color={entorno.luzPrincipalColor}
+                castShadow
+                shadow-mapSize={[2048, 2048]}
+                shadow-bias={-0.0005}
+              >
+                <orthographicCamera
+                  attach="shadow-camera"
+                  args={[-1.5, 1.5, 1.5, -1.5, 0.1, 20]}
+                />
+              </directionalLight>
+
+              <directionalLight
+                position={[-5, 2, -5]}
+                intensity={entorno.luzRelleno}
+                color={entorno.luzRellenoColor}
+              />
+
+              <Environment preset="studio" blur={0.5} />
+
+              <ResponsiveGroup scale={scale}>
+                <ContactShadows
+                  position={[0, -0.79, 0]}
+                  opacity={entorno.sombraOpacidad}
+                  scale={15}
+                  resolution={1024}
+                  blur={entorno.sombraBlur}
+                  far={2.5}
+                  color="#000000"
+                />
+                <RobotPrototype
+                  neckParams={{
+                    baseR: 0.215,
+                    baseH: -0.05,
+                    midR: 0.28,
+                    midH: 0.02,
+                    lipBottomR: 0.295,
+                    lipBottomH: 0.045,
+                    lipTopR: 0.27,
+                    lipTopH: 0.055,
+                    innerR: 0.1,
+                    innerDropH: 0.0,
+                  }}
+                  bodyParams={{
+                    bodyBevelR: 0.235,
+                    bodyBevelY: 0.34,
+                    bodyBevelT: 0.025,
+                  }}
+                  color={color}
+                  pantallaColor={pantallaColor}
+                  pantallaBrillo={pantallaBrillo}
+                  blinkCycle={blinkCycle}
+                  metalness={metalness}
+                />
+              </ResponsiveGroup>
+            </Canvas>
+          </div>
         </div>
+
       </div>
     </section>
   );
