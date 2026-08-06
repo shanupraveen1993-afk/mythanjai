@@ -812,10 +812,10 @@ export function RobotHero({
   };
 
   const entorno = {
-    fondoArriba: "#cecbcb",
-    fondoMedio: "#9a9a9a",
-    fondoAbajo: "#bebebe",
-    luzAmbiente: 0.75,
+    fondoArriba: "#0a0f1d",
+    fondoMedio: "#020617",
+    fondoAbajo: "#090d16",
+    luzAmbiente: 0.85,
     luzPrincipal: 0.0,
     luzPrincipalColor: "#00ffe2",
     luzRelleno: 0.0,
@@ -832,6 +832,9 @@ export function RobotHero({
         background: `linear-gradient(to bottom, ${entorno.fondoArriba} 0%, ${entorno.fondoArriba} 55%, ${entorno.fondoMedio} 65%, ${entorno.fondoAbajo} 100%)`,
       }}
     >
+      {/* Premium subtle gold halo radial glow behind the robot */}
+      <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_40%,rgba(250,204,21,0.06)_0%,transparent_60%)] pointer-events-none" />
+
       <div
         className="absolute left-0 right-0 pointer-events-none overflow-hidden flex justify-center"
         style={{ zIndex: 0, top: "22%" }}
@@ -840,16 +843,17 @@ export function RobotHero({
           <motion.h1
             key={wordIndex}
             initial={{ opacity: 0, y: -15 }}
-            animate={{ opacity: 0.15, y: 0 }}
+            animate={{ opacity: 0.18, y: 0 }}
             exit={{ opacity: 0, y: 15 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
             className="font-sans font-black select-none whitespace-nowrap"
             style={{
-              color: "#000000",
-              letterSpacing: "0.08em",
-              fontSize: "clamp(1.2rem, 5vw, 2.5rem)",
+              color: "#ffffff",
+              letterSpacing: "0.18em",
+              fontSize: "clamp(1.5rem, 6vw, 3.5rem)",
               lineHeight: 1,
               position: "absolute",
+              textShadow: "0 0 40px rgba(255,255,255,0.08)",
             }}
           >
             {words[wordIndex]}
@@ -938,14 +942,14 @@ export function RobotHero({
               namma thanjai<span className="text-yellow-500 font-extrabold">.</span>
             </span>
           </div>
-
+ 
           {/* 3 Category Segments floating independently */}
           <div className="flex flex-wrap items-center justify-center gap-3">
             <motion.button 
               onClick={() => onCategoryClick?.("classifieds")} 
               animate={{ y: [0, -5.5, 0] }}
               transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
-              className="px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-wider text-white hover:text-yellow-400 transition-all cursor-pointer bg-slate-950/80 backdrop-blur-md border border-yellow-500/25 shadow-lg shadow-black/40 hover:scale-105 active:scale-95"
+              className="px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-wider text-slate-200 hover:text-yellow-400 transition-all cursor-pointer bg-white/5 backdrop-blur-md border border-white/10 shadow-md hover:scale-[1.03] active:scale-[0.97] select-none text-center"
             >
               Buy & Sell
             </motion.button>
@@ -953,7 +957,7 @@ export function RobotHero({
               onClick={() => onCategoryClick?.("services")} 
               animate={{ y: [0, -4.5, 0] }}
               transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut", delay: 0.25 }}
-              className="px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-wider text-white hover:text-yellow-400 transition-all cursor-pointer bg-slate-950/80 backdrop-blur-md border border-yellow-500/25 shadow-lg shadow-black/40 hover:scale-105 active:scale-95"
+              className="px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-wider text-slate-200 hover:text-yellow-400 transition-all cursor-pointer bg-white/5 backdrop-blur-md border border-white/10 shadow-md hover:scale-[1.03] active:scale-[0.97] select-none text-center"
             >
               Services
             </motion.button>
@@ -961,7 +965,7 @@ export function RobotHero({
               onClick={() => onCategoryClick?.("shops")} 
               animate={{ y: [0, -5.0, 0] }}
               transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-              className="px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-wider text-white hover:text-yellow-400 transition-all cursor-pointer bg-slate-950/80 backdrop-blur-md border border-yellow-500/25 shadow-lg shadow-black/40 hover:scale-105 active:scale-95"
+              className="px-6 py-2.5 rounded-full text-[10px] font-black uppercase tracking-wider text-slate-200 hover:text-yellow-400 transition-all cursor-pointer bg-white/5 backdrop-blur-md border border-white/10 shadow-md hover:scale-[1.03] active:scale-[0.97] select-none text-center"
             >
               Recent Offer
             </motion.button>
@@ -975,7 +979,7 @@ export function RobotHero({
             onClick={() => onCategoryClick?.("classifieds")}
             animate={{ y: [0, -4, 0] }}
             transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut" }}
-            className="w-full sm:w-auto px-12 py-4 rounded-2xl bg-slate-950/50 backdrop-blur-md hover:bg-slate-950/70 text-white font-extrabold text-xs uppercase tracking-wider border border-white/20 transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer shadow-lg shadow-black/35 select-none text-center font-bold"
+            className="w-full sm:w-auto px-12 py-3.5 rounded-full bg-white/5 backdrop-blur-md hover:bg-white/10 text-white font-extrabold text-xs uppercase tracking-wider border border-white/10 transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer shadow-md select-none text-center font-bold"
           >
             Explore
           </motion.button>
@@ -985,7 +989,7 @@ export function RobotHero({
             onClick={onCtaClick}
             animate={{ y: [0, -4, 0] }}
             transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
-            className="w-full sm:w-auto px-12 py-4 rounded-2xl bg-yellow-500 hover:bg-yellow-600 active:scale-[0.97] hover:scale-[1.03] text-slate-950 font-black text-xs uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-yellow-500/30 border border-yellow-450 select-none text-center flex items-center justify-center gap-2 font-bold"
+            className="w-full sm:w-auto px-12 py-3.5 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-950 font-black text-xs uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-yellow-500/10 border-0 select-none text-center flex items-center justify-center gap-2 font-bold"
           >
             <span>{ctaText === "Verified" ? "Profile" : "Register"}</span>
             <ArrowRight className="w-4 h-4 text-slate-950" />

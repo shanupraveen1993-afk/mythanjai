@@ -138,10 +138,10 @@ export default function HomeLandingPage() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-4">
           
           {/* ==================== BUY & SELL ==================== */}
-          <div className="bg-white/95 border border-slate-200/80 backdrop-blur-md rounded-3xl p-6 shadow-lg shadow-slate-100 flex flex-col justify-between gap-6 border-t-4 border-t-yellow-500/50 hover:shadow-xl transition-all duration-300">
+          <div className="bg-white border border-slate-200/60 rounded-3xl p-6 flex flex-col justify-between gap-6 hover:shadow-md transition-shadow duration-300">
             <div className="flex flex-col gap-5">
               <div className="flex items-center gap-3 pb-3.5 border-b border-slate-100">
-                <div className="w-9 h-9 rounded-xl bg-yellow-50 border border-yellow-200 flex items-center justify-center text-yellow-600 shrink-0">
+                <div className="w-9 h-9 rounded-xl bg-slate-50 border border-slate-150 flex items-center justify-center text-slate-700 shrink-0">
                   <Building className="w-5 h-5" />
                 </div>
                 <div>
@@ -154,9 +154,9 @@ export default function HomeLandingPage() {
               <div className="grid grid-cols-2 gap-3">
                 <button 
                   onClick={() => handleCategoryClick("/classifieds?category=Plot%20%2f%20Real%20Estate")}
-                  className="flex flex-col gap-2 items-start bg-slate-50/70 hover:bg-yellow-50/30 border border-slate-200/60 hover:border-yellow-250 rounded-2xl p-3.5 transition-all hover:scale-[1.03] duration-200 group text-left cursor-pointer"
+                  className="flex flex-col gap-2 items-start bg-slate-50/70 hover:bg-slate-100/50 border border-slate-200/40 hover:border-slate-300 rounded-2xl p-3.5 transition-all hover:scale-[1.02] duration-200 group text-left cursor-pointer font-bold"
                 >
-                  <div className="w-7 h-7 rounded-lg bg-white border border-slate-100 shadow-3xs flex items-center justify-center text-slate-500 group-hover:text-yellow-600 group-hover:border-yellow-200 transition-colors">
+                  <div className="w-7 h-7 rounded-lg bg-white border border-slate-100 shadow-3xs flex items-center justify-center text-slate-500 group-hover:text-slate-900 group-hover:border-slate-200 transition-colors">
                     <Compass className="w-4 h-4" />
                   </div>
                   <div>
@@ -167,9 +167,9 @@ export default function HomeLandingPage() {
 
                 <button 
                   onClick={() => handleCategoryClick("/classifieds?category=Property%20Rental")}
-                  className="flex flex-col gap-2 items-start bg-slate-50/70 hover:bg-yellow-50/30 border border-slate-200/60 hover:border-yellow-250 rounded-2xl p-3.5 transition-all hover:scale-[1.03] duration-200 group text-left cursor-pointer"
+                  className="flex flex-col gap-2 items-start bg-slate-50/70 hover:bg-slate-100/50 border border-slate-200/40 hover:border-slate-300 rounded-2xl p-3.5 transition-all hover:scale-[1.02] duration-200 group text-left cursor-pointer font-bold"
                 >
-                  <div className="w-7 h-7 rounded-lg bg-white border border-slate-100 shadow-3xs flex items-center justify-center text-slate-500 group-hover:text-yellow-600 group-hover:border-yellow-200 transition-colors">
+                  <div className="w-7 h-7 rounded-lg bg-white border border-slate-100 shadow-3xs flex items-center justify-center text-slate-500 group-hover:text-slate-900 group-hover:border-slate-200 transition-colors">
                     <Home className="w-4 h-4" />
                   </div>
                   <div>
@@ -180,9 +180,9 @@ export default function HomeLandingPage() {
 
                 <button 
                   onClick={() => handleCategoryClick("/classifieds?category=Motor%20Vehicle")}
-                  className="flex flex-col gap-2 items-start bg-slate-50/70 hover:bg-yellow-50/30 border border-slate-200/60 hover:border-yellow-250 rounded-2xl p-3.5 transition-all hover:scale-[1.03] duration-200 group text-left cursor-pointer"
+                  className="flex flex-col gap-2 items-start bg-slate-50/70 hover:bg-slate-100/50 border border-slate-200/40 hover:border-slate-300 rounded-2xl p-3.5 transition-all hover:scale-[1.02] duration-200 group text-left cursor-pointer font-bold"
                 >
-                  <div className="w-7 h-7 rounded-lg bg-white border border-slate-100 shadow-3xs flex items-center justify-center text-slate-500 group-hover:text-yellow-600 group-hover:border-yellow-200 transition-colors">
+                  <div className="w-7 h-7 rounded-lg bg-white border border-slate-100 shadow-3xs flex items-center justify-center text-slate-500 group-hover:text-slate-900 group-hover:border-slate-200 transition-colors">
                     <Car className="w-4 h-4" />
                   </div>
                   <div>
@@ -193,9 +193,9 @@ export default function HomeLandingPage() {
 
                 <button 
                   onClick={() => handleCategoryClick("/classifieds?category=Electronics")}
-                  className="flex flex-col gap-2 items-start bg-slate-50/70 hover:bg-yellow-50/30 border border-slate-200/60 hover:border-yellow-250 rounded-2xl p-3.5 transition-all hover:scale-[1.03] duration-200 group text-left cursor-pointer"
+                  className="flex flex-col gap-2 items-start bg-slate-50/70 hover:bg-slate-100/50 border border-slate-200/40 hover:border-slate-300 rounded-2xl p-3.5 transition-all hover:scale-[1.02] duration-200 group text-left cursor-pointer font-bold"
                 >
-                  <div className="w-7 h-7 rounded-lg bg-white border border-slate-100 shadow-3xs flex items-center justify-center text-slate-500 group-hover:text-yellow-600 group-hover:border-yellow-200 transition-colors">
+                  <div className="w-7 h-7 rounded-lg bg-white border border-slate-100 shadow-3xs flex items-center justify-center text-slate-500 group-hover:text-slate-900 group-hover:border-slate-200 transition-colors">
                     <Tv className="w-4 h-4" />
                   </div>
                   <div>
@@ -208,7 +208,7 @@ export default function HomeLandingPage() {
             
             <button
               onClick={() => handleCategoryClick("/classifieds")}
-              className="w-full bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl py-3 text-center text-[10px] font-black text-slate-700 hover:text-slate-900 uppercase tracking-widest flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer"
+              className="w-full bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl py-3 text-center text-[10px] font-black text-slate-700 hover:text-slate-900 uppercase tracking-widest flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer font-bold"
             >
               <span>View Noticeboard</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -216,10 +216,10 @@ export default function HomeLandingPage() {
           </div>
 
           {/* ==================== SERVICES ==================== */}
-          <div className="bg-white/95 border border-slate-200/80 backdrop-blur-md rounded-3xl p-6 shadow-lg shadow-slate-100 flex flex-col justify-between gap-6 border-t-4 border-t-yellow-500/50 hover:shadow-xl transition-all duration-300">
+          <div className="bg-white border border-slate-200/60 rounded-3xl p-6 flex flex-col justify-between gap-6 hover:shadow-md transition-shadow duration-300">
             <div className="flex flex-col gap-5">
               <div className="flex items-center gap-3 pb-3.5 border-b border-slate-100">
-                <div className="w-9 h-9 rounded-xl bg-yellow-50 border border-yellow-200 flex items-center justify-center text-yellow-600 shrink-0">
+                <div className="w-9 h-9 rounded-xl bg-slate-50 border border-slate-150 flex items-center justify-center text-slate-700 shrink-0">
                   <Wrench className="w-5 h-5" />
                 </div>
                 <div>
@@ -232,9 +232,9 @@ export default function HomeLandingPage() {
               <div className="grid grid-cols-2 gap-3">
                 <button 
                   onClick={() => handleCategoryClick("/services?category=Electrician")}
-                  className="flex flex-col gap-2 items-start bg-slate-50/70 hover:bg-yellow-50/30 border border-slate-200/60 hover:border-yellow-250 rounded-2xl p-3.5 transition-all hover:scale-[1.03] duration-200 group text-left cursor-pointer"
+                  className="flex flex-col gap-2 items-start bg-slate-50/70 hover:bg-slate-100/50 border border-slate-200/40 hover:border-slate-300 rounded-2xl p-3.5 transition-all hover:scale-[1.02] duration-200 group text-left cursor-pointer font-bold"
                 >
-                  <div className="w-7 h-7 rounded-lg bg-white border border-slate-100 shadow-3xs flex items-center justify-center text-slate-500 group-hover:text-yellow-600 group-hover:border-yellow-200 transition-colors">
+                  <div className="w-7 h-7 rounded-lg bg-white border border-slate-100 shadow-3xs flex items-center justify-center text-slate-500 group-hover:text-slate-900 group-hover:border-slate-200 transition-colors">
                     <Zap className="w-4 h-4" />
                   </div>
                   <div>
@@ -245,9 +245,9 @@ export default function HomeLandingPage() {
 
                 <button 
                   onClick={() => handleCategoryClick("/services?category=Plumber")}
-                  className="flex flex-col gap-2 items-start bg-slate-50/70 hover:bg-yellow-50/30 border border-slate-200/60 hover:border-yellow-255 rounded-2xl p-3.5 transition-all hover:scale-[1.03] duration-200 group text-left cursor-pointer"
+                  className="flex flex-col gap-2 items-start bg-slate-50/70 hover:bg-slate-100/50 border border-slate-200/40 hover:border-slate-300 rounded-2xl p-3.5 transition-all hover:scale-[1.02] duration-200 group text-left cursor-pointer font-bold"
                 >
-                  <div className="w-7 h-7 rounded-lg bg-white border border-slate-100 shadow-3xs flex items-center justify-center text-slate-500 group-hover:text-yellow-600 group-hover:border-yellow-200 transition-colors">
+                  <div className="w-7 h-7 rounded-lg bg-white border border-slate-100 shadow-3xs flex items-center justify-center text-slate-500 group-hover:text-slate-900 group-hover:border-slate-200 transition-colors">
                     <Droplet className="w-4 h-4" />
                   </div>
                   <div>
@@ -258,9 +258,9 @@ export default function HomeLandingPage() {
 
                 <button 
                   onClick={() => handleCategoryClick("/services?category=AC%20%26%20Refrigeration")}
-                  className="flex flex-col gap-2 items-start bg-slate-50/70 hover:bg-yellow-50/30 border border-slate-200/60 hover:border-yellow-250 rounded-2xl p-3.5 transition-all hover:scale-[1.03] duration-200 group text-left cursor-pointer"
+                  className="flex flex-col gap-2 items-start bg-slate-50/70 hover:bg-slate-100/50 border border-slate-200/40 hover:border-slate-300 rounded-2xl p-3.5 transition-all hover:scale-[1.02] duration-200 group text-left cursor-pointer font-bold"
                 >
-                  <div className="w-7 h-7 rounded-lg bg-white border border-slate-100 shadow-3xs flex items-center justify-center text-slate-500 group-hover:text-yellow-600 group-hover:border-yellow-200 transition-colors">
+                  <div className="w-7 h-7 rounded-lg bg-white border border-slate-100 shadow-3xs flex items-center justify-center text-slate-500 group-hover:text-slate-900 group-hover:border-slate-200 transition-colors">
                     <Wind className="w-4 h-4" />
                   </div>
                   <div>
@@ -271,9 +271,9 @@ export default function HomeLandingPage() {
 
                 <button 
                   onClick={() => handleCategoryClick("/services?category=Carpenter")}
-                  className="flex flex-col gap-2 items-start bg-slate-50/70 hover:bg-yellow-50/30 border border-slate-200/60 hover:border-yellow-255 rounded-2xl p-3.5 transition-all hover:scale-[1.03] duration-200 group text-left cursor-pointer"
+                  className="flex flex-col gap-2 items-start bg-slate-50/70 hover:bg-slate-100/50 border border-slate-200/40 hover:border-slate-300 rounded-2xl p-3.5 transition-all hover:scale-[1.02] duration-200 group text-left cursor-pointer font-bold"
                 >
-                  <div className="w-7 h-7 rounded-lg bg-white border border-slate-100 shadow-3xs flex items-center justify-center text-slate-500 group-hover:text-yellow-600 group-hover:border-yellow-200 transition-colors">
+                  <div className="w-7 h-7 rounded-lg bg-white border border-slate-100 shadow-3xs flex items-center justify-center text-slate-500 group-hover:text-slate-900 group-hover:border-slate-200 transition-colors">
                     <Hammer className="w-4 h-4" />
                   </div>
                   <div>
@@ -286,7 +286,7 @@ export default function HomeLandingPage() {
 
             <button
               onClick={() => handleCategoryClick("/services")}
-              className="w-full bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl py-3 text-center text-[10px] font-black text-slate-700 hover:text-slate-900 uppercase tracking-widest flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer"
+              className="w-full bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl py-3 text-center text-[10px] font-black text-slate-700 hover:text-slate-900 uppercase tracking-widest flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer font-bold"
             >
               <span>View Noticeboard</span>
               <ArrowRight className="w-3.5 h-3.5" />
@@ -294,10 +294,10 @@ export default function HomeLandingPage() {
           </div>
 
           {/* ==================== SHOPS & OFFERS ==================== */}
-          <div className="bg-white/95 border border-slate-200/80 backdrop-blur-md rounded-3xl p-6 shadow-lg shadow-slate-100 flex flex-col justify-between gap-6 border-t-4 border-t-yellow-500/50 hover:shadow-xl transition-all duration-300">
+          <div className="bg-white border border-slate-200/60 rounded-3xl p-6 flex flex-col justify-between gap-6 hover:shadow-md transition-shadow duration-300">
             <div className="flex flex-col gap-5">
               <div className="flex items-center gap-3 pb-3.5 border-b border-slate-100">
-                <div className="w-9 h-9 rounded-xl bg-yellow-50 border border-yellow-200 flex items-center justify-center text-yellow-600 shrink-0">
+                <div className="w-9 h-9 rounded-xl bg-slate-50 border border-slate-150 flex items-center justify-center text-slate-700 shrink-0">
                   <Store className="w-5 h-5" />
                 </div>
                 <div>
@@ -310,9 +310,9 @@ export default function HomeLandingPage() {
               <div className="grid grid-cols-2 gap-3">
                 <button 
                   onClick={() => handleCategoryClick("/shops?category=Cafe%20%26%20Restaurant")}
-                  className="flex flex-col gap-2 items-start bg-slate-50/70 hover:bg-yellow-50/30 border border-slate-200/60 hover:border-yellow-250 rounded-2xl p-3.5 transition-all hover:scale-[1.03] duration-200 group text-left cursor-pointer"
+                  className="flex flex-col gap-2 items-start bg-slate-50/70 hover:bg-slate-100/50 border border-slate-200/40 hover:border-slate-300 rounded-2xl p-3.5 transition-all hover:scale-[1.02] duration-200 group text-left cursor-pointer font-bold"
                 >
-                  <div className="w-7 h-7 rounded-lg bg-white border border-slate-100 shadow-3xs flex items-center justify-center text-slate-500 group-hover:text-yellow-600 group-hover:border-yellow-200 transition-colors">
+                  <div className="w-7 h-7 rounded-lg bg-white border border-slate-100 shadow-3xs flex items-center justify-center text-slate-500 group-hover:text-slate-900 group-hover:border-slate-200 transition-colors">
                     <Utensils className="w-4 h-4" />
                   </div>
                   <div>
@@ -323,9 +323,9 @@ export default function HomeLandingPage() {
 
                 <button 
                   onClick={() => handleCategoryClick("/shops?category=Supermarket%20%26%20Grocery")}
-                  className="flex flex-col gap-2 items-start bg-slate-50/70 hover:bg-yellow-50/30 border border-slate-200/60 hover:border-yellow-250 rounded-2xl p-3.5 transition-all hover:scale-[1.03] duration-200 group text-left cursor-pointer"
+                  className="flex flex-col gap-2 items-start bg-slate-50/70 hover:bg-slate-100/50 border border-slate-200/40 hover:border-slate-300 rounded-2xl p-3.5 transition-all hover:scale-[1.02] duration-200 group text-left cursor-pointer font-bold"
                 >
-                  <div className="w-7 h-7 rounded-lg bg-white border border-slate-100 shadow-3xs flex items-center justify-center text-slate-500 group-hover:text-yellow-600 group-hover:border-yellow-200 transition-colors">
+                  <div className="w-7 h-7 rounded-lg bg-white border border-slate-100 shadow-3xs flex items-center justify-center text-slate-500 group-hover:text-slate-900 group-hover:border-slate-200 transition-colors">
                     <ShoppingBag className="w-4 h-4" />
                   </div>
                   <div>
@@ -336,9 +336,9 @@ export default function HomeLandingPage() {
 
                 <button 
                   onClick={() => handleCategoryClick("/shops?category=Textiles%20%26%20Clothing")}
-                  className="flex flex-col gap-2 items-start bg-slate-50/70 hover:bg-yellow-50/30 border border-slate-200/60 hover:border-yellow-250 rounded-2xl p-3.5 transition-all hover:scale-[1.03] duration-200 group text-left cursor-pointer"
+                  className="flex flex-col gap-2 items-start bg-slate-50/70 hover:bg-slate-100/50 border border-slate-200/40 hover:border-slate-300 rounded-2xl p-3.5 transition-all hover:scale-[1.02] duration-200 group text-left cursor-pointer font-bold"
                 >
-                  <div className="w-7 h-7 rounded-lg bg-white border border-slate-100 shadow-3xs flex items-center justify-center text-slate-500 group-hover:text-yellow-600 group-hover:border-yellow-200 transition-colors">
+                  <div className="w-7 h-7 rounded-lg bg-white border border-slate-100 shadow-3xs flex items-center justify-center text-slate-500 group-hover:text-slate-900 group-hover:border-slate-200 transition-colors">
                     <Shirt className="w-4 h-4" />
                   </div>
                   <div>
@@ -349,9 +349,9 @@ export default function HomeLandingPage() {
 
                 <button 
                   onClick={() => handleCategoryClick("/shops?category=Jewelry%20Showroom")}
-                  className="flex flex-col gap-2 items-start bg-slate-50/70 hover:bg-yellow-50/30 border border-slate-200/60 hover:border-yellow-250 rounded-2xl p-3.5 transition-all hover:scale-[1.03] duration-200 group text-left cursor-pointer"
+                  className="flex flex-col gap-2 items-start bg-slate-50/70 hover:bg-slate-100/50 border border-slate-200/40 hover:border-slate-300 rounded-2xl p-3.5 transition-all hover:scale-[1.02] duration-200 group text-left cursor-pointer font-bold"
                 >
-                  <div className="w-7 h-7 rounded-lg bg-white border border-slate-100 shadow-3xs flex items-center justify-center text-slate-500 group-hover:text-yellow-600 group-hover:border-yellow-200 transition-colors">
+                  <div className="w-7 h-7 rounded-lg bg-white border border-slate-100 shadow-3xs flex items-center justify-center text-slate-500 group-hover:text-slate-900 group-hover:border-slate-200 transition-colors">
                     <Sparkles className="w-4 h-4" />
                   </div>
                   <div>
@@ -364,7 +364,7 @@ export default function HomeLandingPage() {
 
             <button
               onClick={() => handleCategoryClick("/shops")}
-              className="w-full bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-xl py-3 text-center text-[10px] font-black text-slate-700 hover:text-slate-900 uppercase tracking-widest flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer"
+              className="w-full bg-slate-100 hover:bg-slate-200 border border-slate-200 rounded-xl py-3 text-center text-[10px] font-black text-slate-700 hover:text-slate-900 uppercase tracking-widest flex items-center justify-center gap-1.5 transition-all active:scale-[0.98] cursor-pointer font-bold"
             >
               <span>View Noticeboard</span>
               <ArrowRight className="w-3.5 h-3.5" />
