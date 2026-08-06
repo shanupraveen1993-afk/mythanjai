@@ -846,14 +846,12 @@ export function RobotHero({
           1. MOBILE VIEWPORT PORTION (Tightly Packed, No Empty Spaces)
           ========================================== */}
       <div className="flex md:hidden flex-col items-center gap-3.5 z-10 px-6 w-full text-center select-none pointer-events-auto">
-        {/* Logo (Borderless white container) */}
-        <div className="w-14 h-14 bg-white flex items-center justify-center overflow-hidden shadow-xs rounded-2xl shrink-0 mt-1">
-          <img 
-            src="/namma_thanjai_logo.png" 
-            alt="namma thanjai mobile app logo" 
-            className="w-12 h-12 object-contain" 
-          />
-        </div>
+        {/* Logo with clean white circular background and shadow */}
+        <img 
+          src="/namma_thanjai_logo.png" 
+          alt="namma thanjai mobile app logo" 
+          className="w-14 h-14 rounded-full bg-white shadow-md p-1.5 shrink-0 object-contain mt-1" 
+        />
 
         {/* Branding Title (Number 10) & Desc */}
         <div className="flex flex-col items-center gap-1">
@@ -996,14 +994,12 @@ export function RobotHero({
           {/* Left panel branding */}
           <div className="w-[45%] flex flex-col items-start gap-7">
             <div className="flex flex-col gap-5 items-start">
-              {/* Borderless white container */}
-              <div className="w-24 h-24 rounded-3xl bg-white flex items-center justify-center overflow-hidden shadow-xs shrink-0">
-                <img 
-                  src="/namma_thanjai_logo.png" 
-                  alt="namma thanjai logo" 
-                  className="w-20 h-20 object-contain" 
-                />
-              </div>
+              {/* Logo with clean white circular background and shadow */}
+              <img 
+                src="/namma_thanjai_logo.png" 
+                alt="namma thanjai logo" 
+                className="w-24 h-24 rounded-full bg-white shadow-lg p-2.5 shrink-0 object-contain" 
+              />
               <div>
                 <h1 className="font-heading font-black text-6xl text-slate-900 tracking-tight leading-none uppercase">
                   namma<br/> thanjavur<span className="text-yellow-500">.</span>
