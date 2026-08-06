@@ -1,0 +1,84 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ==========================================
+    // HELPER FUNCTIONS
+    // ==========================================
+    
+    // Check if the request is coming from an authenticated user (includes anonymous)
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Check if the request user owns the document
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    // Check if user is an Admin (via token claim or specific admin status in DB)
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.admin == true ||
+        exists(/databases/$(database)/documents/users/$(request.auth.uid)) &&
+        get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true
+      );
+    }
+
+    // Validate that incoming data contains mandatory basic fields
+    function hasValidMetadata() {
+      let data = request.resource.data;
+      return data.area_tag is string &&
+             data.area_tag.size() > 0 &&
+             data.category is string &&
+             data.category.size() > 0;
+    }
+
+    // ==========================================
+    // COLLECTION RULES
+    // ==========================================
+
+    // 1. NEEDS & BUY/SELL CLASSIFIEDS
+    match /needs_and_sales/{docId} {
+      allow read: if true; // Public read for all Tanjore residents
+      allow create: if isSignedIn() 
+                    && request.resource.data.userId == request.auth.uid
+                    && hasValidMetadata();
+      allow update, delete: if isOwner(resource.data.userId) || isAdmin();
+    }
+
+    // 2. SERVICE PROVIDERS DIRECTORY
+    match /services/{docId} {
+      allow read: if true;
+      allow create: if isSignedIn() 
+                    && request.resource.data.userId == request.auth.uid
+                    && request.resource.data.phone is string;
+      allow update, delete: if isOwner(resource.data.userId) || isAdmin();
+    }
+
+    // 3. SHOPS & BUSINESS DIRECTORY
+    match /shops/{docId} {
+      allow read: if true;
+      allow create: if isSignedIn() 
+                    && request.resource.data.shop_name is string
+                    && hasValidMetadata();
+      allow update, delete: if isOwner(resource.data.userId) || isAdmin();
+    }
+
+    // 4. RECENT OFFERS & SOCIAL BUZZ
+    match /offers/{docId} {
+      allow read: if true;
+      allow create: if isSignedIn() 
+                    && request.resource.data.title is string
+                    && request.resource.data.social_link is string;
+      allow update, delete: if isOwner(resource.data.userId) || isAdmin();
+    }
+
+    // 5. USER PROFILES
+    match /users/{userId} {
+      allow read: if true; // Allow read for checking verification status on profiles
+      allow create, update: if isOwner(userId) || isAdmin();
+      allow delete: if isAdmin();
+    }
+  }
+}

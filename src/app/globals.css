@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+@theme {
+  --color-background: #f8fafc; /* Crisp slate white */
+  --color-foreground: #0f172a; /* Deep charcoal slate */
+  --color-card: #ffffff; /* Pure white cards */
+  --color-border: #e2e8f0; /* Soft slate border */
+  --color-muted: #64748b; /* Muted slate gray */
+  --color-muted-foreground: #94a3b8;
+  --color-primary: #d97706; /* Warm Temple Gold */
+  --color-primary-foreground: #ffffff;
+}
+
+body {
+  background-color: #f1f5f9; /* Slate background behind wide layout */
+  color: var(--color-foreground);
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+/* Custom Scrollbar suppression for native app layout feel */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Leaflet map styles container */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  border-radius: 1.25rem;
+  z-index: 10;
+  border: 1px solid #e2e8f0;
+  background-color: #f8fafc !important;
+}
+
+/* Glassmorphism utility - Light mode */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(241, 245, 249, 0.8);
+}
+
+/* Custom animated gradient for premium headers */
+.gold-gradient-text {
+  background: linear-gradient(135deg, #d97706 0%, #fbbf24 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Animations */
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+
+.animate-slide-up {
+  animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.4s ease-out forwards;
+}

@@ -1,0 +1,739 @@
+"use client";
+
+import React, { useState, useEffect } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
+import { useFirestore } from "@/hooks/use-firestore";
+import NeedCard from "@/components/cards/NeedCard";
+import { CLASSIFIED_CATEGORIES, TANJORE_LOCALITIES, TanjoreLocality } from "@/lib/constants";
+import { NeedOrSalePost } from "@/types";
+import { MessageSquare, Plus, ChevronUp, ChevronDown, Loader2, ArrowRight, ArrowLeft, Tag, FileText, Search, Upload, Calendar, Share2, Home, Car, Tv, Compass, Check, MapPin, Sparkles } from "lucide-react";
+import { db } from "@/lib/firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import confetti from "canvas-confetti";
+import { useAuth } from "@/hooks/use-auth";
+
+export default function ClassifiedsPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const { user, profile, loading } = useAuth();
+  
+  const area = (searchParams.get("area") || "All Areas") as TanjoreLocality | "All Areas";
+  const selectedCategory = searchParams.get("category") || null;
+  const searchQuery = searchParams.get("query") || "";
+
+  const CATEGORY_STOCK_IMAGES: Record<string, string> = {
+    "Plot / Real Estate": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=400&q=80",
+    "Property Rental": "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=400&q=80",
+    "Used Vehicles": "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=400&q=80",
+    "Electronics & Mobiles": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=400&q=80",
+    "Household Goods": "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?auto=format&fit=crop&w=400&q=80",
+    "Jobs & Opportunities": "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=400&q=80",
+    "General Requirement": "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=400&q=80",
+    "Others": "https://images.unsplash.com/photo-1457369804613-52c61a468e7d?auto=format&fit=crop&w=400&q=80",
+  };
+
+  const CATEGORY_SAMPLE_POSTS: Record<string, { title: string; price: string; description: string }> = {
+    "Plot / Real Estate": {
+      title: "Premium 2400 sq.ft Residential Plot for Sale",
+      price: "1800000",
+      description: "Direct sale of high-potential housing plot near Vallam. Clean title deed, DTCP approved layout, 30-feet wide road connectivity, water pipeline ready, and immediate constructibility. Price negotiable for cash buyers."
+    },
+    "Property Rental": {
+      title: "Spacious 2 BHK Independent House for Rent",
+      price: "12500",
+      description: "Beautiful 2 BHK spacious house available for rent immediately. Features modular kitchen, built-in wardrobes, 2 bathrooms, 24/7 Kaveri water supply, and dedicated covered car parking. Located in a peaceful residential street close to schools, supermarkets, and temples. Family preferred."
+    },
+    "Used Vehicles": {
+      title: "First-Owner Honda Activa 6G (2022 Model) for Sale",
+      price: "64000",
+      description: "Well-maintained Honda Activa 6G in matte grey colour. Driven only 8,500 kms, single owner, insurance active till December. Serviced regularly at authorized centers, brand new rear tyre, excellent fuel mileage of 50 km/l. Selling due to relocation."
+    },
+    "Electronics & Mobiles": {
+      title: "iPhone 13 (128GB, Blue) - Excellent Condition with Bill",
+      price: "38500",
+      description: "Selling iPhone 13 in excellent condition with 88% battery health. No scratches or dents, always used with screen protector and protective case. Comes with original box, Apple charging cable, and purchase bill. Fully functional face ID and original display."
+    },
+    "Others": {
+      title: "Looking for Experienced Full-Time Accountant for Showroom",
+      price: "18000",
+      description: "We are hiring a full-time accountant for our retail showroom in Gandhiji Road. Must have minimum 2 years experience in Tally Prime, daily ledger maintenance, and GST filing. Working hours: 10 AM to 8 PM. Good communication skills in Tamil required."
+    }
+  };
+
+  const getSamplePost = () => {
+    const cat = selectedCategory || "Others";
+    return CATEGORY_SAMPLE_POSTS[cat] || CATEGORY_SAMPLE_POSTS["Others"];
+  };
+
+  // Classifieds States
+  const [activeType, setActiveType] = useState<"need" | "sale">("need");
+
+  // Inline Form State
+  const [isFormOpen, setIsFormOpen] = useState(false);
+  const [formType, setFormType] = useState<"need" | "sale">("need");
+  const [formTitle, setFormTitle] = useState("");
+  const [formDesc, setFormDesc] = useState("");
+  const [formPrice, setFormPrice] = useState("");
+  const [formArea, setFormArea] = useState<TanjoreLocality>("Tanjore Town (General)");
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [youtubeUrl, setYoutubeUrl] = useState("");
+  const [youtubeThumbnail, setYoutubeThumbnail] = useState("");
+  
+  const [uploading, setUploading] = useState(false);
+  const [polishLoading, setPolishLoading] = useState(false);
+  const [sortBy, setSortBy] = useState<"recent" | "price_low" | "price_high">("recent");
+
+  const displayTitle = formTitle || getSamplePost().title;
+  const displayDescription = formDesc || getSamplePost().description || "";
+  const displayPrice = formPrice || getSamplePost().price;
+  const previewImage = imagePreviews[0] || CATEGORY_STOCK_IMAGES[selectedCategory || "Others"] || CATEGORY_STOCK_IMAGES["Others"];
+
+  const getPreviewIcon = () => {
+    switch (selectedCategory) {
+      case "Plot / Real Estate": return <Compass className="w-3.5 h-3.5 text-slate-500" />;
+      case "Property Rental": return <Home className="w-3.5 h-3.5 text-slate-500" />;
+      case "Electronics & Mobiles": return <Tv className="w-3.5 h-3.5 text-slate-500" />;
+      case "Used Vehicles": return <Car className="w-3.5 h-3.5 text-slate-500" />;
+      default: return <Tag className="w-3.5 h-3.5 text-slate-500" />;
+    }
+  };
+
+  const handleMultipleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const files = Array.from(e.target.files);
+      const totalImages = [...selectedImages, ...files].slice(0, 3);
+      setSelectedImages(totalImages);
+      setImagePreviews(totalImages.map(file => URL.createObjectURL(file)));
+    }
+  };
+
+  const handleRemoveImage = (indexToRemove: number) => {
+    const updatedImages = selectedImages.filter((_, idx) => idx !== indexToRemove);
+    setSelectedImages(updatedImages);
+    setImagePreviews(updatedImages.map(file => URL.createObjectURL(file)));
+  };
+
+  const handleYoutubeUrlChange = (val: string) => {
+    setYoutubeUrl(val);
+    if (!val) {
+      setYoutubeThumbnail("");
+      return;
+    }
+    const match = val.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+    const videoId = match ? match[1] : null;
+    if (videoId) {
+      setYoutubeThumbnail(`https://img.youtube.com/vi/${videoId}/hqdefault.jpg`);
+    } else {
+      setYoutubeThumbnail("");
+    }
+  };
+
+  const handlePolishDescription = async () => {
+    if (!formDesc.trim()) {
+      alert("Please write some description text first to polish.");
+      return;
+    }
+    setPolishLoading(true);
+    try {
+      const formatRes = await fetch("/api/gemini-format", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ rawDescription: formDesc, type: formType }),
+      });
+      const formatData = await formatRes.json();
+      if (formatData.success && formatData.formattedText) {
+        setFormDesc(formatData.formattedText);
+        confetti({ particleCount: 30, spread: 30 });
+      } else {
+        alert("AI Polisher failed to refine. Please try again.");
+      }
+    } catch (err) {
+      console.error("AI polish failed:", err);
+      alert("Polish request failed.");
+    } finally {
+      setPolishLoading(false);
+    }
+  };
+
+  // Sync selected global area filter with form location tag
+  useEffect(() => {
+    if (area !== "All Areas") {
+      setFormArea(area);
+    }
+  }, [area]);
+
+  // Handle header ?create=true URL parameter trigger
+  const triggerCreate = searchParams.get("create") === "true";
+  useEffect(() => {
+    if (triggerCreate && !loading) {
+      if (!profile?.isVerified) {
+        const currentParams = new URLSearchParams(searchParams.toString());
+        currentParams.set("auth", "popup");
+        currentParams.delete("create");
+        router.push(`/classifieds?${currentParams.toString()}`);
+      } else {
+        setIsFormOpen(true);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      }
+    }
+  }, [triggerCreate, loading, profile?.isVerified, searchParams, router]);
+
+  // Real-time Firestore Query subscription
+  const { data: posts, loading: postsLoading } = useFirestore<NeedOrSalePost>({
+    collectionName: "needs_and_sales",
+    areaTag: area,
+    category: selectedCategory || "All",
+    postType: activeType,
+  });
+
+  const handleCategorySelect = (category: string) => {
+    const currentParams = new URLSearchParams(searchParams.toString());
+    currentParams.set("category", category);
+    router.push(`/classifieds?${currentParams.toString()}`);
+  };
+
+  const handleClearCategory = () => {
+    const currentParams = new URLSearchParams(searchParams.toString());
+    currentParams.delete("category");
+    currentParams.delete("create");
+    router.push(`/classifieds?${currentParams.toString()}`);
+  };
+
+  const handlePublish = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user) {
+      alert("Session not ready yet. Please try again.");
+      return;
+    }
+    const phoneNum = profile?.phone || user?.phoneNumber || "";
+    if (!formTitle || !formDesc || !phoneNum || !selectedCategory) {
+      alert("Please ensure you are signed in with a verified account.");
+      return;
+    }
+
+    setUploading(true);
+    try {
+      // Formatted description can run through route polish automatically if not done manually
+      let formattedDescription = formDesc;
+      try {
+        const formatRes = await fetch("/api/gemini-format", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ rawDescription: formDesc, type: formType }),
+        });
+        const formatData = await formatRes.json();
+        if (formatData.success && formatData.formattedText) {
+          formattedDescription = formatData.formattedText;
+        }
+      } catch (err) {
+        console.error("AI format failed, using raw description:", err);
+      }
+
+      // Upload all multiple images to Firebase Storage
+      let imageUrls: string[] = [];
+      if (formType === "sale" && selectedImages.length > 0) {
+        const { ref, uploadBytes, getDownloadURL } = await import("firebase/storage");
+        const { storage } = await import("@/lib/firebase");
+        const { compressImage } = await import("@/lib/image-compressor");
+
+        for (const file of selectedImages) {
+          const compressed = await compressImage(file, 800, 800, 0.75);
+          const storageRef = ref(storage, `classifieds/${Date.now()}_${compressed.fileName}`);
+          const snapshot = await uploadBytes(storageRef, compressed.blob);
+          const url = await getDownloadURL(snapshot.ref);
+          imageUrls.push(url);
+        }
+      }
+
+      const timestamp = serverTimestamp();
+      const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30-day expiry (Task 14)
+
+      await addDoc(collection(db, "needs_and_sales"), {
+        userId: user.uid,
+        type: formType,
+        title: formTitle,
+        description: formattedDescription,
+        raw_text: formDesc,
+        category: selectedCategory,
+        area_tag: formArea,
+        price: formPrice ? parseFloat(formPrice) : null,
+        phone: phoneNum,
+        image_urls: imageUrls,
+        image_url: imageUrls[0] || "",
+        youtube_url: youtubeUrl || "",
+        youtube_thumbnail: youtubeThumbnail || "",
+        is_verified: true,
+        created_at: timestamp,
+        expires_at: expiresAt,
+      });
+
+      // Clear Form & Close
+      setFormTitle("");
+      setFormDesc("");
+      setFormPrice("");
+      setSelectedImages([]);
+      setImagePreviews([]);
+      setYoutubeUrl("");
+      setYoutubeThumbnail("");
+      setIsFormOpen(false);
+      
+      confetti({ particleCount: 60, spread: 45 });
+    } catch (error: any) {
+      console.error("Listing upload failed:", error);
+      alert("Upload failed: " + error.message);
+    } finally {
+      setUploading(false);
+    }
+  };
+
+  // Filter posts locally if there's a search query
+  const filteredPosts = posts.filter(post => {
+    if (!searchQuery.trim()) return true;
+    const query = searchQuery.toLowerCase();
+    const titleMatch = post.title?.toLowerCase().includes(query);
+    const descMatch = post.description?.toLowerCase().includes(query);
+    const textMatch = post.raw_text?.toLowerCase().includes(query);
+    return titleMatch || descMatch || textMatch;
+  });
+
+  // Client-side sorting
+  const sortedPosts = [...filteredPosts].sort((a, b) => {
+    if (sortBy === "price_low") {
+      const priceA = Number(a.price) || 0;
+      const priceB = Number(b.price) || 0;
+      return priceA - priceB;
+    }
+    if (sortBy === "price_high") {
+      const priceA = Number(a.price) || 0;
+      const priceB = Number(b.price) || 0;
+      return priceB - priceA;
+    }
+    // Default: recent (latest first)
+    const timeA = a.created_at?.seconds || 0;
+    const timeB = b.created_at?.seconds || 0;
+    return timeB - timeA;
+  });
+
+  return (
+    <div className="flex flex-col gap-6">
+      {/* ==========================================
+          STEP 1: CATEGORY SELECTION LIST
+          ========================================== */}
+      {!selectedCategory ? (
+        <div className="flex flex-col gap-6">
+          <div className="relative overflow-hidden bg-yellow-50 border border-yellow-250/60 rounded-2xl p-5 shadow-sm flex flex-col gap-1 text-slate-800">
+            <span className="text-[9px] font-black uppercase tracking-wider text-yellow-755 bg-yellow-500/10 border border-yellow-250/60 px-2.5 py-0.5 rounded-xl inline-block w-fit">
+              🏡 Buy & Sell Classifieds
+            </span>
+            <h2 className="font-heading font-black text-lg text-slate-900 mt-2">
+              Select Classified Category
+            </h2>
+            <p className="text-[11px] text-slate-600 mt-1 max-w-[280px]">
+              Select a category block below to explore specific listings or post a new ad.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+            {CLASSIFIED_CATEGORIES.map((cat) => (
+              <button
+                key={cat}
+                onClick={() => handleCategorySelect(cat)}
+                className="bg-white border border-slate-200 hover:border-yellow-500/40 p-5 rounded-2xl shadow-xs text-left transition-all active:scale-[0.98] hover:shadow-md flex flex-col gap-3 group w-full cursor-pointer"
+              >
+                <div className="w-9 h-9 rounded-xl bg-yellow-500/10 text-yellow-600 flex items-center justify-center border border-yellow-250/60 transition-transform group-hover:scale-105">
+                  <Tag className="w-5 h-5" />
+                </div>
+                <div>
+                  <span className="text-xs font-black text-slate-800 block group-hover:text-yellow-755 transition-colors">
+                    {cat}
+                  </span>
+                  <span className="text-[9px] text-slate-500 block leading-normal mt-0.5 font-bold">
+                    Explore listings or add a post under {cat}.
+                  </span>
+                </div>
+              </button>
+            ))}
+          </div>
+        </div>
+      ) : (
+        /* ==========================================
+           STEP 2: DETAILED FEED & POST ENGINE FOR SPECIFIC CATEGORY
+           ========================================== */
+        <div className="flex flex-col gap-5">
+          {/* Header & Back Action */}
+          <div className="flex items-center justify-between">
+            <button
+              onClick={handleClearCategory}
+              className="flex items-center gap-1 text-slate-600 hover:text-slate-900 transition-colors text-xs font-bold bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200 cursor-pointer"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>All Categories</span>
+            </button>
+            <span className="text-xs font-black text-slate-800 bg-yellow-500/10 border border-yellow-250/60 px-3 py-1 rounded-xl">
+              Category: {selectedCategory}
+            </span>
+          </div>
+
+          {/* Sub-Tabs: Buy vs Sell */}
+          <div className="flex bg-slate-200/80 p-1.5 rounded-2xl border border-slate-300/40">
+            <button
+              onClick={() => setActiveType("need")}
+              className={`flex-1 py-2 text-center rounded-xl text-xs font-black transition-all cursor-pointer ${
+                activeType === "need"
+                  ? "bg-white text-yellow-750 shadow-sm"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              Buy / Looking For
+            </button>
+            <button
+              onClick={() => setActiveType("sale")}
+              className={`flex-1 py-2 text-center rounded-xl text-xs font-black transition-all cursor-pointer ${
+                activeType === "sale"
+                  ? "bg-white text-emerald-700 shadow-sm"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              Sell / For Sale
+            </button>
+          </div>
+
+          {/* Action Bar: Sort & Post */}
+          <div className="flex items-center justify-between py-1 border-b border-slate-100 mt-1">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
+              <span>Sort by:</span>
+              <select
+                value={sortBy}
+                onChange={(e) => setSortBy(e.target.value as any)}
+                className="bg-slate-100 border border-slate-200 rounded-lg px-2.5 py-1 text-[11px] font-black focus:outline-none cursor-pointer text-slate-700 font-bold"
+              >
+                <option value="recent">Latest First</option>
+                <option value="price_low">Price: Low to High</option>
+                <option value="price_high">Price: High to Low</option>
+              </select>
+            </div>
+
+            <button
+              onClick={() => {
+                if (!profile?.isVerified) {
+                  router.push(`/profile?auth=popup&redirect=${encodeURIComponent(`/classifieds?category=${encodeURIComponent(selectedCategory || "")}&create=true`)}`);
+                } else {
+                  setFormType(activeType);
+                  setIsFormOpen(!isFormOpen);
+                }
+              }}
+              className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-4 py-2 rounded-xl text-[11px] uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-sm"
+            >
+              <Plus className={`w-3.5 h-3.5 text-slate-955 transition-transform duration-250 ${isFormOpen ? "rotate-45" : ""}`} />
+              <span>Post {activeType === "need" ? "Need" : "Ad"}</span>
+            </button>
+          </div>
+
+          {/* Interactive Posting Form */}
+          {isFormOpen && (
+            <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden transition-all duration-300 animate-fade-in">
+              <form onSubmit={handlePublish} className="p-4 flex flex-col gap-5 bg-white">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
+                  
+                  {/* Left Column: Input Fields */}
+                  <div className="flex flex-col gap-3.5">
+                    {/* Toggle Post Type in Form */}
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1.5">
+                        Posting Type
+                      </label>
+                      <div className="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-xl">
+                        <button
+                          type="button"
+                          onClick={() => setFormType("need")}
+                          className={`py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                            formType === "need" ? "bg-white text-yellow-750 shadow-xs" : "text-slate-500"
+                          }`}
+                        >
+                          📢 I Need / Renting
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setFormType("sale")}
+                          className={`py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                            formType === "sale" ? "bg-white text-emerald-700 shadow-xs" : "text-slate-500"
+                          }`}
+                        >
+                          🏷️ For Sale / Available
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* 1. Location (Thanjavur Locality Dropdown) */}
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1">
+                        Locality Area (Thanjavur only)
+                      </label>
+                      <select
+                        value={formArea}
+                        onChange={(e) => setFormArea(e.target.value as TanjoreLocality)}
+                        className="w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 focus:outline-none font-bold"
+                      >
+                        {TANJORE_LOCALITIES.map((loc) => (
+                          <option key={loc} value={loc}>
+                            {loc}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    {/* 2. Title */}
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1">
+                        Listing Title
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={formTitle}
+                        onChange={(e) => setFormTitle(e.target.value)}
+                        placeholder="e.g. 2 Acre agricultural land, single owner bike"
+                        className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 focus:outline-none font-bold"
+                      />
+                    </div>
+
+                    {/* 3. Description & Gemini AI Polish */}
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1">
+                        Description & Details
+                      </label>
+                      <textarea
+                        required
+                        value={formDesc}
+                        onChange={(e) => setFormDesc(e.target.value)}
+                        placeholder="Describe details: pricing, documents, key specs..."
+                        rows={3}
+                        className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 focus:outline-none"
+                      />
+                      
+                      <div className="flex justify-end mt-1.5">
+                        <button
+                          type="button"
+                          disabled={polishLoading}
+                          onClick={handlePolishDescription}
+                          className="flex items-center gap-1.5 bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-755 border border-yellow-250/30 px-3 py-1.5 rounded-xl text-[10px] uppercase tracking-wider transition-all select-none active:scale-95 disabled:opacity-50 cursor-pointer font-bold"
+                        >
+                          {polishLoading ? (
+                            <>
+                              <Loader2 className="w-3.5 h-3.5 animate-spin text-yellow-600" />
+                              <span>Polishing...</span>
+                            </>
+                          ) : (
+                            <>
+                              <Sparkles className="w-3.5 h-3.5 text-yellow-600 fill-current" />
+                              <span>Polish with Gemini AI</span>
+                            </>
+                          )}
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* 4. Price */}
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1">
+                        Price / Budget (₹ Optional)
+                      </label>
+                      <input
+                        type="number"
+                        value={formPrice}
+                        onChange={(e) => setFormPrice(e.target.value)}
+                        placeholder="e.g. 250000"
+                        className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 focus:outline-none"
+                      />
+                    </div>
+
+                    {/* Photo & Video Upload */}
+                    {formType === "sale" && (
+                      <div className="flex flex-col gap-3">
+                        {/* Multi-Photo Upload */}
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1">
+                            Upload Photos (Max 3, Optional)
+                          </label>
+                          <div className="flex flex-col gap-2">
+                            <label className="flex items-center justify-center gap-1.5 bg-slate-50 hover:bg-slate-100/50 text-slate-700 font-bold border border-dashed border-slate-350 py-3 rounded-xl text-xs cursor-pointer shadow-xs active:scale-98">
+                              <Upload className="w-4 h-4 text-yellow-600" />
+                              <span>Add Image ({selectedImages.length}/3)</span>
+                              <input type="file" accept="image/*" multiple onChange={handleMultipleFileChange} className="hidden" />
+                            </label>
+                            
+                            {imagePreviews.length > 0 && (
+                              <div className="grid grid-cols-3 gap-2 mt-1">
+                                {imagePreviews.map((preview, idx) => (
+                                  <div key={idx} className="relative aspect-video rounded-xl overflow-hidden border border-slate-200 bg-slate-50">
+                                    <img src={preview} alt={`Preview ${idx}`} className="w-full h-full object-cover" />
+                                    <button
+                                      type="button"
+                                      onClick={() => handleRemoveImage(idx)}
+                                      className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 text-[8px] hover:bg-red-600 shadow-xs"
+                                    >
+                                      ✕
+                                    </button>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* YouTube Video link */}
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1">
+                            YouTube Video Link (Optional)
+                          </label>
+                          <input
+                            type="url"
+                            value={youtubeUrl}
+                            onChange={(e) => handleYoutubeUrlChange(e.target.value)}
+                            placeholder="e.g. https://www.youtube.com/watch?v=..."
+                            className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 focus:outline-none"
+                          />
+                          <span className="text-[9px] text-slate-400 block mt-1 leading-normal font-bold">
+                            Post your video on YouTube and paste the link here. We will display the thumbnail automatically.
+                          </span>
+                          
+                          {youtubeThumbnail && (
+                            <div className="relative aspect-video w-32 rounded-lg overflow-hidden border border-slate-200 bg-slate-50 mt-2">
+                              <img src={youtubeThumbnail} alt="YouTube preview" className="w-full h-full object-cover" />
+                              <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
+                                <span className="text-[9px] text-white font-bold bg-black/60 px-2 py-0.5 rounded">YouTube</span>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Right Column: Live Mockup Card Preview */}
+                  <div className="flex flex-col gap-3 sticky top-0 p-1 md:border-l border-slate-100 md:pl-6 h-full justify-start select-none w-full">
+                    <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">
+                      Live Preview Reference
+                    </span>
+
+                    {/* Mockup Card */}
+                    <div className="bg-white border border-slate-200/95 rounded-2xl p-4 shadow-md flex flex-col gap-3.5 w-full max-w-sm mx-auto text-left">
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                          <span className={`px-2.5 py-0.5 rounded-xl text-[9px] font-black uppercase tracking-wider ${formType === "need" ? "bg-slate-105 text-slate-800 border border-slate-200" : "bg-yellow-55 text-yellow-900 border border-yellow-250/50"}`}>
+                            {formType === "need" ? "Looking For" : "Selling"}
+                          </span>
+                          <span className="bg-slate-55 text-slate-700 border border-slate-200/60 font-bold px-2 py-0.5 rounded-xl text-[9px] flex items-center gap-1">
+                            {getPreviewIcon()}
+                            <span className="capitalize">{selectedCategory || "General"}</span>
+                          </span>
+                        </div>
+                        <span className="text-[10px] text-slate-400 font-bold flex items-center gap-1">
+                          <Calendar className="w-3.5 h-3.5 text-slate-300" />
+                          Just now
+                        </span>
+                      </div>
+
+                      <div>
+                        <h3 className="font-heading font-extrabold text-sm text-slate-800 leading-snug line-clamp-2">
+                          {displayTitle}
+                        </h3>
+                        {displayPrice && (
+                          <div className="text-yellow-600 font-black text-xs mt-1">
+                            ₹{Number(displayPrice).toLocaleString("en-IN")}
+                          </div>
+                        )}
+                      </div>
+
+                      {formType === "sale" && (
+                        <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-slate-50 border border-slate-100 shadow-xs">
+                          <img src={previewImage} alt="Preview" className="w-full h-full object-cover" />
+                        </div>
+                      )}
+
+                      <p className="text-xs text-slate-500 whitespace-pre-wrap font-sans leading-relaxed bg-slate-50 p-2.5 rounded-xl border border-slate-200/60 max-h-[140px] overflow-y-auto no-scrollbar">
+                        {displayDescription}
+                      </p>
+
+                      <div className="flex items-center justify-between pt-2 border-t border-slate-100 mt-1">
+                        <div className="flex items-center gap-1 text-[10px] text-slate-500 font-bold">
+                          <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                          <span className="truncate max-w-[120px]">{formArea}</span>
+                        </div>
+
+                        <div className="flex gap-2">
+                          <button className="p-1.5 rounded-xl bg-slate-100 text-slate-450 border border-slate-200 cursor-not-allowed" disabled>
+                            <Share2 className="w-3.5 h-3.5" />
+                          </button>
+                          <button className="flex items-center gap-1 bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-xl text-[10px] cursor-not-allowed" disabled>
+                            <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
+                            <span>WhatsApp</span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="text-[10px] text-slate-400 font-bold mt-2 text-center bg-slate-50 border border-slate-100 p-2.5 rounded-xl max-w-sm mx-auto">
+                      💡 Listings are structured by Gemini AI to match this premium noticeboard format. Prefilled with your WhatsApp number.
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex justify-center w-full mt-4 pb-4">
+                  <button
+                    type="submit"
+                    disabled={uploading}
+                    className="flex items-center justify-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-12 py-3 rounded-xl text-xs transition-colors shadow-md shadow-yellow-500/10 cursor-pointer font-bold"
+                  >
+                    {uploading ? (
+                      <>
+                        <Loader2 className="w-4 h-4 animate-spin text-slate-955" />
+                        <span>Publishing...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Check className="w-4 h-4 text-slate-955 stroke-[3]" />
+                        <span>Publish Live Post</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </form>
+            </div>
+          )}
+
+          {/* List Feed */}
+          {postsLoading ? (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[1, 2].map((n) => (
+                <div key={n} className="bg-white border border-slate-200/60 rounded-2xl p-4 flex flex-col gap-3 animate-pulse">
+                  <div className="w-20 h-4 bg-slate-200 rounded-full" />
+                  <div className="w-full h-10 bg-slate-200 rounded-xl" />
+                </div>
+              ))}
+            </div>
+          ) : sortedPosts.length === 0 ? (
+            <div className="flex flex-col items-center justify-center py-16 px-4 bg-white border border-slate-200/60 rounded-2xl text-center gap-3">
+              <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200/80 text-slate-400">
+                <FileText className="w-5 h-5 text-yellow-500" />
+              </div>
+              <div>
+                <h4 className="font-heading font-extrabold text-sm text-slate-800">No Postings Found</h4>
+                <p className="text-[11px] text-slate-500 mt-1 max-w-[220px] mx-auto leading-relaxed">
+                  No active listings in <span className="font-bold text-slate-800">{selectedCategory}</span> for {area} yet.
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {sortedPosts.map((post) => (
+                <NeedCard key={post.id} post={post} />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+    </div>
+  );
+}
