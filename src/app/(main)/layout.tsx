@@ -162,17 +162,19 @@ function MainLayoutContent({
           </div>
 
           {/* Main Scrollable Content Panel */}
-          <main className="flex-1 overflow-y-auto no-scrollbar">
-            <div className={pathname === "/" ? "w-full" : "w-full max-w-5xl mx-auto px-4 py-4 md:py-8 pb-24 md:pb-8"}>
+          <main className={pathname === "/" ? "flex-1 h-dvh overflow-hidden flex flex-col bg-white" : "flex-1 overflow-y-auto no-scrollbar"}>
+            <div className={pathname === "/" ? "w-full h-full flex flex-col justify-between" : "w-full max-w-5xl mx-auto px-4 py-4 md:py-8 pb-24 md:pb-8"}>
               {children}
             </div>
           </main>
 
-          {/* Bottom Fixed Navigation Bar */}
-          <BottomTabBar
-            activeTab={getActiveTab()}
-            onTabChange={handleTabChange}
-          />
+          {/* Bottom Fixed Navigation Bar (Hidden on mobile for home onboarding page) */}
+          <div className={pathname === "/" ? "hidden md:block" : ""}>
+            <BottomTabBar
+              activeTab={getActiveTab()}
+              onTabChange={handleTabChange}
+            />
+          </div>
 
           {/* Sign-In Popup Modal */}
           <SignInModal

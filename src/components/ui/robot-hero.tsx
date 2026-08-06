@@ -843,7 +843,7 @@ export function RobotHero({
   return (
     <section
       ref={containerRef}
-      className="relative w-full min-h-[580px] md:h-screen flex flex-col bg-white text-slate-800 py-6 md:py-10 justify-between overflow-hidden"
+      className="relative w-full h-full md:h-screen flex flex-col bg-white text-slate-800 py-6 md:py-10 justify-between overflow-hidden"
     >
       {/* Light radial glow centered behind the robot on desktop, or full screen on mobile */}
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_60%,rgba(250,204,21,0.04)_0%,transparent_60%)] pointer-events-none" />
