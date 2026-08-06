@@ -44,9 +44,7 @@ export default function TopHeader({
           onClick={() => onTabChange?.("home")}
           className="flex items-center gap-2 cursor-pointer select-none"
         >
-          <div className="w-7 h-7 rounded-xl bg-yellow-50 flex items-center justify-center border border-yellow-200 overflow-hidden shrink-0 shadow-xs">
-            <img src="/namma_thanjai_logo.png" alt="namma thanjai app logo" className="w-6 h-6 object-contain" />
-          </div>
+          <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-8.5 h-8.5 object-contain shrink-0 rounded-lg shadow-xs" />
           <div className="flex items-center gap-0.5">
             <span className="font-sans font-black tracking-tight text-slate-900 text-sm">
               namma thanjai
@@ -110,9 +108,7 @@ export default function TopHeader({
             onClick={() => onTabChange?.("home")}
             className="flex items-center gap-2 cursor-pointer select-none"
           >
-            <div className="w-6.5 h-6.5 rounded-xl bg-yellow-50 flex items-center justify-center border border-yellow-200 overflow-hidden shrink-0 shadow-xs">
-              <img src="/namma_thanjai_logo.png" alt="namma thanjai app logo" className="w-5.5 h-5.5 object-contain" />
-            </div>
+            <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-7 h-7 object-contain shrink-0 rounded-lg shadow-xs" />
             <div className="flex items-center gap-0.5">
               <span className="font-sans font-black tracking-tight text-slate-900 text-xs">
                 namma thanjai

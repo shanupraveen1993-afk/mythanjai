@@ -786,14 +786,30 @@ export function RobotHero({
 }: RobotHeroProps = {}) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [wordIndex, setWordIndex] = useState(0);
+  const [isSpinning, setIsSpinning] = useState(false);
   const words = ["NAMMA THANJAI", "SELL PLOT", "BUY HOUSE", "PLUMBER", "CARPENTER", "HIRE TAXI", "RENT ROOM", "BEST OFFERS", "LOCAL SHOPS"];
 
   useEffect(() => {
+    if (isSpinning) return;
     const interval = setInterval(() => {
       setWordIndex((prev) => (prev + 1) % words.length);
     }, 2800);
     return () => clearInterval(interval);
-  }, []);
+  }, [isSpinning]);
+
+  const handleRobotTap = () => {
+    if (isSpinning) return;
+    setIsSpinning(true);
+    let count = 0;
+    const interval = setInterval(() => {
+      setWordIndex((prev) => (prev + 1) % words.length);
+      count++;
+      if (count > 16) {
+        clearInterval(interval);
+        setIsSpinning(false);
+      }
+    }, 75);
+  };
 
   const entorno = {
     fondoArriba: "#cecbcb",
@@ -817,21 +833,21 @@ export function RobotHero({
       }}
     >
       <div
-        className="absolute inset-0 flex items-center justify-center pointer-events-none overflow-hidden"
-        style={{ zIndex: 0 }}
+        className="absolute left-0 right-0 pointer-events-none overflow-hidden flex justify-center"
+        style={{ zIndex: 0, top: "22%" }}
       >
         <AnimatePresence mode="wait">
           <motion.h1
             key={wordIndex}
-            initial={{ opacity: 0, y: 70 }}
-            animate={{ opacity: 0.11, y: 40 }}
-            exit={{ opacity: 0, y: 10 }}
+            initial={{ opacity: 0, y: -15 }}
+            animate={{ opacity: 0.15, y: 0 }}
+            exit={{ opacity: 0, y: 15 }}
             transition={{ duration: 0.5, ease: "easeInOut" }}
             className="font-sans font-black select-none whitespace-nowrap"
             style={{
               color: "#000000",
-              letterSpacing: "-0.05em",
-              fontSize: "clamp(3rem, 12vw, 11rem)",
+              letterSpacing: "0.08em",
+              fontSize: "clamp(1.2rem, 5vw, 2.5rem)",
               lineHeight: 1,
               position: "absolute",
             }}
@@ -841,7 +857,11 @@ export function RobotHero({
         </AnimatePresence>
       </div>
 
-      <div className="absolute inset-0 z-10">
+      <div 
+        onClick={handleRobotTap} 
+        className="absolute inset-0 z-10 cursor-pointer"
+        title="Tap the robot to spin categories!"
+      >
         <Canvas shadows camera={{ position: [0, 0.2, 6], fov: 40 }}>
           <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
 
@@ -906,62 +926,70 @@ export function RobotHero({
       </div>
       <div className="absolute inset-0 z-20 pointer-events-none flex flex-col justify-between py-10">
         {/* Category segments row at the top of the hero section */}
-        <div className="w-full max-w-xl mx-auto px-4 flex flex-col items-center gap-3 pointer-events-auto">
+        <div className="w-full max-w-xl mx-auto px-4 flex flex-col items-center gap-4 pointer-events-auto">
           {/* Logo / Branding */}
-          <div className="flex items-center gap-2 select-none">
-            <div className="w-8 h-8 rounded-full bg-yellow-50 border border-yellow-250 flex items-center justify-center overflow-hidden shrink-0">
-              <img 
-                src="/namma_thanjai_logo.png" 
-                alt="namma thanjai logo" 
-                className="w-6 h-6 object-contain" 
-              />
-            </div>
-            <span className="font-heading font-black text-sm tracking-tight text-white uppercase drop-shadow-sm">
+          <div className="flex items-center gap-2.5 select-none">
+            <img 
+              src="/namma_thanjai_logo.png" 
+              alt="namma thanjai logo" 
+              className="w-11 h-11 object-contain shrink-0 rounded-xl shadow-md border border-white/10" 
+            />
+            <span className="font-heading font-black text-base tracking-tight text-white uppercase drop-shadow-sm">
               namma thanjai<span className="text-yellow-500 font-extrabold">.</span>
             </span>
           </div>
 
-          {/* 3 Category Segments */}
-          <nav className="flex items-center gap-2 bg-slate-950/50 backdrop-blur-md border border-white/10 p-1.5 rounded-xl shadow-lg">
-            <button 
+          {/* 3 Category Segments floating independently */}
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <motion.button 
               onClick={() => onCategoryClick?.("classifieds")} 
-              className="px-4 py-2 rounded-lg text-xs font-bold text-white hover:text-slate-200 transition-all cursor-pointer font-bold bg-white/10 hover:bg-white/20 border border-white/10"
+              animate={{ y: [0, -5.5, 0] }}
+              transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
+              className="px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-wider text-white hover:text-yellow-400 transition-all cursor-pointer bg-slate-950/80 backdrop-blur-md border border-yellow-500/25 shadow-lg shadow-black/40 hover:scale-105 active:scale-95"
             >
               Buy & Sell
-            </button>
-            <button 
+            </motion.button>
+            <motion.button 
               onClick={() => onCategoryClick?.("services")} 
-              className="px-4 py-2 rounded-lg text-xs font-bold text-white hover:text-slate-200 transition-all cursor-pointer font-bold bg-white/10 hover:bg-white/20 border border-white/10"
+              animate={{ y: [0, -4.5, 0] }}
+              transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut", delay: 0.25 }}
+              className="px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-wider text-white hover:text-yellow-400 transition-all cursor-pointer bg-slate-950/80 backdrop-blur-md border border-yellow-500/25 shadow-lg shadow-black/40 hover:scale-105 active:scale-95"
             >
               Services
-            </button>
-            <button 
+            </motion.button>
+            <motion.button 
               onClick={() => onCategoryClick?.("shops")} 
-              className="px-4 py-2 rounded-lg text-xs font-bold text-white hover:text-slate-200 transition-all cursor-pointer font-bold bg-white/10 hover:bg-white/20 border border-white/10"
+              animate={{ y: [0, -5.0, 0] }}
+              transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
+              className="px-5 py-3 rounded-2xl text-[10px] font-black uppercase tracking-wider text-white hover:text-yellow-400 transition-all cursor-pointer bg-slate-950/80 backdrop-blur-md border border-yellow-500/25 shadow-lg shadow-black/40 hover:scale-105 active:scale-95"
             >
               Recent Offer
-            </button>
-          </nav>
+            </motion.button>
+          </div>
         </div>
 
-        {/* Responsive, static side-by-side CTA Button Row */}
-        <div className="w-full max-w-xl mx-auto px-6 pb-14 flex flex-col sm:flex-row items-center justify-center gap-4 pointer-events-auto">
+        {/* Responsive, side-by-side CTA Button Row with Independent Floating Animations */}
+        <div className="w-full max-w-xl mx-auto px-6 pb-14 flex flex-col sm:flex-row items-center justify-center gap-4.5 pointer-events-auto">
           {/* Explore Button (Secondary - Glassmorphism) */}
-          <button
+          <motion.button
             onClick={() => onCategoryClick?.("classifieds")}
-            className="w-full sm:w-auto px-10 py-4 rounded-2xl bg-slate-950/40 backdrop-blur-md hover:bg-slate-950/60 text-white font-extrabold text-xs uppercase tracking-wider border border-white/20 transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer shadow-md select-none text-center font-bold"
+            animate={{ y: [0, -4, 0] }}
+            transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut" }}
+            className="w-full sm:w-auto px-12 py-4 rounded-2xl bg-slate-950/50 backdrop-blur-md hover:bg-slate-950/70 text-white font-extrabold text-xs uppercase tracking-wider border border-white/20 transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer shadow-lg shadow-black/35 select-none text-center font-bold"
           >
-            Explore noticeboard
-          </button>
+            Explore
+          </motion.button>
 
           {/* Register Button (Primary - Gold-Yellow) */}
-          <button
+          <motion.button
             onClick={onCtaClick}
-            className="w-full sm:w-auto px-10 py-4 rounded-2xl bg-yellow-500 hover:bg-yellow-600 active:scale-[0.97] hover:scale-[1.03] text-slate-950 font-black text-xs uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-yellow-500/20 border border-yellow-400 select-none text-center flex items-center justify-center gap-2 font-bold"
+            animate={{ y: [0, -4, 0] }}
+            transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut", delay: 0.3 }}
+            className="w-full sm:w-auto px-12 py-4 rounded-2xl bg-yellow-500 hover:bg-yellow-600 active:scale-[0.97] hover:scale-[1.03] text-slate-950 font-black text-xs uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-yellow-500/30 border border-yellow-450 select-none text-center flex items-center justify-center gap-2 font-bold"
           >
-            <span>{ctaText === "Verified" ? "✓ Profile Dashboard" : "Register Business / Member"}</span>
+            <span>{ctaText === "Verified" ? "Profile" : "Register"}</span>
             <ArrowRight className="w-4 h-4 text-slate-950" />
-          </button>
+          </motion.button>
         </div>
       </div>
     </section>

@@ -13,13 +13,13 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  title: "Tanjore Hub - Thanjavur's Local Directory",
+  title: "Namma Thanjai - Thanjavur's Local Directory",
   description: "Browse requirements, verified services, shop directory, and recent offers in Thanjavur (Tanjore), Tamil Nadu.",
   manifest: "/manifest.json",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "Tanjore Hub",
+    title: "Namma Thanjai",
   },
 };
 
