@@ -6,7 +6,8 @@ import { Environment, ContactShadows, Html } from "@react-three/drei";
 import * as THREE from "three";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { PiShoppingBagBold } from "react-icons/pi";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Loader2, Phone, CheckCircle } from "lucide-react";
+import { useAuth } from "@/hooks/use-auth";
 
 class HeartCurve extends THREE.Curve<THREE.Vector3> {
   constructor() {
@@ -801,6 +802,32 @@ export function RobotHero({
   activeAlertIdx = 0,
 }: RobotHeroProps = {}) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const { profile, updatePhone } = useAuth();
+  const [mobileNumber, setMobileNumber] = useState("");
+  const [isVerifying, setIsVerifying] = useState(false);
+
+  const handleMobileSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!mobileNumber || mobileNumber.length < 10) {
+      alert("Please enter a valid 10-digit mobile number.");
+      return;
+    }
+    setIsVerifying(true);
+    try {
+      const result = await updatePhone(mobileNumber);
+      if (result?.success) {
+        const confetti = (await import("canvas-confetti")).default;
+        confetti({ particleCount: 80, spread: 60 });
+      } else {
+        alert("Verification login failed.");
+      }
+    } catch (err: any) {
+      alert("Verification login error: " + err.message);
+    } finally {
+      setIsVerifying(false);
+    }
+  };
+
   const [wordIndex, setWordIndex] = useState(0);
   const [isSpinning, setIsSpinning] = useState(false);
   const words = ["NAMMA THANJAI", "SELL PLOT", "BUY HOUSE", "PLUMBER", "CARPENTER", "HIRE TAXI", "RENT ROOM", "BEST OFFERS", "LOCAL SHOPS"];
@@ -854,69 +881,102 @@ export function RobotHero({
       <div className="flex md:hidden flex-col items-center justify-between z-10 px-6 w-full flex-1 text-center select-none pointer-events-auto pb-6">
         
         {/* Onboarding Header branding */}
-        <div className="flex flex-col items-center gap-2 mt-4">
+        <div className="flex flex-col items-center gap-2 mt-6">
           {/* Circular shadow logo */}
           <img 
             src="/namma_thanjai_logo.png" 
             alt="namma thanjai mobile app logo" 
-            className="w-16 h-16 rounded-full bg-white shadow-md p-1.5 shrink-0 object-contain" 
+            className="w-18 h-18 rounded-full bg-white shadow-md p-2 shrink-0 object-contain" 
           />
           <div className="flex flex-col items-center">
             <h1 className="font-heading font-black text-3.5xl text-slate-900 tracking-tight leading-none uppercase">
               namma thanjavur<span className="text-yellow-500">.</span>
             </h1>
-            <p className="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-1">
+            <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1.5">
               verified local board
             </p>
           </div>
         </div>
 
-        {/* Center: Giant interactive 3D robot mascot */}
-        <div className="w-full h-[320px] relative flex items-center justify-center">
-          {/* Scrolling category words behind the robot */}
-          <div className="absolute left-0 right-0 pointer-events-none overflow-hidden flex justify-center z-0 top-[26%]">
-            <AnimatePresence mode="wait">
-              <motion.h2
-                key={wordIndex}
-                initial={{ opacity: 0, y: -12 }}
-                animate={{ opacity: 0.04, y: 0 }}
-                exit={{ opacity: 0, y: 12 }}
-                transition={{ duration: 0.5, ease: "easeInOut" }}
-                className="font-sans font-black select-none whitespace-nowrap text-slate-950 uppercase tracking-widest text-2.5xl text-center"
+        {/* Center: App Registration & Log In form */}
+        <div className="w-full flex flex-col items-center justify-center flex-1 py-4 animate-scale-up">
+          {profile?.isVerified ? (
+            <div className="w-full max-w-[310px] bg-white border border-slate-100 rounded-3xl p-6 shadow-sm flex flex-col items-center justify-center gap-4 text-slate-800">
+              <div className="w-14 h-14 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100">
+                <CheckCircle className="w-7 h-7 stroke-[2.5]" />
+              </div>
+              <div className="text-center">
+                <h3 className="font-heading font-extrabold text-sm text-slate-900">
+                  Verification Active
+                </h3>
+                <p className="text-[10px] text-slate-500 mt-1.5 font-bold">
+                  Logged in as +91 {profile.phone}
+                </p>
+              </div>
+              <button
+                onClick={() => onCategoryClick?.("classifieds")}
+                className="w-full py-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider transition-all select-none shadow-md cursor-pointer"
               >
-                {words[wordIndex]}
-              </motion.h2>
-            </AnimatePresence>
-          </div>
-          <div onClick={handleRobotTap} className="w-full h-full relative cursor-pointer z-10">
-            <Canvas shadows camera={{ position: [0, 0.12, 4.4], fov: 38 }}>
-              <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
-              <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} castShadow shadow-mapSize={[512, 512]} shadow-bias={-0.0005} />
-              <directionalLight position={[-5, 2, -5]} intensity={entorno.luzRelleno} color={entorno.luzRellenoColor} />
-              <Environment preset="studio" />
-              <ResponsiveGroup scale={scale}>
-                <ContactShadows position={[0, -0.79, 0]} opacity={entorno.sombraOpacidad} scale={15} resolution={256} blur={entorno.sombraBlur} far={2.5} color="#000000" />
-                <RobotPrototype neckParams={{ baseR: 0.215, baseH: -0.05, midR: 0.28, midH: 0.02, lipBottomR: 0.295, lipBottomH: 0.045, lipTopR: 0.27, lipTopH: 0.055, innerR: 0.1, innerDropH: 0.0 }} bodyParams={{ bodyBevelR: 0.235, bodyBevelY: 0.34, bodyBevelT: 0.025 }} color={color} pantallaColor={pantallaColor} pantallaBrillo={pantallaBrillo} blinkCycle={blinkCycle} metalness={metalness} />
-              </ResponsiveGroup>
-            </Canvas>
-          </div>
+                Go to Noticeboard
+              </button>
+            </div>
+          ) : (
+            <div className="w-full max-w-[310px] bg-white border border-slate-150 rounded-3xl p-6 shadow-md flex flex-col gap-4.5 text-slate-800 text-left">
+              <div>
+                <h3 className="font-heading font-black text-sm text-slate-900 uppercase tracking-wide">
+                  Sign In / Register
+                </h3>
+                <p className="text-[10px] text-slate-500 mt-1 font-semibold leading-normal">
+                  Enter your mobile number to verify and get instant access to Thanjavur's smart local directory.
+                </p>
+              </div>
+
+              <form onSubmit={handleMobileSubmit} className="flex flex-col gap-4">
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-wider">
+                    WhatsApp Mobile Number
+                  </label>
+                  <div className="relative">
+                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">+91</span>
+                    <input
+                      type="tel"
+                      required
+                      value={mobileNumber}
+                      onChange={(e) => setMobileNumber(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                      placeholder="10-digit number"
+                      disabled={isVerifying}
+                      className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl pl-11 pr-3 py-2.5 text-xs focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 focus:outline-none font-bold"
+                    />
+                  </div>
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={isVerifying}
+                  className="bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black w-full py-3.5 rounded-2xl text-xs uppercase tracking-wider transition-all shadow-md shadow-yellow-500/10 flex items-center justify-center gap-1.5 cursor-pointer"
+                >
+                  {isVerifying ? (
+                    <>
+                      <Loader2 className="w-4 h-4 animate-spin text-slate-955" />
+                      <span>Verifying...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Phone className="w-3.5 h-3.5 text-slate-955" />
+                      <span>Verify & Continue</span>
+                    </>
+                  )}
+                </button>
+              </form>
+            </div>
+          )}
         </div>
 
-        {/* Bottom Onboarding CTA sequence */}
-        <div className="w-full flex flex-col items-center gap-3.5 max-w-[310px] mx-auto mt-2">
-          {/* Primary Highlighted Register Button */}
-          <button
-            onClick={onCtaClick}
-            className="w-full py-4 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-950 font-black text-xs uppercase tracking-wider transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer shadow-lg shadow-yellow-500/20 border-0 select-none text-center flex items-center justify-center gap-2"
-          >
-            <span>{ctaText === "Verified" ? "Go to Profile" : "Register / Get Started"}</span>
-            <ArrowRight className="w-4 h-4 text-slate-950" />
-          </button>
-
-          {/* Secondary subtle guest link */}
+        {/* Bottom guest link */}
+        <div className="w-full max-w-[310px] mx-auto">
           <button
             onClick={() => onCategoryClick?.("classifieds")}
-            className="text-slate-500 hover:text-slate-800 font-black text-[11px] uppercase tracking-wider py-1.5 transition-colors cursor-pointer select-none"
+            className="text-slate-400 hover:text-slate-700 font-black text-[11px] uppercase tracking-wider py-1.5 transition-colors cursor-pointer select-none bg-transparent border-0"
           >
             Explore Noticeboard
           </button>
