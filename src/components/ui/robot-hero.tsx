@@ -39,7 +39,7 @@ function ResponsiveGroup({
 }: ResponsiveGroupProps) {
   const { viewport } = useThree();
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-  const s = Math.min(1.1, viewport.width / 3.5) * scale * (isMobile ? 0.7 : 1);
+  const s = Math.min(1.5, viewport.width / 2.7) * scale * (isMobile ? 0.75 : 1.3);
   return <group scale={s}>{children}</group>;
 }
 
@@ -898,85 +898,54 @@ export function RobotHero({
           </div>
         </div>
 
-        {/* Center: App Registration & Log In form */}
-        <div className="w-full flex flex-col items-center justify-center flex-1 py-4 animate-scale-up">
-          {profile?.isVerified ? (
-            <div className="w-full max-w-[310px] bg-white border border-slate-100 rounded-3xl p-6 shadow-sm flex flex-col items-center justify-center gap-4 text-slate-800">
-              <div className="w-14 h-14 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-100">
-                <CheckCircle className="w-7 h-7 stroke-[2.5]" />
-              </div>
-              <div className="text-center">
-                <h3 className="font-heading font-extrabold text-sm text-slate-900">
-                  Verification Active
-                </h3>
-                <p className="text-[10px] text-slate-500 mt-1.5 font-bold">
-                  Logged in as +91 {profile.phone}
-                </p>
-              </div>
-              <button
-                onClick={() => onCategoryClick?.("classifieds")}
-                className="w-full py-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider transition-all select-none shadow-md cursor-pointer"
-              >
-                Go to Noticeboard
-              </button>
+        {/* Center: What the App Does (Clever Value Cards) */}
+        <div className="w-full max-w-[320px] flex flex-col gap-3.5 my-6 text-left animate-scale-up">
+          <div className="flex gap-4 items-center bg-slate-50 border border-slate-100 rounded-2xl p-3.5 shadow-3xs">
+            <div className="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center text-yellow-600 text-lg shrink-0">
+              📢
             </div>
-          ) : (
-            <div className="w-full max-w-[310px] bg-white border border-slate-150 rounded-3xl p-6 shadow-md flex flex-col gap-4.5 text-slate-800 text-left">
-              <div>
-                <h3 className="font-heading font-black text-sm text-slate-900 uppercase tracking-wide">
-                  Sign In / Register
-                </h3>
-                <p className="text-[10px] text-slate-500 mt-1 font-semibold leading-normal">
-                  Enter your mobile number to verify and get instant access to Thanjavur's smart local directory.
-                </p>
-              </div>
-
-              <form onSubmit={handleMobileSubmit} className="flex flex-col gap-4">
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-[9px] font-black text-slate-400 uppercase tracking-wider">
-                    WhatsApp Mobile Number
-                  </label>
-                  <div className="relative">
-                    <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">+91</span>
-                    <input
-                      type="tel"
-                      required
-                      value={mobileNumber}
-                      onChange={(e) => setMobileNumber(e.target.value.replace(/\D/g, "").slice(0, 10))}
-                      placeholder="10-digit number"
-                      disabled={isVerifying}
-                      className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl pl-11 pr-3 py-2.5 text-xs focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 focus:outline-none font-bold"
-                    />
-                  </div>
-                </div>
-
-                <button
-                  type="submit"
-                  disabled={isVerifying}
-                  className="bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black w-full py-3.5 rounded-2xl text-xs uppercase tracking-wider transition-all shadow-md shadow-yellow-500/10 flex items-center justify-center gap-1.5 cursor-pointer"
-                >
-                  {isVerifying ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin text-slate-955" />
-                      <span>Verifying...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Phone className="w-3.5 h-3.5 text-slate-955" />
-                      <span>Verify & Continue</span>
-                    </>
-                  )}
-                </button>
-              </form>
+            <div>
+              <h4 className="font-heading font-black text-xs text-slate-900 uppercase tracking-wider">Buy & Sell Notice</h4>
+              <p className="text-[10px] text-slate-500 mt-0.5 font-semibold leading-normal">Scan business cards with AI to post deals instantly.</p>
             </div>
-          )}
+          </div>
+
+          <div className="flex gap-4 items-center bg-slate-50 border border-slate-100 rounded-2xl p-3.5 shadow-3xs">
+            <div className="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center text-yellow-600 text-lg shrink-0">
+              🛠️
+            </div>
+            <div>
+              <h4 className="font-heading font-black text-xs text-slate-900 uppercase tracking-wider">Helper Directory</h4>
+              <p className="text-[10px] text-slate-500 mt-0.5 font-semibold leading-normal">Connect directly with verified local tradespeople.</p>
+            </div>
+          </div>
+
+          <div className="flex gap-4 items-center bg-slate-50 border border-slate-100 rounded-2xl p-3.5 shadow-3xs">
+            <div className="w-10 h-10 rounded-xl bg-yellow-500/10 border border-yellow-500/20 flex items-center justify-center text-yellow-600 text-lg shrink-0">
+              🏪
+            </div>
+            <div>
+              <h4 className="font-heading font-black text-xs text-slate-900 uppercase tracking-wider">Local Offers</h4>
+              <p className="text-[10px] text-slate-500 mt-0.5 font-semibold leading-normal">Explore local showrooms and active discounts in town.</p>
+            </div>
+          </div>
         </div>
 
-        {/* Bottom guest link */}
-        <div className="w-full max-w-[310px] mx-auto">
+        {/* Bottom Onboarding CTA sequence */}
+        <div className="w-full flex flex-col items-center gap-3 max-w-[320px] mx-auto">
+          {/* Primary Highlighted Register Button */}
+          <button
+            onClick={onCtaClick}
+            className="w-full py-4 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-950 font-black text-xs uppercase tracking-wider transition-all hover:scale-[1.02] active:scale-[0.98] cursor-pointer shadow-lg shadow-yellow-500/25 border-0 text-center flex items-center justify-center gap-2"
+          >
+            <span>{ctaText === "Verified" ? "Go to Profile" : "Register / Sign In"}</span>
+            <ArrowRight className="w-4 h-4 text-slate-950" />
+          </button>
+
+          {/* Secondary Outline/Explore Button */}
           <button
             onClick={() => onCategoryClick?.("classifieds")}
-            className="text-slate-400 hover:text-slate-700 font-black text-[11px] uppercase tracking-wider py-1.5 transition-colors cursor-pointer select-none bg-transparent border-0"
+            className="w-full py-4 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider transition-all shadow-md text-center cursor-pointer border-0"
           >
             Explore Noticeboard
           </button>
@@ -1056,22 +1025,22 @@ export function RobotHero({
           {/* Right panel giant mascot */}
           <div className="w-[50%] h-full relative flex items-center justify-center">
             {/* Category words behind the robot */}
-            <div className="absolute left-0 right-0 pointer-events-none overflow-hidden flex justify-center z-0 top-[26%]">
+            <div className="absolute left-0 right-0 pointer-events-none overflow-hidden flex justify-center z-0 top-[2%]">
               <AnimatePresence mode="wait">
                 <motion.h2
                   key={wordIndex}
                   initial={{ opacity: 0, y: -12 }}
-                  animate={{ opacity: 0.05, y: 0 }}
+                  animate={{ opacity: 0.08, y: 0 }}
                   exit={{ opacity: 0, y: 12 }}
                   transition={{ duration: 0.5, ease: "easeInOut" }}
-                  className="font-sans font-black select-none whitespace-nowrap text-slate-950 uppercase tracking-widest text-4xl text-center"
+                  className="font-sans font-black select-none whitespace-nowrap text-slate-950 uppercase tracking-widest text-5xl md:text-7xl text-center"
                 >
                   {words[wordIndex]}
                 </motion.h2>
               </AnimatePresence>
             </div>
             <div onClick={handleRobotTap} className="w-full h-full relative cursor-pointer z-10">
-              <Canvas shadows camera={{ position: [0, 0.15, 5.0], fov: 38 }}>
+              <Canvas shadows camera={{ position: [0, 0.12, 3.6], fov: 38 }}>
                 <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
                 <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} castShadow shadow-mapSize={[1024, 1024]} shadow-bias={-0.0005} />
                 <directionalLight position={[-5, 2, -5]} intensity={entorno.luzRelleno} color={entorno.luzRellenoColor} />
