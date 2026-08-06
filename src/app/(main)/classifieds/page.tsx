@@ -163,6 +163,11 @@ export default function ClassifiedsPage() {
     }
   }, [area]);
 
+  // Keep formType in sync with the activeType tab selection
+  useEffect(() => {
+    setFormType(activeType);
+  }, [activeType]);
+
   // Handle header ?create=true URL parameter trigger
   const triggerCreate = searchParams.get("create") === "true";
   useEffect(() => {
@@ -438,30 +443,17 @@ export default function ClassifiedsPage() {
                   
                   {/* Left Column: Input Fields */}
                   <div className="flex flex-col gap-3.5">
-                    {/* Toggle Post Type in Form */}
+                    {/* Locked Post Type in Form */}
                     <div>
                       <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1.5">
-                        Posting Type
+                        Posting Section
                       </label>
-                      <div className="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-xl">
-                        <button
-                          type="button"
-                          onClick={() => setFormType("need")}
-                          className={`py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                            formType === "need" ? "bg-white text-yellow-750 shadow-xs" : "text-slate-500"
-                          }`}
-                        >
-                          📢 I Need / Renting
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setFormType("sale")}
-                          className={`py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                            formType === "sale" ? "bg-white text-emerald-700 shadow-xs" : "text-slate-500"
-                          }`}
-                        >
-                          🏷️ For Sale / Available
-                        </button>
+                      <div className={`py-2.5 px-4 rounded-xl text-xs font-black select-none border ${
+                        formType === "need" 
+                          ? "bg-blue-50/65 text-blue-700 border-blue-200/80" 
+                          : "bg-emerald-50/65 text-emerald-700 border-emerald-200/80"
+                      }`}>
+                        {formType === "need" ? "📢 Buying / Looking For (Posting to this tab)" : "🏷️ Selling / For Sale (Posting to this tab)"}
                       </div>
                     </div>
 

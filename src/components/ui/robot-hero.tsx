@@ -37,7 +37,8 @@ function ResponsiveGroup({
   scale = 1,
 }: ResponsiveGroupProps) {
   const { viewport } = useThree();
-  const s = Math.min(1.1, viewport.width / 3.5) * scale;
+  const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
+  const s = Math.min(1.1, viewport.width / 3.5) * scale * (isMobile ? 0.7 : 1);
   return <group scale={s}>{children}</group>;
 }
 
@@ -866,9 +867,9 @@ export function RobotHero({
           </button>
         </div>
 
-        {/* Horizontal Ticker alert looping marquee content */}
+        {/* Horizontal Ticker alert looping marquee content (Hidden on mobile) */}
         {alerts.length > 0 && (
-          <div className="w-full bg-slate-950 border-2 border-slate-900 text-yellow-500 rounded-3xl py-3.5 px-6 shadow-xl flex items-center justify-between text-xs font-black select-none max-w-2xl mx-auto tracking-wide">
+          <div className="hidden md:flex w-full bg-slate-950 border-2 border-slate-900 text-yellow-500 rounded-3xl py-3.5 px-6 shadow-xl items-center justify-between text-xs font-black select-none max-w-2xl mx-auto tracking-wide">
             <div className="flex items-center gap-2.5 overflow-hidden w-full">
               <span className="bg-yellow-500 text-slate-950 font-black text-[9px] px-2 py-0.5 rounded-md uppercase shrink-0">
                 LIVE UPDATE
@@ -896,54 +897,54 @@ export function RobotHero({
       <div className="flex-1 w-full max-w-7xl mx-auto px-6 flex flex-col md:flex-row items-center justify-between z-10 pointer-events-none mt-4 pb-14">
         
         {/* LEFT BRANDING PANEL: Big Logo, Branding Title, actions */}
-        <div className="w-full md:w-[45%] flex flex-col items-center md:items-start text-center md:text-left gap-7 pointer-events-auto mt-6 md:mt-0 select-none">
-          <div className="flex flex-col gap-5 items-center md:items-start">
+        <div className="w-full md:w-[45%] flex flex-col items-center md:items-start text-center md:text-left gap-4 md:gap-7 pointer-events-auto mt-6 md:mt-0 select-none">
+          <div className="flex flex-col gap-3 md:gap-5 items-center md:items-start">
             {/* Logo box */}
-            <div className="w-24 h-24 rounded-3xl bg-white border-2 border-slate-200 flex items-center justify-center overflow-hidden shadow-md shrink-0">
+            <div className="w-14 h-14 md:w-24 md:h-24 rounded-2xl md:rounded-3xl bg-white border-2 border-slate-200 flex items-center justify-center overflow-hidden shadow-md shrink-0">
               <img 
                 src="/namma_thanjai_logo.png" 
                 alt="namma thanjai app icon logo" 
-                className="w-22 h-22 object-contain shrink-0" 
+                className="w-12 h-12 md:w-22 md:h-22 object-contain shrink-0" 
               />
             </div>
             {/* App name */}
             <div>
-              <h1 className="font-heading font-black text-5xl md:text-6xl text-slate-900 tracking-tight leading-none uppercase">
+              <h1 className="font-heading font-black text-3xl md:text-6xl text-slate-900 tracking-tight leading-none uppercase">
                 namma<br className="hidden md:block"/> thanjavur<span className="text-yellow-500">.</span>
               </h1>
-              <p className="text-[11px] text-slate-400 font-bold uppercase tracking-widest mt-2.5">
+              <p className="text-[10px] md:text-[11px] text-slate-400 font-bold uppercase tracking-widest mt-1.5 md:mt-2.5">
                 verified local board
               </p>
             </div>
           </div>
 
-          <p className="text-sm md:text-base text-slate-500 max-w-sm leading-relaxed font-semibold">
+          <p className="text-xs md:text-base text-slate-500 max-w-sm leading-relaxed font-semibold">
             Thanjavur's smart local noticeboard directory. Scan visiting cards with AI, explore plot offers, and search helper service trades.
           </p>
 
-          {/* Action buttons */}
-          <div className="w-full flex flex-col sm:flex-row items-center gap-3.5 mt-1.5">
-            {/* Explore Button (Secondary - Glassmorphism) */}
+          {/* Action buttons - Side by Side on Mobile */}
+          <div className="w-full flex flex-row justify-center md:justify-start gap-2.5 mt-1">
+            {/* Explore Button */}
             <button
               onClick={() => onCategoryClick?.("classifieds")}
-              className="w-full sm:w-auto px-12 py-4 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer shadow-lg select-none text-center"
+              className="flex-1 sm:flex-none px-4 md:px-12 py-3 md:py-4 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-black text-[10px] md:text-xs uppercase tracking-wider transition-all hover:scale-[1.03] active:scale-[0.97] cursor-pointer shadow-lg select-none text-center"
             >
-              Explore Noticeboard
+              Explore
             </button>
 
-            {/* Register Button (Primary - Gold-Yellow) */}
+            {/* Register Button */}
             <button
               onClick={onCtaClick}
-              className="w-full sm:w-auto px-12 py-4 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-950 font-black text-xs uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-yellow-500/20 border-0 select-none text-center flex items-center justify-center gap-2"
+              className="flex-1 sm:flex-none px-4 md:px-12 py-3 md:py-4 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-950 font-black text-[10px] md:text-xs uppercase tracking-wider transition-all cursor-pointer shadow-lg shadow-yellow-500/20 border-0 select-none text-center flex items-center justify-center gap-1.5"
             >
               <span>{ctaText === "Verified" ? "Profile" : "Register"}</span>
-              <ArrowRight className="w-4 h-4 text-slate-950" />
+              <ArrowRight className="w-3.5 h-3.5 text-slate-950" />
             </button>
           </div>
         </div>
 
         {/* RIGHT INTERACTIVE MOUSE-FOLLOWING 3D CANVAS */}
-        <div className="w-full md:w-[50%] h-[400px] md:h-full relative pointer-events-auto flex items-center justify-center">
+        <div className="w-full md:w-[50%] h-[240px] md:h-full relative pointer-events-auto flex items-center justify-center">
           
           {/* Scrolling category words behind the robot on the right side */}
           <div className="absolute left-0 right-0 pointer-events-none overflow-hidden flex justify-center z-0 top-[28%] md:top-[26%]">
