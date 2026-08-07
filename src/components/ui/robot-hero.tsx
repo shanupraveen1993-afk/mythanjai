@@ -897,8 +897,15 @@ export function RobotHero({
       {/* Centered Main Hero Container - Broader layout with mobile first-screen fit */}
       <div className="z-10 w-full max-w-3xl lg:max-w-4xl mx-auto flex flex-col items-center text-center gap-2.5 sm:gap-3.5 my-auto pointer-events-auto">
         
-        {/* 1. Static Bold Header Title: NAMMA THANJAVUR */}
-        <div className="flex flex-col items-center gap-0.5">
+        {/* 1. Logo Badge + Static Bold Header Title: NAMMA THANJAVUR */}
+        <div className="flex flex-col items-center gap-1.5">
+          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white shadow-md p-2 flex items-center justify-center shrink-0 border border-slate-150 mb-0.5">
+            <img 
+              src="/namma_thanjai_logo.png" 
+              alt="namma thanjai app logo" 
+              className="w-full h-full object-contain" 
+            />
+          </div>
           <h1 className="font-heading font-black text-2xl sm:text-4xl md:text-5xl text-slate-900 tracking-tight leading-none uppercase">
             namma thanjavur<span className="text-yellow-500">.</span>
           </h1>
@@ -923,16 +930,16 @@ export function RobotHero({
           </AnimatePresence>
         </div>
 
-        {/* 3. Mascot Robot Canvas (Compact height so mobile first-screen fold fits all elements) */}
+        {/* 3. Mascot Robot Canvas (Increased height & scale for prominent display) */}
         <div 
           onClick={handleRobotTap} 
-          className="w-full max-w-[240px] sm:max-w-[300px] h-[160px] sm:h-[210px] relative flex items-center justify-center cursor-pointer my-0.5"
+          className="w-full max-w-[280px] sm:max-w-[340px] h-[210px] sm:h-[260px] md:h-[290px] relative flex items-center justify-center cursor-pointer my-0.5"
         >
           <Canvas shadows camera={{ position: [0, 0.12, 3.6], fov: 38 }}>
             <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
             <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} castShadow shadow-mapSize={[512, 512]} shadow-bias={-0.0005} />
             <Environment preset="studio" blur={0.5} />
-            <ResponsiveGroup scale={scale * 0.72}>
+            <ResponsiveGroup scale={scale * 0.85}>
               <ContactShadows position={[0, -0.79, 0]} opacity={entorno.sombraOpacidad} scale={10} resolution={256} blur={entorno.sombraBlur} far={2.5} color="#000000" />
               <RobotPrototype neckParams={{ baseR: 0.215, baseH: -0.05, midR: 0.28, midH: 0.02, lipBottomR: 0.295, lipBottomH: 0.045, lipTopR: 0.27, lipTopH: 0.055, innerR: 0.1, innerDropH: 0.0 }} bodyParams={{ bodyBevelR: 0.235, bodyBevelY: 0.34, bodyBevelT: 0.025 }} color={color} pantallaColor={pantallaColor} pantallaBrillo={pantallaBrillo} blinkCycle={blinkCycle} metalness={metalness} />
             </ResponsiveGroup>
