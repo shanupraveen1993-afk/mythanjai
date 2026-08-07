@@ -64,7 +64,15 @@ export default function HomeLandingPage() {
       {profile?.isVerified ? (
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-8 animate-fade-in">
           
-          {/* 1. 3 Segment Quick Navigation Shortcuts Bar */}
+          {/* 1. Simple Inline Greeting with Registered Phone Number (No Box Container) */}
+          <div className="flex flex-col gap-0.5 pb-1">
+            <h1 className="font-heading font-black text-lg text-slate-900 tracking-tight">
+              Welcome, {profile?.displayName || "Resident"}
+            </h1>
+            <p className="text-xs text-slate-500 font-bold">
+              Registered Mobile: +{profile?.phone || "919994837342"}
+            </p>
+          </div>
 
           {/* 2. 3 Segment Quick Navigation Shortcuts Bar */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
