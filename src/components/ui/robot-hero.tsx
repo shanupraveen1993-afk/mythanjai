@@ -892,16 +892,16 @@ export function RobotHero({
       className="relative w-full h-full md:h-screen flex flex-col bg-white text-slate-800 py-4 md:py-8 justify-between overflow-hidden"
     >
       {/* Light radial glow centered behind the robot */}
-      <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_60%,rgba(250,204,21,0.05)_0%,transparent_60%)] pointer-events-none" />
+      <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_60%,rgba(250,204,21,0.06)_0%,transparent_60%)] pointer-events-none" />
 
       {/* ==========================================
-          1. MOBILE VIEWPORT PORTION (Simple & Clean User Spec: Logo + Tagline -> Robot Mascot -> Two CTAs)
+          1. MOBILE VIEWPORT PORTION (Sleek, Clean Layout)
           ========================================== */}
       <div className="flex md:hidden flex-col items-center justify-between z-10 px-5 w-full flex-1 text-center select-none pointer-events-auto pb-6 overflow-y-auto">
         
         {/* Top Header Branding: Logo + Namma Thanjavur + Taglines */}
         <div className="flex flex-col items-center gap-2 mt-2">
-          <div className="w-16 h-16 rounded-2xl bg-white shadow-md p-2 flex items-center justify-center shrink-0 border border-slate-100">
+          <div className="w-16 h-16 rounded-2xl bg-white shadow-md p-2 flex items-center justify-center shrink-0 border border-slate-150">
             <img 
               src="/namma_thanjai_logo.png" 
               alt="namma thanjai app logo" 
@@ -922,23 +922,25 @@ export function RobotHero({
           </div>
         </div>
 
-        {/* Middle: Interactive 3D Mascot Robot Canvas with rotating background text */}
-        <div className="w-full flex-1 min-h-[220px] max-h-[320px] relative flex items-center justify-center my-2">
-          <div className="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden z-0">
-            <AnimatePresence mode="wait">
-              <motion.h2
-                key={wordIndex}
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 0.08, scale: 1 }}
-                exit={{ opacity: 0, scale: 1.1 }}
-                transition={{ duration: 0.4 }}
-                className="font-sans font-black text-3xl text-slate-950 uppercase tracking-widest text-center"
-              >
-                {words[wordIndex]}
-              </motion.h2>
-            </AnimatePresence>
-          </div>
+        {/* Animated category tag headline directly ABOVE the robot */}
+        <div className="w-full flex justify-center mt-3 mb-1 min-h-[28px] z-10">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={wordIndex}
+              initial={{ opacity: 0, y: -6 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 6 }}
+              transition={{ duration: 0.3 }}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-400/15 border border-amber-500/30 text-amber-700 font-black text-[11px] uppercase tracking-widest shadow-3xs"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+              <span>{words[wordIndex]}</span>
+            </motion.div>
+          </AnimatePresence>
+        </div>
 
+        {/* Middle: Interactive 3D Mascot Robot Canvas */}
+        <div className="w-full flex-1 min-h-[220px] max-h-[300px] relative flex items-center justify-center my-1">
           <div onClick={handleRobotTap} className="w-full h-full relative cursor-pointer z-10">
             <Canvas shadows camera={{ position: [0, 0.12, 3.6], fov: 38 }}>
               <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
@@ -952,11 +954,11 @@ export function RobotHero({
           </div>
         </div>
 
-        {/* Live Ticker Alert bar */}
+        {/* High-visibility Live Ticker Alert bar */}
         {alerts.length > 0 && (
-          <div className="w-full bg-slate-955 text-yellow-500 rounded-xl py-2 px-3.5 shadow-xs flex items-center justify-between text-[10px] font-black select-none max-w-[320px] mx-auto tracking-wide mb-3 border border-slate-900">
-            <div className="flex items-center gap-2 overflow-hidden w-full text-left">
-              <span className="bg-yellow-500 text-slate-955 font-black text-[7px] px-1.5 py-0.5 rounded-sm uppercase shrink-0 animate-pulse">
+          <div className="w-full bg-slate-900 border border-slate-800 text-white rounded-xl py-2 px-3.5 shadow-md flex items-center justify-between text-[11px] font-black select-none max-w-[340px] mx-auto tracking-wide mb-3">
+            <div className="flex items-center gap-2.5 overflow-hidden w-full text-left">
+              <span className="bg-yellow-500 text-slate-950 font-black text-[8px] px-2 py-0.5 rounded-md uppercase shrink-0 animate-pulse">
                 LIVE
               </span>
               <div className="relative h-4 flex-1 overflow-hidden">
@@ -967,7 +969,7 @@ export function RobotHero({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -10 }}
                     transition={{ duration: 0.3 }}
-                    className="absolute left-0 text-slate-100 truncate w-full font-bold text-left"
+                    className="absolute left-0 text-slate-100 truncate w-full font-bold text-left text-xs"
                   >
                     {alerts[activeAlertIdx]}
                   </motion.span>
@@ -977,29 +979,21 @@ export function RobotHero({
           </div>
         )}
 
-        {/* Bottom: Two Primary Action Buttons */}
-        <div className="w-full max-w-[320px] flex flex-col gap-2.5">
+        {/* Bottom: Single Primary Action Button */}
+        <div className="w-full max-w-[340px]">
           <button
             type="button"
             onClick={onCtaClick}
-            className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs uppercase tracking-wider transition-all shadow-md shadow-yellow-500/15 border-0 text-center flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98]"
+            className="w-full py-4 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs uppercase tracking-wider transition-all shadow-lg shadow-yellow-500/20 border-0 text-center flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98]"
           >
-            <span>{ctaText === "Verified" ? "Verified Profile" : "Register Helper / Ad"}</span>
+            <span>{ctaText === "Verified" ? "Verified Profile" : "Register Helper / Post Ad"}</span>
             <ArrowRight className="w-4 h-4 text-slate-955" />
-          </button>
-          
-          <button
-            type="button"
-            onClick={() => onCategoryClick?.("classifieds")}
-            className="w-full py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider transition-all shadow-sm text-center cursor-pointer border-0 active:scale-[0.98]"
-          >
-            Explore Noticeboard
           </button>
         </div>
       </div>
 
       {/* ==========================================
-          2. DESKTOP VIEWPORT PORTION (Clean Layout, Search Engine Card + Giant 3D Robot)
+          2. DESKTOP VIEWPORT PORTION (Clean Layout, Search Engine Card + 3D Mascot)
           ========================================== */}
       <div className="hidden md:flex flex-col justify-between w-full h-full max-w-7xl mx-auto px-8 z-10 select-none pointer-events-auto">
         
@@ -1113,43 +1107,38 @@ export function RobotHero({
               </div>
             </div>
 
-            {/* Quick CTAs */}
-            <div className="flex flex-row gap-3 w-full max-w-md">
-              <button
-                type="button"
-                onClick={() => onCategoryClick?.("classifieds")}
-                className="flex-1 py-3.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider transition-all hover:scale-[1.02] active:scale-[0.98] shadow-md text-center cursor-pointer border-0"
-              >
-                Explore Noticeboard
-              </button>
+            {/* Single Primary Action CTA */}
+            <div className="w-full max-w-md">
               <button
                 type="button"
                 onClick={onCtaClick}
-                className="flex-1 py-3.5 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs uppercase tracking-wider transition-all hover:scale-[1.02] active:scale-[0.98] shadow-md shadow-yellow-500/15 border-0 text-center flex items-center justify-center gap-2 cursor-pointer"
+                className="w-full py-4 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs uppercase tracking-wider transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-yellow-500/15 border-0 text-center flex items-center justify-center gap-2 cursor-pointer"
               >
-                <span>{ctaText === "Verified" ? "Profile" : "Register Helper / Ad"}</span>
+                <span>{ctaText === "Verified" ? "Verified Profile" : "Register Helper / Post Ad"}</span>
                 <ArrowRight className="w-4 h-4 text-slate-955" />
               </button>
             </div>
           </div>
 
-          {/* Right panel giant mascot */}
-          <div className="w-[50%] h-full relative flex items-center justify-center">
-            {/* Category words behind the robot */}
-            <div className="absolute left-0 right-0 pointer-events-none overflow-hidden flex justify-center z-0 top-[4%]">
+          {/* Right panel giant mascot with animated headline word tag */}
+          <div className="w-[50%] h-full relative flex flex-col items-center justify-center">
+            {/* Animated headline tag above robot on desktop */}
+            <div className="w-full flex justify-center mb-2 z-20">
               <AnimatePresence mode="wait">
-                <motion.h2
+                <motion.div
                   key={wordIndex}
-                  initial={{ opacity: 0, y: -12 }}
-                  animate={{ opacity: 0.08, y: 0 }}
-                  exit={{ opacity: 0, y: 12 }}
-                  transition={{ duration: 0.5, ease: "easeInOut" }}
-                  className="font-sans font-black select-none whitespace-nowrap text-slate-955 uppercase tracking-wider text-3xl md:text-5xl text-center"
+                  initial={{ opacity: 0, y: -10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: 10 }}
+                  transition={{ duration: 0.35 }}
+                  className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-400/15 border border-amber-500/30 text-amber-700 font-black text-xs uppercase tracking-widest shadow-2xs"
                 >
-                  {words[wordIndex]}
-                </motion.h2>
+                  <Sparkles className="w-4 h-4 text-amber-500" />
+                  <span>{words[wordIndex]}</span>
+                </motion.div>
               </AnimatePresence>
             </div>
+
             <div onClick={handleRobotTap} className="w-full h-full min-h-[400px] relative cursor-pointer z-10">
               <Canvas shadows camera={{ position: [0, 0.12, 3.6], fov: 38 }}>
                 <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
@@ -1165,11 +1154,11 @@ export function RobotHero({
           </div>
         </div>
 
-        {/* Bottom Ticker Alert */}
+        {/* High-visibility Bottom Live Ticker Alert */}
         {alerts.length > 0 && (
-          <div className="w-full bg-slate-955 text-yellow-500 rounded-2xl py-2 px-5 shadow-sm flex items-center justify-between text-xs font-black select-none max-w-lg mx-auto tracking-wide border border-slate-900 mb-2">
+          <div className="w-full bg-slate-900 border border-slate-800 text-white rounded-2xl py-2 px-5 shadow-md flex items-center justify-between text-xs font-black select-none max-w-lg mx-auto tracking-wide mb-2">
             <div className="flex items-center gap-2.5 overflow-hidden w-full text-left">
-              <span className="bg-yellow-500 text-slate-955 font-black text-[8px] px-2 py-0.5 rounded-md uppercase shrink-0 animate-pulse">
+              <span className="bg-yellow-500 text-slate-950 font-black text-[8px] px-2 py-0.5 rounded-md uppercase shrink-0 animate-pulse">
                 LIVE
               </span>
               <div className="relative h-4 flex-1 overflow-hidden">
@@ -1180,7 +1169,7 @@ export function RobotHero({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -12 }}
                     transition={{ duration: 0.35 }}
-                    className="absolute left-0 text-slate-100 truncate w-full font-bold text-left"
+                    className="absolute left-0 text-slate-100 truncate w-full font-bold text-left text-xs"
                   >
                     {alerts[activeAlertIdx]}
                   </motion.span>
