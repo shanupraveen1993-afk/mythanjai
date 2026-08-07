@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
-import { Phone, MessageSquare, Star, Award, MapPin, ShieldCheck, Zap, Droplet, Hammer, Wind, Wrench } from "lucide-react";
+import React, { useState } from "react";
+import { Phone, MessageSquare, Award, MapPin, ShieldCheck, Zap, Droplet, Hammer, Wind, Wrench, Eye, Share2, Bookmark } from "lucide-react";
 import { ServiceProviderPost } from "@/types";
 
 interface ServiceCardProps {
@@ -9,6 +9,10 @@ interface ServiceCardProps {
 }
 
 export default function ServiceCard({ post }: ServiceCardProps) {
+  const [saved, setSaved] = useState(false);
+  const viewsCount = Math.floor(120 + (post.name?.length || 5) * 19);
+  const sharesCount = Math.floor(18 + (post.name?.length || 5) * 3);
+
   // Format numbers for dialing and deep linking
   const cleanPhone = post.phone.replace(/\D/g, "");
   const formattedPhone = cleanPhone.startsWith("91") ? cleanPhone : `91${cleanPhone}`;
@@ -28,6 +32,25 @@ export default function ServiceCard({ post }: ServiceCardProps) {
     }
   };
 
+  const handleShare = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (navigator.share) {
+      navigator.share({
+        title: `${post.name} - ${post.skill_category}`,
+        text: `Hire ${post.name} (${post.skill_category}) in ${post.area_tag}, Thanjavur on Namma Thanjai!`,
+        url: window.location.href,
+      }).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      alert("Profile link copied to clipboard!");
+    }
+  };
+
+  const handleToggleSave = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSaved(!saved);
+  };
+
   return (
     <div className="bg-white border border-slate-200/95 rounded-2xl p-4 shadow-xs flex flex-col gap-3.5 transition-all active:scale-[0.99] hover:shadow-sm w-full">
       {/* Top Section: Name & Category Badge */}
@@ -42,19 +65,13 @@ export default function ServiceCard({ post }: ServiceCardProps) {
           </span>
         </div>
 
-        {/* Rating & Verified Indicator */}
-        <div className="flex flex-col items-end gap-1.5">
-          <div className="flex items-center gap-1 bg-yellow-50 text-yellow-750 border border-yellow-250/60 font-bold px-2 py-0.5 rounded-xl text-xs">
-            <Star className="w-3.5 h-3.5 fill-yellow-500 stroke-yellow-500" />
-            <span>{post.rating || "4.8"}</span>
-          </div>
-          {post.is_verified && (
-            <span className="text-[9px] bg-emerald-50 text-emerald-700 border border-emerald-200/60 font-black uppercase tracking-wider px-2 py-0.5 rounded-full flex items-center gap-0.5">
-              <ShieldCheck className="w-3 h-3 text-emerald-600" />
-              Verified
-            </span>
-          )}
-        </div>
+        {/* Verified Indicator */}
+        {post.is_verified && (
+          <span className="text-[9px] bg-emerald-50 text-emerald-700 border border-emerald-200/60 font-black uppercase tracking-wider px-2 py-0.5 rounded-full flex items-center gap-0.5">
+            <ShieldCheck className="w-3 h-3 text-emerald-600" />
+            Verified
+          </span>
+        )}
       </div>
 
       {/* Experience and Locality */}
@@ -75,6 +92,30 @@ export default function ServiceCard({ post }: ServiceCardProps) {
           {post.description}
         </p>
       )}
+
+      {/* Facebook-Style Social Engagement Bar */}
+      <div className="flex items-center justify-between text-[11px] text-slate-500 font-bold border-t border-b border-slate-100 py-2 my-0.5">
+        <div className="flex items-center gap-1.5 text-slate-500">
+          <Eye className="w-3.5 h-3.5 text-slate-400" />
+          <span>{viewsCount} Views</span>
+        </div>
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={handleShare}
+            className="flex items-center gap-1 hover:text-yellow-600 cursor-pointer transition-colors"
+          >
+            <Share2 className="w-3.5 h-3.5 text-slate-400" />
+            <span>{sharesCount} Shares</span>
+          </button>
+          <button 
+            onClick={handleToggleSave}
+            className={`flex items-center gap-1 cursor-pointer transition-colors ${saved ? "text-amber-600 font-extrabold" : "hover:text-amber-600"}`}
+          >
+            <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-amber-500 text-amber-500" : "text-slate-400"}`} />
+            <span>{saved ? "Saved" : "Save"}</span>
+          </button>
+        </div>
+      </div>
 
       {/* Interactive Action Buttons */}
       <div className="flex gap-2 pt-2 border-t border-slate-100 mt-0.5">

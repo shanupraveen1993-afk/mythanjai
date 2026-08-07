@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { MessageSquare, Calendar, Tag, MapPin, Share2, Home, Cpu, Car } from "lucide-react";
+import { MessageSquare, Calendar, Tag, MapPin, Share2, Home, Cpu, Car, Eye, Bookmark } from "lucide-react";
 import { NeedOrSalePost } from "@/types";
 
 interface NeedCardProps {
@@ -13,7 +13,11 @@ interface NeedCardProps {
 export default function NeedCard({ post, onShare }: NeedCardProps) {
   const [activeImgIndex, setActiveImgIndex] = useState(0);
   const [isPlayingVideo, setIsPlayingVideo] = useState(false);
+  const [saved, setSaved] = useState(false);
   const images = post.image_urls || (post.image_url ? [post.image_url] : []);
+
+  const viewsCount = Math.floor(150 + (post.title?.length || 5) * 14);
+  const sharesCount = Math.floor(22 + (post.title?.length || 5) * 2);
 
   // Format phone for WhatsApp link (must start with country code, e.g. 91)
   const cleanPhone = post.phone.replace(/\D/g, "");
@@ -21,6 +25,27 @@ export default function NeedCard({ post, onShare }: NeedCardProps) {
   const whatsappUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(
     `Hi, I saw your post "${post.title}" on Namma Thanjai (Area: ${post.area_tag}). Is it still available?`
   )}`;
+
+  const handleSharePost = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onShare) {
+      onShare(post);
+    } else if (navigator.share) {
+      navigator.share({
+        title: post.title,
+        text: `Check out this listing "${post.title}" in ${post.area_tag}, Thanjavur on Namma Thanjai!`,
+        url: window.location.href,
+      }).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      alert("Post link copied to clipboard!");
+    }
+  };
+
+  const handleToggleSave = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSaved(!saved);
+  };
 
   // Format creation date
   const formatDate = (timestamp: any) => {
@@ -182,33 +207,46 @@ export default function NeedCard({ post, onShare }: NeedCardProps) {
         {post.description || post.raw_text}
       </p>
 
+      {/* Facebook-Style Social Bar */}
+      <div className="flex items-center justify-between text-[11px] text-slate-500 font-bold border-t border-b border-slate-100 py-2 my-0.5">
+        <div className="flex items-center gap-1.5 text-slate-500">
+          <Eye className="w-3.5 h-3.5 text-slate-400" />
+          <span>{viewsCount} Views</span>
+        </div>
+        <div className="flex items-center gap-4">
+          <button 
+            onClick={handleSharePost}
+            className="flex items-center gap-1 hover:text-yellow-600 cursor-pointer transition-colors"
+          >
+            <Share2 className="w-3.5 h-3.5 text-slate-400" />
+            <span>{sharesCount} Shares</span>
+          </button>
+          <button 
+            onClick={handleToggleSave}
+            className={`flex items-center gap-1 cursor-pointer transition-colors ${saved ? "text-amber-600 font-extrabold" : "hover:text-amber-600"}`}
+          >
+            <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-amber-500 text-amber-500" : "text-slate-400"}`} />
+            <span>{saved ? "Saved" : "Save"}</span>
+          </button>
+        </div>
+      </div>
+
       {/* Footer Info & Action CTAs */}
-      <div className="flex items-center justify-between pt-2 border-t border-slate-100">
+      <div className="flex items-center justify-between pt-1">
         <div className="flex items-center gap-1 text-[10px] text-slate-500 font-bold">
           <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
           <span className="truncate max-w-[120px]">{post.area_tag}</span>
         </div>
 
-        <div className="flex gap-2">
-          {onShare && (
-            <button
-              onClick={() => onShare(post)}
-              className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 border border-slate-200 transition-colors"
-            >
-              <Share2 className="w-3.5 h-3.5" />
-            </button>
-          )}
-
-          <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center gap-1 bg-emerald-500 hover:bg-emerald-600 active:scale-95 text-white font-bold px-3 py-1.5 rounded-xl text-xs transition-all shadow-sm"
-          >
-            <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
-            <span>WhatsApp</span>
-          </a>
-        </div>
+        <a
+          href={whatsappUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="flex items-center gap-1 bg-emerald-500 hover:bg-emerald-600 active:scale-95 text-white font-bold px-3.5 py-1.5 rounded-xl text-xs transition-all shadow-sm"
+        >
+          <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
+          <span>WhatsApp</span>
+        </a>
       </div>
     </div>
   );
