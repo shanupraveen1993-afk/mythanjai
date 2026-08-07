@@ -42,36 +42,16 @@ export default function TopHeader({
         {/* Branding Logo - Left */}
         <div 
           onClick={() => onTabChange?.("home")}
-          className="flex items-center gap-2 cursor-pointer select-none"
+          className="flex items-center gap-2.5 cursor-pointer select-none"
         >
-          <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-8.5 h-8.5 object-contain shrink-0 rounded-lg shadow-xs" />
+          <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-9 h-9 object-contain shrink-0 rounded-xl shadow-2xs border border-slate-100" />
           <div className="flex items-center gap-0.5">
-            <span className="font-sans font-black tracking-tight text-slate-900 text-sm">
-              namma thanjai
+            <span className="font-heading font-black tracking-tight text-slate-900 text-base uppercase">
+              namma thanjavur
             </span>
-            <div className="w-1.5 h-1.5 rounded-full bg-yellow-500" />
+            <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 ml-0.5" />
           </div>
         </div>
-
-        {/* Desktop Navigation Links */}
-        <nav className="flex items-center gap-6 mr-16">
-          {DESKTOP_TABS.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => onTabChange?.(tab.id)}
-              className={`text-[10px] font-black uppercase tracking-widest transition-colors relative py-1 ${
-                activeTab === tab.id
-                  ? "text-yellow-600"
-                  : "text-slate-500 hover:text-slate-800"
-              }`}
-            >
-              {tab.label}
-              {activeTab === tab.id && (
-                <div className="absolute bottom-[-10px] left-0 right-0 h-0.5 bg-yellow-500 rounded-full" />
-              )}
-            </button>
-          ))}
-        </nav>
 
         {/* Right Actions */}
         <div className="flex items-center gap-3">

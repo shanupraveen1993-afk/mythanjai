@@ -889,214 +889,97 @@ export function RobotHero({
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-full md:h-screen flex flex-col bg-white text-slate-800 py-4 md:py-8 justify-between overflow-hidden"
+      className="relative w-full min-h-[calc(100vh-64px)] flex flex-col justify-between items-center bg-white text-slate-800 py-6 md:py-8 px-4 overflow-hidden select-none"
     >
-      {/* Light radial glow centered behind the robot */}
-      <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_60%,rgba(250,204,21,0.06)_0%,transparent_60%)] pointer-events-none" />
+      {/* Light radial glow centered behind hero */}
+      <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_50%,rgba(250,204,21,0.06)_0%,transparent_60%)] pointer-events-none" />
 
-      {/* ==========================================
-          1. MOBILE VIEWPORT PORTION (Sleek, Clean Layout with Background Text)
-          ========================================== */}
-      <div className="flex md:hidden flex-col items-center justify-between z-10 px-5 w-full flex-1 text-center select-none pointer-events-auto pb-6 overflow-y-auto">
+      {/* Centered Main Hero Container */}
+      <div className="z-10 w-full max-w-xl mx-auto flex flex-col items-center text-center gap-3.5 my-auto pointer-events-auto">
         
-        {/* Top Header Branding: Logo + Namma Thanjavur + Taglines */}
-        <div className="flex flex-col items-center gap-2 mt-2">
-          <div className="w-16 h-16 rounded-2xl bg-white shadow-md p-2 flex items-center justify-center shrink-0 border border-slate-150">
-            <img 
-              src="/namma_thanjai_logo.png" 
-              alt="namma thanjai app logo" 
-              className="w-full h-full object-contain" 
-            />
-          </div>
-          <div className="flex flex-col items-center mt-0.5">
-            <h1 className="font-heading font-black text-2xl text-slate-900 tracking-tight leading-none uppercase">
-              namma thanjavur<span className="text-yellow-500">.</span>
-            </h1>
-            <p className="text-[10px] text-slate-500 font-extrabold uppercase tracking-widest mt-1">
-              verified local noticeboard & helper trades
-            </p>
-          </div>
-          <div className="bg-yellow-500/10 border border-yellow-500/25 px-3 py-1 rounded-full flex items-center gap-1.5 shadow-3xs mt-1">
-            <span className="text-yellow-600 font-sans font-black text-xs leading-none">10+</span>
-            <span className="text-[8px] text-slate-700 font-extrabold uppercase tracking-wider leading-none">Active Local Trade Channels</span>
-          </div>
+        {/* 1. Static Bold Header Title: NAMMA THANJAVUR */}
+        <div className="flex flex-col items-center gap-1">
+          <h1 className="font-heading font-black text-3xl sm:text-4xl md:text-5xl text-slate-900 tracking-tight leading-none uppercase">
+            namma thanjavur<span className="text-yellow-500">.</span>
+          </h1>
+          <p className="text-[10px] sm:text-xs text-slate-500 font-extrabold uppercase tracking-widest mt-1">
+            thanjavur verified noticeboard & helper trades
+          </p>
         </div>
 
-        {/* Middle: Interactive 3D Mascot Robot Canvas with Giant Background Text */}
-        <div className="w-full flex-1 min-h-[240px] max-h-[340px] relative flex items-center justify-center my-2 overflow-hidden">
-          {/* Giant background word watermark for mobile */}
-          <div className="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden z-0">
-            <AnimatePresence mode="wait">
-              <motion.h2
-                key={wordIndex}
-                initial={{ opacity: 0, scale: 0.9, y: 10 }}
-                animate={{ opacity: 0.09, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 1.1, y: -10 }}
-                transition={{ duration: 0.5 }}
-                className="font-sans font-black text-4xl text-slate-950 uppercase tracking-widest text-center whitespace-nowrap select-none"
-              >
-                {words[wordIndex]}
-              </motion.h2>
-            </AnimatePresence>
-          </div>
-
-          <div onClick={handleRobotTap} className="w-full h-full relative cursor-pointer z-10">
-            <Canvas shadows camera={{ position: [0, 0.12, 3.6], fov: 38 }}>
-              <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
-              <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} castShadow shadow-mapSize={[512, 512]} shadow-bias={-0.0005} />
-              <Environment preset="studio" blur={0.5} />
-              <ResponsiveGroup scale={scale * 0.85}>
-                <ContactShadows position={[0, -0.79, 0]} opacity={entorno.sombraOpacidad} scale={10} resolution={256} blur={entorno.sombraBlur} far={2.5} color="#000000" />
-                <RobotPrototype neckParams={{ baseR: 0.215, baseH: -0.05, midR: 0.28, midH: 0.02, lipBottomR: 0.295, lipBottomH: 0.045, lipTopR: 0.27, lipTopH: 0.055, innerR: 0.1, innerDropH: 0.0 }} bodyParams={{ bodyBevelR: 0.235, bodyBevelY: 0.34, bodyBevelT: 0.025 }} color={color} pantallaColor={pantallaColor} pantallaBrillo={pantallaBrillo} blinkCycle={blinkCycle} metalness={metalness} />
-              </ResponsiveGroup>
-            </Canvas>
-          </div>
+        {/* 2. Dynamic Rotational Topic Badge */}
+        <div className="h-8 flex items-center justify-center my-0.5 overflow-hidden">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={wordIndex}
+              initial={{ opacity: 0, y: -8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 8 }}
+              transition={{ duration: 0.3 }}
+              className="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-yellow-500/10 border border-yellow-500/25 text-yellow-600 font-black text-xs sm:text-sm uppercase tracking-widest shadow-2xs"
+            >
+              <Sparkles className="w-3.5 h-3.5 text-yellow-500 animate-pulse" />
+              <span>{words[wordIndex]}</span>
+            </motion.div>
+          </AnimatePresence>
         </div>
 
-        {/* High-visibility Live Ticker Alert bar */}
-        {alerts.length > 0 && (
-          <div className="w-full bg-slate-900 border border-slate-800 text-white rounded-xl py-2 px-3.5 shadow-md flex items-center justify-between text-[11px] font-black select-none max-w-[340px] mx-auto tracking-wide mb-3">
-            <div className="flex items-center gap-2.5 overflow-hidden w-full text-left">
-              <span className="bg-yellow-500 text-slate-950 font-black text-[8px] px-2 py-0.5 rounded-md uppercase shrink-0 animate-pulse">
-                LIVE
-              </span>
-              <div className="relative h-4 flex-1 overflow-hidden">
-                <AnimatePresence mode="wait">
-                  <motion.span
-                    key={activeAlertIdx}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.3 }}
-                    className="absolute left-0 text-slate-100 truncate w-full font-bold text-left text-xs"
-                  >
-                    {alerts[activeAlertIdx]}
-                  </motion.span>
-                </AnimatePresence>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* 3. Mascot Robot Canvas (Compact, centered, tappable to spin) */}
+        <div 
+          onClick={handleRobotTap} 
+          className="w-full max-w-[280px] sm:max-w-[320px] h-[200px] sm:h-[240px] relative flex items-center justify-center cursor-pointer my-0.5"
+        >
+          <Canvas shadows camera={{ position: [0, 0.12, 3.6], fov: 38 }}>
+            <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
+            <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} castShadow shadow-mapSize={[512, 512]} shadow-bias={-0.0005} />
+            <Environment preset="studio" blur={0.5} />
+            <ResponsiveGroup scale={scale * 0.75}>
+              <ContactShadows position={[0, -0.79, 0]} opacity={entorno.sombraOpacidad} scale={10} resolution={256} blur={entorno.sombraBlur} far={2.5} color="#000000" />
+              <RobotPrototype neckParams={{ baseR: 0.215, baseH: -0.05, midR: 0.28, midH: 0.02, lipBottomR: 0.295, lipBottomH: 0.045, lipTopR: 0.27, lipTopH: 0.055, innerR: 0.1, innerDropH: 0.0 }} bodyParams={{ bodyBevelR: 0.235, bodyBevelY: 0.34, bodyBevelT: 0.025 }} color={color} pantallaColor={pantallaColor} pantallaBrillo={pantallaBrillo} blinkCycle={blinkCycle} metalness={metalness} />
+            </ResponsiveGroup>
+          </Canvas>
+        </div>
 
-        {/* Bottom: Action Buttons (Primary: Register/Post, Secondary: Search Noticeboard) */}
-        <div className="w-full max-w-[340px] flex flex-col gap-2.5">
+        {/* 4. 3 Segment Buttons: Buy & Sell | Services | Shops */}
+        <div className="grid grid-cols-3 gap-2 w-full max-w-md bg-slate-100 p-1.5 rounded-2xl border border-slate-200/80 shadow-2xs mt-1">
+          <button
+            type="button"
+            onClick={() => onCategoryClick?.("classifieds")}
+            className="py-2.5 px-2 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-wider bg-white hover:bg-slate-50 text-slate-900 shadow-2xs hover:text-yellow-600 transition-all text-center flex items-center justify-center gap-1 cursor-pointer border-0 active:scale-[0.97]"
+          >
+            <span>📢 Buy & Sell</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => onCategoryClick?.("services")}
+            className="py-2.5 px-2 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-wider bg-white hover:bg-slate-50 text-slate-900 shadow-2xs hover:text-yellow-600 transition-all text-center flex items-center justify-center gap-1 cursor-pointer border-0 active:scale-[0.97]"
+          >
+            <span>🛠️ Services</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => onCategoryClick?.("shops")}
+            className="py-2.5 px-2 rounded-xl text-[10px] sm:text-xs font-black uppercase tracking-wider bg-white hover:bg-slate-50 text-slate-900 shadow-2xs hover:text-yellow-600 transition-all text-center flex items-center justify-center gap-1 cursor-pointer border-0 active:scale-[0.97]"
+          >
+            <span>🏪 Shops</span>
+          </button>
+        </div>
+
+        {/* 5. Single Primary Button: REGISTER */}
+        <div className="w-full max-w-md mt-1">
           <button
             type="button"
             onClick={onCtaClick}
-            className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs uppercase tracking-wider transition-all shadow-md shadow-yellow-500/20 border-0 text-center flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98]"
+            className="w-full py-4 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs sm:text-sm uppercase tracking-wider transition-all hover:scale-[1.01] active:scale-[0.98] shadow-lg shadow-yellow-500/20 border-0 text-center flex items-center justify-center gap-2 cursor-pointer"
           >
             <span>{ctaText === "Verified" ? "Verified Profile" : "Register Helper / Post Ad"}</span>
             <ArrowRight className="w-4 h-4 text-slate-955" />
           </button>
-
-          <button
-            type="button"
-            onClick={() => onCategoryClick?.("classifieds")}
-            className="w-full py-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider transition-all shadow-sm text-center flex items-center justify-center gap-2 cursor-pointer border-0 active:scale-[0.98]"
-          >
-            <Search className="w-4 h-4 text-yellow-400" />
-            <span>Search Noticeboard</span>
-          </button>
-        </div>
-      </div>
-
-      {/* ==========================================
-          2. DESKTOP VIEWPORT PORTION (Clean Layout, Search & Post Buttons + 3D Mascot)
-          ========================================== */}
-      <div className="hidden md:flex flex-col justify-between w-full h-full max-w-7xl mx-auto px-8 z-10 select-none pointer-events-auto">
-        
-        {/* Split row content */}
-        <div className="flex-1 flex flex-row items-center justify-between gap-12 py-4">
-          {/* Left panel branding & CTAs */}
-          <div className="w-[45%] flex flex-col items-start gap-6">
-            
-            {/* Logo branding container */}
-            <div className="flex items-center gap-4">
-              <div className="w-18 h-18 rounded-2xl bg-white shadow-md p-2 flex items-center justify-center shrink-0 border border-slate-100">
-                <img 
-                  src="/namma_thanjai_logo.png" 
-                  alt="namma thanjai logo" 
-                  className="w-full h-full object-contain" 
-                />
-              </div>
-              <div className="text-left">
-                <h1 className="font-heading font-black text-3xl lg:text-4xl text-slate-900 tracking-tight leading-none uppercase">
-                  namma thanjavur<span className="text-yellow-500">.</span>
-                </h1>
-                <p className="text-[10px] text-slate-500 font-extrabold uppercase tracking-widest mt-1.5">
-                  thanjavur verified noticeboard & services
-                </p>
-              </div>
-            </div>
-
-            {/* Indicator pill */}
-            <div className="bg-yellow-500/10 border border-yellow-500/25 px-3.5 py-1.5 rounded-full flex items-center gap-2 shadow-3xs">
-              <span className="text-yellow-600 font-sans font-black text-xs leading-none">10+</span>
-              <span className="text-[10px] text-slate-700 font-extrabold uppercase tracking-wider leading-none">Verified active trades & listings channels</span>
-            </div>
-
-            <p className="text-xs lg:text-sm text-slate-500 max-w-md leading-relaxed font-semibold text-left">
-              Thanjavur's smart local noticeboard directory. Scan visiting cards with AI, explore plot offers, and search helper service trades.
-            </p>
-
-            {/* Primary & Secondary Action CTAs */}
-            <div className="flex flex-row gap-3 w-full max-w-md mt-2">
-              <button
-                type="button"
-                onClick={onCtaClick}
-                className="flex-1 py-4 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs uppercase tracking-wider transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-yellow-500/15 border-0 text-center flex items-center justify-center gap-2 cursor-pointer"
-              >
-                <span>{ctaText === "Verified" ? "Verified Profile" : "Register Helper / Post Ad"}</span>
-                <ArrowRight className="w-4 h-4 text-slate-955" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => onCategoryClick?.("classifieds")}
-                className="flex-1 py-4 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider transition-all hover:scale-[1.02] active:scale-[0.98] shadow-md text-center flex items-center justify-center gap-2 cursor-pointer border-0"
-              >
-                <Search className="w-4 h-4 text-yellow-400" />
-                <span>Search Noticeboard</span>
-              </button>
-            </div>
-          </div>
-
-          {/* Right panel giant mascot with animated background watermark */}
-          <div className="w-[50%] h-full relative flex items-center justify-center">
-            {/* Giant background text watermark behind robot on desktop */}
-            <div className="absolute left-0 right-0 pointer-events-none overflow-hidden flex justify-center z-0 top-[6%]">
-              <AnimatePresence mode="wait">
-                <motion.h2
-                  key={wordIndex}
-                  initial={{ opacity: 0, y: -20, scale: 0.95 }}
-                  animate={{ opacity: 0.08, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 20, scale: 1.05 }}
-                  transition={{ duration: 0.5, ease: "easeInOut" }}
-                  className="font-sans font-black select-none whitespace-nowrap text-slate-955 uppercase tracking-widest text-4xl md:text-7xl lg:text-8xl text-center"
-                >
-                  {words[wordIndex]}
-                </motion.h2>
-              </AnimatePresence>
-            </div>
-
-            <div onClick={handleRobotTap} className="w-full h-full min-h-[400px] relative cursor-pointer z-10">
-              <Canvas shadows camera={{ position: [0, 0.12, 3.6], fov: 38 }}>
-                <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
-                <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} castShadow shadow-mapSize={[1024, 1024]} shadow-bias={-0.0005} />
-                <directionalLight position={[-5, 2, -5]} intensity={entorno.luzRelleno} color={entorno.luzRellenoColor} />
-                <Environment preset="studio" blur={0.5} />
-                <ResponsiveGroup scale={scale}>
-                  <ContactShadows position={[0, -0.79, 0]} opacity={entorno.sombraOpacidad} scale={15} resolution={512} blur={entorno.sombraBlur} far={2.5} color="#000000" />
-                  <RobotPrototype neckParams={{ baseR: 0.215, baseH: -0.05, midR: 0.28, midH: 0.02, lipBottomR: 0.295, lipBottomH: 0.045, lipTopR: 0.27, lipTopH: 0.055, innerR: 0.1, innerDropH: 0.0 }} bodyParams={{ bodyBevelR: 0.235, bodyBevelY: 0.34, bodyBevelT: 0.025 }} color={color} pantallaColor={pantallaColor} pantallaBrillo={pantallaBrillo} blinkCycle={blinkCycle} metalness={metalness} />
-                </ResponsiveGroup>
-              </Canvas>
-            </div>
-          </div>
         </div>
 
-        {/* High-visibility Bottom Live Ticker Alert */}
+        {/* 6. Live Ticker Alert Banner */}
         {alerts.length > 0 && (
-          <div className="w-full bg-slate-900 border border-slate-800 text-white rounded-2xl py-2 px-5 shadow-md flex items-center justify-between text-xs font-black select-none max-w-lg mx-auto tracking-wide mb-2">
+          <div className="w-full bg-slate-900 border border-slate-800 text-white rounded-2xl py-2 px-5 shadow-md flex items-center justify-between text-xs font-black select-none max-w-md mx-auto tracking-wide mt-3">
             <div className="flex items-center gap-2.5 overflow-hidden w-full text-left">
               <span className="bg-yellow-500 text-slate-950 font-black text-[8px] px-2 py-0.5 rounded-md uppercase shrink-0 animate-pulse">
                 LIVE
