@@ -89,9 +89,9 @@ export default function TopHeader({
           ) : (
             <button
               onClick={onSignInClick}
-              className="flex items-center gap-1 bg-white hover:bg-slate-50 border border-slate-250 text-slate-700 font-bold px-3 py-1.5 rounded-xl text-xs transition-colors cursor-pointer"
+              className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 border border-yellow-400/30 text-slate-950 font-black px-4 py-2 rounded-xl text-xs transition-colors cursor-pointer shadow-sm shadow-yellow-500/10"
             >
-              <User className="w-3.5 h-3.5 text-slate-500" />
+              <User className="w-3.5 h-3.5 text-slate-955" />
               <span>Sign In</span>
             </button>
           )}
@@ -132,9 +132,9 @@ export default function TopHeader({
             ) : (
               <button
                 onClick={onSignInClick}
-                className="flex items-center gap-0.5 bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 font-bold px-2.5 py-1 rounded-xl text-[10px] transition-colors"
+                className="flex items-center gap-1 bg-yellow-500 hover:bg-yellow-600 border border-yellow-400/30 text-slate-955 font-black px-3 py-1.5 rounded-xl text-[10px] transition-colors shadow-sm shadow-yellow-500/10"
               >
-                <User className="w-3.5 h-3.5 text-slate-450" />
+                <User className="w-3 h-3 text-slate-955" />
                 <span>Sign In</span>
               </button>
             )}

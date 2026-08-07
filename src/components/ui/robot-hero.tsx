@@ -805,6 +805,7 @@ export function RobotHero({
 }: RobotHeroProps = {}) {
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+
   const [searchTab, setSearchTab] = useState<"classifieds" | "services" | "shops">("classifieds");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchLocality, setSearchLocality] = useState<TanjoreLocality | "All Areas">("All Areas");
@@ -888,144 +889,72 @@ export function RobotHero({
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-full md:h-screen flex flex-col bg-white text-slate-800 py-6 md:py-10 justify-between overflow-hidden"
+      className="relative w-full h-full md:h-screen flex flex-col bg-white text-slate-800 py-4 md:py-8 justify-between overflow-hidden"
     >
-      {/* Light radial glow centered behind the robot on desktop, or full screen on mobile */}
-      <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_60%,rgba(250,204,21,0.04)_0%,transparent_60%)] pointer-events-none" />
+      {/* Light radial glow centered behind the robot */}
+      <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_60%,rgba(250,204,21,0.05)_0%,transparent_60%)] pointer-events-none" />
 
       {/* ==========================================
-          1. MOBILE VIEWPORT PORTION (Sleek Real-Estate App Style Onboarding)
+          1. MOBILE VIEWPORT PORTION (Simple & Clean User Spec: Logo + Tagline -> Robot Mascot -> Two CTAs)
           ========================================== */}
-      <div className="flex md:hidden flex-col items-center justify-between z-10 px-5 w-full flex-1 text-center select-none pointer-events-auto pb-8 overflow-y-auto">
+      <div className="flex md:hidden flex-col items-center justify-between z-10 px-5 w-full flex-1 text-center select-none pointer-events-auto pb-6 overflow-y-auto">
         
-        {/* Onboarding Header branding: White container with logo, NO borders */}
-        <div className="flex flex-col items-center gap-1.5 mt-5">
-          <div className="w-16 h-16 rounded-2xl bg-white shadow-md p-2 flex items-center justify-center shrink-0">
+        {/* Top Header Branding: Logo + Namma Thanjavur + Taglines */}
+        <div className="flex flex-col items-center gap-2 mt-2">
+          <div className="w-16 h-16 rounded-2xl bg-white shadow-md p-2 flex items-center justify-center shrink-0 border border-slate-100">
             <img 
               src="/namma_thanjai_logo.png" 
               alt="namma thanjai app logo" 
               className="w-full h-full object-contain" 
             />
           </div>
-          <div className="flex flex-col items-center mt-1">
+          <div className="flex flex-col items-center mt-0.5">
             <h1 className="font-heading font-black text-2xl text-slate-900 tracking-tight leading-none uppercase">
               namma thanjavur<span className="text-yellow-500">.</span>
             </h1>
-            <p className="text-[9px] text-slate-400 font-extrabold uppercase tracking-widest mt-1">
-              verified local board
+            <p className="text-[10px] text-slate-500 font-extrabold uppercase tracking-widest mt-1">
+              verified local noticeboard & helper trades
             </p>
           </div>
-        </div>
-
-        {/* Number 10 Badge below logo */}
-        <div className="flex flex-col items-center mt-3">
-          <div className="bg-yellow-500/10 border border-yellow-500/25 px-3 py-1.5 rounded-full flex items-center gap-1.5 shadow-3xs">
+          <div className="bg-yellow-500/10 border border-yellow-500/25 px-3 py-1 rounded-full flex items-center gap-1.5 shadow-3xs mt-1">
             <span className="text-yellow-600 font-sans font-black text-xs leading-none">10+</span>
-            <span className="text-[8px] text-slate-700 font-extrabold uppercase tracking-wider leading-none">Verified active trades & listings channels</span>
+            <span className="text-[8px] text-slate-700 font-extrabold uppercase tracking-wider leading-none">Active Local Trade Channels</span>
           </div>
         </div>
 
-        {/* Three Buttons (Tab filters: Noticeboard, Helpers, Shops) */}
-        <div className="grid grid-cols-3 gap-1.5 w-full max-w-[320px] mt-4 bg-slate-100 p-1 rounded-2xl border border-slate-200/60">
-          <button
-            type="button"
-            onClick={() => setSearchTab("classifieds")}
-            className={`py-2 px-1 rounded-xl text-[9px] font-black uppercase tracking-wider transition-all text-center ${searchTab === "classifieds" ? "bg-white text-slate-900 shadow-3xs" : "text-slate-500 hover:text-slate-900"}`}
-          >
-            📢 Ads
-          </button>
-          <button
-            type="button"
-            onClick={() => setSearchTab("services")}
-            className={`py-2 px-1 rounded-xl text-[9px] font-black uppercase tracking-wider transition-all text-center ${searchTab === "services" ? "bg-white text-slate-900 shadow-3xs" : "text-slate-500 hover:text-slate-900"}`}
-          >
-            🛠️ Helpers
-          </button>
-          <button
-            type="button"
-            onClick={() => setSearchTab("shops")}
-            className={`py-2 px-1 rounded-xl text-[9px] font-black uppercase tracking-wider transition-all text-center ${searchTab === "shops" ? "bg-white text-slate-900 shadow-3xs" : "text-slate-500 hover:text-slate-900"}`}
-          >
-            🏪 Shops
-          </button>
-        </div>
-
-        {/* Free-Form Search Card (NoBroker / 99acres style) */}
-        <div className="w-full max-w-[320px] bg-white border border-slate-200/90 shadow-md rounded-2.5xl p-4 mt-3 flex flex-col gap-3">
-          <div className="flex flex-col gap-1 text-left">
-            <span className="text-[8px] text-slate-400 font-extrabold uppercase tracking-wider leading-none">Find anything in town</span>
-            <h3 className="text-2xs font-black text-slate-800 leading-tight">
-              {searchTab === "classifieds" && "Find Lands, House Rentals, Motors & Electronics"}
-              {searchTab === "services" && "Hire Plumbers, Electricians, Carpentry Helpers"}
-              {searchTab === "shops" && "Explore Showrooms, Cafe & Supermarket Deals"}
-            </h3>
-          </div>
-
-          <div className="flex flex-col gap-2.5">
-            {/* Locality Select */}
-            <div className="flex items-center gap-2 bg-slate-50 border border-slate-200/80 rounded-xl px-3 py-2 text-left">
-              <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
-              <select
-                value={searchLocality}
-                onChange={(e) => setSearchLocality(e.target.value as any)}
-                className="w-full bg-transparent text-[11px] font-bold text-slate-700 focus:outline-none cursor-pointer"
+        {/* Middle: Interactive 3D Mascot Robot Canvas with rotating background text */}
+        <div className="w-full flex-1 min-h-[220px] max-h-[320px] relative flex items-center justify-center my-2">
+          <div className="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden z-0">
+            <AnimatePresence mode="wait">
+              <motion.h2
+                key={wordIndex}
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 0.08, scale: 1 }}
+                exit={{ opacity: 0, scale: 1.1 }}
+                transition={{ duration: 0.4 }}
+                className="font-sans font-black text-3xl text-slate-950 uppercase tracking-widest text-center"
               >
-                <option value="All Areas">All Areas (Thanjavur)</option>
-                {TANJORE_LOCALITIES.map((loc) => (
-                  <option key={loc} value={loc}>{loc}</option>
-                ))}
-              </select>
-            </div>
+                {words[wordIndex]}
+              </motion.h2>
+            </AnimatePresence>
+          </div>
 
-            {/* Query Input */}
-            <div className="flex items-center gap-2 bg-slate-50 border border-slate-200/80 rounded-xl px-3 py-2 text-left">
-              <Search className="w-4 h-4 text-slate-400 shrink-0" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder={
-                  searchTab === "classifieds" 
-                    ? "Try 'plot west main', 'rent room'..." 
-                    : searchTab === "services" 
-                    ? "Try 'plumber', 'mechanic'..." 
-                    : "Try 'cafe', 'textile offer'..."
-                }
-                className="w-full bg-transparent text-[11px] font-bold text-slate-700 placeholder-slate-400 focus:outline-none"
-              />
-            </div>
-
-            {/* Search Action */}
-            <button
-              type="button"
-              onClick={handleSearchSubmit}
-              className="w-full py-2.5 rounded-xl bg-yellow-500 hover:bg-yellow-600 text-slate-950 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 transition-all shadow-xs cursor-pointer border-0"
-            >
-              <Search className="w-3.5 h-3.5 text-slate-955" />
-              <span>Search Noticeboard</span>
-            </button>
+          <div onClick={handleRobotTap} className="w-full h-full relative cursor-pointer z-10">
+            <Canvas shadows camera={{ position: [0, 0.12, 3.6], fov: 38 }}>
+              <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
+              <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} castShadow shadow-mapSize={[512, 512]} shadow-bias={-0.0005} />
+              <Environment preset="studio" blur={0.5} />
+              <ResponsiveGroup scale={scale * 0.85}>
+                <ContactShadows position={[0, -0.79, 0]} opacity={entorno.sombraOpacidad} scale={10} resolution={256} blur={entorno.sombraBlur} far={2.5} color="#000000" />
+                <RobotPrototype neckParams={{ baseR: 0.215, baseH: -0.05, midR: 0.28, midH: 0.02, lipBottomR: 0.295, lipBottomH: 0.045, lipTopR: 0.27, lipTopH: 0.055, innerR: 0.1, innerDropH: 0.0 }} bodyParams={{ bodyBevelR: 0.235, bodyBevelY: 0.34, bodyBevelT: 0.025 }} color={color} pantallaColor={pantallaColor} pantallaBrillo={pantallaBrillo} blinkCycle={blinkCycle} metalness={metalness} />
+              </ResponsiveGroup>
+            </Canvas>
           </div>
         </div>
 
-        {/* Mascot Robot below the search card */}
-        <div 
-          onClick={handleRobotTap} 
-          className="w-full h-[140px] relative flex items-center justify-center mt-3 cursor-pointer z-10"
-        >
-          <Canvas shadows camera={{ position: [0, 0.12, 3.6], fov: 38 }}>
-            <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
-            <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} castShadow shadow-mapSize={[512, 512]} shadow-bias={-0.0005} />
-            <Environment preset="studio" blur={0.5} />
-            <ResponsiveGroup scale={scale * 0.75}>
-              <ContactShadows position={[0, -0.79, 0]} opacity={entorno.sombraOpacidad} scale={10} resolution={256} blur={entorno.sombraBlur} far={2.5} color="#000000" />
-              <RobotPrototype neckParams={{ baseR: 0.215, baseH: -0.05, midR: 0.28, midH: 0.02, lipBottomR: 0.295, lipBottomH: 0.045, lipTopR: 0.27, lipTopH: 0.055, innerR: 0.1, innerDropH: 0.0 }} bodyParams={{ bodyBevelR: 0.235, bodyBevelY: 0.34, bodyBevelT: 0.025 }} color={color} pantallaColor={pantallaColor} pantallaBrillo={pantallaBrillo} blinkCycle={blinkCycle} metalness={metalness} />
-            </ResponsiveGroup>
-          </Canvas>
-        </div>
-
-        {/* Live Alerts scrolling ticker below the robot */}
+        {/* Live Ticker Alert bar */}
         {alerts.length > 0 && (
-          <div className="w-full bg-slate-950 text-yellow-500 rounded-xl py-2 px-4 shadow-sm flex items-center justify-between text-[10px] font-black select-none max-w-[320px] mx-auto tracking-wide mt-2 border border-slate-900">
+          <div className="w-full bg-slate-955 text-yellow-500 rounded-xl py-2 px-3.5 shadow-xs flex items-center justify-between text-[10px] font-black select-none max-w-[320px] mx-auto tracking-wide mb-3 border border-slate-900">
             <div className="flex items-center gap-2 overflow-hidden w-full text-left">
               <span className="bg-yellow-500 text-slate-955 font-black text-[7px] px-1.5 py-0.5 rounded-sm uppercase shrink-0 animate-pulse">
                 LIVE
@@ -1034,10 +963,10 @@ export function RobotHero({
                 <AnimatePresence mode="wait">
                   <motion.span
                     key={activeAlertIdx}
-                    initial={{ opacity: 0, y: 12 }}
+                    initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -12 }}
-                    transition={{ duration: 0.35 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.3 }}
                     className="absolute left-0 text-slate-100 truncate w-full font-bold text-left"
                   >
                     {alerts[activeAlertIdx]}
@@ -1048,21 +977,21 @@ export function RobotHero({
           </div>
         )}
 
-        {/* Two CTA Buttons at the bottom of mobile onboarding */}
-        <div className="w-full max-w-[320px] flex flex-col gap-2 mt-4 pb-1">
+        {/* Bottom: Two Primary Action Buttons */}
+        <div className="w-full max-w-[320px] flex flex-col gap-2.5">
           <button
             type="button"
             onClick={onCtaClick}
-            className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs uppercase tracking-wider transition-all shadow-md shadow-yellow-500/15 border-0 text-center flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs uppercase tracking-wider transition-all shadow-md shadow-yellow-500/15 border-0 text-center flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98]"
           >
-            <span>{ctaText === "Verified" ? "Profile" : "Register Helper/Ad"}</span>
+            <span>{ctaText === "Verified" ? "Verified Profile" : "Register Helper / Ad"}</span>
             <ArrowRight className="w-4 h-4 text-slate-955" />
           </button>
           
           <button
             type="button"
             onClick={() => onCategoryClick?.("classifieds")}
-            className="w-full py-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider transition-all shadow-sm text-center cursor-pointer border-0"
+            className="w-full py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider transition-all shadow-sm text-center cursor-pointer border-0 active:scale-[0.98]"
           >
             Explore Noticeboard
           </button>
@@ -1070,41 +999,18 @@ export function RobotHero({
       </div>
 
       {/* ==========================================
-          2. DESKTOP VIEWPORT PORTION (Screen-Filling Split Layout, Giant Robot)
+          2. DESKTOP VIEWPORT PORTION (Clean Layout, Search Engine Card + Giant 3D Robot)
           ========================================== */}
       <div className="hidden md:flex flex-col justify-between w-full h-full max-w-7xl mx-auto px-8 z-10 select-none pointer-events-auto">
-        {/* Top Centered Category Buttons */}
-        <div className="w-full flex justify-center pt-2">
-          <div className="flex items-center justify-center gap-3 bg-white/40 backdrop-blur-xs p-1.5 rounded-full border border-slate-200/50 shadow-2xs">
-            <button 
-              onClick={() => onCategoryClick?.("classifieds")} 
-              className="px-6 py-2.5 rounded-full text-[11px] font-black uppercase tracking-wider text-slate-800 hover:text-yellow-600 transition-all bg-white shadow-3xs font-bold"
-            >
-              Buy & Sell
-            </button>
-            <button 
-              onClick={() => onCategoryClick?.("services")} 
-              className="px-6 py-2.5 rounded-full text-[11px] font-black uppercase tracking-wider text-slate-800 hover:text-yellow-600 transition-all bg-white shadow-3xs font-bold"
-            >
-              Services
-            </button>
-            <button 
-              onClick={() => onCategoryClick?.("shops")} 
-              className="px-6 py-2.5 rounded-full text-[11px] font-black uppercase tracking-wider text-slate-800 hover:text-yellow-600 transition-all bg-white shadow-3xs font-bold"
-            >
-              Recent Offer
-            </button>
-          </div>
-        </div>
-
+        
         {/* Split row content */}
-        <div className="flex-1 flex flex-row items-center justify-between gap-12 mt-6 pb-6">
-          {/* Left panel branding & Free-Form Search card */}
+        <div className="flex-1 flex flex-row items-center justify-between gap-12 py-4">
+          {/* Left panel branding & Search Engine Card */}
           <div className="w-[45%] flex flex-col items-start gap-5">
             
-            {/* Logo container: White circular wrapper, NO borders */}
+            {/* Logo branding container */}
             <div className="flex items-center gap-4">
-              <div className="w-20 h-20 rounded-full bg-white shadow-lg p-2 flex items-center justify-center shrink-0 object-contain">
+              <div className="w-18 h-18 rounded-2xl bg-white shadow-md p-2 flex items-center justify-center shrink-0 border border-slate-100">
                 <img 
                   src="/namma_thanjai_logo.png" 
                   alt="namma thanjai logo" 
@@ -1112,80 +1018,72 @@ export function RobotHero({
                 />
               </div>
               <div className="text-left">
-                <h1 className="font-heading font-black text-4xl text-slate-900 tracking-tight leading-none uppercase">
+                <h1 className="font-heading font-black text-3xl lg:text-4xl text-slate-900 tracking-tight leading-none uppercase">
                   namma thanjavur<span className="text-yellow-500">.</span>
                 </h1>
-                <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mt-1.5">
-                  verified local board
+                <p className="text-[10px] text-slate-500 font-extrabold uppercase tracking-widest mt-1.5">
+                  thanjavur verified noticeboard & services
                 </p>
               </div>
             </div>
 
-            {/* Number 10 indicator */}
-            <div className="bg-yellow-500/10 border border-yellow-500/25 px-4 py-2 rounded-full flex items-center gap-2 shadow-3xs">
-              <span className="text-yellow-600 font-sans font-black text-sm leading-none">10+</span>
+            {/* Indicator pill */}
+            <div className="bg-yellow-500/10 border border-yellow-500/25 px-3.5 py-1.5 rounded-full flex items-center gap-2 shadow-3xs">
+              <span className="text-yellow-600 font-sans font-black text-xs leading-none">10+</span>
               <span className="text-[10px] text-slate-700 font-extrabold uppercase tracking-wider leading-none">Verified active trades & listings channels</span>
             </div>
 
-            <p className="text-sm text-slate-500 max-w-sm leading-relaxed font-semibold text-left">
+            <p className="text-xs lg:text-sm text-slate-500 max-w-sm leading-relaxed font-semibold text-left">
               Thanjavur's smart local noticeboard directory. Scan visiting cards with AI, explore plot offers, and search helper service trades.
             </p>
 
-            {/* Three Tab Buttons for desktop search */}
-            <div className="grid grid-cols-3 gap-2 w-full max-w-md bg-slate-100 p-1.5 rounded-2xl border border-slate-200/80">
-              <button
-                type="button"
-                onClick={() => setSearchTab("classifieds")}
-                className={`py-2.5 px-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all text-center ${searchTab === "classifieds" ? "bg-white text-slate-900 shadow-2xs" : "text-slate-500 hover:text-slate-900"}`}
-              >
-                📢 Buy & Sell
-              </button>
-              <button
-                type="button"
-                onClick={() => setSearchTab("services")}
-                className={`py-2.5 px-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all text-center ${searchTab === "services" ? "bg-white text-slate-900 shadow-2xs" : "text-slate-500 hover:text-slate-900"}`}
-              >
-                🛠️ Local Helpers
-              </button>
-              <button
-                type="button"
-                onClick={() => setSearchTab("shops")}
-                className={`py-2.5 px-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all text-center ${searchTab === "shops" ? "bg-white text-slate-900 shadow-2xs" : "text-slate-500 hover:text-slate-900"}`}
-              >
-                🏪 Shop Deals
-              </button>
-            </div>
-
-            {/* Realistic Search Card Component */}
-            <div className="w-full max-w-md bg-white border border-slate-200/90 shadow-lg rounded-3xl p-5 flex flex-col gap-4">
-              <div className="flex flex-col gap-1 text-left">
-                <span className="text-[9px] text-slate-400 font-extrabold uppercase tracking-wider leading-none">Instant search engine</span>
-                <h3 className="text-sm font-black text-slate-800 leading-tight">
-                  {searchTab === "classifieds" && "Find Lands, House Rentals, Motors & Electronics"}
-                  {searchTab === "services" && "Hire Plumbers, Electricians, Carpentry Helpers"}
-                  {searchTab === "shops" && "Explore Showrooms, Cafe & Supermarket Deals"}
-                </h3>
+            {/* Single Clean Search Engine Card */}
+            <div className="w-full max-w-md bg-white border border-slate-200/90 shadow-md rounded-3xl p-5 flex flex-col gap-4">
+              
+              {/* Category Segment Tabs */}
+              <div className="grid grid-cols-3 gap-1.5 bg-slate-100 p-1 rounded-2xl border border-slate-200/60">
+                <button
+                  type="button"
+                  onClick={() => setSearchTab("classifieds")}
+                  className={`py-2 px-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all text-center ${searchTab === "classifieds" ? "bg-white text-slate-900 shadow-2xs" : "text-slate-500 hover:text-slate-900"}`}
+                >
+                  📢 Buy & Sell
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSearchTab("services")}
+                  className={`py-2 px-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all text-center ${searchTab === "services" ? "bg-white text-slate-900 shadow-2xs" : "text-slate-500 hover:text-slate-900"}`}
+                >
+                  🛠️ Helpers
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setSearchTab("shops")}
+                  className={`py-2 px-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all text-center ${searchTab === "shops" ? "bg-white text-slate-900 shadow-2xs" : "text-slate-500 hover:text-slate-900"}`}
+                >
+                  🏪 Shops
+                </button>
               </div>
 
               <div className="flex flex-col gap-3">
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-2 gap-2.5">
                   {/* Locality Dropdown */}
-                  <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-200/80 rounded-xl px-3.5 py-2.5 text-left">
+                  <div className="flex items-center gap-2 bg-slate-50 border border-slate-200/80 rounded-xl px-3 py-2.5 text-left">
                     <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
                     <select
                       value={searchLocality}
                       onChange={(e) => setSearchLocality(e.target.value as any)}
                       className="w-full bg-transparent text-[11px] font-bold text-slate-700 focus:outline-none cursor-pointer"
                     >
-                      <option value="All Areas">All Areas (Thanjavur)</option>
+                      <option value="All Areas">All Thanjavur</option>
                       {TANJORE_LOCALITIES.map((loc) => (
                         <option key={loc} value={loc}>{loc}</option>
                       ))}
                     </select>
                   </div>
 
-                  {/* Free-form Text Query Input */}
-                  <div className="flex items-center gap-2.5 bg-slate-50 border border-slate-200/80 rounded-xl px-3.5 py-2.5 text-left">
+                  {/* Text Query Input */}
+                  <div className="flex items-center gap-2 bg-slate-50 border border-slate-200/80 rounded-xl px-3 py-2.5 text-left">
                     <Search className="w-4 h-4 text-slate-400 shrink-0" />
                     <input
                       type="text"
@@ -1196,7 +1094,7 @@ export function RobotHero({
                           ? "e.g. plot, car..." 
                           : searchTab === "services" 
                           ? "e.g. plumber..." 
-                          : "e.g. cafe, discount..."
+                          : "e.g. cafe..."
                       }
                       className="w-full bg-transparent text-[11px] font-bold text-slate-700 placeholder-slate-400 focus:outline-none"
                     />
@@ -1207,29 +1105,29 @@ export function RobotHero({
                 <button
                   type="button"
                   onClick={handleSearchSubmit}
-                  className="w-full py-3.5 rounded-xl bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-md cursor-pointer border-0"
+                  className="w-full py-3 rounded-xl bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer border-0 active:scale-[0.98]"
                 >
                   <Search className="w-4 h-4 text-slate-955" />
-                  <span>Search Local Directory</span>
+                  <span>Search Noticeboard</span>
                 </button>
               </div>
             </div>
 
-            {/* Quick Action CTAs */}
+            {/* Quick CTAs */}
             <div className="flex flex-row gap-3 w-full max-w-md">
               <button
                 type="button"
                 onClick={() => onCategoryClick?.("classifieds")}
-                className="flex-1 py-3.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider transition-all hover:scale-[1.03] active:scale-[0.97] shadow-md text-center cursor-pointer border-0"
+                className="flex-1 py-3.5 rounded-full bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider transition-all hover:scale-[1.02] active:scale-[0.98] shadow-md text-center cursor-pointer border-0"
               >
                 Explore Noticeboard
               </button>
               <button
                 type="button"
                 onClick={onCtaClick}
-                className="flex-1 py-3.5 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-950 font-black text-xs uppercase tracking-wider transition-all hover:scale-[1.03] active:scale-[0.97] shadow-lg shadow-yellow-500/20 border-0 text-center flex items-center justify-center gap-2 cursor-pointer"
+                className="flex-1 py-3.5 rounded-full bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs uppercase tracking-wider transition-all hover:scale-[1.02] active:scale-[0.98] shadow-md shadow-yellow-500/15 border-0 text-center flex items-center justify-center gap-2 cursor-pointer"
               >
-                <span>{ctaText === "Verified" ? "Profile" : "Register Helper/Ad"}</span>
+                <span>{ctaText === "Verified" ? "Profile" : "Register Helper / Ad"}</span>
                 <ArrowRight className="w-4 h-4 text-slate-955" />
               </button>
             </div>
@@ -1238,7 +1136,7 @@ export function RobotHero({
           {/* Right panel giant mascot */}
           <div className="w-[50%] h-full relative flex items-center justify-center">
             {/* Category words behind the robot */}
-            <div className="absolute left-0 right-0 pointer-events-none overflow-hidden flex justify-center z-0 top-[2%]">
+            <div className="absolute left-0 right-0 pointer-events-none overflow-hidden flex justify-center z-0 top-[4%]">
               <AnimatePresence mode="wait">
                 <motion.h2
                   key={wordIndex}
@@ -1252,7 +1150,7 @@ export function RobotHero({
                 </motion.h2>
               </AnimatePresence>
             </div>
-            <div onClick={handleRobotTap} className="w-full h-full relative cursor-pointer z-10">
+            <div onClick={handleRobotTap} className="w-full h-full min-h-[400px] relative cursor-pointer z-10">
               <Canvas shadows camera={{ position: [0, 0.12, 3.6], fov: 38 }}>
                 <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
                 <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} castShadow shadow-mapSize={[1024, 1024]} shadow-bias={-0.0005} />
@@ -1267,9 +1165,9 @@ export function RobotHero({
           </div>
         </div>
 
-        {/* Bottom Ticker Alert (Short form) */}
+        {/* Bottom Ticker Alert */}
         {alerts.length > 0 && (
-          <div className="w-full bg-slate-955 text-yellow-500 rounded-2xl py-2.5 px-5 shadow-lg flex items-center justify-between text-xs font-black select-none max-w-lg mx-auto tracking-wide border border-slate-900">
+          <div className="w-full bg-slate-955 text-yellow-500 rounded-2xl py-2 px-5 shadow-sm flex items-center justify-between text-xs font-black select-none max-w-lg mx-auto tracking-wide border border-slate-900 mb-2">
             <div className="flex items-center gap-2.5 overflow-hidden w-full text-left">
               <span className="bg-yellow-500 text-slate-955 font-black text-[8px] px-2 py-0.5 rounded-md uppercase shrink-0 animate-pulse">
                 LIVE
