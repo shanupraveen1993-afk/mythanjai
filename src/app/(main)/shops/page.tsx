@@ -809,7 +809,7 @@ export default function ShopsPage() {
                 </div>
               ))}
             </div>
-          ) : shops.length === 0 ? (
+          ) : (localShops.length + (shops?.length || 0)) === 0 ? (
             <div className="flex flex-col items-center justify-center py-16 px-4 bg-white border border-slate-200/60 rounded-2xl text-center gap-3">
               <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200/80 text-slate-400">
                 <Store className="w-5 h-5 text-amber-500" />
@@ -823,7 +823,7 @@ export default function ShopsPage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {shops.map((shop) => (
+              {[...localShops, ...(shops || [])].map((shop) => (
                 <ShopCard
                   key={shop.id}
                   post={shop}
