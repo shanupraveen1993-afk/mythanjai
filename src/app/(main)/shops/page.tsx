@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import dynamic from "next/dynamic";
+import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useFirestore } from "@/hooks/use-firestore";
 import ShopCard from "@/components/cards/ShopCard";
@@ -880,6 +881,120 @@ export default function ShopsPage() {
               ))}
             </div>
           )}
+
+      {/* ==========================================
+          SAMPLE OFFER DETAIL MODAL OVERLAY
+          ========================================== */}
+      {searchParams.get("id") && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-900/70 backdrop-blur-xs p-0 sm:p-4 animate-fade-in">
+          <div className="bg-white border-t-2 sm:border border-slate-200/90 w-full sm:max-w-lg rounded-t-3xl sm:rounded-2xl p-6 shadow-2xl relative animate-slide-up sm:animate-scale-up text-slate-800 max-h-[90vh] overflow-y-auto">
+            <div className="w-12 h-1 bg-slate-300 rounded-full mx-auto mb-3 block sm:hidden" />
+            
+            <button
+              onClick={() => router.push(selectedCategory ? `/shops?category=${encodeURIComponent(selectedCategory)}` : "/shops")}
+              className="absolute top-4 right-4 p-2 rounded-full bg-slate-100 text-slate-500 hover:text-slate-900 transition-colors cursor-pointer font-bold z-10"
+            >
+              ✕
+            </button>
+
+            {(() => {
+              const id = searchParams.get("id");
+              const sample = (
+                id === "glen_gallery_video_offer" ? {
+                  name: "GLEN EXCLUSIVE GALLERY",
+                  offer: "Up to 60% OFF - Grand Opening Sale",
+                  category: "Electronics Shop",
+                  area: "New Busstand Rd, Thanjavur",
+                  phone: "9876543216",
+                  isVideo: true,
+                  videoUrl: "/videos/glen_gallery_offer.mp4",
+                  description: "Grand Opening Sale! Up to 60% discount on all kitchen chimneys, built-in hobs, cooktops & gas stoves. Visit our showroom at New Busstand Road."
+                } : id === "tanjore_degree_coffee_offer" ? {
+                  name: "Tanjore Degree Coffee",
+                  offer: "Buy 2 Get 1 FREE",
+                  category: "Cafe & Restaurant",
+                  area: "Gandhiji Rd, Thanjavur",
+                  phone: "9876543217",
+                  isVideo: false,
+                  image: "/thanjavur_temple_illustration.png",
+                  description: "Authentic traditional filter coffee brewed fresh with pure cow milk. Buy 2 degree coffees and get 1 hot snack free!"
+                } : {
+                  name: "Handloom Silk Saree Sale",
+                  offer: "35% Flat Discount",
+                  category: "Textiles & Clothing",
+                  area: "East Rampart Rd, Thanjavur",
+                  phone: "9876543218",
+                  isVideo: false,
+                  image: "/hero_building_visual.png",
+                  description: "Handcrafted pure Kanchipuram silk sarees directly from weavers. Flat 35% discount for festival season."
+                }
+              );
+
+              return (
+                <div className="flex flex-col gap-4">
+                  <div className="w-full h-52 rounded-2xl overflow-hidden bg-slate-900 relative mt-2">
+                    {sample.isVideo ? (
+                      <video 
+                        src={sample.videoUrl} 
+                        controls 
+                        autoPlay 
+                        playsInline 
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <Image 
+                        src={sample.image || "/thanjavur_temple_illustration.png"} 
+                        alt={sample.name} 
+                        fill 
+                        className="object-cover"
+                      />
+                    )}
+                    <span className="absolute top-3 left-3 text-[10px] font-black uppercase text-white bg-gradient-to-r from-amber-600 to-yellow-500 px-3 py-1 rounded-lg shadow-sm">
+                      {sample.offer}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between items-start gap-2">
+                    <div>
+                      <h2 className="font-heading font-black text-lg text-slate-900 leading-snug">
+                        {sample.name}
+                      </h2>
+                      <div className="flex items-center gap-1 text-xs text-slate-500 font-bold mt-1">
+                        <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                        <span>{sample.area}</span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4">
+                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1">Offer & Details</h4>
+                    <p className="text-xs text-slate-700 font-semibold leading-relaxed">
+                      {sample.description}
+                    </p>
+                  </div>
+
+                  <div className="flex gap-3 pt-2">
+                    <a
+                      href={`tel:${sample.phone}`}
+                      className="flex-1 py-3 bg-slate-900 hover:bg-slate-800 text-white font-black text-xs rounded-xl text-center flex items-center justify-center gap-2 shadow-sm"
+                    >
+                      <span>📞 Call Store</span>
+                    </a>
+                    <a
+                      href={`https://wa.me/91${sample.phone}?text=${encodeURIComponent(`Hello ${sample.name}, I saw your offer "${sample.offer}" on Namma Thanjai. Where is your store located?`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xs rounded-xl text-center flex items-center justify-center gap-2 shadow-sm"
+                    >
+                      <span>💬 WhatsApp</span>
+                    </a>
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

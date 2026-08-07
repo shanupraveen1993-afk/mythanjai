@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import Image from "next/image";
 import { useFirestore } from "@/hooks/use-firestore";
 import NeedCard from "@/components/cards/NeedCard";
 import { CLASSIFIED_CATEGORIES, TANJORE_LOCALITIES, TanjoreLocality, CATEGORY_ILLUSTRATIONS } from "@/lib/constants";
@@ -829,6 +830,110 @@ export default function ClassifiedsPage() {
               ))}
             </div>
           )}
+        </div>
+      )}
+
+      {/* ==========================================
+          SAMPLE LISTING DETAIL MODAL OVERLAY
+          ========================================== */}
+      {searchParams.get("id") && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-900/70 backdrop-blur-xs p-0 sm:p-4 animate-fade-in">
+          <div className="bg-white border-t-2 sm:border border-slate-200/90 w-full sm:max-w-lg rounded-t-3xl sm:rounded-2xl p-6 shadow-2xl relative animate-slide-up sm:animate-scale-up text-slate-800 max-h-[90vh] overflow-y-auto">
+            <div className="w-12 h-1 bg-slate-300 rounded-full mx-auto mb-3 block sm:hidden" />
+            
+            <button
+              onClick={() => router.push(selectedCategory ? `/classifieds?category=${encodeURIComponent(selectedCategory)}` : "/classifieds")}
+              className="absolute top-4 right-4 p-2 rounded-full bg-slate-100 text-slate-500 hover:text-slate-900 transition-colors cursor-pointer font-bold"
+            >
+              ✕
+            </button>
+
+            {(() => {
+              const id = searchParams.get("id");
+              const sample = (
+                id === "sample_1" ? {
+                  title: "2400 Sqft CMDA Plot for Sale",
+                  price: "₹24,50,000",
+                  category: "Plot / Real Estate",
+                  area: "Vallam, Thanjavur",
+                  phone: "9876543210",
+                  description: "DTCP approved residential plot with 30ft tar road frontage and Kaveri water line connection ready near Vallam. Clean parent title deeds.",
+                  image: "/thanjavur_temple_illustration.png"
+                } : id === "sample_2" ? {
+                  title: "2 BHK Independent House for Rent",
+                  price: "₹12,500/mo",
+                  category: "Property Rental",
+                  area: "Medical College Rd, Thanjavur",
+                  phone: "9876543211",
+                  description: "Modular kitchen, 2 bathrooms, 24/7 Kaveri water supply, dedicated car parking. Close to schools and hospitals. Family preferred.",
+                  image: "/hero_building_visual.png"
+                } : {
+                  title: "Hero Splendor (2022 Model)",
+                  price: "₹68,000",
+                  category: "Used Vehicles",
+                  area: "New Bus Stand, Thanjavur",
+                  phone: "9876543212",
+                  description: "Single owner, excellent mileage 65+ kmpl, clean insurance documents, pristine condition.",
+                  image: "/namma_thanjai_logo.png"
+                }
+              );
+
+              return (
+                <div className="flex flex-col gap-4">
+                  <div className="w-full h-48 rounded-2xl overflow-hidden bg-slate-100 relative mt-2">
+                    <Image 
+                      src={sample.image} 
+                      alt={sample.title} 
+                      fill 
+                      className="object-cover"
+                    />
+                    <span className="absolute top-3 left-3 text-[10px] font-black uppercase text-yellow-950 bg-yellow-400 px-3 py-1 rounded-lg shadow-sm">
+                      {sample.category}
+                    </span>
+                  </div>
+
+                  <div className="flex justify-between items-start gap-2">
+                    <div>
+                      <h2 className="font-heading font-black text-lg text-slate-900 leading-snug">
+                        {sample.title}
+                      </h2>
+                      <div className="flex items-center gap-1 text-xs text-slate-500 font-bold mt-1">
+                        <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                        <span>{sample.area}</span>
+                      </div>
+                    </div>
+                    <span className="text-base font-black text-yellow-600 shrink-0">
+                      {sample.price}
+                    </span>
+                  </div>
+
+                  <div className="bg-slate-50 border border-slate-200/80 rounded-2xl p-4">
+                    <h4 className="text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1">Description</h4>
+                    <p className="text-xs text-slate-700 font-semibold leading-relaxed">
+                      {sample.description}
+                    </p>
+                  </div>
+
+                  <div className="flex gap-3 pt-2">
+                    <a
+                      href={`tel:${sample.phone}`}
+                      className="flex-1 py-3 bg-slate-900 hover:bg-slate-800 text-white font-black text-xs rounded-xl text-center flex items-center justify-center gap-2 shadow-sm"
+                    >
+                      <span>📞 Call Seller</span>
+                    </a>
+                    <a
+                      href={`https://wa.me/91${sample.phone}?text=${encodeURIComponent(`Hello, I found your listing "${sample.title}" on Namma Thanjai. Is it still available?`)}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="flex-1 py-3 bg-emerald-500 hover:bg-emerald-600 text-white font-black text-xs rounded-xl text-center flex items-center justify-center gap-2 shadow-sm"
+                    >
+                      <span>💬 WhatsApp</span>
+                    </a>
+                  </div>
+                </div>
+              );
+            })()}
+          </div>
         </div>
       )}
     </div>
