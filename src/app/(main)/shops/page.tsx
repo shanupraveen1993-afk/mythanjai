@@ -864,15 +864,25 @@ export default function ShopsPage() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {[...localShops, ...(shops || [])].map((shop) => (
-                <div key={shop.id} id={`post-${shop.id}`} className="transition-all duration-500">
-                  <ShopCard
-                    post={shop}
-                    onMapToggle={handleMapToggle}
-                    isMapActive={mapShop?.id === shop.id}
-                  />
-                </div>
-              ))}
+              {(() => {
+                const list = [...localShops, ...(shops || [])];
+                if (targetPostId) {
+                  list.sort((a, b) => {
+                    if (a.id === targetPostId) return -1;
+                    if (b.id === targetPostId) return 1;
+                    return 0;
+                  });
+                }
+                return list.map((shop) => (
+                  <div key={shop.id} id={`post-${shop.id}`} className="transition-all duration-500">
+                    <ShopCard
+                      post={shop}
+                      onMapToggle={handleMapToggle}
+                      isMapActive={mapShop?.id === shop.id}
+                    />
+                  </div>
+                ));
+              })()}
             </div>
           )}
     </div>

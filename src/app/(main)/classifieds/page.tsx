@@ -423,6 +423,10 @@ export default function ClassifiedsPage() {
 
   // Client-side sorting
   const sortedPosts = [...filteredPosts].sort((a, b) => {
+    if (targetPostId) {
+      if (a.id === targetPostId) return -1;
+      if (b.id === targetPostId) return 1;
+    }
     if (sortBy === "price_low") {
       const priceA = Number(a.price) || 0;
       const priceB = Number(b.price) || 0;

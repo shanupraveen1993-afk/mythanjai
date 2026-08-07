@@ -179,8 +179,16 @@ export default function ServicesPage() {
 
   const combinedServices = React.useMemo(() => {
     const activeLocal = localServices.filter(s => !selectedCategory || s.skill_category === selectedCategory);
-    return [...activeLocal, ...services];
-  }, [localServices, services, selectedCategory]);
+    const list = [...activeLocal, ...services];
+    if (targetPostId) {
+      list.sort((a, b) => {
+        if (a.id === targetPostId) return -1;
+        if (b.id === targetPostId) return 1;
+        return 0;
+      });
+    }
+    return list;
+  }, [localServices, services, selectedCategory, targetPostId]);
 
   const handleCategorySelect = (category: string) => {
     const currentParams = new URLSearchParams(searchParams.toString());
