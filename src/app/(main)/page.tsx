@@ -80,8 +80,8 @@ export default function HomeLandingPage() {
           <div className="flex flex-col gap-4">
             <div className="flex items-center justify-between border-b border-slate-200 pb-3">
               <div className="flex items-center gap-2">
-                <span className="bg-yellow-500/10 text-yellow-700 p-1.5 rounded-xl border border-yellow-300/60">
-                  <ShoppingBag className="w-5 h-5 text-yellow-600" />
+                <span className="bg-slate-100 text-slate-700 p-1.5 rounded-xl border border-slate-200">
+                  <ShoppingBag className="w-5 h-5 text-slate-700" />
                 </span>
                 <h2 className="font-heading font-black text-base md:text-lg text-slate-900 tracking-tight">
                   Sell (Classified Items)
@@ -89,7 +89,7 @@ export default function HomeLandingPage() {
               </div>
               <button
                 onClick={() => router.push("/sell")}
-                className="text-xs font-black text-yellow-600 hover:text-yellow-750 flex items-center gap-1 hover:underline cursor-pointer"
+                className="text-xs font-bold text-slate-600 hover:text-slate-900 flex items-center gap-1 hover:underline cursor-pointer"
               >
                 <span>View All Sell Posts →</span>
               </button>
@@ -99,7 +99,7 @@ export default function HomeLandingPage() {
               {/* Card 1: Popular */}
               <div 
                 onClick={() => router.push("/sell?category=Plot%20%2f%20Real%20Estate&post=cmda_plot")}
-                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
+                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
               >
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
                   <Image 
@@ -109,10 +109,10 @@ export default function HomeLandingPage() {
                     className="object-cover hover:scale-105 transition-transform duration-300"
                   />
                   <div className="absolute top-2 left-2 flex items-center gap-1.5">
-                    <span className="text-[9px] font-black uppercase text-white bg-gradient-to-r from-amber-600 to-yellow-500 px-2.5 py-0.5 rounded-md shadow-xs">
-                      🔥 Popular
+                    <span className="text-[9px] font-bold uppercase text-slate-900 bg-white/95 px-2 py-0.5 rounded-md shadow-2xs border border-slate-200">
+                      Popular
                     </span>
-                    <span className="text-[9px] font-black uppercase text-yellow-950 bg-yellow-400 px-2 py-0.5 rounded-md shadow-xs">
+                    <span className="text-[9px] font-bold uppercase text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md shadow-2xs border border-slate-200">
                       Real Estate
                     </span>
                   </div>
@@ -121,7 +121,7 @@ export default function HomeLandingPage() {
                   <h3 className="font-heading font-extrabold text-sm text-slate-800">
                     2400 Sqft CMDA Plot
                   </h3>
-                  <span className="text-xs font-black text-yellow-600">₹24,50,000</span>
+                  <span className="text-xs font-black text-slate-900">₹24,50,000</span>
                 </div>
                 <p className="text-xs text-slate-500 font-semibold leading-relaxed">
                   DTCP approved residential plot with 30ft tar road frontage and Kaveri water line near Vallam.
@@ -131,7 +131,7 @@ export default function HomeLandingPage() {
                     <MapPin className="w-3.5 h-3.5 text-slate-400" />
                     <span>Vallam, Thanjavur</span>
                   </div>
-                  <span className="text-yellow-600 font-black hover:underline">
+                  <span className="text-slate-800 font-bold hover:underline">
                     View Post in Feed →
                   </span>
                 </div>
@@ -140,7 +140,7 @@ export default function HomeLandingPage() {
               {/* Card 2: Trending */}
               <div 
                 onClick={() => router.push("/sell?category=Property%20Rental&post=house_rental")}
-                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
+                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
               >
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
                   <Image 
@@ -150,10 +150,10 @@ export default function HomeLandingPage() {
                     className="object-cover hover:scale-105 transition-transform duration-300"
                   />
                   <div className="absolute top-2 left-2 flex items-center gap-1.5">
-                    <span className="text-[9px] font-black uppercase text-white bg-gradient-to-r from-blue-600 to-indigo-500 px-2.5 py-0.5 rounded-md shadow-xs">
-                      ⚡ Trending
+                    <span className="text-[9px] font-bold uppercase text-slate-900 bg-white/95 px-2 py-0.5 rounded-md shadow-2xs border border-slate-200">
+                      Trending
                     </span>
-                    <span className="text-[9px] font-black uppercase text-blue-950 bg-blue-400 px-2 py-0.5 rounded-md shadow-xs">
+                    <span className="text-[9px] font-bold uppercase text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md shadow-2xs border border-slate-200">
                       House Rental
                     </span>
                   </div>
@@ -172,7 +172,7 @@ export default function HomeLandingPage() {
                     <MapPin className="w-3.5 h-3.5 text-slate-400" />
                     <span>Medical College Rd</span>
                   </div>
-                  <span className="text-yellow-600 font-black hover:underline">
+                  <span className="text-slate-800 font-bold hover:underline">
                     View Post in Feed →
                   </span>
                 </div>
@@ -181,7 +181,7 @@ export default function HomeLandingPage() {
               {/* Card 3: Recent */}
               <div 
                 onClick={() => router.push("/sell?category=Used%20Vehicles&post=hero_bike")}
-                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
+                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
               >
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
                   <Image 
@@ -191,10 +191,10 @@ export default function HomeLandingPage() {
                     className="object-contain p-4 hover:scale-105 transition-transform duration-300 bg-slate-50"
                   />
                   <div className="absolute top-2 left-2 flex items-center gap-1.5">
-                    <span className="text-[9px] font-black uppercase text-white bg-slate-800 px-2.5 py-0.5 rounded-md shadow-xs">
-                      🆕 Recent Post
+                    <span className="text-[9px] font-bold uppercase text-slate-900 bg-white/95 px-2 py-0.5 rounded-md shadow-2xs border border-slate-200">
+                      Recent Post
                     </span>
-                    <span className="text-[9px] font-black uppercase text-emerald-950 bg-emerald-400 px-2 py-0.5 rounded-md shadow-xs">
+                    <span className="text-[9px] font-bold uppercase text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md shadow-2xs border border-slate-200">
                       Used Motor
                     </span>
                   </div>
@@ -213,7 +213,7 @@ export default function HomeLandingPage() {
                     <MapPin className="w-3.5 h-3.5 text-slate-400" />
                     <span>New Bus Stand</span>
                   </div>
-                  <span className="text-yellow-600 font-black hover:underline">
+                  <span className="text-slate-800 font-bold hover:underline">
                     View Post in Feed →
                   </span>
                 </div>
@@ -225,8 +225,8 @@ export default function HomeLandingPage() {
           <div className="flex flex-col gap-4 mt-2">
             <div className="flex items-center justify-between border-b border-slate-200 pb-3">
               <div className="flex items-center gap-2">
-                <span className="bg-amber-500/10 text-amber-700 p-1.5 rounded-xl border border-amber-300/60">
-                  <Search className="w-5 h-5 text-amber-600" />
+                <span className="bg-slate-100 text-slate-700 p-1.5 rounded-xl border border-slate-200">
+                  <Search className="w-5 h-5 text-slate-700" />
                 </span>
                 <h2 className="font-heading font-black text-base md:text-lg text-slate-900 tracking-tight">
                   Need (Looking For Requirements)
@@ -234,7 +234,7 @@ export default function HomeLandingPage() {
               </div>
               <button
                 onClick={() => router.push("/need")}
-                className="text-xs font-black text-yellow-600 hover:text-yellow-750 flex items-center gap-1 hover:underline cursor-pointer"
+                className="text-xs font-bold text-slate-600 hover:text-slate-900 flex items-center gap-1 hover:underline cursor-pointer"
               >
                 <span>View All Need Posts →</span>
               </button>
@@ -244,13 +244,13 @@ export default function HomeLandingPage() {
               {/* Need Card 1: Urgent */}
               <div 
                 onClick={() => router.push("/need?post=need_3bhk_medical")}
-                className="bg-amber-50/40 border border-amber-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
+                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
               >
                 <div className="flex justify-between items-center">
-                  <span className="text-[9px] font-black uppercase text-white bg-gradient-to-r from-red-600 to-amber-600 px-2.5 py-0.5 rounded-md shadow-xs">
-                    🚨 Urgent Need
+                  <span className="text-[9px] font-bold uppercase text-slate-900 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
+                    Urgent Need
                   </span>
-                  <span className="text-[10px] font-bold text-amber-800">Budget: ₹18,000/mo</span>
+                  <span className="text-[10px] font-bold text-slate-700">Budget: ₹18,000/mo</span>
                 </div>
                 <h3 className="font-heading font-extrabold text-sm text-slate-800">
                   Looking for 3 BHK House in Medical College Rd
@@ -258,9 +258,9 @@ export default function HomeLandingPage() {
                 <p className="text-xs text-slate-600 font-semibold leading-relaxed">
                   Doctor family searching for clean 3 BHK house with covered car parking and 24/7 water connection.
                 </p>
-                <div className="flex justify-between items-center pt-2.5 border-t border-amber-200/60 text-[11px] font-bold text-slate-500">
-                  <span className="text-amber-800">📍 Medical College Rd</span>
-                  <span className="text-amber-700 font-black hover:underline">
+                <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
+                  <span className="text-slate-700">Medical College Rd</span>
+                  <span className="text-slate-800 font-bold hover:underline">
                     View Requirement →
                   </span>
                 </div>
@@ -269,13 +269,13 @@ export default function HomeLandingPage() {
               {/* Need Card 2: Trending */}
               <div 
                 onClick={() => router.push("/need?post=need_goods_auto")}
-                className="bg-amber-50/40 border border-amber-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
+                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
               >
                 <div className="flex justify-between items-center">
-                  <span className="text-[9px] font-black uppercase text-white bg-gradient-to-r from-purple-600 to-indigo-600 px-2.5 py-0.5 rounded-md shadow-xs">
-                    ⚡ Trending
+                  <span className="text-[9px] font-bold uppercase text-slate-900 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
+                    Trending
                   </span>
-                  <span className="text-[10px] font-bold text-amber-800">Budget: ~₹1.2 Lakh</span>
+                  <span className="text-[10px] font-bold text-slate-700">Budget: ~₹1.2 Lakh</span>
                 </div>
                 <h3 className="font-heading font-extrabold text-sm text-slate-800">
                   Need Commercial Goods Auto / Mini Truck
@@ -283,9 +283,9 @@ export default function HomeLandingPage() {
                 <p className="text-xs text-slate-600 font-semibold leading-relaxed">
                   Required used 3-wheeler goods autorickshaw or Tata Ace in good running condition with valid FC.
                 </p>
-                <div className="flex justify-between items-center pt-2.5 border-t border-amber-200/60 text-[11px] font-bold text-slate-500">
-                  <span className="text-amber-800">📍 New Bus Stand Area</span>
-                  <span className="text-amber-700 font-black hover:underline">
+                <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
+                  <span className="text-slate-700">New Bus Stand Area</span>
+                  <span className="text-slate-800 font-bold hover:underline">
                     View Requirement →
                   </span>
                 </div>
@@ -294,13 +294,13 @@ export default function HomeLandingPage() {
               {/* Need Card 3: Recent */}
               <div 
                 onClick={() => router.push("/need?post=need_accountant")}
-                className="bg-amber-50/40 border border-amber-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
+                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
               >
                 <div className="flex justify-between items-center">
-                  <span className="text-[9px] font-black uppercase text-white bg-slate-800 px-2.5 py-0.5 rounded-md shadow-xs">
-                    🆕 Recent Need
+                  <span className="text-[9px] font-bold uppercase text-slate-900 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
+                    Recent Need
                   </span>
-                  <span className="text-[10px] font-bold text-amber-800">Salary: ₹18,000/mo</span>
+                  <span className="text-[10px] font-bold text-slate-700">Salary: ₹18,000/mo</span>
                 </div>
                 <h3 className="font-heading font-extrabold text-sm text-slate-800">
                   Hiring Full-Time Accountant for Retail Store
@@ -308,22 +308,22 @@ export default function HomeLandingPage() {
                 <p className="text-xs text-slate-600 font-semibold leading-relaxed">
                   Hiring accountant experienced in Tally Prime, GST filing, and daily ledger management in Gandhiji Road.
                 </p>
-                <div className="flex justify-between items-center pt-2.5 border-t border-amber-200/60 text-[11px] font-bold text-slate-500">
-                  <span className="text-amber-800">📍 Gandhiji Road</span>
-                  <span className="text-amber-700 font-black hover:underline">
+                <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
+                  <span className="text-slate-700">Gandhiji Road</span>
+                  <span className="text-slate-800 font-bold hover:underline">
                     View Requirement →
                   </span>
                 </div>
+              </div>
             </div>
-          </div>
           </div>
 
           {/* SECTION 3: LOCAL SERVICE */}
           <div className="flex flex-col gap-4 mt-2">
             <div className="flex items-center justify-between border-b border-slate-200 pb-3">
               <div className="flex items-center gap-2">
-                <span className="bg-yellow-500/10 text-yellow-700 p-1.5 rounded-xl border border-yellow-300/60">
-                  <Wrench className="w-5 h-5 text-yellow-600" />
+                <span className="bg-slate-100 text-slate-700 p-1.5 rounded-xl border border-slate-200">
+                  <Wrench className="w-5 h-5 text-slate-700" />
                 </span>
                 <h2 className="font-heading font-black text-base md:text-lg text-slate-900 tracking-tight">
                   Local Service (Technicians & Skilled Trades)
@@ -331,7 +331,7 @@ export default function HomeLandingPage() {
               </div>
               <button
                 onClick={() => router.push("/services")}
-                className="text-xs font-black text-yellow-600 hover:text-yellow-750 flex items-center gap-1 hover:underline cursor-pointer"
+                className="text-xs font-bold text-slate-600 hover:text-slate-900 flex items-center gap-1 hover:underline cursor-pointer"
               >
                 <span>View All Services →</span>
               </button>
@@ -341,11 +341,11 @@ export default function HomeLandingPage() {
               {/* Tech 1: Top Rated */}
               <div 
                 onClick={() => router.push("/services?category=Electrician&post=senthil_electrician")}
-                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
+                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
               >
                 <div className="flex justify-between items-center">
-                  <span className="text-[9px] font-black uppercase text-white bg-gradient-to-r from-amber-500 to-yellow-500 px-2.5 py-0.5 rounded-md shadow-xs">
-                    ⭐ Top Rated (4.9)
+                  <span className="text-[9px] font-bold uppercase text-slate-900 bg-slate-100 px-2.5 py-0.5 rounded-md border border-slate-200">
+                    Top Rated (4.9)
                   </span>
                   <span className="text-[10px] font-bold text-slate-400">Tanjore Town</span>
                 </div>
@@ -357,7 +357,7 @@ export default function HomeLandingPage() {
                 </p>
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
                   <span>Electrician</span>
-                  <span className="text-yellow-600 font-black hover:underline">
+                  <span className="text-slate-800 font-bold hover:underline">
                     View Profile in Feed →
                   </span>
                 </div>
@@ -366,11 +366,11 @@ export default function HomeLandingPage() {
               {/* Tech 2: High Demand */}
               <div 
                 onClick={() => router.push("/services?category=Plumber&post=rajesh_plumber")}
-                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
+                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
               >
                 <div className="flex justify-between items-center">
-                  <span className="text-[9px] font-black uppercase text-white bg-gradient-to-r from-blue-600 to-cyan-500 px-2.5 py-0.5 rounded-md shadow-xs">
-                    🔥 High Demand
+                  <span className="text-[9px] font-bold uppercase text-slate-900 bg-slate-100 px-2.5 py-0.5 rounded-md border border-slate-200">
+                    High Demand
                   </span>
                   <span className="text-[10px] font-bold text-slate-400">Medical College Rd</span>
                 </div>
@@ -382,7 +382,7 @@ export default function HomeLandingPage() {
                 </p>
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
                   <span>Plumber</span>
-                  <span className="text-yellow-600 font-black hover:underline">
+                  <span className="text-slate-800 font-bold hover:underline">
                     View Profile in Feed →
                   </span>
                 </div>
@@ -391,11 +391,11 @@ export default function HomeLandingPage() {
               {/* Tech 3: Active Today */}
               <div 
                 onClick={() => router.push("/services?category=Carpenter&post=venu_carpenter")}
-                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
+                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
               >
                 <div className="flex justify-between items-center">
-                  <span className="text-[9px] font-black uppercase text-white bg-slate-800 px-2.5 py-0.5 rounded-md shadow-xs">
-                    🆕 Active Today
+                  <span className="text-[9px] font-bold uppercase text-slate-900 bg-slate-100 px-2.5 py-0.5 rounded-md border border-slate-200">
+                    Active Today
                   </span>
                   <span className="text-[10px] font-bold text-slate-400">South Rampart Rd</span>
                 </div>
@@ -407,7 +407,7 @@ export default function HomeLandingPage() {
                 </p>
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
                   <span>Carpenter</span>
-                  <span className="text-yellow-600 font-black hover:underline">
+                  <span className="text-slate-800 font-bold hover:underline">
                     View Profile in Feed →
                   </span>
                 </div>
@@ -419,8 +419,8 @@ export default function HomeLandingPage() {
           <div className="flex flex-col gap-4 mt-2">
             <div className="flex items-center justify-between border-b border-slate-200 pb-3">
               <div className="flex items-center gap-2">
-                <span className="bg-yellow-500/10 text-yellow-700 p-1.5 rounded-xl border border-yellow-300/60">
-                  <Store className="w-5 h-5 text-yellow-600" />
+                <span className="bg-slate-100 text-slate-700 p-1.5 rounded-xl border border-slate-200">
+                  <Store className="w-5 h-5 text-slate-700" />
                 </span>
                 <h2 className="font-heading font-black text-base md:text-lg text-slate-900 tracking-tight">
                   Local Offer (Store Discounts & Video Deals)
@@ -428,7 +428,7 @@ export default function HomeLandingPage() {
               </div>
               <button
                 onClick={() => router.push("/shops")}
-                className="text-xs font-black text-yellow-600 hover:text-yellow-750 flex items-center gap-1 hover:underline cursor-pointer"
+                className="text-xs font-bold text-slate-600 hover:text-slate-900 flex items-center gap-1 hover:underline cursor-pointer"
               >
                 <span>View All Offers →</span>
               </button>
@@ -438,7 +438,7 @@ export default function HomeLandingPage() {
               {/* Featured Video Offer: GLEN EXCLUSIVE GALLERY */}
               <div 
                 onClick={() => router.push("/shops?category=Electronics%20Shop&post=glen_gallery")}
-                className="bg-white border-2 border-yellow-500/80 rounded-2xl p-4 shadow-sm flex flex-col gap-3 hover:shadow-md transition-shadow relative cursor-pointer"
+                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow relative cursor-pointer"
               >
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-900 relative group">
                   <video 
@@ -448,11 +448,11 @@ export default function HomeLandingPage() {
                     preload="metadata"
                     className="w-full h-full object-cover"
                   />
-                  <span className="absolute top-2 left-2 text-[9px] font-black uppercase text-white bg-gradient-to-r from-amber-600 to-yellow-500 px-2 py-0.5 rounded-md shadow-xs z-10">
-                    🔥 Grand Opening Sale
+                  <span className="absolute top-2 left-2 text-[9px] font-bold uppercase text-slate-900 bg-white/95 px-2 py-0.5 rounded-md shadow-2xs z-10 border border-slate-200">
+                    Grand Opening Sale
                   </span>
                   <div className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/10 transition-colors">
-                    <div className="w-10 h-10 rounded-full bg-white/90 text-yellow-600 flex items-center justify-center font-black shadow-lg">
+                    <div className="w-10 h-10 rounded-full bg-white/90 text-slate-900 flex items-center justify-center font-black shadow-lg">
                       ▶
                     </div>
                   </div>
@@ -461,14 +461,14 @@ export default function HomeLandingPage() {
                   <h3 className="font-heading font-extrabold text-sm text-slate-900">
                     GLEN EXCLUSIVE GALLERY
                   </h3>
-                  <span className="text-xs font-black text-amber-600">Up to 60% OFF</span>
+                  <span className="text-xs font-black text-slate-900">Up to 60% OFF</span>
                 </div>
                 <p className="text-xs text-slate-600 font-semibold leading-relaxed line-clamp-2">
                   Grand Opening Sale! Up to 60% discount on all kitchen appliances & chimneys at New Busstand Road.
                 </p>
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
                   <span>New Busstand Rd</span>
-                  <span className="text-yellow-600 font-black hover:underline flex items-center gap-1">
+                  <span className="text-slate-800 font-bold hover:underline flex items-center gap-1">
                     View Offer in Feed →
                   </span>
                 </div>
@@ -477,7 +477,7 @@ export default function HomeLandingPage() {
               {/* Offer 2 */}
               <div 
                 onClick={() => router.push("/shops?category=Cafe%20%26%20Restaurant&post=degree_coffee")}
-                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
+                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
               >
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
                   <Image 
@@ -486,22 +486,22 @@ export default function HomeLandingPage() {
                     fill 
                     className="object-cover hover:scale-105 transition-transform duration-300"
                   />
-                  <span className="absolute top-2 left-2 text-[9px] font-black uppercase text-amber-950 bg-amber-400 px-2 py-0.5 rounded-md shadow-xs">
-                    ⚡ Limited Deal
+                  <span className="absolute top-2 left-2 text-[9px] font-bold uppercase text-slate-900 bg-white/95 px-2 py-0.5 rounded-md shadow-2xs border border-slate-200">
+                    Limited Deal
                   </span>
                 </div>
                 <div className="flex justify-between items-center mt-1">
                   <h3 className="font-heading font-extrabold text-sm text-slate-800">
                     Tanjore Degree Coffee
                   </h3>
-                  <span className="text-xs font-black text-amber-600">Buy 1 Get 1</span>
+                  <span className="text-xs font-black text-slate-900">Buy 1 Get 1</span>
                 </div>
                 <p className="text-xs text-slate-500 font-semibold leading-relaxed">
                   Buy 1 Ghee Roast & Get 1 Free Degree Coffee between 4 PM to 7 PM.
                 </p>
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
                   <span>Big Temple Area</span>
-                  <span className="text-yellow-600 font-black hover:underline">
+                  <span className="text-slate-800 font-bold hover:underline">
                     View Offer →
                   </span>
                 </div>
@@ -510,7 +510,7 @@ export default function HomeLandingPage() {
               {/* Offer 3 */}
               <div 
                 onClick={() => router.push("/shops?category=Textiles%20%26%20Clothing")}
-                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
+                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
               >
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
                   <Image 
@@ -519,22 +519,22 @@ export default function HomeLandingPage() {
                     fill 
                     className="object-cover hover:scale-105 transition-transform duration-300"
                   />
-                  <span className="absolute top-2 left-2 text-[9px] font-black uppercase text-white bg-slate-800 px-2 py-0.5 rounded-md shadow-xs">
-                    🆕 Recent Offer
+                  <span className="absolute top-2 left-2 text-[9px] font-bold uppercase text-slate-900 bg-white/95 px-2 py-0.5 rounded-md shadow-2xs border border-slate-200">
+                    Recent Offer
                   </span>
                 </div>
                 <div className="flex justify-between items-center mt-1">
                   <h3 className="font-heading font-extrabold text-sm text-slate-800">
                     Handloom Silk Saree Sale
                   </h3>
-                  <span className="text-xs font-black text-purple-600">20% Off</span>
+                  <span className="text-xs font-black text-slate-900">20% Off</span>
                 </div>
                 <p className="text-xs text-slate-500 font-semibold leading-relaxed">
                   20% direct discount on pure Tanjore handloom silk sarees this festival week.
                 </p>
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
                   <span>South Rampart Rd</span>
-                  <span className="text-yellow-600 font-black hover:underline">
+                  <span className="text-slate-800 font-bold hover:underline">
                     View Offer →
                   </span>
                 </div>

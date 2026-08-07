@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Search, X, Building, Wrench, Store, MessageSquare, MapPin, ArrowRight, Sparkles } from "lucide-react";
+import { Search, X, Building, Wrench, Store, MessageSquare, MapPin, ArrowRight, Loader2 } from "lucide-react";
 import { collection, query, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useRouter } from "next/navigation";
@@ -145,7 +145,7 @@ export default function UniversalSearchBar() {
         <div className="absolute left-4 right-4 sm:left-6 sm:right-6 top-full mt-1.5 bg-white/95 backdrop-blur-xl border border-slate-200 shadow-2xl rounded-2xl z-50 overflow-hidden max-h-[75vh] overflow-y-auto divide-y divide-slate-100 animate-fade-in">
           {loading ? (
             <div className="p-4 text-center text-xs font-bold text-slate-400 flex items-center justify-center gap-2">
-              <Sparkles className="w-4 h-4 text-yellow-500 animate-spin" />
+              <Loader2 className="w-4 h-4 text-slate-500 animate-spin" />
               Searching Thanjavur Directory...
             </div>
           ) : totalMatches === 0 ? (

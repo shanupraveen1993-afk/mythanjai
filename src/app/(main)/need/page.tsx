@@ -159,10 +159,10 @@ export default function NeedPage() {
   return (
     <div className="flex flex-col gap-6 mt-4 md:mt-6 pt-2 pb-12 max-w-7xl mx-auto px-4 sm:px-6">
       {/* HEADER TITLE */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-amber-50/60 border border-amber-200/90 rounded-2xl p-5 shadow-xs">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs">
         <div>
-          <span className="text-[10px] font-black uppercase tracking-wider text-amber-800 bg-amber-100 border border-amber-300/60 px-2.5 py-0.5 rounded-lg inline-block">
-            🎯 Need Requirements
+          <span className="text-[10px] font-black uppercase tracking-wider text-slate-700 bg-slate-100 border border-slate-200 px-2.5 py-0.5 rounded-lg inline-block">
+            Need Requirements
           </span>
           <h1 className="font-heading font-black text-xl md:text-2xl text-slate-900 mt-2">
             Looking For / Buyer Requirements in Thanjavur

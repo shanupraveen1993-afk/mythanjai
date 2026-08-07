@@ -167,8 +167,8 @@ export default function SellPage() {
       {/* HEADER TITLE */}
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs">
         <div>
-          <span className="text-[10px] font-black uppercase tracking-wider text-yellow-700 bg-yellow-50 border border-yellow-300/60 px-2.5 py-0.5 rounded-lg inline-block">
-            🛒 Sell Marketplace
+          <span className="text-[10px] font-black uppercase tracking-wider text-slate-700 bg-slate-100 border border-slate-200 px-2.5 py-0.5 rounded-lg inline-block">
+            Sell Marketplace
           </span>
           <h1 className="font-heading font-black text-xl md:text-2xl text-slate-900 mt-2">
             Sell & Classified Listings in Thanjavur
