@@ -436,8 +436,8 @@ export default function HomeLandingPage() {
            ========================================== */
         <div className="w-full relative flex flex-col min-h-[85vh] justify-between">
           
-          {/* NATIVE MOBILE APP ONBOARDING CONTAINER (Mobile Viewports ONLY) */}
-          <div className="block md:hidden w-full px-5 py-4 bg-gradient-to-b from-yellow-500/15 via-slate-50/50 to-white min-h-[calc(100vh-70px)] flex flex-col justify-between items-center text-center overflow-hidden">
+          {/* NATIVE MOBILE APP ONBOARDING CONTAINER (Mobile Viewports ONLY - Strictly 100vh, No Scroll) */}
+          <div className="block md:hidden w-full px-5 py-4 bg-gradient-to-b from-yellow-500/15 via-slate-50/50 to-white h-[calc(100vh-64px)] max-h-[100vh] flex flex-col justify-between items-center text-center overflow-hidden shrink-0">
             
             {/* Top Branding App Header */}
             <div className="flex flex-col items-center gap-2 mt-1">
