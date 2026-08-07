@@ -128,7 +128,7 @@ export default function ShopsPage() {
   const [landmark, setLandmark] = useState("");
   const [hours, setHours] = useState("9:00 AM - 9:00 PM");
   const [phone, setPhone] = useState("");
-  const [formArea, setFormArea] = useState<TanjoreLocality>("Tanjore Town (General)");
+  const [formArea, setFormArea] = useState("");
   const [latitude, setLatitude] = useState(10.7870);
   const [longitude, setLongitude] = useState(79.1378);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
@@ -149,18 +149,6 @@ export default function ShopsPage() {
   const displayOfferDesc = offerDescription || getSamplePost().offerDescription || "";
   const previewImage = imagePreview || CATEGORY_STOCK_IMAGES[selectedCategory || "Others"] || CATEGORY_STOCK_IMAGES["Others"];
 
-  // Sync selected global area filter with form location tag
-  useEffect(() => {
-    if (area !== "All Areas") {
-      setFormArea(area);
-      const coords = LOCALITY_COORDS[area];
-      if (coords) {
-        setLatitude(coords.lat);
-        setLongitude(coords.lng);
-      }
-    }
-  }, [area]);
-
   // Expand form if ?create=true is in URL query parameters
   const triggerCreate = searchParams.get("create") === "true";
   useEffect(() => {
@@ -168,17 +156,14 @@ export default function ShopsPage() {
       if (!profile?.isVerified) {
         const currentParams = new URLSearchParams(searchParams.toString());
         currentParams.set("auth", "popup");
-        currentParams.delete("create");
         router.push(`/shops?${currentParams.toString()}`);
       } else {
         setIsFormOpen(true);
-        window.scrollTo({ top: 0, behavior: "smooth" });
       }
     }
-  }, [triggerCreate, loading, profile?.isVerified, searchParams, router]);
+  }, [triggerCreate, profile, loading]);
 
-  // Adjust coordinates when shopkeeper changes area
-  const handleFormAreaChange = (newArea: TanjoreLocality) => {
+  const handleFormAreaChange = (newArea: string) => {
     setFormArea(newArea);
     const coords = LOCALITY_COORDS[newArea];
     if (coords) {
@@ -193,6 +178,8 @@ export default function ShopsPage() {
     category: selectedCategory || "All",
   });
 
+  const [localShops, setLocalShops] = useState<ShopPost[]>([]);
+
   const handleCategorySelect = (category: string) => {
     const currentParams = new URLSearchParams(searchParams.toString());
     currentParams.set("category", category);
@@ -203,7 +190,6 @@ export default function ShopsPage() {
     const currentParams = new URLSearchParams(searchParams.toString());
     currentParams.delete("category");
     currentParams.delete("create");
-    currentParams.delete("map");
     router.push(`/shops?${currentParams.toString()}`);
   };
 
@@ -217,23 +203,12 @@ export default function ShopsPage() {
     router.push(`/shops?${currentParams.toString()}`);
   };
 
-  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setSelectedImage(file);
-      setImagePreview(URL.createObjectURL(file));
-    }
-  };
-
   // OCR visiting card scan for shops
   const handleOcrScan = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
 
     setOcrLoading(true);
-    setImagePreview(URL.createObjectURL(file));
-    setSelectedImage(file);
-
     try {
       const { compressImage } = await import("@/lib/image-compressor");
       const compressed = await compressImage(file, 800, 800, 0.7);
@@ -256,12 +231,7 @@ export default function ShopsPage() {
         if (extractedPhone) setPhone(extractedPhone);
         if (address_text) setAddress(address_text);
         if (detected_area) {
-          setFormArea(detected_area as TanjoreLocality);
-          const coords = LOCALITY_COORDS[detected_area];
-          if (coords) {
-            setLatitude(coords.lat);
-            setLongitude(coords.lng);
-          }
+          setFormArea(detected_area);
         }
 
         confetti({ particleCount: 30, colors: ["#fbbf24"] });
@@ -295,7 +265,21 @@ export default function ShopsPage() {
       return;
     }
 
+    if (!formArea || !formArea.trim()) {
+      alert("Please add a specific location in Thanjavur District.");
+      return;
+    }
+
     setUploading(true);
+
+    // AI Location Verification for Thanjavur District
+    const { aiLocalityCheck } = await import("@/lib/ai-locality-check");
+    const isThanjavur = await aiLocalityCheck(formArea);
+    if (!isThanjavur) {
+      alert("Please add a specific location in Thanjavur District.");
+      setUploading(false);
+      return;
+    }
     try {
       // 1. AI Format raw offer description if it exists
       let formattedOfferDesc = offerDescription || "";

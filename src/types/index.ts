@@ -19,7 +19,7 @@ export interface NeedOrSalePost {
   title: string;
   description: string;
   category: string;
-  area_tag: TanjoreLocality;
+  area_tag: TanjoreLocality | string;
   price: number | string | null;
   phone: string;
   is_verified: boolean;
@@ -39,7 +39,7 @@ export interface ServiceProviderPost {
   name: string;
   skill_category: string;
   experience: string;
-  area_tag: TanjoreLocality;
+  area_tag: TanjoreLocality | string;
   phone: string;
   rating: number;
   is_verified: boolean;
@@ -53,7 +53,7 @@ export interface ShopPost {
   userId: string;
   shop_name: string;
   category: string;
-  area_tag: TanjoreLocality;
+  area_tag: TanjoreLocality | string;
   phone: string;
   image_url: string;
   latitude: number | null;
@@ -76,7 +76,7 @@ export interface OfferPost {
   title: string;
   description?: string;
   category: string;
-  area_tag: TanjoreLocality;
+  area_tag: TanjoreLocality | string;
   thumbnail_url: string;
   social_link: string;
   platform: "instagram" | "facebook" | "whatsapp" | "other";

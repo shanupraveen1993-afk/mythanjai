@@ -89,7 +89,7 @@ export default function CreatePostModal({
 
   // Common Form Fields
   const [phone, setPhone] = useState("");
-  const [area, setArea] = useState<TanjoreLocality>(defaultArea);
+  const [area, setArea] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
 
@@ -190,7 +190,21 @@ export default function CreatePostModal({
       return;
     }
 
+    if (!area || !area.trim()) {
+      alert("Please add a specific location in Thanjavur District.");
+      return;
+    }
+
     setLoading(true);
+
+    // AI Location Verification for Thanjavur District
+    const { aiLocalityCheck } = await import("@/lib/ai-locality-check");
+    const isThanjavur = await aiLocalityCheck(area);
+    if (!isThanjavur) {
+      alert("Please add a specific location in Thanjavur District.");
+      setLoading(false);
+      return;
+    }
     try {
       const currentUser = auth.currentUser;
       const uid = currentUser ? currentUser.uid : "anonymous_guest";

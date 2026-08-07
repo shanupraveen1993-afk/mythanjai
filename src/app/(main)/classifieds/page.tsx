@@ -74,7 +74,7 @@ export default function ClassifiedsPage() {
   const [formTitle, setFormTitle] = useState("");
   const [formDesc, setFormDesc] = useState("");
   const [formPrice, setFormPrice] = useState("");
-  const [formArea, setFormArea] = useState<TanjoreLocality>("Tanjore Town (General)");
+  const [formArea, setFormArea] = useState("");
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [youtubeUrl, setYoutubeUrl] = useState("");
@@ -159,13 +159,6 @@ export default function ClassifiedsPage() {
     }
   };
 
-  // Sync selected global area filter with form location tag
-  useEffect(() => {
-    if (area !== "All Areas") {
-      setFormArea(area);
-    }
-  }, [area]);
-
   // Keep formType in sync with the activeType tab selection
   useEffect(() => {
     setFormType(activeType);
@@ -178,14 +171,12 @@ export default function ClassifiedsPage() {
       if (!profile?.isVerified) {
         const currentParams = new URLSearchParams(searchParams.toString());
         currentParams.set("auth", "popup");
-        currentParams.delete("create");
         router.push(`/classifieds?${currentParams.toString()}`);
       } else {
         setIsFormOpen(true);
-        window.scrollTo({ top: 0, behavior: "smooth" });
       }
     }
-  }, [triggerCreate, loading, profile?.isVerified, searchParams, router]);
+  }, [triggerCreate, profile, loading]);
 
   const [localPosts, setLocalPosts] = useState<NeedOrSalePost[]>([]);
 
@@ -215,11 +206,25 @@ export default function ClassifiedsPage() {
     const activeUserId = user?.uid || profile?.uid || "localStorage_user";
     const phoneNum = profile?.phone || user?.phoneNumber || "";
     if (!formTitle || !formDesc || !phoneNum || !selectedCategory) {
-      alert("Please ensure you are signed in with a verified account.");
+      alert("Please fill in all required fields and ensure you are signed in.");
+      return;
+    }
+
+    if (!formArea || !formArea.trim()) {
+      alert("Please add a specific location in Thanjavur District.");
       return;
     }
 
     setUploading(true);
+
+    // AI Location Verification for Thanjavur District
+    const { aiLocalityCheck } = await import("@/lib/ai-locality-check");
+    const isThanjavur = await aiLocalityCheck(formArea);
+    if (!isThanjavur) {
+      alert("Please add a specific location in Thanjavur District.");
+      setUploading(false);
+      return;
+    }
     let formattedDescription = formDesc;
 
     // AI Format raw description
@@ -520,7 +525,7 @@ export default function ClassifiedsPage() {
                         required
                         value={formArea}
                         onChange={(e) => setFormArea(e.target.value as any)}
-                        placeholder="e.g. West Main St, Vallam, Tanjore Town, Medical College Rd"
+                        placeholder="Enter location in Thanjavur (e.g. West Main St, Vallam, Tanjore Town)"
                         className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 focus:outline-none font-bold"
                       />
                       <span className="text-[9px] text-slate-400 block mt-1 leading-normal font-bold">

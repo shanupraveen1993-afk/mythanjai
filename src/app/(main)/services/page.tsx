@@ -80,7 +80,7 @@ export default function ServicesPage() {
   const [serviceDescription, setServiceDescription] = useState("");
   const [availability, setAvailability] = useState("");
   const [altPhone, setAltPhone] = useState("");
-  const [formArea, setFormArea] = useState<TanjoreLocality>("Tanjore Town (General)");
+  const [formArea, setFormArea] = useState("");
   const [ocrLoading, setOcrLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
 
@@ -99,13 +99,6 @@ export default function ServicesPage() {
     }
   };
 
-  // Sync selected global area filter with form location tag
-  useEffect(() => {
-    if (area !== "All Areas") {
-      setFormArea(area);
-    }
-  }, [area]);
-
   // Expand form if ?create=true is in URL query parameters
   const triggerCreate = searchParams.get("create") === "true";
   useEffect(() => {
@@ -113,14 +106,12 @@ export default function ServicesPage() {
       if (!profile?.isVerified) {
         const currentParams = new URLSearchParams(searchParams.toString());
         currentParams.set("auth", "popup");
-        currentParams.delete("create");
         router.push(`/services?${currentParams.toString()}`);
       } else {
         setIsFormOpen(true);
-        window.scrollTo({ top: 0, behavior: "smooth" });
       }
     }
-  }, [triggerCreate, loading, profile?.isVerified, searchParams, router]);
+  }, [triggerCreate, profile, loading]);
 
   const [localServices, setLocalServices] = useState<ServiceProviderPost[]>([]);
 
@@ -154,11 +145,25 @@ export default function ServicesPage() {
     const activeUserId = user?.uid || profile?.uid || "localStorage_user";
     const phoneNum = profile?.phone || user?.phoneNumber || "";
     if (!serviceName || !phoneNum || !selectedCategory || !serviceDescription) {
-      alert("Please ensure you are signed in with a verified account.");
+      alert("Please fill in all required fields.");
+      return;
+    }
+
+    if (!formArea || !formArea.trim()) {
+      alert("Please add a specific location in Thanjavur District.");
       return;
     }
 
     setUploading(true);
+
+    // AI Location Verification for Thanjavur District
+    const { aiLocalityCheck } = await import("@/lib/ai-locality-check");
+    const isThanjavur = await aiLocalityCheck(formArea);
+    if (!isThanjavur) {
+      alert("Please add a specific location in Thanjavur District.");
+      setUploading(false);
+      return;
+    }
     let formattedDescription = serviceDescription;
 
     // AI Format raw description
