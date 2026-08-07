@@ -545,9 +545,9 @@ export default function HomeLandingPage() {
         </div>
       ) : (
         /* ==========================================
-           UNAUTHENTICATED GUEST LANDING PAGE (ROBOT HERO ON BOTH MOBILE & DESKTOP)
+           UNAUTHENTICATED GUEST LANDING PAGE (STATIC MOBILE APP ONBOARDING VIEWPORT)
            ========================================== */
-        <div className="w-full relative flex flex-col min-h-[85vh] justify-between my-2">
+        <div className="w-full relative flex flex-col h-[calc(100vh-64px)] md:min-h-[85vh] overflow-hidden justify-between my-0 max-w-4xl mx-auto px-2">
           
           {/* 3D ROBOT MASCOT HERO (VISIBLE ON BOTH MOBILE & DESKTOP) */}
           <div className="w-full">
