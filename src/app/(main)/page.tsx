@@ -516,10 +516,9 @@ export default function HomeLandingPage() {
       )}
 
       {/* ==========================================
-          PORTAL CONTENT: DIRECTORY SEGMENT LINKS Noticeboard (LOGGED IN ONLY)
+          PORTAL CONTENT: DIRECTORY SEGMENT LINKS Noticeboard (ALWAYS VISIBLE ON DESKTOP WEBSITE, LOGGED IN ON MOBILE)
           ========================================== */}
-      {profile?.isVerified && (
-        <div id="noticeboard-directory" className="flex w-full max-w-7xl mx-auto px-5 md:px-6 py-8 flex-col gap-8 bg-white">
+      <div id="noticeboard-directory" className={`w-full max-w-7xl mx-auto px-5 md:px-6 py-8 flex-col gap-8 bg-white ${profile?.isVerified ? "flex" : "hidden md:flex"}`}>
 
         {/* Section Heading & Branding Emblem */}
         <div className="flex flex-col items-center text-center gap-4 max-w-xl mx-auto">
@@ -904,7 +903,6 @@ export default function HomeLandingPage() {
           <button onClick={() => router.push("/profile")} className="hover:text-slate-600 transition-colors">Profile Control</button>
         </footer>
       </div>
-      )}
 
     </div>
   );
