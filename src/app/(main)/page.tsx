@@ -59,11 +59,12 @@ export default function HomeLandingPage() {
     <div className="w-full flex flex-col bg-white text-slate-800 min-h-screen font-sans">
       
       {/* ==========================================
-          LOGGED IN HOME PAGE (PAGE 1)
+          LOGGED IN HOME PAGE DASHBOARD (PAGE 1)
           ========================================== */}
       {profile?.isVerified ? (
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-6 animate-fade-in">
-          {/* Welcome Header */}
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-8 animate-fade-in">
+          
+          {/* 1. Welcome Resident Banner */}
           <div className="bg-gradient-to-r from-yellow-500/10 via-amber-500/10 to-yellow-500/10 border border-yellow-500/30 rounded-3xl p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-5">
             <div className="flex items-center gap-4">
               <div className="w-14 h-14 rounded-2xl bg-yellow-500 text-slate-955 flex items-center justify-center font-heading font-black text-xl shadow-sm border border-yellow-400">
@@ -71,20 +72,20 @@ export default function HomeLandingPage() {
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h2 className="font-heading font-black text-xl text-slate-900">
+                  <h1 className="font-heading font-black text-xl text-slate-900">
                     Welcome, {profile?.displayName || "Resident"}
-                  </h2>
-                  <span className="text-[9px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-700 border border-emerald-500/30 px-2 py-0.5 rounded-md flex items-center gap-1">
+                  </h1>
+                  <span className="text-[9px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-700 border border-emerald-500/30 px-2.5 py-0.5 rounded-md flex items-center gap-1">
                     ✓ Verified Resident
                   </span>
                 </div>
                 <p className="text-xs text-slate-600 mt-0.5 font-semibold">
-                  Thanjavur Community Member (+{profile?.phone || "919994837342"})
+                  Thanjavur Account (+{profile?.phone || "919994837342"})
                 </p>
               </div>
             </div>
 
-            {/* Quick Post Actions */}
+            {/* Quick Post Actions Bar */}
             <div className="flex flex-wrap items-center gap-2">
               <button
                 onClick={() => router.push("/classifieds?create=true")}
@@ -107,77 +108,326 @@ export default function HomeLandingPage() {
             </div>
           </div>
 
-          {/* CRISP COMMUNITY HIGHLIGHTS ON HOME PAGE */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-2">
-            {/* Highlight 1: Buy & Sell */}
+          {/* 2. 3 Segment Quick Navigation Shortcuts Bar */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             <div 
               onClick={() => router.push("/classifieds")}
-              className="bg-white border border-slate-200 hover:border-yellow-500/50 rounded-3xl p-6 shadow-xs hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between gap-4"
+              className="bg-slate-50 border border-slate-200 hover:border-yellow-500/50 p-4 rounded-2xl flex items-center justify-between cursor-pointer transition-all hover:shadow-sm group"
             >
-              <div className="flex flex-col gap-3">
-                <div className="w-10 h-10 rounded-2xl bg-yellow-500/10 text-yellow-600 flex items-center justify-center border border-yellow-250/60 group-hover:scale-105 transition-transform">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-yellow-500/10 text-yellow-600 flex items-center justify-center border border-yellow-250/60 group-hover:scale-105 transition-transform">
                   <Building className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-heading font-extrabold text-base text-slate-900 group-hover:text-yellow-750 transition-colors">
-                    Buy & Sell Classifieds
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                    Browse lands, house rentals, used vehicles, and electronics in Thanjavur.
-                  </p>
+                  <h3 className="font-heading font-black text-xs text-slate-900 group-hover:text-yellow-750 transition-colors">📢 Buy & Sell Channel</h3>
+                  <span className="text-[10px] text-slate-400 font-bold">Lands, Rentals, Vehicles</span>
                 </div>
               </div>
-              <div className="flex items-center text-xs font-black text-yellow-600 gap-1 group-hover:translate-x-1 transition-transform">
-                <span>View Buy & Sell Page →</span>
-              </div>
+              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-yellow-600 group-hover:translate-x-1 transition-all" />
             </div>
 
-            {/* Highlight 2: Helper Trades */}
             <div 
               onClick={() => router.push("/services")}
-              className="bg-white border border-slate-200 hover:border-yellow-500/50 rounded-3xl p-6 shadow-xs hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between gap-4"
+              className="bg-slate-50 border border-slate-200 hover:border-yellow-500/50 p-4 rounded-2xl flex items-center justify-between cursor-pointer transition-all hover:shadow-sm group"
             >
-              <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-2xl bg-yellow-500/10 text-yellow-600 flex items-center justify-center border border-yellow-250/60 group-hover:scale-105 transition-transform">
                   <Wrench className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-heading font-extrabold text-base text-slate-900 group-hover:text-yellow-750 transition-colors">
-                    Helper Trades & Services
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                    Find verified electricians, plumbers, carpenters, painters, and mechanics.
-                  </p>
+                  <h3 className="font-heading font-black text-xs text-slate-900 group-hover:text-yellow-750 transition-colors">🛠️ Helper Trades Channel</h3>
+                  <span className="text-[10px] text-slate-400 font-bold">Electricians, Plumbers, Mechanics</span>
                 </div>
               </div>
-              <div className="flex items-center text-xs font-black text-yellow-600 gap-1 group-hover:translate-x-1 transition-transform">
-                <span>View Services Page →</span>
-              </div>
+              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-yellow-600 group-hover:translate-x-1 transition-all" />
             </div>
 
-            {/* Highlight 3: Recent Offers */}
             <div 
               onClick={() => router.push("/shops")}
-              className="bg-white border border-slate-200 hover:border-yellow-500/50 rounded-3xl p-6 shadow-xs hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between gap-4"
+              className="bg-slate-50 border border-slate-200 hover:border-yellow-500/50 p-4 rounded-2xl flex items-center justify-between cursor-pointer transition-all hover:shadow-sm group"
             >
-              <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-2xl bg-yellow-500/10 text-yellow-600 flex items-center justify-center border border-yellow-250/60 group-hover:scale-105 transition-transform">
                   <Store className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-heading font-extrabold text-base text-slate-900 group-hover:text-yellow-750 transition-colors">
-                    Recent Offers & Video Reels
-                  </h3>
-                  <p className="text-xs text-slate-500 mt-1 leading-relaxed">
-                    Discover local store discounts, promotions, and Instagram video reels.
-                  </p>
+                  <h3 className="font-heading font-black text-xs text-slate-900 group-hover:text-yellow-750 transition-colors">🏪 Recent Offers Channel</h3>
+                  <span className="text-[10px] text-slate-400 font-bold">Store Discounts & Video Reels</span>
                 </div>
               </div>
-              <div className="flex items-center text-xs font-black text-yellow-600 gap-1 group-hover:translate-x-1 transition-transform">
-                <span>View Recent Offers Page →</span>
+              <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-yellow-600 group-hover:translate-x-1 transition-all" />
+            </div>
+          </div>
+
+          {/* 3. COMBINED FEATURED & POPULAR LISTINGS FEED */}
+          
+          {/* SECTION A: BUY & SELL POPULAR LISTINGS */}
+          <div className="flex flex-col gap-4">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+              <div className="flex items-center gap-2">
+                <Building className="w-5 h-5 text-yellow-600" />
+                <h2 className="font-heading font-black text-base text-slate-900">
+                  📢 Popular Buy & Sell Deals
+                </h2>
+              </div>
+              <button
+                onClick={() => router.push("/classifieds")}
+                className="text-xs font-black text-yellow-600 hover:text-yellow-750 flex items-center gap-1 hover:underline cursor-pointer"
+              >
+                <span>View All Buy & Sell Ads →</span>
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {/* Card 1 */}
+              <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow">
+                <div className="flex justify-between items-center">
+                  <span className="text-[9px] font-black uppercase text-yellow-750 bg-yellow-500/10 px-2 py-0.5 rounded-md border border-yellow-200">
+                    Real Estate
+                  </span>
+                  <span className="text-xs font-black text-slate-900">₹45,00,000</span>
+                </div>
+                <h3 className="font-heading font-extrabold text-sm text-slate-800">
+                  2 Acre Agricultural Plot near Vallam
+                </h3>
+                <p className="text-xs text-slate-500 font-semibold leading-relaxed">
+                  Clear titles, tar road access, Kaveri water line available near Vallam Bus Stand.
+                </p>
+                <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
+                  <div className="flex items-center gap-1">
+                    <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                    <span>Vallam, Thanjavur</span>
+                  </div>
+                  <button onClick={() => router.push("/classifieds")} className="text-yellow-600 font-black hover:underline">
+                    Details →
+                  </button>
+                </div>
+              </div>
+
+              {/* Card 2 */}
+              <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow">
+                <div className="flex justify-between items-center">
+                  <span className="text-[9px] font-black uppercase text-blue-750 bg-blue-500/10 px-2 py-0.5 rounded-md border border-blue-200">
+                    House Rental
+                  </span>
+                  <span className="text-xs font-black text-slate-900">₹12,500/mo</span>
+                </div>
+                <h3 className="font-heading font-extrabold text-sm text-slate-800">
+                  Spacious 2 BHK Independent House
+                </h3>
+                <p className="text-xs text-slate-500 font-semibold leading-relaxed">
+                  Modular kitchen, 2 bathrooms, 24/7 Kaveri water supply, dedicated car parking.
+                </p>
+                <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
+                  <div className="flex items-center gap-1">
+                    <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                    <span>Medical College Rd</span>
+                  </div>
+                  <button onClick={() => router.push("/classifieds")} className="text-yellow-600 font-black hover:underline">
+                    Details →
+                  </button>
+                </div>
+              </div>
+
+              {/* Card 3 */}
+              <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow">
+                <div className="flex justify-between items-center">
+                  <span className="text-[9px] font-black uppercase text-emerald-750 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-200">
+                    Used Motor
+                  </span>
+                  <span className="text-xs font-black text-slate-900">₹68,000</span>
+                </div>
+                <h3 className="font-heading font-extrabold text-sm text-slate-800">
+                  Hero Splendor Plus (2022 Model)
+                </h3>
+                <p className="text-xs text-slate-500 font-semibold leading-relaxed">
+                  Single owner, excellent mileage 65+ kmpl, clean insurance documents upto 2027.
+                </p>
+                <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
+                  <div className="flex items-center gap-1">
+                    <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                    <span>New Bus Stand</span>
+                  </div>
+                  <button onClick={() => router.push("/classifieds")} className="text-yellow-600 font-black hover:underline">
+                    Details →
+                  </button>
+                </div>
               </div>
             </div>
           </div>
+
+          {/* SECTION B: TOP RATED HELPER TECHNICIANS */}
+          <div className="flex flex-col gap-4 mt-2">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+              <div className="flex items-center gap-2">
+                <Wrench className="w-5 h-5 text-yellow-600" />
+                <h2 className="font-heading font-black text-base text-slate-900">
+                  🛠️ Top-Rated Helper Technicians
+                </h2>
+              </div>
+              <button
+                onClick={() => router.push("/services")}
+                className="text-xs font-black text-yellow-600 hover:text-yellow-750 flex items-center gap-1 hover:underline cursor-pointer"
+              >
+                <span>View All Services →</span>
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {/* Tech 1 */}
+              <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow">
+                <div className="flex justify-between items-center">
+                  <span className="text-[9px] font-black uppercase text-amber-750 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-200">
+                    Electrician
+                  </span>
+                  <span className="text-xs font-black text-emerald-600">★ 4.9 Rating</span>
+                </div>
+                <h3 className="font-heading font-extrabold text-sm text-slate-800">
+                  Senthil Kumar - Home Electrician
+                </h3>
+                <p className="text-xs text-slate-500 font-semibold leading-relaxed">
+                  8+ Years Experience. House wiring, DB box, inverter assembly & quick repairs.
+                </p>
+                <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
+                  <span>📍 Tanjore Town</span>
+                  <button onClick={() => router.push("/services")} className="text-yellow-600 font-black hover:underline">
+                    Hire Technician →
+                  </button>
+                </div>
+              </div>
+
+              {/* Tech 2 */}
+              <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow">
+                <div className="flex justify-between items-center">
+                  <span className="text-[9px] font-black uppercase text-blue-750 bg-blue-500/10 px-2 py-0.5 rounded-md border border-blue-200">
+                    Plumber
+                  </span>
+                  <span className="text-xs font-black text-emerald-600">★ 4.8 Rating</span>
+                </div>
+                <h3 className="font-heading font-extrabold text-sm text-slate-800">
+                  Rajesh K - Expert Plumber
+                </h3>
+                <p className="text-xs text-slate-500 font-semibold leading-relaxed">
+                  Pipe fitting, water tank washing, Kaveri line tap connections & leak fixes.
+                </p>
+                <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
+                  <span>📍 Medical College Rd</span>
+                  <button onClick={() => router.push("/services")} className="text-yellow-600 font-black hover:underline">
+                    Hire Technician →
+                  </button>
+                </div>
+              </div>
+
+              {/* Tech 3 */}
+              <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow">
+                <div className="flex justify-between items-center">
+                  <span className="text-[9px] font-black uppercase text-purple-750 bg-purple-500/10 px-2 py-0.5 rounded-md border border-purple-200">
+                    Carpenter
+                  </span>
+                  <span className="text-xs font-black text-emerald-600">★ 5.0 Rating</span>
+                </div>
+                <h3 className="font-heading font-extrabold text-sm text-slate-800">
+                  Venu Gopal - Wood Architect
+                </h3>
+                <p className="text-xs text-slate-500 font-semibold leading-relaxed">
+                  Modular kitchen woodworks, door laminations, locks repairs & bespoke furniture.
+                </p>
+                <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
+                  <span>📍 South Rampart Rd</span>
+                  <button onClick={() => router.push("/services")} className="text-yellow-600 font-black hover:underline">
+                    Hire Technician →
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* SECTION C: RECENT SHOP OFFERS & VIDEO REELS */}
+          <div className="flex flex-col gap-4 mt-2">
+            <div className="flex items-center justify-between border-b border-slate-200 pb-3">
+              <div className="flex items-center gap-2">
+                <Store className="w-5 h-5 text-yellow-600" />
+                <h2 className="font-heading font-black text-base text-slate-900">
+                  🏪 Recent Shop Offers & Video Reels
+                </h2>
+              </div>
+              <button
+                onClick={() => router.push("/shops")}
+                className="text-xs font-black text-yellow-600 hover:text-yellow-750 flex items-center gap-1 hover:underline cursor-pointer"
+              >
+                <span>View All Offers →</span>
+              </button>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {/* Offer 1 */}
+              <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow">
+                <div className="flex justify-between items-center">
+                  <span className="text-[9px] font-black uppercase text-yellow-750 bg-yellow-500/10 px-2 py-0.5 rounded-md border border-yellow-200">
+                    Cafe & Hotel
+                  </span>
+                  <span className="text-xs font-black text-amber-600">🎬 Video Reel</span>
+                </div>
+                <h3 className="font-heading font-extrabold text-sm text-slate-800">
+                  Famous Tanjore Degree Coffee Deal
+                </h3>
+                <p className="text-xs text-slate-500 font-semibold leading-relaxed">
+                  Buy 1 Ghee Roast & Get 1 Free Degree Coffee between 4 PM to 7 PM.
+                </p>
+                <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
+                  <span>📍 Near Big Temple</span>
+                  <button onClick={() => router.push("/shops")} className="text-yellow-600 font-black hover:underline">
+                    View Offer Reel →
+                  </button>
+                </div>
+              </div>
+
+              {/* Offer 2 */}
+              <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow">
+                <div className="flex justify-between items-center">
+                  <span className="text-[9px] font-black uppercase text-purple-750 bg-purple-500/10 px-2 py-0.5 rounded-md border border-purple-200">
+                    Textiles
+                  </span>
+                  <span className="text-xs font-black text-purple-600">Flat 20% Off</span>
+                </div>
+                <h3 className="font-heading font-extrabold text-sm text-slate-800">
+                  Tanjore Handloom Silk Saree Sale
+                </h3>
+                <p className="text-xs text-slate-500 font-semibold leading-relaxed">
+                  20% direct discount on pure Tanjore handloom silk sarees this festival week.
+                </p>
+                <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
+                  <span>📍 South Rampart Rd</span>
+                  <button onClick={() => router.push("/shops")} className="text-yellow-600 font-black hover:underline">
+                    View Offer Reel →
+                  </button>
+                </div>
+              </div>
+
+              {/* Offer 3 */}
+              <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow">
+                <div className="flex justify-between items-center">
+                  <span className="text-[9px] font-black uppercase text-emerald-750 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-200">
+                    Grocery Mart
+                  </span>
+                  <span className="text-xs font-black text-emerald-600">Flat 10% Off</span>
+                </div>
+                <h3 className="font-heading font-extrabold text-sm text-slate-800">
+                  Sri Murugan Super Grocery Deal
+                </h3>
+                <p className="text-xs text-slate-500 font-semibold leading-relaxed">
+                  10% direct discount on 25KG Ponni Rice bags with free Tanjore home delivery.
+                </p>
+                <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
+                  <span>📍 Srinivasapuram</span>
+                  <button onClick={() => router.push("/shops")} className="text-yellow-600 font-black hover:underline">
+                    View Offer Reel →
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       ) : (
         /* ==========================================
@@ -196,6 +446,7 @@ export default function HomeLandingPage() {
             }}
             color="#eab308"
             pantallaColor="#fbbf24"
+            pantallaBrillo={1.6}
             alerts={alerts}
             activeAlertIdx={activeAlertIdx}
           />
