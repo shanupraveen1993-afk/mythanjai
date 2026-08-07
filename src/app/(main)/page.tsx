@@ -62,72 +62,9 @@ export default function HomeLandingPage() {
           LOGGED IN HOME PAGE DASHBOARD (PAGE 1)
           ========================================== */}
       {profile?.isVerified ? (
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 mt-6 md:mt-8 pt-2 pb-12 flex flex-col gap-8 animate-fade-in">
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 mt-4 md:mt-6 pt-2 pb-12 flex flex-col gap-8 animate-fade-in">
           
-          {/* 1. Simple Inline Greeting with Registered Phone Number (No Box Container) */}
-          <div className="flex flex-col gap-0.5 pb-1">
-            <h1 className="font-heading font-black text-lg text-slate-900 tracking-tight">
-              Welcome, {profile?.displayName || "Resident"}
-            </h1>
-            <p className="text-xs text-slate-500 font-bold">
-              Registered Mobile: +{profile?.phone || "919994837342"}
-            </p>
-          </div>
-
-          {/* 2. STICKY 3 Segment Quick Navigation Shortcuts Bar */}
-          <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-3 px-3 border border-slate-200/90 rounded-2xl shadow-sm my-1">
-            <div className="grid grid-cols-3 gap-2 sm:gap-4">
-              <div 
-                onClick={() => router.push("/classifieds")}
-                className="bg-slate-50 border border-slate-200 hover:border-yellow-500/60 p-2.5 sm:p-3.5 rounded-xl flex items-center justify-between cursor-pointer transition-all hover:shadow-md group active:scale-95"
-              >
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-yellow-500/10 text-yellow-600 flex items-center justify-center border border-yellow-250/60 shrink-0 group-hover:scale-105 transition-transform">
-                    <Building className="w-4 h-4 sm:w-5 sm:h-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-heading font-black text-[11px] sm:text-xs text-slate-900 group-hover:text-yellow-750 transition-colors truncate">Buy & Sell</h3>
-                    <span className="text-[9px] text-slate-500 font-bold hidden sm:block">Lands, Rentals, Vehicles</span>
-                  </div>
-                </div>
-                <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-yellow-600 group-hover:translate-x-1 transition-all hidden md:block" />
-              </div>
-
-              <div 
-                onClick={() => router.push("/services")}
-                className="bg-slate-50 border border-slate-200 hover:border-yellow-500/60 p-2.5 sm:p-3.5 rounded-xl flex items-center justify-between cursor-pointer transition-all hover:shadow-md group active:scale-95"
-              >
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-yellow-500/10 text-yellow-600 flex items-center justify-center border border-yellow-250/60 shrink-0 group-hover:scale-105 transition-transform">
-                    <Wrench className="w-4 h-4 sm:w-5 sm:h-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-heading font-black text-[11px] sm:text-xs text-slate-900 group-hover:text-yellow-750 transition-colors truncate">Helper Trades</h3>
-                    <span className="text-[9px] text-slate-500 font-bold hidden sm:block">Electricians, Plumbers</span>
-                  </div>
-                </div>
-                <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-yellow-600 group-hover:translate-x-1 transition-all hidden md:block" />
-              </div>
-
-              <div 
-                onClick={() => router.push("/shops")}
-                className="bg-slate-50 border border-slate-200 hover:border-yellow-500/60 p-2.5 sm:p-3.5 rounded-xl flex items-center justify-between cursor-pointer transition-all hover:shadow-md group active:scale-95"
-              >
-                <div className="flex items-center gap-2 sm:gap-3">
-                  <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-yellow-500/10 text-yellow-600 flex items-center justify-center border border-yellow-250/60 shrink-0 group-hover:scale-105 transition-transform">
-                    <Store className="w-4 h-4 sm:w-5 sm:h-5" />
-                  </div>
-                  <div>
-                    <h3 className="font-heading font-black text-[11px] sm:text-xs text-slate-900 group-hover:text-yellow-750 transition-colors truncate">Store Offers</h3>
-                    <span className="text-[9px] text-slate-500 font-bold hidden sm:block">Discounts & Video Reels</span>
-                  </div>
-                </div>
-                <ArrowRight className="w-3.5 h-3.5 text-slate-400 group-hover:text-yellow-600 group-hover:translate-x-1 transition-all hidden md:block" />
-              </div>
-            </div>
-          </div>
-
-          {/* 3. COMBINED FEATURED & POPULAR LISTINGS FEED */}
+          {/* 1. COMBINED FEATURED & POPULAR LISTINGS FEED */}
           
           {/* SECTION A: BUY & SELL POPULAR LISTINGS */}
           <div className="flex flex-col gap-4">

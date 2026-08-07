@@ -31,7 +31,18 @@ export default function TopHeader({
   onTabChange,
 }: TopHeaderProps) {
   const { profile } = useAuth();
-  const phoneDisplay = profile?.phone ? `+${profile.phone}` : "+919994837342";
+  
+  const isAuthVerified = Boolean(
+    profile?.isVerified ||
+      (typeof window !== "undefined" && localStorage.getItem("my_thanjai_verified") === "true")
+  );
+  
+  const storedMobile = typeof window !== "undefined" ? localStorage.getItem("my_thanjai_phone") : "";
+  const phoneDisplay = profile?.phone
+    ? `+${profile.phone}`
+    : storedMobile
+    ? `+${storedMobile}`
+    : "+919994837342";
 
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-slate-200/90 shadow-xs">
@@ -52,11 +63,11 @@ export default function TopHeader({
         </div>
 
         {/* Center: 3 Segment Direct Navigation Tabs (ONLY VISIBLE AFTER VERIFIED LOGIN) */}
-        {profile?.isVerified && (
-          <div className="hidden sm:flex items-center gap-1 bg-slate-100/80 p-1 rounded-2xl border border-slate-200/60">
+        {isAuthVerified && (
+          <div className="flex items-center gap-1 bg-slate-100/80 p-1 rounded-2xl border border-slate-200/60">
             <button
               onClick={() => onTabChange?.("classifieds")}
-              className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+              className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
                 activeTab === "classifieds"
                   ? "bg-white text-slate-900 shadow-xs border border-slate-250"
                   : "text-slate-600 hover:text-slate-900"
@@ -66,7 +77,7 @@ export default function TopHeader({
             </button>
             <button
               onClick={() => onTabChange?.("services")}
-              className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+              className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
                 activeTab === "services"
                   ? "bg-white text-slate-900 shadow-xs border border-slate-250"
                   : "text-slate-600 hover:text-slate-900"
@@ -76,7 +87,7 @@ export default function TopHeader({
             </button>
             <button
               onClick={() => onTabChange?.("shops")}
-              className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+              className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
                 activeTab === "shops"
                   ? "bg-white text-slate-900 shadow-xs border border-slate-250"
                   : "text-slate-600 hover:text-slate-900"
@@ -89,7 +100,7 @@ export default function TopHeader({
 
         {/* Right: Verified WhatsApp Phone Badge */}
         <div className="flex items-center gap-2 shrink-0">
-          {profile?.isVerified ? (
+          {isAuthVerified ? (
             <button
               onClick={() => onTabChange?.("profile")}
               className="flex items-center gap-1.5 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 font-extrabold px-3 py-1.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer"
