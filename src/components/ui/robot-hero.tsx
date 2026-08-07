@@ -979,28 +979,37 @@ export function RobotHero({
           </div>
         )}
 
-        {/* Bottom: Single Primary Action Button */}
-        <div className="w-full max-w-[340px]">
+        {/* Bottom: Action Buttons (Primary: Register/Post, Secondary: Search Noticeboard) */}
+        <div className="w-full max-w-[340px] flex flex-col gap-2.5">
           <button
             type="button"
             onClick={onCtaClick}
-            className="w-full py-4 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs uppercase tracking-wider transition-all shadow-lg shadow-yellow-500/20 border-0 text-center flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98]"
+            className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs uppercase tracking-wider transition-all shadow-md shadow-yellow-500/20 border-0 text-center flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98]"
           >
             <span>{ctaText === "Verified" ? "Verified Profile" : "Register Helper / Post Ad"}</span>
             <ArrowRight className="w-4 h-4 text-slate-955" />
+          </button>
+
+          <button
+            type="button"
+            onClick={() => onCategoryClick?.("classifieds")}
+            className="w-full py-3.5 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider transition-all shadow-sm text-center flex items-center justify-center gap-2 cursor-pointer border-0 active:scale-[0.98]"
+          >
+            <Search className="w-4 h-4 text-yellow-400" />
+            <span>Search Noticeboard</span>
           </button>
         </div>
       </div>
 
       {/* ==========================================
-          2. DESKTOP VIEWPORT PORTION (Clean Layout, Search Engine Card + 3D Mascot)
+          2. DESKTOP VIEWPORT PORTION (Clean Layout, Search & Post Buttons + 3D Mascot)
           ========================================== */}
       <div className="hidden md:flex flex-col justify-between w-full h-full max-w-7xl mx-auto px-8 z-10 select-none pointer-events-auto">
         
         {/* Split row content */}
         <div className="flex-1 flex flex-row items-center justify-between gap-12 py-4">
-          {/* Left panel branding & Search Engine Card */}
-          <div className="w-[45%] flex flex-col items-start gap-5">
+          {/* Left panel branding & CTAs */}
+          <div className="w-[45%] flex flex-col items-start gap-6">
             
             {/* Logo branding container */}
             <div className="flex items-center gap-4">
@@ -1027,95 +1036,28 @@ export function RobotHero({
               <span className="text-[10px] text-slate-700 font-extrabold uppercase tracking-wider leading-none">Verified active trades & listings channels</span>
             </div>
 
-            <p className="text-xs lg:text-sm text-slate-500 max-w-sm leading-relaxed font-semibold text-left">
+            <p className="text-xs lg:text-sm text-slate-500 max-w-md leading-relaxed font-semibold text-left">
               Thanjavur's smart local noticeboard directory. Scan visiting cards with AI, explore plot offers, and search helper service trades.
             </p>
 
-            {/* Single Clean Search Engine Card */}
-            <div className="w-full max-w-md bg-white border border-slate-200/90 shadow-md rounded-3xl p-5 flex flex-col gap-4">
-              
-              {/* Category Segment Tabs */}
-              <div className="grid grid-cols-3 gap-1.5 bg-slate-100 p-1 rounded-2xl border border-slate-200/60">
-                <button
-                  type="button"
-                  onClick={() => setSearchTab("classifieds")}
-                  className={`py-2 px-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all text-center ${searchTab === "classifieds" ? "bg-white text-slate-900 shadow-2xs" : "text-slate-500 hover:text-slate-900"}`}
-                >
-                  📢 Buy & Sell
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSearchTab("services")}
-                  className={`py-2 px-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all text-center ${searchTab === "services" ? "bg-white text-slate-900 shadow-2xs" : "text-slate-500 hover:text-slate-900"}`}
-                >
-                  🛠️ Helpers
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSearchTab("shops")}
-                  className={`py-2 px-1 rounded-xl text-[10px] font-black uppercase tracking-wider transition-all text-center ${searchTab === "shops" ? "bg-white text-slate-900 shadow-2xs" : "text-slate-500 hover:text-slate-900"}`}
-                >
-                  🏪 Shops
-                </button>
-              </div>
-
-              <div className="flex flex-col gap-3">
-                <div className="grid grid-cols-2 gap-2.5">
-                  {/* Locality Dropdown */}
-                  <div className="flex items-center gap-2 bg-slate-50 border border-slate-200/80 rounded-xl px-3 py-2.5 text-left">
-                    <MapPin className="w-4 h-4 text-slate-400 shrink-0" />
-                    <select
-                      value={searchLocality}
-                      onChange={(e) => setSearchLocality(e.target.value as any)}
-                      className="w-full bg-transparent text-[11px] font-bold text-slate-700 focus:outline-none cursor-pointer"
-                    >
-                      <option value="All Areas">All Thanjavur</option>
-                      {TANJORE_LOCALITIES.map((loc) => (
-                        <option key={loc} value={loc}>{loc}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Text Query Input */}
-                  <div className="flex items-center gap-2 bg-slate-50 border border-slate-200/80 rounded-xl px-3 py-2.5 text-left">
-                    <Search className="w-4 h-4 text-slate-400 shrink-0" />
-                    <input
-                      type="text"
-                      value={searchQuery}
-                      onChange={(e) => setSearchQuery(e.target.value)}
-                      placeholder={
-                        searchTab === "classifieds" 
-                          ? "e.g. plot, car..." 
-                          : searchTab === "services" 
-                          ? "e.g. plumber..." 
-                          : "e.g. cafe..."
-                      }
-                      className="w-full bg-transparent text-[11px] font-bold text-slate-700 placeholder-slate-400 focus:outline-none"
-                    />
-                  </div>
-                </div>
-
-                {/* Search Button */}
-                <button
-                  type="button"
-                  onClick={handleSearchSubmit}
-                  className="w-full py-3 rounded-xl bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black text-xs uppercase tracking-wider flex items-center justify-center gap-2 transition-all shadow-xs cursor-pointer border-0 active:scale-[0.98]"
-                >
-                  <Search className="w-4 h-4 text-slate-955" />
-                  <span>Search Noticeboard</span>
-                </button>
-              </div>
-            </div>
-
-            {/* Single Primary Action CTA */}
-            <div className="w-full max-w-md">
+            {/* Primary & Secondary Action CTAs */}
+            <div className="flex flex-row gap-3 w-full max-w-md mt-2">
               <button
                 type="button"
                 onClick={onCtaClick}
-                className="w-full py-4 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs uppercase tracking-wider transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-yellow-500/15 border-0 text-center flex items-center justify-center gap-2 cursor-pointer"
+                className="flex-1 py-4 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs uppercase tracking-wider transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-yellow-500/15 border-0 text-center flex items-center justify-center gap-2 cursor-pointer"
               >
                 <span>{ctaText === "Verified" ? "Verified Profile" : "Register Helper / Post Ad"}</span>
                 <ArrowRight className="w-4 h-4 text-slate-955" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => onCategoryClick?.("classifieds")}
+                className="flex-1 py-4 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs uppercase tracking-wider transition-all hover:scale-[1.02] active:scale-[0.98] shadow-md text-center flex items-center justify-center gap-2 cursor-pointer border-0"
+              >
+                <Search className="w-4 h-4 text-yellow-400" />
+                <span>Search Noticeboard</span>
               </button>
             </div>
           </div>
