@@ -68,10 +68,11 @@ export default function HomeLandingPage() {
   return (
     <div className="w-full flex flex-col bg-white text-slate-800 min-h-screen font-sans">
       
-      {/* ==========================================
-         HOME PAGE DASHBOARD & CHANNEL FEED (ALWAYS VISIBLE ON DESKTOP WEBSITE)
-         ========================================== */}
-      <div className={`w-full max-w-7xl mx-auto px-4 sm:px-6 mt-4 md:mt-6 pt-2 pb-12 flex-col gap-8 animate-fade-in ${profile?.isVerified ? "flex" : "hidden md:flex"}`}>
+      {profile?.isVerified ? (
+        /* ==========================================
+           LOGGED IN DASHBOARD FEED
+           ========================================== */
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 mt-4 md:mt-6 pt-2 pb-12 flex flex-col gap-8 animate-fade-in">
           
           {/* 1. COMBINED FEATURED & POPULAR LISTINGS FEED */}
           
@@ -541,30 +542,36 @@ export default function HomeLandingPage() {
             </div>
           </div>
         </div>
+      ) : (
+        /* ==========================================
+           UNAUTHENTICATED GUEST LANDING PAGE (3D ROBOT MASCOT HERO ON DESKTOP & MOBILE)
+           ========================================== */
+        <div className="w-full relative flex flex-col min-h-[85vh] justify-between my-2">
+          
+          {/* 3D ROBOT MASCOT HERO (MASSIVE ENLARGED 3D MASCOT) */}
+          <div className="w-full">
+            <RobotHero
+              backgroundText="NAMMA THANJAI"
+              navItemsLeft={[]}
+              ctaText="Register to Post"
+              onCtaClick={() => {
+                router.push("/?auth=popup");
+              }}
+              onCategoryClick={(targetRoute) => {
+                if (targetRoute) {
+                  router.push(`/${targetRoute}`);
+                } else {
+                  router.push("/sell");
+                }
+              }}
+              color="#eab308"
+              pantallaColor="#fbbf24"
+              pantallaBrillo={1.6}
+              alerts={alerts}
+              activeAlertIdx={activeAlertIdx}
+            />
+          </div>
 
-      {/* MOBILE UNAUTHENTICATED GUEST ONBOARDING (DISPLAYED ONLY ON MOBILE IF UNVERIFIED) */}
-      {!profile?.isVerified && (
-        <div className="w-full relative flex flex-col h-[calc(100vh-64px)] overflow-hidden justify-between my-0 max-w-4xl mx-auto px-2 block md:hidden">
-          <RobotHero
-            backgroundText="NAMMA THANJAI"
-            navItemsLeft={[]}
-            ctaText="Register"
-            onCtaClick={() => {
-              router.push("/?auth=popup");
-            }}
-            onCategoryClick={(targetRoute) => {
-              if (targetRoute) {
-                router.push(`/${targetRoute}`);
-              } else {
-                router.push("/sell");
-              }
-            }}
-            color="#eab308"
-            pantallaColor="#fbbf24"
-            pantallaBrillo={1.6}
-            alerts={alerts}
-            activeAlertIdx={activeAlertIdx}
-          />
         </div>
       )}
 
