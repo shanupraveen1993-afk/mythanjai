@@ -958,7 +958,7 @@ export function RobotHero({
         {/* 4. Mascot Robot Canvas (Middle section) */}
         <div 
           onClick={handleRobotTap} 
-          className="w-full max-w-[260px] sm:max-w-[320px] h-[190px] sm:h-[240px] md:h-[270px] relative flex items-center justify-center cursor-pointer my-0.5"
+          className="w-full max-w-[220px] sm:max-w-[270px] h-[140px] sm:h-[180px] md:h-[200px] relative flex items-center justify-center cursor-pointer my-0"
         >
           <Canvas shadows camera={{ position: [0, 0.12, 3.6], fov: 38 }}>
             <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
@@ -971,12 +971,12 @@ export function RobotHero({
           </Canvas>
         </div>
 
-        {/* 5. Single Primary Action Button: REGISTER TO POST (Below Robot ONLY) */}
-        <div className="w-full max-w-lg mt-1">
+        {/* 5. Single Primary Action Button: REGISTER TO POST (Positioned nicely inside First Fold) */}
+        <div className="w-full max-w-md my-1">
           <button
             type="button"
             onClick={onCtaClick}
-            className="w-full py-4 sm:py-4.5 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs sm:text-sm md:text-base uppercase tracking-wider transition-all hover:scale-[1.01] active:scale-[0.98] shadow-md shadow-yellow-500/20 border-0 text-center flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs sm:text-sm md:text-base uppercase tracking-wider transition-all hover:scale-[1.01] active:scale-[0.98] shadow-md shadow-yellow-500/20 border-0 text-center flex items-center justify-center gap-2 cursor-pointer"
           >
             <span>{ctaText === "Verified" ? "Verified Profile" : "Register to Post"}</span>
             <ArrowRight className="w-4 h-4 text-slate-955" />

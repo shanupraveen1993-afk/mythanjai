@@ -181,15 +181,23 @@ export default function HomeLandingPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {/* Card 1 */}
               <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow">
-                <div className="flex justify-between items-center">
-                  <span className="text-[9px] font-black uppercase text-yellow-750 bg-yellow-500/10 px-2 py-0.5 rounded-md border border-yellow-200">
+                <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
+                  <Image 
+                    src="/thanjavur_temple_illustration.png" 
+                    alt="2 Acre Land Plot" 
+                    fill 
+                    className="object-cover hover:scale-105 transition-transform duration-300"
+                  />
+                  <span className="absolute top-2 left-2 text-[9px] font-black uppercase text-yellow-950 bg-yellow-400 px-2 py-0.5 rounded-md shadow-xs">
                     Real Estate
                   </span>
+                </div>
+                <div className="flex justify-between items-center mt-1">
+                  <h3 className="font-heading font-extrabold text-sm text-slate-800">
+                    2 Acre Plot near Vallam
+                  </h3>
                   <span className="text-xs font-black text-slate-900">₹45,00,000</span>
                 </div>
-                <h3 className="font-heading font-extrabold text-sm text-slate-800">
-                  2 Acre Agricultural Plot near Vallam
-                </h3>
                 <p className="text-xs text-slate-500 font-semibold leading-relaxed">
                   Clear titles, tar road access, Kaveri water line available near Vallam Bus Stand.
                 </p>
@@ -206,15 +214,23 @@ export default function HomeLandingPage() {
 
               {/* Card 2 */}
               <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow">
-                <div className="flex justify-between items-center">
-                  <span className="text-[9px] font-black uppercase text-blue-750 bg-blue-500/10 px-2 py-0.5 rounded-md border border-blue-200">
+                <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
+                  <Image 
+                    src="/hero_building_visual.png" 
+                    alt="2 BHK Independent House" 
+                    fill 
+                    className="object-cover hover:scale-105 transition-transform duration-300"
+                  />
+                  <span className="absolute top-2 left-2 text-[9px] font-black uppercase text-blue-950 bg-blue-400 px-2 py-0.5 rounded-md shadow-xs">
                     House Rental
                   </span>
+                </div>
+                <div className="flex justify-between items-center mt-1">
+                  <h3 className="font-heading font-extrabold text-sm text-slate-800">
+                    2 BHK Independent House
+                  </h3>
                   <span className="text-xs font-black text-slate-900">₹12,500/mo</span>
                 </div>
-                <h3 className="font-heading font-extrabold text-sm text-slate-800">
-                  Spacious 2 BHK Independent House
-                </h3>
                 <p className="text-xs text-slate-500 font-semibold leading-relaxed">
                   Modular kitchen, 2 bathrooms, 24/7 Kaveri water supply, dedicated car parking.
                 </p>
@@ -231,17 +247,25 @@ export default function HomeLandingPage() {
 
               {/* Card 3 */}
               <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow">
-                <div className="flex justify-between items-center">
-                  <span className="text-[9px] font-black uppercase text-emerald-750 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-200">
+                <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
+                  <Image 
+                    src="/namma_thanjai_logo.png" 
+                    alt="Hero Splendor Motor" 
+                    fill 
+                    className="object-contain p-4 hover:scale-105 transition-transform duration-300 bg-slate-50"
+                  />
+                  <span className="absolute top-2 left-2 text-[9px] font-black uppercase text-emerald-950 bg-emerald-400 px-2 py-0.5 rounded-md shadow-xs">
                     Used Motor
                   </span>
+                </div>
+                <div className="flex justify-between items-center mt-1">
+                  <h3 className="font-heading font-extrabold text-sm text-slate-800">
+                    Hero Splendor (2022 Model)
+                  </h3>
                   <span className="text-xs font-black text-slate-900">₹68,000</span>
                 </div>
-                <h3 className="font-heading font-extrabold text-sm text-slate-800">
-                  Hero Splendor Plus (2022 Model)
-                </h3>
                 <p className="text-xs text-slate-500 font-semibold leading-relaxed">
-                  Single owner, excellent mileage 65+ kmpl, clean insurance documents upto 2027.
+                  Single owner, excellent mileage 65+ kmpl, clean insurance documents.
                 </p>
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
                   <div className="flex items-center gap-1">
@@ -362,15 +386,23 @@ export default function HomeLandingPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {/* Offer 1 */}
               <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow">
-                <div className="flex justify-between items-center">
-                  <span className="text-[9px] font-black uppercase text-yellow-750 bg-yellow-500/10 px-2 py-0.5 rounded-md border border-yellow-200">
-                    Cafe & Hotel
+                <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
+                  <Image 
+                    src="/thanjavur_temple_illustration.png" 
+                    alt="Degree Coffee Deal" 
+                    fill 
+                    className="object-cover hover:scale-105 transition-transform duration-300"
+                  />
+                  <span className="absolute top-2 left-2 text-[9px] font-black uppercase text-amber-950 bg-amber-400 px-2 py-0.5 rounded-md shadow-xs">
+                    🎬 Reel Offer
                   </span>
-                  <span className="text-xs font-black text-amber-600">🎬 Video Reel</span>
                 </div>
-                <h3 className="font-heading font-extrabold text-sm text-slate-800">
-                  Famous Tanjore Degree Coffee Deal
-                </h3>
+                <div className="flex justify-between items-center mt-1">
+                  <h3 className="font-heading font-extrabold text-sm text-slate-800">
+                    Tanjore Degree Coffee Deal
+                  </h3>
+                  <span className="text-xs font-black text-amber-600">Buy 1 Get 1</span>
+                </div>
                 <p className="text-xs text-slate-500 font-semibold leading-relaxed">
                   Buy 1 Ghee Roast & Get 1 Free Degree Coffee between 4 PM to 7 PM.
                 </p>
@@ -384,15 +416,23 @@ export default function HomeLandingPage() {
 
               {/* Offer 2 */}
               <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow">
-                <div className="flex justify-between items-center">
-                  <span className="text-[9px] font-black uppercase text-purple-750 bg-purple-500/10 px-2 py-0.5 rounded-md border border-purple-200">
-                    Textiles
+                <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
+                  <Image 
+                    src="/hero_building_visual.png" 
+                    alt="Silk Saree Sale" 
+                    fill 
+                    className="object-cover hover:scale-105 transition-transform duration-300"
+                  />
+                  <span className="absolute top-2 left-2 text-[9px] font-black uppercase text-purple-950 bg-purple-400 px-2 py-0.5 rounded-md shadow-xs">
+                    Flat 20% Off
                   </span>
-                  <span className="text-xs font-black text-purple-600">Flat 20% Off</span>
                 </div>
-                <h3 className="font-heading font-extrabold text-sm text-slate-800">
-                  Tanjore Handloom Silk Saree Sale
-                </h3>
+                <div className="flex justify-between items-center mt-1">
+                  <h3 className="font-heading font-extrabold text-sm text-slate-800">
+                    Handloom Silk Saree Sale
+                  </h3>
+                  <span className="text-xs font-black text-purple-600">20% Off</span>
+                </div>
                 <p className="text-xs text-slate-500 font-semibold leading-relaxed">
                   20% direct discount on pure Tanjore handloom silk sarees this festival week.
                 </p>
@@ -406,15 +446,23 @@ export default function HomeLandingPage() {
 
               {/* Offer 3 */}
               <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow">
-                <div className="flex justify-between items-center">
-                  <span className="text-[9px] font-black uppercase text-emerald-750 bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-200">
-                    Grocery Mart
+                <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
+                  <Image 
+                    src="/namma_thanjai_logo.png" 
+                    alt="Grocery Mart Offer" 
+                    fill 
+                    className="object-contain p-4 hover:scale-105 transition-transform duration-300 bg-slate-50"
+                  />
+                  <span className="absolute top-2 left-2 text-[9px] font-black uppercase text-emerald-950 bg-emerald-400 px-2 py-0.5 rounded-md shadow-xs">
+                    Flat 10% Off
                   </span>
-                  <span className="text-xs font-black text-emerald-600">Flat 10% Off</span>
                 </div>
-                <h3 className="font-heading font-extrabold text-sm text-slate-800">
-                  Sri Murugan Super Grocery Deal
-                </h3>
+                <div className="flex justify-between items-center mt-1">
+                  <h3 className="font-heading font-extrabold text-sm text-slate-800">
+                    Super Grocery Deal
+                  </h3>
+                  <span className="text-xs font-black text-emerald-600">10% Off</span>
+                </div>
                 <p className="text-xs text-slate-500 font-semibold leading-relaxed">
                   10% direct discount on 25KG Ponni Rice bags with free Tanjore home delivery.
                 </p>
