@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useFirestore } from "@/hooks/use-firestore";
 import ServiceCard from "@/components/cards/ServiceCard";
-import { SERVICE_CATEGORIES, TANJORE_LOCALITIES, TanjoreLocality } from "@/lib/constants";
+import { SERVICE_CATEGORIES, TANJORE_LOCALITIES, TanjoreLocality, CATEGORY_ILLUSTRATIONS } from "@/lib/constants";
 import { ServiceProviderPost } from "@/types";
 import { Wrench, Plus, ChevronDown, ChevronUp, Loader2, ArrowRight, ArrowLeft, Upload, ShieldCheck, Tag, Calendar, Share2, Check, Zap, Droplet, Wind, Hammer, MapPin, MessageSquare } from "lucide-react";
 import { db } from "@/lib/firebase";
@@ -236,7 +236,7 @@ export default function ServicesPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 mt-6 md:mt-8 pt-2 pb-12">
       {/* ==========================================
           STEP 1: TRADES DIRECTORY GRID
           ========================================== */}
@@ -254,26 +254,34 @@ export default function ServicesPage() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {SERVICE_CATEGORIES.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => handleCategorySelect(cat)}
-                className="bg-white border border-slate-200 hover:border-yellow-500/40 p-5 rounded-2xl shadow-xs text-left transition-all active:scale-[0.98] hover:shadow-md flex flex-col gap-3 group w-full"
-              >
-                <div className="w-9 h-9 rounded-xl bg-yellow-500/10 text-yellow-600 flex items-center justify-center border border-yellow-250/60 transition-transform group-hover:scale-105">
-                  <Wrench className="w-5 h-5" />
-                </div>
-                <div>
-                  <span className="text-xs font-black text-slate-850 block group-hover:text-yellow-750 transition-colors">
-                    {cat}
-                  </span>
-                  <span className="text-[9px] text-slate-500 block leading-normal mt-0.5">
-                    Browse verified technicians or add your profile under {cat}.
-                  </span>
-                </div>
-              </button>
-            ))}
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            {SERVICE_CATEGORIES.map((cat) => {
+              const illustration = CATEGORY_ILLUSTRATIONS[cat] || "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600&auto=format&fit=crop";
+              return (
+                <button
+                  key={cat}
+                  onClick={() => handleCategorySelect(cat)}
+                  className="bg-white border border-slate-200 hover:border-yellow-500/60 p-3.5 rounded-2xl shadow-xs text-left transition-all active:scale-[0.98] hover:shadow-lg flex flex-col gap-3 group w-full cursor-pointer overflow-hidden aspect-square justify-between"
+                >
+                  <div className="w-full h-32 rounded-xl overflow-hidden relative bg-slate-100 border border-slate-100">
+                    <img
+                      src={illustration}
+                      alt={cat}
+                      className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-300"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent" />
+                  </div>
+                  <div>
+                    <span className="text-xs font-black text-slate-900 block group-hover:text-yellow-750 transition-colors line-clamp-1">
+                      {cat}
+                    </span>
+                    <span className="text-[10px] text-slate-500 block leading-tight font-bold mt-0.5 line-clamp-1">
+                      Hire & Register
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
           </div>
         </div>
       ) : (

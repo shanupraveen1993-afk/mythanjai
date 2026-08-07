@@ -417,7 +417,7 @@ export default function ShopsPage() {
   };
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 mt-6 md:mt-8 pt-2 pb-12">
       {/* Universal Sticky Action Bar: Sort on Left, Post Offer on Right */}
       <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 px-4 border border-slate-200/90 rounded-2xl shadow-xs flex items-center justify-between">
         <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500">

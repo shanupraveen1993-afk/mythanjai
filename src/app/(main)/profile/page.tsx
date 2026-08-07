@@ -280,7 +280,7 @@ export default function ProfilePage() {
   }
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-6 mt-6 md:mt-8 pt-2 pb-12">
       {/* ==========================================
           HERO BANNER WIDGET: PROFILE
           ========================================== */}
