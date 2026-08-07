@@ -93,33 +93,45 @@ export default function HomeLandingPage() {
             </div>
           </div>
 
-          {/* Quick Post Actions */}
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              onClick={() => {
-                if (!profile?.isVerified) {
-                  router.push("/?auth=popup");
-                } else {
-                  router.push("/classifieds?create=true");
-                }
-              }}
-              className="bg-yellow-500 hover:bg-yellow-600 active:scale-95 text-slate-955 font-black px-4 py-2.5 rounded-xl text-xs transition-all shadow-xs cursor-pointer border border-yellow-450"
-            >
-              + Post Ad
-            </button>
-            <button
-              onClick={() => {
-                if (!profile?.isVerified) {
-                  router.push("/?auth=popup");
-                } else {
-                  router.push("/services?create=true");
-                }
-              }}
-              className="bg-slate-900 hover:bg-slate-800 text-white font-black px-4 py-2.5 rounded-xl text-xs transition-all shadow-xs cursor-pointer"
-            >
-              + Post Service
-            </button>
-          </div>
+            {/* Quick Post Actions */}
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                onClick={() => {
+                  if (!profile?.isVerified) {
+                    router.push("/?auth=popup");
+                  } else {
+                    router.push("/classifieds?create=true");
+                  }
+                }}
+                className="bg-yellow-500 hover:bg-yellow-600 active:scale-95 text-slate-955 font-black px-4 py-2.5 rounded-xl text-xs transition-all shadow-xs cursor-pointer border border-yellow-450"
+              >
+                + Post Ad
+              </button>
+              <button
+                onClick={() => {
+                  if (!profile?.isVerified) {
+                    router.push("/?auth=popup");
+                  } else {
+                    router.push("/services?create=true");
+                  }
+                }}
+                className="bg-slate-900 hover:bg-slate-800 text-white font-black px-4 py-2.5 rounded-xl text-xs transition-all shadow-xs cursor-pointer"
+              >
+                + Post Service
+              </button>
+              <button
+                onClick={() => {
+                  if (!profile?.isVerified) {
+                    router.push("/?auth=popup");
+                  } else {
+                    router.push("/shops?create=true");
+                  }
+                }}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white font-black px-4 py-2.5 rounded-xl text-xs transition-all shadow-xs cursor-pointer"
+              >
+                + Post Offer
+              </button>
+            </div>
         </div>
 
         {/* 3 SEGMENT TABS BAR FOR HOME EXPLORATION */}
