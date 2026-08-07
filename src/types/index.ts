@@ -20,7 +20,7 @@ export interface NeedOrSalePost {
   description: string;
   category: string;
   area_tag: TanjoreLocality;
-  price: number | null;
+  price: number | string | null;
   phone: string;
   is_verified: boolean;
   created_at: any; // Firestore Timestamp

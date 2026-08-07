@@ -274,7 +274,7 @@ export default function ClassifiedsPage() {
         raw_text: formDesc,
         category: selectedCategory,
         area_tag: formArea,
-        price: formPrice ? parseFloat(formPrice) : null,
+        price: formPrice || "",
         phone: phoneNum,
         image_urls: imageUrls,
         image_url: imageUrls[0] || "",
@@ -299,7 +299,7 @@ export default function ClassifiedsPage() {
         raw_text: formDesc,
         category: selectedCategory,
         area_tag: formArea,
-        price: formPrice ? parseFloat(formPrice) : null,
+        price: formPrice || "",
         phone: phoneNum,
         image_urls: imageUrls,
         image_url: imageUrls[0] || "",
@@ -561,14 +561,14 @@ export default function ClassifiedsPage() {
                     {/* 4. Price */}
                     <div>
                       <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1">
-                        Price / Budget (₹ Optional)
+                        Price / Budget (Supports text like ₹2 Lakhs)
                       </label>
                       <input
-                        type="number"
+                        type="text"
                         value={formPrice}
                         onChange={(e) => setFormPrice(e.target.value)}
-                        placeholder="e.g. 250000"
-                        className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 focus:outline-none"
+                        placeholder="e.g. ₹2 Lakhs, ₹45,000, ₹2.5 Cr"
+                        className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 focus:outline-none font-bold"
                       />
                     </div>
 
@@ -627,26 +627,26 @@ export default function ClassifiedsPage() {
                       <div className="grid grid-cols-2 gap-3">
                         <div>
                           <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1">
-                            Expected Price From (₹)
+                            Expected Price From
                           </label>
                           <input
-                            type="number"
+                            type="text"
                             value={priceFrom}
                             onChange={(e) => setPriceFrom(e.target.value)}
-                            placeholder="e.g. 5000"
-                            className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 focus:outline-none"
+                            placeholder="e.g. ₹5,000 or ₹1 Lakh"
+                            className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 focus:outline-none font-bold"
                           />
                         </div>
                         <div>
                           <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1">
-                            Expected Price To (₹)
+                            Expected Price To
                           </label>
                           <input
-                            type="number"
+                            type="text"
                             value={priceTo}
                             onChange={(e) => setPriceTo(e.target.value)}
-                            placeholder="e.g. 20000"
-                            className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 focus:outline-none"
+                            placeholder="e.g. ₹20,000 or ₹5 Lakhs"
+                            className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 focus:outline-none font-bold"
                           />
                         </div>
                       </div>
