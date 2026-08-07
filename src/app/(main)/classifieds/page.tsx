@@ -67,7 +67,15 @@ export default function ClassifiedsPage() {
   };
 
   // Classifieds States
-  const [activeType, setActiveType] = useState<"need" | "sale">("need");
+  const typeParam = searchParams.get("type");
+  const initialType = typeParam?.toUpperCase() === "SELL" ? "sale" : "need";
+  const [activeType, setActiveType] = useState<"need" | "sale">(initialType);
+
+  useEffect(() => {
+    if (typeParam) {
+      setActiveType(typeParam.toUpperCase() === "SELL" ? "sale" : "need");
+    }
+  }, [typeParam]);
 
   // Inline Form State
   const [isFormOpen, setIsFormOpen] = useState(false);

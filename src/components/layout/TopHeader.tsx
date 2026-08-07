@@ -50,7 +50,7 @@ export default function TopHeader({
           </div>
         </div>
 
-        {/* Center: 4 Channel Navigation Tabs (Home, Selling / Looking For, Local Service, Local Offer) */}
+        {/* Center: 5 Channel Navigation Tabs (Home, Sell, Need, Local Service, Local Offer) */}
         {isAuthVerified && (
           <div className="hidden sm:flex items-center gap-1 bg-slate-100/80 p-1 rounded-2xl border border-slate-200/60">
             <button
@@ -71,7 +71,17 @@ export default function TopHeader({
                   : "text-slate-600 hover:text-slate-900"
               }`}
             >
-              Selling / Looking For
+              Sell
+            </button>
+            <button
+              onClick={() => onTabChange?.("classifieds")}
+              className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
+                activeTab === "classifieds"
+                  ? "bg-white text-slate-900 shadow-xs border border-slate-250"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              Need
             </button>
             <button
               onClick={() => onTabChange?.("services")}
