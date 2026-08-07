@@ -227,14 +227,14 @@ export default function HomeLandingPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {/* Tech 1 */}
               <div 
-                onClick={() => router.push("/services?id=sample_s1")}
+                onClick={() => router.push("/services?category=Electrician")}
                 className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
               >
                 <div className="flex justify-between items-center">
                   <span className="text-[9px] font-black uppercase text-amber-750 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-200">
                     Electrician
                   </span>
-                  <span className="text-xs font-black text-emerald-600">Verified</span>
+                  <span className="text-[10px] font-bold text-slate-400">Tanjore Town</span>
                 </div>
                 <h3 className="font-heading font-extrabold text-sm text-slate-800">
                   Senthil Kumar - Home Electrician
@@ -243,23 +243,23 @@ export default function HomeLandingPage() {
                   8+ Years Experience. House wiring, DB box, inverter assembly & quick repairs.
                 </p>
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
-                  <span>Tanjore Town</span>
+                  <span>View Electricians</span>
                   <span className="text-yellow-600 font-black hover:underline">
-                    Hire Technician →
+                    Explore Trade →
                   </span>
                 </div>
               </div>
 
               {/* Tech 2 */}
               <div 
-                onClick={() => router.push("/services?id=sample_s2")}
+                onClick={() => router.push("/services?category=Plumber")}
                 className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
               >
                 <div className="flex justify-between items-center">
                   <span className="text-[9px] font-black uppercase text-blue-750 bg-blue-500/10 px-2 py-0.5 rounded-md border border-blue-200">
                     Plumber
                   </span>
-                  <span className="text-xs font-black text-emerald-600">Verified</span>
+                  <span className="text-[10px] font-bold text-slate-400">Medical College Rd</span>
                 </div>
                 <h3 className="font-heading font-extrabold text-sm text-slate-800">
                   Rajesh K - Expert Plumber
@@ -268,23 +268,23 @@ export default function HomeLandingPage() {
                   Pipe fitting, water tank washing, Kaveri line tap connections & leak fixes.
                 </p>
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
-                  <span>Medical College Rd</span>
+                  <span>View Plumbers</span>
                   <span className="text-yellow-600 font-black hover:underline">
-                    Hire Technician →
+                    Explore Trade →
                   </span>
                 </div>
               </div>
 
               {/* Tech 3 */}
               <div 
-                onClick={() => router.push("/services?id=sample_s3")}
+                onClick={() => router.push("/services?category=Carpenter")}
                 className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
               >
                 <div className="flex justify-between items-center">
                   <span className="text-[9px] font-black uppercase text-purple-750 bg-purple-500/10 px-2 py-0.5 rounded-md border border-purple-200">
                     Carpenter
                   </span>
-                  <span className="text-xs font-black text-emerald-600">Verified</span>
+                  <span className="text-[10px] font-bold text-slate-400">South Rampart Rd</span>
                 </div>
                 <h3 className="font-heading font-extrabold text-sm text-slate-800">
                   Venu Gopal - Wood Architect
@@ -293,9 +293,9 @@ export default function HomeLandingPage() {
                   Modular kitchen woodworks, door laminations, locks repairs & bespoke furniture.
                 </p>
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
-                  <span>South Rampart Rd</span>
+                  <span>View Carpenters</span>
                   <span className="text-yellow-600 font-black hover:underline">
-                    Hire Technician →
+                    Explore Trade →
                   </span>
                 </div>
               </div>

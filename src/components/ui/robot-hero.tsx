@@ -955,16 +955,16 @@ export function RobotHero({
           </button>
         </div>
 
-        {/* 4. Mascot Robot Canvas (Enlarged on Mobile to fill screen) */}
+        {/* 4. Mascot Robot Canvas (Grand 3D Mascot filling Mobile Screen) */}
         <div 
           onClick={handleRobotTap} 
-          className="w-full max-w-[320px] sm:max-w-[340px] md:max-w-[380px] h-[240px] sm:h-[260px] md:h-[280px] relative flex items-center justify-center cursor-pointer my-1"
+          className="w-full max-w-[360px] sm:max-w-[400px] md:max-w-[440px] h-[300px] sm:h-[320px] md:h-[340px] relative flex items-center justify-center cursor-pointer my-2"
         >
           <Canvas shadows camera={{ position: [0, 0.12, 3.6], fov: 38 }}>
             <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
             <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} castShadow shadow-mapSize={[512, 512]} shadow-bias={-0.0005} />
             <Environment preset="studio" blur={0.5} />
-            <ResponsiveGroup scale={scale * 1.15}>
+            <ResponsiveGroup scale={scale * 1.45}>
               <ContactShadows position={[0, -0.79, 0]} opacity={entorno.sombraOpacidad} scale={10} resolution={256} blur={entorno.sombraBlur} far={2.5} color="#000000" />
               <RobotPrototype neckParams={{ baseR: 0.215, baseH: -0.05, midR: 0.28, midH: 0.02, lipBottomR: 0.295, lipBottomH: 0.045, lipTopR: 0.27, lipTopH: 0.055, innerR: 0.1, innerDropH: 0.0 }} bodyParams={{ bodyBevelR: 0.235, bodyBevelY: 0.34, bodyBevelT: 0.025 }} color={color} pantallaColor={pantallaColor} pantallaBrillo={pantallaBrillo} blinkCycle={blinkCycle} metalness={metalness} />
             </ResponsiveGroup>

@@ -60,9 +60,9 @@ export async function POST(request: NextRequest) {
          • **Terms:** [e.g. Valid till end of month / Minimum purchase requirements]
       
       CRITICAL RULES:
-      1. Correct any spelling or grammar mistakes, but preserve all crucial information (prices, model names, contact details, areas, timings).
-      2. Do NOT add conversational replies, markdown code blocks, or introductory text (like "Here is your formatted text:"). Only return the formatted description itself.
-      3. Keep it brief, easy to read on mobile, and highly professional.
+      1. Correct spelling and grammar mistakes, but strictly PRESERVE the user's original words and facts. Do NOT over-amplify, add fake hype, or invent unmentioned claims.
+      2. Do NOT add conversational replies, markdown code blocks, or introductory text (like "Here is your formatted text:"). Only return the clean formatted text itself.
+      3. Keep it concise, simple, mobile-friendly, and faithful to what the user wrote.
     `;
 
     const response = await ai.models.generateContent({
