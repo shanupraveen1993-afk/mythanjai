@@ -68,13 +68,13 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false }: Sho
             href={post.offer_social_link}
             target="_blank"
             rel="noopener noreferrer"
-            className="absolute inset-0 bg-black/30 hover:bg-black/20 flex items-center justify-center transition-all cursor-pointer group"
+            className="absolute inset-0 bg-black/40 hover:bg-black/25 flex items-center justify-center transition-all cursor-pointer group z-10"
           >
-            <div className="w-11 h-11 rounded-full bg-yellow-500/90 text-slate-955 flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">
-              <span className="text-base font-black ml-0.5">▶</span>
+            <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-purple-600 via-pink-500 to-amber-400 text-white flex items-center justify-center shadow-xl transform group-hover:scale-115 transition-transform border-2 border-white/80">
+              <span className="text-lg font-black ml-0.5">▶</span>
             </div>
-            <span className="absolute bottom-2.5 left-2.5 bg-slate-950/80 text-white text-[8px] font-black uppercase tracking-wider px-2 py-0.5 rounded-lg backdrop-blur-xs flex items-center gap-1">
-              <span>Watch on Instagram Reel</span>
+            <span className="absolute top-2.5 left-2.5 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-[9px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-lg shadow-md flex items-center gap-1">
+              <span>📸 Instagram Reel</span>
             </span>
           </a>
         )}
@@ -116,15 +116,16 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false }: Sho
             </div>
           )}
         </div>
-        {/* Active Promotion Offer Details */}
+
+        {/* Active Promotion Offer Details & Full Reel Caption Content */}
         {post.offer_title && (
-          <div className="bg-yellow-50 border border-yellow-250/60 rounded-xl p-2.5 flex flex-col gap-1 mt-1 text-slate-800 font-sans">
-            <div className="flex items-center gap-1.5 text-yellow-750 font-black text-[10px] uppercase tracking-wider">
-              <Sparkles className="w-3.5 h-3.5 fill-current" />
-              <span>Special Offer: {post.offer_title}</span>
+          <div className="bg-gradient-to-b from-yellow-50 to-amber-50/40 border border-yellow-250/70 rounded-xl p-3 flex flex-col gap-1.5 mt-1 text-slate-800 font-sans shadow-2xs">
+            <div className="flex items-center gap-1.5 text-yellow-800 font-black text-[11px] uppercase tracking-wider">
+              <Sparkles className="w-3.5 h-3.5 fill-yellow-500 stroke-none" />
+              <span>{post.offer_title}</span>
             </div>
             {post.offer_description && (
-              <p className="text-[10px] text-slate-500 font-semibold leading-normal">
+              <p className="text-[11px] text-slate-600 font-semibold leading-relaxed bg-white/90 p-2.5 rounded-lg border border-yellow-200/50">
                 {post.offer_description}
               </p>
             )}
@@ -133,9 +134,9 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false }: Sho
                 href={post.offer_social_link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-[9px] text-yellow-600 hover:text-yellow-750 font-black uppercase tracking-wider flex items-center gap-0.5 hover:underline mt-0.5 self-start"
+                className="mt-1 flex items-center justify-center gap-1.5 bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white font-black px-3 py-2 rounded-xl text-[11px] transition-all shadow-xs active:scale-95 cursor-pointer"
               >
-                Watch Video Reels →
+                <span>Watch Reel on Instagram 📸</span>
               </a>
             )}
           </div>

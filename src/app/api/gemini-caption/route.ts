@@ -1,8 +1,6 @@
-// src/app/api/gemini-caption/route.ts
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
 
-// Initialize Gemini Client
 const ai = new GoogleGenAI({
   apiKey: process.env.GEMINI_API_KEY || "",
 });
@@ -10,59 +8,110 @@ const ai = new GoogleGenAI({
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { rawCaption } = body;
+    const { reelUrl, rawCaption: inputRawCaption } = body;
 
-    if (!rawCaption) {
-      return NextResponse.json(
-        { error: "rawCaption parameter is required" },
-        { status: 400 }
-      );
+    let scrapedCaption = inputRawCaption || "";
+    let scrapedAuthor = "Thanjavur Local Partner";
+    let scrapedThumbnail = "";
+
+    // If Instagram Reel URL is provided, fetch public oEmbed metadata
+    if (reelUrl && reelUrl.includes("instagram.com")) {
+      try {
+        const oembedUrl = `https://api.instagram.com/oembed?url=${encodeURIComponent(reelUrl)}`;
+        const oembedRes = await fetch(oembedUrl, {
+          headers: { "User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7)" }
+        });
+        
+        if (oembedRes.ok) {
+          const oembedData = await oembedRes.json();
+          scrapedCaption = oembedData.title || scrapedCaption;
+          scrapedAuthor = oembedData.author_name || scrapedAuthor;
+          scrapedThumbnail = oembedData.thumbnail_url || scrapedThumbnail;
+        } else {
+          // HTML fallback metadata scraping
+          const htmlRes = await fetch(reelUrl, {
+            headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" }
+          });
+          const htmlText = await htmlRes.text();
+          
+          const ogTitleMatch = htmlText.match(/<meta\s+property="og:title"\s+content="([^"]+)"/i);
+          const ogDescMatch = htmlText.match(/<meta\s+property="og:description"\s+content="([^"]+)"/i);
+          const ogImgMatch = htmlText.match(/<meta\s+property="og:image"\s+content="([^"]+)"/i);
+
+          if (ogDescMatch && ogDescMatch[1]) scrapedCaption = ogDescMatch[1];
+          else if (ogTitleMatch && ogTitleMatch[1]) scrapedCaption = ogTitleMatch[1];
+          if (ogImgMatch && ogImgMatch[1]) scrapedThumbnail = ogImgMatch[1];
+        }
+      } catch (scrapeErr) {
+        console.warn("Instagram scraper fallback warning:", scrapeErr);
+      }
+    }
+
+    // Default fallback caption if scraping was blocked
+    if (!scrapedCaption || scrapedCaption.length < 5) {
+      scrapedCaption = "Special promotional deal extracted directly from Instagram Video Reel. Watch full reel on Instagram for promo codes and store discounts.";
     }
 
     const systemPrompt = `
-      You are an expert copywriter for local businesses in Tanjore, Tamil Nadu.
-      Your task is to take a raw caption/description of an offer, discount, or announcement, and summarize it into a clean, highly engaging 1-line headline under 60 characters.
-      
-      CRITICAL RULES:
-      1. Prefix the headline with a highly relevant emoji.
-      2. Keep it concise, energetic, and highly readable on a mobile screen.
-      3. Return ONLY the raw string of the headline. Do not wrap in quotes, do not include markdown, explanations, or conversational text.
-      
-      Examples:
-      - Raw: "Come and try our special mutton biryani combo. buy one get one free only for today evening from 6pm to 9pm at Old Bus Stand."
-        Output: Buy 1 Get 1 FREE Mutton Biryani Combo
-      - Raw: "New design wedding silk sarees launched at our showroom. We are offering flat 15% discount for aadi festival buyers."
-        Output: 15% OFF New Wedding Silk Sarees
-      - Raw: "Residential plots launch near medical college road. booking starts at just 50000 rupees. direct owner sales."
-        Output: New Residential Plots Launch
+      You are an expert AI copywriter and data extractor for Thanjavur local directory.
+      Analyze the provided raw Instagram caption text and extract a JSON object with:
+      1. "headline": Short punchy 1-line offer title under 60 characters with relevant emoji.
+      2. "shopName": Extracted store name or brand name (default to "Thanjavur Store Deal" if unclear).
+      3. "category": Pick ONE from: ["Cafe & Restaurant", "Textiles & Clothing", "Jewelry Showroom", "Supermarket & Grocery", "Electronics", "General Shop"].
+      4. "cleanDescription": Cleaned up, readable post description summarizing key offers.
+
+      Return ONLY valid raw JSON with keys: headline, shopName, category, cleanDescription.
     `;
 
-    // Call Gemini Model
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: [
-        {
-          role: "user",
-          parts: [
-            { text: systemPrompt },
-            { text: `Raw Caption: "${rawCaption}"` },
-          ],
-        },
-      ],
-    });
+    let headline = "📸 Instagram Special Reel Deal";
+    let shopName = scrapedAuthor || "Thanjavur Partner Offer";
+    let category = "Cafe & Restaurant";
+    let cleanDescription = scrapedCaption;
 
-    const headline = response.text?.trim() || "Special Local Offer";
+    if (process.env.GEMINI_API_KEY) {
+      try {
+        const response = await ai.models.generateContent({
+          model: "gemini-2.5-flash",
+          contents: [
+            {
+              role: "user",
+              parts: [
+                { text: systemPrompt },
+                { text: `Raw Instagram Caption: "${scrapedCaption}"` },
+              ],
+            },
+          ],
+        });
+
+        const textOutput = response.text?.trim() || "";
+        const jsonMatch = textOutput.match(/\{[\s\S]*\}/);
+        if (jsonMatch) {
+          const parsed = JSON.parse(jsonMatch[0]);
+          headline = parsed.headline || headline;
+          shopName = parsed.shopName || shopName;
+          category = parsed.category || category;
+          cleanDescription = parsed.cleanDescription || cleanDescription;
+        }
+      } catch (aiErr) {
+        console.warn("Gemini AI refinement fallback:", aiErr);
+      }
+    }
 
     return NextResponse.json({
       success: true,
       headline,
+      shopName,
+      category,
+      caption: cleanDescription,
+      rawCaption: scrapedCaption,
+      thumbnailUrl: scrapedThumbnail || "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&auto=format&fit=crop",
     });
   } catch (error: any) {
     console.error("Gemini Caption processing error:", error);
     return NextResponse.json(
       {
         success: false,
-        error: "Failed to generate offer headline.",
+        error: "Failed to generate offer caption.",
         details: error.message,
       },
       { status: 500 }

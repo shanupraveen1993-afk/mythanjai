@@ -400,7 +400,12 @@ export default function ShopsPage() {
     const link = reelUrlInput.trim();
 
     // Call Gemini Caption / AI Analyzer
+    let offerTitle = "📸 Instagram Video Reel Deal";
+    let shopName = "Thanjavur Partner Offer";
+    let category = "Cafe & Restaurant";
     let formattedCaption = "Exclusive promotional deal extracted from Instagram Reel! Tap 'Watch Reel' to view video offer on Instagram.";
+    let thumbnailUrl = "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&auto=format&fit=crop";
+
     try {
       const res = await fetch("/api/gemini-caption", {
         method: "POST",
@@ -408,8 +413,12 @@ export default function ShopsPage() {
         body: JSON.stringify({ reelUrl: link }),
       });
       const data = await res.json();
-      if (data.success && data.caption) {
-        formattedCaption = data.caption;
+      if (data.success) {
+        if (data.headline) offerTitle = data.headline;
+        if (data.shopName) shopName = data.shopName;
+        if (data.category) category = data.category;
+        if (data.caption) formattedCaption = data.caption;
+        if (data.thumbnailUrl) thumbnailUrl = data.thumbnailUrl;
       }
     } catch (err) {
       console.error("Gemini Reel AI analysis failed:", err);
@@ -418,18 +427,18 @@ export default function ShopsPage() {
     const newReelItem: ShopPost = {
       id: `reel_${Date.now()}`,
       userId: user?.uid || "admin_account",
-      shop_name: "Thanjavur Partner Offer",
-      category: "Cafe & Restaurant",
+      shop_name: shopName,
+      category: category as any,
       area_tag: formArea || "Tanjore Town (General)",
       phone: profile?.phone || "919994837342",
-      image_url: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&auto=format&fit=crop",
+      image_url: thumbnailUrl,
       latitude: 10.7870,
       longitude: 79.1378,
       address_text: "Thanjavur",
       is_claimed: true,
       is_featured: true,
       created_at: new Date() as any,
-      offer_title: "Instagram Video Offer Reel",
+      offer_title: offerTitle,
       offer_description: formattedCaption,
       offer_social_link: link,
     };
@@ -439,16 +448,16 @@ export default function ShopsPage() {
     try {
       await addDoc(collection(db, "shops"), {
         userId: user?.uid || "admin_account",
-        shop_name: "Thanjavur Partner Offer",
-        category: "Cafe & Restaurant",
+        shop_name: shopName,
+        category: category,
         area_tag: formArea || "Tanjore Town (General)",
         phone: profile?.phone || "919994837342",
-        image_url: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&auto=format&fit=crop",
+        image_url: thumbnailUrl,
         is_verified: true,
         is_featured: true,
         is_claimed: true,
         created_at: serverTimestamp(),
-        offer_title: "Instagram Video Offer Reel",
+        offer_title: offerTitle,
         offer_description: formattedCaption,
         offer_social_link: link,
       });
