@@ -955,23 +955,23 @@ export function RobotHero({
           </button>
         </div>
 
-        {/* 4. Mascot Robot Canvas (Middle section) */}
+        {/* 4. Mascot Robot Canvas (Enlarged on Mobile to fill screen) */}
         <div 
           onClick={handleRobotTap} 
-          className="w-full max-w-[220px] sm:max-w-[270px] h-[140px] sm:h-[180px] md:h-[200px] relative flex items-center justify-center cursor-pointer my-0"
+          className="w-full max-w-[320px] sm:max-w-[340px] md:max-w-[380px] h-[240px] sm:h-[260px] md:h-[280px] relative flex items-center justify-center cursor-pointer my-1"
         >
           <Canvas shadows camera={{ position: [0, 0.12, 3.6], fov: 38 }}>
             <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
             <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} castShadow shadow-mapSize={[512, 512]} shadow-bias={-0.0005} />
             <Environment preset="studio" blur={0.5} />
-            <ResponsiveGroup scale={scale * 0.82}>
+            <ResponsiveGroup scale={scale * 1.15}>
               <ContactShadows position={[0, -0.79, 0]} opacity={entorno.sombraOpacidad} scale={10} resolution={256} blur={entorno.sombraBlur} far={2.5} color="#000000" />
               <RobotPrototype neckParams={{ baseR: 0.215, baseH: -0.05, midR: 0.28, midH: 0.02, lipBottomR: 0.295, lipBottomH: 0.045, lipTopR: 0.27, lipTopH: 0.055, innerR: 0.1, innerDropH: 0.0 }} bodyParams={{ bodyBevelR: 0.235, bodyBevelY: 0.34, bodyBevelT: 0.025 }} color={color} pantallaColor={pantallaColor} pantallaBrillo={pantallaBrillo} blinkCycle={blinkCycle} metalness={metalness} />
             </ResponsiveGroup>
           </Canvas>
         </div>
 
-        {/* 5. Single Primary Action Button: REGISTER TO POST (Positioned nicely inside First Fold) */}
+        {/* 5. Single Primary Action Button: REGISTER TO POST */}
         <div className="w-full max-w-md my-1">
           <button
             type="button"
@@ -1008,7 +1008,7 @@ export function RobotHero({
           </div>
         )}
 
-        {/* 7. Animated Down Arrow Scroll Indicator */}
+        {/* 7. Animated Down Arrow Scroll Indicator (Hidden on Mobile for Onboarding Feel) */}
         <div 
           onClick={() => {
             const noticeboardEl = document.getElementById("noticeboard-directory");
@@ -1018,7 +1018,7 @@ export function RobotHero({
               window.scrollTo({ top: 600, behavior: "smooth" });
             }
           }}
-          className="flex flex-col items-center gap-0.5 mt-2 sm:mt-3 cursor-pointer text-slate-400 hover:text-slate-700 transition-colors animate-bounce select-none"
+          className="hidden md:flex flex-col items-center gap-0.5 mt-2 sm:mt-3 cursor-pointer text-slate-400 hover:text-slate-700 transition-colors animate-bounce select-none"
         >
           <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-slate-400">Scroll to Explore</span>
           <ChevronDown className="w-4 h-4 text-yellow-500" />
