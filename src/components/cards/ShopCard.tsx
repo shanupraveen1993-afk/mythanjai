@@ -134,66 +134,13 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false }: Sho
                 href={post.offer_social_link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-1 flex items-center justify-center gap-1.5 bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white font-black px-3 py-2 rounded-xl text-[11px] transition-all shadow-xs active:scale-95 cursor-pointer"
+                className="mt-1 flex items-center justify-center gap-1.5 bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white font-black px-3 py-2.5 rounded-xl text-xs transition-all shadow-xs active:scale-95 cursor-pointer"
               >
                 <span>Watch Reel on Instagram 📸</span>
               </a>
             )}
           </div>
         )}
-
-        {/* Interactive Action Buttons */}
-        <div className="flex flex-col gap-1.5 pt-2 border-t border-slate-100 mt-1">
-          <div className="flex gap-1.5">
-            {/* Call */}
-            <a
-              href={callUrl}
-              className="flex items-center justify-center gap-1 flex-1 border border-slate-250 bg-white hover:bg-slate-50 text-slate-750 font-bold py-1.5 rounded-xl text-xs transition-colors"
-            >
-              <Phone className="w-3.5 h-3.5 text-slate-500" />
-              <span>Call</span>
-            </a>
-
-            {/* WhatsApp */}
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-1 flex-1 bg-emerald-500 hover:bg-emerald-600 active:scale-95 text-white font-bold py-1.5 rounded-xl text-xs transition-all shadow-sm"
-            >
-              <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
-              <span>WhatsApp</span>
-            </a>
-          </div>
-
-          <div className="flex gap-1.5">
-            {/* Map Toggle inline */}
-            {post.latitude && post.longitude && onMapToggle && (
-              <button
-                onClick={() => onMapToggle(post)}
-                className={`flex items-center justify-center gap-1 flex-1 border font-bold py-1.5 rounded-xl text-xs transition-colors ${
-                  isMapActive
-                    ? "bg-yellow-600 text-white border-yellow-600"
-                    : "border-slate-250 bg-white hover:bg-slate-50 text-slate-750"
-                }`}
-              >
-                <Compass className={`w-3.5 h-3.5 ${isMapActive ? "text-white" : "text-yellow-600"}`} />
-                <span>{isMapActive ? "Close Map" : "Show Map"}</span>
-              </button>
-            )}
-
-            {/* External Navigation Directions */}
-            <a
-              href={navUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-1 flex-1 border border-slate-250 bg-white hover:bg-slate-50 text-slate-750 font-bold py-1.5 rounded-xl text-xs transition-colors"
-            >
-              <Navigation className="w-3.5 h-3.5 text-yellow-600" />
-              <span>Directions</span>
-            </a>
-          </div>
-        </div>
       </div>
     </div>
   );
