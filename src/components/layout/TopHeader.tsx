@@ -51,39 +51,41 @@ export default function TopHeader({
           </div>
         </div>
 
-        {/* Center: 3 Segment Direct Navigation Tabs */}
-        <div className="hidden sm:flex items-center gap-1 bg-slate-100/80 p-1 rounded-2xl border border-slate-200/60">
-          <button
-            onClick={() => onTabChange?.("classifieds")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
-              activeTab === "classifieds"
-                ? "bg-white text-slate-900 shadow-xs border border-slate-250"
-                : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            Buy & Sell
-          </button>
-          <button
-            onClick={() => onTabChange?.("services")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
-              activeTab === "services"
-                ? "bg-white text-slate-900 shadow-xs border border-slate-250"
-                : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            Helper Trades
-          </button>
-          <button
-            onClick={() => onTabChange?.("shops")}
-            className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
-              activeTab === "shops"
-                ? "bg-white text-slate-900 shadow-xs border border-slate-250"
-                : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            Store Offers
-          </button>
-        </div>
+        {/* Center: 3 Segment Direct Navigation Tabs (ONLY VISIBLE AFTER VERIFIED LOGIN) */}
+        {profile?.isVerified && (
+          <div className="hidden sm:flex items-center gap-1 bg-slate-100/80 p-1 rounded-2xl border border-slate-200/60">
+            <button
+              onClick={() => onTabChange?.("classifieds")}
+              className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                activeTab === "classifieds"
+                  ? "bg-white text-slate-900 shadow-xs border border-slate-250"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              Buy & Sell
+            </button>
+            <button
+              onClick={() => onTabChange?.("services")}
+              className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                activeTab === "services"
+                  ? "bg-white text-slate-900 shadow-xs border border-slate-250"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              Helper Trades
+            </button>
+            <button
+              onClick={() => onTabChange?.("shops")}
+              className={`px-3 py-1.5 rounded-xl text-xs font-black transition-all cursor-pointer ${
+                activeTab === "shops"
+                  ? "bg-white text-slate-900 shadow-xs border border-slate-250"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              Store Offers
+            </button>
+          </div>
+        )}
 
         {/* Right: Verified WhatsApp Phone Badge */}
         <div className="flex items-center gap-2 shrink-0">
