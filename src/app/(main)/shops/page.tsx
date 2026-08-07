@@ -463,39 +463,10 @@ export default function ShopsPage() {
         </button>
       </div>
 
-          {/* Inline Collapsible Shop Registration Form */}
-          <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden transition-all duration-300">
-            <button
-              onClick={() => {
-                if (!profile?.isVerified) {
-                  const currentParams = new URLSearchParams(searchParams.toString());
-                  currentParams.set("auth", "popup");
-                  currentParams.set("redirect", `/shops?category=${encodeURIComponent(selectedCategory || "")}&create=true`);
-                  router.push(`/shops?${currentParams.toString()}`);
-                } else {
-                  setIsFormOpen(!isFormOpen);
-                }
-              }}
-              className="w-full flex items-center justify-between px-4 py-3 bg-slate-50 hover:bg-slate-100/50 transition-colors text-left"
-            >
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-xl bg-yellow-500 text-slate-950 flex items-center justify-center">
-                  <Plus className={`w-4 h-4 transition-transform duration-200 ${isFormOpen ? "rotate-45" : ""}`} />
-                </div>
-                <div>
-                  <span className="text-xs font-black text-slate-800 block">
-                    Register Shop under {selectedCategory}
-                  </span>
-                  <span className="text-[10px] text-slate-500">
-                    Snap storefront photo or add coordinates manually
-                  </span>
-                </div>
-              </div>
-              {isFormOpen ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
-            </button>
-
-            {isFormOpen && (
-              <form onSubmit={handleRegisterShop} className="p-4 border-t border-slate-100 flex flex-col gap-5 bg-white">
+      {/* Inline Collapsible Shop Registration Form */}
+      {isFormOpen && (
+        <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden transition-all duration-300 p-4">
+          <form onSubmit={handleRegisterShop} className="flex flex-col gap-5 bg-white">
                 
                 {/* Widescreen Columns */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-start">
@@ -820,8 +791,8 @@ export default function ShopsPage() {
                   </button>
                 </div>
               </form>
-            )}
-          </div>
+        </div>
+      )}
 
           {/* Dynamic Leaflet Map Overlay Pane */}
           {mapShop && mapShop.latitude && mapShop.longitude && (
