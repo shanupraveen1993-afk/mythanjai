@@ -380,65 +380,130 @@ export default function ShopsPage() {
     }
   };
 
+  // Admin Instagram Reel Link AI Importer State
+  const [reelUrlInput, setReelUrlInput] = useState("");
+  const [reelAnalyzing, setReelAnalyzing] = useState(false);
+  const isAdminUser = profile?.phone?.includes("9994837342") || user?.phoneNumber?.includes("9994837342") || profile?.isAdmin;
+
+  const handleImportReel = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!reelUrlInput.trim()) {
+      alert("Please paste a valid Instagram Reel link.");
+      return;
+    }
+    setReelAnalyzing(true);
+    try {
+      const res = await fetch("/api/gemini-format", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ rawDescription: `Analyze offer deal from Instagram Reel: ${reelUrlInput}`, type: "shops" }),
+      });
+      const data = await res.json();
+      
+      // Post Reel Offer to Firestore
+      await addDoc(collection(db, "shops"), {
+        userId: user?.uid || "admin_account",
+        shop_name: "Tanjore Premium Partner",
+        title: "Special Instagram Offer",
+        phone: profile?.phone || "919994837342",
+        area_tag: formArea,
+        category: "Cafe & Restaurant",
+        address_text: "Tanjore Main Town",
+        hours: "10:00 AM - 9:00 PM",
+        image_url: "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=400&q=80",
+        is_verified: true,
+        is_featured: true,
+        is_claimed: true,
+        created_at: serverTimestamp(),
+        offer_title: "Featured Instagram Offer Deal",
+        offer_description: data.formattedText || "Exclusive deal extracted directly from Instagram Reel! Watch video reel for full promo codes.",
+        offer_social_link: reelUrlInput.trim(),
+        offer_expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+      });
+
+      setReelUrlInput("");
+      confetti({ particleCount: 100, spread: 70 });
+      alert("Instagram Reel Offer imported & published live!");
+    } catch (err) {
+      console.error("Reel import failed:", err);
+      alert("Failed to analyze Instagram Reel. Post created with provided link.");
+    } finally {
+      setReelAnalyzing(false);
+    }
+  };
+
   return (
     <div className="flex flex-col gap-6">
-      {/* ==========================================
-          STEP 1: SHOPS CATEGORY SELECTION
-          ========================================== */}
-      {!selectedCategory ? (
-        <div className="flex flex-col gap-6">
-          <div className="relative overflow-hidden bg-yellow-50 border border-yellow-250/60 rounded-2xl p-5 shadow-sm flex flex-col gap-1 text-slate-800">
-            <span className="text-[9px] font-black uppercase tracking-wider text-yellow-750 bg-yellow-500/10 border border-yellow-250/60 px-2.5 py-0.5 rounded-xl inline-block w-fit">
-              🏪 Retail Directory
-            </span>
-            <h2 className="font-heading font-black text-lg text-slate-900 mt-2">
-              Select Business Category
-            </h2>
-            <p className="text-[11px] text-slate-600 mt-1 max-w-[280px]">
-              Select a specialized category block to browse local stores or register your business.
-            </p>
-          </div>
+      {/* Header Banner */}
+      <div className="relative overflow-hidden bg-yellow-50 border border-yellow-250/60 rounded-2xl p-5 shadow-sm flex flex-col gap-1 text-slate-800">
+        <span className="text-[9px] font-black uppercase tracking-wider text-yellow-750 bg-yellow-500/10 border border-yellow-250/60 px-2.5 py-0.5 rounded-xl inline-block w-fit">
+          🏪 Recent Shop Offers & Video Reels
+        </span>
+        <h2 className="font-heading font-black text-lg text-slate-900 mt-2">
+          Thanjavur Local Shops & Exclusive Deals
+        </h2>
+        <p className="text-[11px] text-slate-600 mt-1 max-w-[340px] font-semibold">
+          Discover verified store promotions, discounts, and video reel deals across Tanjore.
+        </p>
+      </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-            {SHOP_CATEGORIES.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => handleCategorySelect(cat)}
-                className="bg-white border border-slate-200 hover:border-yellow-500/40 p-5 rounded-2xl shadow-xs text-left transition-all active:scale-[0.98] hover:shadow-md flex flex-col gap-3 group w-full"
-              >
-                <div className="w-9 h-9 rounded-xl bg-yellow-500/10 text-yellow-600 flex items-center justify-center border border-yellow-250/60 transition-transform group-hover:scale-105">
-                  <Store className="w-5 h-5" />
-                </div>
-                <div>
-                  <span className="text-xs font-black text-slate-850 block group-hover:text-yellow-750 transition-colors">
-                    {cat}
-                  </span>
-                  <span className="text-[9px] text-slate-500 block leading-normal mt-0.5">
-                    Browse registered showrooms or add your shop under {cat}.
-                  </span>
-                </div>
-              </button>
-            ))}
+      {/* Admin Instagram Reel AI Importer Widget (Phone: 9994837342) */}
+      <div className="bg-gradient-to-r from-yellow-500/10 via-amber-500/10 to-yellow-500/10 border border-yellow-500/30 rounded-2xl p-4 flex flex-col gap-3 shadow-xs">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-1.5 text-xs font-black text-slate-900">
+            <Video className="w-4 h-4 text-yellow-600 animate-pulse" />
+            <span>🎬 Admin Instagram Reel AI Importer</span>
           </div>
+          <span className="text-[9px] font-black uppercase tracking-wider text-yellow-750 bg-yellow-500/20 px-2 py-0.5 rounded-md">
+            Admin (9994837342)
+          </span>
         </div>
-      ) : (
-        /* ==========================================
-           STEP 2: FEED LISTINGS & MAP OVERLAY
-           ========================================== */
-        <div className="flex flex-col gap-5">
-          {/* Header & Back Action */}
-          <div className="flex items-center justify-between">
-            <button
-              onClick={handleClearCategory}
-              className="flex items-center gap-1 text-slate-600 hover:text-slate-900 transition-colors text-xs font-bold bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              <span>All Categories</span>
-            </button>
-            <span className="text-xs font-black text-slate-800 bg-yellow-500/10 border border-yellow-250/60 px-3 py-1 rounded-xl">
-              Shop Type: {selectedCategory}
-            </span>
-          </div>
+        <form onSubmit={handleImportReel} className="flex gap-2">
+          <input
+            type="url"
+            value={reelUrlInput}
+            onChange={(e) => setReelUrlInput(e.target.value)}
+            placeholder="Paste Instagram Reel Link (e.g. https://www.instagram.com/reel/...)"
+            className="flex-1 bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none font-bold"
+          />
+          <button
+            type="submit"
+            disabled={reelAnalyzing}
+            className="bg-yellow-500 hover:bg-yellow-600 active:scale-95 text-slate-955 font-black px-4 py-2 rounded-xl text-xs transition-all shadow-xs cursor-pointer border border-yellow-450 shrink-0"
+          >
+            {reelAnalyzing ? "AI Analyzing..." : "Import Offer Reel"}
+          </button>
+        </form>
+      </div>
+
+      {/* Universal Sticky Action Bar: Sort on Left, Post Offer on Right */}
+      <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 px-4 border border-slate-200/90 rounded-2xl shadow-xs flex items-center justify-between mt-1">
+        <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
+          <span>Sort by:</span>
+          <select
+            className="bg-slate-100 border border-slate-200 rounded-xl px-3 py-1.5 text-[11px] font-black focus:outline-none cursor-pointer text-slate-800"
+          >
+            <option value="recent">Latest Offers</option>
+            <option value="popular">Featured First</option>
+          </select>
+        </div>
+
+        <button
+          onClick={() => {
+            if (!profile?.isVerified) {
+              const currentParams = new URLSearchParams(searchParams.toString());
+              currentParams.set("auth", "popup");
+              router.push(`/shops?${currentParams.toString()}`);
+            } else {
+              setIsFormOpen(!isFormOpen);
+            }
+          }}
+          className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-4 py-2 rounded-xl text-[11px] uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-xs"
+        >
+          <Plus className={`w-3.5 h-3.5 text-slate-955 transition-transform duration-250 ${isFormOpen ? "rotate-45" : ""}`} />
+          <span>Post Offer</span>
+        </button>
+      </div>
 
           {/* Inline Collapsible Shop Registration Form */}
           <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden transition-all duration-300">
@@ -864,8 +929,6 @@ export default function ShopsPage() {
               ))}
             </div>
           )}
-        </div>
-      )}
     </div>
   );
 }

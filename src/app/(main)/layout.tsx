@@ -132,9 +132,6 @@ function MainLayoutContent({
 
           if (!profile?.isVerified) {
             setIsSignInOpen(true);
-            currentParams.set("auth", "popup");
-            currentParams.set("redirect", `${targetPath}?create=true`);
-            router.push(`${targetPath}?${currentParams.toString()}`);
           } else {
             currentParams.set("create", "true");
             router.push(`${targetPath}?${currentParams.toString()}`);
@@ -144,8 +141,8 @@ function MainLayoutContent({
         onTabChange={handleTabChange}
       />
 
-      {/* Main Content Panel */}
-      <main className="flex-1 w-full bg-white pb-20 md:pb-8">
+      {/* Main Content Panel with Container Margins */}
+      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-white pb-20 md:pb-8">
         {children}
       </main>
 

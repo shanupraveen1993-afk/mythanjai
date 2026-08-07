@@ -472,7 +472,9 @@ export default function ClassifiedsPage() {
             <button
               onClick={() => {
                 if (!profile?.isVerified) {
-                  router.push(`/profile?auth=popup&redirect=${encodeURIComponent(`/classifieds?category=${encodeURIComponent(selectedCategory || "")}&create=true`)}`);
+                  const currentParams = new URLSearchParams(searchParams.toString());
+                  currentParams.set("auth", "popup");
+                  router.push(`/classifieds?${currentParams.toString()}`);
                 } else {
                   setFormType(activeType);
                   setIsFormOpen(!isFormOpen);

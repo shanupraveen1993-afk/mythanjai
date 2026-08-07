@@ -59,18 +59,68 @@ export default function HomeLandingPage() {
     <div className="w-full flex flex-col bg-white text-slate-800 min-h-screen font-sans">
       
       {/* ==========================================
+          LOGGED IN RESIDENT DASHBOARD BANNER
+          ========================================== */}
+      {profile?.isVerified && (
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-2 animate-fade-in">
+          <div className="bg-gradient-to-r from-yellow-500/10 via-amber-500/10 to-yellow-500/10 border border-yellow-500/30 rounded-3xl p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-5">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-2xl bg-yellow-500 text-slate-955 flex items-center justify-center font-heading font-black text-xl shadow-sm border border-yellow-400">
+                {profile?.displayName?.charAt(0).toUpperCase() || "T"}
+              </div>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="font-heading font-black text-lg text-slate-900">
+                    Welcome back, {profile?.displayName || "Resident"}
+                  </h2>
+                  <span className="text-[9px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-700 border border-emerald-500/30 px-2 py-0.5 rounded-md flex items-center gap-1">
+                    ✓ Verified
+                  </span>
+                </div>
+                <p className="text-xs text-slate-600 mt-0.5 font-semibold">
+                  Thanjavur Community Member (+{profile?.phone || "919994837342"})
+                </p>
+              </div>
+            </div>
+
+            {/* Quick Actions Bar */}
+            <div className="flex flex-wrap items-center gap-2">
+              <button
+                onClick={() => router.push("/classifieds?create=true")}
+                className="bg-yellow-500 hover:bg-yellow-600 active:scale-95 text-slate-955 font-black px-4 py-2 rounded-xl text-xs transition-all shadow-xs cursor-pointer border border-yellow-450"
+              >
+                + Post Ad
+              </button>
+              <button
+                onClick={() => router.push("/services?create=true")}
+                className="bg-slate-900 hover:bg-slate-800 text-white font-black px-4 py-2 rounded-xl text-xs transition-all shadow-xs cursor-pointer"
+              >
+                + Post Trade Service
+              </button>
+              <button
+                onClick={() => router.push("/profile")}
+                className="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-4 py-2 rounded-xl text-xs transition-all border border-slate-300"
+              >
+                Manage My Posts
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ==========================================
           HERO SECTION: 3D INTERACTIVE ROBOT HERO
           ========================================== */}
       <div className="w-full relative flex flex-col">
         <RobotHero
           backgroundText="NAMMA THANJAI"
           navItemsLeft={[]}
-          ctaText={profile?.isVerified ? "Verified" : "Register"}
+          ctaText={profile?.isVerified ? "Verified Account" : "Register"}
           onCtaClick={() => {
             if (profile?.isVerified) {
               router.push("/classifieds");
             } else {
-              router.push("/?auth=popup&redirect=/classifieds");
+              router.push("/classifieds?auth=popup");
             }
           }}
           onCategoryClick={(category) => {
