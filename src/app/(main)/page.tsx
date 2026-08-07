@@ -33,6 +33,14 @@ import { AnimatePresence, motion } from "framer-motion";
 export default function HomeLandingPage() {
   const router = useRouter();
   const { profile } = useAuth();
+
+  const handleAuthModalOpen = () => {
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.set("auth", "popup");
+      router.push(url.pathname + url.search);
+    }
+  };
   
   // Live Alert Ticker Carousel State
   const [activeAlertIdx, setActiveAlertIdx] = React.useState(0);
@@ -111,7 +119,7 @@ export default function HomeLandingPage() {
                     <MapPin className="w-3.5 h-3.5 text-slate-400" />
                     <span>Vallam, Thanjavur</span>
                   </div>
-                  <button onClick={() => router.push("/classifieds")} className="text-yellow-600 font-black hover:underline">
+                  <button onClick={handleAuthModalOpen} className="text-yellow-600 font-black hover:underline cursor-pointer">
                     Details →
                   </button>
                 </div>
@@ -144,7 +152,7 @@ export default function HomeLandingPage() {
                     <MapPin className="w-3.5 h-3.5 text-slate-400" />
                     <span>Medical College Rd</span>
                   </div>
-                  <button onClick={() => router.push("/classifieds")} className="text-yellow-600 font-black hover:underline">
+                  <button onClick={handleAuthModalOpen} className="text-yellow-600 font-black hover:underline cursor-pointer">
                     Details →
                   </button>
                 </div>
@@ -177,7 +185,7 @@ export default function HomeLandingPage() {
                     <MapPin className="w-3.5 h-3.5 text-slate-400" />
                     <span>New Bus Stand</span>
                   </div>
-                  <button onClick={() => router.push("/classifieds")} className="text-yellow-600 font-black hover:underline">
+                  <button onClick={handleAuthModalOpen} className="text-yellow-600 font-black hover:underline cursor-pointer">
                     Details →
                   </button>
                 </div>
@@ -195,7 +203,7 @@ export default function HomeLandingPage() {
                 </h2>
               </div>
               <button
-                onClick={() => router.push("/services")}
+                onClick={handleAuthModalOpen}
                 className="text-xs font-black text-yellow-600 hover:text-yellow-750 flex items-center gap-1 hover:underline cursor-pointer"
               >
                 <span>View All Services →</span>
@@ -219,7 +227,7 @@ export default function HomeLandingPage() {
                 </p>
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
                   <span>Tanjore Town</span>
-                  <button onClick={() => router.push("/services")} className="text-yellow-600 font-black hover:underline">
+                  <button onClick={handleAuthModalOpen} className="text-yellow-600 font-black hover:underline cursor-pointer">
                     Hire Technician →
                   </button>
                 </div>
@@ -241,7 +249,7 @@ export default function HomeLandingPage() {
                 </p>
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
                   <span>Medical College Rd</span>
-                  <button onClick={() => router.push("/services")} className="text-yellow-600 font-black hover:underline">
+                  <button onClick={handleAuthModalOpen} className="text-yellow-600 font-black hover:underline cursor-pointer">
                     Hire Technician →
                   </button>
                 </div>
@@ -263,7 +271,7 @@ export default function HomeLandingPage() {
                 </p>
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
                   <span>South Rampart Rd</span>
-                  <button onClick={() => router.push("/services")} className="text-yellow-600 font-black hover:underline">
+                  <button onClick={handleAuthModalOpen} className="text-yellow-600 font-black hover:underline cursor-pointer">
                     Hire Technician →
                   </button>
                 </div>
@@ -281,7 +289,7 @@ export default function HomeLandingPage() {
                 </h2>
               </div>
               <button
-                onClick={() => router.push("/shops")}
+                onClick={handleAuthModalOpen}
                 className="text-xs font-black text-yellow-600 hover:text-yellow-750 flex items-center gap-1 hover:underline cursor-pointer"
               >
                 <span>View All Offers →</span>
@@ -313,7 +321,7 @@ export default function HomeLandingPage() {
                 </p>
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
                   <span>Near Big Temple</span>
-                  <button onClick={() => router.push("/shops")} className="text-yellow-600 font-black hover:underline">
+                  <button onClick={handleAuthModalOpen} className="text-yellow-600 font-black hover:underline cursor-pointer">
                     View Offer Reel →
                   </button>
                 </div>
@@ -343,7 +351,7 @@ export default function HomeLandingPage() {
                 </p>
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
                   <span>South Rampart Rd</span>
-                  <button onClick={() => router.push("/shops")} className="text-yellow-600 font-black hover:underline">
+                  <button onClick={handleAuthModalOpen} className="text-yellow-600 font-black hover:underline cursor-pointer">
                     View Offer Reel →
                   </button>
                 </div>
@@ -373,7 +381,7 @@ export default function HomeLandingPage() {
                 </p>
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
                   <span>Srinivasapuram</span>
-                  <button onClick={() => router.push("/shops")} className="text-yellow-600 font-black hover:underline">
+                  <button onClick={handleAuthModalOpen} className="text-yellow-600 font-black hover:underline cursor-pointer">
                     View Offer Reel →
                   </button>
                 </div>

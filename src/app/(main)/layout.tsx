@@ -83,6 +83,16 @@ function MainLayoutContent({
   };
 
   const handleTabChange = (tab: AppTab) => {
+    const isAuthVerified = Boolean(
+      profile?.isVerified ||
+        (typeof window !== "undefined" && localStorage.getItem("my_thanjai_verified") === "true")
+    );
+
+    if (tab !== "home" && !isAuthVerified) {
+      setIsSignInOpen(true);
+      return;
+    }
+
     const currentParams = new URLSearchParams(searchParams.toString());
     const area = currentParams.get("area");
     
