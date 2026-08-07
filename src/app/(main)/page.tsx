@@ -909,6 +909,60 @@ export default function HomeLandingPage() {
           </div>
         </div>
 
+        {/* 5 FAQ SECTION */}
+        <div className="flex flex-col gap-4 bg-white border border-slate-200/90 rounded-2xl p-6 shadow-xs">
+          <div className="flex flex-col gap-1 border-b border-slate-100 pb-3">
+            <span className="text-[9px] font-black uppercase tracking-widest text-yellow-750 bg-yellow-500/10 border border-yellow-250/60 px-2.5 py-0.5 rounded-full w-fit">
+              Frequently Asked Questions
+            </span>
+            <h3 className="font-heading font-black text-lg text-slate-900 mt-1">
+              5 Key Questions About Namma Thanjavur
+            </h3>
+          </div>
+
+          <div className="flex flex-col gap-3">
+            {/* Q1 */}
+            <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 flex flex-col gap-1">
+              <h4 className="font-heading font-extrabold text-xs text-slate-900">1. What is Namma Thanjavur?</h4>
+              <p className="text-[11px] text-slate-600 font-semibold leading-relaxed">
+                Namma Thanjavur is a free local community portal for buying & selling classifieds, hiring verified helper technicians (electricians, plumbers), and viewing local store discount offers.
+              </p>
+            </div>
+
+            {/* Q2 */}
+            <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 flex flex-col gap-1">
+              <h4 className="font-heading font-extrabold text-xs text-slate-900">2. How do I log in or register?</h4>
+              <p className="text-[11px] text-slate-600 font-semibold leading-relaxed">
+                Log in or register directly from the Landing Page using WhatsApp OTP verification. No internal login page exists inside the web application.
+              </p>
+            </div>
+
+            {/* Q3 */}
+            <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 flex flex-col gap-1">
+              <h4 className="font-heading font-extrabold text-xs text-slate-900">3. Is posting listings free?</h4>
+              <p className="text-[11px] text-slate-600 font-semibold leading-relaxed">
+                Yes, 100% free with ₹0 subscription cost. Active listings stay published for 30 days and can be managed directly from your Profile section.
+              </p>
+            </div>
+
+            {/* Q4 */}
+            <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 flex flex-col gap-1">
+              <h4 className="font-heading font-extrabold text-xs text-slate-900">4. Who can register as a Service Provider or Shop?</h4>
+              <p className="text-[11px] text-slate-600 font-semibold leading-relaxed">
+                Any local technician (electrician, plumber, carpenter, painter) or commercial store owner operating in Thanjavur can register or scan their visiting card.
+              </p>
+            </div>
+
+            {/* Q5 */}
+            <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 flex flex-col gap-1">
+              <h4 className="font-heading font-extrabold text-xs text-slate-900">5. How does location verification work?</h4>
+              <p className="text-[11px] text-slate-600 font-semibold leading-relaxed">
+                Gemini AI automatically verifies every entered location to ensure that all listings belong exclusively to Thanjavur District. Locations outside Thanjavur are rejected.
+              </p>
+            </div>
+          </div>
+        </div>
+
         {/* Footer */}
         <footer className="text-[10px] text-slate-400 font-bold flex gap-4 pt-4 border-t border-slate-200">
           <span>&copy; {new Date().getFullYear()} namma thanjai</span>

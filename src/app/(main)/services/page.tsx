@@ -78,6 +78,8 @@ export default function ServicesPage() {
   const [serviceName, setServiceName] = useState("");
   const [experience, setExperience] = useState("");
   const [serviceDescription, setServiceDescription] = useState("");
+  const [availability, setAvailability] = useState("");
+  const [altPhone, setAltPhone] = useState("");
   const [formArea, setFormArea] = useState<TanjoreLocality>("Tanjore Town (General)");
   const [ocrLoading, setOcrLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -378,6 +380,7 @@ export default function ServicesPage() {
                     </div>
 
                     {/* 4. Experience Description */}
+                    {/* 4. Experience Description */}
                     <div>
                       <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1">
                         Experience Description
@@ -387,6 +390,34 @@ export default function ServicesPage() {
                         value={experience}
                         onChange={(e) => setExperience(e.target.value)}
                         placeholder="e.g. 8+ Years Experience"
+                        className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 focus:outline-none font-bold"
+                      />
+                    </div>
+
+                    {/* 5. Availability (Free Text) */}
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1">
+                        Availability (Free Text)
+                      </label>
+                      <input
+                        type="text"
+                        value={availability}
+                        onChange={(e) => setAvailability(e.target.value)}
+                        placeholder="e.g. Mon - Sat (8 AM - 8 PM), 24/7 Emergency Calls"
+                        className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 focus:outline-none font-bold"
+                      />
+                    </div>
+
+                    {/* 6. Additional Phone Number */}
+                    <div>
+                      <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1">
+                        Additional Contact Number (Optional)
+                      </label>
+                      <input
+                        type="tel"
+                        value={altPhone}
+                        onChange={(e) => setAltPhone(e.target.value)}
+                        placeholder="e.g. 9443588231"
                         className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 focus:outline-none font-bold"
                       />
                     </div>

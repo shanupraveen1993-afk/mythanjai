@@ -320,7 +320,7 @@ export default function ProfilePage() {
             <div className="bg-yellow-50 border border-yellow-250/60 rounded-xl p-3 flex flex-col gap-1 shadow-2xs">
               <span className="text-[9px] font-black text-yellow-755 uppercase tracking-wider flex items-center gap-1">
                 <Sparkles className="w-3.5 h-3.5 fill-yellow-500 stroke-none" />
-                Plan Status: Free Plan
+                Subscription: <span className="line-through text-slate-400 font-normal">₹100</span> Free
               </span>
               <p className="text-[9px] text-slate-500 leading-normal font-bold">
                 Active listings will be automatically removed after 30 days.
@@ -345,7 +345,7 @@ export default function ProfilePage() {
                   type="button"
                   onClick={handleSaveDisplayName}
                   disabled={displayNameUpdating}
-                  className="bg-yellow-500 hover:bg-yellow-600 active:scale-95 text-slate-950 font-black px-3.5 py-1.5 rounded-xl text-xs transition-all shadow-xs cursor-pointer border border-yellow-450"
+                  className="bg-yellow-500 hover:bg-yellow-600 active:scale-95 text-slate-955 font-black px-3.5 py-1.5 rounded-xl text-xs transition-all shadow-xs cursor-pointer border border-yellow-450"
                 >
                   Save
                 </button>
@@ -354,9 +354,9 @@ export default function ProfilePage() {
 
             {/* Verification Status */}
             {isDbVerified ? (
-              <div className="flex flex-col gap-1.5 border-t border-slate-100 pt-2.5">
+              <div className="flex flex-col gap-2 border-t border-slate-100 pt-2.5">
                 <label className="text-[10px] font-black text-slate-500 uppercase tracking-wider">
-                  Verified Phone Number (Locked)
+                  Registered Mobile Number (Locked)
                 </label>
                 <div className="flex items-center justify-between bg-emerald-500/10 text-emerald-700 border border-emerald-500/20 px-3 py-2.5 rounded-xl text-xs font-semibold">
                   <div className="flex items-center gap-2">
@@ -370,6 +370,13 @@ export default function ProfilePage() {
                     </span>
                   )}
                 </div>
+                <button
+                  type="button"
+                  onClick={() => alert("Your request to change your registered mobile number has been submitted to support. Admin will contact you on WhatsApp.")}
+                  className="text-[10px] font-bold text-yellow-600 hover:text-yellow-750 text-left cursor-pointer hover:underline pt-0.5"
+                >
+                  Request Mobile Number Change →
+                </button>
               </div>
             ) : (
               <div className="flex flex-col gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
