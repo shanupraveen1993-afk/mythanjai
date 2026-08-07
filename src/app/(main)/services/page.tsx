@@ -221,16 +221,15 @@ export default function ServicesPage() {
       };
 
       setLocalServices((prev) => [tempService, ...prev]);
-
-      alert(
-        "Notice: Helper Profile published successfully (Local Session Mode).\n\nIf you want this profile to be visible permanently to other residents in Thanjavur, please make sure Anonymous Sign-in is enabled in your Firebase Console (Authentication -> Sign-in method -> Anonymous -> Enable)."
-      );
       confetti({ particleCount: 80, spread: 60 });
     } finally {
       // Clear Form & Close
       setServiceName("");
       setExperience("");
       setServiceDescription("");
+      setAvailability("");
+      setAltPhone("");
+      setFormArea("");
       setIsFormOpen(false);
       setUploading(false);
     }

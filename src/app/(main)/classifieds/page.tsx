@@ -316,20 +316,18 @@ export default function ClassifiedsPage() {
       };
 
       setLocalPosts((prev) => [tempPost, ...prev]);
-      
-      alert(
-        "Notice: Post published successfully (Local Session Mode).\n\nIf you want this post to be visible permanently to other residents in Thanjavur, please make sure Anonymous Sign-in is enabled in your Firebase Console (Authentication -> Sign-in method -> Anonymous -> Enable)."
-      );
-      confetti({ particleCount: 60, spread: 45 });
+      confetti({ particleCount: 80, spread: 60 });
     } finally {
       // Clear Form & Close
       setFormTitle("");
       setFormDesc("");
       setFormPrice("");
+      setFormArea("");
       setSelectedImages([]);
       setImagePreviews([]);
       setYoutubeUrl("");
       setYoutubeThumbnail("");
+      setGoogleMapsUrl("");
       setIsFormOpen(false);
       setUploading(false);
     }
@@ -338,7 +336,11 @@ export default function ClassifiedsPage() {
   // Combine real Firestore posts with local test fallback posts
   const allPosts = React.useMemo(() => {
     // Filter localPosts to match category and type of active selection
-    const activeLocal = localPosts.filter(p => p.type.toLowerCase() === activeType.toLowerCase() && p.category === selectedCategory);
+    const activeLocal = localPosts.filter(p => {
+      const pType = p.type.toLowerCase();
+      const targetType = activeType === "sale" ? "sell" : "need";
+      return (pType === targetType || pType === activeType.toLowerCase()) && p.category === selectedCategory;
+    });
     return [...activeLocal, ...posts];
   }, [localPosts, posts, activeType, selectedCategory]);
 
