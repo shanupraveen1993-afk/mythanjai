@@ -4,6 +4,7 @@ import React from "react";
 import { MapPin, Plus, User, ShieldCheck, ArrowLeft, Check } from "lucide-react";
 import { TANJORE_LOCALITIES, TanjoreLocality } from "@/lib/constants";
 import { AppTab } from "./BottomTabBar";
+import { usePathname } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 
 interface TopHeaderProps {
@@ -15,13 +16,6 @@ interface TopHeaderProps {
   onTabChange?: (tab: AppTab) => void;
 }
 
-const DESKTOP_TABS = [
-  { id: "classifieds" as AppTab, label: "Buy & Sell" },
-  { id: "services" as AppTab, label: "Services" },
-  { id: "shops" as AppTab, label: "Recent Offer" },
-  { id: "profile" as AppTab, label: "Profile" },
-];
-
 export default function TopHeader({
   selectedArea,
   onAreaChange,
@@ -30,6 +24,7 @@ export default function TopHeader({
   activeTab,
   onTabChange,
 }: TopHeaderProps) {
+  const pathname = usePathname();
   const { profile } = useAuth();
   
   const isAuthVerified = Boolean(
@@ -37,6 +32,8 @@ export default function TopHeader({
       (typeof window !== "undefined" && localStorage.getItem("my_thanjai_verified") === "true")
   );
   
+  const showSegmentTabs = isAuthVerified && pathname !== "/";
+
   const storedMobile = typeof window !== "undefined" ? localStorage.getItem("my_thanjai_phone") : "";
   const phoneDisplay = profile?.phone
     ? `+${profile.phone}`
@@ -62,8 +59,8 @@ export default function TopHeader({
           </div>
         </div>
 
-        {/* Center: 3 Segment Direct Navigation Tabs (ONLY VISIBLE AFTER VERIFIED LOGIN) */}
-        {isAuthVerified && (
+        {/* Center: 3 Segment Direct Navigation Tabs (ONLY VISIBLE ON SUBPAGES AFTER VERIFIED LOGIN) */}
+        {showSegmentTabs && (
           <div className="flex items-center gap-1 bg-slate-100/80 p-1 rounded-2xl border border-slate-200/60">
             <button
               onClick={() => onTabChange?.("classifieds")}

@@ -51,6 +51,18 @@ function MainLayoutContent({
     }
   }, [searchParams]);
 
+  // Strict Route Protection: Unauthenticated users on subpages are immediately kicked to landing page with login modal
+  useEffect(() => {
+    const isAuthVerified = Boolean(
+      profile?.isVerified ||
+        (typeof window !== "undefined" && localStorage.getItem("my_thanjai_verified") === "true")
+    );
+
+    if (!isAuthVerified && pathname !== "/") {
+      router.replace("/?auth=popup");
+    }
+  }, [pathname, profile, router]);
+
   const handleCloseSignIn = () => {
     setIsSignInOpen(false);
     const currentParams = new URLSearchParams(searchParams.toString());
