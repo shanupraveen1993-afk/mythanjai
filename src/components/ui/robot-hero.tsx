@@ -895,7 +895,7 @@ export function RobotHero({
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_60%,rgba(250,204,21,0.06)_0%,transparent_60%)] pointer-events-none" />
 
       {/* ==========================================
-          1. MOBILE VIEWPORT PORTION (Sleek, Clean Layout)
+          1. MOBILE VIEWPORT PORTION (Sleek, Clean Layout with Background Text)
           ========================================== */}
       <div className="flex md:hidden flex-col items-center justify-between z-10 px-5 w-full flex-1 text-center select-none pointer-events-auto pb-6 overflow-y-auto">
         
@@ -922,25 +922,24 @@ export function RobotHero({
           </div>
         </div>
 
-        {/* Animated category tag headline directly ABOVE the robot */}
-        <div className="w-full flex justify-center mt-3 mb-1 min-h-[28px] z-10">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={wordIndex}
-              initial={{ opacity: 0, y: -6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 6 }}
-              transition={{ duration: 0.3 }}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-amber-400/15 border border-amber-500/30 text-amber-700 font-black text-[11px] uppercase tracking-widest shadow-3xs"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
-              <span>{words[wordIndex]}</span>
-            </motion.div>
-          </AnimatePresence>
-        </div>
+        {/* Middle: Interactive 3D Mascot Robot Canvas with Giant Background Text */}
+        <div className="w-full flex-1 min-h-[240px] max-h-[340px] relative flex items-center justify-center my-2 overflow-hidden">
+          {/* Giant background word watermark for mobile */}
+          <div className="absolute inset-0 pointer-events-none flex items-center justify-center overflow-hidden z-0">
+            <AnimatePresence mode="wait">
+              <motion.h2
+                key={wordIndex}
+                initial={{ opacity: 0, scale: 0.9, y: 10 }}
+                animate={{ opacity: 0.09, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 1.1, y: -10 }}
+                transition={{ duration: 0.5 }}
+                className="font-sans font-black text-4xl text-slate-950 uppercase tracking-widest text-center whitespace-nowrap select-none"
+              >
+                {words[wordIndex]}
+              </motion.h2>
+            </AnimatePresence>
+          </div>
 
-        {/* Middle: Interactive 3D Mascot Robot Canvas */}
-        <div className="w-full flex-1 min-h-[220px] max-h-[300px] relative flex items-center justify-center my-1">
           <div onClick={handleRobotTap} className="w-full h-full relative cursor-pointer z-10">
             <Canvas shadows camera={{ position: [0, 0.12, 3.6], fov: 38 }}>
               <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
@@ -1062,22 +1061,21 @@ export function RobotHero({
             </div>
           </div>
 
-          {/* Right panel giant mascot with animated headline word tag */}
-          <div className="w-[50%] h-full relative flex flex-col items-center justify-center">
-            {/* Animated headline tag above robot on desktop */}
-            <div className="w-full flex justify-center mb-2 z-20">
+          {/* Right panel giant mascot with animated background watermark */}
+          <div className="w-[50%] h-full relative flex items-center justify-center">
+            {/* Giant background text watermark behind robot on desktop */}
+            <div className="absolute left-0 right-0 pointer-events-none overflow-hidden flex justify-center z-0 top-[6%]">
               <AnimatePresence mode="wait">
-                <motion.div
+                <motion.h2
                   key={wordIndex}
-                  initial={{ opacity: 0, y: -10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: 10 }}
-                  transition={{ duration: 0.35 }}
-                  className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-amber-400/15 border border-amber-500/30 text-amber-700 font-black text-xs uppercase tracking-widest shadow-2xs"
+                  initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                  animate={{ opacity: 0.08, y: 0, scale: 1 }}
+                  exit={{ opacity: 0, y: 20, scale: 1.05 }}
+                  transition={{ duration: 0.5, ease: "easeInOut" }}
+                  className="font-sans font-black select-none whitespace-nowrap text-slate-955 uppercase tracking-widest text-4xl md:text-7xl lg:text-8xl text-center"
                 >
-                  <Sparkles className="w-4 h-4 text-amber-500" />
-                  <span>{words[wordIndex]}</span>
-                </motion.div>
+                  {words[wordIndex]}
+                </motion.h2>
               </AnimatePresence>
             </div>
 
