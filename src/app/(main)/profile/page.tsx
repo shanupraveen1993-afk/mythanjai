@@ -14,6 +14,7 @@ import {
   deleteDoc,
   onSnapshot,
 } from "firebase/firestore";
+import { useRouter } from "next/navigation";
 import {
   User,
   Phone,
@@ -26,11 +27,13 @@ import {
   MessageSquare,
   ShieldCheck,
   Zap,
+  LogOut
 } from "lucide-react";
 import confetti from "canvas-confetti";
 
 export default function ProfilePage() {
-  const { user, profile, loading: authLoading, updatePhone } = useAuth();
+  const { user, profile, loading: authLoading, updatePhone, signOutUser } = useAuth();
+  const router = useRouter();
   const [phoneNumber, setPhoneNumber] = useState("");
   const [phoneUpdating, setPhoneUpdating] = useState(false);
   const [displayName, setDisplayName] = useState("");
@@ -448,6 +451,21 @@ export default function ProfilePage() {
                 )}
               </div>
             )}
+
+            {/* Logout / Switch Mobile Button */}
+            <div className="border-t border-slate-100 pt-3 mt-1">
+              <button
+                type="button"
+                onClick={async () => {
+                  await signOutUser();
+                  router.push("/");
+                }}
+                className="w-full flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 font-black px-4 py-2.5 rounded-xl text-xs transition-all shadow-xs cursor-pointer active:scale-95"
+              >
+                <LogOut className="w-4 h-4 text-red-600" />
+                <span>Logout / Switch Mobile Number</span>
+              </button>
+            </div>
           </div>
 
           {/* 2. PWA INSTALL WIDGET CARD */}

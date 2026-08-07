@@ -12,6 +12,7 @@ interface AuthContextType {
   loading: boolean;
   updatePhone: (phone: string) => Promise<{ success: boolean }>;
   setAdminStatus: (isAdmin: boolean) => Promise<void>;
+  signOutUser: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -143,9 +144,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const signOutUser = async () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("my_thanjai_verified");
+      localStorage.removeItem("my_thanjai_phone");
+    }
+    setProfile(null);
+    try {
+      const { signOut } = await import("firebase/auth");
+      await signOut(auth);
+    } catch (e) {
+      console.warn("Sign out error:", e);
+    }
+  };
+
   return React.createElement(
     AuthContext.Provider,
-    { value: { user, profile, loading, updatePhone, setAdminStatus } },
+    { value: { user, profile, loading, updatePhone, setAdminStatus, signOutUser } },
     children
   );
 }
@@ -159,6 +174,7 @@ export function useAuth() {
       loading: true,
       updatePhone: async () => ({ success: false }),
       setAdminStatus: async () => {},
+      signOutUser: async () => {},
     };
   }
   return context;

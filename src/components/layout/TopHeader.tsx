@@ -50,9 +50,19 @@ export default function TopHeader({
           </div>
         </div>
 
-        {/* Center: 3 Segment Direct Navigation Tabs (ONLY VISIBLE ON SUBPAGES AFTER VERIFIED LOGIN) */}
-        {showSegmentTabs && (
-          <div className="flex items-center gap-1 bg-slate-100/80 p-1 rounded-2xl border border-slate-200/60">
+        {/* Center: 4 Channel Navigation Tabs (Home, Buy & Sell, Local Services, Local Offers) */}
+        {isAuthVerified && (
+          <div className="hidden sm:flex items-center gap-1 bg-slate-100/80 p-1 rounded-2xl border border-slate-200/60">
+            <button
+              onClick={() => onTabChange?.("home")}
+              className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
+                activeTab === "home"
+                  ? "bg-white text-slate-900 shadow-xs border border-slate-250"
+                  : "text-slate-600 hover:text-slate-900"
+              }`}
+            >
+              Home
+            </button>
             <button
               onClick={() => onTabChange?.("classifieds")}
               className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
@@ -71,7 +81,7 @@ export default function TopHeader({
                   : "text-slate-600 hover:text-slate-900"
               }`}
             >
-              Helper Trades
+              Local Services
             </button>
             <button
               onClick={() => onTabChange?.("shops")}
@@ -81,7 +91,7 @@ export default function TopHeader({
                   : "text-slate-600 hover:text-slate-900"
               }`}
             >
-              Store Offers
+              Local Offers
             </button>
           </div>
         )}
