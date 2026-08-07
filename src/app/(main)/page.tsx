@@ -68,11 +68,10 @@ export default function HomeLandingPage() {
   return (
     <div className="w-full flex flex-col bg-white text-slate-800 min-h-screen font-sans">
       
-      {profile?.isVerified ? (
-        /* ==========================================
-           LOGGED IN HOME PAGE DASHBOARD & CHANNEL FEED
-           ========================================== */
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 mt-4 md:mt-6 pt-2 pb-12 flex flex-col gap-8 animate-fade-in">
+      {/* ==========================================
+         HOME PAGE DASHBOARD & CHANNEL FEED (ALWAYS VISIBLE ON DESKTOP WEBSITE)
+         ========================================== */}
+      <div className={`w-full max-w-7xl mx-auto px-4 sm:px-6 mt-4 md:mt-6 pt-2 pb-12 flex-col gap-8 animate-fade-in ${profile?.isVerified ? "flex" : "hidden md:flex"}`}>
           
           {/* 1. COMBINED FEATURED & POPULAR LISTINGS FEED */}
           
@@ -88,7 +87,7 @@ export default function HomeLandingPage() {
                 </h2>
               </div>
               <button
-                onClick={() => router.push("/classifieds?type=SELL")}
+                onClick={() => router.push("/sell")}
                 className="text-xs font-black text-yellow-600 hover:text-yellow-750 flex items-center gap-1 hover:underline cursor-pointer"
               >
                 <span>View All Sell Posts →</span>
@@ -98,7 +97,7 @@ export default function HomeLandingPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {/* Card 1: Popular */}
               <div 
-                onClick={() => router.push("/classifieds?category=Plot%20%2f%20Real%20Estate&post=cmda_plot")}
+                onClick={() => router.push("/sell?category=Plot%20%2f%20Real%20Estate&post=cmda_plot")}
                 className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
               >
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
@@ -139,7 +138,7 @@ export default function HomeLandingPage() {
 
               {/* Card 2: Trending */}
               <div 
-                onClick={() => router.push("/classifieds?category=Property%20Rental&post=house_rental")}
+                onClick={() => router.push("/sell?category=Property%20Rental&post=house_rental")}
                 className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
               >
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
@@ -180,7 +179,7 @@ export default function HomeLandingPage() {
 
               {/* Card 3: Recent */}
               <div 
-                onClick={() => router.push("/classifieds?category=Used%20Vehicles&post=hero_bike")}
+                onClick={() => router.push("/sell?category=Used%20Vehicles&post=hero_bike")}
                 className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
               >
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
@@ -233,7 +232,7 @@ export default function HomeLandingPage() {
                 </h2>
               </div>
               <button
-                onClick={() => router.push("/classifieds?type=NEED")}
+                onClick={() => router.push("/need")}
                 className="text-xs font-black text-yellow-600 hover:text-yellow-750 flex items-center gap-1 hover:underline cursor-pointer"
               >
                 <span>View All Need Posts →</span>
@@ -243,7 +242,7 @@ export default function HomeLandingPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {/* Need Card 1: Urgent */}
               <div 
-                onClick={() => router.push("/classifieds?type=NEED")}
+                onClick={() => router.push("/need?post=need_3bhk_medical")}
                 className="bg-amber-50/40 border border-amber-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
               >
                 <div className="flex justify-between items-center">
@@ -268,7 +267,7 @@ export default function HomeLandingPage() {
 
               {/* Need Card 2: Trending */}
               <div 
-                onClick={() => router.push("/classifieds?type=NEED")}
+                onClick={() => router.push("/need?post=need_goods_auto")}
                 className="bg-amber-50/40 border border-amber-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
               >
                 <div className="flex justify-between items-center">
@@ -293,7 +292,7 @@ export default function HomeLandingPage() {
 
               {/* Need Card 3: Recent */}
               <div 
-                onClick={() => router.push("/classifieds?type=NEED")}
+                onClick={() => router.push("/need?post=need_accountant")}
                 className="bg-amber-50/40 border border-amber-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
               >
                 <div className="flex justify-between items-center">
@@ -314,8 +313,8 @@ export default function HomeLandingPage() {
                     View Requirement →
                   </span>
                 </div>
-              </div>
             </div>
+          </div>
           </div>
 
           {/* SECTION 3: LOCAL SERVICE */}
@@ -541,38 +540,31 @@ export default function HomeLandingPage() {
               </div>
             </div>
           </div>
-
         </div>
-      ) : (
-        /* ==========================================
-           UNAUTHENTICATED GUEST LANDING PAGE (STATIC MOBILE APP ONBOARDING VIEWPORT)
-           ========================================== */
-        <div className="w-full relative flex flex-col h-[calc(100vh-64px)] md:min-h-[85vh] overflow-hidden justify-between my-0 max-w-4xl mx-auto px-2">
-          
-          {/* 3D ROBOT MASCOT HERO (VISIBLE ON BOTH MOBILE & DESKTOP) */}
-          <div className="w-full">
-            <RobotHero
-              backgroundText="NAMMA THANJAI"
-              navItemsLeft={[]}
-              ctaText="Register"
-              onCtaClick={() => {
-                router.push("/?auth=popup");
-              }}
-              onCategoryClick={(targetRoute) => {
-                if (targetRoute) {
-                  router.push(`/${targetRoute}`);
-                } else {
-                  router.push("/?auth=popup");
-                }
-              }}
-              color="#eab308"
-              pantallaColor="#fbbf24"
-              pantallaBrillo={1.6}
-              alerts={alerts}
-              activeAlertIdx={activeAlertIdx}
-            />
-          </div>
 
+      {/* MOBILE UNAUTHENTICATED GUEST ONBOARDING (DISPLAYED ONLY ON MOBILE IF UNVERIFIED) */}
+      {!profile?.isVerified && (
+        <div className="w-full relative flex flex-col h-[calc(100vh-64px)] overflow-hidden justify-between my-0 max-w-4xl mx-auto px-2 block md:hidden">
+          <RobotHero
+            backgroundText="NAMMA THANJAI"
+            navItemsLeft={[]}
+            ctaText="Register"
+            onCtaClick={() => {
+              router.push("/?auth=popup");
+            }}
+            onCategoryClick={(targetRoute) => {
+              if (targetRoute) {
+                router.push(`/${targetRoute}`);
+              } else {
+                router.push("/sell");
+              }
+            }}
+            color="#eab308"
+            pantallaColor="#fbbf24"
+            pantallaBrillo={1.6}
+            alerts={alerts}
+            activeAlertIdx={activeAlertIdx}
+          />
         </div>
       )}
 

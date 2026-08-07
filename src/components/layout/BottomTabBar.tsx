@@ -19,26 +19,31 @@ export default function BottomTabBar({
       id: "home" as AppTab,
       label: "Home",
       icon: Home,
+      route: "/",
     },
     {
-      id: "classifieds" as AppTab,
-      label: "Sell / Look",
+      id: "sell" as any,
+      label: "Sell",
       icon: MessageSquare,
+      route: "/sell",
+    },
+    {
+      id: "need" as any,
+      label: "Need",
+      icon: MessageSquare,
+      route: "/need",
     },
     {
       id: "services" as AppTab,
-      label: "Local Service",
+      label: "Service",
       icon: Wrench,
+      route: "/services",
     },
     {
       id: "shops" as AppTab,
-      label: "Local Offer",
+      label: "Offer",
       icon: Store,
-    },
-    {
-      id: "profile" as AppTab,
-      label: "Profile",
-      icon: User,
+      route: "/shops",
     },
   ];
 

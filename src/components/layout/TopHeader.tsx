@@ -4,7 +4,7 @@ import React from "react";
 import { MapPin, Plus, User, ShieldCheck, ArrowLeft, Check } from "lucide-react";
 import { TANJORE_LOCALITIES, TanjoreLocality } from "@/lib/constants";
 import { AppTab } from "./BottomTabBar";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 
 interface TopHeaderProps {
@@ -24,6 +24,7 @@ export default function TopHeader({
   activeTab,
   onTabChange,
 }: TopHeaderProps) {
+  const router = useRouter();
   const pathname = usePathname();
   const { profile } = useAuth();
   
@@ -51,60 +52,58 @@ export default function TopHeader({
         </div>
 
         {/* Center: 5 Channel Navigation Tabs (Home, Sell, Need, Local Service, Local Offer) */}
-        {isAuthVerified && (
-          <div className="hidden sm:flex items-center gap-1 bg-slate-100/80 p-1 rounded-2xl border border-slate-200/60">
-            <button
-              onClick={() => onTabChange?.("home")}
-              className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
-                activeTab === "home"
-                  ? "bg-white text-slate-900 shadow-xs border border-slate-250"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
-            >
-              Home
-            </button>
-            <button
-              onClick={() => onTabChange?.("classifieds")}
-              className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
-                activeTab === "classifieds"
-                  ? "bg-white text-slate-900 shadow-xs border border-slate-250"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
-            >
-              Sell
-            </button>
-            <button
-              onClick={() => onTabChange?.("classifieds")}
-              className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
-                activeTab === "classifieds"
-                  ? "bg-white text-slate-900 shadow-xs border border-slate-250"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
-            >
-              Need
-            </button>
-            <button
-              onClick={() => onTabChange?.("services")}
-              className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
-                activeTab === "services"
-                  ? "bg-white text-slate-900 shadow-xs border border-slate-250"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
-            >
-              Local Service
-            </button>
-            <button
-              onClick={() => onTabChange?.("shops")}
-              className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
-                activeTab === "shops"
-                  ? "bg-white text-slate-900 shadow-xs border border-slate-250"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
-            >
-              Local Offer
-            </button>
-          </div>
-        )}
+        <div className="hidden sm:flex items-center gap-1 bg-slate-100/80 p-1 rounded-2xl border border-slate-200/60">
+          <button
+            onClick={() => router.push("/")}
+            className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
+              pathname === "/"
+                ? "bg-white text-slate-900 shadow-xs border border-slate-250"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            Home
+          </button>
+          <button
+            onClick={() => router.push("/sell")}
+            className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
+              pathname === "/sell"
+                ? "bg-white text-slate-900 shadow-xs border border-slate-250"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            Sell
+          </button>
+          <button
+            onClick={() => router.push("/need")}
+            className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
+              pathname === "/need"
+                ? "bg-white text-slate-900 shadow-xs border border-slate-250"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            Need
+          </button>
+          <button
+            onClick={() => router.push("/services")}
+            className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
+              pathname === "/services"
+                ? "bg-white text-slate-900 shadow-xs border border-slate-250"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            Local Service
+          </button>
+          <button
+            onClick={() => router.push("/shops")}
+            className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
+              pathname === "/shops"
+                ? "bg-white text-slate-900 shadow-xs border border-slate-250"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            Local Offer
+          </button>
+        </div>
 
         {/* Right: Verified Profile Icon Button / Verify Mobile */}
         <div className="flex items-center gap-2 shrink-0">
