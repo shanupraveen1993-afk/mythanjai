@@ -99,6 +99,62 @@ export default function ServicesPage() {
     }
   };
 
+  // Seed initial sample technicians in local state
+  const [localServices, setLocalServices] = useState<ServiceProviderPost[]>([
+    {
+      id: "senthil_electrician",
+      userId: "sample_user_s1",
+      name: "Senthil Kumar - Home Electrician",
+      skill_category: "Electrician",
+      experience: "8+ Years Experience",
+      area_tag: "Tanjore Town",
+      phone: "9876543213",
+      rating: 4.9,
+      description: "Expert house wiring, DB box installation, inverter assembly, three-phase connection & emergency electrical fixes.",
+      is_verified: true,
+      created_at: new Date() as any,
+    },
+    {
+      id: "rajesh_plumber",
+      userId: "sample_user_s2",
+      name: "Rajesh K - Expert Plumber",
+      skill_category: "Plumber",
+      experience: "6+ Years Experience",
+      area_tag: "Medical College Rd",
+      phone: "9876543214",
+      rating: 4.8,
+      description: "Pipe fitting, water tank washing, Kaveri line tap connections, motor pump installation & leak repairs.",
+      is_verified: true,
+      created_at: new Date() as any,
+    },
+    {
+      id: "venu_carpenter",
+      userId: "sample_user_s3",
+      name: "Venu Gopal - Wood Architect",
+      skill_category: "Carpenter",
+      experience: "10+ Years Experience",
+      area_tag: "South Rampart Rd",
+      phone: "9876543215",
+      rating: 5.0,
+      description: "Modular kitchen woodworks, door laminations, door locks repairs, bespoke wardrobes & furniture.",
+      is_verified: true,
+      created_at: new Date() as any,
+    }
+  ]);
+
+  const targetPostId = searchParams.get("post");
+  useEffect(() => {
+    if (targetPostId) {
+      const timer = setTimeout(() => {
+        const el = document.getElementById(`post-${targetPostId}`);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }, 400);
+      return () => clearTimeout(timer);
+    }
+  }, [targetPostId]);
+
   // Expand form if ?create=true is in URL query parameters
   const triggerCreate = searchParams.get("create") === "true";
   useEffect(() => {
@@ -113,50 +169,6 @@ export default function ServicesPage() {
     }
   }, [triggerCreate, profile, loading]);
 
-  const [localServices, setLocalServices] = useState<ServiceProviderPost[]>([
-    {
-      id: "sample_s1",
-      userId: "sample_tech_1",
-      name: "Senthil Kumar - Home Electrician",
-      skill_category: "Electrician",
-      experience: "8 Years",
-      area_tag: "Tanjore Town (General)",
-      phone: "919994837342",
-      rating: 4.9,
-      is_verified: true,
-      created_at: new Date() as any,
-      description: "8+ Years Experience. House wiring, DB box, inverter assembly & 24/7 quick emergency repairs.",
-      pinned: true,
-    },
-    {
-      id: "sample_s2",
-      userId: "sample_tech_2",
-      name: "Rajesh K - Expert Plumber",
-      skill_category: "Plumber",
-      experience: "6 Years",
-      area_tag: "Medical College Road",
-      phone: "919994837342",
-      rating: 4.8,
-      is_verified: true,
-      created_at: new Date() as any,
-      description: "Pipe fitting, water tank washing, Kaveri line tap connections, motor pump fitting & leak fixes.",
-      pinned: true,
-    },
-    {
-      id: "sample_s3",
-      userId: "sample_tech_3",
-      name: "Venu Gopal - Wood Architect & Carpenter",
-      skill_category: "Carpenter",
-      experience: "10 Years",
-      area_tag: "South Rampart",
-      phone: "919994837342",
-      rating: 5.0,
-      is_verified: true,
-      created_at: new Date() as any,
-      description: "Modular kitchen woodworks, door laminations, locks repairs, wardrobe assembly & bespoke furniture.",
-      pinned: true,
-    },
-  ]);
 
   // Firestore Real-time Query Subscription
   const { data: services, loading: servicesLoading } = useFirestore<ServiceProviderPost>({
@@ -564,7 +576,9 @@ export default function ServicesPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {combinedServices.map((service) => (
-                <ServiceCard key={service.id} post={service} />
+                <div key={service.id} id={`post-${service.id}`} className="transition-all duration-500">
+                  <ServiceCard post={service} />
+                </div>
               ))}
             </div>
           )}

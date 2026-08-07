@@ -165,6 +165,71 @@ export default function ClassifiedsPage() {
     setFormType(activeType);
   }, [activeType]);
 
+  // Seed initial sample posts in local state
+  const [localPosts, setLocalPosts] = useState<NeedOrSalePost[]>([
+    {
+      id: "cmda_plot",
+      userId: "sample_user_1",
+      type: "SELL",
+      title: "2400 Sqft CMDA Plot for Sale",
+      raw_text: "2400 Sqft CMDA Plot for Sale",
+      description: "DTCP approved residential plot with 30ft tar road frontage and Kaveri water line connection ready near Vallam.",
+      category: "Plot / Real Estate",
+      area_tag: "Vallam, Thanjavur",
+      price: "2450000",
+      phone: "9876543210",
+      image_url: "/thanjavur_temple_illustration.png",
+      is_verified: true,
+      created_at: new Date() as any,
+      expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) as any,
+    },
+    {
+      id: "house_rental",
+      userId: "sample_user_2",
+      type: "SELL",
+      title: "2 BHK Independent House for Rent",
+      raw_text: "2 BHK Independent House for Rent",
+      description: "Modular kitchen, 2 bathrooms, 24/7 Kaveri water supply, dedicated car parking. Close to Medical College Rd.",
+      category: "Property Rental",
+      area_tag: "Medical College Rd",
+      price: "12500",
+      phone: "9876543211",
+      image_url: "/hero_building_visual.png",
+      is_verified: true,
+      created_at: new Date() as any,
+      expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) as any,
+    },
+    {
+      id: "hero_bike",
+      userId: "sample_user_3",
+      type: "SELL",
+      title: "Hero Splendor (2022 Model)",
+      raw_text: "Hero Splendor (2022 Model)",
+      description: "Single owner, excellent mileage 65+ kmpl, clean insurance documents, pristine condition near New Bus Stand.",
+      category: "Used Vehicles",
+      area_tag: "New Bus Stand",
+      price: "68000",
+      phone: "9876543212",
+      image_url: "/namma_thanjai_logo.png",
+      is_verified: true,
+      created_at: new Date() as any,
+      expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) as any,
+    }
+  ]);
+
+  const targetPostId = searchParams.get("post");
+  useEffect(() => {
+    if (targetPostId) {
+      const timer = setTimeout(() => {
+        const el = document.getElementById(`post-${targetPostId}`);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }, 400);
+      return () => clearTimeout(timer);
+    }
+  }, [targetPostId]);
+
   // Handle header ?create=true URL parameter trigger
   const triggerCreate = searchParams.get("create") === "true";
   useEffect(() => {
@@ -179,59 +244,6 @@ export default function ClassifiedsPage() {
     }
   }, [triggerCreate, profile, loading]);
 
-  const [localPosts, setLocalPosts] = useState<NeedOrSalePost[]>([
-    {
-      id: "sample_1",
-      userId: "sample_seller_1",
-      type: "SELL",
-      raw_text: "2400 Sqft CMDA Approved Plot Land for sale near Vallam Bus Stand, Thanjavur.",
-      title: "2400 Sqft CMDA Approved Plot Land",
-      description: "DTCP approved residential plot with 30ft tar road frontage and Kaveri water connection line near Vallam Bus Stand.",
-      category: "Real Estate & Housing",
-      area_tag: "Vallam",
-      price: 2450000,
-      phone: "919994837342",
-      is_verified: true,
-      created_at: new Date() as any,
-      expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) as any,
-      image_url: "/thanjavur_temple_illustration.png",
-      pinned: true,
-    },
-    {
-      id: "sample_2",
-      userId: "sample_seller_2",
-      type: "SELL",
-      raw_text: "2 BHK Independent House for Rent near Medical College Road.",
-      title: "2 BHK Independent House for Rent",
-      description: "Modular kitchen, 2 bathrooms, 24/7 Kaveri water supply, dedicated car parking in quiet residential colony.",
-      category: "Real Estate & Housing",
-      area_tag: "Medical College Road",
-      price: 12500,
-      phone: "919994837342",
-      is_verified: true,
-      created_at: new Date() as any,
-      expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) as any,
-      image_url: "/hero_building_visual.png",
-      pinned: true,
-    },
-    {
-      id: "sample_3",
-      userId: "sample_seller_3",
-      type: "SELL",
-      raw_text: "Hero Splendor Plus 2022 Model for sale.",
-      title: "Hero Splendor Plus (2022 Model)",
-      description: "Single owner, excellent mileage 65+ kmpl, clean insurance documents, pristine condition.",
-      category: "Motor Vehicles",
-      area_tag: "New Bus Stand",
-      price: 68000,
-      phone: "919994837342",
-      is_verified: true,
-      created_at: new Date() as any,
-      expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) as any,
-      image_url: "/namma_thanjai_logo.png",
-      pinned: true,
-    },
-  ]);
 
   // Real-time Firestore Query subscription
   const { data: posts, loading: postsLoading } = useFirestore<NeedOrSalePost>({
@@ -826,7 +838,9 @@ export default function ClassifiedsPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {sortedPosts.map((post) => (
-                <NeedCard key={post.id} post={post} />
+                <div key={post.id} id={`post-${post.id}`} className="transition-all duration-500">
+                  <NeedCard post={post} />
+                </div>
               ))}
             </div>
           )}

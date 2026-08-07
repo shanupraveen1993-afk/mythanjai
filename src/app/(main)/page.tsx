@@ -97,7 +97,7 @@ export default function HomeLandingPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {/* Card 1 */}
               <div 
-                onClick={() => router.push("/classifieds?category=Plot%20%2f%20Real%20Estate")}
+                onClick={() => router.push("/classifieds?category=Plot%20%2f%20Real%20Estate&post=cmda_plot")}
                 className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
               >
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
@@ -126,14 +126,14 @@ export default function HomeLandingPage() {
                     <span>Vallam, Thanjavur</span>
                   </div>
                   <span className="text-yellow-600 font-black hover:underline">
-                    View Classifieds →
+                    View Post in Feed →
                   </span>
                 </div>
               </div>
 
               {/* Card 2 */}
               <div 
-                onClick={() => router.push("/classifieds?category=Property%20Rental")}
+                onClick={() => router.push("/classifieds?category=Property%20Rental&post=house_rental")}
                 className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
               >
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
@@ -162,14 +162,14 @@ export default function HomeLandingPage() {
                     <span>Medical College Rd</span>
                   </div>
                   <span className="text-yellow-600 font-black hover:underline">
-                    View Classifieds →
+                    View Post in Feed →
                   </span>
                 </div>
               </div>
 
               {/* Card 3 */}
               <div 
-                onClick={() => router.push("/classifieds?category=Used%20Vehicles")}
+                onClick={() => router.push("/classifieds?category=Used%20Vehicles&post=hero_bike")}
                 className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
               >
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
@@ -198,7 +198,7 @@ export default function HomeLandingPage() {
                     <span>New Bus Stand</span>
                   </div>
                   <span className="text-yellow-600 font-black hover:underline">
-                    View Classifieds →
+                    View Post in Feed →
                   </span>
                 </div>
               </div>
@@ -227,7 +227,7 @@ export default function HomeLandingPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {/* Tech 1 */}
               <div 
-                onClick={() => router.push("/services?category=Electrician")}
+                onClick={() => router.push("/services?category=Electrician&post=senthil_electrician")}
                 className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
               >
                 <div className="flex justify-between items-center">
@@ -245,14 +245,14 @@ export default function HomeLandingPage() {
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
                   <span>View Electricians</span>
                   <span className="text-yellow-600 font-black hover:underline">
-                    Explore Trade →
+                    View Profile in Feed →
                   </span>
                 </div>
               </div>
 
               {/* Tech 2 */}
               <div 
-                onClick={() => router.push("/services?category=Plumber")}
+                onClick={() => router.push("/services?category=Plumber&post=rajesh_plumber")}
                 className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
               >
                 <div className="flex justify-between items-center">
@@ -270,14 +270,14 @@ export default function HomeLandingPage() {
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
                   <span>View Plumbers</span>
                   <span className="text-yellow-600 font-black hover:underline">
-                    Explore Trade →
+                    View Profile in Feed →
                   </span>
                 </div>
               </div>
 
               {/* Tech 3 */}
               <div 
-                onClick={() => router.push("/services?category=Carpenter")}
+                onClick={() => router.push("/services?category=Carpenter&post=venu_carpenter")}
                 className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
               >
                 <div className="flex justify-between items-center">
@@ -295,7 +295,7 @@ export default function HomeLandingPage() {
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
                   <span>View Carpenters</span>
                   <span className="text-yellow-600 font-black hover:underline">
-                    Explore Trade →
+                    View Profile in Feed →
                   </span>
                 </div>
               </div>
@@ -324,7 +324,7 @@ export default function HomeLandingPage() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {/* Featured Video Offer: GLEN EXCLUSIVE GALLERY */}
               <div 
-                onClick={() => router.push("/shops?category=Electronics%20Shop")}
+                onClick={() => router.push("/shops?category=Electronics%20Shop&post=glen_gallery")}
                 className="bg-white border-2 border-yellow-500/80 rounded-2xl p-4 shadow-sm flex flex-col gap-3 hover:shadow-md transition-shadow relative cursor-pointer"
               >
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-900 relative group">
@@ -356,14 +356,14 @@ export default function HomeLandingPage() {
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
                   <span>New Busstand Rd</span>
                   <span className="text-yellow-600 font-black hover:underline flex items-center gap-1">
-                    Explore Offers →
+                    View Offer in Feed →
                   </span>
                 </div>
               </div>
 
               {/* Offer 2 */}
               <div 
-                onClick={() => router.push("/shops?category=Cafe%20%26%20Restaurant")}
+                onClick={() => router.push("/shops?category=Cafe%20%26%20Restaurant&post=degree_coffee")}
                 className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
               >
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">

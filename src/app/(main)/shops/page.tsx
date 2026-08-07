@@ -122,7 +122,60 @@ export default function ShopsPage() {
     return CATEGORY_SAMPLE_POSTS[cat] || CATEGORY_SAMPLE_POSTS["Others"];
   };
 
-  // Inline Registration Form State
+  // Seed initial sample shops in local state
+  const [localShops, setLocalShops] = useState<ShopPost[]>([
+    {
+      id: "glen_gallery",
+      userId: "sample_user_shop1",
+      shop_name: "GLEN EXCLUSIVE GALLERY",
+      category: "Electronics Shop",
+      address_text: "New Busstand Road, Thanjavur",
+      landmark: "Near New Bus Stand",
+      hours: "9:30 AM - 9:00 PM",
+      phone: "9876543216",
+      area_tag: "New Busstand Rd",
+      offer_title: "Up to 60% OFF - Grand Opening Sale",
+      offer_description: "Grand Opening Sale! Up to 60% discount on all kitchen chimneys, built-in hobs, cooktops & gas stoves.",
+      video_url: "/videos/glen_gallery_offer.mp4",
+      image_url: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&auto=format&fit=crop",
+      latitude: 10.7852,
+      longitude: 79.1162,
+      is_claimed: true,
+      created_at: new Date() as any,
+    },
+    {
+      id: "degree_coffee",
+      userId: "sample_user_shop2",
+      shop_name: "Tanjore Degree Coffee",
+      category: "Cafe & Restaurant",
+      address_text: "Gandhiji Road, Thanjavur",
+      landmark: "Near Railway Station",
+      hours: "6:00 AM - 10:00 PM",
+      phone: "9876543217",
+      area_tag: "Gandhiji Rd",
+      offer_title: "Buy 1 Get 1 Free Degree Coffee",
+      offer_description: "Authentic traditional filter coffee brewed fresh with pure cow milk. Buy 1 Ghee Roast & Get 1 Free Degree Coffee.",
+      image_url: "/thanjavur_temple_illustration.png",
+      latitude: 10.7915,
+      longitude: 79.1305,
+      is_claimed: true,
+      created_at: new Date() as any,
+    }
+  ]);
+
+  const targetPostId = searchParams.get("post");
+  useEffect(() => {
+    if (targetPostId) {
+      const timer = setTimeout(() => {
+        const el = document.getElementById(`post-${targetPostId}`);
+        if (el) {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }, 400);
+      return () => clearTimeout(timer);
+    }
+  }, [targetPostId]);
+
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [shopName, setShopName] = useState("");
   const [address, setAddress] = useState("");
@@ -179,66 +232,6 @@ export default function ShopsPage() {
     category: selectedCategory || "All",
   });
 
-  const [localShops, setLocalShops] = useState<ShopPost[]>([
-    {
-      id: "glen_gallery_video_offer",
-      userId: "admin_account",
-      shop_name: "GLEN EXCLUSIVE GALLERY",
-      category: "Electronics Shop",
-      area_tag: "New Bus Stand",
-      phone: "919994388806",
-      image_url: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&auto=format&fit=crop",
-      video_url: "/videos/glen_gallery_offer.mp4",
-      latitude: 10.7852,
-      longitude: 79.1162,
-      address_text: "No 6, Jayendra Saraswathi Nagar, Opp to Bharath College, New Busstand Road, Thanjavur",
-      landmark: "Opposite to Bharath College",
-      hours: "9:30 AM - 9:00 PM",
-      is_claimed: true,
-      is_featured: true,
-      created_at: new Date() as any,
-      offer_title: "Grand Opening Sale - Up to 60% OFF 🔥🔥💚",
-      offer_description: "Grand Opening Sale! Up to 60% discount on all kitchen appliances & chimney products. Contact: 99943 88806 | 89460 48662.",
-    },
-    {
-      id: "tanjore_degree_coffee_offer",
-      userId: "admin_account",
-      shop_name: "Famous Tanjore Degree Coffee",
-      category: "Cafe & Restaurant",
-      area_tag: "Big Temple Area",
-      phone: "919994837342",
-      image_url: "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&auto=format&fit=crop",
-      latitude: 10.7915,
-      longitude: 79.1305,
-      address_text: "No. 12, East Main Street, Near Big Temple Entrance, Thanjavur",
-      landmark: "Near Temple Car Parking",
-      hours: "6:00 AM - 10:00 PM",
-      is_claimed: true,
-      is_featured: true,
-      created_at: new Date() as any,
-      offer_title: "Degree Coffee + Ghee Roast Deal ☕",
-      offer_description: "Buy 1 Ghee Roast & Get 1 Free Degree Coffee between 4 PM to 7 PM. Pure Filter Coffee made from fresh Kaveri milk!",
-    },
-    {
-      id: "tanjore_silk_saree_offer",
-      userId: "admin_account",
-      shop_name: "Tanjore Handloom Silk House",
-      category: "Textiles & Clothing",
-      area_tag: "South Rampart",
-      phone: "919994837342",
-      image_url: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=600&auto=format&fit=crop",
-      latitude: 10.7858,
-      longitude: 79.1285,
-      address_text: "Shop 8, South Rampart Road, Thanjavur",
-      landmark: "Beside Old Housing Board",
-      hours: "9:30 AM - 9:00 PM",
-      is_claimed: true,
-      is_featured: true,
-      created_at: new Date() as any,
-      offer_title: "Flat 20% OFF Silk Sarees 🥻",
-      offer_description: "20% direct store discount on pure Tanjore handloom silk sarees & bridal collections. Free gift voucher on purchases above ₹5,000!",
-    },
-  ]);
 
   const handleCategorySelect = (category: string) => {
     const currentParams = new URLSearchParams(searchParams.toString());
@@ -872,12 +865,13 @@ export default function ShopsPage() {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
               {[...localShops, ...(shops || [])].map((shop) => (
-                <ShopCard
-                  key={shop.id}
-                  post={shop}
-                  onMapToggle={handleMapToggle}
-                  isMapActive={mapShop?.id === shop.id}
-                />
+                <div key={shop.id} id={`post-${shop.id}`} className="transition-all duration-500">
+                  <ShopCard
+                    post={shop}
+                    onMapToggle={handleMapToggle}
+                    isMapActive={mapShop?.id === shop.id}
+                  />
+                </div>
               ))}
             </div>
           )}
