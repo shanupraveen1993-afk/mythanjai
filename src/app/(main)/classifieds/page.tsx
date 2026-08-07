@@ -446,14 +446,14 @@ export default function ClassifiedsPage() {
             </button>
           </div>
 
-          {/* Action Bar: Sort & Post */}
-          <div className="flex items-center justify-between py-1 border-b border-slate-100 mt-1">
+          {/* Universal Sticky Action Bar: Sort on Left, Post Ad on Right */}
+          <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 px-4 border border-slate-200/90 rounded-2xl shadow-xs flex items-center justify-between mt-1">
             <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
               <span>Sort by:</span>
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as any)}
-                className="bg-slate-100 border border-slate-200 rounded-lg px-2.5 py-1 text-[11px] font-black focus:outline-none cursor-pointer text-slate-700 font-bold"
+                className="bg-slate-100 border border-slate-200 rounded-xl px-3 py-1.5 text-[11px] font-black focus:outline-none cursor-pointer text-slate-800"
               >
                 <option value="recent">Latest First</option>
                 <option value="price_low">Price: Low to High</option>
@@ -466,11 +466,10 @@ export default function ClassifiedsPage() {
                 if (!profile?.isVerified) {
                   router.push(`/profile?auth=popup&redirect=${encodeURIComponent(`/classifieds?category=${encodeURIComponent(selectedCategory || "")}&create=true`)}`);
                 } else {
-                  setFormType(activeType);
                   setIsFormOpen(!isFormOpen);
                 }
               }}
-              className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-4 py-2 rounded-xl text-[11px] uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-sm"
+              className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-4 py-2 rounded-xl text-[11px] uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-xs"
             >
               <Plus className={`w-3.5 h-3.5 text-slate-955 transition-transform duration-250 ${isFormOpen ? "rotate-45" : ""}`} />
               <span>Post {activeType === "need" ? "Need" : "Ad"}</span>
@@ -485,36 +484,49 @@ export default function ClassifiedsPage() {
                   
                   {/* Left Column: Input Fields */}
                   <div className="flex flex-col gap-3.5">
-                    {/* Locked Post Type in Form */}
+                    {/* Post Type Tab Selector inside Form */}
                     <div>
                       <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1.5">
                         Posting Section
                       </label>
-                      <div className={`py-2.5 px-4 rounded-xl text-xs font-black select-none border ${
-                        formType === "need" 
-                          ? "bg-blue-50/65 text-blue-700 border-blue-200/80" 
-                          : "bg-emerald-50/65 text-emerald-700 border-emerald-200/80"
-                      }`}>
-                        {formType === "need" ? "📢 Buying / Looking For (Posting to this tab)" : "🏷️ Selling / For Sale (Posting to this tab)"}
+                      <div className="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-xl border border-slate-200">
+                        <button
+                          type="button"
+                          onClick={() => setFormType("need")}
+                          className={`py-2 text-center rounded-lg text-xs font-black transition-all cursor-pointer ${
+                            formType === "need" ? "bg-white text-blue-700 shadow-2xs" : "text-slate-600"
+                          }`}
+                        >
+                          📢 Buying / Looking For
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setFormType("sale")}
+                          className={`py-2 text-center rounded-lg text-xs font-black transition-all cursor-pointer ${
+                            formType === "sale" ? "bg-white text-emerald-700 shadow-2xs" : "text-slate-600"
+                          }`}
+                        >
+                          🏷️ Selling / For Sale
+                        </button>
                       </div>
                     </div>
 
-                    {/* 1. Location (Thanjavur Locality Dropdown) */}
+                    {/* 1. Free-Text Location Input (AI Verified Thanjavur District Area) */}
                     <div>
                       <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1">
-                        Locality Area (Thanjavur only)
+                        Thanjavur Area / Locality (Free-text entry)
                       </label>
-                      <select
+                      <input
+                        type="text"
+                        required
                         value={formArea}
-                        onChange={(e) => setFormArea(e.target.value as TanjoreLocality)}
-                        className="w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 focus:outline-none font-bold"
-                      >
-                        {TANJORE_LOCALITIES.map((loc) => (
-                          <option key={loc} value={loc}>
-                            {loc}
-                          </option>
-                        ))}
-                      </select>
+                        onChange={(e) => setFormArea(e.target.value as any)}
+                        placeholder="e.g. West Main St, Vallam, Tanjore Town, Medical College Rd"
+                        className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 focus:outline-none font-bold"
+                      />
+                      <span className="text-[9px] text-slate-400 block mt-1 leading-normal font-bold">
+                        AI verifies location is inside Thanjavur District.
+                      </span>
                     </div>
 
                     {/* 2. Title */}
@@ -532,7 +544,7 @@ export default function ClassifiedsPage() {
                       />
                     </div>
 
-                    {/* 3. Description & Gemini AI Polish */}
+                    {/* 3. Description (Auto AI Formatted Live) */}
                     <div>
                       <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1">
                         Description & Details
@@ -545,27 +557,6 @@ export default function ClassifiedsPage() {
                         rows={3}
                         className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 focus:outline-none"
                       />
-                      
-                      <div className="flex justify-end mt-1.5">
-                        <button
-                          type="button"
-                          disabled={polishLoading}
-                          onClick={handlePolishDescription}
-                          className="flex items-center gap-1.5 bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-755 border border-yellow-250/30 px-3 py-1.5 rounded-xl text-[10px] uppercase tracking-wider transition-all select-none active:scale-95 disabled:opacity-50 cursor-pointer font-bold"
-                        >
-                          {polishLoading ? (
-                            <>
-                              <Loader2 className="w-3.5 h-3.5 animate-spin text-yellow-600" />
-                              <span>Polishing...</span>
-                            </>
-                          ) : (
-                            <>
-                              <Sparkles className="w-3.5 h-3.5 text-yellow-600 fill-current" />
-                              <span>Polish with Gemini AI</span>
-                            </>
-                          )}
-                        </button>
-                      </div>
                     </div>
 
                     {/* 4. Price */}

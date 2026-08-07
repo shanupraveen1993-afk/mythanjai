@@ -61,6 +61,23 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false }: Sho
           {getCategoryIllustration(post.category)}
           <span className="capitalize">{post.category}</span>
         </span>
+
+        {/* Play Reel overlay if Instagram Reel link is present */}
+        {post.offer_social_link && (
+          <a
+            href={post.offer_social_link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="absolute inset-0 bg-black/30 hover:bg-black/20 flex items-center justify-center transition-all cursor-pointer group"
+          >
+            <div className="w-11 h-11 rounded-full bg-yellow-500/90 text-slate-955 flex items-center justify-center shadow-lg transform group-hover:scale-110 transition-transform">
+              <span className="text-base font-black ml-0.5">▶</span>
+            </div>
+            <span className="absolute bottom-2.5 left-2.5 bg-slate-950/80 text-white text-[8px] font-black uppercase tracking-wider px-2 py-0.5 rounded-lg backdrop-blur-xs flex items-center gap-1">
+              <span>Watch on Instagram Reel</span>
+            </span>
+          </a>
+        )}
       </div>
 
       {/* Info Details */}

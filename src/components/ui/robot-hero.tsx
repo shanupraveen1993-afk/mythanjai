@@ -894,11 +894,11 @@ export function RobotHero({
       {/* Light radial glow centered behind hero */}
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_45%,rgba(250,204,21,0.06)_0%,transparent_60%)] pointer-events-none" />
 
-      {/* Centered Main Hero Container */}
-      <div className="z-10 w-full max-w-3xl lg:max-w-4xl mx-auto flex flex-col items-center text-center gap-2.5 sm:gap-3.5 my-auto pointer-events-auto">
+      {/* Centered Main Hero Container - Extended layout filling horizontal space */}
+      <div className="z-10 w-full max-w-4xl lg:max-w-5xl mx-auto flex flex-col items-center text-center gap-3 sm:gap-4 my-auto pointer-events-auto">
         
-        {/* 1. Logo Badge + Static Bold Header Title: NAMMA THANJAVUR */}
-        <div className="flex flex-col items-center gap-1.5">
+        {/* 1. Logo Badge + Extended Big Header Title: NAMMA THANJAVUR */}
+        <div className="flex flex-col items-center gap-2 w-full">
           <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white shadow-md p-2 flex items-center justify-center shrink-0 border border-slate-150 mb-0.5">
             <img 
               src="/namma_thanjai_logo.png" 
@@ -906,16 +906,16 @@ export function RobotHero({
               className="w-full h-full object-contain" 
             />
           </div>
-          <h1 className="font-heading font-black text-2xl sm:text-4xl md:text-5xl text-slate-900 tracking-tight leading-none uppercase">
+          <h1 className="font-heading font-black text-3xl sm:text-5xl md:text-6xl lg:text-7xl text-slate-900 tracking-tight leading-none uppercase max-w-4xl">
             namma thanjavur<span className="text-yellow-500">.</span>
           </h1>
-          <p className="text-[9px] sm:text-xs text-slate-500 font-extrabold uppercase tracking-widest mt-0.5 sm:mt-1">
-            thanjavur verified noticeboard & helper trades
+          <p className="text-[10px] sm:text-xs md:text-sm text-slate-500 font-black uppercase tracking-widest mt-1">
+            thanjavur verified noticeboard & local helper trades
           </p>
         </div>
 
         {/* 2. Dynamic Rotational Topic (Bigger low-opacity light grey text) */}
-        <div className="h-7 sm:h-9 flex items-center justify-center my-0.5 overflow-hidden">
+        <div className="h-8 sm:h-10 flex items-center justify-center my-0.5 overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.h2
               key={wordIndex}
@@ -923,69 +923,69 @@ export function RobotHero({
               animate={{ opacity: 0.25, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 6, scale: 1.05 }}
               transition={{ duration: 0.25 }}
-              className="font-sans font-black text-xl sm:text-3xl text-slate-400 uppercase tracking-widest text-center select-none"
+              className="font-sans font-black text-xl sm:text-3xl md:text-4xl text-slate-400 uppercase tracking-widest text-center select-none"
             >
               {words[wordIndex]}
             </motion.h2>
           </AnimatePresence>
         </div>
 
-        {/* 3. Mascot Robot Canvas */}
-        <div 
-          onClick={handleRobotTap} 
-          className="w-full max-w-[280px] sm:max-w-[340px] h-[200px] sm:h-[250px] md:h-[280px] relative flex items-center justify-center cursor-pointer my-0.5"
-        >
-          <Canvas shadows camera={{ position: [0, 0.12, 3.6], fov: 38 }}>
-            <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
-            <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} castShadow shadow-mapSize={[512, 512]} shadow-bias={-0.0005} />
-            <Environment preset="studio" blur={0.5} />
-            <ResponsiveGroup scale={scale * 0.85}>
-              <ContactShadows position={[0, -0.79, 0]} opacity={entorno.sombraOpacidad} scale={10} resolution={256} blur={entorno.sombraBlur} far={2.5} color="#000000" />
-              <RobotPrototype neckParams={{ baseR: 0.215, baseH: -0.05, midR: 0.28, midH: 0.02, lipBottomR: 0.295, lipBottomH: 0.045, lipTopR: 0.27, lipTopH: 0.055, innerR: 0.1, innerDropH: 0.0 }} bodyParams={{ bodyBevelR: 0.235, bodyBevelY: 0.34, bodyBevelT: 0.025 }} color={color} pantallaColor={pantallaColor} pantallaBrillo={pantallaBrillo} blinkCycle={blinkCycle} metalness={metalness} />
-            </ResponsiveGroup>
-          </Canvas>
-        </div>
-
-        {/* 4. 3 Standalone Separate Clickable Buttons */}
-        <div className="grid grid-cols-3 gap-2 sm:gap-3.5 w-full max-w-lg mt-0.5">
+        {/* 3. 3 Standalone Separate Clickable Buttons (Positioned ABOVE Robot with generous padding) */}
+        <div className="grid grid-cols-3 gap-2.5 sm:gap-4 w-full max-w-2xl px-2 my-1">
           <button
             type="button"
             onClick={() => onCategoryClick?.("classifieds")}
-            className="py-2.5 sm:py-3 px-2 sm:px-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-250 text-slate-900 shadow-2xs hover:shadow-xs hover:border-yellow-400 transition-all text-center flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer font-black text-[10px] sm:text-xs uppercase tracking-wider active:scale-[0.97]"
+            className="py-3 sm:py-4 px-3 sm:px-6 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-900 shadow-xs hover:shadow-md hover:border-yellow-400 transition-all text-center flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer font-black text-[11px] sm:text-xs md:text-sm uppercase tracking-wider active:scale-[0.97]"
           >
             <span>📢 Buy & Sell</span>
           </button>
           <button
             type="button"
             onClick={() => onCategoryClick?.("services")}
-            className="py-2.5 sm:py-3 px-2 sm:px-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-250 text-slate-900 shadow-2xs hover:shadow-xs hover:border-yellow-400 transition-all text-center flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer font-black text-[10px] sm:text-xs uppercase tracking-wider active:scale-[0.97]"
+            className="py-3 sm:py-4 px-3 sm:px-6 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-900 shadow-xs hover:shadow-md hover:border-yellow-400 transition-all text-center flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer font-black text-[11px] sm:text-xs md:text-sm uppercase tracking-wider active:scale-[0.97]"
           >
             <span>🛠️ Services</span>
           </button>
           <button
             type="button"
             onClick={() => onCategoryClick?.("shops")}
-            className="py-2.5 sm:py-3 px-2 sm:px-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-250 text-slate-900 shadow-2xs hover:shadow-xs hover:border-yellow-400 transition-all text-center flex items-center justify-center gap-1 sm:gap-1.5 cursor-pointer font-black text-[10px] sm:text-xs uppercase tracking-wider active:scale-[0.97]"
+            className="py-3 sm:py-4 px-3 sm:px-6 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-900 shadow-xs hover:shadow-md hover:border-yellow-400 transition-all text-center flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer font-black text-[11px] sm:text-xs md:text-sm uppercase tracking-wider active:scale-[0.97]"
           >
             <span>🏪 Shops</span>
           </button>
         </div>
 
-        {/* 5. Single Primary Action Button: REGISTER TO POST */}
+        {/* 4. Mascot Robot Canvas (Middle section) */}
+        <div 
+          onClick={handleRobotTap} 
+          className="w-full max-w-[260px] sm:max-w-[320px] h-[190px] sm:h-[240px] md:h-[270px] relative flex items-center justify-center cursor-pointer my-0.5"
+        >
+          <Canvas shadows camera={{ position: [0, 0.12, 3.6], fov: 38 }}>
+            <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
+            <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} castShadow shadow-mapSize={[512, 512]} shadow-bias={-0.0005} />
+            <Environment preset="studio" blur={0.5} />
+            <ResponsiveGroup scale={scale * 0.82}>
+              <ContactShadows position={[0, -0.79, 0]} opacity={entorno.sombraOpacidad} scale={10} resolution={256} blur={entorno.sombraBlur} far={2.5} color="#000000" />
+              <RobotPrototype neckParams={{ baseR: 0.215, baseH: -0.05, midR: 0.28, midH: 0.02, lipBottomR: 0.295, lipBottomH: 0.045, lipTopR: 0.27, lipTopH: 0.055, innerR: 0.1, innerDropH: 0.0 }} bodyParams={{ bodyBevelR: 0.235, bodyBevelY: 0.34, bodyBevelT: 0.025 }} color={color} pantallaColor={pantallaColor} pantallaBrillo={pantallaBrillo} blinkCycle={blinkCycle} metalness={metalness} />
+            </ResponsiveGroup>
+          </Canvas>
+        </div>
+
+        {/* 5. Single Primary Action Button: REGISTER TO POST (Below Robot ONLY) */}
         <div className="w-full max-w-lg mt-1">
           <button
             type="button"
             onClick={onCtaClick}
-            className="w-full py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs sm:text-sm uppercase tracking-wider transition-all hover:scale-[1.01] active:scale-[0.98] shadow-md shadow-yellow-500/20 border-0 text-center flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-4 sm:py-4.5 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs sm:text-sm md:text-base uppercase tracking-wider transition-all hover:scale-[1.01] active:scale-[0.98] shadow-md shadow-yellow-500/20 border-0 text-center flex items-center justify-center gap-2 cursor-pointer"
           >
             <span>{ctaText === "Verified" ? "Verified Profile" : "Register to Post"}</span>
             <ArrowRight className="w-4 h-4 text-slate-955" />
           </button>
         </div>
 
-        {/* 6. Live Ticker Alert Banner */}
+        {/* 6. Live Ticker Alert Banner (Below Robot ONLY) */}
         {alerts.length > 0 && (
-          <div className="w-full bg-slate-900 border border-slate-800 text-white rounded-2xl py-1.5 sm:py-2 px-4 shadow-sm flex items-center justify-between text-[11px] sm:text-xs font-black select-none max-w-lg mx-auto tracking-wide mt-2 sm:mt-3">
+          <div className="w-full bg-slate-900 border border-slate-800 text-white rounded-2xl py-2 px-4 shadow-sm flex items-center justify-between text-[11px] sm:text-xs font-black select-none max-w-lg mx-auto tracking-wide mt-2">
             <div className="flex items-center gap-2.5 overflow-hidden w-full text-left">
               <span className="bg-yellow-500 text-slate-950 font-black text-[8px] px-2 py-0.5 rounded-md uppercase shrink-0 animate-pulse">
                 LIVE

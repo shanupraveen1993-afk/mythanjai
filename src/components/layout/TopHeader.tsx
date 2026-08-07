@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { MapPin, Plus, User, ShieldCheck } from "lucide-react";
+import { MapPin, Plus, User, ShieldCheck, ArrowLeft } from "lucide-react";
 import { TANJORE_LOCALITIES, TanjoreLocality } from "@/lib/constants";
 import { AppTab } from "./BottomTabBar";
 import { useAuth } from "@/hooks/use-auth";
@@ -39,17 +39,28 @@ export default function TopHeader({
           DESKTOP LAYOUT (>= md)
           ========================================== */}
       <div className="hidden md:flex items-center justify-between w-full max-w-7xl mx-auto px-6 py-4">
-        {/* Branding Logo - Left */}
-        <div 
-          onClick={() => onTabChange?.("home")}
-          className="flex items-center gap-2.5 cursor-pointer select-none"
-        >
-          <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-9 h-9 object-contain shrink-0 rounded-xl shadow-2xs border border-slate-100" />
-          <div className="flex items-center gap-0.5">
-            <span className="font-heading font-black tracking-tight text-slate-900 text-base uppercase">
-              namma thanjavur
-            </span>
-            <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 ml-0.5" />
+        {/* Branding Logo - Left with Back Button if subpage */}
+        <div className="flex items-center gap-3">
+          {activeTab && activeTab !== "home" && (
+            <button
+              onClick={() => onTabChange?.("home")}
+              className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors flex items-center justify-center cursor-pointer border-0"
+              title="Back to Home"
+            >
+              <ArrowLeft className="w-4 h-4 text-slate-800" />
+            </button>
+          )}
+          <div 
+            onClick={() => onTabChange?.("home")}
+            className="flex items-center gap-2.5 cursor-pointer select-none"
+          >
+            <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-9 h-9 object-contain shrink-0 rounded-xl shadow-2xs border border-slate-100" />
+            <div className="flex items-center gap-0.5">
+              <span className="font-heading font-black tracking-tight text-slate-900 text-base uppercase">
+                namma thanjavur
+              </span>
+              <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 ml-0.5" />
+            </div>
           </div>
         </div>
 
@@ -69,7 +80,7 @@ export default function TopHeader({
           ) : (
             <button
               onClick={onSignInClick}
-              className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 border border-yellow-400/30 text-slate-950 font-black px-4 py-2 rounded-xl text-xs transition-colors cursor-pointer shadow-sm shadow-yellow-500/10"
+              className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 border border-yellow-400/30 text-slate-955 font-black px-4 py-2 rounded-xl text-xs transition-colors cursor-pointer shadow-sm shadow-yellow-500/10"
             >
               <User className="w-3.5 h-3.5 text-slate-955" />
               <span>Sign In</span>
@@ -83,17 +94,27 @@ export default function TopHeader({
           ========================================== */}
       <div className="flex flex-col gap-2.5 p-3.5 md:hidden">
         <div className="flex items-center justify-between">
-          {/* Logo link */}
-          <div 
-            onClick={() => onTabChange?.("home")}
-            className="flex items-center gap-2 cursor-pointer select-none"
-          >
-            <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-7 h-7 object-contain shrink-0 rounded-lg shadow-xs" />
-            <div className="flex items-center gap-0.5">
-              <span className="font-sans font-black tracking-tight text-slate-900 text-xs">
-                namma thanjai
-              </span>
-              <div className="w-1 h-1 rounded-full bg-yellow-500" />
+          {/* Logo link with Back Button if subpage */}
+          <div className="flex items-center gap-2">
+            {activeTab && activeTab !== "home" && (
+              <button
+                onClick={() => onTabChange?.("home")}
+                className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors flex items-center justify-center cursor-pointer border-0 mr-1"
+              >
+                <ArrowLeft className="w-4 h-4 text-slate-800" />
+              </button>
+            )}
+            <div 
+              onClick={() => onTabChange?.("home")}
+              className="flex items-center gap-2 cursor-pointer select-none"
+            >
+              <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-7 h-7 object-contain shrink-0 rounded-lg shadow-xs" />
+              <div className="flex items-center gap-0.5">
+                <span className="font-sans font-black tracking-tight text-slate-900 text-xs uppercase">
+                  namma thanjavur
+                </span>
+                <div className="w-1 h-1 rounded-full bg-yellow-500" />
+              </div>
             </div>
           </div>
 
