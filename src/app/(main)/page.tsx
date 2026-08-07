@@ -24,7 +24,8 @@ import {
   Hammer,
   Utensils,
   ShoppingBag,
-  Shirt
+  Shirt,
+  ShieldCheck
 } from "lucide-react";
 import Image from "next/image";
 import RobotHero from "@/components/ui/robot-hero";
@@ -87,7 +88,7 @@ export default function HomeLandingPage() {
                 onClick={() => router.push("/classifieds")}
                 className="text-xs font-black text-yellow-600 hover:text-yellow-750 flex items-center gap-1 hover:underline cursor-pointer"
               >
-                <span>View All Buy & Sell Ads →</span>
+                <span>View All Classifieds →</span>
               </button>
             </div>
 
@@ -97,7 +98,7 @@ export default function HomeLandingPage() {
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
                   <Image 
                     src="/thanjavur_temple_illustration.png" 
-                    alt="2 Acre Land Plot" 
+                    alt="Plot Land for Sale" 
                     fill 
                     className="object-cover hover:scale-105 transition-transform duration-300"
                   />
@@ -107,19 +108,19 @@ export default function HomeLandingPage() {
                 </div>
                 <div className="flex justify-between items-center mt-1">
                   <h3 className="font-heading font-extrabold text-sm text-slate-800">
-                    2 Acre Plot near Vallam
+                    2400 Sqft CMDA Plot
                   </h3>
-                  <span className="text-xs font-black text-slate-900">₹45,00,000</span>
+                  <span className="text-xs font-black text-yellow-600">₹24,50,000</span>
                 </div>
                 <p className="text-xs text-slate-500 font-semibold leading-relaxed">
-                  Clear titles, tar road access, Kaveri water line available near Vallam Bus Stand.
+                  DTCP approved residential plot with 30ft tar road frontage and Kaveri water connection line.
                 </p>
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
                   <div className="flex items-center gap-1">
                     <MapPin className="w-3.5 h-3.5 text-slate-400" />
                     <span>Vallam, Thanjavur</span>
                   </div>
-                  <button onClick={handleAuthModalOpen} className="text-yellow-600 font-black hover:underline cursor-pointer">
+                  <button onClick={() => router.push("/classifieds")} className="text-yellow-600 font-black hover:underline cursor-pointer">
                     Details →
                   </button>
                 </div>
@@ -152,7 +153,7 @@ export default function HomeLandingPage() {
                     <MapPin className="w-3.5 h-3.5 text-slate-400" />
                     <span>Medical College Rd</span>
                   </div>
-                  <button onClick={handleAuthModalOpen} className="text-yellow-600 font-black hover:underline cursor-pointer">
+                  <button onClick={() => router.push("/classifieds")} className="text-yellow-600 font-black hover:underline cursor-pointer">
                     Details →
                   </button>
                 </div>
@@ -185,7 +186,7 @@ export default function HomeLandingPage() {
                     <MapPin className="w-3.5 h-3.5 text-slate-400" />
                     <span>New Bus Stand</span>
                   </div>
-                  <button onClick={handleAuthModalOpen} className="text-yellow-600 font-black hover:underline cursor-pointer">
+                  <button onClick={() => router.push("/classifieds")} className="text-yellow-600 font-black hover:underline cursor-pointer">
                     Details →
                   </button>
                 </div>
@@ -203,7 +204,7 @@ export default function HomeLandingPage() {
                 </h2>
               </div>
               <button
-                onClick={handleAuthModalOpen}
+                onClick={() => router.push("/services")}
                 className="text-xs font-black text-yellow-600 hover:text-yellow-750 flex items-center gap-1 hover:underline cursor-pointer"
               >
                 <span>View All Services →</span>
@@ -217,7 +218,7 @@ export default function HomeLandingPage() {
                   <span className="text-[9px] font-black uppercase text-amber-750 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-200">
                     Electrician
                   </span>
-                  <span className="text-xs font-black text-emerald-600">Rating: 4.9</span>
+                  <span className="text-xs font-black text-emerald-600">Verified</span>
                 </div>
                 <h3 className="font-heading font-extrabold text-sm text-slate-800">
                   Senthil Kumar - Home Electrician
@@ -227,7 +228,7 @@ export default function HomeLandingPage() {
                 </p>
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
                   <span>Tanjore Town</span>
-                  <button onClick={handleAuthModalOpen} className="text-yellow-600 font-black hover:underline cursor-pointer">
+                  <button onClick={() => router.push("/services")} className="text-yellow-600 font-black hover:underline cursor-pointer">
                     Hire Technician →
                   </button>
                 </div>
@@ -239,7 +240,7 @@ export default function HomeLandingPage() {
                   <span className="text-[9px] font-black uppercase text-blue-750 bg-blue-500/10 px-2 py-0.5 rounded-md border border-blue-200">
                     Plumber
                   </span>
-                  <span className="text-xs font-black text-emerald-600">Rating: 4.8</span>
+                  <span className="text-xs font-black text-emerald-600">Verified</span>
                 </div>
                 <h3 className="font-heading font-extrabold text-sm text-slate-800">
                   Rajesh K - Expert Plumber
@@ -249,7 +250,7 @@ export default function HomeLandingPage() {
                 </p>
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
                   <span>Medical College Rd</span>
-                  <button onClick={handleAuthModalOpen} className="text-yellow-600 font-black hover:underline cursor-pointer">
+                  <button onClick={() => router.push("/services")} className="text-yellow-600 font-black hover:underline cursor-pointer">
                     Hire Technician →
                   </button>
                 </div>
@@ -261,7 +262,7 @@ export default function HomeLandingPage() {
                   <span className="text-[9px] font-black uppercase text-purple-750 bg-purple-500/10 px-2 py-0.5 rounded-md border border-purple-200">
                     Carpenter
                   </span>
-                  <span className="text-xs font-black text-emerald-600">Rating: 5.0</span>
+                  <span className="text-xs font-black text-emerald-600">Verified</span>
                 </div>
                 <h3 className="font-heading font-extrabold text-sm text-slate-800">
                   Venu Gopal - Wood Architect
@@ -271,7 +272,7 @@ export default function HomeLandingPage() {
                 </p>
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
                   <span>South Rampart Rd</span>
-                  <button onClick={handleAuthModalOpen} className="text-yellow-600 font-black hover:underline cursor-pointer">
+                  <button onClick={() => router.push("/services")} className="text-yellow-600 font-black hover:underline cursor-pointer">
                     Hire Technician →
                   </button>
                 </div>
@@ -289,7 +290,7 @@ export default function HomeLandingPage() {
                 </h2>
               </div>
               <button
-                onClick={handleAuthModalOpen}
+                onClick={() => router.push("/shops")}
                 className="text-xs font-black text-yellow-600 hover:text-yellow-750 flex items-center gap-1 hover:underline cursor-pointer"
               >
                 <span>View All Offers →</span>
@@ -297,7 +298,53 @@ export default function HomeLandingPage() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {/* Offer 1 */}
+              {/* Featured Instagram Reel Offer */}
+              <div className="bg-white border-2 border-yellow-500/80 rounded-2xl p-4 shadow-sm flex flex-col gap-3 hover:shadow-md transition-shadow relative">
+                <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-900 relative group">
+                  <Image 
+                    src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&auto=format&fit=crop" 
+                    alt="Instagram Reel Featured Deal" 
+                    fill 
+                    className="object-cover opacity-80 group-hover:scale-105 transition-transform duration-300"
+                    unoptimized
+                  />
+                  <span className="absolute top-2 left-2 text-[9px] font-black uppercase text-white bg-gradient-to-r from-purple-600 to-pink-600 px-2 py-0.5 rounded-md shadow-xs">
+                    📸 Instagram Reel Offer
+                  </span>
+                  <a
+                    href="https://www.instagram.com/p/DbqZ56FispV/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute inset-0 flex items-center justify-center bg-black/20 group-hover:bg-black/10 transition-colors"
+                  >
+                    <div className="w-10 h-10 rounded-full bg-white/90 text-pink-600 flex items-center justify-center font-black shadow-lg">
+                      ▶
+                    </div>
+                  </a>
+                </div>
+                <div className="flex justify-between items-center mt-1">
+                  <h3 className="font-heading font-extrabold text-sm text-slate-900">
+                    Thanjavur Featured Reel Offer
+                  </h3>
+                  <span className="text-xs font-black text-pink-600">Reel Deal</span>
+                </div>
+                <p className="text-xs text-slate-600 font-semibold leading-relaxed">
+                  Exclusive promotional deal extracted directly from Instagram Reel! Watch video reel for full promo offer codes.
+                </p>
+                <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
+                  <span>Melaveethi, Thanjavur</span>
+                  <a
+                    href="https://www.instagram.com/p/DbqZ56FispV/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-pink-600 font-black hover:underline cursor-pointer flex items-center gap-1"
+                  >
+                    Watch Reel →
+                  </a>
+                </div>
+              </div>
+
+              {/* Offer 2 */}
               <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow">
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
                   <Image 
@@ -321,13 +368,13 @@ export default function HomeLandingPage() {
                 </p>
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
                   <span>Near Big Temple</span>
-                  <button onClick={handleAuthModalOpen} className="text-yellow-600 font-black hover:underline cursor-pointer">
-                    View Offer Reel →
+                  <button onClick={() => router.push("/shops")} className="text-yellow-600 font-black hover:underline cursor-pointer">
+                    View Offer →
                   </button>
                 </div>
               </div>
 
-              {/* Offer 2 */}
+              {/* Offer 3 */}
               <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow">
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
                   <Image 
@@ -351,38 +398,8 @@ export default function HomeLandingPage() {
                 </p>
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
                   <span>South Rampart Rd</span>
-                  <button onClick={handleAuthModalOpen} className="text-yellow-600 font-black hover:underline cursor-pointer">
-                    View Offer Reel →
-                  </button>
-                </div>
-              </div>
-
-              {/* Offer 3 */}
-              <div className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-xs flex flex-col gap-3 hover:shadow-md transition-shadow">
-                <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
-                  <Image 
-                    src="/namma_thanjai_logo.png" 
-                    alt="Grocery Mart Offer" 
-                    fill 
-                    className="object-contain p-4 hover:scale-105 transition-transform duration-300 bg-slate-50"
-                  />
-                  <span className="absolute top-2 left-2 text-[9px] font-black uppercase text-emerald-950 bg-emerald-400 px-2 py-0.5 rounded-md shadow-xs">
-                    Flat 10% Off
-                  </span>
-                </div>
-                <div className="flex justify-between items-center mt-1">
-                  <h3 className="font-heading font-extrabold text-sm text-slate-800">
-                    Super Grocery Deal
-                  </h3>
-                  <span className="text-xs font-black text-emerald-600">10% Off</span>
-                </div>
-                <p className="text-xs text-slate-500 font-semibold leading-relaxed">
-                  10% direct discount on 25KG Ponni Rice bags with free Tanjore home delivery.
-                </p>
-                <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
-                  <span>Srinivasapuram</span>
-                  <button onClick={handleAuthModalOpen} className="text-yellow-600 font-black hover:underline cursor-pointer">
-                    View Offer Reel →
+                  <button onClick={() => router.push("/shops")} className="text-yellow-600 font-black hover:underline cursor-pointer">
+                    View Offer →
                   </button>
                 </div>
               </div>
@@ -392,81 +409,85 @@ export default function HomeLandingPage() {
         </div>
       ) : (
         /* ==========================================
-           GUEST ONBOARDING (MOBILE APP ONBOARDING ON MOBILE, ROBOT HERO ON DESKTOP)
+           GUEST ONBOARDING (NATIVE MOBILE APP ONBOARDING ON MOBILE, ROBOT HERO ON DESKTOP)
            ========================================== */
-        <div className="w-full relative flex flex-col">
+        <div className="w-full relative flex flex-col min-h-[85vh] justify-between">
           
-          {/* MOBILE APP ONBOARDING CONTAINER (Mobile Viewports ONLY) */}
-          <div className="block md:hidden w-full px-5 py-8 bg-gradient-to-b from-yellow-500/10 via-white to-white min-h-[85vh] flex flex-col justify-between items-center text-center">
+          {/* NATIVE MOBILE APP ONBOARDING CONTAINER (Mobile Viewports ONLY) */}
+          <div className="block md:hidden w-full px-6 py-6 bg-gradient-to-b from-yellow-500/15 via-slate-50/50 to-white min-h-[80vh] flex flex-col justify-between items-center text-center">
             
-            {/* Top Branding Emblem */}
-            <div className="flex flex-col items-center gap-3 mt-2">
-              <div className="w-20 h-20 rounded-3xl bg-white shadow-md p-2.5 flex items-center justify-center border border-yellow-300 shadow-yellow-500/10">
-                <Image 
-                  src="/namma_thanjai_logo.png" 
-                  alt="Namma Thanjavur Logo" 
-                  width={64}
-                  height={64}
-                  className="object-contain"
-                />
+            {/* Top Branding App Header */}
+            <div className="flex flex-col items-center gap-2.5 mt-2">
+              <div className="relative">
+                <div className="absolute inset-0 bg-yellow-500/20 rounded-3xl blur-md" />
+                <div className="relative w-20 h-20 rounded-3xl bg-white shadow-md p-2 flex items-center justify-center border border-yellow-300">
+                  <Image 
+                    src="/namma_thanjai_logo.png" 
+                    alt="Namma Thanjavur Logo" 
+                    width={64}
+                    height={64}
+                    className="object-contain"
+                  />
+                </div>
               </div>
-              <span className="text-[10px] font-black uppercase tracking-widest text-yellow-800 bg-yellow-400/30 border border-yellow-500/30 px-3 py-1 rounded-full">
-                Thanjavur Resident Hub
+              <span className="text-[9px] font-black uppercase tracking-widest text-yellow-850 bg-yellow-400/20 border border-yellow-500/30 px-3 py-1 rounded-full mt-1">
+                Thanjavur District App
               </span>
-              <h1 className="font-heading font-black text-3xl text-slate-900 tracking-tight leading-tight">
+              <h1 className="font-heading font-black text-2xl text-slate-900 tracking-tight leading-tight">
                 Namma Thanjavur<span className="text-yellow-500">.</span>
               </h1>
-              <p className="text-xs text-slate-600 font-semibold max-w-xs leading-relaxed">
-                Connect with verified local residents for buying, selling, helper trades, and exclusive shop deals.
+              <p className="text-[11px] text-slate-600 font-bold max-w-xs leading-relaxed">
+                Connect directly with verified local residents, helper tradesmen, and shops across Thanjavur.
               </p>
             </div>
 
-            {/* 3 Native App Feature Bullets */}
-            <div className="w-full flex flex-col gap-3 my-6 text-left">
-              <div className="bg-white border border-slate-200/80 rounded-2xl p-3.5 shadow-2xs flex items-center gap-3.5">
-                <div className="w-10 h-10 rounded-xl bg-yellow-500/10 text-yellow-600 flex items-center justify-center shrink-0 border border-yellow-250/60 font-black">
-                  <Building className="w-5 h-5" />
+            {/* 3 Native App Onboarding Cards */}
+            <div className="w-full flex flex-col gap-3 my-4 text-left">
+              <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 shadow-xs flex items-center gap-3.5">
+                <div className="w-10 h-10 rounded-2xl bg-yellow-500/15 text-yellow-700 flex items-center justify-center shrink-0 border border-yellow-300/60 font-black">
+                  <Building className="w-5 h-5 text-yellow-600" />
                 </div>
                 <div>
                   <h3 className="font-heading font-black text-xs text-slate-900">1. Buy & Sell Classifieds</h3>
-                  <p className="text-[11px] text-slate-500 font-semibold">Lands, House Rentals, Used Vehicles & Appliances</p>
+                  <p className="text-[10px] text-slate-500 font-semibold leading-tight mt-0.5">Plot Lands, Rentals, Used Vehicles & Appliances</p>
                 </div>
               </div>
 
-              <div className="bg-white border border-slate-200/80 rounded-2xl p-3.5 shadow-2xs flex items-center gap-3.5">
-                <div className="w-10 h-10 rounded-xl bg-yellow-500/10 text-yellow-600 flex items-center justify-center shrink-0 border border-yellow-250/60 font-black">
-                  <Wrench className="w-5 h-5" />
+              <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 shadow-xs flex items-center gap-3.5">
+                <div className="w-10 h-10 rounded-2xl bg-yellow-500/15 text-yellow-700 flex items-center justify-center shrink-0 border border-yellow-300/60 font-black">
+                  <Wrench className="w-5 h-5 text-yellow-600" />
                 </div>
                 <div>
                   <h3 className="font-heading font-black text-xs text-slate-900">2. Helper Trades & Services</h3>
-                  <p className="text-[11px] text-slate-500 font-semibold">Verified Electricians, Plumbers, Painters & Mechanics</p>
+                  <p className="text-[10px] text-slate-500 font-semibold leading-tight mt-0.5">Verified Electricians, Plumbers, Mechanics & Carpenters</p>
                 </div>
               </div>
 
-              <div className="bg-white border border-slate-200/80 rounded-2xl p-3.5 shadow-2xs flex items-center gap-3.5">
-                <div className="w-10 h-10 rounded-xl bg-yellow-500/10 text-yellow-600 flex items-center justify-center shrink-0 border border-yellow-250/60 font-black">
-                  <Store className="w-5 h-5" />
+              <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 shadow-xs flex items-center gap-3.5">
+                <div className="w-10 h-10 rounded-2xl bg-yellow-500/15 text-yellow-700 flex items-center justify-center shrink-0 border border-yellow-300/60 font-black">
+                  <Store className="w-5 h-5 text-yellow-600" />
                 </div>
                 <div>
-                  <h3 className="font-heading font-black text-xs text-slate-900">3. Shop Directory & Reel Offers</h3>
-                  <p className="text-[11px] text-slate-500 font-semibold">Store Discounts, Promotions & Video Reels</p>
+                  <h3 className="font-heading font-black text-xs text-slate-900">3. Shop Directory & Video Reels</h3>
+                  <p className="text-[10px] text-slate-500 font-semibold leading-tight mt-0.5">Store Discounts, Local Offers & Video Reels</p>
                 </div>
               </div>
             </div>
 
-            {/* Bottom Onboarding CTA */}
-            <div className="w-full flex flex-col gap-3 mb-2">
+            {/* Fixed Bottom Onboarding Action Dock */}
+            <div className="w-full flex flex-col gap-2.5 mb-2 pt-2 border-t border-slate-100">
               <button
                 type="button"
                 onClick={() => router.push("/?auth=popup")}
-                className="w-full py-4 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-sm uppercase tracking-wider transition-all shadow-md shadow-yellow-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-95 border-0"
+                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-500 text-slate-955 font-black text-xs uppercase tracking-wider transition-all shadow-md shadow-yellow-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-95 border-0"
               >
-                <span>Get Started / Register</span>
+                <span>Verify Mobile Number to Enter</span>
                 <ArrowRight className="w-4 h-4 text-slate-955" />
               </button>
-              <p className="text-[10px] text-slate-400 font-bold">
-                Quick 10-Second WhatsApp Verification
-              </p>
+              <div className="flex items-center justify-center gap-1.5 text-[10px] text-slate-400 font-bold">
+                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
+                <span>Verified by WhatsApp • 100% Free for Thanjavur Residents</span>
+              </div>
             </div>
 
           </div>
@@ -495,9 +516,10 @@ export default function HomeLandingPage() {
       )}
 
       {/* ==========================================
-          PORTAL CONTENT: DIRECTORY SEGMENT LINKS Noticeboard
+          PORTAL CONTENT: DIRECTORY SEGMENT LINKS Noticeboard (LOGGED IN ONLY)
           ========================================== */}
-      <div id="noticeboard-directory" className="flex w-full max-w-7xl mx-auto px-5 md:px-6 py-8 flex-col gap-8 bg-white">
+      {profile?.isVerified && (
+        <div id="noticeboard-directory" className="flex w-full max-w-7xl mx-auto px-5 md:px-6 py-8 flex-col gap-8 bg-white">
 
         {/* Section Heading & Branding Emblem */}
         <div className="flex flex-col items-center text-center gap-4 max-w-xl mx-auto">
@@ -882,6 +904,7 @@ export default function HomeLandingPage() {
           <button onClick={() => router.push("/profile")} className="hover:text-slate-600 transition-colors">Profile Control</button>
         </footer>
       </div>
+      )}
 
     </div>
   );
