@@ -41,7 +41,7 @@ function ResponsiveGroup({
 }: ResponsiveGroupProps) {
   const { viewport } = useThree();
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-  const s = Math.min(1.5, viewport.width / 2.7) * scale * (isMobile ? 0.75 : 1.3);
+  const s = Math.min(1.3, viewport.width / 3.0) * scale * (isMobile ? 0.85 : 0.72);
   return <group scale={s}>{children}</group>;
 }
 
@@ -962,10 +962,10 @@ export function RobotHero({
           </button>
         </div>
 
-        {/* 4. Mascot Robot Canvas (Grand Massive 3D Mascot) */}
+        {/* 4. Mascot Robot Canvas (Perfectly Proportioned 3D Mascot) */}
         <div 
           onClick={handleRobotTap} 
-          className="w-full max-w-[440px] sm:max-w-[500px] md:max-w-[560px] h-[340px] sm:h-[400px] md:h-[440px] relative flex items-center justify-center cursor-pointer my-2"
+          className="w-full max-w-[360px] sm:max-w-[420px] md:max-w-[460px] h-[260px] sm:h-[300px] md:h-[320px] relative flex items-center justify-center cursor-pointer my-1"
         >
           <Canvas camera={{ position: [0, 0.12, 3.6], fov: 38 }}>
             <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
