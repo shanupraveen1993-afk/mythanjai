@@ -466,7 +466,10 @@ export default function HomeLandingPage() {
 
             {/* 3 Native App Onboarding Cards */}
             <div className="w-full flex flex-col gap-2.5 my-3 text-left">
-              <div className="bg-white border border-slate-200/90 rounded-2xl p-3 shadow-xs flex items-center gap-3">
+              <div 
+                onClick={() => router.push("/?auth=popup")}
+                className="bg-white border border-slate-200/90 rounded-2xl p-3 shadow-xs flex items-center gap-3 cursor-pointer hover:border-yellow-400 transition-colors"
+              >
                 <div className="w-9 h-9 rounded-xl bg-yellow-500/15 text-yellow-700 flex items-center justify-center shrink-0 border border-yellow-300/60 font-black">
                   <Building className="w-4 h-4 text-yellow-600" />
                 </div>
@@ -476,7 +479,10 @@ export default function HomeLandingPage() {
                 </div>
               </div>
 
-              <div className="bg-white border border-slate-200/90 rounded-2xl p-3 shadow-xs flex items-center gap-3">
+              <div 
+                onClick={() => router.push("/?auth=popup")}
+                className="bg-white border border-slate-200/90 rounded-2xl p-3 shadow-xs flex items-center gap-3 cursor-pointer hover:border-yellow-400 transition-colors"
+              >
                 <div className="w-9 h-9 rounded-xl bg-yellow-500/15 text-yellow-700 flex items-center justify-center shrink-0 border border-yellow-300/60 font-black">
                   <Wrench className="w-4 h-4 text-yellow-600" />
                 </div>
@@ -486,7 +492,10 @@ export default function HomeLandingPage() {
                 </div>
               </div>
 
-              <div className="bg-white border border-slate-200/90 rounded-2xl p-3 shadow-xs flex items-center gap-3">
+              <div 
+                onClick={() => router.push("/?auth=popup")}
+                className="bg-white border border-slate-200/90 rounded-2xl p-3 shadow-xs flex items-center gap-3 cursor-pointer hover:border-yellow-400 transition-colors"
+              >
                 <div className="w-9 h-9 rounded-xl bg-yellow-500/15 text-yellow-700 flex items-center justify-center shrink-0 border border-yellow-300/60 font-black">
                   <Store className="w-4 h-4 text-yellow-600" />
                 </div>

@@ -53,14 +53,14 @@ function MainLayoutContent({
     }
   }, [searchParams]);
 
-  // Strict Route Protection: Unauthenticated users on subpages are immediately kicked to landing page with login modal
+  // Smooth Auth Trigger: open sign in modal without route flicker
   useEffect(() => {
     const isAuthVerified = Boolean(profile?.isVerified);
 
     if (!isAuthVerified && pathname !== "/") {
-      router.replace("/?auth=popup");
+      setIsSignInOpen(true);
     }
-  }, [pathname, profile, router]);
+  }, [pathname, profile]);
 
   const handleCloseSignIn = () => {
     setIsSignInOpen(false);
