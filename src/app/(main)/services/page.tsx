@@ -113,7 +113,50 @@ export default function ServicesPage() {
     }
   }, [triggerCreate, profile, loading]);
 
-  const [localServices, setLocalServices] = useState<ServiceProviderPost[]>([]);
+  const [localServices, setLocalServices] = useState<ServiceProviderPost[]>([
+    {
+      id: "sample_s1",
+      userId: "sample_tech_1",
+      name: "Senthil Kumar - Home Electrician",
+      skill_category: "Electrician",
+      experience: "8 Years",
+      area_tag: "Tanjore Town (General)",
+      phone: "919994837342",
+      rating: 4.9,
+      is_verified: true,
+      created_at: new Date() as any,
+      description: "8+ Years Experience. House wiring, DB box, inverter assembly & 24/7 quick emergency repairs.",
+      pinned: true,
+    },
+    {
+      id: "sample_s2",
+      userId: "sample_tech_2",
+      name: "Rajesh K - Expert Plumber",
+      skill_category: "Plumber",
+      experience: "6 Years",
+      area_tag: "Medical College Road",
+      phone: "919994837342",
+      rating: 4.8,
+      is_verified: true,
+      created_at: new Date() as any,
+      description: "Pipe fitting, water tank washing, Kaveri line tap connections, motor pump fitting & leak fixes.",
+      pinned: true,
+    },
+    {
+      id: "sample_s3",
+      userId: "sample_tech_3",
+      name: "Venu Gopal - Wood Architect & Carpenter",
+      skill_category: "Carpenter",
+      experience: "10 Years",
+      area_tag: "South Rampart",
+      phone: "919994837342",
+      rating: 5.0,
+      is_verified: true,
+      created_at: new Date() as any,
+      description: "Modular kitchen woodworks, door laminations, locks repairs, wardrobe assembly & bespoke furniture.",
+      pinned: true,
+    },
+  ]);
 
   // Firestore Real-time Query Subscription
   const { data: services, loading: servicesLoading } = useFirestore<ServiceProviderPost>({
@@ -123,7 +166,7 @@ export default function ServicesPage() {
   });
 
   const combinedServices = React.useMemo(() => {
-    const activeLocal = localServices.filter(s => s.skill_category === selectedCategory);
+    const activeLocal = localServices.filter(s => !selectedCategory || s.skill_category === selectedCategory);
     return [...activeLocal, ...services];
   }, [localServices, services, selectedCategory]);
 

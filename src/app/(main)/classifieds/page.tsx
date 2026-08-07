@@ -178,7 +178,59 @@ export default function ClassifiedsPage() {
     }
   }, [triggerCreate, profile, loading]);
 
-  const [localPosts, setLocalPosts] = useState<NeedOrSalePost[]>([]);
+  const [localPosts, setLocalPosts] = useState<NeedOrSalePost[]>([
+    {
+      id: "sample_1",
+      userId: "sample_seller_1",
+      type: "SELL",
+      raw_text: "2400 Sqft CMDA Approved Plot Land for sale near Vallam Bus Stand, Thanjavur.",
+      title: "2400 Sqft CMDA Approved Plot Land",
+      description: "DTCP approved residential plot with 30ft tar road frontage and Kaveri water connection line near Vallam Bus Stand.",
+      category: "Real Estate & Housing",
+      area_tag: "Vallam",
+      price: 2450000,
+      phone: "919994837342",
+      is_verified: true,
+      created_at: new Date() as any,
+      expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) as any,
+      image_url: "/thanjavur_temple_illustration.png",
+      pinned: true,
+    },
+    {
+      id: "sample_2",
+      userId: "sample_seller_2",
+      type: "SELL",
+      raw_text: "2 BHK Independent House for Rent near Medical College Road.",
+      title: "2 BHK Independent House for Rent",
+      description: "Modular kitchen, 2 bathrooms, 24/7 Kaveri water supply, dedicated car parking in quiet residential colony.",
+      category: "Real Estate & Housing",
+      area_tag: "Medical College Road",
+      price: 12500,
+      phone: "919994837342",
+      is_verified: true,
+      created_at: new Date() as any,
+      expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) as any,
+      image_url: "/hero_building_visual.png",
+      pinned: true,
+    },
+    {
+      id: "sample_3",
+      userId: "sample_seller_3",
+      type: "SELL",
+      raw_text: "Hero Splendor Plus 2022 Model for sale.",
+      title: "Hero Splendor Plus (2022 Model)",
+      description: "Single owner, excellent mileage 65+ kmpl, clean insurance documents, pristine condition.",
+      category: "Motor Vehicles",
+      area_tag: "New Bus Stand",
+      price: 68000,
+      phone: "919994837342",
+      is_verified: true,
+      created_at: new Date() as any,
+      expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) as any,
+      image_url: "/namma_thanjai_logo.png",
+      pinned: true,
+    },
+  ]);
 
   // Real-time Firestore Query subscription
   const { data: posts, loading: postsLoading } = useFirestore<NeedOrSalePost>({
@@ -339,7 +391,9 @@ export default function ClassifiedsPage() {
     const activeLocal = localPosts.filter(p => {
       const pType = p.type.toLowerCase();
       const targetType = activeType === "sale" ? "sell" : "need";
-      return (pType === targetType || pType === activeType.toLowerCase()) && p.category === selectedCategory;
+      const matchType = pType === targetType || pType === activeType.toLowerCase();
+      const matchCategory = !selectedCategory || p.category === selectedCategory;
+      return matchType && matchCategory;
     });
     return [...activeLocal, ...posts];
   }, [localPosts, posts, activeType, selectedCategory]);

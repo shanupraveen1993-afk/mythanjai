@@ -67,6 +67,7 @@ export interface ShopPost {
   offer_title?: string;
   offer_description?: string;
   offer_social_link?: string;
+  video_url?: string;
   offer_expires_at?: any; // Firestore Timestamp
 }
 

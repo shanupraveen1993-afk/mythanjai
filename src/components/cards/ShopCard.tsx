@@ -45,25 +45,35 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false }: Sho
         </div>
       )}
 
-      {/* Storefront Image */}
-      <div className="relative aspect-video w-full bg-slate-50 border-b border-slate-100">
-        <Image
-          src={post.image_url || "/placeholder.webp"}
-          alt={post.shop_name}
-          fill
-          sizes="(max-width: 480px) 100vw, 480px"
-          priority={post.is_featured}
-          className="object-cover"
-          unoptimized
-        />
+      {/* Storefront Image / Video Player */}
+      <div className="relative aspect-video w-full bg-slate-900 border-b border-slate-100 overflow-hidden">
+        {post.video_url ? (
+          <video
+            src={post.video_url}
+            controls
+            playsInline
+            preload="metadata"
+            className="w-full h-full object-cover"
+          />
+        ) : (
+          <Image
+            src={post.image_url || "/placeholder.webp"}
+            alt={post.shop_name}
+            fill
+            sizes="(max-width: 480px) 100vw, 480px"
+            priority={post.is_featured}
+            className="object-cover"
+            unoptimized
+          />
+        )}
         {/* Category tag */}
-        <span className="absolute bottom-2.5 right-2.5 bg-black/77 backdrop-blur-sm text-white text-[9px] font-black px-2.5 py-0.5 rounded-xl flex items-center gap-1 shadow-xs border border-white/10">
+        <span className="absolute bottom-2.5 right-2.5 bg-black/77 backdrop-blur-sm text-white text-[9px] font-black px-2.5 py-0.5 rounded-xl flex items-center gap-1 shadow-xs border border-white/10 z-20">
           {getCategoryIllustration(post.category)}
           <span className="capitalize">{post.category}</span>
         </span>
 
-        {/* Play Reel overlay if Instagram Reel link is present */}
-        {post.offer_social_link && (
+        {/* Play Reel overlay if Instagram Reel link is present and no native video */}
+        {!post.video_url && post.offer_social_link && (
           <a
             href={post.offer_social_link}
             target="_blank"

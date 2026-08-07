@@ -159,8 +159,8 @@ function MainLayoutContent({
         onTabChange={handleTabChange}
       />
 
-      {/* Universal Directory Search Bar */}
-      {profile?.isVerified && <UniversalSearchBar />}
+      {/* Universal Directory Search Bar (Hidden on Profile page) */}
+      {profile?.isVerified && pathname !== "/profile" && <UniversalSearchBar />}
 
       {/* Main Content Panel with Container Margins */}
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 bg-white pb-20 md:pb-8">
