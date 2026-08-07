@@ -434,50 +434,8 @@ export default function ShopsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      {/* Header Banner */}
-      <div className="relative overflow-hidden bg-yellow-50 border border-yellow-250/60 rounded-2xl p-5 shadow-sm flex flex-col gap-1 text-slate-800">
-        <span className="text-[9px] font-black uppercase tracking-wider text-yellow-750 bg-yellow-500/10 border border-yellow-250/60 px-2.5 py-0.5 rounded-xl inline-block w-fit">
-          🏪 Recent Shop Offers & Video Reels
-        </span>
-        <h2 className="font-heading font-black text-lg text-slate-900 mt-2">
-          Thanjavur Local Shops & Exclusive Deals
-        </h2>
-        <p className="text-[11px] text-slate-600 mt-1 max-w-[340px] font-semibold">
-          Discover verified store promotions, discounts, and video reel deals across Tanjore.
-        </p>
-      </div>
-
-      {/* Admin Instagram Reel AI Importer Widget (Phone: 9994837342) */}
-      <div className="bg-gradient-to-r from-yellow-500/10 via-amber-500/10 to-yellow-500/10 border border-yellow-500/30 rounded-2xl p-4 flex flex-col gap-3 shadow-xs">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-xs font-black text-slate-900">
-            <Video className="w-4 h-4 text-yellow-600 animate-pulse" />
-            <span>🎬 Admin Instagram Reel AI Importer</span>
-          </div>
-          <span className="text-[9px] font-black uppercase tracking-wider text-yellow-750 bg-yellow-500/20 px-2 py-0.5 rounded-md">
-            Admin (9994837342)
-          </span>
-        </div>
-        <form onSubmit={handleImportReel} className="flex gap-2">
-          <input
-            type="url"
-            value={reelUrlInput}
-            onChange={(e) => setReelUrlInput(e.target.value)}
-            placeholder="Paste Instagram Reel Link (e.g. https://www.instagram.com/reel/...)"
-            className="flex-1 bg-white border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none font-bold"
-          />
-          <button
-            type="submit"
-            disabled={reelAnalyzing}
-            className="bg-yellow-500 hover:bg-yellow-600 active:scale-95 text-slate-955 font-black px-4 py-2 rounded-xl text-xs transition-all shadow-xs cursor-pointer border border-yellow-450 shrink-0"
-          >
-            {reelAnalyzing ? "AI Analyzing..." : "Import Offer Reel"}
-          </button>
-        </form>
-      </div>
-
       {/* Universal Sticky Action Bar: Sort on Left, Post Offer on Right */}
-      <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 px-4 border border-slate-200/90 rounded-2xl shadow-xs flex items-center justify-between mt-1">
+      <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 px-4 border border-slate-200/90 rounded-2xl shadow-xs flex items-center justify-between">
         <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
           <span>Sort by:</span>
           <select

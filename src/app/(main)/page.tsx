@@ -545,7 +545,7 @@ export default function HomeLandingPage() {
             <div className="w-full flex flex-col gap-3 mb-2">
               <button
                 type="button"
-                onClick={() => router.push("/classifieds?auth=popup")}
+                onClick={() => router.push("/?auth=popup")}
                 className="w-full py-4 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-sm uppercase tracking-wider transition-all shadow-md shadow-yellow-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-95 border-0"
               >
                 <span>Get Started / Register</span>
@@ -565,7 +565,7 @@ export default function HomeLandingPage() {
               navItemsLeft={[]}
               ctaText="Register"
               onCtaClick={() => {
-                router.push("/classifieds?auth=popup");
+                router.push("/?auth=popup");
               }}
               onCategoryClick={(category) => {
                 router.push(`/${category}`);
