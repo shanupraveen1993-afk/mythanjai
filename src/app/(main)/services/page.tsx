@@ -289,8 +289,18 @@ export default function ServicesPage() {
             </span>
           </div>
 
-          {/* Inline Collapsible Registration Form */}
-          <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden transition-all duration-300">
+          {/* Universal Sticky Action Bar: Sort on Left, Register Service on Right */}
+          <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 px-4 border border-slate-200/90 rounded-2xl shadow-xs flex items-center justify-between mt-1">
+            <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
+              <span>Sort by:</span>
+              <select
+                className="bg-slate-100 border border-slate-200 rounded-xl px-3 py-1.5 text-[11px] font-black focus:outline-none cursor-pointer text-slate-800"
+              >
+                <option value="recent">Latest First</option>
+                <option value="rating">Top Rated</option>
+              </select>
+            </div>
+
             <button
               onClick={() => {
                 if (!profile?.isVerified) {
@@ -302,25 +312,16 @@ export default function ServicesPage() {
                   setIsFormOpen(!isFormOpen);
                 }
               }}
-              className="w-full flex items-center justify-between px-4 py-3 bg-slate-50 hover:bg-slate-100/50 transition-colors text-left"
+              className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-4 py-2 rounded-xl text-[11px] uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-xs"
             >
-              <div className="flex items-center gap-2">
-                <div className="w-7 h-7 rounded-xl bg-yellow-500 text-slate-950 flex items-center justify-center">
-                  <Plus className={`w-4 h-4 transition-transform duration-200 ${isFormOpen ? "rotate-45" : ""}`} />
-                </div>
-                <div>
-                  <span className="text-xs font-black text-slate-800 block">
-                    Register as a {selectedCategory}
-                  </span>
-                  <span className="text-[10px] text-slate-500">
-                    Describe your expert skill, experience, and location
-                  </span>
-                </div>
-              </div>
-              {isFormOpen ? <ChevronUp className="w-4 h-4 text-slate-500" /> : <ChevronDown className="w-4 h-4 text-slate-500" />}
+              <Plus className={`w-3.5 h-3.5 text-slate-955 transition-transform duration-250 ${isFormOpen ? "rotate-45" : ""}`} />
+              <span>Post Service</span>
             </button>
+          </div>
 
-            {isFormOpen && (
+          {/* Inline Collapsible Registration Form */}
+          {isFormOpen && (
+            <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden transition-all duration-300 animate-fade-in">
               <form onSubmit={handleRegister} className="p-4 border-t border-slate-100 flex flex-col gap-5 bg-white">
                 
                 {/* Widescreen Columns */}
@@ -328,22 +329,22 @@ export default function ServicesPage() {
                   
                   {/* Left Column: Input Fields */}
                   <div className="flex flex-col gap-3.5">
-                    {/* 1. Locality Tag */}
+                    {/* 1. Free-Text Locality Input (AI Verified Thanjavur District Area) */}
                     <div>
                       <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1">
-                        Locality Tag (Thanjavur only)
+                        Thanjavur Area / Locality (Free-text entry)
                       </label>
-                      <select
+                      <input
+                        type="text"
+                        required
                         value={formArea}
-                        onChange={(e) => setFormArea(e.target.value as TanjoreLocality)}
-                        className="w-full bg-slate-50 border border-slate-200 text-slate-700 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 focus:outline-none font-bold"
-                      >
-                        {TANJORE_LOCALITIES.map((loc) => (
-                          <option key={loc} value={loc}>
-                            {loc}
-                          </option>
-                        ))}
-                      </select>
+                        onChange={(e) => setFormArea(e.target.value as any)}
+                        placeholder="e.g. West Main St, Vallam, Tanjore Town, Medical College Rd"
+                        className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 focus:outline-none font-bold"
+                      />
+                      <span className="text-[9px] text-slate-400 block mt-1 leading-normal font-bold">
+                        AI verifies location is inside Thanjavur District.
+                      </span>
                     </div>
 
                     {/* 2. Service Provider Name */}
@@ -484,8 +485,8 @@ export default function ServicesPage() {
                   </button>
                 </div>
               </form>
-            )}
-          </div>
+            </div>
+          )}
 
           {/* Loading Feed skeleton */}
           {servicesLoading ? (

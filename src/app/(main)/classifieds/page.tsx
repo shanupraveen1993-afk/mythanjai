@@ -425,7 +425,11 @@ export default function ClassifiedsPage() {
           {/* Sub-Tabs: Buy vs Sell */}
           <div className="flex bg-slate-200/80 p-1.5 rounded-2xl border border-slate-300/40">
             <button
-              onClick={() => setActiveType("need")}
+              onClick={() => {
+                setActiveType("need");
+                setFormType("need");
+                setIsFormOpen(false);
+              }}
               className={`flex-1 py-2 text-center rounded-xl text-xs font-black transition-all cursor-pointer ${
                 activeType === "need"
                   ? "bg-white text-yellow-750 shadow-sm"
@@ -435,7 +439,11 @@ export default function ClassifiedsPage() {
               Buy / Looking For
             </button>
             <button
-              onClick={() => setActiveType("sale")}
+              onClick={() => {
+                setActiveType("sale");
+                setFormType("sale");
+                setIsFormOpen(false);
+              }}
               className={`flex-1 py-2 text-center rounded-xl text-xs font-black transition-all cursor-pointer ${
                 activeType === "sale"
                   ? "bg-white text-emerald-700 shadow-sm"
@@ -466,6 +474,7 @@ export default function ClassifiedsPage() {
                 if (!profile?.isVerified) {
                   router.push(`/profile?auth=popup&redirect=${encodeURIComponent(`/classifieds?category=${encodeURIComponent(selectedCategory || "")}&create=true`)}`);
                 } else {
+                  setFormType(activeType);
                   setIsFormOpen(!isFormOpen);
                 }
               }}
@@ -484,30 +493,15 @@ export default function ClassifiedsPage() {
                   
                   {/* Left Column: Input Fields */}
                   <div className="flex flex-col gap-3.5">
-                    {/* Post Type Tab Selector inside Form */}
+                    {/* Active Posting Section Badge */}
                     <div>
-                      <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1.5">
-                        Posting Section
-                      </label>
-                      <div className="grid grid-cols-2 gap-2 p-1 bg-slate-100 rounded-xl border border-slate-200">
-                        <button
-                          type="button"
-                          onClick={() => setFormType("need")}
-                          className={`py-2 text-center rounded-lg text-xs font-black transition-all cursor-pointer ${
-                            formType === "need" ? "bg-white text-blue-700 shadow-2xs" : "text-slate-600"
-                          }`}
-                        >
-                          📢 Buying / Looking For
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => setFormType("sale")}
-                          className={`py-2 text-center rounded-lg text-xs font-black transition-all cursor-pointer ${
-                            formType === "sale" ? "bg-white text-emerald-700 shadow-2xs" : "text-slate-600"
-                          }`}
-                        >
-                          🏷️ Selling / For Sale
-                        </button>
+                      <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block mb-1">
+                        Active Form Target
+                      </span>
+                      <div className={`py-2 px-3.5 rounded-xl text-xs font-black select-none border border-slate-200 ${
+                        formType === "need" ? "bg-blue-50 text-blue-700" : "bg-emerald-50 text-emerald-700"
+                      }`}>
+                        {formType === "need" ? "📢 Creating Post for: Buy / Looking For" : "🏷️ Creating Post for: Sell / For Sale"}
                       </div>
                     </div>
 
