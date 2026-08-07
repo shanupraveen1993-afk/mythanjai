@@ -22,17 +22,17 @@ export default function BottomTabBar({
     },
     {
       id: "classifieds" as AppTab,
-      label: "Buy/Sell",
+      label: "Sell / Look",
       icon: MessageSquare,
     },
     {
       id: "services" as AppTab,
-      label: "Services",
+      label: "Local Service",
       icon: Wrench,
     },
     {
       id: "shops" as AppTab,
-      label: "Recent Offer",
+      label: "Local Offer",
       icon: Store,
     },
     {

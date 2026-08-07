@@ -124,7 +124,7 @@ export default function UniversalSearchBar() {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           onFocus={() => searchTerm.trim().length >= 2 && setIsOpen(true)}
-          placeholder="Search Buy & Sell, Helper Trades, Store Offers across Thanjavur..."
+          placeholder="Search Selling / Looking For, Local Service, Local Offer across Thanjavur..."
           className="w-full bg-transparent text-xs text-slate-900 placeholder-slate-400 focus:outline-none font-extrabold tracking-tight"
         />
         {searchTerm && (
@@ -155,13 +155,13 @@ export default function UniversalSearchBar() {
           ) : (
             <div className="p-3 flex flex-col gap-4">
               
-              {/* Category 1: Buy & Sell */}
+              {/* Category 1: Selling / Looking For */}
               {results.classifieds.length > 0 && (
                 <div className="flex flex-col gap-1.5">
                   <div className="flex items-center justify-between px-1 text-[10px] font-black uppercase text-yellow-750 tracking-wider">
                     <span className="flex items-center gap-1">
                       <Building className="w-3 h-3 text-yellow-600" />
-                      Buy & Sell ({results.classifieds.length})
+                      Selling / Looking For ({results.classifieds.length})
                     </span>
                     <button 
                       onClick={() => {
@@ -206,13 +206,13 @@ export default function UniversalSearchBar() {
                 </div>
               )}
 
-              {/* Category 2: Helper Trades */}
+              {/* Category 2: Local Service */}
               {results.services.length > 0 && (
                 <div className="flex flex-col gap-1.5">
                   <div className="flex items-center justify-between px-1 text-[10px] font-black uppercase text-yellow-750 tracking-wider">
                     <span className="flex items-center gap-1">
                       <Wrench className="w-3 h-3 text-yellow-600" />
-                      Helper Trades ({results.services.length})
+                      Local Service ({results.services.length})
                     </span>
                     <button 
                       onClick={() => {
@@ -264,13 +264,13 @@ export default function UniversalSearchBar() {
                 </div>
               )}
 
-              {/* Category 3: Store Offers */}
+              {/* Category 3: Local Offer */}
               {results.shops.length > 0 && (
                 <div className="flex flex-col gap-1.5">
                   <div className="flex items-center justify-between px-1 text-[10px] font-black uppercase text-yellow-750 tracking-wider">
                     <span className="flex items-center gap-1">
                       <Store className="w-3 h-3 text-yellow-600" />
-                      Store Offers ({results.shops.length})
+                      Local Offer ({results.shops.length})
                     </span>
                     <button 
                       onClick={() => {

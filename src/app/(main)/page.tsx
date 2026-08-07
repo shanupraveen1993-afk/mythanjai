@@ -414,62 +414,62 @@ export default function HomeLandingPage() {
         <div className="w-full relative flex flex-col min-h-[85vh] justify-between">
           
           {/* NATIVE MOBILE APP ONBOARDING CONTAINER (Mobile Viewports ONLY) */}
-          <div className="block md:hidden w-full px-6 py-6 bg-gradient-to-b from-yellow-500/15 via-slate-50/50 to-white min-h-[80vh] flex flex-col justify-between items-center text-center">
+          <div className="block md:hidden w-full px-5 py-4 bg-gradient-to-b from-yellow-500/15 via-slate-50/50 to-white min-h-[calc(100vh-70px)] flex flex-col justify-between items-center text-center overflow-hidden">
             
             {/* Top Branding App Header */}
-            <div className="flex flex-col items-center gap-2.5 mt-2">
+            <div className="flex flex-col items-center gap-2 mt-1">
               <div className="relative">
                 <div className="absolute inset-0 bg-yellow-500/20 rounded-3xl blur-md" />
-                <div className="relative w-20 h-20 rounded-3xl bg-white shadow-md p-2 flex items-center justify-center border border-yellow-300">
+                <div className="relative w-16 h-16 rounded-2xl bg-white shadow-md p-2 flex items-center justify-center border border-yellow-300">
                   <Image 
                     src="/namma_thanjai_logo.png" 
                     alt="Namma Thanjavur Logo" 
-                    width={64}
-                    height={64}
+                    width={52}
+                    height={52}
                     className="object-contain"
                   />
                 </div>
               </div>
-              <span className="text-[9px] font-black uppercase tracking-widest text-yellow-850 bg-yellow-400/20 border border-yellow-500/30 px-3 py-1 rounded-full mt-1">
+              <span className="text-[9px] font-black uppercase tracking-widest text-yellow-850 bg-yellow-400/20 border border-yellow-500/30 px-3 py-0.5 rounded-full mt-1">
                 Thanjavur District App
               </span>
-              <h1 className="font-heading font-black text-2xl text-slate-900 tracking-tight leading-tight">
+              <h1 className="font-heading font-black text-xl text-slate-900 tracking-tight leading-tight">
                 Namma Thanjavur<span className="text-yellow-500">.</span>
               </h1>
-              <p className="text-[11px] text-slate-600 font-bold max-w-xs leading-relaxed">
-                Connect directly with verified local residents, helper tradesmen, and shops across Thanjavur.
+              <p className="text-[10px] text-slate-600 font-bold max-w-xs leading-relaxed">
+                Connect directly with verified local residents, technicians, and shops across Thanjavur.
               </p>
             </div>
 
             {/* 3 Native App Onboarding Cards */}
-            <div className="w-full flex flex-col gap-3 my-4 text-left">
-              <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 shadow-xs flex items-center gap-3.5">
-                <div className="w-10 h-10 rounded-2xl bg-yellow-500/15 text-yellow-700 flex items-center justify-center shrink-0 border border-yellow-300/60 font-black">
-                  <Building className="w-5 h-5 text-yellow-600" />
+            <div className="w-full flex flex-col gap-2.5 my-3 text-left">
+              <div className="bg-white border border-slate-200/90 rounded-2xl p-3 shadow-xs flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-yellow-500/15 text-yellow-700 flex items-center justify-center shrink-0 border border-yellow-300/60 font-black">
+                  <Building className="w-4 h-4 text-yellow-600" />
                 </div>
                 <div>
-                  <h3 className="font-heading font-black text-xs text-slate-900">1. Buy & Sell Classifieds</h3>
-                  <p className="text-[10px] text-slate-500 font-semibold leading-tight mt-0.5">Plot Lands, Rentals, Used Vehicles & Appliances</p>
+                  <h3 className="font-heading font-black text-xs text-slate-900">1. Selling / Looking For</h3>
+                  <p className="text-[10px] text-slate-500 font-semibold leading-tight mt-0.5">Plot Lands, Rentals, Used Vehicles & Mobiles</p>
                 </div>
               </div>
 
-              <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 shadow-xs flex items-center gap-3.5">
-                <div className="w-10 h-10 rounded-2xl bg-yellow-500/15 text-yellow-700 flex items-center justify-center shrink-0 border border-yellow-300/60 font-black">
-                  <Wrench className="w-5 h-5 text-yellow-600" />
+              <div className="bg-white border border-slate-200/90 rounded-2xl p-3 shadow-xs flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-yellow-500/15 text-yellow-700 flex items-center justify-center shrink-0 border border-yellow-300/60 font-black">
+                  <Wrench className="w-4 h-4 text-yellow-600" />
                 </div>
                 <div>
-                  <h3 className="font-heading font-black text-xs text-slate-900">2. Helper Trades & Services</h3>
+                  <h3 className="font-heading font-black text-xs text-slate-900">2. Local Service</h3>
                   <p className="text-[10px] text-slate-500 font-semibold leading-tight mt-0.5">Verified Electricians, Plumbers, Mechanics & Carpenters</p>
                 </div>
               </div>
 
-              <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 shadow-xs flex items-center gap-3.5">
-                <div className="w-10 h-10 rounded-2xl bg-yellow-500/15 text-yellow-700 flex items-center justify-center shrink-0 border border-yellow-300/60 font-black">
-                  <Store className="w-5 h-5 text-yellow-600" />
+              <div className="bg-white border border-slate-200/90 rounded-2xl p-3 shadow-xs flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-yellow-500/15 text-yellow-700 flex items-center justify-center shrink-0 border border-yellow-300/60 font-black">
+                  <Store className="w-4 h-4 text-yellow-600" />
                 </div>
                 <div>
-                  <h3 className="font-heading font-black text-xs text-slate-900">3. Shop Directory & Video Reels</h3>
-                  <p className="text-[10px] text-slate-500 font-semibold leading-tight mt-0.5">Store Discounts, Local Offers & Video Reels</p>
+                  <h3 className="font-heading font-black text-xs text-slate-900">3. Local Offer</h3>
+                  <p className="text-[10px] text-slate-500 font-semibold leading-tight mt-0.5">Store Discounts, Local Promotions & Video Reels</p>
                 </div>
               </div>
             </div>

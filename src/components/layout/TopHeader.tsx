@@ -50,7 +50,7 @@ export default function TopHeader({
           </div>
         </div>
 
-        {/* Center: 4 Channel Navigation Tabs (Home, Buy & Sell, Local Services, Local Offers) */}
+        {/* Center: 4 Channel Navigation Tabs (Home, Selling / Looking For, Local Service, Local Offer) */}
         {isAuthVerified && (
           <div className="hidden sm:flex items-center gap-1 bg-slate-100/80 p-1 rounded-2xl border border-slate-200/60">
             <button
@@ -71,7 +71,7 @@ export default function TopHeader({
                   : "text-slate-600 hover:text-slate-900"
               }`}
             >
-              Buy & Sell
+              Selling / Looking For
             </button>
             <button
               onClick={() => onTabChange?.("services")}
@@ -81,7 +81,7 @@ export default function TopHeader({
                   : "text-slate-600 hover:text-slate-900"
               }`}
             >
-              Local Services
+              Local Service
             </button>
             <button
               onClick={() => onTabChange?.("shops")}
@@ -91,7 +91,7 @@ export default function TopHeader({
                   : "text-slate-600 hover:text-slate-900"
               }`}
             >
-              Local Offers
+              Local Offer
             </button>
           </div>
         )}
