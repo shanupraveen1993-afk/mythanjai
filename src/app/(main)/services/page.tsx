@@ -238,7 +238,7 @@ export default function ServicesPage() {
         <div className="flex flex-col gap-6">
           <div className="relative overflow-hidden bg-yellow-50 border border-yellow-250/60 rounded-2xl p-5 shadow-sm flex flex-col gap-1 text-slate-800">
             <span className="text-[9px] font-black uppercase tracking-wider text-yellow-750 bg-yellow-500/10 border border-yellow-250/60 px-2.5 py-0.5 rounded-xl inline-block w-fit">
-              🛠️ Services Registry
+              Services Registry
             </span>
             <h2 className="font-heading font-black text-lg text-slate-900 mt-2">
               Select Expert Trade
@@ -418,13 +418,13 @@ export default function ServicesPage() {
                       </p>
 
                       <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 pt-1">
-                        <span>📍 South Rampart / Tanjore Town</span>
+                        <span>South Rampart / Tanjore Town</span>
                         <span>Sample Only</span>
                       </div>
                     </div>
 
                     <div className="text-[10px] text-slate-500 font-bold mt-2 text-center bg-yellow-50 border border-yellow-200/60 p-3 rounded-xl max-w-sm mx-auto">
-                      ⚡ <strong>AI Auto-Refinement:</strong> Upload your visiting card or enter details. Gemini AI automatically structures your trade service profile before publishing live.
+                      <strong>AI Auto-Refinement:</strong> Upload your visiting card or enter details. Gemini AI automatically structures your trade service profile before publishing live.
                     </div>
                   </div>
                 </div>

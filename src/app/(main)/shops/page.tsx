@@ -703,13 +703,13 @@ export default function ShopsPage() {
                       </p>
 
                       <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 pt-1">
-                        <span>📍 South Rampart Rd, Tanjore</span>
+                        <span>South Rampart Rd, Tanjore</span>
                         <span>Sample Only</span>
                       </div>
                     </div>
 
                     <div className="text-[10px] text-slate-500 font-bold mt-2 text-center bg-yellow-50 border border-yellow-200/60 p-3 rounded-xl max-w-sm mx-auto">
-                      ⚡ <strong>AI Auto-Refinement:</strong> Upload visiting card or enter offer details. Gemini AI automatically structures your promotion before publishing live.
+                      <strong>AI Auto-Refinement:</strong> Upload visiting card or enter offer details. Gemini AI automatically structures your promotion before publishing live.
                     </div>
                   </div>
 

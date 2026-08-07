@@ -937,21 +937,21 @@ export function RobotHero({
             onClick={() => onCategoryClick?.("classifieds")}
             className="py-3 sm:py-4 px-3 sm:px-6 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-900 shadow-xs hover:shadow-md hover:border-yellow-400 transition-all text-center flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer font-black text-[11px] sm:text-xs md:text-sm uppercase tracking-wider active:scale-[0.97]"
           >
-            <span>📢 Buy & Sell</span>
+            <span>Buy & Sell</span>
           </button>
           <button
             type="button"
             onClick={() => onCategoryClick?.("services")}
             className="py-3 sm:py-4 px-3 sm:px-6 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-900 shadow-xs hover:shadow-md hover:border-yellow-400 transition-all text-center flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer font-black text-[11px] sm:text-xs md:text-sm uppercase tracking-wider active:scale-[0.97]"
           >
-            <span>🛠️ Services</span>
+            <span>Services</span>
           </button>
           <button
             type="button"
             onClick={() => onCategoryClick?.("shops")}
             className="py-3 sm:py-4 px-3 sm:px-6 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-900 shadow-xs hover:shadow-md hover:border-yellow-400 transition-all text-center flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer font-black text-[11px] sm:text-xs md:text-sm uppercase tracking-wider active:scale-[0.97]"
           >
-            <span>🏪 Shops</span>
+            <span>Shops</span>
           </button>
         </div>
 

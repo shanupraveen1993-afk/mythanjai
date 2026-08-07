@@ -374,7 +374,7 @@ export default function ClassifiedsPage() {
         <div className="flex flex-col gap-6">
           <div className="relative overflow-hidden bg-yellow-50 border border-yellow-250/60 rounded-2xl p-5 shadow-sm flex flex-col gap-1 text-slate-800">
             <span className="text-[9px] font-black uppercase tracking-wider text-yellow-755 bg-yellow-500/10 border border-yellow-250/60 px-2.5 py-0.5 rounded-xl inline-block w-fit">
-              🏡 Buy & Sell Classifieds
+              Buy & Sell Classifieds
             </span>
             <h2 className="font-heading font-black text-lg text-slate-900 mt-2">
               Select Classified Category
@@ -506,7 +506,7 @@ export default function ClassifiedsPage() {
                       <div className={`py-2 px-3.5 rounded-xl text-xs font-black select-none border border-slate-200 ${
                         formType === "need" ? "bg-blue-50 text-blue-700" : "bg-emerald-50 text-emerald-700"
                       }`}>
-                        {formType === "need" ? "📢 Creating Post for: Buy / Looking For" : "🏷️ Creating Post for: Sell / For Sale"}
+                        {formType === "need" ? "Creating Post for: Buy / Looking For" : "Creating Post for: Sell / For Sale"}
                       </div>
                     </div>
 
@@ -683,13 +683,13 @@ export default function ClassifiedsPage() {
                       </p>
 
                       <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 pt-1">
-                        <span>📍 Vallam / Medical College Rd, Tanjore</span>
+                        <span>Vallam / Medical College Rd, Tanjore</span>
                         <span>Sample Only</span>
                       </div>
                     </div>
 
                     <div className="text-[10px] text-slate-500 font-bold mt-2 text-center bg-yellow-50 border border-yellow-200/60 p-3 rounded-xl max-w-sm mx-auto">
-                      ⚡ <strong>AI Auto-Refinement:</strong> Upon submission, Gemini AI will automatically refine your title and description using standard marketplace terms before publishing live.
+                      <strong>AI Auto-Refinement:</strong> Upon submission, Gemini AI will automatically refine your title and description using standard marketplace terms before publishing live.
                     </div>
                   </div>
                 </div>

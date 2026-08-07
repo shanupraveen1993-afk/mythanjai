@@ -30,11 +30,11 @@ export async function POST(request: NextRequest) {
       
       Examples:
       - Raw: "Come and try our special mutton biryani combo. buy one get one free only for today evening from 6pm to 9pm at Old Bus Stand."
-        Output: 🍲 Buy 1 Get 1 FREE Mutton Biryani Combo
+        Output: Buy 1 Get 1 FREE Mutton Biryani Combo
       - Raw: "New design wedding silk sarees launched at our showroom. We are offering flat 15% discount for aadi festival buyers."
-        Output: 🥻 15% OFF New Wedding Silk Sarees
+        Output: 15% OFF New Wedding Silk Sarees
       - Raw: "Residential plots launch near medical college road. booking starts at just 50000 rupees. direct owner sales."
-        Output: 🏡 New Residential Plots Launch
+        Output: New Residential Plots Launch
     `;
 
     // Call Gemini Model
@@ -51,7 +51,7 @@ export async function POST(request: NextRequest) {
       ],
     });
 
-    const headline = response.text?.trim() || "🔥 Special Local Offer";
+    const headline = response.text?.trim() || "Special Local Offer";
 
     return NextResponse.json({
       success: true,

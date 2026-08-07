@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { MapPin, Plus, User, ShieldCheck, ArrowLeft } from "lucide-react";
+import { MapPin, Plus, User, ShieldCheck, ArrowLeft, Check } from "lucide-react";
 import { TANJORE_LOCALITIES, TanjoreLocality } from "@/lib/constants";
 import { AppTab } from "./BottomTabBar";
 import { useAuth } from "@/hooks/use-auth";
@@ -63,9 +63,7 @@ export default function TopHeader({
               onClick={() => onTabChange?.("profile")}
               className="flex items-center gap-1.5 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 font-bold px-3 py-1.5 rounded-xl text-xs transition-colors cursor-pointer animate-fade-in"
             >
-              <div className="w-2.5 h-2.5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[7px] font-black shrink-0">
-                ✓
-              </div>
+              <Check className="w-3 h-3 text-emerald-600 shrink-0" />
               <span>Verified Profile</span>
             </button>
           ) : (
@@ -116,9 +114,7 @@ export default function TopHeader({
                 onClick={() => onTabChange?.("profile")}
                 className="flex items-center gap-1 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 font-bold px-2.5 py-1 rounded-xl text-[10px] transition-colors animate-fade-in"
               >
-                <div className="w-2 h-2 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[6px] font-black shrink-0">
-                  ✓
-                </div>
+                <Check className="w-2.5 h-2.5 text-emerald-600 shrink-0" />
                 <span>Verified</span>
               </button>
             ) : (

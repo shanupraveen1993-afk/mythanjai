@@ -290,7 +290,7 @@ export default function ProfilePage() {
 
         <div className="relative z-10">
           <span className="text-[9px] font-black uppercase tracking-wider text-yellow-800 bg-yellow-500/10 border border-yellow-250/60 px-2.5 py-1 rounded-full inline-block">
-            👤 User Dashboard
+            User Dashboard
           </span>
           <h2 className="font-heading font-black text-lg text-slate-900 mt-2.5 leading-tight">
             Namma Thanjai Account
@@ -323,7 +323,7 @@ export default function ProfilePage() {
                 Plan Status: Free Plan
               </span>
               <p className="text-[9px] text-slate-500 leading-normal font-bold">
-                ⚠️ Active listings will be automatically removed after 30 days.
+                Active listings will be automatically removed after 30 days.
               </p>
             </div>
 
@@ -474,7 +474,7 @@ export default function ProfilePage() {
               <div>
                 <h4 className="text-xs font-bold">Install on iPhone / Safari</h4>
                 <p className="text-[10px] text-muted-foreground mt-1 leading-normal">
-                  Tap the **Share** button <span className="font-bold underline text-blue-500 inline-block px-1">📤</span> in Safari, then select **Add to Home Screen** <span className="font-bold underline text-blue-500 inline-block px-1">➕</span>.
+                  Tap the **Share** button in Safari, then select **Add to Home Screen**.
                 </p>
               </div>
             </div>
@@ -553,7 +553,7 @@ export default function ProfilePage() {
                             {post.title || post.name || post.shop_name || "Untitled Listing"}
                           </h5>
                           <span className="text-[10px] text-slate-500 block mt-0.5">
-                            📍 {post.area_tag}
+                            {post.area_tag}
                           </span>
                         </div>
      
@@ -590,7 +590,7 @@ export default function ProfilePage() {
                             {post.title || post.name || "Saved Listing"}
                           </h5>
                           <span className="text-[10px] text-slate-500 block mt-0.5">
-                            📍 {post.area_tag || post.location || "Thanjavur"}
+                            {post.area_tag || post.location || "Thanjavur"}
                           </span>
                         </div>
                       </div>

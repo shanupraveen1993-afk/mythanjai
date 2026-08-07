@@ -1143,7 +1143,7 @@ export default function CreatePostModal({
                   </div>
 
                   <div className="text-[10px] text-slate-400 font-bold mt-2 text-center bg-slate-50 border border-slate-100 p-2.5 rounded-xl max-w-sm mx-auto">
-                    💡 This is exactly how other residents in Tanjore will see your listing! Your raw text will be structured by AI to match this design.
+                    This is exactly how other residents in Tanjore will see your listing! Your raw text will be structured by AI to match this design.
                   </div>
                 </div>
 

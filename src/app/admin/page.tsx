@@ -284,7 +284,7 @@ export default function AdminPage() {
           phone: "9948373420",
           is_verified: true,
           experience: "8+ Years Experience",
-          description: "🛠️ Services Offered:\n• House wiring & DB box installations\n• Inverter setup & battery maintenance\n• AC repair, filter cleaning & gas charge\n\n⚙️ Expertise:\n• 8+ Years Experience\n• Covers Tanjore town, Srinivasapuram, NHU\n• ₹150 visiting charge",
+          description: "Services Offered:\n• House wiring & DB box installations\n• Inverter setup & battery maintenance\n• AC repair, filter cleaning & gas charge\n\nExpertise:\n• 8+ Years Experience\n• Covers Tanjore town, Srinivasapuram, NHU\n• ₹150 visiting charge",
           created_at: now,
         },
         {
@@ -296,7 +296,7 @@ export default function AdminPage() {
           phone: "9845612300",
           is_verified: true,
           experience: "5 Years",
-          description: "🛠️ Services Offered:\n• Bathroom fittings & sanitary repairs\n• Leakage detection & pipeline replacements\n• Water heater / geyser installations\n\n⚙️ Expertise:\n• 5 Years Experience\n• Fully equipped toolkits\n• Free consultation on layout remodeling",
+          description: "Services Offered:\n• Bathroom fittings & sanitary repairs\n• Leakage detection & pipeline replacements\n• Water heater / geyser installations\n\nExpertise:\n• 5 Years Experience\n• Fully equipped toolkits\n• Free consultation on layout remodeling",
           created_at: now,
         },
         {
@@ -308,7 +308,7 @@ export default function AdminPage() {
           phone: "9444122334",
           is_verified: true,
           experience: "12+ Years",
-          description: "🛠️ Services Offered:\n• Custom wood furniture & table building\n• Door frame mounting & lock repairs\n• Wardrobes & modular kitchen carpentry\n\n⚙️ Expertise:\n• 12+ Years Experience\n• Custom sizing design consults\n• Native wood artisan",
+          description: "Services Offered:\n• Custom wood furniture & table building\n• Door frame mounting & lock repairs\n• Wardrobes & modular kitchen carpentry\n\nExpertise:\n• 12+ Years Experience\n• Custom sizing design consults\n• Native wood artisan",
           created_at: now,
         },
         {
@@ -320,7 +320,7 @@ export default function AdminPage() {
           phone: "9894055667",
           is_verified: true,
           experience: "6 Years Experience",
-          description: "🛠️ Services Offered:\n• Inverter AC card repair & chip diagnostics\n• Fridge cooling coil replacement & gas topup\n• Deep washing & fan motor repairs\n\n⚙️ Expertise:\n• 6 Years Experience\n• Home inspection within 2 hours",
+          description: "Services Offered:\n• Inverter AC card repair & chip diagnostics\n• Fridge cooling coil replacement & gas topup\n• Deep washing & fan motor repairs\n\nExpertise:\n• 6 Years Experience\n• Home inspection within 2 hours",
           created_at: now,
         },
         {
@@ -332,7 +332,7 @@ export default function AdminPage() {
           phone: "7502441122",
           is_verified: true,
           experience: "Chip-Level Specialist",
-          description: "🛠️ Services Offered:\n• Motherboard chip-level repair & soldering\n• Broken screen & laptop hinge adjustments\n• Data backup & operating system setup\n\n⚙️ Expertise:\n• Certified technician\n• Doorstep pickup & drop-off option available",
+          description: "Services Offered:\n• Motherboard chip-level repair & soldering\n• Broken screen & laptop hinge adjustments\n• Data backup & operating system setup\n\nExpertise:\n• Certified technician\n• Doorstep pickup & drop-off option available",
           created_at: now,
         },
         {
@@ -344,7 +344,7 @@ export default function AdminPage() {
           phone: "9600123456",
           is_verified: true,
           experience: "Home Visits Undertaken",
-          description: "🛠️ Services Offered:\n• Washing machine drum & belt repair\n• Refrigerator fan & thermostat services\n• Microwave magnetron replacement\n\n⚙️ Expertise:\n• Multi-brand home appliance support\n• Original spare parts replacement with warranty",
+          description: "Services Offered:\n• Washing machine drum & belt repair\n• Refrigerator fan & thermostat services\n• Microwave magnetron replacement\n\nExpertise:\n• Multi-brand home appliance support\n• Original spare parts replacement with warranty",
           created_at: now,
         }
       ];
@@ -673,10 +673,10 @@ export default function AdminPage() {
                     </span>
                   )}
                   <span className="text-[10px] text-slate-500 block mt-1">
-                    📍 Locality: <b className="text-slate-700">{item.area_tag}</b>
+                    Locality: <b className="text-slate-700">{item.area_tag}</b>
                   </span>
                   <span className="text-[10px] text-slate-500 block mt-0.5">
-                    📞 Contact: <b className="text-slate-700">{item.phone}</b>
+                    Contact: <b className="text-slate-700">{item.phone}</b>
                   </span>
                 </div>
 

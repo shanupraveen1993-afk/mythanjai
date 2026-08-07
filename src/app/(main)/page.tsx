@@ -37,11 +37,11 @@ export default function HomeLandingPage() {
   // Live Alert Ticker Carousel State
   const [activeAlertIdx, setActiveAlertIdx] = React.useState(0);
   const alerts = [
-    "🔥 Lands & Plots recently listed in West Main St, Thanjavur",
-    "🛠️ Murugan Painters got 4.9 star feedback in Tanjore Town",
-    "🏷️ Cafe Thanjai updated their special discount offer validity",
-    "⚡ Electrician Senthil is active now near Big Temple",
-    "📈 12 new local members joined Namma Thanjai today!"
+    "Lands & Plots recently listed in West Main St, Thanjavur",
+    "Murugan Painters received 4.9 star feedback in Tanjore Town",
+    "Cafe Thanjai updated their special discount offer validity",
+    "Electrician Senthil is active now near Big Temple",
+    "12 new local members joined Namma Thanjavur today!"
   ];
 
   React.useEffect(() => {
@@ -76,7 +76,7 @@ export default function HomeLandingPage() {
                     Welcome, {profile?.displayName || "Resident"}
                   </h1>
                   <span className="text-[9px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-700 border border-emerald-500/30 px-2.5 py-0.5 rounded-md flex items-center gap-1">
-                    ✓ Verified Resident
+                    <span>Verified Resident</span>
                   </span>
                 </div>
                 <p className="text-xs text-slate-600 mt-0.5 font-semibold">
@@ -119,7 +119,7 @@ export default function HomeLandingPage() {
                   <Building className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-heading font-black text-xs text-slate-900 group-hover:text-yellow-750 transition-colors">📢 Buy & Sell Channel</h3>
+                  <h3 className="font-heading font-black text-xs text-slate-900 group-hover:text-yellow-750 transition-colors">Buy & Sell Channel</h3>
                   <span className="text-[10px] text-slate-400 font-bold">Lands, Rentals, Vehicles</span>
                 </div>
               </div>
@@ -135,7 +135,7 @@ export default function HomeLandingPage() {
                   <Wrench className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-heading font-black text-xs text-slate-900 group-hover:text-yellow-750 transition-colors">🛠️ Helper Trades Channel</h3>
+                  <h3 className="font-heading font-black text-xs text-slate-900 group-hover:text-yellow-750 transition-colors">Helper Trades Channel</h3>
                   <span className="text-[10px] text-slate-400 font-bold">Electricians, Plumbers, Mechanics</span>
                 </div>
               </div>
@@ -151,7 +151,7 @@ export default function HomeLandingPage() {
                   <Store className="w-5 h-5" />
                 </div>
                 <div>
-                  <h3 className="font-heading font-black text-xs text-slate-900 group-hover:text-yellow-750 transition-colors">🏪 Recent Offers Channel</h3>
+                  <h3 className="font-heading font-black text-xs text-slate-900 group-hover:text-yellow-750 transition-colors">Recent Offers Channel</h3>
                   <span className="text-[10px] text-slate-400 font-bold">Store Discounts & Video Reels</span>
                 </div>
               </div>
@@ -167,7 +167,7 @@ export default function HomeLandingPage() {
               <div className="flex items-center gap-2">
                 <Building className="w-5 h-5 text-yellow-600" />
                 <h2 className="font-heading font-black text-base text-slate-900">
-                  📢 Popular Buy & Sell Deals
+                  Popular Buy & Sell Deals
                 </h2>
               </div>
               <button
@@ -286,7 +286,7 @@ export default function HomeLandingPage() {
               <div className="flex items-center gap-2">
                 <Wrench className="w-5 h-5 text-yellow-600" />
                 <h2 className="font-heading font-black text-base text-slate-900">
-                  🛠️ Top-Rated Helper Technicians
+                  Top-Rated Helper Technicians
                 </h2>
               </div>
               <button
@@ -304,7 +304,7 @@ export default function HomeLandingPage() {
                   <span className="text-[9px] font-black uppercase text-amber-750 bg-amber-500/10 px-2 py-0.5 rounded-md border border-amber-200">
                     Electrician
                   </span>
-                  <span className="text-xs font-black text-emerald-600">★ 4.9 Rating</span>
+                  <span className="text-xs font-black text-emerald-600">Rating: 4.9</span>
                 </div>
                 <h3 className="font-heading font-extrabold text-sm text-slate-800">
                   Senthil Kumar - Home Electrician
@@ -313,7 +313,7 @@ export default function HomeLandingPage() {
                   8+ Years Experience. House wiring, DB box, inverter assembly & quick repairs.
                 </p>
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
-                  <span>📍 Tanjore Town</span>
+                  <span>Tanjore Town</span>
                   <button onClick={() => router.push("/services")} className="text-yellow-600 font-black hover:underline">
                     Hire Technician →
                   </button>
@@ -326,7 +326,7 @@ export default function HomeLandingPage() {
                   <span className="text-[9px] font-black uppercase text-blue-750 bg-blue-500/10 px-2 py-0.5 rounded-md border border-blue-200">
                     Plumber
                   </span>
-                  <span className="text-xs font-black text-emerald-600">★ 4.8 Rating</span>
+                  <span className="text-xs font-black text-emerald-600">Rating: 4.8</span>
                 </div>
                 <h3 className="font-heading font-extrabold text-sm text-slate-800">
                   Rajesh K - Expert Plumber
@@ -335,7 +335,7 @@ export default function HomeLandingPage() {
                   Pipe fitting, water tank washing, Kaveri line tap connections & leak fixes.
                 </p>
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
-                  <span>📍 Medical College Rd</span>
+                  <span>Medical College Rd</span>
                   <button onClick={() => router.push("/services")} className="text-yellow-600 font-black hover:underline">
                     Hire Technician →
                   </button>
@@ -348,7 +348,7 @@ export default function HomeLandingPage() {
                   <span className="text-[9px] font-black uppercase text-purple-750 bg-purple-500/10 px-2 py-0.5 rounded-md border border-purple-200">
                     Carpenter
                   </span>
-                  <span className="text-xs font-black text-emerald-600">★ 5.0 Rating</span>
+                  <span className="text-xs font-black text-emerald-600">Rating: 5.0</span>
                 </div>
                 <h3 className="font-heading font-extrabold text-sm text-slate-800">
                   Venu Gopal - Wood Architect
@@ -357,7 +357,7 @@ export default function HomeLandingPage() {
                   Modular kitchen woodworks, door laminations, locks repairs & bespoke furniture.
                 </p>
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
-                  <span>📍 South Rampart Rd</span>
+                  <span>South Rampart Rd</span>
                   <button onClick={() => router.push("/services")} className="text-yellow-600 font-black hover:underline">
                     Hire Technician →
                   </button>
@@ -372,7 +372,7 @@ export default function HomeLandingPage() {
               <div className="flex items-center gap-2">
                 <Store className="w-5 h-5 text-yellow-600" />
                 <h2 className="font-heading font-black text-base text-slate-900">
-                  🏪 Recent Shop Offers & Video Reels
+                  Recent Shop Offers & Video Reels
                 </h2>
               </div>
               <button
@@ -394,7 +394,7 @@ export default function HomeLandingPage() {
                     className="object-cover hover:scale-105 transition-transform duration-300"
                   />
                   <span className="absolute top-2 left-2 text-[9px] font-black uppercase text-amber-950 bg-amber-400 px-2 py-0.5 rounded-md shadow-xs">
-                    🎬 Reel Offer
+                    Reel Offer
                   </span>
                 </div>
                 <div className="flex justify-between items-center mt-1">
@@ -407,7 +407,7 @@ export default function HomeLandingPage() {
                   Buy 1 Ghee Roast & Get 1 Free Degree Coffee between 4 PM to 7 PM.
                 </p>
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
-                  <span>📍 Near Big Temple</span>
+                  <span>Near Big Temple</span>
                   <button onClick={() => router.push("/shops")} className="text-yellow-600 font-black hover:underline">
                     View Offer Reel →
                   </button>
@@ -437,7 +437,7 @@ export default function HomeLandingPage() {
                   20% direct discount on pure Tanjore handloom silk sarees this festival week.
                 </p>
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
-                  <span>📍 South Rampart Rd</span>
+                  <span>South Rampart Rd</span>
                   <button onClick={() => router.push("/shops")} className="text-yellow-600 font-black hover:underline">
                     View Offer Reel →
                   </button>
@@ -467,7 +467,7 @@ export default function HomeLandingPage() {
                   10% direct discount on 25KG Ponni Rice bags with free Tanjore home delivery.
                 </p>
                 <div className="flex justify-between items-center pt-2.5 border-t border-slate-100 text-[11px] font-bold text-slate-500">
-                  <span>📍 Srinivasapuram</span>
+                  <span>Srinivasapuram</span>
                   <button onClick={() => router.push("/shops")} className="text-yellow-600 font-black hover:underline">
                     View Offer Reel →
                   </button>
@@ -552,7 +552,7 @@ export default function HomeLandingPage() {
                 <ArrowRight className="w-4 h-4 text-slate-955" />
               </button>
               <p className="text-[10px] text-slate-400 font-bold">
-                🔒 Quick 10-Second WhatsApp Verification
+                Quick 10-Second WhatsApp Verification
               </p>
             </div>
 
@@ -857,7 +857,7 @@ export default function HomeLandingPage() {
           
           <div className="flex flex-col gap-1 max-w-sm">
             <span className="text-[9px] font-black uppercase tracking-widest text-yellow-500 bg-yellow-500/10 border border-yellow-500/25 px-2.5 py-0.5 rounded-full w-fit">
-              ✨ Simple Guide
+              Simple Guide
             </span>
             <h3 className="font-heading font-black text-xl text-white tracking-tight leading-tight mt-2.5">
               How to Post on Namma Thanjai
