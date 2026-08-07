@@ -907,20 +907,19 @@ export function RobotHero({
           </p>
         </div>
 
-        {/* 2. Dynamic Rotational Topic Badge (Light Grey / Sleek Slate style) */}
-        <div className="h-7 sm:h-8 flex items-center justify-center my-0.5 overflow-hidden">
+        {/* 2. Dynamic Rotational Topic (Bigger low-opacity light grey text) */}
+        <div className="h-7 sm:h-9 flex items-center justify-center my-0.5 overflow-hidden">
           <AnimatePresence mode="wait">
-            <motion.div
+            <motion.h2
               key={wordIndex}
-              initial={{ opacity: 0, y: -6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 6 }}
+              initial={{ opacity: 0, y: -6, scale: 0.95 }}
+              animate={{ opacity: 0.25, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 6, scale: 1.05 }}
               transition={{ duration: 0.25 }}
-              className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-slate-100 border border-slate-250 text-slate-800 font-black text-xs sm:text-sm uppercase tracking-wider shadow-3xs"
+              className="font-sans font-black text-xl sm:text-3xl text-slate-400 uppercase tracking-widest text-center select-none"
             >
-              <Sparkles className="w-3.5 h-3.5 text-yellow-600 animate-pulse" />
-              <span>{words[wordIndex]}</span>
-            </motion.div>
+              {words[wordIndex]}
+            </motion.h2>
           </AnimatePresence>
         </div>
 
@@ -965,14 +964,14 @@ export function RobotHero({
           </button>
         </div>
 
-        {/* 5. Single Primary Action Button: REGISTER */}
+        {/* 5. Single Primary Action Button: REGISTER TO POST */}
         <div className="w-full max-w-lg mt-1">
           <button
             type="button"
             onClick={onCtaClick}
             className="w-full py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs sm:text-sm uppercase tracking-wider transition-all hover:scale-[1.01] active:scale-[0.98] shadow-md shadow-yellow-500/20 border-0 text-center flex items-center justify-center gap-2 cursor-pointer"
           >
-            <span>{ctaText === "Verified" ? "Verified Profile" : "Register Helper / Post Ad"}</span>
+            <span>{ctaText === "Verified" ? "Verified Profile" : "Register to Post"}</span>
             <ArrowRight className="w-4 h-4 text-slate-955" />
           </button>
         </div>
