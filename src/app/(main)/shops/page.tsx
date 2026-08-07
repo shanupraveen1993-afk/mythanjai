@@ -677,94 +677,39 @@ export default function ShopsPage() {
 
                   {/* Right Column: Live Mockup Card Preview */}
                   <div className="flex flex-col gap-3 sticky top-0 p-1 md:border-l border-slate-100 md:pl-6 h-full justify-start select-none w-full">
+                  {/* Right Column: Static Sample Offer Reference Box (NO EMULATOR) */}
+                  <div className="flex flex-col gap-3 p-1 md:border-l border-slate-100 md:pl-6 h-full justify-start font-sans w-full">
                     <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">
-                      Live Post Preview Reference Guide
+                      Sample Offer Listing Reference
                     </span>
 
-                    {/* Mockup Card */}
-                    <div className="bg-white border border-slate-200/95 rounded-2xl p-4 shadow-md flex flex-col gap-3.5 w-full max-w-sm mx-auto text-left">
-                      
-                      {/* Badge / Category Header */}
-                      <div className="flex items-center justify-between">
-                        <span className="bg-yellow-55 text-yellow-900 border border-yellow-250/50 font-bold px-2.5 py-0.5 rounded-xl text-[9px] flex items-center gap-1">
-                          <Store className="w-3.5 h-3.5 text-slate-500" />
-                          <span>{selectedCategory || "Showroom"}</span>
+                    {/* Clean Static Reference Card */}
+                    <div className="bg-slate-50 border border-slate-200/90 rounded-2xl p-4 flex flex-col gap-3 w-full max-w-sm mx-auto text-left">
+                      <div className="flex justify-between items-center">
+                        <span className="text-[9px] font-black uppercase text-purple-950 bg-purple-400 px-2 py-0.5 rounded-md">
+                          Flat 20% Off Deal
                         </span>
-                        
-                        {displayHours && (
-                          <span className="text-[10px] text-slate-400 font-bold flex items-center gap-1">
-                            <Calendar className="w-3.5 h-3.5 text-slate-300" />
-                            {displayHours}
-                          </span>
-                        )}
+                        <span className="text-xs font-black text-purple-600">
+                          Valid 15 Days
+                        </span>
                       </div>
+                      
+                      <h4 className="font-heading font-extrabold text-sm text-slate-800">
+                        Tanjore Handloom Silk Saree Festival Offer
+                      </h4>
 
-                      {/* Store Name & Address */}
-                      <div>
-                        <h3 className="font-heading font-extrabold text-sm text-slate-800 leading-snug">
-                          {displayShopName}
-                        </h3>
-                        <p className="text-[10px] text-slate-500 mt-1 leading-normal font-bold">
-                          {displayAddress} {displayLandmark ? `(Landmark: ${displayLandmark})` : ""}
-                        </p>
-                      </div>
+                      <p className="text-xs text-slate-600 font-semibold leading-relaxed bg-white p-3 rounded-xl border border-slate-200">
+                        Get 20% direct store discount on pure silk sarees & wedding collections. Free gift voucher on purchases above ₹5,000.
+                      </p>
 
-                      {/* Store Signboard / Photo */}
-                      <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-slate-50 border border-slate-100 shadow-xs">
-                        <img
-                          src={previewImage}
-                          alt="Store Cover"
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-
-                      {/* Display Offer Deal if configured */}
-                      {displayOfferTitle && (
-                        <div className="bg-yellow-50 border border-yellow-200/60 rounded-xl p-3 flex flex-col gap-1.5 shadow-2xs border-dashed">
-                          <div className="flex items-center justify-between">
-                            <span className="text-[9px] font-black text-yellow-800 uppercase tracking-wider flex items-center gap-1">
-                              <Sparkles className="w-3 h-3 text-yellow-600 fill-yellow-500/20" />
-                              Active Shop Offer
-                            </span>
-                            {offerSocialLink && (
-                              <span className="text-[8px] text-slate-400 font-bold flex items-center gap-0.5">
-                                <Video className="w-3 h-3 text-slate-400" />
-                                Video Attached
-                              </span>
-                            )}
-                          </div>
-                          <h4 className="text-[11px] font-extrabold text-slate-900 leading-tight">
-                            {displayOfferTitle}
-                          </h4>
-                          {displayOfferDesc && (
-                            <p className="text-[10px] text-slate-550 leading-normal">
-                              {displayOfferDesc}
-                            </p>
-                          )}
-                        </div>
-                      )}
-
-                      {/* Footer Details */}
-                      <div className="flex items-center justify-between pt-2 border-t border-slate-100 mt-1">
-                        <div className="flex items-center gap-1 text-[10px] text-slate-500 font-bold">
-                          <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                          <span>{formArea}</span>
-                        </div>
-
-                        <div className="flex gap-2">
-                          <button className="p-1.5 rounded-xl bg-slate-100 text-slate-450 border border-slate-200 cursor-not-allowed" disabled>
-                            <Share2 className="w-3.5 h-3.5" />
-                          </button>
-                          <button className="flex items-center gap-1 bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-xl text-[10px] cursor-not-allowed" disabled>
-                            <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
-                            <span>WhatsApp</span>
-                          </button>
-                        </div>
+                      <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 pt-1">
+                        <span>📍 South Rampart Rd, Tanjore</span>
+                        <span>Sample Only</span>
                       </div>
                     </div>
 
-                    <div className="text-[10px] text-slate-400 font-bold mt-2 text-center bg-slate-50 border border-slate-100 p-2.5 rounded-xl max-w-sm mx-auto">
-                      💡 This is exactly how your showroom will look in the Tanjore directory map and feed list! Details will be structured by AI to match this guide.
+                    <div className="text-[10px] text-slate-500 font-bold mt-2 text-center bg-yellow-50 border border-yellow-200/60 p-3 rounded-xl max-w-sm mx-auto">
+                      ⚡ <strong>AI Auto-Refinement:</strong> Upload visiting card or enter offer details. Gemini AI automatically structures your promotion before publishing live.
                     </div>
                   </div>
 
@@ -790,9 +735,10 @@ export default function ShopsPage() {
                     )}
                   </button>
                 </div>
-              </form>
-        </div>
-      )}
+              </div>
+            </form>
+          </div>
+        )}
 
           {/* Dynamic Leaflet Map Overlay Pane */}
           {mapShop && mapShop.latitude && mapShop.longitude && (

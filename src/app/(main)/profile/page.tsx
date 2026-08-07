@@ -41,8 +41,10 @@ export default function ProfilePage() {
   const [verificationPending, setVerificationPending] = useState(false);
   const [isDbVerified, setIsDbVerified] = useState(false);
 
-  // My Postings states
+  // My Postings & Saved Bookmarks states
+  const [profileTab, setProfileTab] = useState<"my_posts" | "saved_posts">("my_posts");
   const [myPosts, setMyPosts] = useState<any[]>([]);
+  const [savedPosts, setSavedPosts] = useState<any[]>([]);
   const [postsLoading, setPostsLoading] = useState(true);
 
   // PWA Install prompt states
@@ -477,7 +479,9 @@ export default function ProfilePage() {
               </div>
             </div>
           )}
-                {/* Right Column: My Listings Feed (2/3 width) */}
+        </div>
+
+        {/* Right Column: My Listings & Saved Bookmarks (2/3 width) */}
         <div className="md:col-span-2 flex flex-col gap-4">
           {!isDbVerified ? (
             <div className="bg-white border border-slate-200/80 rounded-2xl p-6 flex flex-col gap-5 text-center items-center shadow-sm">
@@ -501,53 +505,103 @@ export default function ProfilePage() {
               </div>
             </div>
           ) : (
-            <div className="bg-white border border-slate-200/80 rounded-2xl p-4 flex flex-col gap-3 shadow-sm">
-              <h4 className="font-heading font-black text-sm text-slate-800 px-1">My Active Listings</h4>
-   
-              {postsLoading ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {[1, 2].map((n) => (
-                    <div key={n} className="bg-slate-50 border border-slate-100 rounded-xl p-3 h-16 animate-pulse" />
-                  ))}
-                </div>
-              ) : myPosts.length === 0 ? (
-                <div className="text-center py-10 border border-dashed border-slate-200 rounded-2xl text-xs text-slate-500 bg-slate-50">
-                  You haven't posted any directory listings yet.
-                </div>
-              ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {myPosts.map((post) => (
-                    <div
-                      key={post.id}
-                      className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5 shadow-xs flex items-center justify-between gap-3 hover:shadow-md transition-shadow animate-fade-in"
-                    >
-                      <div className="flex-1 min-w-0">
-                        <span className="text-[9px] uppercase font-bold text-amber-600 tracking-wider">
-                          {post.colName?.replace(/_/g, " ")}
-                        </span>
-                        <h5 className="font-bold text-xs text-slate-800 truncate mt-0.5">
-                          {post.title || post.name || post.shop_name || "Untitled Listing"}
-                        </h5>
-                        <span className="text-[10px] text-slate-500 block mt-0.5">
-                          📍 {post.area_tag}
-                        </span>
-                      </div>
-   
-                      {/* Delete Trigger */}
-                      <button
-                        onClick={() => handleDeletePost(post.id, post.colName)}
-                        className="p-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 transition-colors shrink-0 cursor-pointer"
-                        title="Delete Listing"
+            <div className="bg-white border border-slate-200/80 rounded-2xl p-4 flex flex-col gap-4 shadow-sm">
+              
+              {/* Tabs: My Listings vs Saved Posts */}
+              <div className="flex bg-slate-100 p-1 rounded-xl border border-slate-200">
+                <button
+                  onClick={() => setProfileTab("my_posts")}
+                  className={`flex-1 py-1.5 text-xs font-black rounded-lg transition-all cursor-pointer ${
+                    profileTab === "my_posts" ? "bg-white text-slate-900 shadow-2xs" : "text-slate-500 hover:text-slate-800"
+                  }`}
+                >
+                  My Active Listings ({myPosts.length})
+                </button>
+                <button
+                  onClick={() => setProfileTab("saved_posts")}
+                  className={`flex-1 py-1.5 text-xs font-black rounded-lg transition-all cursor-pointer ${
+                    profileTab === "saved_posts" ? "bg-yellow-500 text-slate-955 shadow-2xs" : "text-slate-500 hover:text-slate-800"
+                  }`}
+                >
+                  Saved Bookmarks ({savedPosts.length})
+                </button>
+              </div>
+
+              {profileTab === "my_posts" ? (
+                postsLoading ? (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    {[1, 2].map((n) => (
+                      <div key={n} className="bg-slate-50 border border-slate-100 rounded-xl p-3 h-16 animate-pulse" />
+                    ))}
+                  </div>
+                ) : myPosts.length === 0 ? (
+                  <div className="text-center py-10 border border-dashed border-slate-200 rounded-2xl text-xs text-slate-500 bg-slate-50">
+                    You haven't posted any directory listings yet.
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {myPosts.map((post) => (
+                      <div
+                        key={post.id}
+                        className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5 shadow-xs flex items-center justify-between gap-3 hover:shadow-md transition-shadow animate-fade-in"
                       >
-                        <Trash2 className="w-4 h-4" />
-                      </button>
-                    </div>
-                  ))}
-                </div>
+                        <div className="flex-1 min-w-0">
+                          <span className="text-[9px] uppercase font-bold text-amber-600 tracking-wider">
+                            {post.colName?.replace(/_/g, " ")}
+                          </span>
+                          <h5 className="font-bold text-xs text-slate-800 truncate mt-0.5">
+                            {post.title || post.name || post.shop_name || "Untitled Listing"}
+                          </h5>
+                          <span className="text-[10px] text-slate-500 block mt-0.5">
+                            📍 {post.area_tag}
+                          </span>
+                        </div>
+     
+                        {/* Delete Trigger */}
+                        <button
+                          onClick={() => handleDeletePost(post.id, post.colName)}
+                          className="p-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 transition-colors shrink-0 cursor-pointer"
+                          title="Delete Listing"
+                        >
+                          <Trash2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )
+              ) : (
+                /* Saved Bookmarks List */
+                savedPosts.length === 0 ? (
+                  <div className="text-center py-10 border border-dashed border-slate-200 rounded-2xl text-xs text-slate-500 bg-slate-50">
+                    No saved posts yet. Click the bookmark icon on any listing card to save it here!
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    {savedPosts.map((post) => (
+                      <div
+                        key={post.id}
+                        className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5 shadow-xs flex items-center justify-between gap-3 hover:shadow-md transition-shadow animate-fade-in"
+                      >
+                        <div className="flex-1 min-w-0">
+                          <span className="text-[9px] uppercase font-bold text-yellow-750 tracking-wider">
+                            Saved Item
+                          </span>
+                          <h5 className="font-bold text-xs text-slate-800 truncate mt-0.5">
+                            {post.title || post.name || "Saved Listing"}
+                          </h5>
+                          <span className="text-[10px] text-slate-500 block mt-0.5">
+                            📍 {post.area_tag || post.location || "Thanjavur"}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )
               )}
+
             </div>
           )}
-        </div>     </div>
+        </div>
       </div>
     </div>
   );

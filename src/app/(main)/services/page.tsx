@@ -392,76 +392,41 @@ export default function ServicesPage() {
                     </div>
                   </div>
 
-                  {/* Right Column: Live Mockup Card Preview */}
-                  <div className="flex flex-col gap-3 sticky top-0 p-1 md:border-l border-slate-100 md:pl-6 h-full justify-start select-none w-full">
+                  {/* Right Column: Static Sample Trade Reference Box (NO EMULATOR) */}
+                  <div className="flex flex-col gap-3 p-1 md:border-l border-slate-100 md:pl-6 h-full justify-start font-sans w-full">
                     <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest block mb-1">
-                      Live Post Preview Reference Guide
+                      Sample Service Listing Reference
                     </span>
 
-                    {/* Mockup Card */}
-                    <div className="bg-white border border-slate-200/95 rounded-2xl p-4 shadow-md flex flex-col gap-3.5 w-full max-w-sm mx-auto text-left">
-                      
-                      {/* Badge / Category Header */}
-                      <div className="flex items-center justify-between">
-                        <span className="bg-yellow-55 text-yellow-900 border border-yellow-250/50 font-bold px-2.5 py-0.5 rounded-xl text-[9px] flex items-center gap-1">
-                          {getPreviewIcon()}
-                          <span>{selectedCategory || "Expert Skill"}</span>
+                    {/* Clean Static Reference Card */}
+                    <div className="bg-slate-50 border border-slate-200/90 rounded-2xl p-4 flex flex-col gap-3 w-full max-w-sm mx-auto text-left">
+                      <div className="flex justify-between items-center">
+                        <span className="text-[9px] font-black uppercase text-yellow-750 bg-yellow-500/10 px-2 py-0.5 rounded-md border border-yellow-200">
+                          Sample Trade Listing
                         </span>
-                        
-                        <div className="flex items-center gap-1 text-[9px] text-slate-455 font-bold uppercase tracking-wider">
-                          <ShieldCheck className="w-3.5 h-3.5 text-yellow-600 fill-yellow-50/10" />
-                          <span>Verified Skill</span>
-                        </div>
+                        <span className="text-xs font-black text-slate-900">
+                          10+ Years Experience
+                        </span>
                       </div>
+                      
+                      <h4 className="font-heading font-extrabold text-sm text-slate-800">
+                        Senior Electrician & Plumbing Specialist
+                      </h4>
 
-                      {/* Title & Experience */}
-                      <div>
-                        <h3 className="font-heading font-extrabold text-sm text-slate-800 leading-snug">
-                          {displayName}
-                        </h3>
-                        <div className="text-[10px] text-yellow-600 font-black mt-1">
-                          {displayExperience}
-                        </div>
-                      </div>
-
-                      {/* Photo illustration */}
-                      <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-slate-50 border border-slate-100 shadow-xs">
-                        <img
-                          src={previewImage}
-                          alt="Category Cover"
-                          className="w-full h-full object-cover"
-                        />
-                      </div>
-
-                      {/* Description */}
-                      <p className="text-xs text-slate-500 whitespace-pre-wrap font-sans leading-relaxed bg-slate-50 p-2.5 rounded-xl border border-slate-200/60 max-h-[140px] overflow-y-auto no-scrollbar">
-                        {displayDescription}
+                      <p className="text-xs text-slate-600 font-semibold leading-relaxed bg-white p-3 rounded-xl border border-slate-200">
+                        Experienced in house wiring, motor pump repairs, inverter installation, and pipeline leak fixing across Tanjore Town & Vallam.
                       </p>
 
-                      {/* Footer */}
-                      <div className="flex items-center justify-between pt-2 border-t border-slate-100 mt-1">
-                        <div className="flex items-center gap-1 text-[10px] text-slate-500 font-bold">
-                          <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                          <span>{formArea}</span>
-                        </div>
-
-                        <div className="flex gap-2">
-                          <button className="p-1.5 rounded-xl bg-slate-100 text-slate-450 border border-slate-200 cursor-not-allowed" disabled>
-                            <Share2 className="w-3.5 h-3.5" />
-                          </button>
-                          <button className="flex items-center gap-1 bg-emerald-500 text-white font-bold px-3 py-1.5 rounded-xl text-[10px] cursor-not-allowed" disabled>
-                            <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
-                            <span>WhatsApp</span>
-                          </button>
-                        </div>
+                      <div className="flex justify-between items-center text-[10px] font-bold text-slate-400 pt-1">
+                        <span>📍 South Rampart / Tanjore Town</span>
+                        <span>Sample Only</span>
                       </div>
                     </div>
 
-                    <div className="text-[10px] text-slate-400 font-bold mt-2 text-center bg-slate-50 border border-slate-100 p-2.5 rounded-xl max-w-sm mx-auto">
-                      💡 This is exactly how your trade profile will be listed! Your details will be formatted by AI to match this design.
+                    <div className="text-[10px] text-slate-500 font-bold mt-2 text-center bg-yellow-50 border border-yellow-200/60 p-3 rounded-xl max-w-sm mx-auto">
+                      ⚡ <strong>AI Auto-Refinement:</strong> Upload your visiting card or enter details. Gemini AI automatically structures your trade service profile before publishing live.
                     </div>
                   </div>
-
                 </div>
 
                 {/* Centered actions */}
