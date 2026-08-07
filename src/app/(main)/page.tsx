@@ -479,25 +479,105 @@ export default function HomeLandingPage() {
         </div>
       ) : (
         /* ==========================================
-           EXACT OLD GUEST LANDING PAGE (WITH ROBOT MASCOT HERO)
+           GUEST ONBOARDING (MOBILE APP ONBOARDING ON MOBILE, ROBOT HERO ON DESKTOP)
            ========================================== */
         <div className="w-full relative flex flex-col">
-          <RobotHero
-            backgroundText="NAMMA THANJAI"
-            navItemsLeft={[]}
-            ctaText="Register"
-            onCtaClick={() => {
-              router.push("/classifieds?auth=popup");
-            }}
-            onCategoryClick={(category) => {
-              router.push(`/${category}`);
-            }}
-            color="#eab308"
-            pantallaColor="#fbbf24"
-            pantallaBrillo={1.6}
-            alerts={alerts}
-            activeAlertIdx={activeAlertIdx}
-          />
+          
+          {/* MOBILE APP ONBOARDING CONTAINER (Mobile Viewports ONLY) */}
+          <div className="block md:hidden w-full px-5 py-8 bg-gradient-to-b from-yellow-500/10 via-white to-white min-h-[85vh] flex flex-col justify-between items-center text-center">
+            
+            {/* Top Branding Emblem */}
+            <div className="flex flex-col items-center gap-3 mt-2">
+              <div className="w-20 h-20 rounded-3xl bg-white shadow-md p-2.5 flex items-center justify-center border border-yellow-300 shadow-yellow-500/10">
+                <Image 
+                  src="/namma_thanjai_logo.png" 
+                  alt="Namma Thanjavur Logo" 
+                  width={64}
+                  height={64}
+                  className="object-contain"
+                />
+              </div>
+              <span className="text-[10px] font-black uppercase tracking-widest text-yellow-800 bg-yellow-400/30 border border-yellow-500/30 px-3 py-1 rounded-full">
+                Thanjavur Resident Hub
+              </span>
+              <h1 className="font-heading font-black text-3xl text-slate-900 tracking-tight leading-tight">
+                Namma Thanjavur<span className="text-yellow-500">.</span>
+              </h1>
+              <p className="text-xs text-slate-600 font-semibold max-w-xs leading-relaxed">
+                Connect with verified local residents for buying, selling, helper trades, and exclusive shop deals.
+              </p>
+            </div>
+
+            {/* 3 Native App Feature Bullets */}
+            <div className="w-full flex flex-col gap-3 my-6 text-left">
+              <div className="bg-white border border-slate-200/80 rounded-2xl p-3.5 shadow-2xs flex items-center gap-3.5">
+                <div className="w-10 h-10 rounded-xl bg-yellow-500/10 text-yellow-600 flex items-center justify-center shrink-0 border border-yellow-250/60 font-black">
+                  <Building className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-heading font-black text-xs text-slate-900">1. Buy & Sell Classifieds</h3>
+                  <p className="text-[11px] text-slate-500 font-semibold">Lands, House Rentals, Used Vehicles & Appliances</p>
+                </div>
+              </div>
+
+              <div className="bg-white border border-slate-200/80 rounded-2xl p-3.5 shadow-2xs flex items-center gap-3.5">
+                <div className="w-10 h-10 rounded-xl bg-yellow-500/10 text-yellow-600 flex items-center justify-center shrink-0 border border-yellow-250/60 font-black">
+                  <Wrench className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-heading font-black text-xs text-slate-900">2. Helper Trades & Services</h3>
+                  <p className="text-[11px] text-slate-500 font-semibold">Verified Electricians, Plumbers, Painters & Mechanics</p>
+                </div>
+              </div>
+
+              <div className="bg-white border border-slate-200/80 rounded-2xl p-3.5 shadow-2xs flex items-center gap-3.5">
+                <div className="w-10 h-10 rounded-xl bg-yellow-500/10 text-yellow-600 flex items-center justify-center shrink-0 border border-yellow-250/60 font-black">
+                  <Store className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-heading font-black text-xs text-slate-900">3. Shop Directory & Reel Offers</h3>
+                  <p className="text-[11px] text-slate-500 font-semibold">Store Discounts, Promotions & Video Reels</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Onboarding CTA */}
+            <div className="w-full flex flex-col gap-3 mb-2">
+              <button
+                type="button"
+                onClick={() => router.push("/classifieds?auth=popup")}
+                className="w-full py-4 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-sm uppercase tracking-wider transition-all shadow-md shadow-yellow-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-95 border-0"
+              >
+                <span>Get Started / Register</span>
+                <ArrowRight className="w-4 h-4 text-slate-955" />
+              </button>
+              <p className="text-[10px] text-slate-400 font-bold">
+                🔒 Quick 10-Second WhatsApp Verification
+              </p>
+            </div>
+
+          </div>
+
+          {/* DESKTOP 3D ROBOT MASCOT HERO (Desktop Viewports ONLY) */}
+          <div className="hidden md:block w-full">
+            <RobotHero
+              backgroundText="NAMMA THANJAI"
+              navItemsLeft={[]}
+              ctaText="Register"
+              onCtaClick={() => {
+                router.push("/classifieds?auth=popup");
+              }}
+              onCategoryClick={(category) => {
+                router.push(`/${category}`);
+              }}
+              color="#eab308"
+              pantallaColor="#fbbf24"
+              pantallaBrillo={1.6}
+              alerts={alerts}
+              activeAlertIdx={activeAlertIdx}
+            />
+          </div>
+
         </div>
       )}
 
