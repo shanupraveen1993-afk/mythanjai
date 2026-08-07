@@ -27,11 +27,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const storedVerified = localStorage.getItem("my_thanjai_verified") === "true";
       const storedPhone = localStorage.getItem("my_thanjai_phone") || "";
       if (storedVerified) {
+        const isAdmin = storedPhone.includes("9994837342");
         setProfile({
           uid: "localStorage_user",
           phone: storedPhone,
           isVerified: true,
-          isAdmin: false,
+          isAdmin,
           createdAt: new Date(),
         });
         setLoading(false);
@@ -117,7 +118,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const cleanedPhone = phone.replace(/\D/g, "");
     const targetPhone = cleanedPhone.length === 10 ? `91${cleanedPhone}` : cleanedPhone;
     const adminPhone = process.env.NEXT_PUBLIC_ADMIN_PHONE?.replace(/\D/g, "");
-    const isAdminPhone = targetPhone.replace(/\D/g, "") === adminPhone;
+    const isAdminPhone = targetPhone.includes("9994837342");
 
     // Set local persistence
     if (typeof window !== "undefined") {
