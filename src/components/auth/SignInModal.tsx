@@ -24,14 +24,19 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
   // Listen to profile verification state to close modal and redirect
   useEffect(() => {
     if (profile?.isVerified) {
-      const redirect = searchParams.get("redirect");
-      const timer = setTimeout(() => {
-        onClose();
-        if (redirect) {
-          router.push(redirect);
+      onClose();
+      if (typeof window !== "undefined") {
+        const params = new URLSearchParams(window.location.search);
+        if (params.get("auth")) {
+          params.delete("auth");
+          const newSearch = params.toString() ? `?${params.toString()}` : "";
+          window.history.replaceState(null, "", `${window.location.pathname}${newSearch}`);
         }
-      }, 1000);
-      return () => clearTimeout(timer);
+      }
+      const redirect = searchParams.get("redirect");
+      if (redirect) {
+        router.push(redirect);
+      }
     }
   }, [profile?.isVerified, onClose, searchParams, router]);
 

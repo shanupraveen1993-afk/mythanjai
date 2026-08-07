@@ -34,6 +34,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
           if (userDoc.exists()) {
             const data = userDoc.data() as UserProfile;
+            const storedVerified = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_verified") === "true") : false;
+            const storedPhone = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_phone") || "") : "";
+
+            if (storedVerified) {
+              data.isVerified = true;
+              if (storedPhone) data.phone = storedPhone;
+            }
+
             const adminPhone = process.env.NEXT_PUBLIC_ADMIN_PHONE?.replace(/\D/g, "");
             const hasAdminPhone = data.phone && (data.phone.replace(/\D/g, "") === adminPhone || data.phone.includes("9994837342"));
             if (hasAdminPhone && !data.isAdmin) {
