@@ -962,16 +962,16 @@ export function RobotHero({
           </button>
         </div>
 
-        {/* 4. Mascot Robot Canvas (Perfectly Proportioned 3D Mascot) */}
+        {/* 4. Mascot Robot Canvas (Compact 3D Mascot - Fits 100% in First Fold) */}
         <div 
           onClick={handleRobotTap} 
-          className="w-full max-w-[360px] sm:max-w-[420px] md:max-w-[460px] h-[260px] sm:h-[300px] md:h-[320px] relative flex items-center justify-center cursor-pointer my-1"
+          className="w-full max-w-[280px] sm:max-w-[320px] md:max-w-[360px] h-[170px] sm:h-[190px] md:h-[210px] relative flex items-center justify-center cursor-pointer my-0.5"
         >
           <Canvas camera={{ position: [0, 0.12, 3.6], fov: 38 }}>
             <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
             <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} shadow-bias={-0.0005} />
             <Environment preset="studio" blur={0.5} />
-            <ResponsiveGroup scale={scale * 2.05}>
+            <ResponsiveGroup scale={scale * 1.35}>
               <RobotPrototype neckParams={{ baseR: 0.215, baseH: -0.05, midR: 0.28, midH: 0.02, lipBottomR: 0.295, lipBottomH: 0.045, lipTopR: 0.27, lipTopH: 0.055, innerR: 0.1, innerDropH: 0.0 }} bodyParams={{ bodyBevelR: 0.235, bodyBevelY: 0.34, bodyBevelT: 0.025 }} color={color} pantallaColor={pantallaColor} pantallaBrillo={pantallaBrillo} blinkCycle={blinkCycle} metalness={metalness} />
             </ResponsiveGroup>
           </Canvas>
