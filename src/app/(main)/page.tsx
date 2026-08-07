@@ -432,100 +432,12 @@ export default function HomeLandingPage() {
         </div>
       ) : (
         /* ==========================================
-           GUEST ONBOARDING (MOBILE ONBOARDING ON MOBILE, ROBOT HERO ON DESKTOP)
+           UNAUTHENTICATED GUEST LANDING PAGE (ROBOT HERO ON BOTH MOBILE & DESKTOP)
            ========================================== */
-        <div className="w-full relative flex flex-col min-h-[85vh] justify-between">
+        <div className="w-full relative flex flex-col min-h-[85vh] justify-between my-2">
           
-          {/* NATIVE MOBILE APP ONBOARDING CONTAINER (Mobile Viewports ONLY - Strictly 100vh, No Scroll) */}
-          <div className="block md:hidden w-full px-5 py-4 bg-gradient-to-b from-yellow-500/15 via-slate-50/50 to-white h-[calc(100vh-64px)] max-h-[100vh] flex flex-col justify-between items-center text-center overflow-hidden shrink-0">
-            
-            {/* Top Branding App Header */}
-            <div className="flex flex-col items-center gap-2 mt-1">
-              <div className="relative">
-                <div className="absolute inset-0 bg-yellow-500/20 rounded-3xl blur-md" />
-                <div className="relative w-16 h-16 rounded-2xl bg-white shadow-md p-2 flex items-center justify-center border border-yellow-300">
-                  <Image 
-                    src="/namma_thanjai_logo.png" 
-                    alt="Namma Thanjavur Logo" 
-                    width={52}
-                    height={52}
-                    className="object-contain"
-                  />
-                </div>
-              </div>
-              <span className="text-[9px] font-black uppercase tracking-widest text-yellow-850 bg-yellow-400/20 border border-yellow-500/30 px-3 py-0.5 rounded-full mt-1">
-                Thanjavur District App
-              </span>
-              <h1 className="font-heading font-black text-xl text-slate-900 tracking-tight leading-tight">
-                Namma Thanjavur<span className="text-yellow-500">.</span>
-              </h1>
-              <p className="text-[10px] text-slate-600 font-bold max-w-xs leading-relaxed">
-                Connect directly with verified local residents, technicians, and shops across Thanjavur.
-              </p>
-            </div>
-
-            {/* 3 Native App Onboarding Cards */}
-            <div className="w-full flex flex-col gap-2.5 my-3 text-left">
-              <div 
-                onClick={() => router.push("/?auth=popup")}
-                className="bg-white border border-slate-200/90 rounded-2xl p-3 shadow-xs flex items-center gap-3 cursor-pointer hover:border-yellow-400 transition-colors"
-              >
-                <div className="w-9 h-9 rounded-xl bg-yellow-500/15 text-yellow-700 flex items-center justify-center shrink-0 border border-yellow-300/60 font-black">
-                  <Building className="w-4 h-4 text-yellow-600" />
-                </div>
-                <div>
-                  <h3 className="font-heading font-black text-xs text-slate-900">1. Selling / Looking For</h3>
-                  <p className="text-[10px] text-slate-500 font-semibold leading-tight mt-0.5">Plot Lands, Rentals, Used Vehicles & Mobiles</p>
-                </div>
-              </div>
-
-              <div 
-                onClick={() => router.push("/?auth=popup")}
-                className="bg-white border border-slate-200/90 rounded-2xl p-3 shadow-xs flex items-center gap-3 cursor-pointer hover:border-yellow-400 transition-colors"
-              >
-                <div className="w-9 h-9 rounded-xl bg-yellow-500/15 text-yellow-700 flex items-center justify-center shrink-0 border border-yellow-300/60 font-black">
-                  <Wrench className="w-4 h-4 text-yellow-600" />
-                </div>
-                <div>
-                  <h3 className="font-heading font-black text-xs text-slate-900">2. Local Service</h3>
-                  <p className="text-[10px] text-slate-500 font-semibold leading-tight mt-0.5">Verified Electricians, Plumbers, Mechanics & Carpenters</p>
-                </div>
-              </div>
-
-              <div 
-                onClick={() => router.push("/?auth=popup")}
-                className="bg-white border border-slate-200/90 rounded-2xl p-3 shadow-xs flex items-center gap-3 cursor-pointer hover:border-yellow-400 transition-colors"
-              >
-                <div className="w-9 h-9 rounded-xl bg-yellow-500/15 text-yellow-700 flex items-center justify-center shrink-0 border border-yellow-300/60 font-black">
-                  <Store className="w-4 h-4 text-yellow-600" />
-                </div>
-                <div>
-                  <h3 className="font-heading font-black text-xs text-slate-900">3. Local Offer</h3>
-                  <p className="text-[10px] text-slate-500 font-semibold leading-tight mt-0.5">Store Discounts, Local Promotions & Video Reels</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Fixed Bottom Onboarding Action Dock */}
-            <div className="w-full flex flex-col gap-2.5 mb-2 pt-2 border-t border-slate-100">
-              <button
-                type="button"
-                onClick={() => router.push("/?auth=popup")}
-                className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-500 text-slate-955 font-black text-xs uppercase tracking-wider transition-all shadow-md shadow-yellow-500/20 flex items-center justify-center gap-2 cursor-pointer active:scale-95 border-0"
-              >
-                <span>Verify Mobile Number to Enter</span>
-                <ArrowRight className="w-4 h-4 text-slate-955" />
-              </button>
-              <div className="flex items-center justify-center gap-1.5 text-[10px] text-slate-400 font-bold">
-                <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                <span>Verified by WhatsApp • 100% Free for Thanjavur Residents</span>
-              </div>
-            </div>
-
-          </div>
-
-          {/* DESKTOP 3D ROBOT MASCOT HERO (Desktop Viewports ONLY) */}
-          <div className="hidden md:block w-full">
+          {/* 3D ROBOT MASCOT HERO (VISIBLE ON BOTH MOBILE & DESKTOP) */}
+          <div className="w-full">
             <RobotHero
               backgroundText="NAMMA THANJAI"
               navItemsLeft={[]}
@@ -533,8 +445,8 @@ export default function HomeLandingPage() {
               onCtaClick={() => {
                 router.push("/?auth=popup");
               }}
-              onCategoryClick={(category) => {
-                router.push(`/${category}`);
+              onCategoryClick={() => {
+                router.push("/?auth=popup");
               }}
               color="#eab308"
               pantallaColor="#fbbf24"
