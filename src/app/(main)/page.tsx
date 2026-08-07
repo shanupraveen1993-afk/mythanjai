@@ -558,8 +558,12 @@ export default function HomeLandingPage() {
               onCtaClick={() => {
                 router.push("/?auth=popup");
               }}
-              onCategoryClick={() => {
-                router.push("/?auth=popup");
+              onCategoryClick={(targetRoute) => {
+                if (targetRoute) {
+                  router.push(`/${targetRoute}`);
+                } else {
+                  router.push("/?auth=popup");
+                }
               }}
               color="#eab308"
               pantallaColor="#fbbf24"

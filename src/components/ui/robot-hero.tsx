@@ -930,28 +930,35 @@ export function RobotHero({
           </AnimatePresence>
         </div>
 
-        {/* 3. 3 Standalone Separate Clickable Buttons (Positioned ABOVE Robot with generous padding) */}
-        <div className="grid grid-cols-3 gap-2.5 sm:gap-4 w-full max-w-2xl px-2 my-1">
+        {/* 3. 4 Standalone Separate Clickable Channel Buttons (Positioned ABOVE Robot) */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 w-full max-w-2xl px-2 my-1">
           <button
             type="button"
-            onClick={() => onCategoryClick?.("classifieds")}
-            className="py-3 sm:py-4 px-3 sm:px-6 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-900 shadow-xs hover:shadow-md hover:border-yellow-400 transition-all text-center flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer font-black text-[11px] sm:text-xs md:text-sm uppercase tracking-wider active:scale-[0.97]"
+            onClick={() => onCategoryClick?.("classifieds?type=SELL")}
+            className="py-3 px-2 sm:px-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-900 shadow-xs hover:shadow-md hover:border-yellow-400 transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer font-black text-[11px] sm:text-xs uppercase tracking-wider active:scale-[0.97]"
           >
-            <span>Buy & Sell</span>
+            <span>🛒 Sell</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => onCategoryClick?.("classifieds?type=NEED")}
+            className="py-3 px-2 sm:px-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-900 shadow-xs hover:shadow-md hover:border-yellow-400 transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer font-black text-[11px] sm:text-xs uppercase tracking-wider active:scale-[0.97]"
+          >
+            <span>🎯 Need</span>
           </button>
           <button
             type="button"
             onClick={() => onCategoryClick?.("services")}
-            className="py-3 sm:py-4 px-3 sm:px-6 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-900 shadow-xs hover:shadow-md hover:border-yellow-400 transition-all text-center flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer font-black text-[11px] sm:text-xs md:text-sm uppercase tracking-wider active:scale-[0.97]"
+            className="py-3 px-2 sm:px-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-900 shadow-xs hover:shadow-md hover:border-yellow-400 transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer font-black text-[11px] sm:text-xs uppercase tracking-wider active:scale-[0.97]"
           >
-            <span>Services</span>
+            <span>🔧 Service</span>
           </button>
           <button
             type="button"
             onClick={() => onCategoryClick?.("shops")}
-            className="py-3 sm:py-4 px-3 sm:px-6 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-900 shadow-xs hover:shadow-md hover:border-yellow-400 transition-all text-center flex items-center justify-center gap-1.5 sm:gap-2 cursor-pointer font-black text-[11px] sm:text-xs md:text-sm uppercase tracking-wider active:scale-[0.97]"
+            className="py-3 px-2 sm:px-4 rounded-2xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-900 shadow-xs hover:shadow-md hover:border-yellow-400 transition-all text-center flex items-center justify-center gap-1.5 cursor-pointer font-black text-[11px] sm:text-xs uppercase tracking-wider active:scale-[0.97]"
           >
-            <span>Shops</span>
+            <span>🏪 Offer</span>
           </button>
         </div>
 
