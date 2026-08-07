@@ -39,17 +39,8 @@ export default function TopHeader({
           DESKTOP LAYOUT (>= md)
           ========================================== */}
       <div className="hidden md:flex items-center justify-between w-full max-w-7xl mx-auto px-6 py-4">
-        {/* Branding Logo - Left with Back Button if subpage */}
+        {/* Branding Logo - Left */}
         <div className="flex items-center gap-3">
-          {activeTab && activeTab !== "home" && (
-            <button
-              onClick={() => onTabChange?.("home")}
-              className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors flex items-center justify-center cursor-pointer border-0"
-              title="Back to Home"
-            >
-              <ArrowLeft className="w-4 h-4 text-slate-800" />
-            </button>
-          )}
           <div 
             onClick={() => onTabChange?.("home")}
             className="flex items-center gap-2.5 cursor-pointer select-none"

@@ -59,10 +59,11 @@ export default function HomeLandingPage() {
     <div className="w-full flex flex-col bg-white text-slate-800 min-h-screen font-sans">
       
       {/* ==========================================
-          LOGGED IN RESIDENT DASHBOARD BANNER
+          LOGGED IN RESIDENT DASHBOARD PORTAL
           ========================================== */}
-      {profile?.isVerified && (
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 pt-4 pb-2 animate-fade-in">
+      {profile?.isVerified ? (
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-6 animate-fade-in">
+          {/* Welcome Header */}
           <div className="bg-gradient-to-r from-yellow-500/10 via-amber-500/10 to-yellow-500/10 border border-yellow-500/30 rounded-3xl p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-5">
             <div className="flex items-center gap-4">
               <div className="w-14 h-14 rounded-2xl bg-yellow-500 text-slate-955 flex items-center justify-center font-heading font-black text-xl shadow-sm border border-yellow-400">
@@ -70,15 +71,15 @@ export default function HomeLandingPage() {
               </div>
               <div>
                 <div className="flex items-center gap-2">
-                  <h2 className="font-heading font-black text-lg text-slate-900">
-                    Welcome back, {profile?.displayName || "Resident"}
+                  <h2 className="font-heading font-black text-xl text-slate-900">
+                    Welcome, {profile?.displayName || "Resident"}
                   </h2>
                   <span className="text-[9px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-700 border border-emerald-500/30 px-2 py-0.5 rounded-md flex items-center gap-1">
-                    ✓ Verified
+                    ✓ Verified Resident
                   </span>
                 </div>
                 <p className="text-xs text-slate-600 mt-0.5 font-semibold">
-                  Thanjavur Community Member (+{profile?.phone || "919994837342"})
+                  Thanjavur Account (+{profile?.phone || "919994837342"})
                 </p>
               </div>
             </div>
@@ -87,52 +88,120 @@ export default function HomeLandingPage() {
             <div className="flex flex-wrap items-center gap-2">
               <button
                 onClick={() => router.push("/classifieds?create=true")}
-                className="bg-yellow-500 hover:bg-yellow-600 active:scale-95 text-slate-955 font-black px-4 py-2 rounded-xl text-xs transition-all shadow-xs cursor-pointer border border-yellow-450"
+                className="bg-yellow-500 hover:bg-yellow-600 active:scale-95 text-slate-955 font-black px-4 py-2.5 rounded-xl text-xs transition-all shadow-xs cursor-pointer border border-yellow-450"
               >
                 + Post Ad
               </button>
               <button
                 onClick={() => router.push("/services?create=true")}
-                className="bg-slate-900 hover:bg-slate-800 text-white font-black px-4 py-2 rounded-xl text-xs transition-all shadow-xs cursor-pointer"
+                className="bg-slate-900 hover:bg-slate-800 text-white font-black px-4 py-2.5 rounded-xl text-xs transition-all shadow-xs cursor-pointer"
               >
-                + Post Trade Service
+                + Post Service
               </button>
               <button
-                onClick={() => router.push("/profile")}
-                className="bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-4 py-2 rounded-xl text-xs transition-all border border-slate-300"
+                onClick={() => router.push("/shops?create=true")}
+                className="bg-emerald-600 hover:bg-emerald-700 text-white font-black px-4 py-2.5 rounded-xl text-xs transition-all shadow-xs cursor-pointer"
               >
-                Manage My Posts
+                + Post Offer
               </button>
             </div>
           </div>
+
+          {/* 3 Main Segment Channel Portal Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-2">
+            {/* Segment 1: Buy & Sell */}
+            <div 
+              onClick={() => router.push("/classifieds")}
+              className="bg-white border border-slate-200 hover:border-yellow-500/50 rounded-3xl p-6 shadow-xs hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between gap-4"
+            >
+              <div className="flex flex-col gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-yellow-500/10 text-yellow-600 flex items-center justify-center border border-yellow-250/60 group-hover:scale-105 transition-transform">
+                  <Building className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-heading font-extrabold text-base text-slate-900 group-hover:text-yellow-750 transition-colors">
+                    Buy & Sell Classifieds
+                  </h3>
+                  <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                    Browse lands, house rentals, used vehicles, and appliances in Thanjavur.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center text-xs font-black text-yellow-600 gap-1 group-hover:translate-x-1 transition-transform">
+                <span>Enter Channel →</span>
+              </div>
+            </div>
+
+            {/* Segment 2: Helper Trades */}
+            <div 
+              onClick={() => router.push("/services")}
+              className="bg-white border border-slate-200 hover:border-yellow-500/50 rounded-3xl p-6 shadow-xs hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between gap-4"
+            >
+              <div className="flex flex-col gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-yellow-500/10 text-yellow-600 flex items-center justify-center border border-yellow-250/60 group-hover:scale-105 transition-transform">
+                  <Wrench className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-heading font-extrabold text-base text-slate-900 group-hover:text-yellow-750 transition-colors">
+                    Helper Trades & Services
+                  </h3>
+                  <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                    Find verified electricians, plumbers, carpenters, painters, and mechanics.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center text-xs font-black text-yellow-600 gap-1 group-hover:translate-x-1 transition-transform">
+                <span>Enter Channel →</span>
+              </div>
+            </div>
+
+            {/* Segment 3: Shop Directory & Offers */}
+            <div 
+              onClick={() => router.push("/shops")}
+              className="bg-white border border-slate-200 hover:border-yellow-500/50 rounded-3xl p-6 shadow-xs hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between gap-4"
+            >
+              <div className="flex flex-col gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-yellow-500/10 text-yellow-600 flex items-center justify-center border border-yellow-250/60 group-hover:scale-105 transition-transform">
+                  <Store className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-heading font-extrabold text-base text-slate-900 group-hover:text-yellow-750 transition-colors">
+                    Shop Directory & Offers
+                  </h3>
+                  <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                    Discover local store discounts, promotions, and Instagram video reels.
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center text-xs font-black text-yellow-600 gap-1 group-hover:translate-x-1 transition-transform">
+                <span>Enter Channel →</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        /* ==========================================
+           GUEST HERO SECTION: 3D INTERACTIVE ROBOT HERO
+           ========================================== */
+        <div className="w-full relative flex flex-col">
+          <RobotHero
+            backgroundText="NAMMA THANJAI"
+            navItemsLeft={[]}
+            ctaText="Register"
+            onCtaClick={() => {
+              router.push("/classifieds?auth=popup");
+            }}
+            onCategoryClick={(category) => {
+              router.push(`/${category}`);
+            }}
+            color="#eab308"
+            pantallaColor="#fbbf24"
+            pantallaBrillo={1.6}
+            alerts={alerts}
+            activeAlertIdx={activeAlertIdx}
+          />
         </div>
       )}
-
-      {/* ==========================================
-          HERO SECTION: 3D INTERACTIVE ROBOT HERO
-          ========================================== */}
-      <div className="w-full relative flex flex-col">
-        <RobotHero
-          backgroundText="NAMMA THANJAI"
-          navItemsLeft={[]}
-          ctaText={profile?.isVerified ? "Verified Account" : "Register"}
-          onCtaClick={() => {
-            if (profile?.isVerified) {
-              router.push("/classifieds");
-            } else {
-              router.push("/classifieds?auth=popup");
-            }
-          }}
-          onCategoryClick={(category) => {
-            router.push(`/${category}`);
-          }}
-          color="#eab308" // Vibrant warm gold-yellow chassis
-          pantallaColor="#fbbf24" // Bright yellow display screen
-          pantallaBrillo={1.6}
-          alerts={alerts}
-          activeAlertIdx={activeAlertIdx}
-        />
-      </div>
 
       {/* ==========================================
           PORTAL CONTENT: DIRECTORY SEGMENT LINKS Noticeboard
