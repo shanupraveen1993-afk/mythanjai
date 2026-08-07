@@ -27,19 +27,10 @@ export default function TopHeader({
   const pathname = usePathname();
   const { profile } = useAuth();
   
-  const isAuthVerified = Boolean(
-    profile?.isVerified ||
-      (typeof window !== "undefined" && localStorage.getItem("my_thanjai_verified") === "true")
-  );
-  
+  const isAuthVerified = Boolean(profile?.isVerified);
   const showSegmentTabs = isAuthVerified && pathname !== "/";
 
-  const storedMobile = typeof window !== "undefined" ? localStorage.getItem("my_thanjai_phone") : "";
-  const phoneDisplay = profile?.phone
-    ? `+${profile.phone}`
-    : storedMobile
-    ? `+${storedMobile}`
-    : "+919994837342";
+  const phoneDisplay = profile?.phone ? `+${profile.phone}` : "+919994837342";
 
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-slate-200/90 shadow-xs">

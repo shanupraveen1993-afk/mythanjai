@@ -53,10 +53,7 @@ function MainLayoutContent({
 
   // Strict Route Protection: Unauthenticated users on subpages are immediately kicked to landing page with login modal
   useEffect(() => {
-    const isAuthVerified = Boolean(
-      profile?.isVerified ||
-        (typeof window !== "undefined" && localStorage.getItem("my_thanjai_verified") === "true")
-    );
+    const isAuthVerified = Boolean(profile?.isVerified);
 
     if (!isAuthVerified && pathname !== "/") {
       router.replace("/?auth=popup");
@@ -95,10 +92,7 @@ function MainLayoutContent({
   };
 
   const handleTabChange = (tab: AppTab) => {
-    const isAuthVerified = Boolean(
-      profile?.isVerified ||
-        (typeof window !== "undefined" && localStorage.getItem("my_thanjai_verified") === "true")
-    );
+    const isAuthVerified = Boolean(profile?.isVerified);
 
     if (tab !== "home" && !isAuthVerified) {
       setIsSignInOpen(true);

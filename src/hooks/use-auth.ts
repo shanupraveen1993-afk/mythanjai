@@ -21,31 +21,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  // Synchronously load local storage auth state immediately on client-side mount
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const storedVerified = localStorage.getItem("my_thanjai_verified") === "true";
-      const storedPhone = localStorage.getItem("my_thanjai_phone") || "";
-      if (storedVerified) {
-        const isAdmin = storedPhone.includes("9994837342");
-        setProfile({
-          uid: "localStorage_user",
-          phone: storedPhone,
-          isVerified: true,
-          isAdmin,
-          createdAt: new Date(),
-        });
-        setLoading(false);
-      }
-    }
-  }, []);
-
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
-
-      const storedVerified = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_verified") === "true") : false;
-      const storedPhone = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_phone") || "") : "";
 
       if (currentUser) {
         // Fetch or create user profile document in Firestore
@@ -55,46 +33,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
           if (userDoc.exists()) {
             const data = userDoc.data() as UserProfile;
-            // Sync with local verification if local verified state is active
-            if (storedVerified) {
-              data.isVerified = true;
-              data.phone = storedPhone || data.phone;
-            }
-            // Check if phone matches configured admin phone
             const adminPhone = process.env.NEXT_PUBLIC_ADMIN_PHONE?.replace(/\D/g, "");
-            const hasAdminPhone = data.phone && data.phone.replace(/\D/g, "") === adminPhone;
+            const hasAdminPhone = data.phone && (data.phone.replace(/\D/g, "") === adminPhone || data.phone.includes("9994837342"));
             if (hasAdminPhone && !data.isAdmin) {
               await updateDoc(userRef, { isAdmin: true });
               data.isAdmin = true;
             }
             setProfile(data);
           } else {
-            // Initialize new profile
+            const storedPhone = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_phone") || "") : "";
+            const storedVerified = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_verified") === "true") : false;
             const newProfile: UserProfile = {
               uid: currentUser.uid,
               phone: storedPhone || "",
               isVerified: storedVerified || false,
-              createdAt: serverTimestamp(),
+              isAdmin: storedPhone.includes("9994837342"),
+              createdAt: new Date(),
             };
             await setDoc(userRef, newProfile);
             setProfile(newProfile);
           }
         } catch (error) {
-          console.error("Error loading user profile:", error);
-          setProfile({
-            uid: currentUser.uid,
-            phone: storedPhone,
-            isVerified: storedVerified,
-            createdAt: new Date(),
-          });
+          console.error("Error fetching user profile:", error);
         }
       } else {
-        setProfile(null);
-        // Force silent guest login for zero friction onboarding
-        try {
-          await signInAnonymously(auth);
-        } catch (error) {
-          console.error("Error signing in anonymously:", error);
+        const storedPhone = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_phone") || "") : "";
+        const storedVerified = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_verified") === "true") : false;
+        if (storedVerified && storedPhone) {
+          setProfile({
+            uid: "localStorage_user",
+            phone: storedPhone,
+            isVerified: true,
+            isAdmin: storedPhone.includes("9994837342"),
+            createdAt: new Date(),
+          });
+        } else {
+          setProfile(null);
         }
       }
       setLoading(false);
