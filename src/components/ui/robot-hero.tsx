@@ -7,7 +7,7 @@ import { Environment, ContactShadows, Html } from "@react-three/drei";
 import * as THREE from "three";
 import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion";
 import { PiShoppingBagBold } from "react-icons/pi";
-import { ArrowRight, Loader2, Phone, CheckCircle, Megaphone, Wrench, Store, Search, MapPin, Sparkles } from "lucide-react";
+import { ArrowRight, Loader2, Phone, CheckCircle, Megaphone, Wrench, Store, Search, MapPin, Sparkles, ChevronDown } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { TANJORE_LOCALITIES, TanjoreLocality } from "@/lib/constants";
 
@@ -889,17 +889,17 @@ export function RobotHero({
   return (
     <section
       ref={containerRef}
-      className="relative w-full min-h-[calc(100vh-64px)] flex flex-col justify-between items-center bg-white text-slate-800 py-3 md:py-6 px-4 overflow-hidden select-none"
+      className="relative w-full flex flex-col justify-between items-center bg-white text-slate-800 py-4 sm:py-6 md:py-8 px-4 overflow-x-clip select-none"
     >
       {/* Light radial glow centered behind hero */}
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_45%,rgba(250,204,21,0.06)_0%,transparent_60%)] pointer-events-none" />
 
-      {/* Centered Main Hero Container - Broader layout with mobile first-screen fit */}
+      {/* Centered Main Hero Container */}
       <div className="z-10 w-full max-w-3xl lg:max-w-4xl mx-auto flex flex-col items-center text-center gap-2.5 sm:gap-3.5 my-auto pointer-events-auto">
         
         {/* 1. Logo Badge + Static Bold Header Title: NAMMA THANJAVUR */}
         <div className="flex flex-col items-center gap-1.5">
-          <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-white shadow-md p-2 flex items-center justify-center shrink-0 border border-slate-150 mb-0.5">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white shadow-md p-2 flex items-center justify-center shrink-0 border border-slate-150 mb-0.5">
             <img 
               src="/namma_thanjai_logo.png" 
               alt="namma thanjai app logo" 
@@ -930,10 +930,10 @@ export function RobotHero({
           </AnimatePresence>
         </div>
 
-        {/* 3. Mascot Robot Canvas (Increased height & scale for prominent display) */}
+        {/* 3. Mascot Robot Canvas */}
         <div 
           onClick={handleRobotTap} 
-          className="w-full max-w-[280px] sm:max-w-[340px] h-[210px] sm:h-[260px] md:h-[290px] relative flex items-center justify-center cursor-pointer my-0.5"
+          className="w-full max-w-[280px] sm:max-w-[340px] h-[200px] sm:h-[250px] md:h-[280px] relative flex items-center justify-center cursor-pointer my-0.5"
         >
           <Canvas shadows camera={{ position: [0, 0.12, 3.6], fov: 38 }}>
             <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
@@ -946,7 +946,7 @@ export function RobotHero({
           </Canvas>
         </div>
 
-        {/* 4. 3 Standalone Separate Clickable Buttons (No outer component box) */}
+        {/* 4. 3 Standalone Separate Clickable Buttons */}
         <div className="grid grid-cols-3 gap-2 sm:gap-3.5 w-full max-w-lg mt-0.5">
           <button
             type="button"
@@ -1007,6 +1007,22 @@ export function RobotHero({
             </div>
           </div>
         )}
+
+        {/* 7. Animated Down Arrow Scroll Indicator */}
+        <div 
+          onClick={() => {
+            const noticeboardEl = document.getElementById("noticeboard-directory");
+            if (noticeboardEl) {
+              noticeboardEl.scrollIntoView({ behavior: "smooth" });
+            } else {
+              window.scrollTo({ top: 600, behavior: "smooth" });
+            }
+          }}
+          className="flex flex-col items-center gap-0.5 mt-2 sm:mt-3 cursor-pointer text-slate-400 hover:text-slate-700 transition-colors animate-bounce select-none"
+        >
+          <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-widest text-slate-400">Scroll to Explore</span>
+          <ChevronDown className="w-4 h-4 text-yellow-500" />
+        </div>
       </div>
     </section>
   );

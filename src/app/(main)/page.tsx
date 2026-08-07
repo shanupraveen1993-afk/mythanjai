@@ -61,7 +61,7 @@ export default function HomeLandingPage() {
       {/* ==========================================
           HERO SECTION: 3D INTERACTIVE ROBOT HERO
           ========================================== */}
-      <div className="w-full h-full md:h-dvh md:min-h-[700px] relative flex flex-col">
+      <div className="w-full relative flex flex-col">
         <RobotHero
           backgroundText="NAMMA THANJAI"
           navItemsLeft={[]}
@@ -87,7 +87,7 @@ export default function HomeLandingPage() {
       {/* ==========================================
           PORTAL CONTENT: DIRECTORY SEGMENT LINKS Noticeboard
           ========================================== */}
-      <div className="flex w-full max-w-7xl mx-auto px-5 md:px-6 py-8 flex-col gap-8 bg-white">
+      <div id="noticeboard-directory" className="flex w-full max-w-7xl mx-auto px-5 md:px-6 py-8 flex-col gap-8 bg-white">
 
         {/* Section Heading & Branding Emblem */}
         <div className="flex flex-col items-center text-center gap-4 max-w-xl mx-auto">
