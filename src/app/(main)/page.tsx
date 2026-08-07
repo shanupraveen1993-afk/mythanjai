@@ -34,13 +34,6 @@ export default function HomeLandingPage() {
   const router = useRouter();
   const { profile } = useAuth();
   
-  // 3 Segment State on Home Page
-  const [activeHomeSegment, setActiveHomeSegment] = React.useState<"classifieds" | "services" | "shops">("classifieds");
-
-  const handleCategoryClick = (targetPath: string) => {
-    router.push(targetPath);
-  };
-
   // Live Alert Ticker Carousel State
   const [activeAlertIdx, setActiveAlertIdx] = React.useState(0);
   const alerts = [
@@ -58,275 +51,156 @@ export default function HomeLandingPage() {
     return () => clearInterval(interval);
   }, []);
 
+  const handleCategoryClick = (targetPath: string) => {
+    router.push(targetPath);
+  };
+
   return (
     <div className="w-full flex flex-col bg-white text-slate-800 min-h-screen font-sans">
       
       {/* ==========================================
-          DYNAMIC HOME PAGE SEGMENT EXPLORER
+          LOGGED IN HOME PAGE (PAGE 1)
           ========================================== */}
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-6 animate-fade-in">
-        
-        {/* Welcome Header */}
-        <div className="bg-gradient-to-r from-yellow-500/10 via-amber-500/10 to-yellow-500/10 border border-yellow-500/30 rounded-3xl p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-5">
-          <div className="flex items-center gap-4">
-            <div className="w-14 h-14 rounded-2xl bg-yellow-500 text-slate-955 flex items-center justify-center font-heading font-black text-xl shadow-sm border border-yellow-400">
-              {profile?.displayName?.charAt(0).toUpperCase() || "N"}
-            </div>
-            <div>
-              <div className="flex items-center gap-2">
-                <h1 className="font-heading font-black text-xl text-slate-900">
-                  {profile?.isVerified ? `Welcome, ${profile.displayName || "Resident"}` : "Namma Thanjavur Directory"}
-                </h1>
-                {profile?.isVerified ? (
-                  <span className="text-[9px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-700 border border-emerald-500/30 px-2 py-0.5 rounded-md flex items-center gap-1">
-                    ✓ Verified
-                  </span>
-                ) : (
-                  <span className="text-[9px] font-black uppercase tracking-wider bg-yellow-500/20 text-yellow-800 border border-yellow-500/30 px-2 py-0.5 rounded-md">
-                    Community Portal
-                  </span>
-                )}
+      {profile?.isVerified ? (
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-6 animate-fade-in">
+          {/* Welcome Header */}
+          <div className="bg-gradient-to-r from-yellow-500/10 via-amber-500/10 to-yellow-500/10 border border-yellow-500/30 rounded-3xl p-6 shadow-sm flex flex-col md:flex-row md:items-center justify-between gap-5">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-2xl bg-yellow-500 text-slate-955 flex items-center justify-center font-heading font-black text-xl shadow-sm border border-yellow-400">
+                {profile?.displayName?.charAt(0).toUpperCase() || "T"}
               </div>
-              <p className="text-xs text-slate-600 mt-0.5 font-semibold">
-                Explore local requirements, helper trades, and shop offers across Tanjore.
-              </p>
+              <div>
+                <div className="flex items-center gap-2">
+                  <h2 className="font-heading font-black text-xl text-slate-900">
+                    Welcome, {profile?.displayName || "Resident"}
+                  </h2>
+                  <span className="text-[9px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-700 border border-emerald-500/30 px-2 py-0.5 rounded-md flex items-center gap-1">
+                    ✓ Verified Resident
+                  </span>
+                </div>
+                <p className="text-xs text-slate-600 mt-0.5 font-semibold">
+                  Thanjavur Community Member (+{profile?.phone || "919994837342"})
+                </p>
+              </div>
             </div>
-          </div>
 
             {/* Quick Post Actions */}
             <div className="flex flex-wrap items-center gap-2">
               <button
-                onClick={() => {
-                  if (!profile?.isVerified) {
-                    router.push("/?auth=popup");
-                  } else {
-                    router.push("/classifieds?create=true");
-                  }
-                }}
+                onClick={() => router.push("/classifieds?create=true")}
                 className="bg-yellow-500 hover:bg-yellow-600 active:scale-95 text-slate-955 font-black px-4 py-2.5 rounded-xl text-xs transition-all shadow-xs cursor-pointer border border-yellow-450"
               >
                 + Post Ad
               </button>
               <button
-                onClick={() => {
-                  if (!profile?.isVerified) {
-                    router.push("/?auth=popup");
-                  } else {
-                    router.push("/services?create=true");
-                  }
-                }}
+                onClick={() => router.push("/services?create=true")}
                 className="bg-slate-900 hover:bg-slate-800 text-white font-black px-4 py-2.5 rounded-xl text-xs transition-all shadow-xs cursor-pointer"
               >
                 + Post Service
               </button>
               <button
-                onClick={() => {
-                  if (!profile?.isVerified) {
-                    router.push("/?auth=popup");
-                  } else {
-                    router.push("/shops?create=true");
-                  }
-                }}
+                onClick={() => router.push("/shops?create=true")}
                 className="bg-emerald-600 hover:bg-emerald-700 text-white font-black px-4 py-2.5 rounded-xl text-xs transition-all shadow-xs cursor-pointer"
               >
                 + Post Offer
               </button>
             </div>
-        </div>
+          </div>
 
-        {/* 3 SEGMENT TABS BAR FOR HOME EXPLORATION */}
-        <div className="flex bg-slate-100 p-1.5 rounded-2xl border border-slate-200 shadow-2xs">
-          <button
-            onClick={() => setActiveHomeSegment("classifieds")}
-            className={`flex-1 py-3 text-center rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-2 ${
-              activeHomeSegment === "classifieds"
-                ? "bg-white text-slate-900 shadow-sm border border-slate-200"
-                : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            <Building className="w-4 h-4 text-yellow-600" />
-            <span>1. Buy & Sell</span>
-          </button>
-          <button
-            onClick={() => setActiveHomeSegment("services")}
-            className={`flex-1 py-3 text-center rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-2 ${
-              activeHomeSegment === "services"
-                ? "bg-white text-slate-900 shadow-sm border border-slate-200"
-                : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            <Wrench className="w-4 h-4 text-yellow-600" />
-            <span>2. Helper Trades</span>
-          </button>
-          <button
-            onClick={() => setActiveHomeSegment("shops")}
-            className={`flex-1 py-3 text-center rounded-xl text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-2 ${
-              activeHomeSegment === "shops"
-                ? "bg-white text-slate-900 shadow-sm border border-slate-200"
-                : "text-slate-600 hover:text-slate-900"
-            }`}
-          >
-            <Store className="w-4 h-4 text-yellow-600" />
-            <span>3. Shop Offers</span>
-          </button>
-        </div>
-
-        {/* DYNAMIC SEGMENT CONTENT FEED */}
-        <div className="w-full flex flex-col gap-5 mt-2">
-          {activeHomeSegment === "classifieds" && (
-            <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs flex flex-col gap-4">
-              <div className="flex items-center justify-between">
+          {/* CRISP COMMUNITY HIGHLIGHTS ON HOME PAGE */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-2">
+            {/* Highlight 1: Buy & Sell */}
+            <div 
+              onClick={() => router.push("/classifieds")}
+              className="bg-white border border-slate-200 hover:border-yellow-500/50 rounded-3xl p-6 shadow-xs hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between gap-4"
+            >
+              <div className="flex flex-col gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-yellow-500/10 text-yellow-600 flex items-center justify-center border border-yellow-250/60 group-hover:scale-105 transition-transform">
+                  <Building className="w-5 h-5" />
+                </div>
                 <div>
-                  <h3 className="font-heading font-black text-lg text-slate-900">
-                    📢 Buy & Sell Classifieds Channel
+                  <h3 className="font-heading font-extrabold text-base text-slate-900 group-hover:text-yellow-750 transition-colors">
+                    Buy & Sell Classifieds
                   </h3>
-                  <p className="text-xs text-slate-500 font-semibold mt-0.5">
-                    Real Estate, House Rentals, Used Vehicles & Electronics in Tanjore
+                  <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                    Browse lands, house rentals, used vehicles, and electronics in Thanjavur.
                   </p>
                 </div>
-                <button
-                  onClick={() => router.push("/classifieds")}
-                  className="bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-4 py-2 rounded-xl text-xs flex items-center gap-1"
-                >
-                  <span>Explore All Ads</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
               </div>
-
-              {/* Sample Cards preview for classifieds */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col gap-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-[10px] font-black uppercase text-yellow-750 bg-yellow-500/10 px-2 py-0.5 rounded-md">Real Estate</span>
-                    <span className="text-xs font-black text-slate-900">₹45,00,000</span>
-                  </div>
-                  <h4 className="font-black text-sm text-slate-800">2 Acre Agricultural Plot near Vallam</h4>
-                  <p className="text-xs text-slate-500 font-semibold">Clear titles, tar road access, Kaveri water line available.</p>
-                  <div className="flex justify-between items-center pt-2 border-t border-slate-200 text-[11px] font-bold text-slate-500">
-                    <span>📍 Vallam, Thanjavur</span>
-                    <button onClick={() => router.push("/classifieds")} className="text-yellow-600 font-black">Contact Poster →</button>
-                  </div>
-                </div>
-
-                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col gap-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-[10px] font-black uppercase text-blue-750 bg-blue-500/10 px-2 py-0.5 rounded-md">House Rental</span>
-                    <span className="text-xs font-black text-slate-900">₹12,500/mo</span>
-                  </div>
-                  <h4 className="font-black text-sm text-slate-800">Spacious 2 BHK Independent House</h4>
-                  <p className="text-xs text-slate-500 font-semibold">Modular kitchen, 2 bathrooms, 24/7 water supply, car parking.</p>
-                  <div className="flex justify-between items-center pt-2 border-t border-slate-200 text-[11px] font-bold text-slate-500">
-                    <span>📍 Medical College Rd, Tanjore</span>
-                    <button onClick={() => router.push("/classifieds")} className="text-yellow-600 font-black">Contact Poster →</button>
-                  </div>
-                </div>
+              <div className="flex items-center text-xs font-black text-yellow-600 gap-1 group-hover:translate-x-1 transition-transform">
+                <span>View Buy & Sell Page →</span>
               </div>
             </div>
-          )}
 
-          {activeHomeSegment === "services" && (
-            <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs flex flex-col gap-4">
-              <div className="flex items-center justify-between">
+            {/* Highlight 2: Helper Trades */}
+            <div 
+              onClick={() => router.push("/services")}
+              className="bg-white border border-slate-200 hover:border-yellow-500/50 rounded-3xl p-6 shadow-xs hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between gap-4"
+            >
+              <div className="flex flex-col gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-yellow-500/10 text-yellow-600 flex items-center justify-center border border-yellow-250/60 group-hover:scale-105 transition-transform">
+                  <Wrench className="w-5 h-5" />
+                </div>
                 <div>
-                  <h3 className="font-heading font-black text-lg text-slate-900">
-                    🛠️ Helper Trades & Local Services Channel
+                  <h3 className="font-heading font-extrabold text-base text-slate-900 group-hover:text-yellow-750 transition-colors">
+                    Helper Trades & Services
                   </h3>
-                  <p className="text-xs text-slate-500 font-semibold mt-0.5">
-                    Verified Electricians, Plumbers, Mechanics, Painters in Tanjore
+                  <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                    Find verified electricians, plumbers, carpenters, painters, and mechanics.
                   </p>
                 </div>
-                <button
-                  onClick={() => router.push("/services")}
-                  className="bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-4 py-2 rounded-xl text-xs flex items-center gap-1"
-                >
-                  <span>Explore All Services</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
               </div>
-
-              {/* Sample Cards preview for services */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col gap-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-[10px] font-black uppercase text-amber-750 bg-amber-500/10 px-2 py-0.5 rounded-md">Electrician</span>
-                    <span className="text-xs font-black text-emerald-600">★ 4.9 Rating</span>
-                  </div>
-                  <h4 className="font-black text-sm text-slate-800">Senthil Kumar - Home Electrician</h4>
-                  <p className="text-xs text-slate-500 font-semibold">8+ Years Experience. House wiring, DB box, inverter assembly & repairs.</p>
-                  <div className="flex justify-between items-center pt-2 border-t border-slate-200 text-[11px] font-bold text-slate-500">
-                    <span>📍 Tanjore Town</span>
-                    <button onClick={() => router.push("/services")} className="text-yellow-600 font-black">Hire Technician →</button>
-                  </div>
-                </div>
-
-                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col gap-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-[10px] font-black uppercase text-blue-750 bg-blue-500/10 px-2 py-0.5 rounded-md">Plumber</span>
-                    <span className="text-xs font-black text-emerald-600">★ 4.8 Rating</span>
-                  </div>
-                  <h4 className="font-black text-sm text-slate-800">Rajesh K - Expert Plumber</h4>
-                  <p className="text-xs text-slate-500 font-semibold">Pipe fitting, water tank washing, Kaveri water connections & repairs.</p>
-                  <div className="flex justify-between items-center pt-2 border-t border-slate-200 text-[11px] font-bold text-slate-500">
-                    <span>📍 Medical College Rd</span>
-                    <button onClick={() => router.push("/services")} className="text-yellow-600 font-black">Hire Technician →</button>
-                  </div>
-                </div>
+              <div className="flex items-center text-xs font-black text-yellow-600 gap-1 group-hover:translate-x-1 transition-transform">
+                <span>View Services Page →</span>
               </div>
             </div>
-          )}
 
-          {activeHomeSegment === "shops" && (
-            <div className="bg-white border border-slate-200 rounded-3xl p-6 shadow-xs flex flex-col gap-4">
-              <div className="flex items-center justify-between">
+            {/* Highlight 3: Recent Offers */}
+            <div 
+              onClick={() => router.push("/shops")}
+              className="bg-white border border-slate-200 hover:border-yellow-500/50 rounded-3xl p-6 shadow-xs hover:shadow-md transition-all cursor-pointer group flex flex-col justify-between gap-4"
+            >
+              <div className="flex flex-col gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-yellow-500/10 text-yellow-600 flex items-center justify-center border border-yellow-250/60 group-hover:scale-105 transition-transform">
+                  <Store className="w-5 h-5" />
+                </div>
                 <div>
-                  <h3 className="font-heading font-black text-lg text-slate-900">
-                    🏪 Shop Directory & Recent Offers Channel
+                  <h3 className="font-heading font-extrabold text-base text-slate-900 group-hover:text-yellow-750 transition-colors">
+                    Recent Offers & Video Reels
                   </h3>
-                  <p className="text-xs text-slate-500 font-semibold mt-0.5">
-                    Store Promotions, Discount Deals & Video Reels in Tanjore
+                  <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+                    Discover local store discounts, promotions, and Instagram video reels.
                   </p>
                 </div>
-                <button
-                  onClick={() => router.push("/shops")}
-                  className="bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-4 py-2 rounded-xl text-xs flex items-center gap-1"
-                >
-                  <span>Explore All Offers</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
               </div>
-
-              {/* Sample Cards preview for shops */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col gap-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-[10px] font-black uppercase text-yellow-750 bg-yellow-500/10 px-2 py-0.5 rounded-md">Degree Coffee</span>
-                    <span className="text-xs font-black text-amber-600">🎬 Reel Offer</span>
-                  </div>
-                  <h4 className="font-black text-sm text-slate-800">Famous Tanjore Degree Coffee Deal</h4>
-                  <p className="text-xs text-slate-500 font-semibold">Buy 1 Ghee Roast & Get 1 Free Degree Coffee between 4 PM to 7 PM.</p>
-                  <div className="flex justify-between items-center pt-2 border-t border-slate-200 text-[11px] font-bold text-slate-500">
-                    <span>📍 Near Big Temple</span>
-                    <button onClick={() => router.push("/shops")} className="text-yellow-600 font-black">View Offer Reel →</button>
-                  </div>
-                </div>
-
-                <div className="bg-slate-50 border border-slate-200 rounded-2xl p-4 flex flex-col gap-2">
-                  <div className="flex justify-between items-center">
-                    <span className="text-[10px] font-black uppercase text-purple-750 bg-purple-500/10 px-2 py-0.5 rounded-md">Textile Silk</span>
-                    <span className="text-xs font-black text-purple-600">Flat 20% Off</span>
-                  </div>
-                  <h4 className="font-black text-sm text-slate-800">Tanjore Handloom Silk Saree Sale</h4>
-                  <p className="text-xs text-slate-500 font-semibold">20% direct discount on pure Tanjore handloom silk sarees this week.</p>
-                  <div className="flex justify-between items-center pt-2 border-t border-slate-200 text-[11px] font-bold text-slate-500">
-                    <span>📍 South Rampart Rd</span>
-                    <button onClick={() => router.push("/shops")} className="text-yellow-600 font-black">View Offer Reel →</button>
-                  </div>
-                </div>
+              <div className="flex items-center text-xs font-black text-yellow-600 gap-1 group-hover:translate-x-1 transition-transform">
+                <span>View Recent Offers Page →</span>
               </div>
             </div>
-          )}
+          </div>
         </div>
-      </div>
+      ) : (
+        /* ==========================================
+           EXACT OLD GUEST LANDING PAGE (WITH ROBOT MASCOT HERO)
+           ========================================== */
+        <div className="w-full relative flex flex-col">
+          <RobotHero
+            backgroundText="NAMMA THANJAI"
+            navItemsLeft={[]}
+            ctaText="Register"
+            onCtaClick={() => {
+              router.push("/classifieds?auth=popup");
+            }}
+            onCategoryClick={(category) => {
+              router.push(`/${category}`);
+            }}
+            color="#eab308"
+            pantallaColor="#fbbf24"
+            alerts={alerts}
+            activeAlertIdx={activeAlertIdx}
+          />
+        </div>
+      )}
 
       {/* ==========================================
           PORTAL CONTENT: DIRECTORY SEGMENT LINKS Noticeboard
