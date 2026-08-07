@@ -99,6 +99,8 @@ export default function CreatePostModal({
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [classifiedCategory, setClassifiedCategory] = useState(CLASSIFIED_CATEGORIES[0]);
+  const [youtubeUrl, setYoutubeUrl] = useState("");
+  const [googleMapsUrl, setGoogleMapsUrl] = useState("");
 
   // Service Specific State
   const [serviceName, setServiceName] = useState("");
@@ -360,6 +362,8 @@ export default function CreatePostModal({
     setOfferTitle("");
     setOfferDesc("");
     setSocialLink("");
+    setYoutubeUrl("");
+    setGoogleMapsUrl("");
   };
 
   const CATEGORY_SAMPLE_POSTS: Record<string, { title: string; price?: string; description?: string; experience?: string; hours?: string; address?: string; landmark?: string; offerTitle?: string; offerDesc?: string }> = {
@@ -725,13 +729,13 @@ export default function CreatePostModal({
 
                           <div className="grid grid-cols-2 gap-3">
                             <div>
-                              <label className="block text-[11px] font-bold text-slate-500 mb-1">Price (₹, Optional)</label>
+                              <label className="block text-[11px] font-bold text-slate-500 mb-1">Price (₹, Text Supported)</label>
                               <input
-                                type="number"
+                                type="text"
                                 value={price}
                                 onChange={(e) => setPrice(e.target.value)}
-                                placeholder="8000"
-                                className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none"
+                                placeholder="e.g. ₹2 Lakhs"
+                                className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none font-bold"
                               />
                             </div>
                             <div>
@@ -749,6 +753,31 @@ export default function CreatePostModal({
                               </select>
                             </div>
                           </div>
+
+                          {classifiedType === "SELL" && (
+                            <div className="flex flex-col gap-3 pt-1">
+                              <div>
+                                <label className="block text-[11px] font-bold text-slate-500 mb-1">YouTube Video Link (Optional)</label>
+                                <input
+                                  type="url"
+                                  value={youtubeUrl}
+                                  onChange={(e) => setYoutubeUrl(e.target.value)}
+                                  placeholder="e.g. https://www.youtube.com/watch?v=..."
+                                  className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-[11px] font-bold text-slate-500 mb-1">Google Maps Location Link (Optional)</label>
+                                <input
+                                  type="url"
+                                  value={googleMapsUrl}
+                                  onChange={(e) => setGoogleMapsUrl(e.target.value)}
+                                  placeholder="e.g. https://maps.google.com/..."
+                                  className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none"
+                                />
+                              </div>
+                            </div>
+                          )}
                         </div>
                       )}
 

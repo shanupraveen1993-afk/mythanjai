@@ -606,6 +606,20 @@ export default function ClassifiedsPage() {
                           </div>
                         </div>
 
+                        {/* YouTube Video Link */}
+                        <div>
+                          <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1">
+                            YouTube Video Walkthrough Link (Optional)
+                          </label>
+                          <input
+                            type="url"
+                            value={youtubeUrl}
+                            onChange={(e) => setYoutubeUrl(e.target.value)}
+                            placeholder="e.g. https://www.youtube.com/watch?v=... or https://youtu.be/..."
+                            className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 focus:outline-none"
+                          />
+                        </div>
+
                         {/* Google Maps Location link */}
                         <div>
                           <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-wide mb-1">
