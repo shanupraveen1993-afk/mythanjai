@@ -106,16 +106,21 @@ export default function TopHeader({
           </div>
         )}
 
-        {/* Right: Verified WhatsApp Phone Badge */}
+        {/* Right: Verified Profile Icon Button / Verify Mobile */}
         <div className="flex items-center gap-2 shrink-0">
           {isAuthVerified ? (
             <button
               onClick={() => onTabChange?.("profile")}
-              className="flex items-center gap-1.5 bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 font-extrabold px-3 py-1.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer"
+              className="relative flex items-center gap-2 bg-slate-100/90 hover:bg-slate-200/80 border border-slate-250/80 text-slate-800 font-extrabold px-3 py-1.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer group"
+              title={`Verified Profile (${phoneDisplay})`}
             >
-              <ShieldCheck className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-              <span className="hidden xs:inline">{phoneDisplay}</span>
-              <span className="bg-emerald-600 text-white text-[9px] font-black uppercase px-1.5 py-0.2 rounded-md">Verified</span>
+              <div className="relative">
+                <User className="w-4 h-4 text-slate-700 group-hover:text-slate-900" />
+                <span className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[8px] font-black shadow-xs border border-white">
+                  ✓
+                </span>
+              </div>
+              <span className="hidden md:inline text-xs font-black text-slate-700">Profile</span>
             </button>
           ) : (
             <button
