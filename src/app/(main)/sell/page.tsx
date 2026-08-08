@@ -165,23 +165,25 @@ export default function SellPage() {
   return (
     <div className="flex flex-col gap-6 mt-4 md:mt-6 pt-2 pb-12 max-w-7xl mx-auto px-4 sm:px-6">
       {/* HERO ILLUSTRATION BANNER */}
-      <div className="relative w-full h-44 sm:h-52 md:h-60 rounded-3xl overflow-hidden shadow-xs border border-slate-200/90 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white flex items-center p-6 sm:p-8">
+      <div className="relative w-full min-h-[210px] sm:min-h-[220px] rounded-3xl overflow-hidden shadow-lg border border-slate-800 bg-slate-950 text-white flex items-center p-6 sm:p-8">
         <img 
-          src="/hero_building_visual.png" 
+          src="/thanjavur_house_rental.png" 
           alt="Sell Marketplace Banner" 
-          className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-30 mix-blend-overlay pointer-events-none"
+          className="absolute right-0 top-0 h-full w-full sm:w-3/5 object-cover opacity-50 pointer-events-none"
         />
-        <div className="relative z-10 max-w-xl flex flex-col gap-2">
-          <span className="text-[10px] font-black uppercase tracking-widest text-yellow-400 bg-yellow-400/10 border border-yellow-400/30 px-2.5 py-0.5 rounded-lg w-max">
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent pointer-events-none" />
+        
+        <div className="relative z-10 max-w-xl flex flex-col gap-2.5">
+          <span className="text-[10px] font-black uppercase tracking-widest text-yellow-400 bg-yellow-400/10 border border-yellow-400/30 px-3 py-1 rounded-full w-fit">
             Verified Classifieds
           </span>
-          <h1 className="font-heading font-black text-2xl sm:text-3xl md:text-4xl text-white tracking-tight uppercase leading-none">
+          <h1 className="font-heading font-black text-2xl sm:text-3xl md:text-4xl text-white tracking-tight uppercase leading-tight">
             Sell & Trade In Thanjavur
           </h1>
-          <p className="text-xs sm:text-sm text-slate-300 font-medium">
+          <p className="text-xs sm:text-sm text-slate-300 font-medium leading-relaxed">
             Discover verified plots, houses for rent, used motor vehicles, and local items directly from Thanjavur residents.
           </p>
-          <div className="mt-2">
+          <div className="mt-1">
             <button
               onClick={() => {
                 if (!profile?.isVerified) {
@@ -190,9 +192,9 @@ export default function SellPage() {
                   setIsFormOpen(true);
                 }
               }}
-              className="py-2.5 px-5 bg-gradient-to-r from-yellow-400 to-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer w-max"
+              className="py-3 px-5 bg-gradient-to-r from-yellow-400 to-amber-500 text-slate-955 font-black text-xs uppercase tracking-wider rounded-xl shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer w-max"
             >
-              <Plus className="w-4 h-4" />
+              <Plus className="w-4 h-4 text-slate-955 stroke-[2.5]" />
               <span>Post Item for Sale</span>
             </button>
           </div>
