@@ -981,10 +981,10 @@ export function RobotHero({
             <ResponsiveGroup scale={scale * 1.35}>
               <ContactShadows
                 position={[0, -0.79, 0]}
-                opacity={0.75}
+                opacity={0.25}
                 scale={12}
                 resolution={1024}
-                blur={1.7}
+                blur={2.0}
                 far={2.5}
                 color="#000000"
               />
