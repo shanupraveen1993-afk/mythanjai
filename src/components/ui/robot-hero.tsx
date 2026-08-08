@@ -938,6 +938,22 @@ export function RobotHero({
           </p>
         </div>
 
+        {/* 2. Dynamic Rotational Topic (Restored) */}
+        <div className="h-6 sm:h-8 flex items-center justify-center overflow-hidden">
+          <AnimatePresence mode="wait">
+            <motion.h2
+              key={wordIndex}
+              initial={{ opacity: 0, y: -6, scale: 0.95 }}
+              animate={{ opacity: 0.25, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 6, scale: 1.05 }}
+              transition={{ duration: 0.25 }}
+              className="font-sans font-black text-lg sm:text-2xl md:text-3xl text-slate-400 uppercase tracking-widest text-center select-none"
+            >
+              {words[wordIndex]}
+            </motion.h2>
+          </AnimatePresence>
+        </div>
+
         {/* 3. 4 Standalone Clickable Channel Buttons */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 w-full max-w-xl px-2 my-0.5">
           <button
@@ -967,28 +983,6 @@ export function RobotHero({
             className="py-2.5 px-3 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-900 shadow-2xs hover:border-slate-300 transition-all text-center flex items-center justify-center cursor-pointer font-extrabold text-[11px] sm:text-xs uppercase tracking-wider active:scale-[0.97]"
           >
             <span>Offer</span>
-          </button>
-        </div>
-
-        {/* 4. Category Shortcut Pills Across All 4 Segments */}
-        <div className="flex items-center gap-1.5 overflow-x-auto w-full max-w-xl px-2 py-0.5 scrollbar-none justify-center flex-wrap">
-          <button onClick={() => onCategoryClick?.("sell?category=Plot%20%2f%20Real%20Estate")} className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 text-[10px] font-bold rounded-lg transition-all border border-slate-200 cursor-pointer">
-            Real Estate
-          </button>
-          <button onClick={() => onCategoryClick?.("sell?category=Property%20Rental")} className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 text-[10px] font-bold rounded-lg transition-all border border-slate-200 cursor-pointer">
-            House Rental
-          </button>
-          <button onClick={() => onCategoryClick?.("need?category=Property%20Rental")} className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 text-[10px] font-bold rounded-lg transition-all border border-slate-200 cursor-pointer">
-            Wanted House
-          </button>
-          <button onClick={() => onCategoryClick?.("services?category=Electrician")} className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 text-[10px] font-bold rounded-lg transition-all border border-slate-200 cursor-pointer">
-            Electrician
-          </button>
-          <button onClick={() => onCategoryClick?.("services?category=Plumber")} className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 text-[10px] font-bold rounded-lg transition-all border border-slate-200 cursor-pointer">
-            Plumber
-          </button>
-          <button onClick={() => onCategoryClick?.("shops?category=Electronics%20Shop")} className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 text-[10px] font-bold rounded-lg transition-all border border-slate-200 cursor-pointer">
-            Store Discounts
           </button>
         </div>
 
