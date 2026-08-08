@@ -898,30 +898,30 @@ export function RobotHero({
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-[calc(100dvh-60px)] md:h-auto md:min-h-[calc(100vh-70px)] flex flex-col justify-between md:justify-center items-center bg-white text-slate-800 py-1 sm:py-4 px-3 sm:px-4 overflow-hidden select-none"
+      className="relative w-full h-[calc(100dvh-60px)] md:h-auto md:min-h-[calc(100vh-70px)] flex flex-col justify-between items-center bg-white text-slate-800 pt-2 pb-5 sm:py-6 px-3 sm:px-4 overflow-hidden select-none"
     >
       {/* Light radial glow centered behind hero */}
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_45%,rgba(250,204,21,0.06)_0%,transparent_60%)] pointer-events-none" />
 
-      {/* Centered Foreground Hero Content (Filling the first fold perfectly with enlarged 3D Robot & zero whitespace waste) */}
-      <div className="relative z-10 w-full max-w-4xl md:max-w-5xl mx-auto flex flex-col items-center justify-between text-center gap-1.5 sm:gap-2.5 my-auto h-full pointer-events-auto py-1 sm:py-3">
+      {/* Centered Foreground Hero Content */}
+      <div className="relative z-10 w-full max-w-4xl md:max-w-5xl mx-auto flex flex-col items-center justify-between text-center gap-1 sm:gap-2 my-auto h-full pointer-events-auto">
         
         {/* 1. Extended Prominent Logo + Massive Headline: NAMMA THANJAI. */}
-        <div className="flex flex-col items-center gap-1.5 sm:gap-2 w-full shrink-0 pt-1">
-          <div className="w-20 h-20 sm:w-26 sm:h-26 md:w-32 md:h-32 rounded-3xl bg-white shadow-lg p-2 sm:p-2.5 flex items-center justify-center shrink-0 border border-slate-200/90 hover:scale-[1.02] transition-transform">
+        <div className="flex flex-col items-center gap-1 sm:gap-1.5 w-full shrink-0 pt-0.5">
+          <div className="w-16 h-16 sm:w-22 sm:h-22 md:w-28 md:h-28 rounded-3xl bg-white shadow-lg p-2 sm:p-2.5 flex items-center justify-center shrink-0 border border-slate-200/90 hover:scale-[1.02] transition-transform">
             <img 
               src="/namma_thanjai_logo.png" 
               alt="namma thanjai logo" 
               className="w-full h-full object-contain" 
             />
           </div>
-          <h1 className="font-heading font-black text-4xl sm:text-6xl md:text-7xl text-slate-955 tracking-tighter sm:tracking-tight leading-none uppercase mt-1 w-full text-center drop-shadow-2xs">
+          <h1 className="font-heading font-black text-3.5xl sm:text-5.5xl md:text-6.5xl text-slate-955 tracking-tighter sm:tracking-tight leading-none uppercase mt-0.5 w-full text-center drop-shadow-2xs">
             namma thanjai<span className="text-yellow-500">.</span>
           </h1>
         </div>
 
         {/* 2. Rotational Category Switcher Badge */}
-        <div className="h-7 sm:h-9 flex items-center justify-center overflow-hidden shrink-0 my-1">
+        <div className="h-6 sm:h-8 flex items-center justify-center overflow-hidden shrink-0 my-0.5">
           <AnimatePresence mode="wait">
             <motion.div
               key={wordIndex}
@@ -929,18 +929,18 @@ export function RobotHero({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 6, scale: 1.05 }}
               transition={{ duration: 0.25 }}
-              className="bg-slate-900 border border-slate-800 text-yellow-400 font-black text-xs sm:text-sm px-4 py-1.5 rounded-full uppercase tracking-widest text-center shadow-md flex items-center gap-2 select-none"
+              className="bg-slate-900 border border-slate-800 text-yellow-400 font-black text-[11px] sm:text-xs px-3.5 py-1 rounded-full uppercase tracking-widest text-center shadow-md flex items-center gap-2 select-none"
             >
-              <span className="w-2 h-2 rounded-full bg-yellow-400 animate-ping" />
+              <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-ping" />
               <span>{words[wordIndex]}</span>
             </motion.div>
           </AnimatePresence>
         </div>
 
-        {/* 3. 3D Mascot Robot Canvas (Perfect Camera Frustum & Zero Boundary Clipping, Zero Excess Whitespace) */}
+        {/* 3. Responsive 3D Mascot Robot Canvas */}
         <div 
           onClick={handleRobotTap} 
-          className="w-full max-w-[340px] sm:max-w-[420px] md:max-w-[480px] h-[230px] sm:h-[290px] md:h-[330px] shrink-0 relative flex items-center justify-center cursor-pointer overflow-visible my-0 bg-transparent"
+          className="w-full max-w-[320px] sm:max-w-[400px] md:max-w-[460px] flex-1 min-h-[190px] max-h-[320px] relative flex items-center justify-center cursor-pointer overflow-visible my-0 bg-transparent"
         >
           <Canvas camera={{ position: [0, 0, 4.2], fov: 46 }} className="overflow-visible bg-transparent">
             <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
@@ -952,42 +952,41 @@ export function RobotHero({
           </Canvas>
         </div>
 
-        {/* 4. Primary Register Button: REGISTER TO POST */}
-        <div className="w-full max-w-sm shrink-0 my-0.5">
+        {/* 4. Action Footer Group (REGISTER TO POST + LIVE ALERT TICKER bound in tight, safe bottom container) */}
+        <div className="w-full max-w-sm shrink-0 flex flex-col gap-2 px-1 pb-1">
           <button
             type="button"
             onClick={onCtaClick}
-            className="w-full py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs sm:text-sm uppercase tracking-wider transition-all hover:scale-[1.01] active:scale-[0.98] shadow-lg shadow-yellow-500/25 border-0 text-center flex items-center justify-center gap-2 cursor-pointer scale-[1.02]"
+            className="w-full py-3 sm:py-3.5 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs sm:text-sm uppercase tracking-wider transition-all hover:scale-[1.01] active:scale-[0.98] shadow-lg shadow-yellow-500/25 border-0 text-center flex items-center justify-center gap-2 cursor-pointer scale-[1.01]"
           >
             <span>{ctaText === "Verified" ? "Verified Profile" : "Register to Post"}</span>
             <ArrowRight className="w-4 h-4 text-slate-955 stroke-[2.5]" />
           </button>
-        </div>
 
-        {/* 5. LIVE Noticeboard Ticker Alert Banner */}
-        {alerts.length > 0 && (
-          <div className="w-full bg-slate-900 border border-slate-800 text-white rounded-2xl py-2 px-4 shadow-sm flex items-center justify-between text-[11px] sm:text-xs font-black select-none max-w-md mx-auto tracking-wide shrink-0 my-0.5">
-            <div className="flex items-center gap-2.5 overflow-hidden w-full text-left">
-              <span className="bg-yellow-500 text-slate-950 font-black text-[8px] px-2 py-0.5 rounded-md uppercase shrink-0 animate-pulse">
-                LIVE
-              </span>
-              <div className="relative h-4 flex-1 overflow-hidden">
-                <AnimatePresence mode="wait">
-                  <motion.span
-                    key={activeAlertIdx}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.3 }}
-                    className="absolute left-0 text-slate-100 truncate w-full font-bold text-left text-[11px] sm:text-xs"
-                  >
-                    {alerts[activeAlertIdx]}
-                  </motion.span>
-                </AnimatePresence>
+          {alerts.length > 0 && (
+            <div className="w-full bg-slate-900 border border-slate-800 text-white rounded-xl py-1.5 px-3.5 shadow-sm flex items-center justify-between text-[11px] sm:text-xs font-black select-none tracking-wide">
+              <div className="flex items-center gap-2 overflow-hidden w-full text-left">
+                <span className="bg-yellow-500 text-slate-950 font-black text-[8px] px-1.5 py-0.5 rounded-md uppercase shrink-0 animate-pulse">
+                  LIVE
+                </span>
+                <div className="relative h-4 flex-1 overflow-hidden">
+                  <AnimatePresence mode="wait">
+                    <motion.span
+                      key={activeAlertIdx}
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.3 }}
+                      className="absolute left-0 text-slate-100 truncate w-full font-bold text-left text-[11px] sm:text-xs"
+                    >
+                      {alerts[activeAlertIdx]}
+                    </motion.span>
+                  </AnimatePresence>
+                </div>
               </div>
             </div>
-          </div>
-        )}
+          )}
+        </div>
 
       </div>
     </section>
