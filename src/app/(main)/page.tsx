@@ -74,10 +74,10 @@ export default function HomeLandingPage() {
            ========================================== */
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 mt-4 md:mt-6 pt-2 pb-12 flex flex-col gap-10 animate-fade-in">
           
-          {/* 1. HERO ILLUSTRATION BANNER */}
+          {/* 1. HERO SECTION IMAGE (No buttons, showcasing everything available inside Namma Thanjavur app) */}
           <div className="w-full bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
             <div className="absolute top-0 right-0 w-80 h-80 bg-yellow-500/10 blur-3xl rounded-full pointer-events-none" />
-            <div className="flex flex-col gap-3 max-w-lg z-10 text-left">
+            <div className="flex flex-col gap-2.5 max-w-lg z-10 text-left">
               <span className="text-[10px] font-black uppercase tracking-widest text-yellow-400 bg-yellow-400/10 border border-yellow-400/30 px-3 py-1 rounded-full w-fit">
                 Namma Thanjavur Directory
               </span>
@@ -85,28 +85,14 @@ export default function HomeLandingPage() {
                 Verified Local Marketplace & Helper Trades
               </h1>
               <p className="text-xs sm:text-sm text-slate-300 font-medium leading-relaxed">
-                Explore plots in Vallam, home electricians near Big Temple, rental houses on Medical College Rd & exclusive store discounts.
+                Explore real estate plots in Vallam, certified electricians near Big Temple, 2 BHK rental houses on Medical College Rd, and exclusive store discounts.
               </p>
-              <div className="flex flex-wrap items-center gap-3 pt-2">
-                <button
-                  onClick={() => router.push("/sell")}
-                  className="px-5 py-2.5 rounded-xl bg-yellow-400 text-slate-950 font-black text-xs uppercase tracking-wider hover:bg-yellow-300 transition-colors cursor-pointer shadow-md"
-                >
-                  Explore Sell Posts
-                </button>
-                <button
-                  onClick={() => router.push("/services")}
-                  className="px-5 py-2.5 rounded-xl bg-slate-800 text-white font-black text-xs uppercase tracking-wider hover:bg-slate-700 border border-slate-700 transition-colors cursor-pointer"
-                >
-                  Find Services
-                </button>
-              </div>
             </div>
 
-            <div className="w-full md:w-80 h-48 sm:h-56 relative shrink-0 rounded-2xl overflow-hidden bg-slate-950 border border-slate-800 shadow-md">
+            <div className="w-full md:w-96 h-52 sm:h-60 relative shrink-0 rounded-2xl overflow-hidden bg-slate-950 border border-slate-800 shadow-md">
               <Image
                 src="/thanjavur_hero_banner.png"
-                alt="Thanjavur Marketplace Illustration"
+                alt="Thanjavur Marketplace & Services Overview"
                 fill
                 className="object-cover hover:scale-105 transition-transform duration-500"
               />
