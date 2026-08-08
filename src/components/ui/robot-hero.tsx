@@ -481,21 +481,23 @@ function RobotPrototype({
     const tx = state.pointer.x;
     const ty = state.pointer.y;
 
-  // Floating bobbing motion
-  const floatY = Math.sin(state.clock.getElapsedTime() * 2.2) * 0.05;
+    const isMobile = state.viewport.width < 3.2;
 
-  // Centered subtle position sway with floating Y
-  const targetPosX = tx * 0.15;
-  bodyRef.current.position.x = THREE.MathUtils.lerp(
-    bodyRef.current.position.x,
-    targetPosX,
-    config.moveSpeed * dt,
-  );
-  bodyRef.current.position.y = THREE.MathUtils.lerp(
-    bodyRef.current.position.y,
-    -0.3 + floatY,
-    dt * 5.0,
-  );
+    // Floating bobbing motion
+    const floatY = Math.sin(state.clock.getElapsedTime() * 2.2) * 0.05;
+
+    // Centered subtle position sway with floating Y (Mobile stays tight & centered)
+    const targetPosX = isMobile ? 0 : tx * 0.15;
+    bodyRef.current.position.x = THREE.MathUtils.lerp(
+      bodyRef.current.position.x,
+      targetPosX,
+      config.moveSpeed * dt,
+    );
+    bodyRef.current.position.y = THREE.MathUtils.lerp(
+      bodyRef.current.position.y,
+      -0.3 + floatY,
+      dt * 5.0,
+    );
 
     const relativeX = tx - bodyRef.current.position.x / 2.5;
 
