@@ -580,95 +580,120 @@ export default function HomeLandingPage() {
           ========================================== */}
       <div id="noticeboard-directory" className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-col gap-10 bg-white">
 
-        {/* 1. WHAT WE ARE UP TO: LIVE VERIFIED ACTIVITY STREAM */}
-        <div className="w-full bg-slate-900 border border-slate-800 rounded-3xl p-5 sm:p-7 text-white shadow-xl flex flex-col gap-5 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-60 h-60 bg-yellow-500/10 blur-3xl rounded-full pointer-events-none" />
+        {/* 1. THANJAVUR LIVE BULLETIN: REAL-TIME VERIFIED ACTIVITY STREAM */}
+        <div className="w-full bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col gap-6 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-80 h-80 bg-yellow-500/10 blur-3xl rounded-full pointer-events-none" />
           
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-4">
-            <div className="flex items-center gap-2.5">
-              <span className="bg-yellow-500 text-slate-950 font-black text-[9px] uppercase px-2.5 py-1 rounded-md animate-pulse tracking-wider">
-                LIVE
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800 pb-5">
+            <div className="flex items-center gap-3">
+              <span className="flex items-center gap-1.5 bg-yellow-400 text-slate-950 font-black text-[10px] uppercase px-3 py-1 rounded-lg tracking-wider">
+                <span className="w-2 h-2 rounded-full bg-slate-950 animate-ping" />
+                LIVE BULLETIN
               </span>
-              <h2 className="font-heading font-black text-lg sm:text-xl text-white tracking-tight">
-                What We Are Up To (Live Verified Activity Stream)
+              <h2 className="font-heading font-black text-xl sm:text-2xl text-white tracking-tight">
+                Thanjavur Verified Activity Stream
               </h2>
             </div>
-            <span className="text-[11px] font-bold text-slate-400">
-              Real-time verified postings in Thanjavur District
+            <span className="text-xs font-medium text-slate-400">
+              Live updates directly from verified residents & tradesmen
             </span>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div 
               onClick={() => router.push("/sell?category=Plot%20%2f%20Real%20Estate")}
-              className="bg-slate-800/80 border border-slate-700/80 hover:border-yellow-500/50 p-3.5 rounded-2xl flex flex-col gap-1.5 cursor-pointer transition-all hover:scale-[1.02]"
+              className="bg-slate-800/90 border border-slate-700/80 hover:border-yellow-400 p-4 rounded-2xl flex flex-col justify-between gap-3 cursor-pointer transition-all hover:-translate-y-0.5 shadow-sm group"
             >
-              <div className="flex items-center justify-between">
-                <span className="text-[9px] font-bold text-yellow-400 uppercase tracking-widest bg-yellow-500/10 px-2 py-0.5 rounded-md border border-yellow-500/20">
-                  REAL ESTATE
-                </span>
-                <span className="text-[9px] text-slate-400 font-bold">Just Now</span>
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[9px] font-black text-yellow-400 uppercase tracking-widest bg-yellow-400/10 px-2.5 py-0.5 rounded-md border border-yellow-400/30">
+                    REAL ESTATE
+                  </span>
+                  <span className="text-[10px] text-slate-400 font-bold">Just Now</span>
+                </div>
+                <h4 className="text-sm font-extrabold text-white group-hover:text-yellow-400 transition-colors">
+                  2,400 Sqft CMDA Plot
+                </h4>
+                <p className="text-xs text-slate-300 font-medium line-clamp-2 leading-relaxed">
+                  Approved residential plot with tar road frontage & Kaveri water line in Vallam.
+                </p>
               </div>
-              <p className="text-xs font-bold text-slate-100 line-clamp-2">
-                2,400 Sqft CMDA Approved Plot listed in Vallam with Kaveri line connection.
-              </p>
-              <span className="text-[10px] font-black text-yellow-400 mt-1 flex items-center gap-1">
-                View in Sell Feed →
-              </span>
+              <div className="flex items-center justify-between pt-2 border-t border-slate-700/60 text-[11px] font-bold text-slate-400">
+                <span>Vallam, Thanjavur</span>
+                <span className="text-yellow-400 font-black group-hover:underline">Explore →</span>
+              </div>
             </div>
 
             <div 
               onClick={() => router.push("/services?category=Electrician")}
-              className="bg-slate-800/80 border border-slate-700/80 hover:border-yellow-500/50 p-3.5 rounded-2xl flex flex-col gap-1.5 cursor-pointer transition-all hover:scale-[1.02]"
+              className="bg-slate-800/90 border border-slate-700/80 hover:border-yellow-400 p-4 rounded-2xl flex flex-col justify-between gap-3 cursor-pointer transition-all hover:-translate-y-0.5 shadow-sm group"
             >
-              <div className="flex items-center justify-between">
-                <span className="text-[9px] font-bold text-yellow-400 uppercase tracking-widest bg-yellow-500/10 px-2 py-0.5 rounded-md border border-yellow-500/20">
-                  SERVICE
-                </span>
-                <span className="text-[9px] text-slate-400 font-bold">5m ago</span>
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[9px] font-black text-yellow-400 uppercase tracking-widest bg-yellow-400/10 px-2.5 py-0.5 rounded-md border border-yellow-400/30">
+                    LOCAL SERVICE
+                  </span>
+                  <span className="text-[10px] text-slate-400 font-bold">5m ago</span>
+                </div>
+                <h4 className="text-sm font-extrabold text-white group-hover:text-yellow-400 transition-colors">
+                  Senthil Kumar (Electrician)
+                </h4>
+                <p className="text-xs text-slate-300 font-medium line-clamp-2 leading-relaxed">
+                  Available for DB box assemblies, inverter setups & short circuit repairs in Tanjore Town.
+                </p>
               </div>
-              <p className="text-xs font-bold text-slate-100 line-clamp-2">
-                Senthil Kumar (8+ Yrs Exp Electrician) available for DB box & inverter wiring in Tanjore Town.
-              </p>
-              <span className="text-[10px] font-black text-yellow-400 mt-1 flex items-center gap-1">
-                View in Services Feed →
-              </span>
+              <div className="flex items-center justify-between pt-2 border-t border-slate-700/60 text-[11px] font-bold text-slate-400">
+                <span>Tanjore Town</span>
+                <span className="text-yellow-400 font-black group-hover:underline">Explore →</span>
+              </div>
             </div>
 
             <div 
               onClick={() => router.push("/need?category=Property%20Rental")}
-              className="bg-slate-800/80 border border-slate-700/80 hover:border-yellow-500/50 p-3.5 rounded-2xl flex flex-col gap-1.5 cursor-pointer transition-all hover:scale-[1.02]"
+              className="bg-slate-800/90 border border-slate-700/80 hover:border-yellow-400 p-4 rounded-2xl flex flex-col justify-between gap-3 cursor-pointer transition-all hover:-translate-y-0.5 shadow-sm group"
             >
-              <div className="flex items-center justify-between">
-                <span className="text-[9px] font-bold text-yellow-400 uppercase tracking-widest bg-yellow-500/10 px-2 py-0.5 rounded-md border border-yellow-500/20">
-                  NEED
-                </span>
-                <span className="text-[9px] text-slate-400 font-bold">12m ago</span>
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[9px] font-black text-yellow-400 uppercase tracking-widest bg-yellow-400/10 px-2.5 py-0.5 rounded-md border border-yellow-400/30">
+                    REQUIREMENT
+                  </span>
+                  <span className="text-[10px] text-slate-400 font-bold">12m ago</span>
+                </div>
+                <h4 className="text-sm font-extrabold text-white group-hover:text-yellow-400 transition-colors">
+                  Wanted 3 BHK Rental
+                </h4>
+                <p className="text-xs text-slate-300 font-medium line-clamp-2 leading-relaxed">
+                  Doctor family searching for independent 3 BHK rental house near Medical College Road.
+                </p>
               </div>
-              <p className="text-xs font-bold text-slate-100 line-clamp-2">
-                Doctor family looking for 3 BHK House rental near Medical College Road.
-              </p>
-              <span className="text-[10px] font-black text-yellow-400 mt-1 flex items-center gap-1">
-                View in Need Feed →
-              </span>
+              <div className="flex items-center justify-between pt-2 border-t border-slate-700/60 text-[11px] font-bold text-slate-400">
+                <span>Medical College Rd</span>
+                <span className="text-yellow-400 font-black group-hover:underline">Explore →</span>
+              </div>
             </div>
 
             <div 
               onClick={() => router.push("/shops?category=Electronics%20Shop")}
-              className="bg-slate-800/80 border border-slate-700/80 hover:border-yellow-500/50 p-3.5 rounded-2xl flex flex-col gap-1.5 cursor-pointer transition-all hover:scale-[1.02]"
+              className="bg-slate-800/90 border border-slate-700/80 hover:border-yellow-400 p-4 rounded-2xl flex flex-col justify-between gap-3 cursor-pointer transition-all hover:-translate-y-0.5 shadow-sm group"
             >
-              <div className="flex items-center justify-between">
-                <span className="text-[9px] font-bold text-yellow-400 uppercase tracking-widest bg-yellow-500/10 px-2 py-0.5 rounded-md border border-yellow-500/20">
-                  OFFER
-                </span>
-                <span className="text-[9px] text-slate-400 font-bold">25m ago</span>
+              <div className="flex flex-col gap-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-[9px] font-black text-yellow-400 uppercase tracking-widest bg-yellow-400/10 px-2.5 py-0.5 rounded-md border border-yellow-400/30">
+                    STORE OFFER
+                  </span>
+                  <span className="text-[10px] text-slate-400 font-bold">25m ago</span>
+                </div>
+                <h4 className="text-sm font-extrabold text-white group-hover:text-yellow-400 transition-colors">
+                  Glen Exclusive Gallery
+                </h4>
+                <p className="text-xs text-slate-300 font-medium line-clamp-2 leading-relaxed">
+                  Up to 60% discount offer on built-in hobs & kitchen chimneys in New Busstand Rd.
+                </p>
               </div>
-              <p className="text-xs font-bold text-slate-100 line-clamp-2">
-                Glen Exclusive Gallery offering up to 60% OFF on kitchen chimneys in New Busstand Rd.
-              </p>
-              <span className="text-[10px] font-black text-yellow-400 mt-1 flex items-center gap-1">
-                View Offer Video →
-              </span>
+              <div className="flex items-center justify-between pt-2 border-t border-slate-700/60 text-[11px] font-bold text-slate-400">
+                <span>New Busstand Rd</span>
+                <span className="text-yellow-400 font-black group-hover:underline">Explore →</span>
+              </div>
             </div>
           </div>
         </div>
