@@ -915,7 +915,7 @@ export function RobotHero({
       {/* Centered Foreground Hero Content */}
       <div className="relative z-10 w-full max-w-3xl md:max-w-4xl lg:max-w-5xl mx-auto flex flex-col items-center justify-between text-center gap-1 sm:gap-1.5 md:gap-2 my-auto h-full pointer-events-auto">
         
-        {/* 1. Extended Prominent Logo + Bigger Extended Headline: NAMMA THANJAI. + Medium Tagline */}
+        {/* 1. Extended Prominent Logo + Wider Massive Headline: NAMMA THANJAI. + Small Subtitle Tagline */}
         <div className="flex flex-col items-center gap-1 sm:gap-1.5 w-full shrink-0 pt-0.5">
           <div className="w-20 h-20 sm:w-26 sm:h-26 md:w-32 md:h-32 rounded-3xl bg-white shadow-xl p-2.5 sm:p-3 flex items-center justify-center shrink-0 border border-slate-200/90 hover:scale-[1.02] transition-transform">
             <img 
@@ -924,10 +924,10 @@ export function RobotHero({
               className="w-full h-full object-contain" 
             />
           </div>
-          <h1 className="font-heading font-black text-4.5xl sm:text-6.5xl md:text-7.5xl lg:text-8.5xl text-slate-955 tracking-tighter leading-none uppercase mt-1 w-full text-center drop-shadow-2xs">
+          <h1 className="font-heading font-black text-5xl sm:text-7.5xl md:text-8.5xl lg:text-9.5xl text-slate-955 tracking-tighter leading-none uppercase mt-1 w-full text-center drop-shadow-2xs scale-x-[1.03] transform origin-center">
             namma thanjai<span className="text-yellow-500">.</span>
           </h1>
-          <p className="text-xs sm:text-sm md:text-base font-bold text-slate-500 max-w-lg mx-auto leading-tight uppercase tracking-wider mt-1">
+          <p className="text-[11px] sm:text-xs md:text-sm font-semibold text-slate-500 max-w-xl mx-auto leading-normal tracking-wide uppercase mt-1.5 opacity-90">
             Thanjavur Verified Noticeboard & Local Helper Trades
           </p>
         </div>
