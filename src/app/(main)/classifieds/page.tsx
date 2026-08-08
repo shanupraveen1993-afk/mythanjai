@@ -552,11 +552,11 @@ export default function ClassifiedsPage() {
           </div>
 
           {/* Universal Sticky Action Bar: Sort on Left, Post Ad on Right */}
-          <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 px-4 border border-slate-200/90 rounded-2xl shadow-xs flex items-center justify-between mt-1">
+          <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 px-4 border border-slate-200/90 rounded-none shadow-xs flex items-center justify-between mt-1">
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="bg-slate-100 border border-slate-200 rounded-none px-3 py-2 text-xs font-black focus:outline-none cursor-pointer text-slate-800 shrink-0"
+              className="bg-slate-100 border border-slate-200 rounded-xl px-3 py-2 text-xs font-black focus:outline-none cursor-pointer text-slate-800 shrink-0"
             >
               <option value="recent">Latest First</option>
               <option value="price_low">Price: Low to High</option>
@@ -574,7 +574,7 @@ export default function ClassifiedsPage() {
                   setIsFormOpen(!isFormOpen);
                 }
               }}
-              className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-4 py-2 rounded-none text-[11px] uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-xs"
+              className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-4 py-2 rounded-xl text-[11px] uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-xs"
             >
               <Plus className={`w-3.5 h-3.5 text-slate-955 transition-transform duration-250 ${isFormOpen ? "rotate-45" : ""}`} />
               <span>Post {activeType === "need" ? "Need" : "Ad"}</span>
