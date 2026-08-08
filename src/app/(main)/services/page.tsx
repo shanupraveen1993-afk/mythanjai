@@ -341,7 +341,7 @@ export default function ServicesPage() {
       {/* UNIVERSAL STICKY ACTION BAR: Sort on Left | Post Trade on Right */}
       <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 px-4 border border-slate-200/90 rounded-2xl shadow-xs flex items-center justify-between">
         <select
-          className="text-xs font-black bg-slate-100 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none cursor-pointer shrink-0"
+          className="text-xs font-black bg-slate-100 border border-slate-200 rounded-none px-3 py-2 text-slate-800 focus:outline-none cursor-pointer shrink-0"
         >
           <option value="recent">Latest First</option>
           <option value="rating">Top Rated</option>
@@ -358,7 +358,7 @@ export default function ServicesPage() {
               setIsFormOpen(!isFormOpen);
             }
           }}
-          className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-xs shrink-0"
+          className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-4 py-2 rounded-none text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-xs shrink-0"
         >
           <Plus className={`w-4 h-4 text-slate-955 transition-transform duration-250 ${isFormOpen ? "rotate-45" : ""}`} />
           <span>Post Trade</span>
