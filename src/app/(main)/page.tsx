@@ -261,7 +261,7 @@ export default function HomeLandingPage() {
                 onClick={() => router.push("/need")}
                 className="text-xs font-bold text-slate-600 hover:text-slate-900 flex items-center gap-1 hover:underline cursor-pointer"
               >
-                <span>View All Need Posts →</span>
+                <span>View All →</span>
               </button>
             </div>
 

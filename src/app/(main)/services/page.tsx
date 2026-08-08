@@ -335,33 +335,37 @@ export default function ServicesPage() {
           <p className="text-xs sm:text-sm text-slate-300 font-medium leading-relaxed">
             Direct access to verified electricians, plumbers, carpenters, AC technicians, and painters.
           </p>
-          <div className="mt-1">
-            <button
-              onClick={() => setIsFormOpen(true)}
-              className="py-3 px-5 bg-gradient-to-r from-yellow-400 to-amber-500 text-slate-955 font-black text-xs uppercase tracking-wider rounded-xl shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer w-max"
-            >
-              <Plus className="w-4 h-4 text-slate-955 stroke-[2.5]" />
-              <span>Register as Technician</span>
-            </button>
-          </div>
         </div>
       </div>
 
-      {/* SEGMENT DEDICATED SEARCH BAR */}
-      <div className="relative w-full">
-        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-        <input
-          type="text"
-          placeholder="Search electricians, plumbers, carpenters, technicians in Thanjavur..."
-          value={searchQuery}
-          onChange={(e) => {
-            const currentParams = new URLSearchParams(searchParams.toString());
-            if (e.target.value) currentParams.set("query", e.target.value);
-            else currentParams.delete("query");
-            router.push(`/services?${currentParams.toString()}`);
+      {/* UNIVERSAL STICKY ACTION BAR: Sort on Left | Post Trade on Right */}
+      <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 px-4 border border-slate-200/90 rounded-2xl shadow-xs flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-extrabold text-slate-500">Sort by:</span>
+          <select
+            className="text-xs font-black bg-slate-100 border border-slate-200 rounded-xl px-3 py-1.5 text-slate-800 focus:outline-none cursor-pointer"
+          >
+            <option value="recent">Latest First</option>
+            <option value="rating">Top Rated</option>
+          </select>
+        </div>
+
+        <button
+          onClick={() => {
+            if (!profile?.isVerified) {
+              const currentParams = new URLSearchParams(searchParams.toString());
+              currentParams.set("auth", "popup");
+              currentParams.set("redirect", `/services?category=${encodeURIComponent(selectedCategory || "")}&create=true`);
+              router.push(`/services?${currentParams.toString()}`);
+            } else {
+              setIsFormOpen(!isFormOpen);
+            }
           }}
-          className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-400 shadow-2xs"
-        />
+          className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-xs shrink-0"
+        >
+          <Plus className={`w-4 h-4 text-slate-955 transition-transform duration-250 ${isFormOpen ? "rotate-45" : ""}`} />
+          <span>Post Trade</span>
+        </button>
       </div>
 
       {/* HORIZONTAL CATEGORY HIGHLIGHT BAR */}
@@ -374,7 +378,7 @@ export default function ServicesPage() {
               : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
           }`}
         >
-          All Services
+          All Trades
         </button>
         {SERVICE_CATEGORIES.map((cat) => {
           const isActive = selectedCategory === cat;
@@ -405,35 +409,7 @@ export default function ServicesPage() {
           </div>
         )}
 
-          {/* Universal Sticky Action Bar: Sort on Left, Register Service on Right */}
-          <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 px-4 border border-slate-200/90 rounded-2xl shadow-xs flex items-center justify-between mt-1">
-            <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
-              <span>Sort by:</span>
-              <select
-                className="bg-slate-100 border border-slate-200 rounded-xl px-3 py-1.5 text-[11px] font-black focus:outline-none cursor-pointer text-slate-800"
-              >
-                <option value="recent">Latest First</option>
-                <option value="rating">Top Rated</option>
-              </select>
-            </div>
 
-            <button
-              onClick={() => {
-                if (!profile?.isVerified) {
-                  const currentParams = new URLSearchParams(searchParams.toString());
-                  currentParams.set("auth", "popup");
-                  currentParams.set("redirect", `/services?category=${encodeURIComponent(selectedCategory || "")}&create=true`);
-                  router.push(`/services?${currentParams.toString()}`);
-                } else {
-                  setIsFormOpen(!isFormOpen);
-                }
-              }}
-              className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-4 py-2 rounded-xl text-[11px] uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-xs"
-            >
-              <Plus className={`w-3.5 h-3.5 text-slate-955 transition-transform duration-250 ${isFormOpen ? "rotate-45" : ""}`} />
-              <span>Post Service</span>
-            </button>
-          </div>
 
           {/* Inline Collapsible Registration Form */}
           {isFormOpen && (

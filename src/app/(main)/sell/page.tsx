@@ -183,39 +183,37 @@ export default function SellPage() {
           <p className="text-xs sm:text-sm text-slate-300 font-medium leading-relaxed">
             Discover verified plots, houses for rent, used motor vehicles, and local items directly from Thanjavur residents.
           </p>
-          <div className="mt-1">
-            <button
-              onClick={() => {
-                if (!profile?.isVerified) {
-                  router.push("/sell?auth=popup");
-                } else {
-                  setIsFormOpen(true);
-                }
-              }}
-              className="py-3 px-5 bg-gradient-to-r from-yellow-400 to-amber-500 text-slate-955 font-black text-xs uppercase tracking-wider rounded-xl shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer w-max"
-            >
-              <Plus className="w-4 h-4 text-slate-955 stroke-[2.5]" />
-              <span>Post Item for Sale</span>
-            </button>
-          </div>
         </div>
       </div>
 
-      {/* SEGMENT DEDICATED SEARCH BAR */}
-      <div className="relative w-full">
-        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-        <input
-          type="text"
-          placeholder="Search items for sale, real estate, rentals, vehicles in Thanjavur..."
-          value={searchQuery}
-          onChange={(e) => {
-            const currentParams = new URLSearchParams(searchParams.toString());
-            if (e.target.value) currentParams.set("query", e.target.value);
-            else currentParams.delete("query");
-            router.push(`/sell?${currentParams.toString()}`);
+      {/* UNIVERSAL STICKY ACTION BAR: Sort on Left | Post Sale on Right */}
+      <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 px-4 border border-slate-200/90 rounded-2xl shadow-xs flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-extrabold text-slate-500">Sort by:</span>
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as any)}
+            className="text-xs font-black bg-slate-100 border border-slate-200 rounded-xl px-3 py-1.5 text-slate-800 focus:outline-none cursor-pointer"
+          >
+            <option value="recent">Latest First</option>
+            <option value="price_low">Price: Low to High</option>
+            <option value="price_high">Price: High to Low</option>
+          </select>
+        </div>
+
+        <button
+          onClick={() => {
+            if (!profile?.isVerified) {
+              router.push("/sell?auth=popup");
+            } else {
+              setIsFormOpen(!isFormOpen);
+            }
           }}
-          className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-400 shadow-2xs"
-        />
+          className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-xs shrink-0"
+        >
+          <Plus className="w-4 h-4 text-slate-955 stroke-[2.5]" />
+          <span>Post Sale</span>
+        </button>
       </div>
 
       {/* HORIZONTAL CATEGORY HIGHLIGHT BAR */}
@@ -228,7 +226,7 @@ export default function SellPage() {
               : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
           }`}
         >
-          All Sell Categories
+          All Categories
         </button>
         {CLASSIFIED_CATEGORIES.map((cat) => {
           const isActive = selectedCategory === cat;

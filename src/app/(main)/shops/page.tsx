@@ -545,33 +545,27 @@ export default function ShopsPage() {
           <p className="text-xs sm:text-sm text-slate-300 font-medium leading-relaxed">
             Explore active store discounts, restaurant deals, clothing sales, and video offers in Thanjavur.
           </p>
-          <div className="mt-1">
-            <button
-              onClick={() => setIsFormOpen(!isFormOpen)}
-              className="py-3 px-5 bg-gradient-to-r from-yellow-400 to-amber-500 text-slate-955 font-black text-xs uppercase tracking-wider rounded-xl shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer w-max"
-            >
-              <Plus className="w-4 h-4 text-slate-955 stroke-[2.5]" />
-              <span>List Your Shop / Offer</span>
-            </button>
-          </div>
         </div>
       </div>
 
-      {/* SEGMENT DEDICATED SEARCH BAR */}
-      <div className="relative w-full">
-        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-        <input
-          type="text"
-          placeholder="Search store discounts, restaurants, clothing, electronics in Thanjavur..."
-          value={searchQuery}
-          onChange={(e) => {
-            const currentParams = new URLSearchParams(searchParams.toString());
-            if (e.target.value) currentParams.set("query", e.target.value);
-            else currentParams.delete("query");
-            router.push(`/shops?${currentParams.toString()}`);
-          }}
-          className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-400 shadow-2xs"
-        />
+      {/* UNIVERSAL STICKY ACTION BAR: Sort on Left | Post Offer on Right */}
+      <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 px-4 border border-slate-200/90 rounded-2xl shadow-xs flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-extrabold text-slate-500">Sort by:</span>
+          <select
+            className="text-xs font-black bg-slate-100 border border-slate-200 rounded-xl px-3 py-1.5 text-slate-800 focus:outline-none cursor-pointer"
+          >
+            <option value="recent">Latest First</option>
+          </select>
+        </div>
+
+        <button
+          onClick={() => setIsFormOpen(!isFormOpen)}
+          className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-xs shrink-0"
+        >
+          <Plus className={`w-4 h-4 text-slate-955 transition-transform duration-250 ${isFormOpen ? "rotate-45" : ""}`} />
+          <span>Post Offer</span>
+        </button>
       </div>
 
       {/* HORIZONTAL CATEGORY HIGHLIGHT BAR */}
@@ -584,7 +578,7 @@ export default function ShopsPage() {
               : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
           }`}
         >
-          All Store Offers
+          All Offers
         </button>
         {SHOP_CATEGORIES.map((cat) => {
           const isActive = selectedCategory === cat;
