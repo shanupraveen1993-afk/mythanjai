@@ -393,24 +393,17 @@ export default function ServicesPage() {
           );
         })}
       </div>
-      {!selectedCategory ? null : (
-        /* ==========================================
-           STEP 2: DETAILED FEED & REGISTRATION CARD FOR TRADE
-           ========================================== */
-        <div className="flex flex-col gap-5">
-          {/* Header & Back Action */}
-          <div className="flex items-center justify-between">
-            <button
-              onClick={handleClearCategory}
-              className="flex items-center gap-1 text-slate-600 hover:text-slate-900 transition-colors text-xs font-bold bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              <span>All Trades</span>
-            </button>
+
+      {/* STEP 2: DETAILED FEED & REGISTRATION CARD FOR TRADE */}
+      <div className="flex flex-col gap-5">
+        {/* Header Badge */}
+        {selectedCategory && (
+          <div className="flex items-center justify-end">
             <span className="text-xs font-black text-slate-800 bg-yellow-500/10 border border-yellow-250/60 px-3 py-1 rounded-xl">
               Trade: {selectedCategory}
             </span>
           </div>
+        )}
 
           {/* Universal Sticky Action Bar: Sort on Left, Register Service on Right */}
           <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 px-4 border border-slate-200/90 rounded-2xl shadow-xs flex items-center justify-between mt-1">
@@ -637,7 +630,6 @@ export default function ServicesPage() {
             </div>
           )}
         </div>
-      )}
     </div>
   );
 }

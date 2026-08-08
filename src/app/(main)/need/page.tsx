@@ -274,12 +274,9 @@ export default function NeedPage() {
         /* LISTINGS FEED */
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between bg-amber-50/50 p-2.5 rounded-xl border border-amber-200">
-            <button
-              onClick={handleClearCategory}
-              className="text-xs font-black text-slate-700 hover:text-slate-900 flex items-center gap-1 cursor-pointer"
-            >
-              ← Back to All Categories ({selectedCategory})
-            </button>
+            <span className="text-xs font-black text-slate-800">
+              Category: {selectedCategory}
+            </span>
 
             <select
               value={sortBy}

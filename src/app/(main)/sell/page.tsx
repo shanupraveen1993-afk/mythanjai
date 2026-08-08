@@ -280,12 +280,9 @@ export default function SellPage() {
         /* LISTINGS FEED */
         <div className="flex flex-col gap-4">
           <div className="flex items-center justify-between bg-slate-100 p-2.5 rounded-xl border border-slate-200">
-            <button
-              onClick={handleClearCategory}
-              className="text-xs font-black text-slate-700 hover:text-slate-900 flex items-center gap-1 cursor-pointer"
-            >
-              ← Back to All Categories ({selectedCategory})
-            </button>
+            <span className="text-xs font-black text-slate-800">
+              Category: {selectedCategory}
+            </span>
 
             <select
               value={sortBy}
