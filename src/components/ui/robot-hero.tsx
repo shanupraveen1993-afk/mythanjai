@@ -972,6 +972,7 @@ export function RobotHero({
             <ResponsiveGroup scale={scale * 1.35}>
               <RobotPrototype neckParams={{ baseR: 0.215, baseH: -0.05, midR: 0.28, midH: 0.02, lipBottomR: 0.295, lipBottomH: 0.045, lipTopR: 0.27, lipTopH: 0.055, innerR: 0.1, innerDropH: 0.0 }} bodyParams={{ bodyBevelR: 0.235, bodyBevelY: 0.34, bodyBevelT: 0.025 }} color={color} pantallaColor={pantallaColor} pantallaBrillo={pantallaBrillo} blinkCycle={blinkCycle} metalness={metalness} />
             </ResponsiveGroup>
+            <ContactShadows position={[0, -0.75, 0]} opacity={0.4} scale={2.8} blur={2.0} far={1.8} color="#000000" />
           </Canvas>
         </div>
 
