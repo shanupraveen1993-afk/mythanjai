@@ -443,6 +443,7 @@ function RobotPrototype({
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const bodyRef = useRef<THREE.Group>(null);
   const headRef = useRef<THREE.Group>(null);
+  const shadowRef = useRef<THREE.Mesh>(null);
 
   const [textures, setTextures] = useState<{
     colorMap: THREE.CanvasTexture | null;
@@ -480,13 +481,31 @@ function RobotPrototype({
     const tx = state.pointer.x;
     const ty = state.pointer.y;
 
-    // Centered subtle position sway
+    // Floating bobbing motion
+    const floatY = Math.sin(state.clock.getElapsedTime() * 2.2) * 0.05;
+
+    // Centered subtle position sway with floating Y
     const targetPosX = tx * 0.15;
     bodyRef.current.position.x = THREE.MathUtils.lerp(
       bodyRef.current.position.x,
       targetPosX,
       config.moveSpeed * dt,
     );
+    bodyRef.current.position.y = THREE.MathUtils.lerp(
+      bodyRef.current.position.y,
+      -0.3 + floatY,
+      dt * 5.0,
+    );
+
+    // Dynamic ground shadow pulsing with float height
+    if (shadowRef.current) {
+      const shadowFactor = 1.0 - (floatY + 0.05) * 3.0;
+      const shadowScale = 1.0 + floatY * 1.2;
+      shadowRef.current.scale.set(shadowScale, shadowScale, 1.0);
+      if (shadowRef.current.material) {
+        (shadowRef.current.material as THREE.MeshBasicMaterial).opacity = 0.22 * shadowFactor;
+      }
+    }
 
     const relativeX = tx - bodyRef.current.position.x / 2.5;
 
@@ -609,6 +628,19 @@ function RobotPrototype({
       onPointerOver={() => (document.body.style.cursor = "pointer")}
       onPointerOut={() => (document.body.style.cursor = "auto")}
     >
+      {/* Dynamic Floating Ground Shadow Disk */}
+      <mesh
+        ref={shadowRef}
+        position={[0, -0.44, 0]}
+        rotation={[-Math.PI / 2, 0, 0]}
+      >
+        <planeGeometry args={[0.7, 0.7]} />
+        <meshBasicMaterial
+          color="#000000"
+          transparent={true}
+          opacity={0.22}
+        />
+      </mesh>
       <mesh castShadow receiveShadow>
         <sphereGeometry
           args={[0.43, 64, 64, 0, Math.PI * 2, Math.PI * 0.15, Math.PI * 0.85]}
