@@ -915,19 +915,19 @@ export function RobotHero({
       {/* Centered Foreground Hero Content */}
       <div className="relative z-10 w-full max-w-3xl md:max-w-4xl lg:max-w-5xl mx-auto flex flex-col items-center justify-between text-center gap-1 sm:gap-1.5 md:gap-2 my-auto h-full pointer-events-auto">
         
-        {/* 1. Extended Logo Icon + Headline: NAMMA THANJAI. + Sub-Tagline */}
-        <div className="flex flex-col items-center gap-0.5 sm:gap-1 w-full shrink-0 pt-0.5">
-          <div className="w-14 h-14 sm:w-18 sm:h-18 md:w-22 md:h-22 rounded-3xl bg-white shadow-lg p-2 sm:p-2.5 flex items-center justify-center shrink-0 border border-slate-200/90 hover:scale-[1.02] transition-transform">
+        {/* 1. Extended Prominent Logo + Bigger Extended Headline: NAMMA THANJAI. + Medium Tagline */}
+        <div className="flex flex-col items-center gap-1 sm:gap-1.5 w-full shrink-0 pt-0.5">
+          <div className="w-20 h-20 sm:w-26 sm:h-26 md:w-32 md:h-32 rounded-3xl bg-white shadow-xl p-2.5 sm:p-3 flex items-center justify-center shrink-0 border border-slate-200/90 hover:scale-[1.02] transition-transform">
             <img 
               src="/namma_thanjai_logo.png" 
               alt="namma thanjai logo" 
               className="w-full h-full object-contain" 
             />
           </div>
-          <h1 className="font-heading font-black text-3.5xl sm:text-5.5xl md:text-6.5xl text-slate-955 tracking-tighter sm:tracking-tight leading-none uppercase mt-0.5 w-full text-center drop-shadow-2xs">
+          <h1 className="font-heading font-black text-4.5xl sm:text-6.5xl md:text-7.5xl lg:text-8.5xl text-slate-955 tracking-tighter leading-none uppercase mt-1 w-full text-center drop-shadow-2xs">
             namma thanjai<span className="text-yellow-500">.</span>
           </h1>
-          <p className="text-[10px] sm:text-xs font-bold text-slate-500 max-w-md mx-auto leading-tight uppercase tracking-wider mt-0.5">
+          <p className="text-xs sm:text-sm md:text-base font-bold text-slate-500 max-w-lg mx-auto leading-tight uppercase tracking-wider mt-1">
             Thanjavur Verified Noticeboard & Local Helper Trades
           </p>
         </div>
