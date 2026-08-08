@@ -576,31 +576,318 @@ export default function HomeLandingPage() {
       )}
 
       {/* ==========================================
-          PORTAL CONTENT: DIRECTORY SEGMENT LINKS Noticeboard (ALWAYS VISIBLE ON DESKTOP WEBSITE, LOGGED IN ON MOBILE)
+          PORTAL CONTENT: DIRECTORY SEGMENT LINKS Noticeboard (ALWAYS VISIBLE ON DESKTOP & MOBILE)
           ========================================== */}
-      <div id="noticeboard-directory" className={`w-full max-w-7xl mx-auto px-5 md:px-6 py-8 flex-col gap-8 bg-white ${profile?.isVerified ? "flex" : "hidden md:flex"}`}>
+      <div id="noticeboard-directory" className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-col gap-10 bg-white">
 
-        {/* Section Heading & Branding Emblem */}
-        <div className="flex flex-col items-center text-center gap-4 max-w-xl mx-auto">
-          <div className="w-16 h-16 rounded-full bg-yellow-50 border border-yellow-250 flex items-center justify-center overflow-hidden shrink-0 shadow-sm animate-pulse-slow">
-            <Image 
-              src="/thanjavur_temple_illustration.png" 
-              alt="namma thanjai logo" 
-              width={50}
-              height={50}
-              className="object-contain" 
-            />
-          </div>
-          <div>
-            <span className="text-[10px] font-black uppercase tracking-widest text-yellow-600 bg-yellow-55 border border-yellow-200/60 px-3.5 py-1 rounded-full">
-              Thanjavur noticeboard
+        {/* 1. WHAT WE ARE UP TO: LIVE VERIFIED ACTIVITY STREAM */}
+        <div className="w-full bg-slate-900 border border-slate-800 rounded-3xl p-5 sm:p-7 text-white shadow-xl flex flex-col gap-5 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-60 h-60 bg-yellow-500/10 blur-3xl rounded-full pointer-events-none" />
+          
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800 pb-4">
+            <div className="flex items-center gap-2.5">
+              <span className="bg-yellow-500 text-slate-950 font-black text-[9px] uppercase px-2.5 py-1 rounded-md animate-pulse tracking-wider">
+                LIVE
+              </span>
+              <h2 className="font-heading font-black text-lg sm:text-xl text-white tracking-tight">
+                What We Are Up To (Live Verified Activity Stream)
+              </h2>
+            </div>
+            <span className="text-[11px] font-bold text-slate-400">
+              Real-time verified postings in Thanjavur District
             </span>
-            <h2 className="font-heading font-black text-2xl md:text-3xl text-slate-900 tracking-tight leading-tight mt-3.5">
-              Explore Local noticeboard Channels
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+            <div 
+              onClick={() => router.push("/sell?category=Plot%20%2f%20Real%20Estate")}
+              className="bg-slate-800/80 border border-slate-700/80 hover:border-yellow-500/50 p-3.5 rounded-2xl flex flex-col gap-1.5 cursor-pointer transition-all hover:scale-[1.02]"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[9px] font-bold text-yellow-400 uppercase tracking-widest bg-yellow-500/10 px-2 py-0.5 rounded-md border border-yellow-500/20">
+                  REAL ESTATE
+                </span>
+                <span className="text-[9px] text-slate-400 font-bold">Just Now</span>
+              </div>
+              <p className="text-xs font-bold text-slate-100 line-clamp-2">
+                2,400 Sqft CMDA Approved Plot listed in Vallam with Kaveri line connection.
+              </p>
+              <span className="text-[10px] font-black text-yellow-400 mt-1 flex items-center gap-1">
+                View in Sell Feed →
+              </span>
+            </div>
+
+            <div 
+              onClick={() => router.push("/services?category=Electrician")}
+              className="bg-slate-800/80 border border-slate-700/80 hover:border-yellow-500/50 p-3.5 rounded-2xl flex flex-col gap-1.5 cursor-pointer transition-all hover:scale-[1.02]"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[9px] font-bold text-yellow-400 uppercase tracking-widest bg-yellow-500/10 px-2 py-0.5 rounded-md border border-yellow-500/20">
+                  SERVICE
+                </span>
+                <span className="text-[9px] text-slate-400 font-bold">5m ago</span>
+              </div>
+              <p className="text-xs font-bold text-slate-100 line-clamp-2">
+                Senthil Kumar (8+ Yrs Exp Electrician) available for DB box & inverter wiring in Tanjore Town.
+              </p>
+              <span className="text-[10px] font-black text-yellow-400 mt-1 flex items-center gap-1">
+                View in Services Feed →
+              </span>
+            </div>
+
+            <div 
+              onClick={() => router.push("/need?category=Property%20Rental")}
+              className="bg-slate-800/80 border border-slate-700/80 hover:border-yellow-500/50 p-3.5 rounded-2xl flex flex-col gap-1.5 cursor-pointer transition-all hover:scale-[1.02]"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[9px] font-bold text-yellow-400 uppercase tracking-widest bg-yellow-500/10 px-2 py-0.5 rounded-md border border-yellow-500/20">
+                  NEED
+                </span>
+                <span className="text-[9px] text-slate-400 font-bold">12m ago</span>
+              </div>
+              <p className="text-xs font-bold text-slate-100 line-clamp-2">
+                Doctor family looking for 3 BHK House rental near Medical College Road.
+              </p>
+              <span className="text-[10px] font-black text-yellow-400 mt-1 flex items-center gap-1">
+                View in Need Feed →
+              </span>
+            </div>
+
+            <div 
+              onClick={() => router.push("/shops?category=Electronics%20Shop")}
+              className="bg-slate-800/80 border border-slate-700/80 hover:border-yellow-500/50 p-3.5 rounded-2xl flex flex-col gap-1.5 cursor-pointer transition-all hover:scale-[1.02]"
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[9px] font-bold text-yellow-400 uppercase tracking-widest bg-yellow-500/10 px-2 py-0.5 rounded-md border border-yellow-500/20">
+                  OFFER
+                </span>
+                <span className="text-[9px] text-slate-400 font-bold">25m ago</span>
+              </div>
+              <p className="text-xs font-bold text-slate-100 line-clamp-2">
+                Glen Exclusive Gallery offering up to 60% OFF on kitchen chimneys in New Busstand Rd.
+              </p>
+              <span className="text-[10px] font-black text-yellow-400 mt-1 flex items-center gap-1">
+                View Offer Video →
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* 2. 4-SEGMENT CATEGORY EXPLORER GRID */}
+        <div className="flex flex-col gap-5">
+          <div className="flex flex-col items-center text-center gap-2 max-w-xl mx-auto">
+            <span className="text-[10px] font-black uppercase tracking-widest text-yellow-600 bg-yellow-50 border border-yellow-200/60 px-3.5 py-1 rounded-full">
+              4 Core Channels
+            </span>
+            <h2 className="font-heading font-black text-2xl md:text-3xl text-slate-900 tracking-tight leading-tight">
+              Explore All 4 Segments in Thanjavur
             </h2>
-            <p className="text-xs text-slate-500 mt-2 leading-relaxed font-semibold">
-              Tap any sub-category tile below to enter the channel noticeboard, search active listings, or publish your own ad.
+            <p className="text-xs text-slate-500 leading-relaxed font-semibold">
+              Select any channel or sub-category below to explore verified local postings.
             </p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5">
+            {/* SEGMENT 1: SELL */}
+            <div className="bg-white border border-slate-200 rounded-3xl p-5 shadow-xs flex flex-col gap-4 hover:shadow-md transition-shadow">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2">
+                  <span className="bg-slate-100 text-slate-900 p-2 rounded-xl border border-slate-200">
+                    <ShoppingBag className="w-5 h-5" />
+                  </span>
+                  <h3 className="font-heading font-black text-base text-slate-900">
+                    1. Sell Marketplace
+                  </h3>
+                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                <button 
+                  onClick={() => router.push("/sell?category=Plot%20%2f%20Real%20Estate")}
+                  className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
+                >
+                  <span>Plot / Real Estate</span>
+                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                </button>
+                <button 
+                  onClick={() => router.push("/sell?category=Property%20Rental")}
+                  className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
+                >
+                  <span>House / Commercial Rental</span>
+                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                </button>
+                <button 
+                  onClick={() => router.push("/sell?category=Motor%20Vehicles")}
+                  className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
+                >
+                  <span>Used Motor Vehicles</span>
+                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                </button>
+                <button 
+                  onClick={() => router.push("/sell?category=Electronics")}
+                  className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
+                >
+                  <span>Electronics & Goods</span>
+                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                </button>
+              </div>
+              <button 
+                onClick={() => router.push("/sell")}
+                className="w-full py-2.5 bg-slate-900 text-white rounded-xl text-xs font-black uppercase tracking-wider text-center cursor-pointer hover:bg-slate-800 transition-colors"
+              >
+                Open Sell Channel →
+              </button>
+            </div>
+
+            {/* SEGMENT 2: NEED */}
+            <div className="bg-white border border-slate-200 rounded-3xl p-5 shadow-xs flex flex-col gap-4 hover:shadow-md transition-shadow">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2">
+                  <span className="bg-slate-100 text-slate-900 p-2 rounded-xl border border-slate-200">
+                    <Building className="w-5 h-5" />
+                  </span>
+                  <h3 className="font-heading font-black text-base text-slate-900">
+                    2. Buyer Requirement
+                  </h3>
+                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                <button 
+                  onClick={() => router.push("/need?category=Property%20Rental")}
+                  className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
+                >
+                  <span>Wanted House / Rental</span>
+                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                </button>
+                <button 
+                  onClick={() => router.push("/need?category=Plot%20%2f%20Real%20Estate")}
+                  className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
+                >
+                  <span>Wanted Land / Plot</span>
+                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                </button>
+                <button 
+                  onClick={() => router.push("/need?category=Others")}
+                  className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
+                >
+                  <span>Job Openings & Hiring</span>
+                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                </button>
+                <button 
+                  onClick={() => router.push("/need?category=Electronics")}
+                  className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
+                >
+                  <span>Wanted Goods & Vehicle</span>
+                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                </button>
+              </div>
+              <button 
+                onClick={() => router.push("/need")}
+                className="w-full py-2.5 bg-slate-900 text-white rounded-xl text-xs font-black uppercase tracking-wider text-center cursor-pointer hover:bg-slate-800 transition-colors"
+              >
+                Open Need Channel →
+              </button>
+            </div>
+
+            {/* SEGMENT 3: SERVICE */}
+            <div className="bg-white border border-slate-200 rounded-3xl p-5 shadow-xs flex flex-col gap-4 hover:shadow-md transition-shadow">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2">
+                  <span className="bg-slate-100 text-slate-900 p-2 rounded-xl border border-slate-200">
+                    <Wrench className="w-5 h-5" />
+                  </span>
+                  <h3 className="font-heading font-black text-base text-slate-900">
+                    3. Local Helper Trades
+                  </h3>
+                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                <button 
+                  onClick={() => router.push("/services?category=Electrician")}
+                  className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
+                >
+                  <span>Home Electrician</span>
+                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                </button>
+                <button 
+                  onClick={() => router.push("/services?category=Plumber")}
+                  className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
+                >
+                  <span>Expert Plumber</span>
+                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                </button>
+                <button 
+                  onClick={() => router.push("/services?category=AC%20%26%20Refrigeration")}
+                  className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
+                >
+                  <span>AC & Fridge Repair</span>
+                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                </button>
+                <button 
+                  onClick={() => router.push("/services?category=Carpenter")}
+                  className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
+                >
+                  <span>Wood Carpenter</span>
+                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                </button>
+              </div>
+              <button 
+                onClick={() => router.push("/services")}
+                className="w-full py-2.5 bg-slate-900 text-white rounded-xl text-xs font-black uppercase tracking-wider text-center cursor-pointer hover:bg-slate-800 transition-colors"
+              >
+                Open Services Channel →
+              </button>
+            </div>
+
+            {/* SEGMENT 4: OFFER */}
+            <div className="bg-white border border-slate-200 rounded-3xl p-5 shadow-xs flex flex-col gap-4 hover:shadow-md transition-shadow">
+              <div className="flex items-center justify-between border-b border-slate-100 pb-3">
+                <div className="flex items-center gap-2">
+                  <span className="bg-slate-100 text-slate-900 p-2 rounded-xl border border-slate-200">
+                    <Store className="w-5 h-5" />
+                  </span>
+                  <h3 className="font-heading font-black text-base text-slate-900">
+                    4. Local Store Offers
+                  </h3>
+                </div>
+              </div>
+              <div className="flex flex-col gap-2">
+                <button 
+                  onClick={() => router.push("/shops?category=Electronics%20Shop")}
+                  className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
+                >
+                  <span>Kitchen & Electronics</span>
+                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                </button>
+                <button 
+                  onClick={() => router.push("/shops?category=Cafe%20%26%20Restaurant")}
+                  className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
+                >
+                  <span>Degree Coffee & Food Deals</span>
+                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                </button>
+                <button 
+                  onClick={() => router.push("/shops?category=Textiles%20%26%20Clothing")}
+                  className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
+                >
+                  <span>Handloom Silk & Textiles</span>
+                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                </button>
+                <button 
+                  onClick={() => router.push("/shops?category=Jewelry%20Showroom")}
+                  className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
+                >
+                  <span>Gold & Jewelry Mart</span>
+                  <ChevronRight className="w-4 h-4 text-slate-400" />
+                </button>
+              </div>
+              <button 
+                onClick={() => router.push("/shops")}
+                className="w-full py-2.5 bg-slate-900 text-white rounded-xl text-xs font-black uppercase tracking-wider text-center cursor-pointer hover:bg-slate-800 transition-colors"
+              >
+                Open Offers Channel →
+              </button>
+            </div>
+
           </div>
         </div>
 
