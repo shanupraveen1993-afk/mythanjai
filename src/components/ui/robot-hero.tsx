@@ -463,13 +463,13 @@ function RobotPrototype({
   };
 
   const config = {
-    moveSpeed: 0.35,
-    bodyRotSpeed: 10.0,
-    headRotSpeed: 20.0,
-    bodyTiltX: 0.0,
-    bodyTiltY: 0.95,
-    headLookX: 0.3,
-    headLookY: 1.8,
+    moveSpeed: 1.5,
+    bodyRotSpeed: 12.0,
+    headRotSpeed: 25.0,
+    bodyTiltX: 0.15,
+    bodyTiltY: 1.15,
+    headLookX: 0.5,
+    headLookY: 2.2,
   };
 
   useFrame((state, delta) => {
@@ -480,21 +480,28 @@ function RobotPrototype({
     const tx = state.pointer.x;
     const ty = state.pointer.y;
 
-    const maxMoveX = state.viewport.width / 3.5;
+    // Full-side smooth translation tracking mouse across screen
+    const maxMoveX = state.viewport.width / 2.5;
+    const maxMoveY = state.viewport.height / 4.0;
     const targetPosX = tx * maxMoveX;
+    const targetPosY = ty * maxMoveY - 0.25;
+
     bodyRef.current.position.x = THREE.MathUtils.lerp(
       bodyRef.current.position.x,
       targetPosX,
-      config.moveSpeed * dt,
+      config.moveSpeed * dt * 3.5,
+    );
+    bodyRef.current.position.y = THREE.MathUtils.lerp(
+      bodyRef.current.position.y,
+      targetPosY,
+      config.moveSpeed * dt * 3.5,
     );
 
     const relativeX = tx - bodyRef.current.position.x / 2.5;
 
     const bodyTargetRotY = -relativeX * config.bodyTiltY;
-
-    const bodyTargetRotX = relativeX * relativeX * config.bodyTiltX - ty * 0.25;
-
-    const bodyTargetRotZ = -relativeX * 0.15;
+    const bodyTargetRotX = relativeX * relativeX * config.bodyTiltX - ty * 0.35;
+    const bodyTargetRotZ = -relativeX * 0.2;
 
     bodyRef.current.rotation.y = THREE.MathUtils.lerp(
       bodyRef.current.rotation.y,
@@ -934,14 +941,14 @@ export function RobotHero({
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 w-full max-w-2xl px-2 my-1">
           <button
             type="button"
-            onClick={() => onCategoryClick?.("classifieds?type=SELL")}
+            onClick={() => onCategoryClick?.("sell")}
             className="py-2.5 px-2 sm:px-4 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-900 shadow-2xs hover:border-slate-300 transition-all text-center flex items-center justify-center cursor-pointer font-extrabold text-[11px] sm:text-xs uppercase tracking-wider active:scale-[0.97]"
           >
             <span>Sell</span>
           </button>
           <button
             type="button"
-            onClick={() => onCategoryClick?.("classifieds?type=NEED")}
+            onClick={() => onCategoryClick?.("need")}
             className="py-2.5 px-2 sm:px-4 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-900 shadow-2xs hover:border-slate-300 transition-all text-center flex items-center justify-center cursor-pointer font-extrabold text-[11px] sm:text-xs uppercase tracking-wider active:scale-[0.97]"
           >
             <span>Need</span>
@@ -959,6 +966,28 @@ export function RobotHero({
             className="py-2.5 px-2 sm:px-4 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-900 shadow-2xs hover:border-slate-300 transition-all text-center flex items-center justify-center cursor-pointer font-extrabold text-[11px] sm:text-xs uppercase tracking-wider active:scale-[0.97]"
           >
             <span>Offer</span>
+          </button>
+        </div>
+
+        {/* 3.5 Popular Category Shortcut Pills Across All 4 Segments */}
+        <div className="flex items-center gap-1.5 overflow-x-auto w-full max-w-2xl px-2 py-1 scrollbar-none justify-center flex-wrap">
+          <button onClick={() => onCategoryClick?.("sell?category=Plot%20%2f%20Real%20Estate")} className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 text-[10px] font-bold rounded-lg transition-all border border-slate-200 cursor-pointer">
+            Real Estate
+          </button>
+          <button onClick={() => onCategoryClick?.("sell?category=Property%20Rental")} className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 text-[10px] font-bold rounded-lg transition-all border border-slate-200 cursor-pointer">
+            House Rental
+          </button>
+          <button onClick={() => onCategoryClick?.("need?category=Property%20Rental")} className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 text-[10px] font-bold rounded-lg transition-all border border-slate-200 cursor-pointer">
+            Wanted House
+          </button>
+          <button onClick={() => onCategoryClick?.("services?category=Electrician")} className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 text-[10px] font-bold rounded-lg transition-all border border-slate-200 cursor-pointer">
+            Electrician
+          </button>
+          <button onClick={() => onCategoryClick?.("services?category=Plumber")} className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 text-[10px] font-bold rounded-lg transition-all border border-slate-200 cursor-pointer">
+            Plumber
+          </button>
+          <button onClick={() => onCategoryClick?.("shops?category=Electronics%20Shop")} className="px-2.5 py-1 bg-slate-100 hover:bg-slate-200 text-slate-800 text-[10px] font-bold rounded-lg transition-all border border-slate-200 cursor-pointer">
+            Store Discounts
           </button>
         </div>
 
