@@ -180,35 +180,6 @@ export default function NeedPage() {
         </div>
       </div>
 
-      {/* UNIVERSAL STICKY ACTION BAR: Light Yellow Glassmorphism Container */}
-      <div className="sticky top-[57px] z-30 bg-amber-50/85 backdrop-blur-md py-2.5 px-4 border border-amber-200/80 rounded-2xl shadow-xs flex items-center justify-between">
-        <select
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as any)}
-          className="text-xs font-black bg-white/90 border border-amber-200/90 rounded-xl px-3.5 py-2 text-slate-800 focus:outline-none cursor-pointer shrink-0 shadow-xs"
-        >
-          <option value="recent">Latest First</option>
-          <option value="price_low">Budget: Low to High</option>
-          <option value="price_high">Budget: High to Low</option>
-        </select>
-
-        <button
-          onClick={() => {
-            if (!profile?.isVerified) {
-              router.push("/need?auth=popup");
-            } else {
-              setIsFormOpen(!isFormOpen);
-            }
-          }}
-          className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-xs shrink-0"
-        >
-          <Plus className="w-4 h-4 text-slate-955 stroke-[2.5]" />
-          <span>Post Need</span>
-        </button>
-      </div>
-
-
-
       {/* CATEGORIES SELECTION */}
       {!selectedCategory ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
@@ -240,6 +211,33 @@ export default function NeedPage() {
       ) : (
         /* LISTINGS FEED */
         <div className="flex flex-col gap-4">
+          {/* UNIVERSAL STICKY ACTION BAR: Shown Only After Category is Selected */}
+          <div className="sticky top-[57px] z-30 bg-amber-50/85 backdrop-blur-md py-2.5 px-4 border border-amber-200/80 rounded-2xl shadow-xs flex items-center justify-between">
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as any)}
+              className="text-xs font-black bg-white/90 border border-amber-200/90 rounded-xl px-3.5 py-2 text-slate-800 focus:outline-none cursor-pointer shrink-0 shadow-xs"
+            >
+              <option value="recent">Latest First</option>
+              <option value="price_low">Budget: Low to High</option>
+              <option value="price_high">Budget: High to Low</option>
+            </select>
+
+            <button
+              onClick={() => {
+                if (!profile?.isVerified) {
+                  router.push("/need?auth=popup");
+                } else {
+                  setIsFormOpen(!isFormOpen);
+                }
+              }}
+              className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-xs shrink-0"
+            >
+              <Plus className="w-4 h-4 text-slate-955 stroke-[2.5]" />
+              <span>Post Need</span>
+            </button>
+          </div>
+
           <div className="flex items-center justify-between bg-slate-100 p-2.5 rounded-xl border border-slate-200">
             <span className="text-xs font-black text-slate-800">
               Category: {selectedCategory}

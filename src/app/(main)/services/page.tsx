@@ -338,45 +338,90 @@ export default function ServicesPage() {
         </div>
       </div>
 
-      {/* UNIVERSAL STICKY ACTION BAR: Light Yellow Glassmorphism Container */}
-      <div className="sticky top-[57px] z-30 bg-amber-50/85 backdrop-blur-md py-2.5 px-4 border border-amber-200/80 rounded-2xl shadow-xs flex items-center justify-between">
-        <select
-          className="text-xs font-black bg-white/90 border border-amber-200/90 rounded-xl px-3.5 py-2 text-slate-800 focus:outline-none cursor-pointer shrink-0 shadow-xs"
-        >
-          <option value="recent">Latest First</option>
-          <option value="rating">Top Rated</option>
-        </select>
+      {/* CATEGORY SELECTION OR DETAILED TRADE FEED */}
+      {!selectedCategory ? (
+        <div className="flex flex-col gap-4">
+          <div className="bg-yellow-50 border border-yellow-250/60 rounded-2xl p-4 flex flex-col gap-1 text-slate-800">
+            <span className="text-[9px] font-black uppercase tracking-wider text-yellow-755 bg-yellow-500/10 border border-yellow-250/60 px-2.5 py-0.5 rounded-xl inline-block w-fit">
+              Thanjavur Local Skilled Trades
+            </span>
+            <h2 className="font-heading font-black text-lg text-slate-900 mt-1">
+              Select Trade Category
+            </h2>
+            <p className="text-[11px] text-slate-600 max-w-md">
+              Choose a trade category below to browse verified local technicians or register your trade service profile.
+            </p>
+          </div>
 
-        <button
-          onClick={() => {
-            if (!profile?.isVerified) {
-              const currentParams = new URLSearchParams(searchParams.toString());
-              currentParams.set("auth", "popup");
-              currentParams.set("redirect", `/services?category=${encodeURIComponent(selectedCategory || "")}&create=true`);
-              router.push(`/services?${currentParams.toString()}`);
-            } else {
-              setIsFormOpen(!isFormOpen);
-            }
-          }}
-          className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-xs shrink-0"
-        >
-          <Plus className={`w-4 h-4 text-slate-955 transition-transform duration-250 ${isFormOpen ? "rotate-45" : ""}`} />
-          <span>Post Trade</span>
-        </button>
-      </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+            {SERVICE_CATEGORIES.map((cat) => {
+              const illustration = CATEGORY_ILLUSTRATIONS[cat] || "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=600&auto=format&fit=crop";
+              return (
+                <button
+                  key={cat}
+                  onClick={() => handleCategorySelect(cat)}
+                  className="bg-white border border-slate-200 hover:border-slate-400 p-3.5 rounded-2xl shadow-2xs text-left transition-all active:scale-[0.98] hover:shadow-md flex flex-col gap-3 group w-full cursor-pointer overflow-hidden aspect-square justify-between"
+                >
+                  <div className="w-full h-32 rounded-xl overflow-hidden relative bg-slate-100 border border-slate-100">
+                    <img
+                      src={illustration}
+                      alt={cat}
+                      className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-300"
+                    />
+                  </div>
+                  <div>
+                    <span className="text-xs font-black text-slate-900 block group-hover:text-slate-700 transition-colors line-clamp-1">
+                      {cat}
+                    </span>
+                    <span className="text-[10px] font-bold text-slate-400 block mt-0.5">Explore Trade →</span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      ) : (
+        /* STEP 2: DETAILED FEED & REGISTRATION CARD FOR TRADE */
+        <div className="flex flex-col gap-5">
+          {/* UNIVERSAL STICKY ACTION BAR: Shown Only After Category is Selected */}
+          <div className="sticky top-[57px] z-30 bg-amber-50/85 backdrop-blur-md py-2.5 px-4 border border-amber-200/80 rounded-2xl shadow-xs flex items-center justify-between">
+            <select
+              className="text-xs font-black bg-white/90 border border-amber-200/90 rounded-xl px-3.5 py-2 text-slate-800 focus:outline-none cursor-pointer shrink-0 shadow-xs"
+            >
+              <option value="recent">Latest First</option>
+              <option value="rating">Top Rated</option>
+            </select>
 
+            <button
+              onClick={() => {
+                if (!profile?.isVerified) {
+                  const currentParams = new URLSearchParams(searchParams.toString());
+                  currentParams.set("auth", "popup");
+                  currentParams.set("redirect", `/services?category=${encodeURIComponent(selectedCategory || "")}&create=true`);
+                  router.push(`/services?${currentParams.toString()}`);
+                } else {
+                  setIsFormOpen(!isFormOpen);
+                }
+              }}
+              className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-xs shrink-0"
+            >
+              <Plus className={`w-4 h-4 text-slate-955 transition-transform duration-250 ${isFormOpen ? "rotate-45" : ""}`} />
+              <span>Post Trade</span>
+            </button>
+          </div>
 
-
-      {/* STEP 2: DETAILED FEED & REGISTRATION CARD FOR TRADE */}
-      <div className="flex flex-col gap-5">
-        {/* Header Badge */}
-        {selectedCategory && (
-          <div className="flex items-center justify-end">
-            <span className="text-xs font-black text-slate-800 bg-yellow-500/10 border border-yellow-250/60 px-3 py-1 rounded-xl">
+          {/* Header Badge */}
+          <div className="flex items-center justify-between bg-slate-100 p-2.5 rounded-xl border border-slate-200">
+            <button
+              onClick={handleClearCategory}
+              className="text-xs font-bold text-slate-600 hover:text-slate-900 cursor-pointer"
+            >
+              ← All Trades
+            </button>
+            <span className="text-xs font-black text-slate-800">
               Trade: {selectedCategory}
             </span>
           </div>
-        )}
 
 
 
@@ -575,6 +620,7 @@ export default function ServicesPage() {
             </div>
           )}
         </div>
+      )}
     </div>
   );
 }
