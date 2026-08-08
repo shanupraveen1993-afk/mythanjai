@@ -903,28 +903,28 @@ export function RobotHero({
       {/* Light radial glow centered behind hero */}
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_45%,rgba(250,204,21,0.06)_0%,transparent_60%)] pointer-events-none" />
 
-      {/* Centered Foreground Hero Content */}
-      <div className="relative z-10 w-full max-w-4xl md:max-w-5xl mx-auto flex flex-col items-center justify-between text-center gap-1.5 sm:gap-2.5 my-auto h-full pointer-events-auto py-2 sm:py-4">
+      {/* Centered Foreground Hero Content (Optimized specifically for mobile web app viewport fit) */}
+      <div className="relative z-10 w-full max-w-4xl md:max-w-5xl mx-auto flex flex-col items-center justify-between text-center gap-1 sm:gap-2.5 my-auto h-full pointer-events-auto py-1 sm:py-4">
         
-        {/* 1. Enlarged Prominent Logo + Bold Extended Title + Subtitle */}
-        <div className="flex flex-col items-center gap-1 w-full shrink-0 pt-1">
-          <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-3xl bg-white shadow-md p-1.5 flex items-center justify-center shrink-0 border border-slate-200/80">
+        {/* 1. Logo Icon + Title + Tagline (Compact mobile web app scaling) */}
+        <div className="flex flex-col items-center gap-0.5 sm:gap-1 w-full shrink-0 pt-0.5 sm:pt-1">
+          <div className="w-12 h-12 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-2xl sm:rounded-3xl bg-white shadow-sm p-1 sm:p-1.5 flex items-center justify-center shrink-0 border border-slate-200/80">
             <img 
               src="/namma_thanjai_logo.png" 
               alt="namma thanjai logo" 
-              className="w-full h-full object-contain drop-shadow-xs" 
+              className="w-full h-full object-contain" 
             />
           </div>
-          <h1 className="font-heading font-black text-3xl sm:text-5xl md:text-6xl text-slate-900 tracking-tight leading-none uppercase mt-1 max-w-3xl">
+          <h1 className="font-heading font-black text-2xl sm:text-4xl md:text-5xl text-slate-900 tracking-tight leading-none uppercase mt-0.5 sm:mt-1 max-w-3xl">
             namma thanjavur<span className="text-yellow-500">.</span>
           </h1>
-          <p className="text-[10px] sm:text-xs md:text-sm text-slate-500 font-extrabold uppercase tracking-widest mt-0.5">
+          <p className="text-[9px] sm:text-xs md:text-sm text-slate-500 font-extrabold uppercase tracking-widest mt-0.5">
             thanjavur verified noticeboard & local helper trades
           </p>
         </div>
 
         {/* 2. Dynamic Rotational Topic Category */}
-        <div className="h-6 sm:h-8 flex items-center justify-center overflow-hidden shrink-0">
+        <div className="h-5 sm:h-8 flex items-center justify-center overflow-hidden shrink-0">
           <AnimatePresence mode="wait">
             <motion.h2
               key={wordIndex}
@@ -932,7 +932,7 @@ export function RobotHero({
               animate={{ opacity: 0.45, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 6, scale: 1.05 }}
               transition={{ duration: 0.25 }}
-              className="font-sans font-black text-lg sm:text-2xl md:text-3xl text-slate-400 uppercase tracking-widest text-center select-none"
+              className="font-sans font-black text-base sm:text-xl md:text-2xl text-slate-400 uppercase tracking-widest text-center select-none"
             >
               {words[wordIndex]}
             </motion.h2>
