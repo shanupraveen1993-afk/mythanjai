@@ -903,25 +903,25 @@ export function RobotHero({
       {/* Light radial glow centered behind hero */}
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_45%,rgba(250,204,21,0.06)_0%,transparent_60%)] pointer-events-none" />
 
-      {/* Centered Foreground Hero Content */}
+      {/* Centered Foreground Hero Content (Fitting first fold perfectly with enlarged logo & 3D Robot) */}
       <div className="relative z-10 w-full max-w-4xl md:max-w-5xl mx-auto flex flex-col items-center justify-between text-center gap-1 sm:gap-2 my-auto h-full pointer-events-auto">
         
         {/* 1. Extended Prominent Logo + Massive Headline: NAMMA THANJAI. */}
         <div className="flex flex-col items-center gap-1 sm:gap-1.5 w-full shrink-0 pt-0.5">
-          <div className="w-16 h-16 sm:w-22 sm:h-22 md:w-28 md:h-28 rounded-3xl bg-white shadow-lg p-2 sm:p-2.5 flex items-center justify-center shrink-0 border border-slate-200/90 hover:scale-[1.02] transition-transform">
+          <div className="w-20 h-20 sm:w-26 sm:h-26 md:w-32 md:h-32 rounded-3xl bg-white shadow-xl p-2 sm:p-2.5 flex items-center justify-center shrink-0 border border-slate-200/90 hover:scale-[1.02] transition-transform">
             <img 
               src="/namma_thanjai_logo.png" 
               alt="namma thanjai logo" 
               className="w-full h-full object-contain" 
             />
           </div>
-          <h1 className="font-heading font-black text-3.5xl sm:text-5.5xl md:text-6.5xl text-slate-955 tracking-tighter sm:tracking-tight leading-none uppercase mt-0.5 w-full text-center drop-shadow-2xs">
+          <h1 className="font-heading font-black text-4xl sm:text-6xl md:text-7.5xl text-slate-955 tracking-tighter sm:tracking-tight leading-none uppercase mt-1 w-full text-center drop-shadow-2xs">
             namma thanjai<span className="text-yellow-500">.</span>
           </h1>
         </div>
 
-        {/* 2. Rotational Category Switcher Badge */}
-        <div className="h-6 sm:h-8 flex items-center justify-center overflow-hidden shrink-0 my-0.5">
+        {/* 2. Interactive Rotational Category Switcher Badge */}
+        <div className="h-7 sm:h-9 flex items-center justify-center overflow-hidden shrink-0 my-0.5">
           <AnimatePresence mode="wait">
             <motion.div
               key={wordIndex}
@@ -929,42 +929,42 @@ export function RobotHero({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 6, scale: 1.05 }}
               transition={{ duration: 0.25 }}
-              className="bg-slate-900 border border-slate-800 text-yellow-400 font-black text-[11px] sm:text-xs px-3.5 py-1 rounded-full uppercase tracking-widest text-center shadow-md flex items-center gap-2 select-none"
+              className="bg-slate-900 border border-slate-800 text-yellow-400 font-black text-xs sm:text-sm px-4 py-1.5 rounded-full uppercase tracking-widest text-center shadow-md flex items-center gap-2 select-none"
             >
-              <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-ping" />
+              <span className="w-2 h-2 rounded-full bg-yellow-400 animate-ping" />
               <span>{words[wordIndex]}</span>
             </motion.div>
           </AnimatePresence>
         </div>
 
-        {/* 3. Responsive 3D Mascot Robot Canvas */}
+        {/* 3. 3D Mascot Robot Canvas (Unclipped Camera Frustum, Flows Left and Right) */}
         <div 
           onClick={handleRobotTap} 
-          className="w-full max-w-[320px] sm:max-w-[400px] md:max-w-[460px] flex-1 min-h-[190px] max-h-[320px] relative flex items-center justify-center cursor-pointer overflow-visible my-0 bg-transparent"
+          className="w-full max-w-[360px] sm:max-w-[460px] md:max-w-[540px] flex-1 min-h-[200px] max-h-[360px] relative flex items-center justify-center cursor-pointer overflow-visible my-0 bg-transparent"
         >
-          <Canvas camera={{ position: [0, 0, 4.2], fov: 46 }} className="overflow-visible bg-transparent">
+          <Canvas camera={{ position: [0, 0, 4.4], fov: 50 }} className="overflow-visible bg-transparent">
             <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
             <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} shadow-bias={-0.0005} />
             <Environment preset="studio" blur={0.5} />
-            <ResponsiveGroup scale={scale * 1.55}>
+            <ResponsiveGroup scale={scale * 1.7}>
               <RobotPrototype neckParams={{ baseR: 0.215, baseH: -0.05, midR: 0.28, midH: 0.02, lipBottomR: 0.295, lipBottomH: 0.045, lipTopR: 0.27, lipTopH: 0.055, innerR: 0.1, innerDropH: 0.0 }} bodyParams={{ bodyBevelR: 0.235, bodyBevelY: 0.34, bodyBevelT: 0.025 }} color={color} pantallaColor={pantallaColor} pantallaBrillo={pantallaBrillo} blinkCycle={blinkCycle} metalness={metalness} />
             </ResponsiveGroup>
           </Canvas>
         </div>
 
         {/* 4. Action Footer Group (REGISTER TO POST + LIVE ALERT TICKER bound in tight container) */}
-        <div className="w-full max-w-sm shrink-0 flex flex-col gap-2 px-1 pb-1">
+        <div className="w-full max-w-sm sm:max-w-md shrink-0 flex flex-col gap-2 px-1 pb-1 sm:pb-3">
           <button
             type="button"
             onClick={onCtaClick}
-            className="w-full py-3 sm:py-3.5 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs sm:text-sm uppercase tracking-wider transition-all hover:scale-[1.01] active:scale-[0.98] shadow-lg shadow-yellow-500/25 border-0 text-center flex items-center justify-center gap-2 cursor-pointer scale-[1.01]"
+            className="w-full py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs sm:text-sm uppercase tracking-wider transition-all hover:scale-[1.01] active:scale-[0.98] shadow-lg shadow-yellow-500/25 border-0 text-center flex items-center justify-center gap-2 cursor-pointer scale-[1.01]"
           >
             <span>{ctaText === "Verified" ? "Verified Profile" : "Register to Post"}</span>
             <ArrowRight className="w-4 h-4 text-slate-955 stroke-[2.5]" />
           </button>
 
           {alerts.length > 0 && (
-            <div className="w-full bg-slate-900 border border-slate-800 text-white rounded-xl py-1.5 px-3.5 shadow-sm flex items-center justify-between text-[11px] sm:text-xs font-black select-none tracking-wide">
+            <div className="w-full bg-slate-900 border border-slate-800 text-white rounded-xl py-2 px-3.5 shadow-sm flex items-center justify-between text-[11px] sm:text-xs font-black select-none tracking-wide">
               <div className="flex items-center gap-2 overflow-hidden w-full text-left">
                 <span className="bg-yellow-500 text-slate-950 font-black text-[8px] px-1.5 py-0.5 rounded-md uppercase shrink-0 animate-pulse">
                   LIVE
