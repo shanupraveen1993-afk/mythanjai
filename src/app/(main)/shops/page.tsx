@@ -565,35 +565,7 @@ export default function ShopsPage() {
         </button>
       </div>
 
-      {/* HORIZONTAL CATEGORY HIGHLIGHT BAR */}
-      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
-        <button
-          onClick={handleClearCategory}
-          className={`px-4 py-2 rounded-xl text-xs font-black shrink-0 transition-all cursor-pointer border ${
-            !selectedCategory 
-              ? "bg-slate-900 text-white border-slate-900 shadow-sm scale-[1.02]" 
-              : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
-          }`}
-        >
-          All Offers
-        </button>
-        {SHOP_CATEGORIES.map((cat) => {
-          const isActive = selectedCategory === cat;
-          return (
-            <button
-              key={cat}
-              onClick={() => handleCategorySelect(cat)}
-              className={`px-4 py-2 rounded-xl text-xs font-black shrink-0 transition-all cursor-pointer border ${
-                isActive 
-                  ? "bg-slate-900 text-white border-slate-900 shadow-sm scale-[1.02]" 
-                  : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
-              }`}
-            >
-              {cat}
-            </button>
-          );
-        })}
-      </div>
+
 
       {/* Inline Collapsible Shop Registration Form */}
       {isFormOpen && (
