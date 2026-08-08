@@ -906,7 +906,7 @@ export function RobotHero({
       {/* Centered Foreground Hero Content (Filling the first fold perfectly with enlarged 3D Robot & zero whitespace waste) */}
       <div className="relative z-10 w-full max-w-4xl md:max-w-5xl mx-auto flex flex-col items-center justify-between text-center gap-1.5 sm:gap-2.5 my-auto h-full pointer-events-auto py-1 sm:py-3">
         
-        {/* 1. Prominent Logo + Bold Extended Headline + Subtitle */}
+        {/* 1. Prominent Logo + Bold Headline: NAMMA THANJAI. */}
         <div className="flex flex-col items-center gap-1 w-full shrink-0 pt-1">
           <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-2xl sm:rounded-3xl bg-white shadow-md p-1.5 flex items-center justify-center shrink-0 border border-slate-200/90">
             <img 
@@ -915,12 +915,9 @@ export function RobotHero({
               className="w-full h-full object-contain" 
             />
           </div>
-          <h1 className="font-heading font-black text-3xl sm:text-5xl md:text-6xl text-slate-955 tracking-tight leading-none uppercase mt-1 max-w-4xl drop-shadow-2xs">
-            namma thanjavur<span className="text-yellow-500">.</span>
+          <h1 className="font-heading font-black text-3.5xl sm:text-5.5xl md:text-6.5xl text-slate-955 tracking-tight leading-none uppercase mt-1 max-w-4xl drop-shadow-2xs">
+            namma thanjai<span className="text-yellow-500">.</span>
           </h1>
-          <p className="text-[10px] sm:text-xs md:text-sm text-slate-600 font-extrabold uppercase tracking-widest bg-slate-100/90 px-3.5 py-1 rounded-full border border-slate-200/80 mt-0.5">
-            thanjavur verified noticeboard & local helper trades
-          </p>
         </div>
 
         {/* 2. High-Contrast Rotational Category Switcher Badge */}
@@ -940,25 +937,16 @@ export function RobotHero({
           </AnimatePresence>
         </div>
 
-        {/* 3. Enlarged Prominent 3D Mascot Robot Canvas (Fills center fold, 100% Transparent, Unclipped) */}
+        {/* 3. Significantly Enlarged 3D Mascot Robot (Zero Shadow, 100% Transparent, Unclipped) */}
         <div 
           onClick={handleRobotTap} 
-          className="w-full max-w-[380px] sm:max-w-[460px] md:max-w-[540px] flex-1 min-h-[250px] max-h-[380px] relative flex items-center justify-center cursor-pointer overflow-visible my-1 bg-transparent"
+          className="w-full max-w-[420px] sm:max-w-[500px] md:max-w-[580px] flex-1 min-h-[280px] max-h-[420px] relative flex items-center justify-center cursor-pointer overflow-visible my-1 bg-transparent"
         >
           <Canvas camera={{ position: [0, 0.08, 3.6], fov: 38 }} className="overflow-visible bg-transparent">
             <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
             <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} shadow-bias={-0.0005} />
             <Environment preset="studio" blur={0.5} />
-            <ResponsiveGroup scale={scale * 1.55}>
-              <ContactShadows
-                position={[0, -0.72, 0]}
-                opacity={0.28}
-                scale={9.5}
-                resolution={1024}
-                blur={1.8}
-                far={3.0}
-                color="#000000"
-              />
+            <ResponsiveGroup scale={scale * 1.85}>
               <RobotPrototype neckParams={{ baseR: 0.215, baseH: -0.05, midR: 0.28, midH: 0.02, lipBottomR: 0.295, lipBottomH: 0.045, lipTopR: 0.27, lipTopH: 0.055, innerR: 0.1, innerDropH: 0.0 }} bodyParams={{ bodyBevelR: 0.235, bodyBevelY: 0.34, bodyBevelT: 0.025 }} color={color} pantallaColor={pantallaColor} pantallaBrillo={pantallaBrillo} blinkCycle={blinkCycle} metalness={metalness} />
             </ResponsiveGroup>
           </Canvas>
