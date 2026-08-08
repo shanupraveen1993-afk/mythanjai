@@ -8,7 +8,7 @@ import { useFirestore } from "@/hooks/use-firestore";
 import ShopCard from "@/components/cards/ShopCard";
 import { SHOP_CATEGORIES, TANJORE_LOCALITIES, TanjoreLocality } from "@/lib/constants";
 import { ShopPost } from "@/types";
-import { Store, Plus, ChevronDown, ChevronUp, Loader2, ArrowRight, ArrowLeft, Upload, Compass, X, MapPin, Sparkles, Check, Calendar, Share2, MessageSquare, Video } from "lucide-react";
+import { Store, Plus, ChevronDown, ChevronUp, Loader2, ArrowRight, ArrowLeft, Upload, Compass, X, MapPin, Sparkles, Check, Calendar, Share2, MessageSquare, Video, Search } from "lucide-react";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import confetti from "canvas-confetti";
@@ -231,6 +231,11 @@ export default function ShopsPage() {
     areaTag: area,
     category: selectedCategory || "All",
   });
+
+  const combinedShops = React.useMemo(() => {
+    const activeLocal = localShops.filter(s => !selectedCategory || s.category === selectedCategory);
+    return [...activeLocal, ...(shops || [])];
+  }, [localShops, shops, selectedCategory]);
 
 
   const handleCategorySelect = (category: string) => {
@@ -502,35 +507,99 @@ export default function ShopsPage() {
     confetti({ particleCount: 100, spread: 70 });
   };
 
-  return (
-    <div className="flex flex-col gap-6 mt-6 md:mt-8 pt-2 pb-12">
-      {/* Universal Sticky Action Bar: Sort on Left, Post Offer on Right */}
-      <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 px-4 border border-slate-200/90 rounded-2xl shadow-xs flex items-center justify-between">
-        <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
-          <span>Sort by:</span>
-          <select
-            className="bg-slate-100 border border-slate-200 rounded-xl px-3 py-1.5 text-[11px] font-black focus:outline-none cursor-pointer text-slate-800"
-          >
-            <option value="recent">Latest Offers</option>
-            <option value="popular">Featured First</option>
-          </select>
-        </div>
+  const searchQuery = searchParams.get("query") || "";
 
-        <button
-          onClick={() => {
-            if (!profile?.isVerified) {
-              const currentParams = new URLSearchParams(searchParams.toString());
-              currentParams.set("auth", "popup");
-              router.push(`/shops?${currentParams.toString()}`);
-            } else {
-              setIsFormOpen(!isFormOpen);
-            }
+  // Filter shops by search query
+  const filteredShops = React.useMemo(() => {
+    return combinedShops.filter(s => {
+      if (!searchQuery.trim()) return true;
+      const q = searchQuery.toLowerCase();
+      return (
+        s.shop_name?.toLowerCase().includes(q) ||
+        s.category?.toLowerCase().includes(q) ||
+        s.address_text?.toLowerCase().includes(q) ||
+        s.offer_title?.toLowerCase().includes(q) ||
+        s.offer_description?.toLowerCase().includes(q)
+      );
+    });
+  }, [combinedShops, searchQuery]);
+
+  return (
+    <div className="flex flex-col gap-6 mt-4 md:mt-6 pt-2 pb-12 max-w-7xl mx-auto px-4 sm:px-6">
+      {/* HERO ILLUSTRATION BANNER */}
+      <div className="relative w-full h-44 sm:h-52 md:h-60 rounded-3xl overflow-hidden shadow-xs border border-slate-200/90 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white flex items-center p-6 sm:p-8">
+        <img 
+          src="/thanjavur_temple_illustration.png" 
+          alt="Local Offers Banner" 
+          className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-30 mix-blend-overlay pointer-events-none"
+        />
+        <div className="relative z-10 max-w-xl flex flex-col gap-2">
+          <span className="text-[10px] font-black uppercase tracking-widest text-yellow-400 bg-yellow-400/10 border border-yellow-400/30 px-2.5 py-0.5 rounded-lg w-max">
+            Local Discounts & Video Deals
+          </span>
+          <h1 className="font-heading font-black text-2xl sm:text-3xl md:text-4xl text-white tracking-tight uppercase leading-none">
+            Local Store Offers & Discounts
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-300 font-medium">
+            Explore active store discounts, restaurant deals, clothing sales, and video offers in Thanjavur.
+          </p>
+          <div className="mt-2">
+            <button
+              onClick={() => setIsFormOpen(!isFormOpen)}
+              className="py-2.5 px-5 bg-gradient-to-r from-yellow-400 to-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer w-max"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Post Store Offer</span>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/* SEGMENT DEDICATED SEARCH BAR */}
+      <div className="relative w-full">
+        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+        <input
+          type="text"
+          placeholder="Search store discounts, restaurants, clothing, electronics in Thanjavur..."
+          value={searchQuery}
+          onChange={(e) => {
+            const currentParams = new URLSearchParams(searchParams.toString());
+            if (e.target.value) currentParams.set("query", e.target.value);
+            else currentParams.delete("query");
+            router.push(`/shops?${currentParams.toString()}`);
           }}
-          className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-4 py-2 rounded-xl text-[11px] uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-xs"
+          className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-400 shadow-2xs"
+        />
+      </div>
+
+      {/* HORIZONTAL CATEGORY HIGHLIGHT BAR */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+        <button
+          onClick={handleClearCategory}
+          className={`px-4 py-2 rounded-xl text-xs font-black shrink-0 transition-all cursor-pointer border ${
+            !selectedCategory 
+              ? "bg-slate-900 text-white border-slate-900 shadow-sm scale-[1.02]" 
+              : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+          }`}
         >
-          <Plus className={`w-3.5 h-3.5 text-slate-955 transition-transform duration-250 ${isFormOpen ? "rotate-45" : ""}`} />
-          <span>Post Offer</span>
+          All Store Offers
         </button>
+        {SHOP_CATEGORIES.map((cat) => {
+          const isActive = selectedCategory === cat;
+          return (
+            <button
+              key={cat}
+              onClick={() => handleCategorySelect(cat)}
+              className={`px-4 py-2 rounded-xl text-xs font-black shrink-0 transition-all cursor-pointer border ${
+                isActive 
+                  ? "bg-slate-900 text-white border-slate-900 shadow-sm scale-[1.02]" 
+                  : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+              }`}
+            >
+              {cat}
+            </button>
+          );
+        })}
       </div>
 
       {/* Inline Collapsible Shop Registration Form */}

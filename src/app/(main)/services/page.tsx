@@ -6,7 +6,7 @@ import { useFirestore } from "@/hooks/use-firestore";
 import ServiceCard from "@/components/cards/ServiceCard";
 import { SERVICE_CATEGORIES, TANJORE_LOCALITIES, TanjoreLocality, CATEGORY_ILLUSTRATIONS } from "@/lib/constants";
 import { ServiceProviderPost } from "@/types";
-import { Wrench, Plus, ChevronDown, ChevronUp, Loader2, ArrowRight, ArrowLeft, Upload, ShieldCheck, Tag, Calendar, Share2, Check, Zap, Droplet, Wind, Hammer, MapPin, MessageSquare } from "lucide-react";
+import { Wrench, Plus, ChevronDown, ChevronUp, Loader2, ArrowRight, ArrowLeft, Upload, ShieldCheck, Tag, Calendar, Share2, Check, Zap, Droplet, Wind, Hammer, MapPin, MessageSquare, Search } from "lucide-react";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import confetti from "canvas-confetti";
@@ -298,56 +298,100 @@ export default function ServicesPage() {
     }
   };
 
-  return (
-    <div className="flex flex-col gap-6 mt-6 md:mt-8 pt-2 pb-12">
-      {/* ==========================================
-          STEP 1: TRADES DIRECTORY GRID
-          ========================================== */}
-      {!selectedCategory ? (
-        <div className="flex flex-col gap-6">
-          <div className="relative overflow-hidden bg-yellow-50 border border-yellow-250/60 rounded-2xl p-5 shadow-sm flex flex-col gap-1 text-slate-800">
-            <span className="text-[9px] font-black uppercase tracking-wider text-yellow-750 bg-yellow-500/10 border border-yellow-250/60 px-2.5 py-0.5 rounded-xl inline-block w-fit">
-              Services Registry
-            </span>
-            <h2 className="font-heading font-black text-lg text-slate-900 mt-2">
-              Select Expert Trade
-            </h2>
-            <p className="text-[11px] text-slate-600 mt-1 max-w-[280px]">
-              Select a specialized category block to hire professional technicians or register yourself.
-            </p>
-          </div>
+  const searchQuery = searchParams.get("query") || "";
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {SERVICE_CATEGORIES.map((cat) => {
-              const illustration = CATEGORY_ILLUSTRATIONS[cat] || "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600&auto=format&fit=crop";
-              return (
-                <button
-                  key={cat}
-                  onClick={() => handleCategorySelect(cat)}
-                  className="bg-white border border-slate-200 hover:border-yellow-500/60 p-3.5 rounded-2xl shadow-xs text-left transition-all active:scale-[0.98] hover:shadow-lg flex flex-col gap-3 group w-full cursor-pointer overflow-hidden aspect-square justify-between"
-                >
-                  <div className="w-full h-32 rounded-xl overflow-hidden relative bg-slate-100 border border-slate-100">
-                    <img
-                      src={illustration}
-                      alt={cat}
-                      className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-300"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent" />
-                  </div>
-                  <div>
-                    <span className="text-xs font-black text-slate-900 block group-hover:text-yellow-750 transition-colors line-clamp-1">
-                      {cat}
-                    </span>
-                    <span className="text-[10px] text-slate-500 block leading-tight font-bold mt-0.5 line-clamp-1">
-                      Hire & Register
-                    </span>
-                  </div>
-                </button>
-              );
-            })}
+  // Filter services by search query
+  const filteredServices = React.useMemo(() => {
+    return combinedServices.filter(s => {
+      if (!searchQuery.trim()) return true;
+      const q = searchQuery.toLowerCase();
+      return (
+        s.name?.toLowerCase().includes(q) ||
+        s.skill_category?.toLowerCase().includes(q) ||
+        s.area_tag?.toLowerCase().includes(q) ||
+        s.description?.toLowerCase().includes(q)
+      );
+    });
+  }, [combinedServices, searchQuery]);
+
+  return (
+    <div className="flex flex-col gap-6 mt-4 md:mt-6 pt-2 pb-12 max-w-7xl mx-auto px-4 sm:px-6">
+      {/* HERO ILLUSTRATION BANNER */}
+      <div className="relative w-full h-44 sm:h-52 md:h-60 rounded-3xl overflow-hidden shadow-xs border border-slate-200/90 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white flex items-center p-6 sm:p-8">
+        <img 
+          src="/hero_building_visual.png" 
+          alt="Local Services Banner" 
+          className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-30 mix-blend-overlay pointer-events-none"
+        />
+        <div className="relative z-10 max-w-xl flex flex-col gap-2">
+          <span className="text-[10px] font-black uppercase tracking-widest text-yellow-400 bg-yellow-400/10 border border-yellow-400/30 px-2.5 py-0.5 rounded-lg w-max">
+            Local Technicians & Skilled Trades
+          </span>
+          <h1 className="font-heading font-black text-2xl sm:text-3xl md:text-4xl text-white tracking-tight uppercase leading-none">
+            Find Local Experts In Thanjavur
+          </h1>
+          <p className="text-xs sm:text-sm text-slate-300 font-medium">
+            Direct access to verified electricians, plumbers, carpenters, AC technicians, and painters.
+          </p>
+          <div className="mt-2">
+            <button
+              onClick={() => setIsFormOpen(true)}
+              className="py-2.5 px-5 bg-gradient-to-r from-yellow-400 to-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer w-max"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Register as Technician</span>
+            </button>
           </div>
         </div>
-      ) : (
+      </div>
+
+      {/* SEGMENT DEDICATED SEARCH BAR */}
+      <div className="relative w-full">
+        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+        <input
+          type="text"
+          placeholder="Search electricians, plumbers, carpenters, technicians in Thanjavur..."
+          value={searchQuery}
+          onChange={(e) => {
+            const currentParams = new URLSearchParams(searchParams.toString());
+            if (e.target.value) currentParams.set("query", e.target.value);
+            else currentParams.delete("query");
+            router.push(`/services?${currentParams.toString()}`);
+          }}
+          className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-400 shadow-2xs"
+        />
+      </div>
+
+      {/* HORIZONTAL CATEGORY HIGHLIGHT BAR */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
+        <button
+          onClick={handleClearCategory}
+          className={`px-4 py-2 rounded-xl text-xs font-black shrink-0 transition-all cursor-pointer border ${
+            !selectedCategory 
+              ? "bg-slate-900 text-white border-slate-900 shadow-sm scale-[1.02]" 
+              : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+          }`}
+        >
+          All Services
+        </button>
+        {SERVICE_CATEGORIES.map((cat) => {
+          const isActive = selectedCategory === cat;
+          return (
+            <button
+              key={cat}
+              onClick={() => handleCategorySelect(cat)}
+              className={`px-4 py-2 rounded-xl text-xs font-black shrink-0 transition-all cursor-pointer border ${
+                isActive 
+                  ? "bg-slate-900 text-white border-slate-900 shadow-sm scale-[1.02]" 
+                  : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+              }`}
+            >
+              {cat}
+            </button>
+          );
+        })}
+      </div>
+      {!selectedCategory ? null : (
         /* ==========================================
            STEP 2: DETAILED FEED & REGISTRATION CARD FOR TRADE
            ========================================== */

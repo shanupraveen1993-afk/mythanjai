@@ -199,6 +199,23 @@ export default function SellPage() {
         </div>
       </div>
 
+      {/* SEGMENT DEDICATED SEARCH BAR */}
+      <div className="relative w-full">
+        <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+        <input
+          type="text"
+          placeholder="Search items for sale, real estate, rentals, vehicles in Thanjavur..."
+          value={searchQuery}
+          onChange={(e) => {
+            const currentParams = new URLSearchParams(searchParams.toString());
+            if (e.target.value) currentParams.set("query", e.target.value);
+            else currentParams.delete("query");
+            router.push(`/sell?${currentParams.toString()}`);
+          }}
+          className="w-full pl-10 pr-4 py-2.5 bg-white border border-slate-200 rounded-xl text-xs font-medium text-slate-900 placeholder:text-slate-400 focus:outline-none focus:border-slate-400 shadow-2xs"
+        />
+      </div>
+
       {/* HORIZONTAL CATEGORY HIGHLIGHT BAR */}
       <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
         <button
