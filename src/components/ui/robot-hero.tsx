@@ -904,32 +904,15 @@ export function RobotHero({
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_45%,rgba(250,204,21,0.06)_0%,transparent_60%)] pointer-events-none" />
 
       {/* Centered Foreground Hero Content */}
-      <div className="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-center text-center gap-2 sm:gap-3 my-auto pointer-events-auto">
+      <div className="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-center justify-between text-center gap-1.5 sm:gap-3 my-auto h-full pointer-events-auto py-1">
         
-        {/* 1. Logo Badge + Header Title */}
-        <div className="flex flex-col items-center gap-1 w-full">
-          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white/90 shadow-xs p-1 flex items-center justify-center shrink-0 border-0 mb-0.5">
-            <img 
-              src="/namma_thanjai_logo.png" 
-              alt="namma thanjai app logo" 
-              className="w-full h-full object-contain" 
-            />
-          </div>
-          <h1 className="font-heading font-black text-3xl sm:text-5xl md:text-6xl text-slate-900 tracking-tight leading-none uppercase max-w-4xl">
-            namma thanjavur<span className="text-yellow-500">.</span>
-          </h1>
-          <p className="text-[10px] sm:text-xs text-slate-500 font-black uppercase tracking-widest mt-0.5">
-            thanjavur verified noticeboard & local helper trades
-          </p>
-        </div>
-
-        {/* 2. Dynamic Rotational Topic */}
-        <div className="h-6 sm:h-8 flex items-center justify-center overflow-hidden">
+        {/* 1. Dynamic Rotational Topic Text (at top below top header) */}
+        <div className="h-6 sm:h-8 flex items-center justify-center overflow-hidden shrink-0 mt-1">
           <AnimatePresence mode="wait">
             <motion.h2
               key={wordIndex}
               initial={{ opacity: 0, y: -6, scale: 0.95 }}
-              animate={{ opacity: 0.25, y: 0, scale: 1 }}
+              animate={{ opacity: 0.35, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 6, scale: 1.05 }}
               transition={{ duration: 0.25 }}
               className="font-sans font-black text-lg sm:text-2xl md:text-3xl text-slate-400 uppercase tracking-widest text-center select-none"
@@ -939,8 +922,8 @@ export function RobotHero({
           </AnimatePresence>
         </div>
 
-        {/* 3. 4 Standalone Clickable Channel Buttons */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 w-full max-w-xl px-2 my-0.5">
+        {/* 2. 4 Standalone Clickable Channel Buttons */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 w-full max-w-xl px-2 shrink-0">
           <button
             type="button"
             onClick={() => onCategoryClick?.("sell")}
@@ -971,10 +954,10 @@ export function RobotHero({
           </button>
         </div>
 
-        {/* 4. Centered 3D Mascot Robot Canvas in Original Spot with UNBOUNDED OVERFLOW (No Border Clipping) */}
+        {/* 3. Centered 3D Mascot Robot Canvas with Generous Unclipped Height */}
         <div 
           onClick={handleRobotTap} 
-          className="w-full max-w-[340px] sm:max-w-[380px] md:max-w-[420px] h-[190px] sm:h-[220px] md:h-[240px] relative flex items-center justify-center cursor-pointer my-0.5 overflow-visible"
+          className="w-full max-w-[360px] sm:max-w-[420px] md:max-w-[460px] flex-1 min-h-[220px] max-h-[340px] relative flex items-center justify-center cursor-pointer overflow-visible my-1"
         >
           <Canvas camera={{ position: [0, 0.12, 3.6], fov: 38 }} className="overflow-visible">
             <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
