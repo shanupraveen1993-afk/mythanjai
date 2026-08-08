@@ -566,6 +566,54 @@ export default function HomeLandingPage() {
               </div>
             </div>
           </div>
+
+          {/* 3. HOW TO ADD POST GUIDE (Steps of Instruction) */}
+          <div className="w-full bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col gap-6">
+            <div className="flex flex-col gap-2">
+              <span className="text-[10px] font-black uppercase tracking-widest text-yellow-400 bg-yellow-400/10 border border-yellow-400/30 px-3 py-1 rounded-full w-fit">
+                3 Simple Steps
+              </span>
+              <h2 className="font-heading font-black text-xl sm:text-2xl text-white tracking-tight">
+                How to Add a Post in Namma Thanjavur
+              </h2>
+              <p className="text-xs text-slate-400 font-medium">
+                Post classified items, land requirements, worker profiles, or shop discount videos in under 30 seconds.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+              <div className="bg-slate-800/80 border border-slate-700/80 p-5 rounded-2xl flex flex-col gap-3">
+                <div className="w-10 h-10 rounded-xl bg-yellow-400/15 border border-yellow-400/30 text-yellow-400 font-black text-lg flex items-center justify-center">
+                  1
+                </div>
+                <h4 className="font-extrabold text-sm text-white">Scan or Type Details</h4>
+                <p className="text-xs text-slate-300 font-medium leading-relaxed">
+                  Upload a photo of your business card or type raw post details in Tamil or English.
+                </p>
+              </div>
+
+              <div className="bg-slate-800/80 border border-slate-700/80 p-5 rounded-2xl flex flex-col gap-3">
+                <div className="w-10 h-10 rounded-xl bg-yellow-400/15 border border-yellow-400/30 text-yellow-400 font-black text-lg flex items-center justify-center">
+                  2
+                </div>
+                <h4 className="font-extrabold text-sm text-white">Gemini AI Auto-Format</h4>
+                <p className="text-xs text-slate-300 font-medium leading-relaxed">
+                  Our local AI instantly structures your text into a verified headline, pricing & location tag.
+                </p>
+              </div>
+
+              <div className="bg-slate-800/80 border border-slate-700/80 p-5 rounded-2xl flex flex-col gap-3">
+                <div className="w-10 h-10 rounded-xl bg-yellow-400/15 border border-yellow-400/30 text-yellow-400 font-black text-lg flex items-center justify-center">
+                  3
+                </div>
+                <h4 className="font-extrabold text-sm text-white">Free Verified Share</h4>
+                <p className="text-xs text-slate-300 font-medium leading-relaxed">
+                  Verify your mobile via free WhatsApp OTP and publish instantly to all Thanjavur residents.
+                </p>
+              </div>
+            </div>
+          </div>
+
         </div>
       ) : (
         /* ==========================================
@@ -601,9 +649,9 @@ export default function HomeLandingPage() {
       )}
 
       {/* ==========================================
-          PORTAL CONTENT: DIRECTORY SEGMENT LINKS Noticeboard (VISIBLE ON DESKTOP WEBSITE, HIDDEN ON MOBILE WEB APP TO PREVENT SCROLLING)
+          PORTAL CONTENT: GUEST NOTICEBOARD DIRECTORY (VISIBLE ON DESKTOP WEBSITE ONLY FOR UNAUTHENTICATED GUESTS)
           ========================================== */}
-      <div id="noticeboard-directory" className={`w-full max-w-7xl mx-auto px-4 sm:px-6 py-8 flex-col gap-10 bg-white ${profile?.isVerified ? "flex" : "hidden md:flex"}`}>
+      <div id="noticeboard-directory" className={`w-full max-w-7xl mx-auto px-4 sm:px-6 py-8 flex-col gap-10 bg-white ${profile?.isVerified ? "hidden" : "hidden md:flex"}`}>
 
         {/* 1. THANJAVUR LIVE BULLETIN: REAL-TIME VERIFIED ACTIVITY STREAM */}
         <div className="w-full bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col gap-6 relative overflow-hidden">
