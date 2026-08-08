@@ -182,18 +182,15 @@ export default function NeedPage() {
 
       {/* UNIVERSAL STICKY ACTION BAR: Sort on Left | Post Need on Right */}
       <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 px-4 border border-slate-200/90 rounded-2xl shadow-xs flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <span className="text-xs font-extrabold text-slate-500">Sort by:</span>
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
-            className="text-xs font-black bg-slate-100 border border-slate-200 rounded-xl px-3 py-1.5 text-slate-800 focus:outline-none cursor-pointer"
-          >
-            <option value="recent">Latest First</option>
-            <option value="price_low">Budget: Low to High</option>
-            <option value="price_high">Budget: High to Low</option>
-          </select>
-        </div>
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value as any)}
+          className="text-xs font-black bg-slate-100 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none cursor-pointer shrink-0"
+        >
+          <option value="recent">Latest First</option>
+          <option value="price_low">Budget: Low to High</option>
+          <option value="price_high">Budget: High to Low</option>
+        </select>
 
         <button
           onClick={() => {

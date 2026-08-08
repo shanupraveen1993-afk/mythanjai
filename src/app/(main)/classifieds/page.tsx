@@ -553,18 +553,15 @@ export default function ClassifiedsPage() {
 
           {/* Universal Sticky Action Bar: Sort on Left, Post Ad on Right */}
           <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 px-4 border border-slate-200/90 rounded-2xl shadow-xs flex items-center justify-between mt-1">
-            <div className="flex items-center gap-1.5 text-xs font-bold text-slate-500">
-              <span>Sort by:</span>
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value as any)}
-                className="bg-slate-100 border border-slate-200 rounded-xl px-3 py-1.5 text-[11px] font-black focus:outline-none cursor-pointer text-slate-800"
-              >
-                <option value="recent">Latest First</option>
-                <option value="price_low">Price: Low to High</option>
-                <option value="price_high">Price: High to Low</option>
-              </select>
-            </div>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as any)}
+              className="bg-slate-100 border border-slate-200 rounded-xl px-3 py-2 text-xs font-black focus:outline-none cursor-pointer text-slate-800 shrink-0"
+            >
+              <option value="recent">Latest First</option>
+              <option value="price_low">Price: Low to High</option>
+              <option value="price_high">Price: High to Low</option>
+            </select>
 
             <button
               onClick={() => {
