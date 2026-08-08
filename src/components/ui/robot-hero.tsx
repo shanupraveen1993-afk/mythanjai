@@ -858,7 +858,15 @@ export function RobotHero({
 
   const [wordIndex, setWordIndex] = useState(0);
   const [isSpinning, setIsSpinning] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(false);
   const words = ["SELL PLOT", "BUY HOUSE", "PLUMBER", "CARPENTER", "HIRE TAXI", "RENT ROOM", "BEST OFFERS", "LOCAL SHOPS"];
+
+  useEffect(() => {
+    const handleResize = () => setIsDesktop(window.innerWidth >= 768);
+    handleResize();
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   useEffect(() => {
     if (isSpinning) return;
@@ -937,16 +945,16 @@ export function RobotHero({
           </AnimatePresence>
         </div>
 
-        {/* 3. 3D Mascot Robot Canvas (Grand 2.5x close-up camera frustum distance 3.2, 100% transparent, zero shadow, unclipped) */}
+        {/* 3. 3D Mascot Robot Canvas (Dynamic desktop 3x close-up frustum & safe unclipped mobile frustum) */}
         <div 
           onClick={handleRobotTap} 
           className="w-full max-w-[340px] sm:max-w-[440px] md:max-w-[640px] lg:max-w-[760px] flex-1 min-h-[190px] md:min-h-[320px] lg:min-h-[400px] max-h-[320px] md:max-h-[460px] relative flex items-center justify-center cursor-pointer overflow-visible my-0 bg-transparent"
         >
-          <Canvas camera={{ position: [0, 0, 3.2], fov: 44 }} className="overflow-visible bg-transparent">
+          <Canvas camera={{ position: [0, 0, isDesktop ? 3.0 : 4.4], fov: isDesktop ? 42 : 50 }} className="overflow-visible bg-transparent">
             <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
             <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} shadow-bias={-0.0005} />
             <Environment preset="studio" blur={0.5} />
-            <ResponsiveGroup scale={scale * 2.2}>
+            <ResponsiveGroup scale={scale * (isDesktop ? 2.4 : 1.7)}>
               <RobotPrototype neckParams={{ baseR: 0.215, baseH: -0.05, midR: 0.28, midH: 0.02, lipBottomR: 0.295, lipBottomH: 0.045, lipTopR: 0.27, lipTopH: 0.055, innerR: 0.1, innerDropH: 0.0 }} bodyParams={{ bodyBevelR: 0.235, bodyBevelY: 0.34, bodyBevelT: 0.025 }} color={color} pantallaColor={pantallaColor} pantallaBrillo={pantallaBrillo} blinkCycle={blinkCycle} metalness={metalness} />
             </ResponsiveGroup>
           </Canvas>
