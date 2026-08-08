@@ -271,20 +271,10 @@ export default function NeedPage() {
       ) : (
         /* LISTINGS FEED */
         <div className="flex flex-col gap-4">
-          <div className="flex items-center justify-between bg-amber-50/50 p-2.5 rounded-xl border border-amber-200">
+          <div className="flex items-center justify-between bg-slate-100 p-2.5 rounded-xl border border-slate-200">
             <span className="text-xs font-black text-slate-800">
               Category: {selectedCategory}
             </span>
-
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
-              className="text-xs font-bold bg-white border border-slate-200 rounded-lg px-2.5 py-1 text-slate-700 cursor-pointer"
-            >
-              <option value="recent">Latest First</option>
-              <option value="price_low">Budget: Low to High</option>
-              <option value="price_high">Budget: High to Low</option>
-            </select>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

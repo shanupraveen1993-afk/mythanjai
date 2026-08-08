@@ -281,16 +281,6 @@ export default function SellPage() {
             <span className="text-xs font-black text-slate-800">
               Category: {selectedCategory}
             </span>
-
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
-              className="text-xs font-bold bg-white border border-slate-200 rounded-lg px-2.5 py-1 text-slate-700 cursor-pointer"
-            >
-              <option value="recent">Latest First</option>
-              <option value="price_low">Price: Low to High</option>
-              <option value="price_high">Price: High to Low</option>
-            </select>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
