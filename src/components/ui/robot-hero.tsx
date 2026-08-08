@@ -903,19 +903,19 @@ export function RobotHero({
       {/* Light radial glow centered behind hero */}
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_45%,rgba(250,204,21,0.06)_0%,transparent_60%)] pointer-events-none" />
 
-      {/* Centered Foreground Hero Content (Tight container fitting first fold perfectly with ZERO extra blank whitespace) */}
-      <div className="relative z-10 w-full max-w-4xl md:max-w-5xl mx-auto flex flex-col items-center justify-between text-center gap-1 sm:gap-2 my-auto h-full pointer-events-auto py-1 sm:py-2">
+      {/* Centered Foreground Hero Content (Filling the first fold perfectly with enlarged 3D Robot & zero whitespace waste) */}
+      <div className="relative z-10 w-full max-w-4xl md:max-w-5xl mx-auto flex flex-col items-center justify-between text-center gap-1.5 sm:gap-2.5 my-auto h-full pointer-events-auto py-1 sm:py-3">
         
         {/* 1. Prominent Logo + Bold Extended Headline + Subtitle */}
-        <div className="flex flex-col items-center gap-0.5 sm:gap-1 w-full shrink-0 pt-0.5 sm:pt-1">
-          <div className="w-14 h-14 sm:w-18 sm:h-18 md:w-22 md:h-22 rounded-2xl sm:rounded-3xl bg-white shadow-md p-1.5 flex items-center justify-center shrink-0 border border-slate-200/90">
+        <div className="flex flex-col items-center gap-1 w-full shrink-0 pt-1">
+          <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-2xl sm:rounded-3xl bg-white shadow-md p-1.5 flex items-center justify-center shrink-0 border border-slate-200/90">
             <img 
               src="/namma_thanjai_logo.png" 
               alt="namma thanjai logo" 
               className="w-full h-full object-contain" 
             />
           </div>
-          <h1 className="font-heading font-black text-3xl sm:text-5xl md:text-6xl text-slate-955 tracking-tight leading-none uppercase mt-0.5 sm:mt-1 max-w-4xl drop-shadow-2xs">
+          <h1 className="font-heading font-black text-3xl sm:text-5xl md:text-6xl text-slate-955 tracking-tight leading-none uppercase mt-1 max-w-4xl drop-shadow-2xs">
             namma thanjavur<span className="text-yellow-500">.</span>
           </h1>
           <p className="text-[10px] sm:text-xs md:text-sm text-slate-600 font-extrabold uppercase tracking-widest bg-slate-100/90 px-3.5 py-1 rounded-full border border-slate-200/80 mt-0.5">
@@ -923,7 +923,7 @@ export function RobotHero({
           </p>
         </div>
 
-        {/* 2. High-Contrast Rotational Category Pill Badge (Crisp visual hierarchy anchor) */}
+        {/* 2. High-Contrast Rotational Category Switcher Badge */}
         <div className="h-7 sm:h-9 flex items-center justify-center overflow-hidden shrink-0 my-0.5">
           <AnimatePresence mode="wait">
             <motion.div
@@ -940,48 +940,16 @@ export function RobotHero({
           </AnimatePresence>
         </div>
 
-        {/* 3. 4 Standalone Clickable Channel Segment Buttons (Secondary hierarchy tier) */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 w-full max-w-md sm:max-w-lg px-2 shrink-0">
-          <button
-            type="button"
-            onClick={() => onCtaClick ? onCtaClick() : onCategoryClick?.("sell")}
-            className="py-2.5 sm:py-3 px-3 rounded-2xl bg-white hover:bg-yellow-50/50 border border-slate-200/90 text-slate-900 shadow-2xs hover:border-yellow-400 transition-all text-center flex items-center justify-center cursor-pointer font-black text-xs sm:text-sm uppercase tracking-wider active:scale-[0.97]"
-          >
-            <span>Sell</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => onCtaClick ? onCtaClick() : onCategoryClick?.("need")}
-            className="py-2.5 sm:py-3 px-3 rounded-2xl bg-white hover:bg-yellow-50/50 border border-slate-200/90 text-slate-900 shadow-2xs hover:border-yellow-400 transition-all text-center flex items-center justify-center cursor-pointer font-black text-xs sm:text-sm uppercase tracking-wider active:scale-[0.97]"
-          >
-            <span>Need</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => onCtaClick ? onCtaClick() : onCategoryClick?.("services")}
-            className="py-2.5 sm:py-3 px-3 rounded-2xl bg-white hover:bg-yellow-50/50 border border-slate-200/90 text-slate-900 shadow-2xs hover:border-yellow-400 transition-all text-center flex items-center justify-center cursor-pointer font-black text-xs sm:text-sm uppercase tracking-wider active:scale-[0.97]"
-          >
-            <span>Service</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => onCtaClick ? onCtaClick() : onCategoryClick?.("shops")}
-            className="py-2.5 sm:py-3 px-3 rounded-2xl bg-white hover:bg-yellow-50/50 border border-slate-200/90 text-slate-900 shadow-2xs hover:border-yellow-400 transition-all text-center flex items-center justify-center cursor-pointer font-black text-xs sm:text-sm uppercase tracking-wider active:scale-[0.97]"
-          >
-            <span>Offer</span>
-          </button>
-        </div>
-
-        {/* 4. Centered 3D Mascot Robot Canvas (100% Transparent Background, Elevated Shadow, Zero Cut) */}
+        {/* 3. Enlarged Prominent 3D Mascot Robot Canvas (Fills center fold, 100% Transparent, Unclipped) */}
         <div 
           onClick={handleRobotTap} 
-          className="w-full max-w-[340px] sm:max-w-[400px] md:max-w-[460px] flex-1 min-h-[210px] max-h-[320px] relative flex items-center justify-center cursor-pointer overflow-visible my-0.5 bg-transparent"
+          className="w-full max-w-[380px] sm:max-w-[460px] md:max-w-[540px] flex-1 min-h-[250px] max-h-[380px] relative flex items-center justify-center cursor-pointer overflow-visible my-1 bg-transparent"
         >
-          <Canvas camera={{ position: [0, 0.06, 3.6], fov: 38 }} className="overflow-visible bg-transparent">
+          <Canvas camera={{ position: [0, 0.08, 3.6], fov: 38 }} className="overflow-visible bg-transparent">
             <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
             <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} shadow-bias={-0.0005} />
             <Environment preset="studio" blur={0.5} />
-            <ResponsiveGroup scale={scale * 1.35}>
+            <ResponsiveGroup scale={scale * 1.55}>
               <ContactShadows
                 position={[0, -0.72, 0]}
                 opacity={0.28}
@@ -996,21 +964,21 @@ export function RobotHero({
           </Canvas>
         </div>
 
-        {/* 5. Primary Register Button: REGISTER TO POST (Undeniable primary visual focal point) */}
-        <div className="w-full max-w-sm shrink-0 mb-0.5 mt-0.5">
+        {/* 4. Primary Register Button: REGISTER TO POST */}
+        <div className="w-full max-w-sm shrink-0 my-0.5">
           <button
             type="button"
             onClick={onCtaClick}
-            className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs sm:text-sm uppercase tracking-wider transition-all hover:scale-[1.01] active:scale-[0.98] shadow-lg shadow-yellow-500/25 border-0 text-center flex items-center justify-center gap-2 cursor-pointer scale-[1.02]"
+            className="w-full py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs sm:text-sm uppercase tracking-wider transition-all hover:scale-[1.01] active:scale-[0.98] shadow-lg shadow-yellow-500/25 border-0 text-center flex items-center justify-center gap-2 cursor-pointer scale-[1.02]"
           >
             <span>{ctaText === "Verified" ? "Verified Profile" : "Register to Post"}</span>
             <ArrowRight className="w-4 h-4 text-slate-955 stroke-[2.5]" />
           </button>
         </div>
 
-        {/* 6. LIVE Noticeboard Ticker Alert Banner */}
+        {/* 5. LIVE Noticeboard Ticker Alert Banner */}
         {alerts.length > 0 && (
-          <div className="w-full bg-slate-900 border border-slate-800 text-white rounded-2xl py-2 px-4 shadow-sm flex items-center justify-between text-[11px] sm:text-xs font-black select-none max-w-md mx-auto tracking-wide shrink-0 mt-0.5 mb-0.5">
+          <div className="w-full bg-slate-900 border border-slate-800 text-white rounded-2xl py-2 px-4 shadow-sm flex items-center justify-between text-[11px] sm:text-xs font-black select-none max-w-md mx-auto tracking-wide shrink-0 my-0.5">
             <div className="flex items-center gap-2.5 overflow-hidden w-full text-left">
               <span className="bg-yellow-500 text-slate-950 font-black text-[8px] px-2 py-0.5 rounded-md uppercase shrink-0 animate-pulse">
                 LIVE
