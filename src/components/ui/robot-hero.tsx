@@ -481,31 +481,21 @@ function RobotPrototype({
     const tx = state.pointer.x;
     const ty = state.pointer.y;
 
-    // Floating bobbing motion
-    const floatY = Math.sin(state.clock.getElapsedTime() * 2.2) * 0.05;
+  // Floating bobbing motion
+  const floatY = Math.sin(state.clock.getElapsedTime() * 2.2) * 0.05;
 
-    // Centered subtle position sway with floating Y
-    const targetPosX = tx * 0.15;
-    bodyRef.current.position.x = THREE.MathUtils.lerp(
-      bodyRef.current.position.x,
-      targetPosX,
-      config.moveSpeed * dt,
-    );
-    bodyRef.current.position.y = THREE.MathUtils.lerp(
-      bodyRef.current.position.y,
-      -0.3 + floatY,
-      dt * 5.0,
-    );
-
-    // Dynamic ground shadow pulsing with float height
-    if (shadowRef.current) {
-      const shadowFactor = 1.0 - (floatY + 0.05) * 3.0;
-      const shadowScale = 1.0 + floatY * 1.2;
-      shadowRef.current.scale.set(shadowScale, shadowScale, 1.0);
-      if (shadowRef.current.material) {
-        (shadowRef.current.material as THREE.MeshBasicMaterial).opacity = 0.22 * shadowFactor;
-      }
-    }
+  // Centered subtle position sway with floating Y
+  const targetPosX = tx * 0.15;
+  bodyRef.current.position.x = THREE.MathUtils.lerp(
+    bodyRef.current.position.x,
+    targetPosX,
+    config.moveSpeed * dt,
+  );
+  bodyRef.current.position.y = THREE.MathUtils.lerp(
+    bodyRef.current.position.y,
+    -0.3 + floatY,
+    dt * 5.0,
+  );
 
     const relativeX = tx - bodyRef.current.position.x / 2.5;
 
@@ -628,19 +618,6 @@ function RobotPrototype({
       onPointerOver={() => (document.body.style.cursor = "pointer")}
       onPointerOut={() => (document.body.style.cursor = "auto")}
     >
-      {/* Dynamic Floating Ground Shadow Disk */}
-      <mesh
-        ref={shadowRef}
-        position={[0, -0.44, 0]}
-        rotation={[-Math.PI / 2, 0, 0]}
-      >
-        <planeGeometry args={[0.7, 0.7]} />
-        <meshBasicMaterial
-          color="#000000"
-          transparent={true}
-          opacity={0.22}
-        />
-      </mesh>
       <mesh castShadow receiveShadow>
         <sphereGeometry
           args={[0.43, 64, 64, 0, Math.PI * 2, Math.PI * 0.15, Math.PI * 0.85]}
@@ -1002,9 +979,17 @@ export function RobotHero({
             <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} shadow-bias={-0.0005} />
             <Environment preset="studio" blur={0.5} />
             <ResponsiveGroup scale={scale * 1.35}>
+              <ContactShadows
+                position={[0, -0.79, 0]}
+                opacity={0.75}
+                scale={12}
+                resolution={1024}
+                blur={1.7}
+                far={2.5}
+                color="#000000"
+              />
               <RobotPrototype neckParams={{ baseR: 0.215, baseH: -0.05, midR: 0.28, midH: 0.02, lipBottomR: 0.295, lipBottomH: 0.045, lipTopR: 0.27, lipTopH: 0.055, innerR: 0.1, innerDropH: 0.0 }} bodyParams={{ bodyBevelR: 0.235, bodyBevelY: 0.34, bodyBevelT: 0.025 }} color={color} pantallaColor={pantallaColor} pantallaBrillo={pantallaBrillo} blinkCycle={blinkCycle} metalness={metalness} />
             </ResponsiveGroup>
-            <ContactShadows position={[0, -0.75, 0]} opacity={0.4} scale={2.8} blur={2.0} far={1.8} color="#000000" />
           </Canvas>
         </div>
 
