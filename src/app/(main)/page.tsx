@@ -546,7 +546,7 @@ export default function HomeLandingPage() {
         /* ==========================================
            UNAUTHENTICATED GUEST LANDING PAGE (3D ROBOT MASCOT HERO ON DESKTOP & MOBILE)
            ========================================== */
-        <div className="w-full relative flex flex-col min-h-[85vh] justify-between my-2">
+        <div className="w-full relative flex flex-col h-[100dvh] overflow-hidden justify-between py-1 md:h-auto md:min-h-[85vh] md:overflow-visible">
           
           {/* 3D ROBOT MASCOT HERO (MASSIVE ENLARGED 3D MASCOT) */}
           <div className="w-full">
@@ -576,9 +576,9 @@ export default function HomeLandingPage() {
       )}
 
       {/* ==========================================
-          PORTAL CONTENT: DIRECTORY SEGMENT LINKS Noticeboard (ALWAYS VISIBLE ON DESKTOP & MOBILE)
+          PORTAL CONTENT: DIRECTORY SEGMENT LINKS Noticeboard (VISIBLE ON DESKTOP WEBSITE, HIDDEN ON MOBILE WEB APP TO PREVENT SCROLLING)
           ========================================== */}
-      <div id="noticeboard-directory" className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-8 flex flex-col gap-10 bg-white">
+      <div id="noticeboard-directory" className={`w-full max-w-7xl mx-auto px-4 sm:px-6 py-8 flex-col gap-10 bg-white ${profile?.isVerified ? "flex" : "hidden md:flex"}`}>
 
         {/* 1. THANJAVUR LIVE BULLETIN: REAL-TIME VERIFIED ACTIVITY STREAM */}
         <div className="w-full bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col gap-6 relative overflow-hidden">

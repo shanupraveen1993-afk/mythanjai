@@ -898,7 +898,7 @@ export function RobotHero({
   return (
     <section
       ref={containerRef}
-      className="relative w-full min-h-[calc(100vh-70px)] flex flex-col justify-center items-center bg-white text-slate-800 py-2 sm:py-4 px-4 overflow-hidden select-none"
+      className="relative w-full h-[calc(100dvh-60px)] md:h-auto md:min-h-[calc(100vh-70px)] flex flex-col justify-between md:justify-center items-center bg-white text-slate-800 py-1 sm:py-4 px-3 sm:px-4 overflow-hidden select-none"
     >
       {/* Light radial glow centered behind hero */}
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_45%,rgba(250,204,21,0.06)_0%,transparent_60%)] pointer-events-none" />
