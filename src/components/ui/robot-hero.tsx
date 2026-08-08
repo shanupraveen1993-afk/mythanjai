@@ -463,13 +463,13 @@ function RobotPrototype({
   };
 
   const config = {
-    moveSpeed: 1.5,
-    bodyRotSpeed: 12.0,
-    headRotSpeed: 25.0,
-    bodyTiltX: 0.15,
-    bodyTiltY: 1.15,
-    headLookX: 0.5,
-    headLookY: 2.2,
+    moveSpeed: 1.0,
+    bodyRotSpeed: 10.0,
+    headRotSpeed: 20.0,
+    bodyTiltX: 0.1,
+    bodyTiltY: 0.95,
+    headLookX: 0.4,
+    headLookY: 1.8,
   };
 
   useFrame((state, delta) => {
@@ -480,28 +480,19 @@ function RobotPrototype({
     const tx = state.pointer.x;
     const ty = state.pointer.y;
 
-    // Full-side smooth translation tracking mouse across screen
-    const maxMoveX = state.viewport.width / 2.5;
-    const maxMoveY = state.viewport.height / 4.0;
-    const targetPosX = tx * maxMoveX;
-    const targetPosY = ty * maxMoveY - 0.25;
-
+    // Centered subtle position sway
+    const targetPosX = tx * 0.15;
     bodyRef.current.position.x = THREE.MathUtils.lerp(
       bodyRef.current.position.x,
       targetPosX,
-      config.moveSpeed * dt * 3.5,
-    );
-    bodyRef.current.position.y = THREE.MathUtils.lerp(
-      bodyRef.current.position.y,
-      targetPosY,
-      config.moveSpeed * dt * 3.5,
+      config.moveSpeed * dt,
     );
 
     const relativeX = tx - bodyRef.current.position.x / 2.5;
 
     const bodyTargetRotY = -relativeX * config.bodyTiltY;
-    const bodyTargetRotX = relativeX * relativeX * config.bodyTiltX - ty * 0.35;
-    const bodyTargetRotZ = -relativeX * 0.2;
+    const bodyTargetRotX = relativeX * relativeX * config.bodyTiltX - ty * 0.25;
+    const bodyTargetRotZ = -relativeX * 0.15;
 
     bodyRef.current.rotation.y = THREE.MathUtils.lerp(
       bodyRef.current.rotation.y,
@@ -901,24 +892,7 @@ export function RobotHero({
       {/* Light radial glow centered behind hero */}
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_45%,rgba(250,204,21,0.06)_0%,transparent_60%)] pointer-events-none" />
 
-      {/* UPPER FLOATING LAYER: 3D Mascot Robot Canvas with NO BORDER LIMITS */}
-      <div className="absolute inset-0 z-20 pointer-events-none overflow-visible w-full h-full flex items-center justify-center">
-        <div 
-          onClick={handleRobotTap} 
-          className="w-full h-full relative flex items-center justify-center cursor-pointer pointer-events-auto"
-        >
-          <Canvas camera={{ position: [0, 0.12, 3.6], fov: 38 }} className="overflow-visible w-full h-full">
-            <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
-            <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} shadow-bias={-0.0005} />
-            <Environment preset="studio" blur={0.5} />
-            <ResponsiveGroup scale={scale * 1.35}>
-              <RobotPrototype neckParams={{ baseR: 0.215, baseH: -0.05, midR: 0.28, midH: 0.02, lipBottomR: 0.295, lipBottomH: 0.045, lipTopR: 0.27, lipTopH: 0.055, innerR: 0.1, innerDropH: 0.0 }} bodyParams={{ bodyBevelR: 0.235, bodyBevelY: 0.34, bodyBevelT: 0.025 }} color={color} pantallaColor={pantallaColor} pantallaBrillo={pantallaBrillo} blinkCycle={blinkCycle} metalness={metalness} />
-            </ResponsiveGroup>
-          </Canvas>
-        </div>
-      </div>
-
-      {/* Centered Foreground Hero Content - Fits 100% in First Fold */}
+      {/* Centered Foreground Hero Content */}
       <div className="relative z-10 w-full max-w-4xl mx-auto flex flex-col items-center text-center gap-2 sm:gap-3 my-auto pointer-events-auto">
         
         {/* 1. Logo Badge + Header Title */}
@@ -938,7 +912,7 @@ export function RobotHero({
           </p>
         </div>
 
-        {/* 2. Dynamic Rotational Topic (Restored) */}
+        {/* 2. Dynamic Rotational Topic */}
         <div className="h-6 sm:h-8 flex items-center justify-center overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.h2
@@ -986,7 +960,22 @@ export function RobotHero({
           </button>
         </div>
 
-        {/* 5. LIVE Ticker Alert Banner (Prominently fit in First Fold) */}
+        {/* 4. Centered 3D Mascot Robot Canvas in Original Spot with UNBOUNDED OVERFLOW (No Border Clipping) */}
+        <div 
+          onClick={handleRobotTap} 
+          className="w-full max-w-[340px] sm:max-w-[380px] md:max-w-[420px] h-[190px] sm:h-[220px] md:h-[240px] relative flex items-center justify-center cursor-pointer my-0.5 overflow-visible"
+        >
+          <Canvas camera={{ position: [0, 0.12, 3.6], fov: 38 }} className="overflow-visible">
+            <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
+            <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} shadow-bias={-0.0005} />
+            <Environment preset="studio" blur={0.5} />
+            <ResponsiveGroup scale={scale * 1.35}>
+              <RobotPrototype neckParams={{ baseR: 0.215, baseH: -0.05, midR: 0.28, midH: 0.02, lipBottomR: 0.295, lipBottomH: 0.045, lipTopR: 0.27, lipTopH: 0.055, innerR: 0.1, innerDropH: 0.0 }} bodyParams={{ bodyBevelR: 0.235, bodyBevelY: 0.34, bodyBevelT: 0.025 }} color={color} pantallaColor={pantallaColor} pantallaBrillo={pantallaBrillo} blinkCycle={blinkCycle} metalness={metalness} />
+            </ResponsiveGroup>
+          </Canvas>
+        </div>
+
+        {/* 5. LIVE Ticker Alert Banner */}
         {alerts.length > 0 && (
           <div className="w-full bg-slate-900 border border-slate-800 text-white rounded-2xl py-2 px-4 shadow-sm flex items-center justify-between text-[11px] sm:text-xs font-black select-none max-w-md mx-auto tracking-wide my-1">
             <div className="flex items-center gap-2.5 overflow-hidden w-full text-left">
