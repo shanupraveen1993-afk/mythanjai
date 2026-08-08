@@ -46,21 +46,14 @@ function MainLayoutContent({
     }
   }, [searchParams]);
 
-  // Sync auth popup state from URL parameters
+  // Sync auth popup state from URL parameters (ONLY opens when explicitly requested by user click)
   useEffect(() => {
     if (searchParams.get("auth") === "popup") {
       setIsSignInOpen(true);
+    } else {
+      setIsSignInOpen(false);
     }
   }, [searchParams]);
-
-  // Smooth Auth Trigger: open sign in modal without route flicker
-  useEffect(() => {
-    const isAuthVerified = Boolean(profile?.isVerified);
-
-    if (!isAuthVerified && pathname !== "/") {
-      setIsSignInOpen(true);
-    }
-  }, [pathname, profile]);
 
   const handleCloseSignIn = () => {
     setIsSignInOpen(false);
