@@ -53,9 +53,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
     try {
       // Mock bypass: immediately verify and register the phone number
       const result = await updatePhone(phoneNumber);
-      if (result?.success) {
-        confetti({ particleCount: 80, spread: 60 });
-      } else {
+      if (!result?.success) {
         alert("Verification failed.");
       }
     } catch (err: any) {

@@ -85,30 +85,23 @@ function MainLayoutContent({
 
   // Determine current active tab based on pathname
   const getActiveTab = (): AppTab => {
-    if (pathname.includes("/classifieds")) return "classifieds";
+    if (pathname.includes("/sell")) return "sell";
+    if (pathname.includes("/need")) return "need";
     if (pathname.includes("/services")) return "services";
     if (pathname.includes("/shops")) return "shops";
-    if (pathname.includes("/offers")) return "shops";
     if (pathname.includes("/profile")) return "profile";
     return "home";
   };
 
   const handleTabChange = (tab: AppTab) => {
-    const isAuthVerified = Boolean(profile?.isVerified);
-
-    if (tab !== "home" && !isAuthVerified) {
-      setIsSignInOpen(true);
-      return;
-    }
-
     const currentParams = new URLSearchParams(searchParams.toString());
     const area = currentParams.get("area");
     
     let targetPath = "/";
-    if (tab === "classifieds") targetPath = "/classifieds";
+    if (tab === "sell") targetPath = "/sell";
+    else if (tab === "need") targetPath = "/need";
     else if (tab === "services") targetPath = "/services";
     else if (tab === "shops") targetPath = "/shops";
-    else if (tab === "offers") targetPath = "/shops";
     else if (tab === "profile") targetPath = "/profile";
 
     // Maintain selected locality across tabs
@@ -141,10 +134,10 @@ function MainLayoutContent({
         onSignInClick={() => setIsSignInOpen(true)}
         onPostClick={() => {
           const currentTab = getActiveTab();
-          let targetPath = "/classifieds";
-          if (currentTab === "services") targetPath = "/services";
+          let targetPath = "/sell";
+          if (currentTab === "need") targetPath = "/need";
+          else if (currentTab === "services") targetPath = "/services";
           else if (currentTab === "shops") targetPath = "/shops";
-          else if (currentTab === "offers") targetPath = "/shops";
 
           const currentParams = new URLSearchParams(searchParams.toString());
 

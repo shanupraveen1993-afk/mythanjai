@@ -2,18 +2,22 @@
 
 import React from "react";
 import { Home, MessageSquare, Wrench, Store, User } from "lucide-react";
+import { useRouter, usePathname } from "next/navigation";
 
-export type AppTab = "home" | "classifieds" | "services" | "shops" | "profile" | "offers";
+export type AppTab = "home" | "sell" | "need" | "services" | "shops" | "profile";
 
 interface BottomTabBarProps {
-  activeTab: AppTab;
-  onTabChange: (tab: AppTab) => void;
+  activeTab?: AppTab;
+  onTabChange?: (tab: AppTab) => void;
 }
 
 export default function BottomTabBar({
   activeTab,
   onTabChange,
 }: BottomTabBarProps) {
+  const router = useRouter();
+  const pathname = usePathname();
+
   const tabs = [
     {
       id: "home" as AppTab,
@@ -22,13 +26,13 @@ export default function BottomTabBar({
       route: "/",
     },
     {
-      id: "sell" as any,
+      id: "sell" as AppTab,
       label: "Sell",
       icon: MessageSquare,
       route: "/sell",
     },
     {
-      id: "need" as any,
+      id: "need" as AppTab,
       label: "Need",
       icon: MessageSquare,
       route: "/need",
@@ -47,17 +51,22 @@ export default function BottomTabBar({
     },
   ];
 
+  const handleTabClick = (tab: typeof tabs[0]) => {
+    if (onTabChange) onTabChange(tab.id);
+    router.push(tab.route);
+  };
+
   return (
     <nav className="sticky bottom-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/80 pb-safe-bottom shadow-lg shadow-slate-100 md:hidden">
       <div className="flex justify-around items-center h-16 px-2">
         {tabs.map((tab) => {
           const Icon = tab.icon;
-          const isActive = activeTab === tab.id;
+          const isActive = pathname === tab.route || activeTab === tab.id;
 
           return (
             <button
               key={tab.id}
-              onClick={() => onTabChange(tab.id)}
+              onClick={() => handleTabClick(tab)}
               className={`flex flex-col items-center justify-center flex-1 h-full py-1 text-[10px] font-bold transition-all duration-200 ${
                 isActive
                   ? "text-yellow-600 scale-105"

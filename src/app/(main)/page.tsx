@@ -95,11 +95,11 @@ export default function HomeLandingPage() {
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="flex overflow-x-auto snap-x scrollbar-none pb-2 gap-4 md:grid md:grid-cols-3 md:overflow-visible">
               {/* Card 1: Popular */}
               <div 
                 onClick={() => router.push("/sell?category=Plot%20%2f%20Real%20Estate&post=cmda_plot")}
-                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
+                className="shrink-0 w-[285px] sm:w-[330px] md:w-auto snap-start bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
               >
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
                   <Image 
@@ -140,7 +140,7 @@ export default function HomeLandingPage() {
               {/* Card 2: Trending */}
               <div 
                 onClick={() => router.push("/sell?category=Property%20Rental&post=house_rental")}
-                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
+                className="shrink-0 w-[285px] sm:w-[330px] md:w-auto snap-start bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
               >
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
                   <Image 
@@ -181,7 +181,7 @@ export default function HomeLandingPage() {
               {/* Card 3: Recent */}
               <div 
                 onClick={() => router.push("/sell?category=Used%20Vehicles&post=hero_bike")}
-                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
+                className="shrink-0 w-[285px] sm:w-[330px] md:w-auto snap-start bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
               >
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
                   <Image 
@@ -240,11 +240,11 @@ export default function HomeLandingPage() {
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="flex overflow-x-auto snap-x scrollbar-none pb-2 gap-4 md:grid md:grid-cols-3 md:overflow-visible">
               {/* Need Card 1: Urgent */}
               <div 
                 onClick={() => router.push("/need?post=need_3bhk_medical")}
-                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
+                className="shrink-0 w-[285px] sm:w-[330px] md:w-auto snap-start bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
               >
                 <div className="flex justify-between items-center">
                   <span className="text-[9px] font-bold uppercase text-slate-900 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
@@ -269,7 +269,7 @@ export default function HomeLandingPage() {
               {/* Need Card 2: Trending */}
               <div 
                 onClick={() => router.push("/need?post=need_goods_auto")}
-                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
+                className="shrink-0 w-[285px] sm:w-[330px] md:w-auto snap-start bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
               >
                 <div className="flex justify-between items-center">
                   <span className="text-[9px] font-bold uppercase text-slate-900 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
@@ -294,7 +294,7 @@ export default function HomeLandingPage() {
               {/* Need Card 3: Recent */}
               <div 
                 onClick={() => router.push("/need?post=need_accountant")}
-                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
+                className="shrink-0 w-[285px] sm:w-[330px] md:w-auto snap-start bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
               >
                 <div className="flex justify-between items-center">
                   <span className="text-[9px] font-bold uppercase text-slate-900 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200">
@@ -337,11 +337,11 @@ export default function HomeLandingPage() {
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="flex overflow-x-auto snap-x scrollbar-none pb-2 gap-4 md:grid md:grid-cols-3 md:overflow-visible">
               {/* Tech 1: Top Rated */}
               <div 
                 onClick={() => router.push("/services?category=Electrician&post=senthil_electrician")}
-                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
+                className="shrink-0 w-[285px] sm:w-[330px] md:w-auto snap-start bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
               >
                 <div className="flex justify-between items-center">
                   <span className="text-[9px] font-bold uppercase text-slate-900 bg-slate-100 px-2.5 py-0.5 rounded-md border border-slate-200">
@@ -366,7 +366,7 @@ export default function HomeLandingPage() {
               {/* Tech 2: High Demand */}
               <div 
                 onClick={() => router.push("/services?category=Plumber&post=rajesh_plumber")}
-                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
+                className="shrink-0 w-[285px] sm:w-[330px] md:w-auto snap-start bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
               >
                 <div className="flex justify-between items-center">
                   <span className="text-[9px] font-bold uppercase text-slate-900 bg-slate-100 px-2.5 py-0.5 rounded-md border border-slate-200">
@@ -391,7 +391,7 @@ export default function HomeLandingPage() {
               {/* Tech 3: Active Today */}
               <div 
                 onClick={() => router.push("/services?category=Carpenter&post=venu_carpenter")}
-                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
+                className="shrink-0 w-[285px] sm:w-[330px] md:w-auto snap-start bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
               >
                 <div className="flex justify-between items-center">
                   <span className="text-[9px] font-bold uppercase text-slate-900 bg-slate-100 px-2.5 py-0.5 rounded-md border border-slate-200">
@@ -434,11 +434,11 @@ export default function HomeLandingPage() {
               </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="flex overflow-x-auto snap-x scrollbar-none pb-2 gap-4 md:grid md:grid-cols-3 md:overflow-visible">
               {/* Featured Video Offer: GLEN EXCLUSIVE GALLERY */}
               <div 
                 onClick={() => router.push("/shops?category=Electronics%20Shop&post=glen_gallery")}
-                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow relative cursor-pointer"
+                className="shrink-0 w-[285px] sm:w-[330px] md:w-auto snap-start bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow relative cursor-pointer"
               >
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-900 relative group">
                   <video 
@@ -477,7 +477,7 @@ export default function HomeLandingPage() {
               {/* Offer 2 */}
               <div 
                 onClick={() => router.push("/shops?category=Cafe%20%26%20Restaurant&post=degree_coffee")}
-                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
+                className="shrink-0 w-[285px] sm:w-[330px] md:w-auto snap-start bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
               >
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
                   <Image 
@@ -510,7 +510,7 @@ export default function HomeLandingPage() {
               {/* Offer 3 */}
               <div 
                 onClick={() => router.push("/shops?category=Textiles%20%26%20Clothing")}
-                className="bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
+                className="shrink-0 w-[285px] sm:w-[330px] md:w-auto snap-start bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
               >
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
                   <Image 

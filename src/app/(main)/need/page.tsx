@@ -158,33 +158,69 @@ export default function NeedPage() {
 
   return (
     <div className="flex flex-col gap-6 mt-4 md:mt-6 pt-2 pb-12 max-w-7xl mx-auto px-4 sm:px-6">
-      {/* HEADER TITLE */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs">
-        <div>
-          <span className="text-[10px] font-black uppercase tracking-wider text-slate-700 bg-slate-100 border border-slate-200 px-2.5 py-0.5 rounded-lg inline-block">
-            Need Requirements
+      {/* HERO ILLUSTRATION BANNER */}
+      <div className="relative w-full h-44 sm:h-52 md:h-60 rounded-3xl overflow-hidden shadow-xs border border-slate-200/90 bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 text-white flex items-center p-6 sm:p-8">
+        <img 
+          src="/thanjavur_temple_illustration.png" 
+          alt="Need Requirements Banner" 
+          className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-30 mix-blend-overlay pointer-events-none"
+        />
+        <div className="relative z-10 max-w-xl flex flex-col gap-2">
+          <span className="text-[10px] font-black uppercase tracking-widest text-yellow-400 bg-yellow-400/10 border border-yellow-400/30 px-2.5 py-0.5 rounded-lg w-max">
+            Wanted & Requirements
           </span>
-          <h1 className="font-heading font-black text-xl md:text-2xl text-slate-900 mt-2">
-            Looking For / Buyer Requirements in Thanjavur
+          <h1 className="font-heading font-black text-2xl sm:text-3xl md:text-4xl text-white tracking-tight uppercase leading-none">
+            Looking For In Thanjavur
           </h1>
-          <p className="text-xs text-slate-600 font-semibold mt-1">
-            Browse buyer requirements, job openings, wanted houses, and vehicles in Thanjavur District.
+          <p className="text-xs sm:text-sm text-slate-300 font-medium">
+            Post and search buyer requirements, job openings, wanted houses for rent, and local services needed.
           </p>
+          <div className="mt-2">
+            <button
+              onClick={() => {
+                if (!profile?.isVerified) {
+                  router.push("/need?auth=popup");
+                } else {
+                  setIsFormOpen(true);
+                }
+              }}
+              className="py-2.5 px-5 bg-gradient-to-r from-yellow-400 to-amber-500 text-slate-950 font-black text-xs uppercase tracking-wider rounded-xl shadow-md hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center gap-2 cursor-pointer w-max"
+            >
+              <Plus className="w-4 h-4" />
+              <span>Post a Requirement</span>
+            </button>
+          </div>
         </div>
+      </div>
 
+      {/* HORIZONTAL CATEGORY HIGHLIGHT BAR */}
+      <div className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-none">
         <button
-          onClick={() => {
-            if (!profile?.isVerified) {
-              router.push("/need?auth=popup");
-            } else {
-              setIsFormOpen(true);
-            }
-          }}
-          className="py-3 px-5 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-black text-xs rounded-xl shadow-xs hover:from-amber-600 hover:to-yellow-600 transition-all flex items-center justify-center gap-2 shrink-0 cursor-pointer"
+          onClick={handleClearCategory}
+          className={`px-4 py-2 rounded-xl text-xs font-black shrink-0 transition-all cursor-pointer border ${
+            !selectedCategory 
+              ? "bg-slate-900 text-white border-slate-900 shadow-sm scale-[1.02]" 
+              : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+          }`}
         >
-          <Plus className="w-4 h-4" />
-          <span>Post a Requirement</span>
+          All Need Categories
         </button>
+        {CLASSIFIED_CATEGORIES.map((cat) => {
+          const isActive = selectedCategory === cat;
+          return (
+            <button
+              key={cat}
+              onClick={() => handleCategorySelect(cat)}
+              className={`px-4 py-2 rounded-xl text-xs font-black shrink-0 transition-all cursor-pointer border ${
+                isActive 
+                  ? "bg-slate-900 text-white border-slate-900 shadow-sm scale-[1.02]" 
+                  : "bg-white text-slate-700 border-slate-200 hover:bg-slate-50"
+              }`}
+            >
+              {cat}
+            </button>
+          );
+        })}
       </div>
 
       {/* CATEGORIES SELECTION */}
@@ -196,7 +232,7 @@ export default function NeedPage() {
               <button
                 key={cat}
                 onClick={() => handleCategorySelect(cat)}
-                className="bg-white border border-slate-200 hover:border-amber-500/60 p-3.5 rounded-2xl shadow-xs text-left transition-all active:scale-[0.98] hover:shadow-lg flex flex-col gap-3 group w-full cursor-pointer overflow-hidden aspect-square justify-between"
+                className="bg-white border border-slate-200 hover:border-slate-400 p-3.5 rounded-2xl shadow-2xs text-left transition-all active:scale-[0.98] hover:shadow-md flex flex-col gap-3 group w-full cursor-pointer overflow-hidden aspect-square justify-between"
               >
                 <div className="w-full h-32 rounded-xl overflow-hidden relative bg-slate-100 border border-slate-100">
                   <img
@@ -206,10 +242,10 @@ export default function NeedPage() {
                   />
                 </div>
                 <div>
-                  <span className="text-xs font-black text-slate-900 block group-hover:text-amber-700 transition-colors line-clamp-1">
+                  <span className="text-xs font-black text-slate-900 block group-hover:text-slate-700 transition-colors line-clamp-1">
                     {cat}
                   </span>
-                  <span className="text-[10px] font-bold text-amber-700 block mt-0.5">Explore Need →</span>
+                  <span className="text-[10px] font-bold text-slate-400 block mt-0.5">Explore Need →</span>
                 </div>
               </button>
             );

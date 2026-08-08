@@ -41,7 +41,7 @@ function ResponsiveGroup({
 }: ResponsiveGroupProps) {
   const { viewport } = useThree();
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-  const s = Math.min(1.3, viewport.width / 3.0) * scale * (isMobile ? 0.85 : 0.72);
+  const s = Math.min(1.4, viewport.width / 2.8) * scale * (isMobile ? 1.25 : 0.72);
   return <group scale={s}>{children}</group>;
 }
 
@@ -899,7 +899,7 @@ export function RobotHero({
         
         {/* 1. Logo Badge + Extended Big Header Title: NAMMA THANJAVUR */}
         <div className="flex flex-col items-center gap-2 w-full">
-          <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-white shadow-md p-2 flex items-center justify-center shrink-0 border border-slate-150 mb-0.5">
+          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-3xl bg-white/90 shadow-sm p-1.5 flex items-center justify-center shrink-0 border-0 mb-0.5">
             <img 
               src="/namma_thanjai_logo.png" 
               alt="namma thanjai app logo" 
@@ -965,7 +965,7 @@ export function RobotHero({
         {/* 4. Mascot Robot Canvas (Compact 3D Mascot - Fits 100% in First Fold) */}
         <div 
           onClick={handleRobotTap} 
-          className="w-full max-w-[280px] sm:max-w-[320px] md:max-w-[360px] h-[170px] sm:h-[190px] md:h-[210px] relative flex items-center justify-center cursor-pointer my-0.5"
+          className="w-full max-w-[320px] sm:max-w-[360px] md:max-w-[400px] h-[210px] sm:h-[230px] md:h-[250px] relative flex items-center justify-center cursor-pointer my-0.5"
         >
           <Canvas camera={{ position: [0, 0.12, 3.6], fov: 38 }}>
             <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
