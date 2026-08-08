@@ -937,16 +937,16 @@ export function RobotHero({
           </AnimatePresence>
         </div>
 
-        {/* 3. Massive 3D Mascot Robot Canvas (Elevated camera to prevent bottom clipping, 100% transparent, zero shadow) */}
+        {/* 3. 3D Mascot Robot Canvas (Perfect Camera Frustum & Zero Boundary Clipping, Zero Excess Whitespace) */}
         <div 
           onClick={handleRobotTap} 
-          className="w-full max-w-[460px] sm:max-w-[560px] md:max-w-[640px] flex-1 min-h-[290px] max-h-[460px] relative flex items-center justify-center cursor-pointer overflow-visible my-1.5 bg-transparent"
+          className="w-full max-w-[340px] sm:max-w-[420px] md:max-w-[480px] h-[230px] sm:h-[290px] md:h-[330px] shrink-0 relative flex items-center justify-center cursor-pointer overflow-visible my-0 bg-transparent"
         >
-          <Canvas camera={{ position: [0, 0.15, 3.6], fov: 38 }} className="overflow-visible bg-transparent">
+          <Canvas camera={{ position: [0, 0, 4.2], fov: 46 }} className="overflow-visible bg-transparent">
             <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
             <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} shadow-bias={-0.0005} />
             <Environment preset="studio" blur={0.5} />
-            <ResponsiveGroup scale={scale * 2.05}>
+            <ResponsiveGroup scale={scale * 1.55}>
               <RobotPrototype neckParams={{ baseR: 0.215, baseH: -0.05, midR: 0.28, midH: 0.02, lipBottomR: 0.295, lipBottomH: 0.045, lipTopR: 0.27, lipTopH: 0.055, innerR: 0.1, innerDropH: 0.0 }} bodyParams={{ bodyBevelR: 0.235, bodyBevelY: 0.34, bodyBevelT: 0.025 }} color={color} pantallaColor={pantallaColor} pantallaBrillo={pantallaBrillo} blinkCycle={blinkCycle} metalness={metalness} />
             </ResponsiveGroup>
           </Canvas>
