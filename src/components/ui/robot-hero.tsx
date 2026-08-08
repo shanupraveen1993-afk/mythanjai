@@ -971,23 +971,23 @@ export function RobotHero({
           </button>
         </div>
 
-        {/* 4. Centered 3D Mascot Robot Canvas (100% Transparent Background, Unbounded Side Overflow, Zero Cut) */}
+        {/* 4. Centered 3D Mascot Robot Canvas (100% Transparent Background, Elevated Shadow, Zero Cut) */}
         <div 
           onClick={handleRobotTap} 
-          className="w-full max-w-[340px] sm:max-w-[400px] md:max-w-[460px] flex-1 min-h-[200px] max-h-[320px] relative flex items-center justify-center cursor-pointer overflow-visible my-1 bg-transparent"
+          className="w-full max-w-[340px] sm:max-w-[400px] md:max-w-[460px] flex-1 min-h-[210px] max-h-[320px] relative flex items-center justify-center cursor-pointer overflow-visible my-0.5 bg-transparent"
         >
-          <Canvas camera={{ position: [0, 0.12, 3.6], fov: 38 }} className="overflow-visible bg-transparent">
+          <Canvas camera={{ position: [0, 0.06, 3.6], fov: 38 }} className="overflow-visible bg-transparent">
             <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
             <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} shadow-bias={-0.0005} />
             <Environment preset="studio" blur={0.5} />
             <ResponsiveGroup scale={scale * 1.35}>
               <ContactShadows
-                position={[0, -0.79, 0]}
-                opacity={0.25}
-                scale={12}
+                position={[0, -0.72, 0]}
+                opacity={0.28}
+                scale={9.5}
                 resolution={1024}
-                blur={2.0}
-                far={2.5}
+                blur={1.8}
+                far={3.0}
                 color="#000000"
               />
               <RobotPrototype neckParams={{ baseR: 0.215, baseH: -0.05, midR: 0.28, midH: 0.02, lipBottomR: 0.295, lipBottomH: 0.045, lipTopR: 0.27, lipTopH: 0.055, innerR: 0.1, innerDropH: 0.0 }} bodyParams={{ bodyBevelR: 0.235, bodyBevelY: 0.34, bodyBevelT: 0.025 }} color={color} pantallaColor={pantallaColor} pantallaBrillo={pantallaBrillo} blinkCycle={blinkCycle} metalness={metalness} />
@@ -995,21 +995,21 @@ export function RobotHero({
           </Canvas>
         </div>
 
-        {/* 5. Primary Register Button: REGISTER TO POST */}
-        <div className="w-full max-w-sm shrink-0">
+        {/* 5. Primary Register Button: REGISTER TO POST (Tight bottom spacing on mobile) */}
+        <div className="w-full max-w-sm shrink-0 mb-1 mt-0.5">
           <button
             type="button"
             onClick={onCtaClick}
-            className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs sm:text-sm uppercase tracking-wider transition-all hover:scale-[1.01] active:scale-[0.98] shadow-md shadow-yellow-500/20 border-0 text-center flex items-center justify-center gap-2 cursor-pointer"
+            className="w-full py-3 sm:py-3.5 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs sm:text-sm uppercase tracking-wider transition-all hover:scale-[1.01] active:scale-[0.98] shadow-md shadow-yellow-500/20 border-0 text-center flex items-center justify-center gap-2 cursor-pointer"
           >
             <span>{ctaText === "Verified" ? "Verified Profile" : "Register to Post"}</span>
             <ArrowRight className="w-4 h-4 text-slate-955" />
           </button>
         </div>
 
-        {/* 6. LIVE Noticeboard Ticker Alert Banner */}
+        {/* 6. LIVE Noticeboard Ticker Alert Banner (Tight bottom spacing on mobile) */}
         {alerts.length > 0 && (
-          <div className="w-full bg-slate-900 border border-slate-800 text-white rounded-2xl py-2 px-4 shadow-sm flex items-center justify-between text-[11px] sm:text-xs font-black select-none max-w-md mx-auto tracking-wide shrink-0">
+          <div className="w-full bg-slate-900 border border-slate-800 text-white rounded-2xl py-2 px-4 shadow-sm flex items-center justify-between text-[11px] sm:text-xs font-black select-none max-w-md mx-auto tracking-wide shrink-0 mt-0.5 mb-1">
             <div className="flex items-center gap-2.5 overflow-hidden w-full text-left">
               <span className="bg-yellow-500 text-slate-950 font-black text-[8px] px-2 py-0.5 rounded-md uppercase shrink-0 animate-pulse">
                 LIVE
