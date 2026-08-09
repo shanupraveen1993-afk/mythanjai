@@ -51,6 +51,7 @@ interface CreatePostModalProps {
   defaultArea?: TanjoreLocality;
   defaultType?: PostType;
   defaultCategory?: string;
+  defaultClassifiedType?: "NEED" | "SELL";
 }
 
 // Approximate coordinate mapping for Tanjore area tags (enables OSM rendering without Google API costs)
@@ -85,6 +86,7 @@ export default function CreatePostModal({
   defaultArea = "Tanjore Town (General)",
   defaultType = "needs",
   defaultCategory,
+  defaultClassifiedType,
 }: CreatePostModalProps) {
   const [step, setStep] = useState(1);
   const [type, setType] = useState<PostType>(defaultType);
@@ -127,12 +129,13 @@ export default function CreatePostModal({
   useEffect(() => {
     if (defaultArea) setArea(defaultArea);
     if (defaultType) setType(defaultType);
+    if (defaultClassifiedType) setClassifiedType(defaultClassifiedType);
     if (defaultCategory) {
       if (CLASSIFIED_CATEGORIES.includes(defaultCategory as any)) setClassifiedCategory(defaultCategory as any);
       if (SERVICE_CATEGORIES.includes(defaultCategory as any)) setServiceCategory(defaultCategory as any);
       if (SHOP_CATEGORIES.includes(defaultCategory as any)) setShopCategory(defaultCategory as any);
     }
-  }, [defaultArea, defaultType, defaultCategory, isOpen]);
+  }, [defaultArea, defaultType, defaultCategory, defaultClassifiedType, isOpen]);
 
   if (!isOpen) return null;
 

@@ -533,46 +533,28 @@ function ShopsPageContent() {
   }, [combinedShops, searchQuery]);
 
   return (
-    <div className="flex flex-col gap-6 mt-4 md:mt-6 pt-2 pb-12 max-w-7xl mx-auto px-4 sm:px-6">
-      {/* HERO ILLUSTRATION BANNER */}
-      <div className="relative w-full min-h-[210px] sm:min-h-[220px] rounded-3xl overflow-hidden shadow-lg border border-slate-800 bg-slate-950 text-white flex items-center p-6 sm:p-8">
-        <img 
-          src="/thanjavur_hero_banner.png" 
-          alt="Local Offers Banner" 
-          className="absolute right-0 top-0 h-full w-full sm:w-3/5 object-cover opacity-50 pointer-events-none"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent pointer-events-none" />
-        
-        <div className="relative z-10 max-w-xl flex flex-col gap-2.5">
-          <span className="text-[10px] font-black uppercase tracking-widest text-yellow-400 bg-yellow-400/10 border border-yellow-400/30 px-3 py-1 rounded-full w-fit">
-            Local Discounts & Video Deals
-          </span>
-          <h1 className="font-heading font-black text-2xl sm:text-3xl md:text-4xl text-white tracking-tight uppercase leading-tight">
-            Local Store Offers & Discounts
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-300 font-medium leading-relaxed">
-            Explore active store discounts, restaurant deals, clothing sales, and video offers in Thanjavur.
-          </p>
-        </div>
-      </div>
-
+    <div className="flex flex-col gap-5 mt-3 md:mt-4 pt-1 pb-12 max-w-7xl mx-auto px-4 sm:px-6">
       {/* DIRECT OFFERS FEED & STICKY ACTION BAR */}
       <div className="flex flex-col gap-5">
         {/* UNIVERSAL STICKY ACTION BAR */}
-        <div className="sticky top-[57px] z-30 bg-amber-50/85 backdrop-blur-md py-2.5 px-4 border border-amber-200/80 rounded-2xl shadow-xs flex items-center justify-between">
-          <select
-            className="text-xs font-black bg-white/90 border border-amber-200/90 rounded-xl px-3.5 py-2 text-slate-800 focus:outline-none cursor-pointer shrink-0 shadow-xs"
-          >
-            <option value="recent">Latest First</option>
-          </select>
+        <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 px-3.5 border border-slate-200 rounded-2xl shadow-2xs flex items-center justify-between gap-2">
+          <span className="font-heading font-black text-xs sm:text-sm text-slate-800 uppercase tracking-tight">
+            Local Offers & Store Deals
+          </span>
 
-          <button
-            onClick={() => setIsFormOpen(!isFormOpen)}
-            className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-xs shrink-0"
-          >
-            <Plus className={`w-4 h-4 text-slate-955 transition-transform duration-250 ${isFormOpen ? "rotate-45" : ""}`} />
-            <span>Post Offer</span>
-          </button>
+          <div className="flex items-center gap-2">
+            <select className="text-xs font-black bg-slate-50 border border-slate-250 rounded-xl px-3 py-2 text-slate-800 focus:outline-none cursor-pointer shrink-0 shadow-2xs">
+              <option value="recent">Latest First</option>
+            </select>
+
+            <button
+              onClick={() => setIsFormOpen(!isFormOpen)}
+              className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-3.5 sm:px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-2xs shrink-0"
+            >
+              <Plus className={`w-4 h-4 text-slate-955 transition-transform duration-250 ${isFormOpen ? "rotate-45" : ""}`} />
+              <span>Post Offer</span>
+            </button>
+          </div>
         </div>
 
           <div className="flex items-center justify-between bg-slate-100 p-2.5 rounded-xl border border-slate-200">

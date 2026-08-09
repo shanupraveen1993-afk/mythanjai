@@ -326,32 +326,50 @@ function ServicesPageContent() {
   }, [combinedServices, searchQuery]);
 
   return (
-    <div className="flex flex-col gap-6 mt-4 md:mt-6 pt-2 pb-12 max-w-7xl mx-auto px-4 sm:px-6">
-      {/* HERO ILLUSTRATION BANNER */}
-      <div className="relative w-full min-h-[210px] sm:min-h-[220px] rounded-3xl overflow-hidden shadow-lg border border-slate-800 bg-slate-950 text-white flex items-center p-6 sm:p-8">
-        <img 
-          src="/thanjavur_electrician_service.png" 
-          alt="Local Services Banner" 
-          className="absolute right-0 top-0 h-full w-full sm:w-3/5 object-cover opacity-50 pointer-events-none"
-        />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent pointer-events-none" />
-        
-        <div className="relative z-10 max-w-xl flex flex-col gap-2.5">
-          <span className="text-[10px] font-black uppercase tracking-widest text-yellow-400 bg-yellow-400/10 border border-yellow-400/30 px-3 py-1 rounded-full w-fit">
-            Local Technicians & Skilled Trades
+    <div className="flex flex-col gap-5 mt-3 md:mt-4 pt-1 pb-12 max-w-7xl mx-auto px-4 sm:px-6">
+      {/* TOP CONTROLS & POST TRADE ACTION BAR */}
+      <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 px-3.5 border border-slate-200 rounded-2xl shadow-2xs flex items-center justify-between gap-2">
+        {selectedCategory ? (
+          <button
+            onClick={handleClearCategory}
+            className="flex items-center gap-1.5 font-black text-xs text-slate-800 hover:text-slate-955 bg-slate-100 hover:bg-slate-200 px-3 py-2 rounded-xl border border-slate-250 cursor-pointer transition-colors shrink-0"
+          >
+            <ArrowLeft className="w-3.5 h-3.5 text-slate-900" />
+            <span className="truncate max-w-[120px] sm:max-w-none">{selectedCategory}</span>
+          </button>
+        ) : (
+          <span className="font-heading font-black text-xs sm:text-sm text-slate-800 uppercase tracking-tight">
+            Service Categories
           </span>
-          <h1 className="font-heading font-black text-2xl sm:text-3xl md:text-4xl text-white tracking-tight uppercase leading-tight">
-            Find Local Experts In Thanjavur
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-300 font-medium leading-relaxed">
-            Direct access to verified electricians, plumbers, carpenters, AC technicians, and painters.
-          </p>
+        )}
+
+        <div className="flex items-center gap-2">
+          <select className="text-xs font-black bg-slate-50 border border-slate-250 rounded-xl px-3 py-2 text-slate-800 focus:outline-none cursor-pointer shrink-0 shadow-2xs">
+            <option value="recent">Latest First</option>
+            <option value="rating">Top Rated</option>
+          </select>
+
+          <button
+            onClick={() => {
+              if (!profile?.isVerified) {
+                const currentParams = new URLSearchParams(searchParams.toString());
+                currentParams.set("auth", "popup");
+                router.push(`/services?${currentParams.toString()}`);
+              } else {
+                setIsFormOpen(!isFormOpen);
+              }
+            }}
+            className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-3.5 sm:px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-2xs shrink-0"
+          >
+            <Plus className={`w-4 h-4 text-slate-955 transition-transform duration-250 ${isFormOpen ? "rotate-45" : ""}`} />
+            <span>Post Trade</span>
+          </button>
         </div>
       </div>
 
       {/* CATEGORY SELECTION OR DETAILED TRADE FEED */}
       {!selectedCategory ? (
-        <div className="flex flex-col gap-8">
+        <div className="flex flex-col gap-6">
           {/* 3-Column Compact Category Selection Grid */}
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2.5 sm:gap-3.5">
             {SERVICE_CATEGORIES.map((cat) => {
@@ -404,45 +422,6 @@ function ServicesPageContent() {
       ) : (
         /* STEP 2: DETAILED FEED & REGISTRATION CARD FOR TRADE */
         <div className="flex flex-col gap-5">
-          {/* UNIVERSAL STICKY ACTION BAR: Shown Only After Category is Selected */}
-          <div className="sticky top-[57px] z-30 bg-amber-50/85 backdrop-blur-md py-2.5 px-4 border border-amber-200/80 rounded-2xl shadow-xs flex items-center justify-between">
-            <select
-              className="text-xs font-black bg-white/90 border border-amber-200/90 rounded-xl px-3.5 py-2 text-slate-800 focus:outline-none cursor-pointer shrink-0 shadow-xs"
-            >
-              <option value="recent">Latest First</option>
-              <option value="rating">Top Rated</option>
-            </select>
-
-            <button
-              onClick={() => {
-                if (!profile?.isVerified) {
-                  const currentParams = new URLSearchParams(searchParams.toString());
-                  currentParams.set("auth", "popup");
-                  currentParams.set("redirect", `/services?category=${encodeURIComponent(selectedCategory || "")}&create=true`);
-                  router.push(`/services?${currentParams.toString()}`);
-                } else {
-                  setIsFormOpen(!isFormOpen);
-                }
-              }}
-              className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-xs shrink-0"
-            >
-              <Plus className={`w-4 h-4 text-slate-955 transition-transform duration-250 ${isFormOpen ? "rotate-45" : ""}`} />
-              <span>Post Trade</span>
-            </button>
-          </div>
-
-          {/* Compact Header Badge */}
-          <div className="flex items-center justify-between">
-            <span className="inline-flex items-center gap-1.5 bg-yellow-500/10 border border-yellow-300 text-slate-900 font-black text-xs px-3 py-1.5 rounded-xl shadow-2xs">
-              Trade: {selectedCategory}
-            </span>
-            <button
-              onClick={handleClearCategory}
-              className="text-xs font-bold text-slate-600 hover:text-slate-900 cursor-pointer"
-            >
-              ← Clear Filter
-            </button>
-          </div>
 
 
 
