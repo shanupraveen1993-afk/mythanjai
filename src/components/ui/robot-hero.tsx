@@ -42,7 +42,7 @@ function ResponsiveGroup({
 }: ResponsiveGroupProps) {
   const { viewport } = useThree();
   const isMobile = typeof window !== "undefined" && window.innerWidth < 768;
-  const s = Math.min(1.4, viewport.width / 2.8) * scale * (isMobile ? 1.25 : 0.72);
+  const s = Math.min(1.4, viewport.width / 2.8) * scale * (isMobile ? 1.05 : 0.72);
   return <group scale={s}>{children}</group>;
 }
 
@@ -933,7 +933,7 @@ export function RobotHero({
         </div>
 
         {/* 2. Rotational Category Switcher Badge */}
-        <div className="h-6 sm:h-8 flex items-center justify-center overflow-hidden shrink-0 my-0.5">
+        <div className="h-6 sm:h-8 flex items-center justify-center overflow-hidden shrink-0 -mt-1 sm:my-0.5">
           <AnimatePresence mode="wait">
             <motion.div
               key={wordIndex}
@@ -952,7 +952,7 @@ export function RobotHero({
         {/* 3. Responsive 3D Mascot Robot Canvas (Unclipped Camera Frustum, Flows Left and Right with Zero Border Cuts) */}
         <div 
           onClick={handleRobotTap} 
-          className="w-full max-w-[280px] sm:max-w-[360px] md:max-w-[440px] flex-1 min-h-[170px] sm:min-h-[220px] md:min-h-[260px] max-h-[260px] sm:max-h-[300px] md:max-h-[360px] relative flex items-center justify-center cursor-pointer overflow-visible my-0 bg-transparent"
+          className="w-full max-w-[280px] sm:max-w-[360px] md:max-w-[440px] flex-1 min-h-[160px] sm:min-h-[220px] md:min-h-[260px] max-h-[240px] sm:max-h-[300px] md:max-h-[360px] relative flex items-center justify-center cursor-pointer overflow-visible my-0 bg-transparent"
         >
           <Canvas camera={{ position: [0, 0, 4.2], fov: 46 }} className="overflow-visible bg-transparent">
             <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
@@ -964,8 +964,8 @@ export function RobotHero({
           </Canvas>
         </div>
 
-        {/* 4. Action Footer Group (REGISTER TO POST + LIVE ALERT TICKER bound in tight container) */}
-        <div className="w-full max-w-xs sm:max-w-sm md:max-w-md shrink-0 flex flex-col gap-1.5 sm:gap-2 px-1 pb-1">
+        {/* 4. Action Footer Group (REGISTER TO POST + LIVE ALERT TICKER with extra mobile spacing) */}
+        <div className="w-full max-w-xs sm:max-w-sm md:max-w-md shrink-0 flex flex-col gap-3 sm:gap-2 px-1 pb-1">
           <button
             type="button"
             onClick={onCtaClick}
