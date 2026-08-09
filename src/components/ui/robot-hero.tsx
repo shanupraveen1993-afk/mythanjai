@@ -954,16 +954,16 @@ export function RobotHero({
           </AnimatePresence>
         </div>
 
-        {/* 3. Responsive 3D Mascot Robot Canvas (Heroic Proportions, Fills Middle Area with Zero Border Cuts) */}
+        {/* 3. Responsive 3D Mascot Robot Canvas (Unclipped Camera Frustum with Ample Top & Bottom Margin) */}
         <div 
           onClick={handleRobotTap} 
-          className="w-full max-w-[290px] sm:max-w-[370px] md:max-w-[450px] flex-1 min-h-[180px] sm:min-h-[230px] md:min-h-[270px] max-h-[280px] sm:max-h-[320px] md:max-h-[380px] relative flex items-center justify-center cursor-pointer overflow-visible my-0 bg-transparent"
+          className="w-full max-w-[290px] sm:max-w-[370px] md:max-w-[450px] flex-1 min-h-[190px] sm:min-h-[240px] md:min-h-[280px] max-h-[290px] sm:max-h-[330px] md:max-h-[380px] relative flex items-center justify-center cursor-pointer overflow-visible my-1 bg-transparent"
         >
-          <Canvas camera={{ position: [0, 0, 4.2], fov: 46 }} className="overflow-visible bg-transparent">
+          <Canvas camera={{ position: [0, 0.1, 4.5], fov: 42 }} className="overflow-visible bg-transparent">
             <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
             <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} shadow-bias={-0.0005} />
             <Environment preset="studio" blur={0.5} />
-            <ResponsiveGroup scale={scale * 1.55}>
+            <ResponsiveGroup scale={scale * 1.5}>
               <RobotPrototype neckParams={{ baseR: 0.215, baseH: -0.05, midR: 0.28, midH: 0.02, lipBottomR: 0.295, lipBottomH: 0.045, lipTopR: 0.27, lipTopH: 0.055, innerR: 0.1, innerDropH: 0.0 }} bodyParams={{ bodyBevelR: 0.235, bodyBevelY: 0.34, bodyBevelT: 0.025 }} color={color} pantallaColor={pantallaColor} pantallaBrillo={pantallaBrillo} blinkCycle={blinkCycle} metalness={metalness} />
             </ResponsiveGroup>
           </Canvas>
