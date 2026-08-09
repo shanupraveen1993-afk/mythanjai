@@ -20,7 +20,8 @@ export default function NeedCard({ post, onShare }: NeedCardProps) {
   const sharesCount = Math.floor(22 + (post.title?.length || 5) * 2);
 
   // Format phone for WhatsApp link (must start with country code, e.g. 91)
-  const cleanPhone = post.phone.replace(/\D/g, "");
+  const rawPhone = post.phone || "9994837342";
+  const cleanPhone = rawPhone.replace(/\D/g, "");
   const formattedPhone = cleanPhone.startsWith("91") ? cleanPhone : `91${cleanPhone}`;
   const whatsappUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(
     `Hi, I saw your post "${post.title}" on Namma Thanjai (Area: ${post.area_tag}). Is it still available?`

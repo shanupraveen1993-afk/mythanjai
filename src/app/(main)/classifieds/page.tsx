@@ -272,12 +272,21 @@ function ClassifiedsPageContent() {
 
 
 
-  const handleCategorySelect = (category: string) => {
-    setSelectedCategory(category);
+  const handleCategorySelect = (category?: string | null) => {
+    if (category && typeof category === "string") {
+      setSelectedCategory(category);
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("category", category);
+      router.push(`/classifieds?${params.toString()}`);
+    }
   };
 
   const handleClearCategory = () => {
     setSelectedCategory(null);
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("category");
+    const q = params.toString();
+    router.push(q ? `/classifieds?${q}` : "/classifieds");
   };
 
   const handlePublish = async (e: React.FormEvent) => {
@@ -511,19 +520,6 @@ function ClassifiedsPageContent() {
            STEP 2: DETAILED FEED & POST ENGINE FOR SPECIFIC CATEGORY
            ========================================== */
         <div className="flex flex-col gap-5">
-          {/* Header & Back Action */}
-          <div className="flex items-center justify-between">
-            <button
-              onClick={handleClearCategory}
-              className="flex items-center gap-1 text-slate-600 hover:text-slate-900 transition-colors text-xs font-bold bg-slate-100 px-3 py-1.5 rounded-full border border-slate-200 cursor-pointer"
-            >
-              <ArrowLeft className="w-3.5 h-3.5" />
-              <span>All Categories</span>
-            </button>
-            <span className="text-xs font-black text-slate-800 bg-yellow-500/10 border border-yellow-250/60 px-3 py-1 rounded-xl">
-              Category: {selectedCategory}
-            </span>
-          </div>
 
           {/* Sub-Tabs: Buy vs Sell */}
           <div className="flex bg-slate-200/80 p-1.5 rounded-2xl border border-slate-300/40">

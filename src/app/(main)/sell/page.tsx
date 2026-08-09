@@ -221,31 +221,25 @@ function SellPageContent() {
       )}
 
       {/* CONTROLS BAR ABOVE LISTING: ONLY Sort By & Post Button */}
-      <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 px-3.5 border border-slate-200 rounded-2xl shadow-2xs flex items-center justify-between gap-2">
-        <span className="font-heading font-black text-xs sm:text-sm text-slate-800 uppercase tracking-tight">
-          {selectedCategory || "Sell Categories"}
-        </span>
+      <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 px-3.5 border border-slate-200 rounded-2xl shadow-2xs flex items-center justify-end gap-2">
+        <select
+          value={sortBy}
+          onChange={(e) => setSortBy(e.target.value as any)}
+          className="text-xs font-black bg-slate-50 border border-slate-250 rounded-xl px-3 py-2 text-slate-800 focus:outline-none cursor-pointer shrink-0 shadow-2xs"
+        >
+          <option value="recent">Latest First</option>
+          <option value="price_low">Price: Low to High</option>
+          <option value="price_high">Price: High to Low</option>
+        </select>
 
-        <div className="flex items-center gap-2 ml-auto">
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
-            className="text-xs font-black bg-slate-50 border border-slate-250 rounded-xl px-3 py-2 text-slate-800 focus:outline-none cursor-pointer shrink-0 shadow-2xs"
-          >
-            <option value="recent">Latest First</option>
-            <option value="price_low">Price: Low to High</option>
-            <option value="price_high">Price: High to Low</option>
-          </select>
-
-          <button
-            type="button"
-            onClick={() => setIsFormOpen(true)}
-            className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-3.5 sm:px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-2xs shrink-0"
-          >
-            <Plus className="w-4 h-4 text-slate-955 stroke-[2.5]" />
-            <span>Post Sale</span>
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={() => setIsFormOpen(true)}
+          className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-3.5 sm:px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-2xs shrink-0"
+        >
+          <Plus className="w-4 h-4 text-slate-955 stroke-[2.5]" />
+          <span>Post Sale</span>
+        </button>
       </div>
 
       {/* CATEGORIES GRID OR LISTINGS FEED */}
@@ -258,6 +252,7 @@ function SellPageContent() {
               return (
                 <button
                   key={cat}
+                  type="button"
                   onClick={() => handleCategorySelect(cat)}
                   className="bg-white border border-slate-200 hover:border-slate-400 p-2 sm:p-3 rounded-2xl shadow-2xs text-left transition-all active:scale-[0.98] hover:shadow-md flex flex-col gap-2 group w-full cursor-pointer overflow-hidden justify-between"
                 >
