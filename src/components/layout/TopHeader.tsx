@@ -64,88 +64,80 @@ export default function TopHeader({
     <header className="sticky top-0 z-40 bg-white border-b border-slate-200/90 shadow-xs">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between gap-3">
         
-        {/* Left: Branding Logo (Home Only) OR Back-Heading Button (Subpages Only) */}
+        {/* Left: Website Branding Logo across all pages */}
         <div className="flex items-center gap-3">
-          {pathname === "/" ? (
-            <div 
-              onClick={() => onTabChange?.("home")}
-              className="flex items-center gap-2 cursor-pointer select-none shrink-0"
-            >
-              <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-9 h-9 sm:w-10 sm:h-10 object-contain shrink-0 rounded-xl border-0 shadow-none" />
-              <div className="flex items-center gap-0.5">
-                <span className="font-heading font-black tracking-tight text-slate-900 text-xs sm:text-sm uppercase">
-                  namma thanjai
-                </span>
-                <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 ml-0.5" />
-              </div>
+          <div 
+            onClick={() => router.push("/")}
+            className="flex items-center gap-2 cursor-pointer select-none shrink-0"
+          >
+            <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-9 h-9 sm:w-10 sm:h-10 object-contain shrink-0 rounded-xl border-0 shadow-none" />
+            <div className="flex items-center gap-0.5">
+              <span className="font-heading font-black tracking-tight text-slate-900 text-xs sm:text-sm uppercase">
+                namma thanjai
+              </span>
+              <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 ml-0.5" />
             </div>
-          ) : (
-            <button
-              type="button"
-              onClick={handleBackClick}
-              className="flex items-center gap-2 font-heading font-black text-xs sm:text-sm text-slate-900 hover:text-slate-700 cursor-pointer bg-slate-100/90 hover:bg-slate-200/90 px-3 py-1.5 rounded-xl border border-slate-250 transition-colors shadow-2xs"
-            >
-              <ArrowLeft className="w-4 h-4 text-slate-900 stroke-[2.5]" />
-              <span className="uppercase tracking-tight truncate max-w-[180px] sm:max-w-[280px]">{sectionTitle}</span>
-            </button>
-          )}
+          </div>
         </div>
 
-        {/* Center: 5 Channel Navigation Tabs (Home, Sell, Need, Local Service, Local Offer) - VISIBLE ONLY WHEN LOGGED IN / DASHBOARD */}
-        {isAuthVerified && (
-          <div className="hidden sm:flex items-center gap-1 bg-slate-100/80 p-1 rounded-2xl border border-slate-200/60">
-            <button
-              onClick={() => router.push("/")}
-              className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
-                pathname === "/"
-                  ? "bg-white text-slate-900 shadow-xs border border-slate-250"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
-            >
-              Home
-            </button>
-            <button
-              onClick={() => router.push("/sell")}
-              className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
-                pathname === "/sell"
-                  ? "bg-white text-slate-900 shadow-xs border border-slate-250"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
-            >
-              Sell
-            </button>
-            <button
-              onClick={() => router.push("/need")}
-              className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
-                pathname === "/need"
-                  ? "bg-white text-slate-900 shadow-xs border border-slate-250"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
-            >
-              Need
-            </button>
-            <button
-              onClick={() => router.push("/services")}
-              className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
-                pathname === "/services"
-                  ? "bg-white text-slate-900 shadow-xs border border-slate-250"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
-            >
-              Local Service
-            </button>
-            <button
-              onClick={() => router.push("/shops")}
-              className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
-                pathname === "/shops"
-                  ? "bg-white text-slate-900 shadow-xs border border-slate-250"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
-            >
-              Local Offer
-            </button>
-          </div>
-        )}
+        {/* Center: 5 Channel Navigation Tabs (Home, Sell, Need, Local Service, Local Offer) */}
+        <div className="hidden sm:flex items-center gap-1 bg-slate-100/80 p-1 rounded-2xl border border-slate-200/60">
+          <button
+            type="button"
+            onClick={() => router.push("/")}
+            className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
+              pathname === "/"
+                ? "bg-white text-slate-900 shadow-xs border border-slate-250"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            Home
+          </button>
+          <button
+            type="button"
+            onClick={() => router.push("/sell")}
+            className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
+              pathname === "/sell"
+                ? "bg-white text-slate-900 shadow-xs border border-slate-250"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            Sell
+          </button>
+          <button
+            type="button"
+            onClick={() => router.push("/need")}
+            className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
+              pathname === "/need"
+                ? "bg-white text-slate-900 shadow-xs border border-slate-250"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            Need
+          </button>
+          <button
+            type="button"
+            onClick={() => router.push("/services")}
+            className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
+              pathname === "/services"
+                ? "bg-white text-slate-900 shadow-xs border border-slate-250"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            Local Service
+          </button>
+          <button
+            type="button"
+            onClick={() => router.push("/shops")}
+            className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
+              pathname === "/shops"
+                ? "bg-white text-slate-900 shadow-xs border border-slate-250"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            Local Offer
+          </button>
+        </div>
 
         {/* Right: Verified Profile Icon Button / Verify Mobile */}
         <div className="flex items-center gap-2 shrink-0">

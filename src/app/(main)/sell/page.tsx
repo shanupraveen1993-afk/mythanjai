@@ -66,7 +66,7 @@ function SellPageContent() {
       title: "2400 Sqft CMDA Plot",
       raw_text: "2400 Sqft CMDA Plot",
       description: "DTCP approved residential plot with 30ft road frontage in Vallam.",
-      category: "Plot / Real Estate",
+      category: "Plots & Real Estate",
       area_tag: "Vallam",
       price: "2450000",
       phone: "9876543210",
@@ -193,7 +193,7 @@ function SellPageContent() {
         onClose={() => setIsFormOpen(false)}
         defaultType="needs"
         defaultClassifiedType="SELL"
-        defaultCategory={selectedCategory || "Plot / Real Estate"}
+        defaultCategory={selectedCategory || "Plots & Real Estate"}
       />
 
       {/* HERO BANNER: Shown ONLY on Main Category Overview Page */}

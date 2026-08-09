@@ -36,7 +36,7 @@ export type TanjoreLocality = typeof TANJORE_LOCALITIES[number];
 // Categories for Tab 1: Needs & Buy/Sell
 export const CLASSIFIED_CATEGORIES = [
   "Property Rental",
-  "Plot / Real Estate",
+  "Plots & Real Estate",
   "Used Vehicles",
   "Electronics & Mobiles",
   "Household Goods",
@@ -51,11 +51,11 @@ export const SERVICE_CATEGORIES = [
   "Electrician",
   "Plumber",
   "AC & Fridge Repair",
-  "Mechanic (Bike/Car)",
+  "Mechanic (Bike & Car)",
   "Carpenter",
   "Painter",
   "Cleaning & Housekeeping",
-  "Caterer / Cooking",
+  "Catering & Cooking",
   "Driver",
   "General Technician",
 ] as const;
@@ -94,7 +94,7 @@ export type OfferCategory = typeof OFFER_CATEGORIES[number];
 export const CATEGORY_ILLUSTRATIONS: Record<string, string> = {
   // Classifieds
   "Property Rental": "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&auto=format&fit=crop",
-  "Plot / Real Estate": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&auto=format&fit=crop",
+  "Plots & Real Estate": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&auto=format&fit=crop",
   "Used Vehicles": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600&auto=format&fit=crop",
   "Electronics & Mobiles": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&auto=format&fit=crop",
   "Household Goods": "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=600&auto=format&fit=crop",
@@ -105,11 +105,11 @@ export const CATEGORY_ILLUSTRATIONS: Record<string, string> = {
   "Electrician": "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=600&auto=format&fit=crop",
   "Plumber": "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=600&auto=format&fit=crop",
   "AC & Fridge Repair": "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=600&auto=format&fit=crop",
-  "Mechanic (Bike/Car)": "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=600&auto=format&fit=crop",
+  "Mechanic (Bike & Car)": "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=600&auto=format&fit=crop",
   "Carpenter": "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?w=600&auto=format&fit=crop",
   "Painter": "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=600&auto=format&fit=crop",
   "Cleaning & Housekeeping": "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600&auto=format&fit=crop",
-  "Caterer / Cooking": "https://images.unsplash.com/photo-1555244162-803834f70033?w=600&auto=format&fit=crop",
+  "Catering & Cooking": "https://images.unsplash.com/photo-1555244162-803834f70033?w=600&auto=format&fit=crop",
   "Driver": "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=600&auto=format&fit=crop",
   "General Technician": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600&auto=format&fit=crop",
 

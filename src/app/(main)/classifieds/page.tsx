@@ -32,7 +32,7 @@ function ClassifiedsPageContent() {
   const searchQuery = searchParams.get("query") || "";
 
   const CATEGORY_STOCK_IMAGES: Record<string, string> = {
-    "Plot / Real Estate": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=400&q=80",
+    "Plots & Real Estate": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=400&q=80",
     "Property Rental": "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=400&q=80",
     "Used Vehicles": "https://images.unsplash.com/photo-1549399542-7e3f8b79c341?auto=format&fit=crop&w=400&q=80",
     "Electronics & Mobiles": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=400&q=80",
@@ -43,7 +43,7 @@ function ClassifiedsPageContent() {
   };
 
   const CATEGORY_SAMPLE_POSTS: Record<string, { title: string; price: string; description: string }> = {
-    "Plot / Real Estate": {
+    "Plots & Real Estate": {
       title: "Premium 2400 sq.ft Residential Plot for Sale",
       price: "1800000",
       description: "Direct sale of high-potential housing plot near Vallam. Clean title deed, DTCP approved layout, 30-feet wide road connectivity, water pipeline ready, and immediate constructibility. Price negotiable for cash buyers."
@@ -112,7 +112,7 @@ function ClassifiedsPageContent() {
 
   const getPreviewIcon = () => {
     switch (selectedCategory) {
-      case "Plot / Real Estate": return <Compass className="w-3.5 h-3.5 text-slate-500" />;
+      case "Plots & Real Estate": return <Compass className="w-3.5 h-3.5 text-slate-500" />;
       case "Property Rental": return <Home className="w-3.5 h-3.5 text-slate-500" />;
       case "Electronics & Mobiles": return <Tv className="w-3.5 h-3.5 text-slate-500" />;
       case "Used Vehicles": return <Car className="w-3.5 h-3.5 text-slate-500" />;
@@ -191,7 +191,7 @@ function ClassifiedsPageContent() {
       title: "2400 Sqft CMDA Plot for Sale",
       raw_text: "2400 Sqft CMDA Plot for Sale",
       description: "DTCP approved residential plot with 30ft tar road frontage and Kaveri water line connection ready near Vallam.",
-      category: "Plot / Real Estate",
+      category: "Plots & Real Estate",
       area_tag: "Vallam, Thanjavur",
       price: "2450000",
       phone: "9876543210",

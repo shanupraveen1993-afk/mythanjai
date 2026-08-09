@@ -122,8 +122,8 @@ function MainLayoutContent({
 
   return (
     <div className={`w-full flex flex-col relative bg-white font-sans ${pathname === "/" && !profile?.isVerified ? "h-dvh max-h-dvh overflow-hidden md:h-auto md:max-h-none md:min-h-screen md:overflow-visible" : "min-h-screen"}`}>
-      {/* Top Header Section (Hidden on Mobile Landing Onboarding Screen for Maximum Height) */}
-      <div className={pathname === "/" ? "hidden sm:block" : "block"}>
+      {/* Top Header Section */}
+      <div className="block">
         <TopHeader
           selectedArea={selectedArea}
           onAreaChange={handleAreaChange}

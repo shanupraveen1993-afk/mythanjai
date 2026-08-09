@@ -128,7 +128,7 @@ function HomeLandingPageContent() {
             <div className="flex overflow-x-auto snap-x scrollbar-none pb-2 gap-4 md:grid md:grid-cols-3 md:overflow-visible">
               {/* Card 1: Popular */}
               <div 
-                onClick={() => router.push("/sell?category=Plot%20%2f%20Real%20Estate&post=cmda_plot")}
+                onClick={() => router.push("/sell?category=Plots%20%26%20Real%20Estate&post=cmda_plot")}
                 className="shrink-0 w-[285px] sm:w-[330px] md:w-auto snap-start bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
               >
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
@@ -805,10 +805,10 @@ function HomeLandingPageContent() {
               </div>
               <div className="flex flex-col gap-2">
                 <button 
-                  onClick={() => router.push("/sell?category=Plot%20%2f%20Real%20Estate")}
+                  onClick={() => router.push("/sell?category=Plots%20%26%20Real%20Estate")}
                   className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
                 >
-                  <span>Plot / Real Estate</span>
+                  <span>Plots & Real Estate</span>
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </button>
                 <button 

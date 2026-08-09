@@ -406,7 +406,7 @@ export default function CreatePostModal({
 
   const CATEGORY_SAMPLE_POSTS: Record<string, { title: string; price?: string; description?: string; experience?: string; hours?: string; address?: string; landmark?: string; offerTitle?: string; offerDesc?: string }> = {
     // Classifieds
-    "Plot / Real Estate": {
+    "Plots & Real Estate": {
       title: "1200 Sq.Ft Premium Corner Plot for Sale in Srinivasapuram",
       price: "1850000",
       description: "Excellent DTCP approved residential corner plot available for sale in a fast-developing neighborhood. North-facing, 30 feet wide road access. Located just 1.5 km from the main road, with excellent groundwater source and compound wall. Clear titles ready for registration. Price negotiable for immediate buyers."
@@ -534,7 +534,7 @@ export default function CreatePostModal({
 
   const CATEGORY_STOCK_IMAGES: Record<string, string> = {
     // Classifieds
-    "Plot / Real Estate": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=400&q=80",
+    "Plots & Real Estate": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=400&q=80",
     "Property Rental": "https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=400&q=80",
     "Motor Vehicle": "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=400&q=80",
     "Electronics": "https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=400&q=80",
@@ -567,7 +567,7 @@ export default function CreatePostModal({
   const getPreviewIcon = () => {
     switch (activeCategory) {
       // Classifieds
-      case "Plot / Real Estate": return <Compass className="w-3.5 h-3.5 text-slate-500" />;
+      case "Plots & Real Estate": return <Compass className="w-3.5 h-3.5 text-slate-500" />;
       case "Property Rental": return <Home className="w-3.5 h-3.5 text-slate-500" />;
       case "Electronics": return <Cpu className="w-3.5 h-3.5 text-slate-500" />;
       case "Motor Vehicle": return <Car className="w-3.5 h-3.5 text-slate-500" />;
