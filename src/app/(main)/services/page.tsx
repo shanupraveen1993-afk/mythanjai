@@ -26,7 +26,15 @@ function ServicesPageContent() {
   const { user, profile, loading } = useAuth();
   
   const area = (searchParams.get("area") || "All Areas") as TanjoreLocality | "All Areas";
-  const selectedCategory = searchParams.get("category") || null;
+  const urlCategory = searchParams.get("category") || null;
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(urlCategory);
+
+  useEffect(() => {
+    const cat = searchParams.get("category");
+    if (cat) {
+      setSelectedCategory(cat);
+    }
+  }, [searchParams]);
 
   const CATEGORY_STOCK_IMAGES: Record<string, string> = {
     "Electrician": "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=400&q=80",
@@ -199,16 +207,11 @@ function ServicesPageContent() {
   }, [localServices, services, selectedCategory, targetPostId]);
 
   const handleCategorySelect = (category: string) => {
-    const currentParams = new URLSearchParams(searchParams.toString());
-    currentParams.set("category", category);
-    router.push(`/services?${currentParams.toString()}`);
+    setSelectedCategory(category);
   };
 
   const handleClearCategory = () => {
-    const currentParams = new URLSearchParams(searchParams.toString());
-    currentParams.delete("category");
-    currentParams.delete("create");
-    router.push(`/services?${currentParams.toString()}`);
+    setSelectedCategory(null);
   };
 
   const handleRegister = async (e: React.FormEvent) => {

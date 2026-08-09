@@ -26,8 +26,16 @@ function NeedPageContent() {
   const { user, profile, loading } = useAuth();
   
   const area = (searchParams.get("area") || "All Areas") as TanjoreLocality | "All Areas";
-  const selectedCategory = searchParams.get("category") || null;
+  const urlCategory = searchParams.get("category") || null;
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(urlCategory);
   const searchQuery = searchParams.get("query") || "";
+
+  useEffect(() => {
+    const cat = searchParams.get("category");
+    if (cat) {
+      setSelectedCategory(cat);
+    }
+  }, [searchParams]);
 
   // Dedicated Need Channel (Type = NEED)
   const activeType = "need";
@@ -115,15 +123,11 @@ function NeedPageContent() {
   });
 
   const handleCategorySelect = (category: string) => {
-    const currentParams = new URLSearchParams(searchParams.toString());
-    currentParams.set("category", category);
-    router.push(`/need?${currentParams.toString()}`);
+    setSelectedCategory(category);
   };
 
   const handleClearCategory = () => {
-    const currentParams = new URLSearchParams(searchParams.toString());
-    currentParams.delete("category");
-    router.push(`/need?${currentParams.toString()}`);
+    setSelectedCategory(null);
   };
 
   // Combine real Firestore posts with local test fallback posts

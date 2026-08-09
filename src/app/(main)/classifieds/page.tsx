@@ -27,7 +27,8 @@ function ClassifiedsPageContent() {
   const { user, profile, loading } = useAuth();
   
   const area = (searchParams.get("area") || "All Areas") as TanjoreLocality | "All Areas";
-  const selectedCategory = searchParams.get("category") || null;
+  const urlCategory = searchParams.get("category") || null;
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(urlCategory);
   const searchQuery = searchParams.get("query") || "";
 
   const CATEGORY_STOCK_IMAGES: Record<string, string> = {
@@ -269,17 +270,14 @@ function ClassifiedsPageContent() {
     postType: activeType,
   });
 
+
+
   const handleCategorySelect = (category: string) => {
-    const currentParams = new URLSearchParams(searchParams.toString());
-    currentParams.set("category", category);
-    router.push(`/classifieds?${currentParams.toString()}`);
+    setSelectedCategory(category);
   };
 
   const handleClearCategory = () => {
-    const currentParams = new URLSearchParams(searchParams.toString());
-    currentParams.delete("category");
-    currentParams.delete("create");
-    router.push(`/classifieds?${currentParams.toString()}`);
+    setSelectedCategory(null);
   };
 
   const handlePublish = async (e: React.FormEvent) => {
