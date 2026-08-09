@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useFirestore } from "@/hooks/use-firestore";
 import NeedCard from "@/components/cards/NeedCard";
 import { CLASSIFIED_CATEGORIES, TANJORE_LOCALITIES, TanjoreLocality, CATEGORY_ILLUSTRATIONS } from "@/lib/constants";
@@ -14,11 +14,11 @@ import CreatePostModal from "@/components/modals/CreatePostModal";
 
 export default function NeedClientPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { user, profile, loading } = useAuth();
   
-  const area = (searchParams.get("area") || "All Areas") as TanjoreLocality | "All Areas";
-  const searchQuery = searchParams.get("query") || "";
+  // Pure client-side state — NO URL query params (prevents Vercel RSC crash)
+  const [area] = useState<TanjoreLocality | "All Areas">("All Areas");
+  const searchQuery = "";
   // Pure client-side state — NO URL query params for category (prevents Vercel RSC crash)
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 

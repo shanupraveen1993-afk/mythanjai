@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useFirestore } from "@/hooks/use-firestore";
 import ServiceCard from "@/components/cards/ServiceCard";
 import { SERVICE_CATEGORIES, TANJORE_LOCALITIES, TanjoreLocality, CATEGORY_ILLUSTRATIONS } from "@/lib/constants";
@@ -14,10 +14,10 @@ import CreatePostModal from "@/components/modals/CreatePostModal";
 
 export default function ServicesClientPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { user, profile, loading } = useAuth();
   
-  const area = (searchParams.get("area") || "All Areas") as TanjoreLocality | "All Areas";
+  // Pure client-side state — NO URL query params (prevents Vercel RSC crash)
+  const [area] = useState<TanjoreLocality | "All Areas">("All Areas");
   // Pure client-side state — NO URL query params for category (prevents Vercel RSC crash)
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
@@ -191,7 +191,7 @@ export default function ServicesClientPage() {
     }
   ]);
 
-  const targetPostId = searchParams.get("post");
+  const targetPostId = null;
   useEffect(() => {
     if (targetPostId) {
       const timer = setTimeout(() => {
@@ -205,7 +205,7 @@ export default function ServicesClientPage() {
   }, [targetPostId]);
 
   // Expand form if ?create=true is in URL query parameters
-  const triggerCreate = searchParams.get("create") === "true";
+  const triggerCreate = false;
   useEffect(() => {
     if (triggerCreate) {
       setIsFormOpen(true);
@@ -247,7 +247,7 @@ export default function ServicesClientPage() {
     setSelectedCategory(null);
   };
 
-  const searchQuery = searchParams.get("query") || "";
+  const searchQuery = "";
 
   // Filter services by search query
   const filteredServices = React.useMemo(() => {

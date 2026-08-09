@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import nextDynamic from "next/dynamic";
 import Image from "next/image";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useFirestore } from "@/hooks/use-firestore";
 import ShopCard from "@/components/cards/ShopCard";
 import { SHOP_CATEGORIES, TANJORE_LOCALITIES, TanjoreLocality, CATEGORY_ILLUSTRATIONS } from "@/lib/constants";
@@ -50,24 +50,17 @@ const LeafletMap = nextDynamic(() => import("@/components/maps/LeafletMap"), {
 
 export default function ShopsClientPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { user, profile, loading } = useAuth();
   
-  const area = (searchParams.get("area") || "All Areas") as TanjoreLocality | "All Areas";
+  // Pure client-side state — NO URL query params (prevents Vercel RSC crash)
+  const [area] = useState<TanjoreLocality | "All Areas">("All Areas");
   // Pure client-side state — NO URL query params for category (prevents Vercel RSC crash)
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
+  // No map param from URL — static null
+  const mapShop = null;
 
-  const rawMapParam = searchParams.get("map");
-  const mapShop = React.useMemo(() => {
-    if (!rawMapParam) return null;
-    try {
-      return JSON.parse(decodeURIComponent(rawMapParam)) as ShopPost;
-    } catch {
-      return null;
-    }
-  }, [rawMapParam]);
 
   const CATEGORY_STOCK_IMAGES: Record<string, string> = {
     "Cafe & Restaurant": "https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=400&q=80",
@@ -163,7 +156,7 @@ export default function ShopsClientPage() {
     setSelectedCategory(null);
   };
 
-  const searchQuery = searchParams.get("query") || "";
+  const searchQuery = "";
 
   // Filter shops by search query
   const filteredShops = React.useMemo(() => {
