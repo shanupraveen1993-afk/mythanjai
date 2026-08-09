@@ -6,7 +6,7 @@ import { useFirestore } from "@/hooks/use-firestore";
 import NeedCard from "@/components/cards/NeedCard";
 import { CLASSIFIED_CATEGORIES, TANJORE_LOCALITIES, TanjoreLocality, CATEGORY_ILLUSTRATIONS } from "@/lib/constants";
 import { NeedOrSalePost } from "@/types";
-import { Search, Plus, ChevronUp, ChevronDown, Loader2, ArrowRight, ArrowLeft, Tag, FileText, Upload, Calendar, Share2, Home, Car, Tv, Compass, Check, MapPin } from "lucide-react";
+import { Search, Plus, ChevronUp, ChevronDown, Loader2, ArrowRight, ArrowLeft, Tag, FileText, Upload, Calendar, Share2, Home, Car, Tv, Compass, Check, MapPin, ShoppingBag } from "lucide-react";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import confetti from "canvas-confetti";
@@ -103,18 +103,21 @@ function NeedPageContent() {
   const handleCategorySelect = (category?: string | null) => {
     if (category && typeof category === "string") {
       setSelectedCategory(category);
-      const params = new URLSearchParams(searchParams.toString());
-      params.set("category", category);
-      router.push(`/need?${params.toString()}`);
+      if (typeof window !== "undefined") {
+        const url = new URL(window.location.href);
+        url.searchParams.set("category", category);
+        window.history.pushState({}, "", url.pathname + url.search);
+      }
     }
   };
 
   const handleClearCategory = () => {
     setSelectedCategory(null);
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete("category");
-    const q = params.toString();
-    router.push(q ? `/need?${q}` : "/need");
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("category");
+      window.history.pushState({}, "", url.pathname + (url.search ? url.search : ""));
+    }
   };
 
   const allPosts = React.useMemo(() => {
@@ -192,26 +195,31 @@ function NeedPageContent() {
         <div className="flex flex-col gap-6">
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2.5 sm:gap-3.5">
             {CLASSIFIED_CATEGORIES.map((cat) => {
-              const illustration = CATEGORY_ILLUSTRATIONS[cat] || "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=600&auto=format&fit=crop";
+              const getVectorIcon = (categoryName: string) => {
+                switch (categoryName) {
+                  case "Property Rental": return <Home className="w-6 h-6 text-emerald-600" />;
+                  case "Plots & Real Estate": return <Compass className="w-6 h-6 text-blue-600" />;
+                  case "Used Vehicles": return <Car className="w-6 h-6 text-amber-600" />;
+                  case "Electronics & Mobiles": return <Tv className="w-6 h-6 text-indigo-600" />;
+                  case "Household Goods": return <ShoppingBag className="w-6 h-6 text-rose-600" />;
+                  default: return <Tag className="w-6 h-6 text-slate-600" />;
+                }
+              };
+
               return (
                 <button
                   key={cat}
                   type="button"
                   onClick={() => handleCategorySelect(cat)}
-                  className="bg-white border border-slate-200 hover:border-slate-400 p-2 sm:p-3 rounded-2xl shadow-2xs text-left transition-all active:scale-[0.98] hover:shadow-md flex flex-col gap-2 group w-full cursor-pointer overflow-hidden justify-between"
+                  className="bg-white border border-slate-200 hover:border-slate-300 p-2.5 sm:p-3 rounded-2xl shadow-2xs text-left transition-all active:scale-[0.98] hover:shadow-xs flex flex-col gap-2.5 group w-full cursor-pointer overflow-hidden justify-between items-center"
                 >
-                  <div className="w-full h-16 sm:h-24 rounded-xl overflow-hidden relative bg-slate-100 border border-slate-100">
-                    <img
-                      src={illustration}
-                      alt={cat}
-                      className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-300"
-                    />
+                  <div className="w-full h-12 sm:h-16 rounded-xl flex items-center justify-center bg-slate-100/80 group-hover:bg-slate-200/80 transition-colors border border-slate-200/50">
+                    {getVectorIcon(cat)}
                   </div>
-                  <div>
+                  <div className="w-full text-center">
                     <span className="text-[11px] sm:text-xs font-black text-slate-900 block group-hover:text-slate-700 transition-colors line-clamp-1">
                       {cat}
                     </span>
-                    <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 block mt-0.5">Explore →</span>
                   </div>
                 </button>
               );
@@ -220,8 +228,8 @@ function NeedPageContent() {
 
           <div className="flex flex-col gap-3 pt-2 border-t border-slate-200/80">
             <div className="flex items-center justify-between">
-              <h2 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight">
-                Recent Buyer & Requirement Listings
+              <h2 className="font-heading font-black text-sm sm:text-base text-slate-900 tracking-tight">
+                Recent Requirements
               </h2>
             </div>
             <div className="flex overflow-x-auto snap-x scrollbar-none gap-4 pb-2">

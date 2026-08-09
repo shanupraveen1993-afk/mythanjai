@@ -8,7 +8,7 @@ import { useFirestore } from "@/hooks/use-firestore";
 import ShopCard from "@/components/cards/ShopCard";
 import { SHOP_CATEGORIES, TANJORE_LOCALITIES, TanjoreLocality, CATEGORY_ILLUSTRATIONS } from "@/lib/constants";
 import { ShopPost } from "@/types";
-import { Store, Plus, ChevronDown, ChevronUp, Loader2, ArrowRight, ArrowLeft, Upload, Compass, X, MapPin, Sparkles, Check, Calendar, Share2, MessageSquare, Video, Search } from "lucide-react";
+import { Store, Plus, ChevronDown, ChevronUp, Loader2, ArrowRight, ArrowLeft, Upload, Compass, X, MapPin, Sparkles, Check, Calendar, Share2, MessageSquare, Video, Search, Utensils, ShoppingBag, Shirt, ShieldCheck, Tv, Car } from "lucide-react";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import confetti from "canvas-confetti";
@@ -62,7 +62,16 @@ function ShopsPageContent() {
   const { user, profile, loading } = useAuth();
   
   const area = (searchParams.get("area") || "All Areas") as TanjoreLocality | "All Areas";
-  const selectedCategory = searchParams.get("category") || null;
+  const urlCategory = searchParams.get("category") || null;
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(urlCategory);
+
+  useEffect(() => {
+    const cat = searchParams.get("category");
+    if (cat) {
+      setSelectedCategory(cat);
+    }
+  }, [searchParams]);
+
   const mapShop = searchParams.get("map") ? JSON.parse(decodeURIComponent(searchParams.get("map") || "")) : null;
 
   const CATEGORY_STOCK_IMAGES: Record<string, string> = {
@@ -246,17 +255,24 @@ function ShopsPageContent() {
   }, [localShops, shops, selectedCategory]);
 
 
-  const handleCategorySelect = (category: string) => {
-    const currentParams = new URLSearchParams(searchParams.toString());
-    currentParams.set("category", category);
-    router.push(`/shops?${currentParams.toString()}`);
+  const handleCategorySelect = (category?: string | null) => {
+    if (category && typeof category === "string") {
+      setSelectedCategory(category);
+      if (typeof window !== "undefined") {
+        const url = new URL(window.location.href);
+        url.searchParams.set("category", category);
+        window.history.pushState({}, "", url.pathname + url.search);
+      }
+    }
   };
 
   const handleClearCategory = () => {
-    const currentParams = new URLSearchParams(searchParams.toString());
-    currentParams.delete("category");
-    currentParams.delete("create");
-    router.push(`/shops?${currentParams.toString()}`);
+    setSelectedCategory(null);
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("category");
+      window.history.pushState({}, "", url.pathname + (url.search ? url.search : ""));
+    }
   };
 
   const handleMapToggle = (shop: ShopPost) => {
@@ -564,26 +580,33 @@ function ShopsPageContent() {
           {/* 3-Column Compact Category Selection Grid */}
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2.5 sm:gap-3.5">
             {SHOP_CATEGORIES.map((cat) => {
-              const illustration = CATEGORY_ILLUSTRATIONS[cat] || "https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&auto=format&fit=crop";
+              const getVectorIcon = (categoryName: string) => {
+                switch (categoryName) {
+                  case "Cafe & Restaurant": return <Utensils className="w-6 h-6 text-red-600" />;
+                  case "Grocery & Supermarket": return <ShoppingBag className="w-6 h-6 text-emerald-600" />;
+                  case "Textiles & Readymades": return <Shirt className="w-6 h-6 text-purple-600" />;
+                  case "Gold & Jewelry": return <Sparkles className="w-6 h-6 text-yellow-600" />;
+                  case "Medical & Pharmacy": return <ShieldCheck className="w-6 h-6 text-emerald-600" />;
+                  case "Electronics & Mobiles": return <Tv className="w-6 h-6 text-indigo-600" />;
+                  case "Automobile Showroom": return <Car className="w-6 h-6 text-amber-600" />;
+                  default: return <Store className="w-6 h-6 text-slate-600" />;
+                }
+              };
+
               return (
                 <button
                   key={cat}
                   type="button"
                   onClick={() => handleCategorySelect(cat)}
-                  className="bg-white border border-slate-200 hover:border-slate-400 p-2 sm:p-3 rounded-2xl shadow-2xs text-left transition-all active:scale-[0.98] hover:shadow-md flex flex-col gap-2 group w-full cursor-pointer overflow-hidden justify-between"
+                  className="bg-white border border-slate-200 hover:border-slate-300 p-2.5 sm:p-3 rounded-2xl shadow-2xs text-left transition-all active:scale-[0.98] hover:shadow-xs flex flex-col gap-2.5 group w-full cursor-pointer overflow-hidden justify-between items-center"
                 >
-                  <div className="w-full h-16 sm:h-24 rounded-xl overflow-hidden relative bg-slate-100 border border-slate-100">
-                    <img
-                      src={illustration}
-                      alt={cat}
-                      className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-300"
-                    />
+                  <div className="w-full h-12 sm:h-16 rounded-xl flex items-center justify-center bg-slate-100/80 group-hover:bg-slate-200/80 transition-colors border border-slate-200/50">
+                    {getVectorIcon(cat)}
                   </div>
-                  <div>
+                  <div className="w-full text-center">
                     <span className="text-[11px] sm:text-xs font-black text-slate-900 block group-hover:text-slate-700 transition-colors line-clamp-1">
                       {cat}
                     </span>
-                    <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 block mt-0.5">Explore →</span>
                   </div>
                 </button>
               );
@@ -593,10 +616,9 @@ function ShopsPageContent() {
           {/* Horizontal Scrollable Preview Feed of Recent Stores & Offers */}
           <div className="flex flex-col gap-3 pt-2 border-t border-slate-200/80">
             <div className="flex items-center justify-between">
-              <h2 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight">
-                Recent Store Offers & Deals
+              <h2 className="font-heading font-black text-sm sm:text-base text-slate-900 tracking-tight">
+                Recent Local Offers
               </h2>
-              <span className="text-xs font-bold text-slate-500">Click card to view category →</span>
             </div>
             <div className="flex overflow-x-auto snap-x scrollbar-none gap-4 pb-2">
               {(localShops.length > 0 ? localShops : combinedShops).map((shop) => (

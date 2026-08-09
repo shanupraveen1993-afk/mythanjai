@@ -275,18 +275,21 @@ function ClassifiedsPageContent() {
   const handleCategorySelect = (category?: string | null) => {
     if (category && typeof category === "string") {
       setSelectedCategory(category);
-      const params = new URLSearchParams(searchParams.toString());
-      params.set("category", category);
-      router.push(`/classifieds?${params.toString()}`);
+      if (typeof window !== "undefined") {
+        const url = new URL(window.location.href);
+        url.searchParams.set("category", category);
+        window.history.pushState({}, "", url.pathname + url.search);
+      }
     }
   };
 
   const handleClearCategory = () => {
     setSelectedCategory(null);
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete("category");
-    const q = params.toString();
-    router.push(q ? `/classifieds?${q}` : "/classifieds");
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("category");
+      window.history.pushState({}, "", url.pathname + (url.search ? url.search : ""));
+    }
   };
 
   const handlePublish = async (e: React.FormEvent) => {
@@ -485,29 +488,32 @@ function ClassifiedsPageContent() {
             </p>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2.5 sm:gap-3.5">
             {CLASSIFIED_CATEGORIES.map((cat) => {
-              const illustration = CATEGORY_ILLUSTRATIONS[cat] || "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=600&auto=format&fit=crop";
+              const getVectorIcon = (categoryName: string) => {
+                switch (categoryName) {
+                  case "Property Rental": return <Home className="w-6 h-6 text-emerald-600" />;
+                  case "Plots & Real Estate": return <Compass className="w-6 h-6 text-blue-600" />;
+                  case "Used Vehicles": return <Car className="w-6 h-6 text-amber-600" />;
+                  case "Electronics & Mobiles": return <Tv className="w-6 h-6 text-indigo-600" />;
+                  case "Household Goods": return <Tag className="w-6 h-6 text-rose-600" />;
+                  default: return <Tag className="w-6 h-6 text-slate-600" />;
+                }
+              };
+
               return (
                 <button
                   key={cat}
+                  type="button"
                   onClick={() => handleCategorySelect(cat)}
-                  className="bg-white border border-slate-200 hover:border-yellow-500/60 p-3.5 rounded-2xl shadow-xs text-left transition-all active:scale-[0.98] hover:shadow-lg flex flex-col gap-3 group w-full cursor-pointer overflow-hidden aspect-square justify-between"
+                  className="bg-white border border-slate-200 hover:border-slate-300 p-2.5 sm:p-3 rounded-2xl shadow-2xs text-left transition-all active:scale-[0.98] hover:shadow-xs flex flex-col gap-2.5 group w-full cursor-pointer overflow-hidden justify-between items-center"
                 >
-                  <div className="w-full h-32 rounded-xl overflow-hidden relative bg-slate-100 border border-slate-100">
-                    <img
-                      src={illustration}
-                      alt={cat}
-                      className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-300"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/40 via-transparent to-transparent" />
+                  <div className="w-full h-12 sm:h-16 rounded-xl flex items-center justify-center bg-slate-100/80 group-hover:bg-slate-200/80 transition-colors border border-slate-200/50">
+                    {getVectorIcon(cat)}
                   </div>
-                  <div>
-                    <span className="text-xs font-black text-slate-900 block group-hover:text-yellow-750 transition-colors line-clamp-1">
+                  <div className="w-full text-center">
+                    <span className="text-[11px] sm:text-xs font-black text-slate-900 block group-hover:text-slate-700 transition-colors line-clamp-1">
                       {cat}
-                    </span>
-                    <span className="text-[10px] text-slate-500 block leading-tight font-bold mt-0.5 line-clamp-1">
-                      Explore & Post
                     </span>
                   </div>
                 </button>

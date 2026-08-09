@@ -6,7 +6,7 @@ import { useFirestore } from "@/hooks/use-firestore";
 import ServiceCard from "@/components/cards/ServiceCard";
 import { SERVICE_CATEGORIES, TANJORE_LOCALITIES, TanjoreLocality, CATEGORY_ILLUSTRATIONS } from "@/lib/constants";
 import { ServiceProviderPost } from "@/types";
-import { Wrench, Plus, ChevronDown, ChevronUp, Loader2, ArrowRight, ArrowLeft, Upload, ShieldCheck, Tag, Calendar, Share2, Check, Zap, Droplet, Wind, Hammer, MapPin, MessageSquare, Search } from "lucide-react";
+import { Wrench, Plus, ChevronDown, ChevronUp, Loader2, ArrowRight, ArrowLeft, Upload, ShieldCheck, Tag, Calendar, Share2, Check, Zap, Droplet, Wind, Hammer, MapPin, MessageSquare, Search, Utensils } from "lucide-react";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import confetti from "canvas-confetti";
@@ -209,18 +209,21 @@ function ServicesPageContent() {
   const handleCategorySelect = (category?: string | null) => {
     if (category && typeof category === "string") {
       setSelectedCategory(category);
-      const params = new URLSearchParams(searchParams.toString());
-      params.set("category", category);
-      router.push(`/services?${params.toString()}`);
+      if (typeof window !== "undefined") {
+        const url = new URL(window.location.href);
+        url.searchParams.set("category", category);
+        window.history.pushState({}, "", url.pathname + url.search);
+      }
     }
   };
 
   const handleClearCategory = () => {
     setSelectedCategory(null);
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete("category");
-    const q = params.toString();
-    router.push(q ? `/services?${q}` : "/services");
+    if (typeof window !== "undefined") {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("category");
+      window.history.pushState({}, "", url.pathname + (url.search ? url.search : ""));
+    }
   };
 
   const handleRegister = async (e: React.FormEvent) => {
@@ -366,25 +369,32 @@ function ServicesPageContent() {
           {/* 3-Column Compact Category Selection Grid */}
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2.5 sm:gap-3.5">
             {SERVICE_CATEGORIES.map((cat) => {
-              const illustration = CATEGORY_ILLUSTRATIONS[cat] || "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=600&auto=format&fit=crop";
+              const getVectorIcon = (categoryName: string) => {
+                switch (categoryName) {
+                  case "Electrician": return <Zap className="w-6 h-6 text-amber-500" />;
+                  case "Plumber": return <Droplet className="w-6 h-6 text-blue-500" />;
+                  case "AC & Fridge Repair": return <Wind className="w-6 h-6 text-cyan-500" />;
+                  case "Mechanic (Bike & Car)": return <Wrench className="w-6 h-6 text-slate-700" />;
+                  case "Carpenter": return <Hammer className="w-6 h-6 text-amber-700" />;
+                  case "Catering & Cooking": return <Utensils className="w-6 h-6 text-orange-600" />;
+                  default: return <Wrench className="w-6 h-6 text-slate-600" />;
+                }
+              };
+
               return (
                 <button
                   key={cat}
+                  type="button"
                   onClick={() => handleCategorySelect(cat)}
-                  className="bg-white border border-slate-200 hover:border-slate-400 p-2 sm:p-3 rounded-2xl shadow-2xs text-left transition-all active:scale-[0.98] hover:shadow-md flex flex-col gap-2 group w-full cursor-pointer overflow-hidden justify-between"
+                  className="bg-white border border-slate-200 hover:border-slate-300 p-2.5 sm:p-3 rounded-2xl shadow-2xs text-left transition-all active:scale-[0.98] hover:shadow-xs flex flex-col gap-2.5 group w-full cursor-pointer overflow-hidden justify-between items-center"
                 >
-                  <div className="w-full h-16 sm:h-24 rounded-xl overflow-hidden relative bg-slate-100 border border-slate-100">
-                    <img
-                      src={illustration}
-                      alt={cat}
-                      className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-300"
-                    />
+                  <div className="w-full h-12 sm:h-16 rounded-xl flex items-center justify-center bg-slate-100/80 group-hover:bg-slate-200/80 transition-colors border border-slate-200/50">
+                    {getVectorIcon(cat)}
                   </div>
-                  <div>
+                  <div className="w-full text-center">
                     <span className="text-[11px] sm:text-xs font-black text-slate-900 block group-hover:text-slate-700 transition-colors line-clamp-1">
                       {cat}
                     </span>
-                    <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 block mt-0.5">Explore →</span>
                   </div>
                 </button>
               );
@@ -394,10 +404,9 @@ function ServicesPageContent() {
           {/* Horizontal Scrollable Preview Feed of Recent Technicians */}
           <div className="flex flex-col gap-3 pt-2 border-t border-slate-200/80">
             <div className="flex items-center justify-between">
-              <h2 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight">
-                Recent Local Skilled Tradesmen
+              <h2 className="font-heading font-black text-sm sm:text-base text-slate-900 tracking-tight">
+                Recent Service Experts
               </h2>
-              <span className="text-xs font-bold text-slate-500">Click card to view trade →</span>
             </div>
             <div className="flex overflow-x-auto snap-x scrollbar-none gap-4 pb-2">
               {combinedServices.map((service) => (
