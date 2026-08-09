@@ -17,11 +17,36 @@ export default function MainLayout({
 }) {
   return (
     <AuthProvider>
-      <React.Suspense fallback={<div className="min-h-screen bg-white flex items-center justify-center font-bold text-xs text-slate-400">Loading Namma Thanjavur...</div>}>
-        <MainLayoutContent>{children}</MainLayoutContent>
-      </React.Suspense>
+      <MainLayoutContent>{children}</MainLayoutContent>
     </AuthProvider>
   );
+}
+
+function SearchParamSync({
+  onAreaSync,
+  onAuthSync,
+}: {
+  onAreaSync: (area: TanjoreLocality | "All Areas") => void;
+  onAuthSync: (isOpen: boolean) => void;
+}) {
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const areaParam = searchParams.get("area");
+    if (areaParam) {
+      onAreaSync(areaParam as TanjoreLocality | "All Areas");
+    } else {
+      onAreaSync("All Areas");
+    }
+
+    if (searchParams.get("auth") === "popup") {
+      onAuthSync(true);
+    } else {
+      onAuthSync(false);
+    }
+  }, [searchParams, onAreaSync, onAuthSync]);
+
+  return null;
 }
 
 function MainLayoutContent({
@@ -31,35 +56,15 @@ function MainLayoutContent({
 }) {
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const { user, profile } = useAuth();
 
   // Selected Area filter state, synced with URL query params
   const [selectedArea, setSelectedArea] = useState<TanjoreLocality | "All Areas">("All Areas");
   const [isSignInOpen, setIsSignInOpen] = useState(false);
 
-  // Sync state from query params on load/update
-  useEffect(() => {
-    const areaParam = searchParams.get("area");
-    if (areaParam) {
-      setSelectedArea(areaParam as TanjoreLocality | "All Areas");
-    } else {
-      setSelectedArea("All Areas");
-    }
-  }, [searchParams]);
-
-  // Sync auth popup state from URL parameters (ONLY opens when explicitly requested by user click)
-  useEffect(() => {
-    if (searchParams.get("auth") === "popup") {
-      setIsSignInOpen(true);
-    } else {
-      setIsSignInOpen(false);
-    }
-  }, [searchParams]);
-
   const handleCloseSignIn = () => {
     setIsSignInOpen(false);
-    const currentParams = new URLSearchParams(searchParams.toString());
+    const currentParams = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
     if (currentParams.has("auth")) {
       currentParams.delete("auth");
       
@@ -89,7 +94,7 @@ function MainLayoutContent({
   };
 
   const handleTabChange = (tab: AppTab) => {
-    const currentParams = new URLSearchParams(searchParams.toString());
+    const currentParams = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
     const area = currentParams.get("area");
     
     let targetPath = "/";
@@ -109,7 +114,7 @@ function MainLayoutContent({
 
   const handleAreaChange = (area: TanjoreLocality | "All Areas") => {
     setSelectedArea(area);
-    const currentParams = new URLSearchParams(searchParams.toString());
+    const currentParams = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
     if (area === "All Areas") {
       currentParams.delete("area");
     } else {
@@ -122,35 +127,45 @@ function MainLayoutContent({
 
   return (
     <div className={`w-full flex flex-col relative bg-white font-sans ${pathname === "/" && !profile?.isVerified ? "h-dvh max-h-dvh overflow-hidden md:h-auto md:max-h-none md:min-h-screen md:overflow-visible" : "min-h-screen"}`}>
+      <React.Suspense fallback={null}>
+        <SearchParamSync onAreaSync={setSelectedArea} onAuthSync={setIsSignInOpen} />
+      </React.Suspense>
+
       {/* Top Header Section */}
       <div className="block">
-        <TopHeader
-          selectedArea={selectedArea}
-          onAreaChange={handleAreaChange}
-          onSignInClick={() => setIsSignInOpen(true)}
-          onPostClick={() => {
-            const currentTab = getActiveTab();
-            let targetPath = "/sell";
-            if (currentTab === "need") targetPath = "/need";
-            else if (currentTab === "services") targetPath = "/services";
-            else if (currentTab === "shops") targetPath = "/shops";
+        <React.Suspense fallback={null}>
+          <TopHeader
+            selectedArea={selectedArea}
+            onAreaChange={handleAreaChange}
+            onSignInClick={() => setIsSignInOpen(true)}
+            onPostClick={() => {
+              const currentTab = getActiveTab();
+              let targetPath = "/sell";
+              if (currentTab === "need") targetPath = "/need";
+              else if (currentTab === "services") targetPath = "/services";
+              else if (currentTab === "shops") targetPath = "/shops";
 
-            const currentParams = new URLSearchParams(searchParams.toString());
+              const currentParams = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
 
-            if (!profile?.isVerified) {
-              setIsSignInOpen(true);
-            } else {
-              currentParams.set("create", "true");
-              router.push(`${targetPath}?${currentParams.toString()}`);
-            }
-          }}
-          activeTab={getActiveTab()}
-          onTabChange={handleTabChange}
-        />
+              if (!profile?.isVerified) {
+                setIsSignInOpen(true);
+              } else {
+                currentParams.set("create", "true");
+                router.push(`${targetPath}?${currentParams.toString()}`);
+              }
+            }}
+            activeTab={getActiveTab()}
+            onTabChange={handleTabChange}
+          />
+        </React.Suspense>
       </div>
 
       {/* Universal Directory Search Bar (Hidden on Home & Profile pages) */}
-      {profile?.isVerified && pathname !== "/" && pathname !== "/profile" && <UniversalSearchBar />}
+      {profile?.isVerified && pathname !== "/" && pathname !== "/profile" && (
+        <React.Suspense fallback={null}>
+          <UniversalSearchBar />
+        </React.Suspense>
+      )}
 
       {/* Main Content Panel with Container Margins */}
       <main className={`flex-1 w-full max-w-7xl mx-auto bg-white ${pathname === "/" && !profile?.isVerified ? "px-0 py-0 pb-0" : "px-4 sm:px-6 lg:px-8 pb-20 md:pb-8"}`}>

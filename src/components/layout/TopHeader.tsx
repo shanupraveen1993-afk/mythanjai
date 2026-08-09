@@ -51,7 +51,7 @@ export default function TopHeader({
 
   const handleBackClick = () => {
     if (currentCategory) {
-      const params = new URLSearchParams(searchParams.toString());
+      const params = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
       params.delete("category");
       const queryString = params.toString();
       router.push(queryString ? `${pathname}?${queryString}` : pathname);
