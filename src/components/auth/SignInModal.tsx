@@ -25,14 +25,6 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
   useEffect(() => {
     if (profile?.isVerified) {
       onClose();
-      if (typeof window !== "undefined") {
-        const params = new URLSearchParams(window.location.search);
-        if (params.get("auth")) {
-          params.delete("auth");
-          const newSearch = params.toString() ? `?${params.toString()}` : "";
-          window.history.replaceState(null, "", `${window.location.pathname}${newSearch}`);
-        }
-      }
       const redirect = searchParams.get("redirect");
       if (redirect) {
         router.push(redirect);

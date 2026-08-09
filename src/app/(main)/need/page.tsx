@@ -103,21 +103,18 @@ function NeedPageContent() {
   const handleCategorySelect = (category?: string | null) => {
     if (category && typeof category === "string") {
       setSelectedCategory(category);
-      if (typeof window !== "undefined") {
-        const url = new URL(window.location.href);
-        url.searchParams.set("category", category);
-        window.history.pushState({}, "", url.pathname + url.search);
-      }
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("category", category);
+      router.replace(`/need?${params.toString()}`, { scroll: false });
     }
   };
 
   const handleClearCategory = () => {
     setSelectedCategory(null);
-    if (typeof window !== "undefined") {
-      const url = new URL(window.location.href);
-      url.searchParams.delete("category");
-      window.history.pushState({}, "", url.pathname + (url.search ? url.search : ""));
-    }
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("category");
+    const queryString = params.toString();
+    router.replace(queryString ? `/need?${queryString}` : "/need", { scroll: false });
   };
 
   const allPosts = React.useMemo(() => {
