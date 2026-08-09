@@ -4,7 +4,7 @@ import React from "react";
 import { MapPin, Plus, User, ShieldCheck, ArrowLeft, Check } from "lucide-react";
 import { TANJORE_LOCALITIES, TanjoreLocality } from "@/lib/constants";
 import { AppTab } from "./BottomTabBar";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 
 interface TopHeaderProps {
@@ -33,7 +33,11 @@ export default function TopHeader({
 
   const phoneDisplay = profile?.phone ? `+${profile.phone}` : "+919994837342";
 
+  const searchParams = useSearchParams();
+  const currentCategory = searchParams.get("category");
+
   const getSectionTitle = () => {
+    if (currentCategory) return currentCategory;
     if (pathname === "/sell") return "Sell";
     if (pathname === "/need") return "Requirements";
     if (pathname === "/services") return "Services";
@@ -45,33 +49,44 @@ export default function TopHeader({
 
   const sectionTitle = getSectionTitle();
 
+  const handleBackClick = () => {
+    if (currentCategory) {
+      const params = new URLSearchParams(searchParams.toString());
+      params.delete("category");
+      const queryString = params.toString();
+      router.push(queryString ? `${pathname}?${queryString}` : pathname);
+    } else {
+      router.push("/");
+    }
+  };
+
   return (
     <header className="sticky top-0 z-40 bg-white border-b border-slate-200/90 shadow-xs">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between gap-3">
         
-        {/* Left: Branding Logo or Section Back Navigation */}
+        {/* Left: Branding Logo (Home Only) OR Back-Heading Button (Subpages Only) */}
         <div className="flex items-center gap-3">
-          <div 
-            onClick={() => onTabChange?.("home")}
-            className="flex items-center gap-2 cursor-pointer select-none shrink-0"
-          >
-            <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-9 h-9 sm:w-10 sm:h-10 object-contain shrink-0 rounded-xl border-0 shadow-none" />
-            <div className="hidden sm:flex items-center gap-0.5">
-              <span className="font-heading font-black tracking-tight text-slate-900 text-xs sm:text-sm uppercase">
-                namma thanjai
-              </span>
-              <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 ml-0.5" />
+          {pathname === "/" ? (
+            <div 
+              onClick={() => onTabChange?.("home")}
+              className="flex items-center gap-2 cursor-pointer select-none shrink-0"
+            >
+              <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-9 h-9 sm:w-10 sm:h-10 object-contain shrink-0 rounded-xl border-0 shadow-none" />
+              <div className="flex items-center gap-0.5">
+                <span className="font-heading font-black tracking-tight text-slate-900 text-xs sm:text-sm uppercase">
+                  namma thanjai
+                </span>
+                <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 ml-0.5" />
+              </div>
             </div>
-          </div>
-
-          {/* Mobile App Style Section Header Navigation (e.g. ← Sell, ← Requirements) */}
-          {pathname !== "/" && sectionTitle && (
+          ) : (
             <button
-              onClick={() => router.push("/")}
-              className="flex items-center gap-1.5 font-heading font-black text-sm text-slate-900 hover:text-slate-700 cursor-pointer bg-slate-100/80 hover:bg-slate-200/80 px-2.5 py-1 rounded-xl border border-slate-250 transition-colors"
+              type="button"
+              onClick={handleBackClick}
+              className="flex items-center gap-2 font-heading font-black text-xs sm:text-sm text-slate-900 hover:text-slate-700 cursor-pointer bg-slate-100/90 hover:bg-slate-200/90 px-3 py-1.5 rounded-xl border border-slate-250 transition-colors shadow-2xs"
             >
               <ArrowLeft className="w-4 h-4 text-slate-900 stroke-[2.5]" />
-              <span className="uppercase tracking-tight">{sectionTitle}</span>
+              <span className="uppercase tracking-tight truncate max-w-[180px] sm:max-w-[280px]">{sectionTitle}</span>
             </button>
           )}
         </div>

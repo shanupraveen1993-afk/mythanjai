@@ -189,23 +189,37 @@ function SellPageContent() {
         defaultCategory={selectedCategory || "Plot / Real Estate"}
       />
 
-      {/* TOP CONTROLS & POST SALE ACTION BAR */}
-      <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 px-3.5 border border-slate-200 rounded-2xl shadow-2xs flex items-center justify-between gap-2">
-        {selectedCategory ? (
-          <button
-            onClick={handleClearCategory}
-            className="flex items-center gap-1.5 font-black text-xs text-slate-800 hover:text-slate-950 bg-slate-100 hover:bg-slate-200 px-3 py-2 rounded-xl border border-slate-250 cursor-pointer transition-colors shrink-0"
-          >
-            <ArrowLeft className="w-3.5 h-3.5 text-slate-900" />
-            <span className="truncate max-w-[120px] sm:max-w-none">{selectedCategory}</span>
-          </button>
-        ) : (
-          <span className="font-heading font-black text-xs sm:text-sm text-slate-800 uppercase tracking-tight">
-            Sell Categories
-          </span>
-        )}
+      {/* HERO BANNER: Shown ONLY on Main Category Overview Page */}
+      {!selectedCategory && (
+        <div className="relative w-full min-h-[190px] sm:min-h-[210px] rounded-3xl overflow-hidden shadow-md border border-slate-800 bg-slate-950 text-white flex items-center p-6 sm:p-8">
+          <img 
+            src="/thanjavur_house_rental.png" 
+            alt="Sell Listings Banner" 
+            className="absolute right-0 top-0 h-full w-full sm:w-3/5 object-cover opacity-50 pointer-events-none"
+          />
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent pointer-events-none" />
+          
+          <div className="relative z-10 max-w-xl flex flex-col gap-2">
+            <span className="text-[10px] font-black uppercase tracking-widest text-emerald-400 bg-emerald-400/10 border border-emerald-400/30 px-3 py-1 rounded-full w-fit">
+              Verified Local Marketplace
+            </span>
+            <h1 className="font-heading font-black text-2xl sm:text-3xl text-white tracking-tight uppercase leading-tight">
+              Buy & Sell In Thanjavur
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-300 font-medium leading-relaxed">
+              Explore plots for sale, house rentals, used bikes, cars, and electronics directly from local owners.
+            </p>
+          </div>
+        </div>
+      )}
 
-        <div className="flex items-center gap-2">
+      {/* CONTROLS BAR ABOVE LISTING: ONLY Sort By & Post Button */}
+      <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 px-3.5 border border-slate-200 rounded-2xl shadow-2xs flex items-center justify-between gap-2">
+        <span className="font-heading font-black text-xs sm:text-sm text-slate-800 uppercase tracking-tight">
+          {selectedCategory || "Sell Categories"}
+        </span>
+
+        <div className="flex items-center gap-2 ml-auto">
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as any)}
@@ -217,6 +231,7 @@ function SellPageContent() {
           </select>
 
           <button
+            type="button"
             onClick={() => setIsFormOpen(true)}
             className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-3.5 sm:px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-2xs shrink-0"
           >
