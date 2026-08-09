@@ -55,8 +55,8 @@ export default function ServiceCard({ post }: ServiceCardProps) {
     <div className="bg-white border border-slate-200/95 rounded-2xl p-4 shadow-xs flex flex-col gap-3.5 transition-all active:scale-[0.99] hover:shadow-sm w-full">
       {/* Top Section: Name & Category Badge */}
       <div className="flex items-start justify-between">
-        <div>
-          <h3 className="font-heading font-extrabold text-sm text-slate-800">
+        <div className="min-w-0 flex-1">
+          <h3 className="font-heading font-extrabold text-sm text-slate-800 line-clamp-1 truncate">
             {post.name}
           </h3>
           <span className="inline-flex items-center gap-1 mt-1 bg-yellow-50 border border-yellow-250/60 text-yellow-750 font-bold px-2 py-0.5 rounded-xl text-[9px] uppercase tracking-wide">
@@ -64,24 +64,23 @@ export default function ServiceCard({ post }: ServiceCardProps) {
             <span>{post.skill_category}</span>
           </span>
         </div>
-
       </div>
 
       {/* Experience and Locality */}
       <div className="flex items-center justify-between text-xs text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-200/60 font-bold">
         <div className="flex items-center gap-1">
           <Award className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-          <span>{post.experience || "Expert tradesman"}</span>
+          <span className="truncate max-w-[110px]">{post.experience || "Expert tradesman"}</span>
         </div>
         <div className="flex items-center gap-1">
           <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-          <span>{post.area_tag}</span>
+          <span className="truncate max-w-[100px]">{post.area_tag}</span>
         </div>
       </div>
 
-      {/* Services Description / Bio */}
+      {/* Services Description / Bio (Max 2 lines short) */}
       {post.description && (
-        <p className="text-xs text-slate-500 whitespace-pre-wrap font-sans leading-relaxed bg-slate-50 p-2.5 rounded-xl border border-slate-200/60">
+        <p className="text-xs text-slate-500 font-sans leading-relaxed bg-slate-50 p-2.5 rounded-xl border border-slate-200/60 line-clamp-2">
           {post.description}
         </p>
       )}

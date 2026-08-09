@@ -95,11 +95,11 @@ export default function NeedCard({ post, onShare }: NeedCardProps) {
 
       {/* Title & Price */}
       <div>
-        <h3 className="font-heading font-extrabold text-sm text-slate-800 leading-snug line-clamp-2">
+        <h3 className="font-heading font-extrabold text-sm text-slate-800 leading-snug line-clamp-1 truncate">
           {post.title}
         </h3>
         {post.price !== null && (
-          <div className="text-yellow-600 font-black text-sm mt-1">
+          <div className="text-yellow-600 font-black text-sm mt-0.5">
             ₹{post.price.toLocaleString("en-IN")}
           </div>
         )}
@@ -202,8 +202,8 @@ export default function NeedCard({ post, onShare }: NeedCardProps) {
         </div>
       )}
 
-      {/* Description Body */}
-      <p className="text-xs text-slate-500 whitespace-pre-wrap font-sans leading-relaxed bg-slate-50 p-2.5 rounded-xl border border-slate-200/60">
+      {/* Description Body (Max 2 lines short) */}
+      <p className="text-xs text-slate-500 font-sans leading-relaxed bg-slate-50 p-2.5 rounded-xl border border-slate-200/60 line-clamp-2">
         {post.description || post.raw_text}
       </p>
 

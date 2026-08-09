@@ -93,7 +93,7 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false }: Sho
       {/* Info Details */}
       <div className="p-3.5 flex flex-col gap-2 flex-1">
         <div className="flex items-start justify-between gap-1">
-          <h3 className="font-heading font-extrabold text-sm text-slate-800 leading-snug">
+          <h3 className="font-heading font-extrabold text-sm text-slate-800 leading-snug line-clamp-1 truncate min-w-0 flex-1">
             {post.shop_name}
           </h3>
           {post.is_claimed && (
@@ -103,11 +103,11 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false }: Sho
           )}
         </div>
 
-        {/* Address and Landmark */}
-        <p className="text-[11px] text-slate-500 leading-relaxed font-sans bg-slate-50 p-2.5 rounded-xl border border-slate-200/60">
+        {/* Address and Landmark (Max 2 lines short) */}
+        <p className="text-[11px] text-slate-500 leading-relaxed font-sans bg-slate-50 p-2.5 rounded-xl border border-slate-200/60 line-clamp-2">
           {post.address_text}
           {post.landmark && (
-            <span className="block mt-1 font-semibold text-slate-700">
+            <span className="block mt-0.5 font-semibold text-slate-700 truncate">
               Near: {post.landmark}
             </span>
           )}
@@ -117,7 +117,7 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false }: Sho
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[10px] text-slate-500 font-bold mt-1">
           <div className="flex items-center gap-1">
             <MapPin className="w-3 h-3 text-slate-400" />
-            <span>{post.area_tag}</span>
+            <span className="truncate max-w-[120px]">{post.area_tag}</span>
           </div>
           {post.hours && (
             <div className="flex items-center gap-1">
@@ -130,12 +130,12 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false }: Sho
         {/* Active Promotion Offer Details & Full Reel Caption Content */}
         {post.offer_title && (
           <div className="bg-gradient-to-b from-yellow-50 to-amber-50/40 border border-yellow-250/70 rounded-xl p-3 flex flex-col gap-1.5 mt-1 text-slate-800 font-sans shadow-2xs">
-            <div className="flex items-center gap-1.5 text-yellow-800 font-black text-[11px] uppercase tracking-wider">
-              <Sparkles className="w-3.5 h-3.5 fill-yellow-500 stroke-none" />
-              <span>{post.offer_title}</span>
+            <div className="flex items-center gap-1.5 text-yellow-800 font-black text-[11px] uppercase tracking-wider line-clamp-1 truncate">
+              <Sparkles className="w-3.5 h-3.5 fill-yellow-500 stroke-none shrink-0" />
+              <span className="truncate">{post.offer_title}</span>
             </div>
             {post.offer_description && (
-              <p className="text-[11px] text-slate-600 font-semibold leading-relaxed bg-white/90 p-2.5 rounded-lg border border-yellow-200/50">
+              <p className="text-[11px] text-slate-600 font-semibold leading-relaxed bg-white/90 p-2.5 rounded-lg border border-yellow-200/50 line-clamp-2">
                 {post.offer_description}
               </p>
             )}
