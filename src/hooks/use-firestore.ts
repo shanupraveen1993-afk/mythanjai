@@ -69,9 +69,8 @@ export function useFirestore<T = any>({
         constraints.push(where("type", "==", postType));
       }
 
-      // 4. Default sorting and limits
-      constraints.push(orderBy("created_at", "desc"));
-      constraints.push(limit(50));
+      // 4. Limit results (sorting handled safely client-side to prevent unindexed composite query errors)
+      constraints.push(limit(100));
 
       q = query(colRef, ...constraints);
     } catch (err: any) {
@@ -105,6 +104,13 @@ export function useFirestore<T = any>({
             id: doc.id,
             ...data,
           });
+        });
+
+        // Safe client-side sorting by creation time
+        items.sort((a, b) => {
+          const timeA = a.created_at?.seconds || (a.created_at ? new Date(a.created_at).getTime() / 1000 : 0);
+          const timeB = b.created_at?.seconds || (b.created_at ? new Date(b.created_at).getTime() / 1000 : 0);
+          return timeB - timeA;
         });
 
         setData(items);

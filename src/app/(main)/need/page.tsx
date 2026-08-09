@@ -217,11 +217,15 @@ export default function NeedPage() {
               <h2 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight">
                 Recent Buyer & Requirement Listings
               </h2>
-              <span className="text-xs font-bold text-slate-500">Scroll for more →</span>
+              <span className="text-xs font-bold text-slate-500">Click card to view category →</span>
             </div>
             <div className="flex overflow-x-auto snap-x scrollbar-none gap-4 pb-2">
               {sortedPosts.map((post) => (
-                <div key={post.id} className="shrink-0 w-[280px] sm:w-[320px] snap-start">
+                <div 
+                  key={post.id} 
+                  onClick={() => handleCategorySelect(post.category)}
+                  className="shrink-0 w-[280px] sm:w-[320px] snap-start cursor-pointer hover:scale-[1.01] transition-transform"
+                >
                   <NeedCard post={post} />
                 </div>
               ))}

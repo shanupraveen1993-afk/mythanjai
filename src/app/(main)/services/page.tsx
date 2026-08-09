@@ -375,11 +375,15 @@ export default function ServicesPage() {
               <h2 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight">
                 Recent Local Skilled Tradesmen
               </h2>
-              <span className="text-xs font-bold text-slate-500">Scroll for more →</span>
+              <span className="text-xs font-bold text-slate-500">Click card to view trade →</span>
             </div>
             <div className="flex overflow-x-auto snap-x scrollbar-none gap-4 pb-2">
               {combinedServices.map((service) => (
-                <div key={service.id} className="shrink-0 w-[280px] sm:w-[320px] snap-start">
+                <div 
+                  key={service.id} 
+                  onClick={() => handleCategorySelect(service.skill_category)}
+                  className="shrink-0 w-[280px] sm:w-[320px] snap-start cursor-pointer hover:scale-[1.01] transition-transform"
+                >
                   <ServiceCard post={service} />
                 </div>
               ))}
