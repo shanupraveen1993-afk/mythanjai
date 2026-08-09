@@ -195,7 +195,7 @@ function ServicesPageContent() {
 
   const combinedServices = React.useMemo(() => {
     const activeLocal = localServices.filter(s => !selectedCategory || s.skill_category === selectedCategory);
-    const list = [...activeLocal, ...services];
+    const list = [...activeLocal, ...(services || [])];
     if (targetPostId) {
       list.sort((a, b) => {
         if (a.id === targetPostId) return -1;

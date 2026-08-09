@@ -41,18 +41,10 @@ export function useFirestore<T = any>({
       const colRef = collection(db, collectionName);
       const constraints: any[] = [];
 
-      // 1. Filter by specific user if looking at personal listings on profile tab
+      // Single-field Firestore query (prevents composite index requirements)
       if (onlyUserPosted) {
         constraints.push(where("userId", "==", onlyUserPosted));
-      }
-
-      // 2. Filter by area tag unless "All Areas" is selected
-      if (areaTag !== "All Areas" && !onlyUserPosted) {
-        constraints.push(where("area_tag", "==", areaTag));
-      }
-
-      // 3. Filter by sub-category chip unless "All" is selected
-      if (category && category !== "All") {
+      } else if (category && category !== "All") {
         if (collectionName === "needs_and_sales") {
           constraints.push(where("category", "==", category));
         } else if (collectionName === "services") {
@@ -62,15 +54,14 @@ export function useFirestore<T = any>({
         } else if (collectionName === "offers") {
           constraints.push(where("category", "==", category));
         }
-      }
-
-      // 3.5. Filter by classified postType (need/sale)
-      if (postType && collectionName === "needs_and_sales") {
+      } else if (areaTag !== "All Areas") {
+        constraints.push(where("area_tag", "==", areaTag));
+      } else if (postType && collectionName === "needs_and_sales") {
         constraints.push(where("type", "==", postType));
       }
 
-      // 4. Limit results (sorting handled safely client-side to prevent unindexed composite query errors)
-      constraints.push(limit(100));
+      // Limit results
+      constraints.push(limit(150));
 
       q = query(colRef, ...constraints);
     } catch (err: any) {
@@ -87,22 +78,37 @@ export function useFirestore<T = any>({
         const now = new Date();
 
         snapshot.forEach((doc) => {
-          const data = doc.data();
+          const docData = doc.data();
+
+          // Client-side secondary filters (avoids multi-field Firestore index requirements)
+          if (onlyUserPosted && docData.userId !== onlyUserPosted) return;
+          if (areaTag !== "All Areas" && docData.area_tag !== areaTag) return;
+
+          if (category && category !== "All") {
+            const catField = collectionName === "services" ? docData.skill_category : docData.category;
+            if (catField !== category) return;
+          }
+
+          if (postType && collectionName === "needs_and_sales") {
+            const pType = docData.type?.toLowerCase();
+            const targetType = postType.toLowerCase();
+            if (pType !== targetType && pType !== (targetType === "sale" ? "sell" : "need")) return;
+          }
 
           // 7-day auto-expiry check: filter out expired posts
-          if (data.expires_at) {
-            const expiryDate = data.expires_at.toDate
-              ? data.expires_at.toDate()
-              : new Date(data.expires_at);
+          if (docData.expires_at) {
+            const expiryDate = docData.expires_at.toDate
+              ? docData.expires_at.toDate()
+              : new Date(docData.expires_at);
 
             if (expiryDate <= now) {
-              return; // Skip this document as it is expired
+              return;
             }
           }
 
           items.push({
             id: doc.id,
-            ...data,
+            ...docData,
           });
         });
 
@@ -118,14 +124,16 @@ export function useFirestore<T = any>({
         setError(null);
       },
       (err) => {
-        console.error("Firestore onSnapshot error:", err);
-        setError(err);
+        console.warn("Firestore onSnapshot non-fatal warning:", err);
+        // Fallback gracefully without crashing UI
+        setData([]);
         setLoading(false);
+        setError(null);
       }
     );
 
     return () => unsubscribe();
   }, [collectionName, areaTag, category, onlyUserPosted, postType]);
 
-  return { data, loading, error };
+  return { data: data || [], loading, error };
 }
