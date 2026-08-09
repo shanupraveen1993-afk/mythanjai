@@ -206,12 +206,21 @@ function ServicesPageContent() {
     return list;
   }, [localServices, services, selectedCategory, targetPostId]);
 
-  const handleCategorySelect = (category: string) => {
-    setSelectedCategory(category);
+  const handleCategorySelect = (category?: string | null) => {
+    if (category && typeof category === "string") {
+      setSelectedCategory(category);
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("category", category);
+      router.push(`/services?${params.toString()}`);
+    }
   };
 
   const handleClearCategory = () => {
     setSelectedCategory(null);
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("category");
+    const q = params.toString();
+    router.push(q ? `/services?${q}` : "/services");
   };
 
   const handleRegister = async (e: React.FormEvent) => {

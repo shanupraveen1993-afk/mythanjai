@@ -132,11 +132,18 @@ function SellPageContent() {
   const handleCategorySelect = (category?: string | null) => {
     if (category && typeof category === "string") {
       setSelectedCategory(category);
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("category", category);
+      router.push(`/sell?${params.toString()}`);
     }
   };
 
   const handleClearCategory = () => {
     setSelectedCategory(null);
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("category");
+    const q = params.toString();
+    router.push(q ? `/sell?${q}` : "/sell");
   };
 
   // Combine real Firestore posts with local test fallback posts

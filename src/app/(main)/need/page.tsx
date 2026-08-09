@@ -103,11 +103,18 @@ function NeedPageContent() {
   const handleCategorySelect = (category?: string | null) => {
     if (category && typeof category === "string") {
       setSelectedCategory(category);
+      const params = new URLSearchParams(searchParams.toString());
+      params.set("category", category);
+      router.push(`/need?${params.toString()}`);
     }
   };
 
   const handleClearCategory = () => {
     setSelectedCategory(null);
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete("category");
+    const q = params.toString();
+    router.push(q ? `/need?${q}` : "/need");
   };
 
   const allPosts = React.useMemo(() => {
