@@ -184,18 +184,10 @@ function ServicesPageContent() {
   // Expand form if ?create=true is in URL query parameters
   const triggerCreate = searchParams.get("create") === "true";
   useEffect(() => {
-    if (triggerCreate && !loading) {
-      if (!profile?.isVerified) {
-        const currentParams = new URLSearchParams(searchParams.toString());
-        if (currentParams.get("auth") !== "popup") {
-          currentParams.set("auth", "popup");
-          router.push(`/services?${currentParams.toString()}`);
-        }
-      } else {
-        setIsFormOpen(true);
-      }
+    if (triggerCreate) {
+      setIsFormOpen(true);
     }
-  }, [triggerCreate, profile, loading, searchParams, router]);
+  }, [triggerCreate]);
 
 
   // Firestore Real-time Query Subscription

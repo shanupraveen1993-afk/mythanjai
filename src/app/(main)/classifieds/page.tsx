@@ -250,18 +250,10 @@ function ClassifiedsPageContent() {
   // Handle header ?create=true URL parameter trigger
   const triggerCreate = searchParams.get("create") === "true";
   useEffect(() => {
-    if (triggerCreate && !loading) {
-      if (!profile?.isVerified) {
-        const currentParams = new URLSearchParams(searchParams.toString());
-        if (currentParams.get("auth") !== "popup") {
-          currentParams.set("auth", "popup");
-          router.push(`/classifieds?${currentParams.toString()}`);
-        }
-      } else {
-        setIsFormOpen(true);
-      }
+    if (triggerCreate) {
+      setIsFormOpen(true);
     }
-  }, [triggerCreate, profile, loading, searchParams, router]);
+  }, [triggerCreate]);
 
 
   // Real-time Firestore Query subscription

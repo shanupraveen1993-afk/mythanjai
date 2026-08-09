@@ -14,7 +14,21 @@ export default function NeedCard({ post, onShare }: NeedCardProps) {
   const [activeImgIndex, setActiveImgIndex] = useState(0);
   const [isPlayingVideo, setIsPlayingVideo] = useState(false);
   const [saved, setSaved] = useState(false);
-  const images = post.image_urls || (post.image_url ? [post.image_url] : []);
+  const youtubeId = React.useMemo(() => {
+    if (!post.youtube_url || typeof post.youtube_url !== "string") return null;
+    const match = post.youtube_url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/);
+    return match ? match[1] : null;
+  }, [post.youtube_url]);
+
+  const images = React.useMemo(() => {
+    if (Array.isArray(post.image_urls) && post.image_urls.length > 0) {
+      return post.image_urls.filter((url): url is string => typeof url === "string" && url.trim().length > 0);
+    }
+    if (typeof post.image_url === "string" && post.image_url.trim().length > 0) {
+      return [post.image_url];
+    }
+    return [];
+  }, [post.image_urls, post.image_url]);
 
   const viewsCount = Math.floor(150 + (post.title?.length || 5) * 14);
   const sharesCount = Math.floor(22 + (post.title?.length || 5) * 2);
@@ -60,11 +74,18 @@ export default function NeedCard({ post, onShare }: NeedCardProps) {
   // Format creation date
   const formatDate = (timestamp: any) => {
     if (!timestamp) return "Just now";
-    const date = timestamp.toDate ? timestamp.toDate() : new Date(timestamp);
-    return date.toLocaleDateString("en-IN", {
-      day: "numeric",
-      month: "short",
-    });
+    try {
+      const date = typeof timestamp?.toDate === "function" ? timestamp.toDate() : new Date(timestamp);
+      if (date instanceof Date && !isNaN(date.getTime())) {
+        return date.toLocaleDateString("en-IN", {
+          day: "numeric",
+          month: "short",
+        });
+      }
+    } catch (e) {
+      // Fallback
+    }
+    return "Just now";
   };
 
   const getCategoryIllustration = (cat: string) => {
@@ -116,12 +137,12 @@ export default function NeedCard({ post, onShare }: NeedCardProps) {
       </div>
 
       {/* YouTube Video Player */}
-      {post.youtube_url && (
+      {youtubeId && (
         <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-slate-50 border border-slate-100 shadow-sm">
           {isPlayingVideo ? (
             <div className="relative w-full h-full bg-black">
               <iframe
-                src={`https://www.youtube.com/embed/${post.youtube_url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/)?.[1] || ""}?autoplay=1`}
+                src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1`}
                 title="YouTube video player"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
@@ -145,7 +166,7 @@ export default function NeedCard({ post, onShare }: NeedCardProps) {
               className="relative w-full h-full cursor-pointer group"
             >
               <Image
-                src={post.youtube_thumbnail || `https://img.youtube.com/vi/${post.youtube_url.match(/(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/)?.[1]}/hqdefault.jpg`}
+                src={post.youtube_thumbnail || `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`}
                 alt="YouTube Video Thumbnail"
                 fill
                 className="object-cover transition-transform group-hover:scale-105"
@@ -164,7 +185,7 @@ export default function NeedCard({ post, onShare }: NeedCardProps) {
       )}
 
       {/* Multi-Photo Carousel Slider */}
-      {!post.youtube_url && images.length > 0 && (
+      {!youtubeId && images.length > 0 && (
         <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-slate-50 border border-slate-100 shadow-sm group">
           <Image
             src={images[activeImgIndex]}

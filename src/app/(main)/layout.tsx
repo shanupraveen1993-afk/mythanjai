@@ -8,6 +8,7 @@ import { TanjoreLocality } from "@/lib/constants";
 import { useAuth, AuthProvider } from "@/hooks/use-auth";
 import SignInModal from "@/components/auth/SignInModal";
 
+import CreatePostModal from "@/components/modals/CreatePostModal";
 import UniversalSearchBar from "@/components/layout/UniversalSearchBar";
 
 export default function MainLayout({
@@ -61,6 +62,7 @@ function MainLayoutContent({
   // Selected Area filter state, synced with URL query params
   const [selectedArea, setSelectedArea] = useState<TanjoreLocality | "All Areas">("All Areas");
   const [isSignInOpen, setIsSignInOpen] = useState(false);
+  const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false);
 
   const handleCloseSignIn = () => {
     setIsSignInOpen(false);
@@ -73,10 +75,6 @@ function MainLayoutContent({
         currentParams.delete("redirect");
         router.push(redirectPath);
       } else {
-        // Auto-trigger form opening on successful sign-in if not on homepage
-        if (profile?.isVerified && pathname !== "/") {
-          currentParams.set("create", "true");
-        }
         const queryString = currentParams.toString();
         router.push(`${pathname}${queryString ? `?${queryString}` : ""}`);
       }
@@ -139,20 +137,7 @@ function MainLayoutContent({
             onAreaChange={handleAreaChange}
             onSignInClick={() => setIsSignInOpen(true)}
             onPostClick={() => {
-              const currentTab = getActiveTab();
-              let targetPath = "/sell";
-              if (currentTab === "need") targetPath = "/need";
-              else if (currentTab === "services") targetPath = "/services";
-              else if (currentTab === "shops") targetPath = "/shops";
-
-              const currentParams = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
-
-              if (!profile?.isVerified) {
-                setIsSignInOpen(true);
-              } else {
-                currentParams.set("create", "true");
-                router.push(`${targetPath}?${currentParams.toString()}`);
-              }
+              setIsCreatePostModalOpen(true);
             }}
             activeTab={getActiveTab()}
             onTabChange={handleTabChange}
@@ -182,6 +167,15 @@ function MainLayoutContent({
       <SignInModal
         isOpen={isSignInOpen}
         onClose={handleCloseSignIn}
+      />
+
+      {/* Post Creation Modal */}
+      <CreatePostModal
+        isOpen={isCreatePostModalOpen}
+        onClose={() => setIsCreatePostModalOpen(false)}
+        defaultArea={selectedArea === "All Areas" ? "Tanjore Town (General)" : selectedArea}
+        defaultType={getActiveTab() === "services" ? "services" : getActiveTab() === "shops" ? "shops" : "needs"}
+        defaultClassifiedType={getActiveTab() === "need" ? "NEED" : "SELL"}
       />
     </div>
   );
