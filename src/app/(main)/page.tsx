@@ -74,28 +74,25 @@ export default function HomeLandingPage() {
            ========================================== */
         <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 mt-4 md:mt-6 pt-2 pb-12 flex flex-col gap-10 animate-fade-in">
           
-          {/* 1. HERO SECTION IMAGE (No buttons, showcasing everything available inside Namma Thanjavur app) */}
-          <div className="w-full bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden flex flex-col md:flex-row items-center justify-between gap-6 shadow-xl">
-            <div className="absolute top-0 right-0 w-80 h-80 bg-yellow-500/10 blur-3xl rounded-full pointer-events-none" />
-            <div className="flex flex-col gap-2.5 max-w-lg z-10 text-left">
+          {/* 1. HERO ILLUSTRATION BANNER */}
+          <div className="relative w-full min-h-[210px] sm:min-h-[220px] rounded-3xl overflow-hidden shadow-lg border border-slate-800 bg-slate-950 text-white flex items-center p-6 sm:p-8">
+            <img 
+              src="/thanjavur_hero_banner.png" 
+              alt="Thanjavur Marketplace & Services Overview" 
+              className="absolute right-0 top-0 h-full w-full sm:w-3/5 object-cover opacity-50 pointer-events-none"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent pointer-events-none" />
+            
+            <div className="relative z-10 max-w-xl flex flex-col gap-2.5">
               <span className="text-[10px] font-black uppercase tracking-widest text-yellow-400 bg-yellow-400/10 border border-yellow-400/30 px-3 py-1 rounded-full w-fit">
                 Namma Thanjavur Directory
               </span>
-              <h1 className="font-heading font-black text-2xl sm:text-3xl text-white tracking-tight leading-tight">
+              <h1 className="font-heading font-black text-2xl sm:text-3xl md:text-4xl text-white tracking-tight uppercase leading-tight">
                 Verified Local Marketplace & Helper Trades
               </h1>
               <p className="text-xs sm:text-sm text-slate-300 font-medium leading-relaxed">
                 Explore real estate plots in Vallam, certified electricians near Big Temple, 2 BHK rental houses on Medical College Rd, and exclusive store discounts.
               </p>
-            </div>
-
-            <div className="w-full md:w-96 h-52 sm:h-60 relative shrink-0 rounded-2xl overflow-hidden bg-slate-950 border border-slate-800 shadow-md">
-              <Image
-                src="/thanjavur_hero_banner.png"
-                alt="Thanjavur Marketplace & Services Overview"
-                fill
-                className="object-cover hover:scale-105 transition-transform duration-500"
-              />
             </div>
           </div>
           

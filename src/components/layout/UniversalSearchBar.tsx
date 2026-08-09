@@ -4,7 +4,7 @@ import React, { useState, useEffect, useRef } from "react";
 import { Search, X, Building, Wrench, Store, MessageSquare, MapPin, ArrowRight, Loader2 } from "lucide-react";
 import { collection, query, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
-import { useRouter } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 
 interface SearchResults {
   classifieds: any[];
@@ -14,6 +14,14 @@ interface SearchResults {
 
 export default function UniversalSearchBar() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const selectedCategory = searchParams.get("category");
+
+  // Render SearchBar ONLY when user enters into a specific category feed
+  if (!selectedCategory) {
+    return null;
+  }
+
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);

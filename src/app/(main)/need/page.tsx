@@ -182,31 +182,51 @@ export default function NeedPage() {
 
       {/* CATEGORIES SELECTION */}
       {!selectedCategory ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-          {CLASSIFIED_CATEGORIES.map((cat) => {
-            const illustration = CATEGORY_ILLUSTRATIONS[cat] || "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=600&auto=format&fit=crop";
-            return (
-              <button
-                key={cat}
-                onClick={() => handleCategorySelect(cat)}
-                className="bg-white border border-slate-200 hover:border-slate-400 p-3.5 rounded-2xl shadow-2xs text-left transition-all active:scale-[0.98] hover:shadow-md flex flex-col gap-3 group w-full cursor-pointer overflow-hidden aspect-square justify-between"
-              >
-                <div className="w-full h-32 rounded-xl overflow-hidden relative bg-slate-100 border border-slate-100">
-                  <img
-                    src={illustration}
-                    alt={cat}
-                    className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-300"
-                  />
+        <div className="flex flex-col gap-8">
+          {/* 3-Column Compact Category Selection Grid */}
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2.5 sm:gap-3.5">
+            {CLASSIFIED_CATEGORIES.map((cat) => {
+              const illustration = CATEGORY_ILLUSTRATIONS[cat] || "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=600&auto=format&fit=crop";
+              return (
+                <button
+                  key={cat}
+                  onClick={() => handleCategorySelect(cat)}
+                  className="bg-white border border-slate-200 hover:border-slate-400 p-2 sm:p-3 rounded-2xl shadow-2xs text-left transition-all active:scale-[0.98] hover:shadow-md flex flex-col gap-2 group w-full cursor-pointer overflow-hidden justify-between"
+                >
+                  <div className="w-full h-16 sm:h-24 rounded-xl overflow-hidden relative bg-slate-100 border border-slate-100">
+                    <img
+                      src={illustration}
+                      alt={cat}
+                      className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-300"
+                    />
+                  </div>
+                  <div>
+                    <span className="text-[11px] sm:text-xs font-black text-slate-900 block group-hover:text-slate-700 transition-colors line-clamp-1">
+                      {cat}
+                    </span>
+                    <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 block mt-0.5">Explore →</span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+
+          {/* Horizontal Scrollable Preview Feed of Recent Listings */}
+          <div className="flex flex-col gap-3 pt-2 border-t border-slate-200/80">
+            <div className="flex items-center justify-between">
+              <h2 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight">
+                Recent Buyer & Requirement Listings
+              </h2>
+              <span className="text-xs font-bold text-slate-500">Scroll for more →</span>
+            </div>
+            <div className="flex overflow-x-auto snap-x scrollbar-none gap-4 pb-2">
+              {sortedPosts.map((post) => (
+                <div key={post.id} className="shrink-0 w-[280px] sm:w-[320px] snap-start">
+                  <NeedCard post={post} />
                 </div>
-                <div>
-                  <span className="text-xs font-black text-slate-900 block group-hover:text-slate-700 transition-colors line-clamp-1">
-                    {cat}
-                  </span>
-                  <span className="text-[10px] font-bold text-slate-400 block mt-0.5">Explore Need →</span>
-                </div>
-              </button>
-            );
-          })}
+              ))}
+            </div>
+          </div>
         </div>
       ) : (
         /* LISTINGS FEED */
@@ -238,10 +258,16 @@ export default function NeedPage() {
             </button>
           </div>
 
-          <div className="flex items-center justify-between bg-slate-100 p-2.5 rounded-xl border border-slate-200">
-            <span className="text-xs font-black text-slate-800">
+          <div className="flex items-center justify-between">
+            <span className="inline-flex items-center gap-1.5 bg-yellow-500/10 border border-yellow-300 text-slate-900 font-black text-xs px-3 py-1.5 rounded-xl shadow-2xs">
               Category: {selectedCategory}
             </span>
+            <button
+              onClick={handleClearCategory}
+              className="text-xs font-bold text-slate-600 hover:text-slate-900 cursor-pointer"
+            >
+              ← Clear Filter
+            </button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

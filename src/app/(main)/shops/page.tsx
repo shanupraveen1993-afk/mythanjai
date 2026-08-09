@@ -548,61 +548,24 @@ export default function ShopsPage() {
         </div>
       </div>
 
-      {/* CATEGORY SELECTION OR OFFERS FEED */}
-      {!selectedCategory ? (
-        <div className="flex flex-col gap-4">
-          <div className="bg-yellow-50 border border-yellow-250/60 rounded-2xl p-4 flex flex-col gap-1 text-slate-800">
-            <span className="text-[9px] font-black uppercase tracking-wider text-yellow-755 bg-yellow-500/10 border border-yellow-250/60 px-2.5 py-0.5 rounded-xl inline-block w-fit">
-              Thanjavur Verified Store Offers
-            </span>
-            <h2 className="font-heading font-black text-lg text-slate-900 mt-1">
-              Select Store Category
-            </h2>
-            <p className="text-[11px] text-slate-600 max-w-md">
-              Choose a category below to explore active store discounts, restaurant deals, clothing sales, and video offers in Thanjavur.
-            </p>
-          </div>
+      {/* DIRECT OFFERS FEED & STICKY ACTION BAR */}
+      <div className="flex flex-col gap-5">
+        {/* UNIVERSAL STICKY ACTION BAR */}
+        <div className="sticky top-[57px] z-30 bg-amber-50/85 backdrop-blur-md py-2.5 px-4 border border-amber-200/80 rounded-2xl shadow-xs flex items-center justify-between">
+          <select
+            className="text-xs font-black bg-white/90 border border-amber-200/90 rounded-xl px-3.5 py-2 text-slate-800 focus:outline-none cursor-pointer shrink-0 shadow-xs"
+          >
+            <option value="recent">Latest First</option>
+          </select>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-            {SHOP_CATEGORIES.map((cat) => {
-              return (
-                <button
-                  key={cat}
-                  onClick={() => handleCategorySelect(cat)}
-                  className="bg-white border border-slate-200 hover:border-slate-400 p-3.5 rounded-2xl shadow-2xs text-left transition-all active:scale-[0.98] hover:shadow-md flex flex-col gap-3 group w-full cursor-pointer overflow-hidden aspect-square justify-between"
-                >
-                  <div className="w-full h-32 rounded-xl overflow-hidden relative bg-slate-100 border border-slate-100 flex items-center justify-center p-4">
-                    <Store className="w-10 h-10 text-yellow-500 group-hover:scale-110 transition-transform duration-300" />
-                  </div>
-                  <div>
-                    <span className="text-xs font-black text-slate-900 block group-hover:text-slate-700 transition-colors line-clamp-1">
-                      {cat}
-                    </span>
-                    <span className="text-[10px] font-bold text-slate-400 block mt-0.5">Explore Offers →</span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
+          <button
+            onClick={() => setIsFormOpen(!isFormOpen)}
+            className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-xs shrink-0"
+          >
+            <Plus className={`w-4 h-4 text-slate-955 transition-transform duration-250 ${isFormOpen ? "rotate-45" : ""}`} />
+            <span>Post Offer</span>
+          </button>
         </div>
-      ) : (
-        <div className="flex flex-col gap-5">
-          {/* UNIVERSAL STICKY ACTION BAR: Shown Only After Category is Selected */}
-          <div className="sticky top-[57px] z-30 bg-amber-50/85 backdrop-blur-md py-2.5 px-4 border border-amber-200/80 rounded-2xl shadow-xs flex items-center justify-between">
-            <select
-              className="text-xs font-black bg-white/90 border border-amber-200/90 rounded-xl px-3.5 py-2 text-slate-800 focus:outline-none cursor-pointer shrink-0 shadow-xs"
-            >
-              <option value="recent">Latest First</option>
-            </select>
-
-            <button
-              onClick={() => setIsFormOpen(!isFormOpen)}
-              className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-xs shrink-0"
-            >
-              <Plus className={`w-4 h-4 text-slate-955 transition-transform duration-250 ${isFormOpen ? "rotate-45" : ""}`} />
-              <span>Post Offer</span>
-            </button>
-          </div>
 
           <div className="flex items-center justify-between bg-slate-100 p-2.5 rounded-xl border border-slate-200">
             <button
@@ -971,7 +934,6 @@ export default function ShopsPage() {
             </div>
           )}
         </div>
-      )}
     </div>
   );
 }

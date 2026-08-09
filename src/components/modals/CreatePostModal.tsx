@@ -49,6 +49,8 @@ interface CreatePostModalProps {
   isOpen: boolean;
   onClose: () => void;
   defaultArea?: TanjoreLocality;
+  defaultType?: PostType;
+  defaultCategory?: string;
 }
 
 // Approximate coordinate mapping for Tanjore area tags (enables OSM rendering without Google API costs)
@@ -81,9 +83,11 @@ export default function CreatePostModal({
   isOpen,
   onClose,
   defaultArea = "Tanjore Town (General)",
+  defaultType = "needs",
+  defaultCategory,
 }: CreatePostModalProps) {
   const [step, setStep] = useState(1);
-  const [type, setType] = useState<PostType>("needs");
+  const [type, setType] = useState<PostType>(defaultType);
   const [loading, setLoading] = useState(false);
   const [ocrLoading, setOcrLoading] = useState(false);
 
@@ -122,7 +126,13 @@ export default function CreatePostModal({
 
   useEffect(() => {
     if (defaultArea) setArea(defaultArea);
-  }, [defaultArea, isOpen]);
+    if (defaultType) setType(defaultType);
+    if (defaultCategory) {
+      if (CLASSIFIED_CATEGORIES.includes(defaultCategory as any)) setClassifiedCategory(defaultCategory as any);
+      if (SERVICE_CATEGORIES.includes(defaultCategory as any)) setServiceCategory(defaultCategory as any);
+      if (SHOP_CATEGORIES.includes(defaultCategory as any)) setShopCategory(defaultCategory as any);
+    }
+  }, [defaultArea, defaultType, defaultCategory, isOpen]);
 
   if (!isOpen) return null;
 
@@ -563,8 +573,11 @@ export default function CreatePostModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-black/60 backdrop-blur-xs p-0 md:p-4 w-full">
-      {/* Modal Card */}
+      {/* Modal Card / Mobile Bottom Sheet */}
       <div className="bg-white w-full max-w-[480px] md:max-w-4xl rounded-t-3xl md:rounded-2xl border-t md:border border-slate-205 flex flex-col max-h-[92vh] md:max-h-[88vh] animate-slide-up text-slate-800 shadow-2xl overflow-hidden">
+        {/* Mobile Bottom Sheet Drag Handle */}
+        <div className="w-12 h-1.5 rounded-full bg-slate-300 mx-auto mt-2.5 mb-0.5 md:hidden shrink-0" />
+
         {/* Header */}
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 shrink-0">
           <div>
