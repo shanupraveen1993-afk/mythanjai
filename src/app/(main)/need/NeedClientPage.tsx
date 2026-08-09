@@ -18,17 +18,10 @@ export default function NeedClientPage() {
   const { user, profile, loading } = useAuth();
   
   const area = (searchParams.get("area") || "All Areas") as TanjoreLocality | "All Areas";
-  const rawCat = searchParams.get("category");
-  const urlCategory = rawCat ? decodeURIComponent(rawCat.replace(/\+/g, " ")) : null;
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(urlCategory);
   const searchQuery = searchParams.get("query") || "";
+  // Pure client-side state — NO URL query params for category (prevents Vercel RSC crash)
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  useEffect(() => {
-    const cat = searchParams.get("category");
-    if (cat) {
-      setSelectedCategory(decodeURIComponent(cat.replace(/\+/g, " ")));
-    }
-  }, [searchParams]);
 
   // Dedicated Need Channel (Type = NEED)
   const activeType = "need";
@@ -152,21 +145,15 @@ export default function NeedClientPage() {
     category: selectedCategory || "All",
   });
 
+  // Pure client-side category switching — zero URL updates, zero Vercel server re-fetch
   const handleCategorySelect = (category?: string | null) => {
     if (category && typeof category === "string") {
       setSelectedCategory(category);
-      const params = new URLSearchParams(searchParams.toString());
-      params.set("category", category);
-      router.replace(`/need?${params.toString()}`, { scroll: false });
     }
   };
 
   const handleClearCategory = () => {
     setSelectedCategory(null);
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete("category");
-    const queryString = params.toString();
-    router.replace(queryString ? `/need?${queryString}` : "/need", { scroll: false });
   };
 
   const allPosts = React.useMemo(() => {

@@ -18,17 +18,10 @@ export default function SellClientPage() {
   const { user, profile, loading } = useAuth();
   
   const area = (searchParams.get("area") || "All Areas") as TanjoreLocality | "All Areas";
-  const rawCat = searchParams.get("category");
-  const urlCategory = rawCat ? decodeURIComponent(rawCat.replace(/\+/g, " ")) : null;
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(urlCategory);
   const searchQuery = searchParams.get("query") || "";
+  // Pure client-side state — NO URL query params for category (prevents Vercel RSC crash)
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  useEffect(() => {
-    const cat = searchParams.get("category");
-    if (cat) {
-      setSelectedCategory(decodeURIComponent(cat.replace(/\+/g, " ")));
-    }
-  }, [searchParams]);
 
   // Dedicated Sell Channel (Type = SELL)
   const activeType = "sale";
@@ -157,21 +150,15 @@ export default function SellClientPage() {
     category: selectedCategory || "All",
   });
 
+  // Pure client-side category switching — zero URL updates, zero Vercel server re-fetch
   const handleCategorySelect = (category?: string | null) => {
     if (category && typeof category === "string") {
       setSelectedCategory(category);
-      const params = new URLSearchParams(searchParams.toString());
-      params.set("category", category);
-      router.replace(`/sell?${params.toString()}`, { scroll: false });
     }
   };
 
   const handleClearCategory = () => {
     setSelectedCategory(null);
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete("category");
-    const queryString = params.toString();
-    router.replace(queryString ? `/sell?${queryString}` : "/sell", { scroll: false });
   };
 
   // Combine real Firestore posts with local test fallback posts

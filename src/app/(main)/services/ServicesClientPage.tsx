@@ -18,16 +18,9 @@ export default function ServicesClientPage() {
   const { user, profile, loading } = useAuth();
   
   const area = (searchParams.get("area") || "All Areas") as TanjoreLocality | "All Areas";
-  const rawCat = searchParams.get("category");
-  const urlCategory = rawCat ? decodeURIComponent(rawCat.replace(/\+/g, " ")) : null;
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(urlCategory);
+  // Pure client-side state — NO URL query params for category (prevents Vercel RSC crash)
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
 
-  useEffect(() => {
-    const cat = searchParams.get("category");
-    if (cat) {
-      setSelectedCategory(decodeURIComponent(cat.replace(/\+/g, " ")));
-    }
-  }, [searchParams]);
 
   const CATEGORY_STOCK_IMAGES: Record<string, string> = {
     "Electrician": "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=400&q=80",
@@ -243,21 +236,15 @@ export default function ServicesClientPage() {
     return list;
   }, [localServices, services, selectedCategory, targetPostId]);
 
+  // Pure client-side category switching — zero URL updates, zero Vercel server re-fetch
   const handleCategorySelect = (category?: string | null) => {
     if (category && typeof category === "string") {
       setSelectedCategory(category);
-      const params = new URLSearchParams(searchParams.toString());
-      params.set("category", category);
-      router.replace(`/services?${params.toString()}`, { scroll: false });
     }
   };
 
   const handleClearCategory = () => {
     setSelectedCategory(null);
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete("category");
-    const queryString = params.toString();
-    router.replace(queryString ? `/services?${queryString}` : "/services", { scroll: false });
   };
 
   const searchQuery = searchParams.get("query") || "";

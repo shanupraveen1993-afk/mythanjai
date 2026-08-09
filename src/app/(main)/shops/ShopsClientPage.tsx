@@ -54,17 +54,10 @@ export default function ShopsClientPage() {
   const { user, profile, loading } = useAuth();
   
   const area = (searchParams.get("area") || "All Areas") as TanjoreLocality | "All Areas";
-  const rawCat = searchParams.get("category");
-  const urlCategory = rawCat ? decodeURIComponent(rawCat.replace(/\+/g, " ")) : null;
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(urlCategory);
+  // Pure client-side state — NO URL query params for category (prevents Vercel RSC crash)
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [isFormOpen, setIsFormOpen] = useState(false);
 
-  useEffect(() => {
-    const cat = searchParams.get("category");
-    if (cat) {
-      setSelectedCategory(decodeURIComponent(cat.replace(/\+/g, " ")));
-    }
-  }, [searchParams]);
 
   const rawMapParam = searchParams.get("map");
   const mapShop = React.useMemo(() => {
@@ -159,21 +152,15 @@ export default function ShopsClientPage() {
     return [...activeLocal, ...(shops || [])];
   }, [localShops, shops, selectedCategory]);
 
+  // Pure client-side category switching — zero URL updates, zero Vercel server re-fetch
   const handleCategorySelect = (category?: string | null) => {
     if (category && typeof category === "string") {
       setSelectedCategory(category);
-      const params = new URLSearchParams(searchParams.toString());
-      params.set("category", category);
-      router.replace(`/shops?${params.toString()}`, { scroll: false });
     }
   };
 
   const handleClearCategory = () => {
     setSelectedCategory(null);
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete("category");
-    const queryString = params.toString();
-    router.replace(queryString ? `/shops?${queryString}` : "/shops", { scroll: false });
   };
 
   const searchQuery = searchParams.get("query") || "";
