@@ -11,9 +11,6 @@ import SignInModal from "@/components/auth/SignInModal";
 import CreatePostModal from "@/components/modals/CreatePostModal";
 import UniversalSearchBar from "@/components/layout/UniversalSearchBar";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
-
 export default function MainLayout({
   children,
 }: {
@@ -167,19 +164,23 @@ function MainLayoutContent({
       />
 
       {/* Sign-In Popup Modal */}
-      <SignInModal
-        isOpen={isSignInOpen}
-        onClose={handleCloseSignIn}
-      />
+      <React.Suspense fallback={null}>
+        <SignInModal
+          isOpen={isSignInOpen}
+          onClose={handleCloseSignIn}
+        />
+      </React.Suspense>
 
       {/* Post Creation Modal */}
-      <CreatePostModal
-        isOpen={isCreatePostModalOpen}
-        onClose={() => setIsCreatePostModalOpen(false)}
-        defaultArea={selectedArea === "All Areas" ? "Tanjore Town (General)" : selectedArea}
-        defaultType={getActiveTab() === "services" ? "services" : getActiveTab() === "shops" ? "shops" : "needs"}
-        defaultClassifiedType={getActiveTab() === "need" ? "NEED" : "SELL"}
-      />
+      <React.Suspense fallback={null}>
+        <CreatePostModal
+          isOpen={isCreatePostModalOpen}
+          onClose={() => setIsCreatePostModalOpen(false)}
+          defaultArea={selectedArea === "All Areas" ? "Tanjore Town (General)" : selectedArea}
+          defaultType={getActiveTab() === "services" ? "services" : getActiveTab() === "shops" ? "shops" : "needs"}
+          defaultClassifiedType={getActiveTab() === "need" ? "NEED" : "SELL"}
+        />
+      </React.Suspense>
     </div>
   );
 }
