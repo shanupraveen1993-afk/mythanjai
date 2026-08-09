@@ -7,8 +7,6 @@ import BottomTabBar, { AppTab } from "@/components/layout/BottomTabBar";
 import { TanjoreLocality } from "@/lib/constants";
 import { useAuth, AuthProvider } from "@/hooks/use-auth";
 import SignInModal from "@/components/auth/SignInModal";
-
-import CreatePostModal from "@/components/modals/CreatePostModal";
 import UniversalSearchBar from "@/components/layout/UniversalSearchBar";
 
 export default function MainLayout({
@@ -62,7 +60,6 @@ function MainLayoutContent({
   // Selected Area filter state, synced with URL query params
   const [selectedArea, setSelectedArea] = useState<TanjoreLocality | "All Areas">("All Areas");
   const [isSignInOpen, setIsSignInOpen] = useState(false);
-  const [isCreatePostModalOpen, setIsCreatePostModalOpen] = useState(false);
 
   const handleCloseSignIn = () => {
     setIsSignInOpen(false);
@@ -137,7 +134,7 @@ function MainLayoutContent({
             onAreaChange={handleAreaChange}
             onSignInClick={() => setIsSignInOpen(true)}
             onPostClick={() => {
-              setIsCreatePostModalOpen(true);
+              router.push("/post");
             }}
             activeTab={getActiveTab()}
             onTabChange={handleTabChange}
@@ -171,16 +168,6 @@ function MainLayoutContent({
         />
       </React.Suspense>
 
-      {/* Post Creation Modal */}
-      <React.Suspense fallback={null}>
-        <CreatePostModal
-          isOpen={isCreatePostModalOpen}
-          onClose={() => setIsCreatePostModalOpen(false)}
-          defaultArea={selectedArea === "All Areas" ? "Tanjore Town (General)" : selectedArea}
-          defaultType={getActiveTab() === "services" ? "services" : getActiveTab() === "shops" ? "shops" : "needs"}
-          defaultClassifiedType={getActiveTab() === "need" ? "NEED" : "SELL"}
-        />
-      </React.Suspense>
     </div>
   );
 }

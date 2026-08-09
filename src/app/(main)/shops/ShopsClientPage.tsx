@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
+import { useRouter } from "next/navigation";
 import { useFirestore } from "@/hooks/use-firestore";
 import ShopCard from "@/components/cards/ShopCard";
 import { ShopPost } from "@/types";
 import { Plus, Loader2, Store } from "lucide-react";
-import CreatePostModal from "@/components/modals/CreatePostModal";
 
 const SAMPLE_POSTS: ShopPost[] = [
   { id: "sh_glen", userId: "sample", shop_name: "GLEN Exclusive Gallery", category: "Electronics & Mobiles", address_text: "New Busstand Road, Thanjavur", landmark: "Near New Bus Stand", hours: "9:30 AM – 9 PM", phone: "9876543225", area_tag: "New Bus Stand", offer_title: "Up to 60% OFF — Grand Opening Sale", offer_description: "Massive discounts on kitchen chimneys, hobs, cooktops & gas stoves.", image_url: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&auto=format&fit=crop", latitude: 10.7852, longitude: 79.1162, is_claimed: true, created_at: new Date() as any },
@@ -16,7 +16,7 @@ const SAMPLE_POSTS: ShopPost[] = [
 ];
 
 export default function ShopsClientPage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const router = useRouter();
 
   const { data: firestorePosts, loading } = useFirestore<ShopPost>({
     collectionName: "shops",
@@ -47,7 +47,7 @@ export default function ShopsClientPage() {
       {/* Control Bar */}
       <div className="sticky top-[57px] z-30 bg-white border-b border-slate-200 py-2.5 flex items-center justify-between gap-3">
         <span className="text-xs font-black text-slate-500 uppercase tracking-wider">{allPosts.length} Active Store Offers</span>
-        <button onClick={() => setIsModalOpen(true)} className="flex items-center gap-1.5 bg-purple-600 hover:bg-purple-500 active:scale-95 text-white font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all border border-purple-500 shadow-sm">
+        <button onClick={() => router.push("/post?type=offer")} className="flex items-center gap-1.5 bg-purple-600 hover:bg-purple-500 active:scale-95 text-white font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all border border-purple-500 shadow-sm cursor-pointer">
           <Plus className="w-3.5 h-3.5 stroke-[3]" /> Post Offer
         </button>
       </div>
@@ -59,15 +59,13 @@ export default function ShopsClientPage() {
         <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
           <Store className="w-8 h-8 text-slate-300" />
           <p className="text-sm font-black text-slate-500">No store offers listed yet.</p>
-          <button onClick={() => setIsModalOpen(true)} className="bg-purple-600 text-white font-black text-xs px-5 py-2.5 rounded-xl border border-purple-500">+ Post Offer</button>
+          <button onClick={() => router.push("/post?type=offer")} className="bg-purple-600 text-white font-black text-xs px-5 py-2.5 rounded-xl border border-purple-500 hover:bg-purple-500 transition-all cursor-pointer">+ Post Offer</button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {allPosts.map((post) => <ShopCard key={post.id} post={post} />)}
         </div>
       )}
-
-      {isModalOpen && <CreatePostModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} defaultType="shops" defaultCategory="General Store" />}
     </div>
   );
 }

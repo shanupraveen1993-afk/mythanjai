@@ -1,11 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useFirestore } from "@/hooks/use-firestore";
 import NeedCard from "@/components/cards/NeedCard";
 import { NeedOrSalePost } from "@/types";
 import { Plus, Loader2, Search } from "lucide-react";
-import CreatePostModal from "@/components/modals/CreatePostModal";
 
 const SAMPLE_POSTS: NeedOrSalePost[] = [
   { id: "n_land", userId: "sample", type: "NEED", title: "Need 1-2 Acres Commercial Land", raw_text: "", description: "Main road facing land near New Bus Stand or Vallam for warehouse use.", category: "Plots & Real Estate", area_tag: "Vallam", price: "5000000", phone: "9876543215", is_verified: true, created_at: new Date() as any, expires_at: new Date(Date.now() + 30 * 86400000) as any },
@@ -16,7 +16,7 @@ const SAMPLE_POSTS: NeedOrSalePost[] = [
 ];
 
 export default function NeedClientPage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const router = useRouter();
   const [sortBy, setSortBy] = useState<"recent" | "price_low" | "price_high">("recent");
 
   const { data: firestorePosts, loading } = useFirestore<NeedOrSalePost>({
@@ -56,7 +56,7 @@ export default function NeedClientPage() {
           <option value="price_low">Budget: Low → High</option>
           <option value="price_high">Budget: High → Low</option>
         </select>
-        <button onClick={() => setIsModalOpen(true)} className="flex items-center gap-1.5 bg-blue-500 hover:bg-blue-400 active:scale-95 text-white font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all border border-blue-400 shadow-sm">
+        <button onClick={() => router.push("/post?type=need")} className="flex items-center gap-1.5 bg-blue-500 hover:bg-blue-400 active:scale-95 text-white font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all border border-blue-400 shadow-sm cursor-pointer">
           <Plus className="w-3.5 h-3.5 stroke-[3]" /> Post Requirement
         </button>
       </div>
@@ -68,15 +68,13 @@ export default function NeedClientPage() {
         <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
           <Search className="w-8 h-8 text-slate-300" />
           <p className="text-sm font-black text-slate-500">No requirements yet — post what you need!</p>
-          <button onClick={() => setIsModalOpen(true)} className="bg-blue-500 text-white font-black text-xs px-5 py-2.5 rounded-xl border border-blue-400">+ Post Requirement</button>
+          <button onClick={() => router.push("/post?type=need")} className="bg-blue-500 text-white font-black text-xs px-5 py-2.5 rounded-xl border border-blue-400 hover:bg-blue-400 transition-all cursor-pointer">+ Post Requirement</button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {allPosts.map((post) => <NeedCard key={post.id} post={post} />)}
         </div>
       )}
-
-      {isModalOpen && <CreatePostModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} defaultType="needs" defaultClassifiedType="NEED" defaultCategory="General Requirement" />}
     </div>
   );
 }

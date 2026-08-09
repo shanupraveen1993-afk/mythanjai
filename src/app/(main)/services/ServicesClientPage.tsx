@@ -1,11 +1,11 @@
 "use client";
 
-import React, { useState } from "react";
+import React from "react";
+import { useRouter } from "next/navigation";
 import { useFirestore } from "@/hooks/use-firestore";
 import ServiceCard from "@/components/cards/ServiceCard";
 import { ServiceProviderPost } from "@/types";
 import { Plus, Loader2, Wrench } from "lucide-react";
-import CreatePostModal from "@/components/modals/CreatePostModal";
 
 const SAMPLE_POSTS: ServiceProviderPost[] = [
   { id: "sv_elec", userId: "sample", name: "Senthil Kumar — Home Electrician", skill_category: "Electrician", experience: "8+ Years", area_tag: "Tanjore Town (General)", phone: "9876543220", rating: 4.9, description: "Expert house wiring, DB box installation, inverter assembly, three-phase connections.", is_verified: true, created_at: new Date() as any },
@@ -16,7 +16,7 @@ const SAMPLE_POSTS: ServiceProviderPost[] = [
 ];
 
 export default function ServicesClientPage() {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const router = useRouter();
 
   const { data: firestorePosts, loading } = useFirestore<ServiceProviderPost>({
     collectionName: "services",
@@ -47,7 +47,7 @@ export default function ServicesClientPage() {
       {/* Control Bar */}
       <div className="sticky top-[57px] z-30 bg-white border-b border-slate-200 py-2.5 flex items-center justify-between gap-3">
         <span className="text-xs font-black text-slate-500 uppercase tracking-wider">{allPosts.length} Active Technicians</span>
-        <button onClick={() => setIsModalOpen(true)} className="flex items-center gap-1.5 bg-green-600 hover:bg-green-500 active:scale-95 text-white font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all border border-green-500 shadow-sm">
+        <button onClick={() => router.push("/post?type=service")} className="flex items-center gap-1.5 bg-green-600 hover:bg-green-500 active:scale-95 text-white font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all border border-green-500 shadow-sm cursor-pointer">
           <Plus className="w-3.5 h-3.5 stroke-[3]" /> Register Service
         </button>
       </div>
@@ -59,15 +59,13 @@ export default function ServicesClientPage() {
         <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
           <Wrench className="w-8 h-8 text-slate-300" />
           <p className="text-sm font-black text-slate-500">No service providers listed yet.</p>
-          <button onClick={() => setIsModalOpen(true)} className="bg-green-600 text-white font-black text-xs px-5 py-2.5 rounded-xl border border-green-500">+ Register Service</button>
+          <button onClick={() => router.push("/post?type=service")} className="bg-green-600 text-white font-black text-xs px-5 py-2.5 rounded-xl border border-green-500 hover:bg-green-500 transition-all cursor-pointer">+ Register Service</button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {allPosts.map((post) => <ServiceCard key={post.id} post={post} />)}
         </div>
       )}
-
-      {isModalOpen && <CreatePostModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} defaultType="services" defaultCategory="Electrician" />}
     </div>
   );
 }
