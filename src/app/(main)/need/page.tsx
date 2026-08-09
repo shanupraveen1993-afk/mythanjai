@@ -122,11 +122,18 @@ function NeedPageContent() {
 
   const allPosts = React.useMemo(() => {
     const activeLocal = localPosts.filter((p) => {
-      const matchType = p.type?.toUpperCase() === "NEED";
+      const pType = p.type?.toUpperCase();
+      const matchType = pType === "NEED" || pType === "BUY";
       const matchCat = !selectedCategory || p.category === selectedCategory;
       return matchType && matchCat;
     });
-    const list = [...activeLocal, ...(posts || []).filter((p) => p.type?.toUpperCase() === "NEED")];
+    const list = [
+      ...activeLocal,
+      ...(posts || []).filter((p) => {
+        const pType = p.type?.toUpperCase();
+        return pType === "NEED" || pType === "BUY";
+      }),
+    ];
     if (targetPostId) {
       list.sort((a, b) => {
         if (a.id === targetPostId) return -1;

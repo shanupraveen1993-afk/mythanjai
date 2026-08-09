@@ -152,11 +152,18 @@ function SellPageContent() {
   // Combine real Firestore posts with local test fallback posts
   const allPosts = React.useMemo(() => {
     const activeLocal = localPosts.filter((p) => {
-      const matchType = p.type?.toUpperCase() === "SELL";
+      const pType = p.type?.toUpperCase();
+      const matchType = !pType || pType === "SELL" || pType === "SALE";
       const matchCat = !selectedCategory || p.category === selectedCategory;
       return matchType && matchCat;
     });
-    const list = [...activeLocal, ...(posts || []).filter((p) => p.type?.toUpperCase() === "SELL")];
+    const list = [
+      ...activeLocal,
+      ...(posts || []).filter((p) => {
+        const pType = p.type?.toUpperCase();
+        return !pType || pType === "SELL" || pType === "SALE";
+      }),
+    ];
     if (targetPostId) {
       list.sort((a, b) => {
         if (a.id === targetPostId) return -1;

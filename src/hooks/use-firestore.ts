@@ -92,7 +92,13 @@ export function useFirestore<T = any>({
           if (postType && collectionName === "needs_and_sales") {
             const pType = docData.type?.toLowerCase();
             const targetType = postType.toLowerCase();
-            if (pType !== targetType && pType !== (targetType === "sale" ? "sell" : "need")) return;
+            const isSaleTarget = targetType === "sale" || targetType === "sell";
+            const isSaleDoc = !pType || pType === "sale" || pType === "sell";
+            const isNeedTarget = targetType === "need" || targetType === "buy";
+            const isNeedDoc = pType === "need" || pType === "buy";
+
+            if (isSaleTarget && !isSaleDoc) return;
+            if (isNeedTarget && !isNeedDoc) return;
           }
 
           // 7-day auto-expiry check: filter out expired posts
