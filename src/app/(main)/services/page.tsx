@@ -165,6 +165,45 @@ function ServicesPageContent() {
       description: "Modular kitchen woodworks, door laminations, door locks repairs, bespoke wardrobes & furniture.",
       is_verified: true,
       created_at: new Date() as any,
+    },
+    {
+      id: "muthu_ac_repair",
+      userId: "sample_user_s4",
+      name: "Muthu Cool Tech - AC & Fridge",
+      skill_category: "AC & Fridge Repair",
+      experience: "7+ Years Experience",
+      area_tag: "Old Bus Stand",
+      phone: "9876543216",
+      rating: 4.9,
+      description: "Split AC gas filling, deep foam wash cleaning, refrigerator compressor repairs & washing machine service.",
+      is_verified: true,
+      created_at: new Date() as any,
+    },
+    {
+      id: "murugan_painter",
+      userId: "sample_user_s5",
+      name: "Murugan Professional Painters",
+      skill_category: "Painter",
+      experience: "12+ Years Experience",
+      area_tag: "Vallam",
+      phone: "9876543217",
+      rating: 4.8,
+      description: "Interior & exterior wall painting, waterproof putty application, Asian Paints wall texture & wood polishing.",
+      is_verified: true,
+      created_at: new Date() as any,
+    },
+    {
+      id: "clean_home_service",
+      userId: "sample_user_s6",
+      name: "Thanjavur Deep Cleaning Services",
+      skill_category: "House Cleaning",
+      experience: "5+ Years Experience",
+      area_tag: "New Bus Stand",
+      phone: "9876543218",
+      rating: 4.7,
+      description: "Full home deep cleaning, sofa shampooing, water tank disinfection & kitchen chimney degreasing.",
+      is_verified: true,
+      created_at: new Date() as any,
     }
   ]);
 
@@ -198,7 +237,11 @@ function ServicesPageContent() {
   });
 
   const combinedServices = React.useMemo(() => {
-    const activeLocal = localServices.filter(s => !selectedCategory || s.skill_category === selectedCategory);
+    const normSelected = (selectedCategory || "").toLowerCase().trim();
+    const activeLocal = localServices.filter(s => {
+      const sCat = (s.skill_category || "").toLowerCase().trim();
+      return !normSelected || sCat === normSelected || sCat.includes(normSelected) || normSelected.includes(sCat);
+    });
     const list = [...activeLocal, ...(services || [])];
     if (targetPostId) {
       list.sort((a, b) => {
@@ -425,7 +468,25 @@ function ServicesPageContent() {
       ) : (
         /* STEP 2: DETAILED FEED & REGISTRATION CARD FOR TRADE */
         <div className="flex flex-col gap-5">
-          <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 flex items-center justify-between gap-2">
+          {/* Active Category Title Bar */}
+          <div className="flex items-center justify-between bg-slate-100/90 border border-slate-200/90 rounded-2xl p-3 shadow-2xs">
+            <div className="flex items-center gap-2">
+              <span className="bg-yellow-500 text-slate-955 font-black text-xs px-2.5 py-1 rounded-xl shadow-2xs">
+                {selectedCategory}
+              </span>
+              <span className="text-xs text-slate-600 font-bold">
+                ({filteredServices.length} {filteredServices.length === 1 ? "Technician" : "Technicians"})
+              </span>
+            </div>
+            <button
+              onClick={handleClearCategory}
+              className="text-xs font-black text-slate-700 hover:text-slate-900 bg-white border border-slate-250 px-3 py-1 rounded-xl shadow-2xs cursor-pointer hover:bg-slate-50 transition-colors"
+            >
+              ✕ All Categories
+            </button>
+          </div>
+
+          <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2 flex items-center justify-between gap-2">
             <select className="text-xs font-black bg-slate-50 border border-slate-250 rounded-xl px-3 py-2 text-slate-800 focus:outline-none cursor-pointer shrink-0 shadow-2xs">
               <option value="recent">Latest First</option>
               <option value="rating">Top Rated</option>

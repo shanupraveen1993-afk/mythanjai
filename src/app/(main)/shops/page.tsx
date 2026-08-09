@@ -259,7 +259,11 @@ function ShopsPageContent() {
   });
 
   const combinedShops = React.useMemo(() => {
-    const activeLocal = localShops.filter(s => !selectedCategory || s.category === selectedCategory);
+    const normSelected = (selectedCategory || "").toLowerCase().trim();
+    const activeLocal = localShops.filter(s => {
+      const sCat = (s.category || "").toLowerCase().trim();
+      return !normSelected || sCat === normSelected || sCat.includes(normSelected) || normSelected.includes(sCat);
+    });
     return [...activeLocal, ...(shops || [])];
   }, [localShops, shops, selectedCategory]);
 
@@ -654,8 +658,26 @@ function ShopsPageContent() {
         </div>
       ) : (
         /* DIRECT OFFERS FEED & STICKY ACTION BAR */
-        <div className="flex flex-col gap-5">
-          <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 flex items-center justify-between gap-2">
+        <div className="flex flex-col gap-4">
+          {/* Active Category Title Bar */}
+          <div className="flex items-center justify-between bg-slate-100/90 border border-slate-200/90 rounded-2xl p-3 shadow-2xs">
+            <div className="flex items-center gap-2">
+              <span className="bg-yellow-500 text-slate-955 font-black text-xs px-2.5 py-1 rounded-xl shadow-2xs">
+                {selectedCategory}
+              </span>
+              <span className="text-xs text-slate-600 font-bold">
+                ({filteredShops.length} {filteredShops.length === 1 ? "Offer" : "Offers"})
+              </span>
+            </div>
+            <button
+              onClick={handleClearCategory}
+              className="text-xs font-black text-slate-700 hover:text-slate-900 bg-white border border-slate-250 px-3 py-1 rounded-xl shadow-2xs cursor-pointer hover:bg-slate-50 transition-colors"
+            >
+              ✕ All Categories
+            </button>
+          </div>
+
+          <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2 flex items-center justify-between gap-2">
             <select className="text-xs font-black bg-slate-50 border border-slate-250 rounded-xl px-3 py-2 text-slate-800 focus:outline-none cursor-pointer shrink-0 shadow-2xs">
               <option value="recent">Latest First</option>
             </select>

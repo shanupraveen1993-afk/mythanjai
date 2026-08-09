@@ -106,6 +106,54 @@ function SellPageContent() {
       is_verified: true,
       created_at: new Date() as any,
       expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) as any,
+    },
+    {
+      id: "iphone_sale",
+      userId: "sample_user_4",
+      type: "SELL",
+      title: "iPhone 13 128GB Blue",
+      raw_text: "iPhone 13 128GB Blue",
+      description: "Mint condition, original box, charger cable & bill available.",
+      category: "Electronics & Mobiles",
+      area_tag: "Old Bus Stand",
+      price: "42000",
+      phone: "9876543213",
+      image_url: "/namma_thanjai_logo.png",
+      is_verified: true,
+      created_at: new Date() as any,
+      expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) as any,
+    },
+    {
+      id: "sofa_set_sale",
+      userId: "sample_user_5",
+      type: "SELL",
+      title: "Teakwood 5 Seater Sofa Set",
+      raw_text: "Teakwood 5 Seater Sofa Set",
+      description: "Premium polish, comfortable cushions, well maintained.",
+      category: "Household Goods",
+      area_tag: "Karanthai",
+      price: "18500",
+      phone: "9876543214",
+      image_url: "/hero_building_visual.png",
+      is_verified: true,
+      created_at: new Date() as any,
+      expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) as any,
+    },
+    {
+      id: "treadmill_sale",
+      userId: "sample_user_6",
+      type: "SELL",
+      title: "Motorized Fitness Treadmill",
+      raw_text: "Motorized Fitness Treadmill",
+      description: "Heavy duty motor, digital display, foldable design.",
+      category: "Others",
+      area_tag: "Pullanabhoothangudi",
+      price: "15000",
+      phone: "9876543215",
+      image_url: "/thanjavur_temple_illustration.png",
+      is_verified: true,
+      created_at: new Date() as any,
+      expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) as any,
     }
   ]);
 
@@ -148,10 +196,12 @@ function SellPageContent() {
 
   // Combine real Firestore posts with local test fallback posts
   const allPosts = React.useMemo(() => {
+    const normSelected = (selectedCategory || "").toLowerCase().trim();
     const activeLocal = localPosts.filter((p) => {
       const pType = p.type?.toUpperCase();
       const matchType = !pType || pType === "SELL" || pType === "SALE";
-      const matchCat = !selectedCategory || p.category === selectedCategory;
+      const pCat = (p.category || "").toLowerCase().trim();
+      const matchCat = !normSelected || pCat === normSelected || pCat.includes(normSelected) || normSelected.includes(pCat);
       return matchType && matchCat;
     });
     const list = [
@@ -287,7 +337,25 @@ function SellPageContent() {
       ) : (
         /* ACTIVE CATEGORY LISTINGS GRID & BORDERLESS STICKY CONTROLS BAR */
         <div className="flex flex-col gap-4">
-          <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 flex items-center justify-between gap-2">
+          {/* Active Category Title Bar */}
+          <div className="flex items-center justify-between bg-slate-100/90 border border-slate-200/90 rounded-2xl p-3 shadow-2xs">
+            <div className="flex items-center gap-2">
+              <span className="bg-yellow-500 text-slate-955 font-black text-xs px-2.5 py-1 rounded-xl shadow-2xs">
+                {selectedCategory}
+              </span>
+              <span className="text-xs text-slate-600 font-bold">
+                ({sortedPosts.length} {sortedPosts.length === 1 ? "Listing" : "Listings"})
+              </span>
+            </div>
+            <button
+              onClick={handleClearCategory}
+              className="text-xs font-black text-slate-700 hover:text-slate-900 bg-white border border-slate-250 px-3 py-1 rounded-xl shadow-2xs cursor-pointer hover:bg-slate-50 transition-colors"
+            >
+              ✕ All Categories
+            </button>
+          </div>
+
+          <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2 flex items-center justify-between gap-2">
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}

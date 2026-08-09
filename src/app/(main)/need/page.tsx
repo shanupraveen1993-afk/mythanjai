@@ -89,6 +89,38 @@ function NeedPageContent() {
       is_verified: true,
       created_at: new Date() as any,
       expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) as any,
+    },
+    {
+      id: "need_laptop_sample",
+      userId: "sample_user_7",
+      type: "NEED",
+      title: "Urgent Need i5 Laptop",
+      raw_text: "Urgent Need i5 Laptop",
+      description: "Looking for used Dell/HP laptop for online classes.",
+      category: "Electronics & Mobiles",
+      area_tag: "Medical College Rd",
+      price: "22000",
+      phone: "9876543216",
+      image_url: "/hero_building_visual.png",
+      is_verified: true,
+      created_at: new Date() as any,
+      expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) as any,
+    },
+    {
+      id: "need_furniture_sample",
+      userId: "sample_user_8",
+      type: "NEED",
+      title: "Need Wooden Dining Table",
+      raw_text: "Need Wooden Dining Table",
+      description: "Looking for 4-seater wooden dining table set in good condition.",
+      category: "Household Goods",
+      area_tag: "Vallam",
+      price: "8000",
+      phone: "9876543217",
+      image_url: "/thanjavur_temple_illustration.png",
+      is_verified: true,
+      created_at: new Date() as any,
+      expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) as any,
     }
   ]);
 
@@ -118,17 +150,19 @@ function NeedPageContent() {
   };
 
   const allPosts = React.useMemo(() => {
+    const normSelected = (selectedCategory || "").toLowerCase().trim();
     const activeLocal = localPosts.filter((p) => {
       const pType = p.type?.toUpperCase();
-      const matchType = pType === "NEED" || pType === "BUY";
-      const matchCat = !selectedCategory || p.category === selectedCategory;
+      const matchType = !pType || pType === "NEED";
+      const pCat = (p.category || "").toLowerCase().trim();
+      const matchCat = !normSelected || pCat === normSelected || pCat.includes(normSelected) || normSelected.includes(pCat);
       return matchType && matchCat;
     });
     const list = [
       ...activeLocal,
       ...(posts || []).filter((p) => {
         const pType = p.type?.toUpperCase();
-        return pType === "NEED" || pType === "BUY";
+        return !pType || pType === "NEED";
       }),
     ];
     if (targetPostId) {
@@ -252,7 +286,25 @@ function NeedPageContent() {
       ) : (
         /* ACTIVE CATEGORY LISTINGS GRID & BORDERLESS STICKY CONTROLS BAR */
         <div className="flex flex-col gap-4">
-          <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 flex items-center justify-between gap-2">
+          {/* Active Category Title Bar */}
+          <div className="flex items-center justify-between bg-slate-100/90 border border-slate-200/90 rounded-2xl p-3 shadow-2xs">
+            <div className="flex items-center gap-2">
+              <span className="bg-yellow-500 text-slate-955 font-black text-xs px-2.5 py-1 rounded-xl shadow-2xs">
+                {selectedCategory}
+              </span>
+              <span className="text-xs text-slate-600 font-bold">
+                ({sortedPosts.length} {sortedPosts.length === 1 ? "Requirement" : "Requirements"})
+              </span>
+            </div>
+            <button
+              onClick={handleClearCategory}
+              className="text-xs font-black text-slate-700 hover:text-slate-900 bg-white border border-slate-250 px-3 py-1 rounded-xl shadow-2xs cursor-pointer hover:bg-slate-50 transition-colors"
+            >
+              ✕ All Categories
+            </button>
+          </div>
+
+          <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2 flex items-center justify-between gap-2">
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
