@@ -17,7 +17,9 @@ export default function MainLayout({
 }) {
   return (
     <AuthProvider>
-      <MainLayoutContent>{children}</MainLayoutContent>
+      <React.Suspense fallback={<div className="min-h-screen bg-white flex items-center justify-center font-bold text-xs text-slate-400">Loading Namma Thanjavur...</div>}>
+        <MainLayoutContent>{children}</MainLayoutContent>
+      </React.Suspense>
     </AuthProvider>
   );
 }

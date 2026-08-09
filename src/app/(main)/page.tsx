@@ -33,6 +33,14 @@ import RobotHero from "@/components/ui/robot-hero";
 import { AnimatePresence, motion } from "framer-motion";
 
 export default function HomeLandingPage() {
+  return (
+    <React.Suspense fallback={<div className="min-h-screen bg-white flex items-center justify-center font-bold text-xs text-slate-400">Loading Namma Thanjavur...</div>}>
+      <HomeLandingPageContent />
+    </React.Suspense>
+  );
+}
+
+function HomeLandingPageContent() {
   const router = useRouter();
   const { profile } = useAuth();
 

@@ -32,6 +32,14 @@ import {
 import confetti from "canvas-confetti";
 
 export default function ProfilePage() {
+  return (
+    <React.Suspense fallback={<div className="p-8 text-center text-xs font-bold text-slate-400">Loading User Profile...</div>}>
+      <ProfilePageContent />
+    </React.Suspense>
+  );
+}
+
+function ProfilePageContent() {
   const { user, profile, loading: authLoading, updatePhone, signOutUser } = useAuth();
   const router = useRouter();
   const [phoneNumber, setPhoneNumber] = useState("");

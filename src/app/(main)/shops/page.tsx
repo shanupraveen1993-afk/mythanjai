@@ -49,6 +49,14 @@ const LeafletMap = dynamic(() => import("@/components/maps/LeafletMap"), {
 });
 
 export default function ShopsPage() {
+  return (
+    <React.Suspense fallback={<div className="p-8 text-center text-xs font-bold text-slate-400">Loading Store Offers...</div>}>
+      <ShopsPageContent />
+    </React.Suspense>
+  );
+}
+
+function ShopsPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, profile, loading } = useAuth();
