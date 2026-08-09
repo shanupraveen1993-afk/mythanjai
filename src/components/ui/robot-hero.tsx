@@ -912,7 +912,7 @@ export function RobotHero({
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-dvh md:h-[calc(100vh-70px)] flex flex-col justify-between items-center bg-white text-slate-800 pt-5 sm:pt-6 pb-4 sm:py-5 px-3 sm:px-4 overflow-hidden select-none"
+      className="relative w-full h-dvh md:h-[calc(100vh-70px)] flex flex-col justify-between items-center bg-white text-slate-800 pt-7 sm:pt-10 pb-4 sm:py-5 px-3 sm:px-4 overflow-hidden select-none"
     >
       {/* Light radial glow centered behind hero */}
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_45%,rgba(250,204,21,0.06)_0%,transparent_60%)] pointer-events-none" />
@@ -920,8 +920,8 @@ export function RobotHero({
       {/* Centered Foreground Hero Content */}
       <div className="relative z-10 w-full max-w-3xl md:max-w-4xl lg:max-w-5xl mx-auto flex flex-col items-center justify-between text-center gap-1 my-auto h-full pointer-events-auto">
         
-        {/* 1. Tight Unified Header Group: Logo + Headline + Subline + Rotational Switcher Badge (ZERO GAPS) */}
-        <div className="flex flex-col items-center gap-1 sm:gap-1.5 w-full shrink-0 pt-2 sm:pt-3">
+        {/* 1. Clean Spaced Header Group: Logo + Headline + Subline + Rotational Switcher Badge */}
+        <div className="flex flex-col items-center gap-2 sm:gap-2.5 w-full shrink-0 pt-1 sm:pt-2">
           <div className="w-18 h-18 sm:w-24 sm:h-24 md:w-30 md:h-30 rounded-2xl sm:rounded-3xl bg-white shadow-md p-2 sm:p-3 flex items-center justify-center shrink-0 border border-slate-200/90 hover:scale-[1.02] transition-transform">
             <img 
               src="/namma_thanjai_logo.png" 
@@ -929,15 +929,15 @@ export function RobotHero({
               className="w-full h-full object-contain" 
             />
           </div>
-          <h1 className="font-heading font-black text-4xl xs:text-5xl sm:text-7xl md:text-8.5xl lg:text-9.5xl text-slate-955 tracking-tight leading-none uppercase mt-0.5 sm:mt-1.5 w-full text-center drop-shadow-2xs scale-x-[1.04] transform origin-center whitespace-nowrap">
+          <h1 className="font-heading font-black text-4xl xs:text-5xl sm:text-7xl md:text-8.5xl lg:text-9.5xl text-slate-955 tracking-tight leading-none uppercase mt-1 sm:mt-2 w-full text-center drop-shadow-2xs scale-x-[1.04] transform origin-center whitespace-nowrap">
             namma thanjai<span className="text-yellow-500">.</span>
           </h1>
-          <p className="text-[11px] sm:text-xs md:text-sm font-black text-slate-600 max-w-xl mx-auto leading-normal tracking-wider uppercase opacity-90">
+          <p className="text-[11px] sm:text-xs md:text-sm font-black text-slate-600 max-w-xl mx-auto leading-normal tracking-wider uppercase mt-1 opacity-90">
             SELL, NEED, SERVICES & OFFERS
           </p>
 
-          {/* 2. Rotational Category Switcher Badge (Locked Directly Under Subline with Zero Space) */}
-          <div className="flex items-center justify-center overflow-visible shrink-0 mt-1 py-0.5">
+          {/* 2. Rotational Category Switcher Badge */}
+          <div className="flex items-center justify-center overflow-visible shrink-0 mt-2 sm:mt-2.5 py-0.5">
             <AnimatePresence mode="wait">
               <motion.div
                 key={wordIndex}
@@ -954,23 +954,23 @@ export function RobotHero({
           </div>
         </div>
 
-        {/* 3. Responsive 3D Mascot Robot Canvas (Unclipped Camera Frustum with Ample Top & Bottom Margin) */}
+        {/* 3. Responsive 3D Mascot Robot Canvas (Standard Proportions) */}
         <div 
           onClick={handleRobotTap} 
-          className="w-full max-w-[290px] sm:max-w-[370px] md:max-w-[450px] flex-1 min-h-[190px] sm:min-h-[240px] md:min-h-[280px] max-h-[290px] sm:max-h-[330px] md:max-h-[380px] relative flex items-center justify-center cursor-pointer overflow-visible my-0.5 bg-transparent"
+          className="w-full max-w-[300px] sm:max-w-[370px] md:max-w-[450px] flex-1 h-full min-h-[200px] sm:min-h-[240px] md:min-h-[280px] max-h-[310px] sm:max-h-[340px] md:max-h-[380px] relative flex items-center justify-center cursor-pointer overflow-visible my-1 bg-transparent"
         >
-          <Canvas camera={{ position: [0, 0.1, 4.5], fov: 42 }} className="overflow-visible bg-transparent">
+          <Canvas camera={{ position: [0, 0.1, 4.4], fov: 42 }} className="overflow-visible bg-transparent">
             <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
             <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} shadow-bias={-0.0005} />
             <Environment preset="studio" blur={0.5} />
-            <ResponsiveGroup scale={scale * 1.5}>
+            <ResponsiveGroup scale={scale * 1.35}>
               <RobotPrototype neckParams={{ baseR: 0.215, baseH: -0.05, midR: 0.28, midH: 0.02, lipBottomR: 0.295, lipBottomH: 0.045, lipTopR: 0.27, lipTopH: 0.055, innerR: 0.1, innerDropH: 0.0 }} bodyParams={{ bodyBevelR: 0.235, bodyBevelY: 0.34, bodyBevelT: 0.025 }} color={color} pantallaColor={pantallaColor} pantallaBrillo={pantallaBrillo} blinkCycle={blinkCycle} metalness={metalness} />
             </ResponsiveGroup>
           </Canvas>
         </div>
 
-        {/* 4. Snug Action Footer Group (Only CTA button on Mobile, Live alert ticker hidden on mobile) */}
-        <div className="w-full max-w-xs sm:max-w-sm md:max-w-md shrink-0 flex flex-col gap-2 sm:gap-2.5 px-1 pb-1">
+        {/* 4. Action Footer Group (CTA button lifted higher up with bottom padding) */}
+        <div className="w-full max-w-xs sm:max-w-sm md:max-w-md shrink-0 flex flex-col gap-2 sm:gap-2.5 px-1 pb-3 sm:pb-4 mb-2">
           <button
             type="button"
             onClick={onCtaClick}
