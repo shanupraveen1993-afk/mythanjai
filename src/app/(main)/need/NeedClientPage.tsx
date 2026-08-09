@@ -137,7 +137,7 @@ export default function NeedClientPage() {
     }
   ]);
 
-  const targetPostId = searchParams.get("post");
+  const targetPostId = null;
   
   const { data: posts, loading: postsLoading } = useFirestore<NeedOrSalePost>({
     collectionName: "needs_and_sales",
