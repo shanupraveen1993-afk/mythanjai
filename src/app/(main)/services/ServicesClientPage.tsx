@@ -9,7 +9,6 @@ import { ServiceProviderPost } from "@/types";
 import { Wrench, Plus, ChevronDown, ChevronUp, Loader2, ArrowRight, ArrowLeft, Upload, ShieldCheck, Tag, Calendar, Share2, Check, Zap, Droplet, Wind, Hammer, MapPin, MessageSquare, Search, Utensils } from "lucide-react";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import confetti from "canvas-confetti";
 import { useAuth } from "@/hooks/use-auth";
 
 export default function ServicesClientPage() {

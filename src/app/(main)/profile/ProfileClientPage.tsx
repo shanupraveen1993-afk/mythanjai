@@ -29,7 +29,6 @@ import {
   Zap,
   LogOut
 } from "lucide-react";
-import confetti from "canvas-confetti";
 
 export default function ProfileClientPage() {
   const { user, profile, loading: authLoading, updatePhone, signOutUser } = useAuth();
@@ -157,7 +156,10 @@ export default function ProfileClientPage() {
       const { doc, setDoc } = await import("firebase/firestore");
       const userRef = doc(db, "users", user.uid);
       await setDoc(userRef, { displayName: displayName.trim() }, { merge: true });
-      confetti({ particleCount: 30, spread: 30 });
+      try {
+        const confetti = (await import("canvas-confetti")).default;
+        confetti({ particleCount: 30, spread: 30 });
+      } catch (err) {}
       alert("Profile name updated successfully!");
     } catch (error) {
       console.error("Error saving name:", error);
@@ -233,11 +235,14 @@ export default function ProfileClientPage() {
 
           setIsDbVerified(true);
           setVerificationPending(false);
-          confetti({
-            particleCount: 150,
-            spread: 80,
-            origin: { y: 0.6 },
-          });
+          try {
+            const confetti = (await import("canvas-confetti")).default;
+            confetti({
+              particleCount: 150,
+              spread: 80,
+              origin: { y: 0.6 },
+            });
+          } catch (err) {}
         }
       }
     } catch (error) {
@@ -254,7 +259,10 @@ export default function ProfileClientPage() {
     if (outcome === "accepted") {
       setIsInstallable(false);
       setDeferredPrompt(null);
-      confetti({ particleCount: 50, spread: 60 });
+      try {
+        const confetti = (await import("canvas-confetti")).default;
+        confetti({ particleCount: 50, spread: 60 });
+      } catch (err) {}
     }
   };
 
@@ -267,7 +275,10 @@ export default function ProfileClientPage() {
       const docRef = doc(db, colName, id);
       await deleteDoc(docRef);
       setMyPosts((prev) => prev.filter((p) => p.id !== id));
-      confetti({ particleCount: 20, colors: ["#ef4444"] });
+      try {
+        const confetti = (await import("canvas-confetti")).default;
+        confetti({ particleCount: 20, colors: ["#ef4444"] });
+      } catch (err) {}
     } catch (error) {
       console.error("Error deleting post:", error);
       alert("Failed to delete post.");

@@ -11,7 +11,6 @@ import { ShopPost } from "@/types";
 import { Store, Plus, ChevronDown, ChevronUp, Loader2, ArrowRight, ArrowLeft, Upload, Compass, X, MapPin, Sparkles, Check, Calendar, Share2, MessageSquare, Video, Search, Utensils, ShoppingBag, Shirt, ShieldCheck, Tv, Car } from "lucide-react";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import confetti from "canvas-confetti";
 import { useAuth } from "@/hooks/use-auth";
 
 // Locality coordinates centers to auto-coordinate map markers

@@ -31,7 +31,6 @@ import {
   Shirt,
   Compass,
 } from "lucide-react";
-import confetti from "canvas-confetti";
 import { db, storage, auth } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -183,7 +182,10 @@ export default function CreatePostModal({
         if (extractedPhone) setPhone(extractedPhone);
 
         // Flash message or visual cue
-        confetti({ particleCount: 30, spread: 40, colors: ["#fbbf24"] });
+        try {
+          const confetti = (await import("canvas-confetti")).default;
+          confetti({ particleCount: 30, spread: 40, colors: ["#fbbf24"] });
+        } catch (err) {}
       } else {
         alert("Could not extract details. Please fill manually.");
       }
@@ -371,18 +373,24 @@ export default function CreatePostModal({
       }
 
       // Success Celebratory feedback
-      confetti({
-        particleCount: 120,
-        spread: 70,
-        origin: { y: 0.6 },
-      });
+      try {
+        const confetti = (await import("canvas-confetti")).default;
+        confetti({
+          particleCount: 120,
+          spread: 70,
+          origin: { y: 0.6 },
+        });
+      } catch (err) {}
 
       // Reset & Close
       onClose();
       resetForm();
     } catch (error: any) {
       console.error("Error publishing post:", error);
-      confetti({ particleCount: 80, spread: 60 });
+      try {
+        const confetti = (await import("canvas-confetti")).default;
+        confetti({ particleCount: 80, spread: 60 });
+      } catch (err) {}
       onClose();
       resetForm();
     } finally {

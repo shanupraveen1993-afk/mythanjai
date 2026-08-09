@@ -4,7 +4,6 @@ import React, { useState, useEffect } from "react";
 import { X, Phone, MessageSquare, Zap, Loader2, CheckCircle } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useSearchParams, useRouter } from "next/navigation";
-import confetti from "canvas-confetti";
 
 interface SignInModalProps {
   isOpen: boolean;

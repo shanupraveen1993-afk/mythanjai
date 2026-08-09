@@ -10,7 +10,6 @@ import { NeedOrSalePost } from "@/types";
 import { MessageSquare, Plus, ChevronUp, ChevronDown, Loader2, ArrowRight, ArrowLeft, Tag, FileText, Search, Upload, Calendar, Share2, Home, Car, Tv, Compass, Check, MapPin, Sparkles } from "lucide-react";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import confetti from "canvas-confetti";
 import { useAuth } from "@/hooks/use-auth";
 
 export default function ClassifiedsClientPage() {

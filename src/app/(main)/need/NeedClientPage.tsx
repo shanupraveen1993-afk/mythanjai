@@ -9,7 +9,6 @@ import { NeedOrSalePost } from "@/types";
 import { Search, Plus, ChevronUp, ChevronDown, Loader2, ArrowRight, ArrowLeft, Tag, FileText, Upload, Calendar, Share2, Home, Car, Tv, Compass, Check, MapPin, ShoppingBag } from "lucide-react";
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
-import confetti from "canvas-confetti";
 import { useAuth } from "@/hooks/use-auth";
 import CreatePostModal from "@/components/modals/CreatePostModal";
 
@@ -252,7 +251,10 @@ export default function NeedClientPage() {
       };
 
       setLocalPosts((prev) => [newPost, ...prev]);
-      confetti({ particleCount: 80, spread: 60 });
+      try {
+        const confetti = (await import("canvas-confetti")).default;
+        confetti({ particleCount: 80, spread: 60 });
+      } catch (err) {}
     } finally {
       setFormTitle("");
       setFormDesc("");
