@@ -217,8 +217,8 @@ export default function SellClientPage() {
 
   return (
     <div className="flex flex-col gap-5 mt-3 md:mt-4 pt-1 pb-12 max-w-7xl mx-auto px-4 sm:px-6">
-      {/* HERO BANNER: Shown ONLY on Main Category Overview Page */}
-      {!selectedCategory && (
+      {/* HERO BANNER */}
+      {true && (
         <div className="relative w-full min-h-[190px] sm:min-h-[210px] rounded-3xl overflow-hidden shadow-md border border-slate-800 bg-slate-955 text-white flex items-center p-6 sm:p-8">
           <img 
             src="/thanjavur_temple_illustration.png" 
@@ -248,147 +248,83 @@ export default function SellClientPage() {
         </div>
       )}
 
-      {/* STEP 1: CATEGORY SELECTION OVERVIEW GRID */}
-      {!selectedCategory ? (
-        <div className="flex flex-col gap-6">
-          <div className="flex justify-between items-center border-b border-slate-200/80 pb-3">
-            <div>
-              <h2 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight">
-                Browse Sell Categories
-              </h2>
-              <p className="text-xs text-slate-500 font-medium mt-0.5">
-                Select a category to view active listings across Thanjavur
-              </p>
-            </div>
+      {/* FILTER BAR + POST BUTTON */}
+      <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2 flex flex-col gap-2">
+        <div className="flex items-center justify-between gap-2">
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as any)}
+            className="text-xs font-black bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none cursor-pointer shrink-0 shadow-sm"
+          >
+            <option value="recent">Latest First</option>
+            <option value="price_low">Price: Low → High</option>
+            <option value="price_high">Price: High → Low</option>
+          </select>
+          <button
+            type="button"
+            onClick={() => setIsFormOpen(true)}
+            className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-3.5 sm:px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-sm shrink-0"
+          >
+            <Plus className="w-4 h-4 text-slate-955 stroke-[2.5]" />
+            <span>Post Sale</span>
+          </button>
+        </div>
 
+        {/* Horizontal Category Chips */}
+        <div className="flex overflow-x-auto scrollbar-none gap-2 pb-1">
+          <button
+            onClick={() => setSelectedCategory(null)}
+            className={`shrink-0 text-[11px] font-black px-3 py-1.5 rounded-full border transition-all ${!selectedCategory ? "bg-slate-900 text-white border-slate-900" : "bg-white text-slate-700 border-slate-200 hover:border-slate-400"}`}
+          >
+            All
+          </button>
+          {CLASSIFIED_CATEGORIES.map((cat) => (
             <button
-              onClick={() => setIsFormOpen(true)}
-              className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-3.5 sm:px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-2xs shrink-0"
+              key={cat}
+              onClick={() => setSelectedCategory(cat)}
+              className={`shrink-0 text-[11px] font-black px-3 py-1.5 rounded-full border transition-all whitespace-nowrap ${selectedCategory === cat ? "bg-yellow-500 text-slate-900 border-yellow-500" : "bg-white text-slate-700 border-slate-200 hover:border-slate-400"}`}
             >
-              <Plus className="w-4 h-4 text-slate-955 stroke-[2.5]" />
-              <span>Post Sale</span>
+              {cat}
             </button>
-          </div>
+          ))}
+        </div>
+      </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-3.5 sm:gap-4">
-            {CLASSIFIED_CATEGORIES.map((cat) => {
-              const illustration = CATEGORY_ILLUSTRATIONS[cat] || "/thanjavur_temple_illustration.png";
-              return (
-                <button
-                  key={cat}
-                  type="button"
-                  onClick={() => handleCategorySelect(cat)}
-                  className="bg-white border border-slate-200 hover:border-slate-300 p-2.5 sm:p-3 rounded-2xl shadow-2xs text-left transition-all active:scale-[0.98] hover:shadow-xs flex flex-col gap-2.5 group w-full cursor-pointer overflow-hidden justify-between items-center"
-                >
-                  <div className="w-full h-16 sm:h-20 rounded-xl overflow-hidden bg-slate-100/80 relative flex items-center justify-center border border-slate-200/50">
-                    <img 
-                      src={illustration} 
-                      alt={cat} 
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                  <div className="w-full text-center">
-                    <span className="text-[11px] sm:text-xs font-black text-slate-900 block group-hover:text-slate-700 transition-colors line-clamp-1">
-                      {cat}
-                    </span>
-                  </div>
-                </button>
-              );
-            })}
-          </div>
-
-          <div className="flex flex-col gap-3 pt-2 border-t border-slate-200/80">
-            <div className="flex items-center justify-between">
-              <h2 className="font-heading font-black text-sm sm:text-base text-slate-900 tracking-tight">
-                Recent Sell Listings
-              </h2>
+      {/* FLAT LISTINGS FEED */}
+      {postsLoading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[1, 2, 3].map((n) => (
+            <div key={n} className="bg-white border border-slate-200/60 rounded-2xl p-4 flex flex-col gap-3 animate-pulse">
+              <div className="w-24 h-4 bg-slate-200 rounded-full" />
+              <div className="w-full h-20 bg-slate-200 rounded-xl" />
             </div>
-            <div className="flex overflow-x-auto snap-x scrollbar-none gap-4 pb-2">
-              {sortedPosts.map((post) => (
-                <div 
-                  key={post.id} 
-                  onClick={() => handleCategorySelect(post.category)}
-                  className="shrink-0 w-[280px] sm:w-[320px] snap-start cursor-pointer hover:scale-[1.01] transition-transform"
-                >
-                  <NeedCard post={post} />
-                </div>
-              ))}
-            </div>
+          ))}
+        </div>
+      ) : sortedPosts.length === 0 ? (
+        <div className="flex flex-col items-center justify-center py-16 px-4 bg-white border border-slate-200/60 rounded-2xl text-center gap-3">
+          <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200/80">
+            <ShoppingBag className="w-5 h-5 text-amber-500" />
           </div>
+          <div>
+            <h4 className="font-heading font-extrabold text-sm text-slate-800">No Listings Yet</h4>
+            <p className="text-[11px] text-slate-500 mt-1 max-w-[220px] mx-auto leading-relaxed">
+              {selectedCategory ? `No items in "${selectedCategory}" yet.` : "Be the first to post a listing!"}
+            </p>
+          </div>
+          <button
+            onClick={() => setIsFormOpen(true)}
+            className="mt-1 bg-yellow-500 text-slate-900 font-black text-xs px-4 py-2 rounded-xl border border-yellow-400 hover:bg-yellow-600 transition-all"
+          >
+            + Post Now
+          </button>
         </div>
       ) : (
-        /* ACTIVE CATEGORY LISTINGS GRID & BORDERLESS STICKY CONTROLS BAR */
-        <div className="flex flex-col gap-4">
-          {/* Active Category Title Bar */}
-          <div className="flex items-center justify-between bg-slate-100/90 border border-slate-200/90 rounded-2xl p-3 shadow-2xs">
-            <div className="flex items-center gap-2">
-              <span className="bg-yellow-500 text-slate-955 font-black text-xs px-2.5 py-1 rounded-xl shadow-2xs">
-                {selectedCategory}
-              </span>
-              <span className="text-xs text-slate-600 font-bold">
-                ({sortedPosts.length} {sortedPosts.length === 1 ? "Listing" : "Listings"})
-              </span>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {sortedPosts.map((post) => (
+            <div key={post.id} id={`post-${post.id}`} className="transition-all duration-300">
+              <NeedCard post={post} />
             </div>
-            <button
-              onClick={handleClearCategory}
-              className="text-xs font-black text-slate-700 hover:text-slate-900 bg-white border border-slate-250 px-3 py-1 rounded-xl shadow-2xs cursor-pointer hover:bg-slate-50 transition-colors"
-            >
-              ✕ All Categories
-            </button>
-          </div>
-
-          <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2 flex items-center justify-between gap-2">
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
-              className="text-xs font-black bg-slate-50 border border-slate-250 rounded-xl px-3 py-2 text-slate-800 focus:outline-none cursor-pointer shrink-0 shadow-2xs"
-            >
-              <option value="recent">Latest First</option>
-              <option value="price_low">Price: Low to High</option>
-              <option value="price_high">Price: High to Low</option>
-            </select>
-
-            <button
-              type="button"
-              onClick={() => setIsFormOpen(true)}
-              className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-3.5 sm:px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-2xs shrink-0"
-            >
-              <Plus className="w-4 h-4 text-slate-955 stroke-[2.5]" />
-              <span>Post Sale</span>
-            </button>
-          </div>
-
-          {/* Posts Grid */}
-          {postsLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {[1, 2, 3].map((n) => (
-                <div key={n} className="bg-white border border-slate-200/60 rounded-2xl p-4 flex flex-col gap-3 animate-pulse">
-                  <div className="w-24 h-4 bg-slate-200 rounded-full" />
-                  <div className="w-full h-20 bg-slate-200 rounded-xl" />
-                </div>
-              ))}
-            </div>
-          ) : sortedPosts.length === 0 ? (
-            <div className="flex flex-col items-center justify-center py-16 px-4 bg-white border border-slate-200/60 rounded-2xl text-center gap-3">
-              <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center border border-slate-200/80 text-slate-400">
-                <ShoppingBag className="w-5 h-5 text-amber-500" />
-              </div>
-              <div>
-                <h4 className="font-heading font-extrabold text-sm text-slate-800">No Posts Found</h4>
-                <p className="text-[11px] text-slate-500 mt-1 max-w-[220px] mx-auto leading-relaxed">
-                  No items listed in <span className="font-bold text-slate-800">{selectedCategory}</span> for {area} yet.
-                </p>
-              </div>
-            </div>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {sortedPosts.map((post) => (
-                <div key={post.id} id={`post-${post.id}`} className="transition-all duration-500">
-                  <NeedCard post={post} />
-                </div>
-              ))}
-            </div>
-          )}
+          ))}
         </div>
       )}
 
