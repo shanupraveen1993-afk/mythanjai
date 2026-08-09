@@ -350,15 +350,7 @@ function ServicesPageContent() {
           </select>
 
           <button
-            onClick={() => {
-              if (!profile?.isVerified) {
-                const currentParams = new URLSearchParams(searchParams.toString());
-                currentParams.set("auth", "popup");
-                router.push(`/services?${currentParams.toString()}`);
-              } else {
-                setIsFormOpen(!isFormOpen);
-              }
-            }}
+            onClick={() => setIsFormOpen(!isFormOpen)}
             className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-3.5 sm:px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-2xs shrink-0"
           >
             <Plus className={`w-4 h-4 text-slate-955 transition-transform duration-250 ${isFormOpen ? "rotate-45" : ""}`} />

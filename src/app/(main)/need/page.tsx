@@ -100,8 +100,10 @@ function NeedPageContent() {
     category: selectedCategory || "All",
   });
 
-  const handleCategorySelect = (category: string) => {
-    setSelectedCategory(category);
+  const handleCategorySelect = (category?: string | null) => {
+    if (category && typeof category === "string") {
+      setSelectedCategory(category);
+    }
   };
 
   const handleClearCategory = () => {
@@ -114,7 +116,7 @@ function NeedPageContent() {
       const matchCat = !selectedCategory || p.category === selectedCategory;
       return matchType && matchCat;
     });
-    const list = [...activeLocal, ...posts.filter((p) => p.type?.toUpperCase() === "NEED")];
+    const list = [...activeLocal, ...(posts || []).filter((p) => p.type?.toUpperCase() === "NEED")];
     if (targetPostId) {
       list.sort((a, b) => {
         if (a.id === targetPostId) return -1;
@@ -182,13 +184,7 @@ function NeedPageContent() {
           </select>
 
           <button
-            onClick={() => {
-              if (!profile?.isVerified) {
-                router.push("/need?auth=popup");
-              } else {
-                setIsFormOpen(true);
-              }
-            }}
+            onClick={() => setIsFormOpen(true)}
             className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-3.5 sm:px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-2xs shrink-0"
           >
             <Plus className="w-4 h-4 text-slate-955 stroke-[2.5]" />

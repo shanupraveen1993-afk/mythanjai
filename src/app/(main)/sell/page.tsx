@@ -129,8 +129,10 @@ function SellPageContent() {
     category: selectedCategory || "All",
   });
 
-  const handleCategorySelect = (category: string) => {
-    setSelectedCategory(category);
+  const handleCategorySelect = (category?: string | null) => {
+    if (category && typeof category === "string") {
+      setSelectedCategory(category);
+    }
   };
 
   const handleClearCategory = () => {
@@ -139,41 +141,42 @@ function SellPageContent() {
 
   // Combine real Firestore posts with local test fallback posts
   const allPosts = React.useMemo(() => {
-    const activeLocal = localPosts.filter(p => {
-      const pType = p.type.toLowerCase();
-      const matchType = pType === "sell" || pType === "sale";
-      const matchCategory = !selectedCategory || p.category === selectedCategory;
-      return matchType && matchCategory;
+    const activeLocal = localPosts.filter((p) => {
+      const matchType = p.type?.toUpperCase() === "SELL";
+      const matchCat = !selectedCategory || p.category === selectedCategory;
+      return matchType && matchCat;
     });
-    return [...activeLocal, ...(posts || []).filter(p => p.type?.toLowerCase() === "sell" || p.type?.toLowerCase() === "sale")];
-  }, [localPosts, posts, selectedCategory]);
-
-  // Filter posts locally if there's a search query
-  const filteredPosts = allPosts.filter((post: NeedOrSalePost) => {
-    if (!searchQuery.trim()) return true;
-    const query = searchQuery.toLowerCase();
-    const titleMatch = post.title?.toLowerCase().includes(query);
-    const descMatch = post.description?.toLowerCase().includes(query);
-    const textMatch = post.raw_text?.toLowerCase().includes(query);
-    return titleMatch || descMatch || textMatch;
-  });
-
-  // Client-side sorting
-  const sortedPosts = [...filteredPosts].sort((a, b) => {
+    const list = [...activeLocal, ...(posts || []).filter((p) => p.type?.toUpperCase() === "SELL")];
     if (targetPostId) {
-      if (a.id === targetPostId) return -1;
-      if (b.id === targetPostId) return 1;
+      list.sort((a, b) => {
+        if (a.id === targetPostId) return -1;
+        if (b.id === targetPostId) return 1;
+        return 0;
+      });
     }
+    return list;
+  }, [localPosts, posts, selectedCategory, targetPostId]);
+
+  // Client-side search and sort
+  const sortedPosts = React.useMemo(() => {
+    let result = [...allPosts];
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
+      result = result.filter(
+        (p) =>
+          p.title?.toLowerCase().includes(q) ||
+          p.description?.toLowerCase().includes(q) ||
+          p.area_tag?.toLowerCase().includes(q)
+      );
+    }
+
     if (sortBy === "price_low") {
-      return (Number(a.price) || 0) - (Number(b.price) || 0);
+      result.sort((a, b) => (Number(a.price) || 0) - (Number(b.price) || 0));
+    } else if (sortBy === "price_high") {
+      result.sort((a, b) => (Number(b.price) || 0) - (Number(a.price) || 0));
     }
-    if (sortBy === "price_high") {
-      return (Number(b.price) || 0) - (Number(a.price) || 0);
-    }
-    const timeA = a.created_at?.seconds || 0;
-    const timeB = b.created_at?.seconds || 0;
-    return timeB - timeA;
-  });
+    return result;
+  }, [allPosts, searchQuery, sortBy]);
 
   return (
     <div className="flex flex-col gap-5 mt-3 md:mt-4 pt-1 pb-12 max-w-7xl mx-auto px-4 sm:px-6">
@@ -214,13 +217,7 @@ function SellPageContent() {
           </select>
 
           <button
-            onClick={() => {
-              if (!profile?.isVerified) {
-                router.push("/sell?auth=popup");
-              } else {
-                setIsFormOpen(true);
-              }
-            }}
+            onClick={() => setIsFormOpen(true)}
             className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-3.5 sm:px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-2xs shrink-0"
           >
             <Plus className="w-4 h-4 text-slate-955 stroke-[2.5]" />
