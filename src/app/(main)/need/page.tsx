@@ -188,28 +188,6 @@ function NeedPageContent() {
         </div>
       )}
 
-      {/* CONTROLS BAR ABOVE LISTING: ONLY Sort By & Post Button */}
-      <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 px-3.5 border border-slate-200 rounded-2xl shadow-2xs flex items-center justify-end gap-2">
-        <select
-          value={sortBy}
-          onChange={(e) => setSortBy(e.target.value as any)}
-          className="text-xs font-black bg-slate-50 border border-slate-250 rounded-xl px-3 py-2 text-slate-800 focus:outline-none cursor-pointer shrink-0 shadow-2xs"
-        >
-          <option value="recent">Latest First</option>
-          <option value="price_low">Budget: Low to High</option>
-          <option value="price_high">Budget: High to Low</option>
-        </select>
-
-        <button
-          type="button"
-          onClick={() => setIsFormOpen(true)}
-          className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-3.5 sm:px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-2xs shrink-0"
-        >
-          <Plus className="w-4 h-4 text-slate-955 stroke-[2.5]" />
-          <span>Post Need</span>
-        </button>
-      </div>
-
       {!selectedCategory ? (
         <div className="flex flex-col gap-6">
           <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2.5 sm:gap-3.5">
@@ -260,12 +238,36 @@ function NeedPageContent() {
           </div>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {sortedPosts.map((post) => (
-            <div key={post.id} id={`post-${post.id}`} className="transition-all duration-500">
-              <NeedCard post={post} />
-            </div>
-          ))}
+        /* ACTIVE CATEGORY LISTINGS GRID & BORDERLESS STICKY CONTROLS BAR */
+        <div className="flex flex-col gap-4">
+          <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 flex items-center justify-between gap-2">
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as any)}
+              className="text-xs font-black bg-slate-50 border border-slate-250 rounded-xl px-3 py-2 text-slate-800 focus:outline-none cursor-pointer shrink-0 shadow-2xs"
+            >
+              <option value="recent">Latest First</option>
+              <option value="price_low">Budget: Low to High</option>
+              <option value="price_high">Budget: High to Low</option>
+            </select>
+
+            <button
+              type="button"
+              onClick={() => setIsFormOpen(true)}
+              className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-3.5 sm:px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-2xs shrink-0"
+            >
+              <Plus className="w-4 h-4 text-slate-955 stroke-[2.5]" />
+              <span>Post Need</span>
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {sortedPosts.map((post) => (
+              <div key={post.id} id={`post-${post.id}`} className="transition-all duration-500">
+                <NeedCard post={post} />
+              </div>
+            ))}
+          </div>
         </div>
       )}
     </div>

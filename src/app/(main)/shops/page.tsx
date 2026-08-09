@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useFirestore } from "@/hooks/use-firestore";
 import ShopCard from "@/components/cards/ShopCard";
-import { SHOP_CATEGORIES, TANJORE_LOCALITIES, TanjoreLocality } from "@/lib/constants";
+import { SHOP_CATEGORIES, TANJORE_LOCALITIES, TanjoreLocality, CATEGORY_ILLUSTRATIONS } from "@/lib/constants";
 import { ShopPost } from "@/types";
 import { Store, Plus, ChevronDown, ChevronUp, Loader2, ArrowRight, ArrowLeft, Upload, Compass, X, MapPin, Sparkles, Check, Calendar, Share2, MessageSquare, Video, Search } from "lucide-react";
 import { db } from "@/lib/firebase";
@@ -558,23 +558,76 @@ function ShopsPageContent() {
         </div>
       )}
 
-      {/* DIRECT OFFERS FEED & STICKY ACTION BAR */}
-      <div className="flex flex-col gap-5">
-        {/* UNIVERSAL STICKY ACTION BAR */}
-        <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 px-3.5 border border-slate-200 rounded-2xl shadow-2xs flex items-center justify-end gap-2">
-          <select className="text-xs font-black bg-slate-50 border border-slate-250 rounded-xl px-3 py-2 text-slate-800 focus:outline-none cursor-pointer shrink-0 shadow-2xs">
-            <option value="recent">Latest First</option>
-          </select>
+      {/* CATEGORY SELECTION OR DIRECT OFFERS FEED */}
+      {!selectedCategory ? (
+        <div className="flex flex-col gap-6">
+          {/* 3-Column Compact Category Selection Grid */}
+          <div className="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-2.5 sm:gap-3.5">
+            {SHOP_CATEGORIES.map((cat) => {
+              const illustration = CATEGORY_ILLUSTRATIONS[cat] || "https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&auto=format&fit=crop";
+              return (
+                <button
+                  key={cat}
+                  type="button"
+                  onClick={() => handleCategorySelect(cat)}
+                  className="bg-white border border-slate-200 hover:border-slate-400 p-2 sm:p-3 rounded-2xl shadow-2xs text-left transition-all active:scale-[0.98] hover:shadow-md flex flex-col gap-2 group w-full cursor-pointer overflow-hidden justify-between"
+                >
+                  <div className="w-full h-16 sm:h-24 rounded-xl overflow-hidden relative bg-slate-100 border border-slate-100">
+                    <img
+                      src={illustration}
+                      alt={cat}
+                      className="w-full h-full object-cover group-hover:scale-108 transition-transform duration-300"
+                    />
+                  </div>
+                  <div>
+                    <span className="text-[11px] sm:text-xs font-black text-slate-900 block group-hover:text-slate-700 transition-colors line-clamp-1">
+                      {cat}
+                    </span>
+                    <span className="text-[9px] sm:text-[10px] font-bold text-slate-400 block mt-0.5">Explore →</span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
 
-          <button
-            type="button"
-            onClick={() => setIsFormOpen(!isFormOpen)}
-            className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-3.5 sm:px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-2xs shrink-0"
-          >
-            <Plus className={`w-4 h-4 text-slate-955 transition-transform duration-250 ${isFormOpen ? "rotate-45" : ""}`} />
-            <span>Post Offer</span>
-          </button>
+          {/* Horizontal Scrollable Preview Feed of Recent Stores & Offers */}
+          <div className="flex flex-col gap-3 pt-2 border-t border-slate-200/80">
+            <div className="flex items-center justify-between">
+              <h2 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight">
+                Recent Store Offers & Deals
+              </h2>
+              <span className="text-xs font-bold text-slate-500">Click card to view category →</span>
+            </div>
+            <div className="flex overflow-x-auto snap-x scrollbar-none gap-4 pb-2">
+              {(localShops.length > 0 ? localShops : combinedShops).map((shop) => (
+                <div 
+                  key={shop.id} 
+                  onClick={() => handleCategorySelect(shop.category)}
+                  className="shrink-0 w-[280px] sm:w-[320px] snap-start cursor-pointer hover:scale-[1.01] transition-transform"
+                >
+                  <ShopCard post={shop} onMapToggle={handleMapToggle} isMapActive={mapShop?.id === shop.id} />
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
+      ) : (
+        /* DIRECT OFFERS FEED & STICKY ACTION BAR */
+        <div className="flex flex-col gap-5">
+          <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 flex items-center justify-between gap-2">
+            <select className="text-xs font-black bg-slate-50 border border-slate-250 rounded-xl px-3 py-2 text-slate-800 focus:outline-none cursor-pointer shrink-0 shadow-2xs">
+              <option value="recent">Latest First</option>
+            </select>
+
+            <button
+              type="button"
+              onClick={() => setIsFormOpen(!isFormOpen)}
+              className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-3.5 sm:px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-2xs shrink-0"
+            >
+              <Plus className={`w-4 h-4 text-slate-955 transition-transform duration-250 ${isFormOpen ? "rotate-45" : ""}`} />
+              <span>Post Offer</span>
+            </button>
+          </div>
 
 
 
@@ -931,6 +984,7 @@ function ShopsPageContent() {
             </div>
           )}
         </div>
+      )}
     </div>
   );
 }

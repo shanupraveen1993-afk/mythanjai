@@ -360,23 +360,6 @@ function ServicesPageContent() {
         </div>
       )}
 
-      {/* CONTROLS BAR ABOVE LISTING: ONLY Sort By & Post Button */}
-      <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 px-3.5 border border-slate-200 rounded-2xl shadow-2xs flex items-center justify-end gap-2">
-        <select className="text-xs font-black bg-slate-50 border border-slate-250 rounded-xl px-3 py-2 text-slate-800 focus:outline-none cursor-pointer shrink-0 shadow-2xs">
-          <option value="recent">Latest First</option>
-          <option value="rating">Top Rated</option>
-        </select>
-
-        <button
-          type="button"
-          onClick={() => setIsFormOpen(!isFormOpen)}
-          className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-3.5 sm:px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-2xs shrink-0"
-        >
-          <Plus className={`w-4 h-4 text-slate-955 transition-transform duration-250 ${isFormOpen ? "rotate-45" : ""}`} />
-          <span>Post Trade</span>
-        </button>
-      </div>
-
       {/* CATEGORY SELECTION OR DETAILED TRADE FEED */}
       {!selectedCategory ? (
         <div className="flex flex-col gap-6">
@@ -432,6 +415,21 @@ function ServicesPageContent() {
       ) : (
         /* STEP 2: DETAILED FEED & REGISTRATION CARD FOR TRADE */
         <div className="flex flex-col gap-5">
+          <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-md py-2.5 flex items-center justify-between gap-2">
+            <select className="text-xs font-black bg-slate-50 border border-slate-250 rounded-xl px-3 py-2 text-slate-800 focus:outline-none cursor-pointer shrink-0 shadow-2xs">
+              <option value="recent">Latest First</option>
+              <option value="rating">Top Rated</option>
+            </select>
+
+            <button
+              type="button"
+              onClick={() => setIsFormOpen(!isFormOpen)}
+              className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-3.5 sm:px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-2xs shrink-0"
+            >
+              <Plus className={`w-4 h-4 text-slate-955 transition-transform duration-250 ${isFormOpen ? "rotate-45" : ""}`} />
+              <span>Post Trade</span>
+            </button>
+          </div>
 
 
 
