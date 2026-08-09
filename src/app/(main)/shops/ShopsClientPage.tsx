@@ -12,6 +12,7 @@ import { Store, Plus, ChevronDown, ChevronUp, Loader2, ArrowRight, ArrowLeft, Up
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { useAuth } from "@/hooks/use-auth";
+import CreatePostModal from "@/components/modals/CreatePostModal";
 
 // Locality coordinates centers to auto-coordinate map markers
 const LOCALITY_COORDS: Record<string, { lat: number; lng: number }> = {
@@ -56,6 +57,7 @@ export default function ShopsClientPage() {
   const rawCat = searchParams.get("category");
   const urlCategory = rawCat ? decodeURIComponent(rawCat.replace(/\+/g, " ")) : null;
   const [selectedCategory, setSelectedCategory] = useState<string | null>(urlCategory);
+  const [isFormOpen, setIsFormOpen] = useState(false);
 
   useEffect(() => {
     const cat = searchParams.get("category");
@@ -235,6 +237,14 @@ export default function ShopsClientPage() {
                 Choose a store category to view active discounts & video deals in Thanjavur
               </p>
             </div>
+
+            <button
+              onClick={() => setIsFormOpen(true)}
+              className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-3.5 sm:px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all cursor-pointer border border-yellow-400 active:scale-95 shadow-2xs shrink-0"
+            >
+              <Plus className="w-4 h-4 text-slate-955 stroke-[2.5]" />
+              <span>Post Offer</span>
+            </button>
           </div>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-3.5 sm:gap-4">
@@ -337,6 +347,16 @@ export default function ShopsClientPage() {
             </div>
           )}
         </div>
+      )}
+
+      {/* Unified Create Post Modal — pre-set to Shops/Offers */}
+      {isFormOpen && (
+        <CreatePostModal
+          isOpen={isFormOpen}
+          onClose={() => setIsFormOpen(false)}
+          defaultType="shops"
+          defaultCategory={selectedCategory || SHOP_CATEGORIES[0]}
+        />
       )}
     </div>
   );

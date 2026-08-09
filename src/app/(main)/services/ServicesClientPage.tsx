@@ -10,6 +10,7 @@ import { Wrench, Plus, ChevronDown, ChevronUp, Loader2, ArrowRight, ArrowLeft, U
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { useAuth } from "@/hooks/use-auth";
+import CreatePostModal from "@/components/modals/CreatePostModal";
 
 export default function ServicesClientPage() {
   const router = useRouter();
@@ -97,21 +98,12 @@ export default function ServicesClientPage() {
     };
   };
 
-  // Inline Form State
+  // Modal State
   const [isFormOpen, setIsFormOpen] = useState(false);
-  const [serviceName, setServiceName] = useState("");
-  const [experience, setExperience] = useState("");
-  const [serviceDescription, setServiceDescription] = useState("");
-  const [availability, setAvailability] = useState("");
-  const [altPhone, setAltPhone] = useState("");
-  const [formArea, setFormArea] = useState("");
 
-  const [uploading, setUploading] = useState(false);
-  const [polishLoading, setPolishLoading] = useState(false);
-
-  const displayTechName = serviceName || getSampleTechnician().name;
-  const displayTechExp = experience || getSampleTechnician().exp;
-  const displayTechDesc = serviceDescription || getSampleTechnician().desc;
+  const displayTechName = getSampleTechnician().name;
+  const displayTechExp = getSampleTechnician().exp;
+  const displayTechDesc = getSampleTechnician().desc;
   const previewImage = CATEGORY_STOCK_IMAGES[selectedCategory || "Others"] || CATEGORY_STOCK_IMAGES["Others"];
 
   const getVectorIcon = (category: string) => {
@@ -462,6 +454,16 @@ export default function ServicesClientPage() {
             </div>
           )}
         </div>
+      )}
+
+      {/* Unified Create Post Modal - pre-set to Services */}
+      {isFormOpen && (
+        <CreatePostModal
+          isOpen={isFormOpen}
+          onClose={() => setIsFormOpen(false)}
+          defaultType="services"
+          defaultCategory={selectedCategory || SERVICE_CATEGORIES[0]}
+        />
       )}
     </div>
   );
