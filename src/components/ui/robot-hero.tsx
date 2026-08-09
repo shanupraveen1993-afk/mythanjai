@@ -920,20 +920,20 @@ export function RobotHero({
       {/* Centered Foreground Hero Content */}
       <div className="relative z-10 w-full max-w-3xl md:max-w-4xl lg:max-w-5xl mx-auto flex flex-col items-center justify-between text-center gap-1 sm:gap-2 my-auto h-full pointer-events-auto">
         
-        {/* 1. Cohesive Header Group: Compact Logo + Single-Line Headline + Tagline */}
-        <div className="flex flex-col items-center gap-1 sm:gap-1.5 w-full shrink-0 pt-1">
-          <div className="w-14 h-14 sm:w-20 sm:h-20 md:w-28 md:h-28 rounded-2xl sm:rounded-3xl bg-white shadow-md p-1.5 sm:p-2.5 flex items-center justify-center shrink-0 border border-slate-200/90 hover:scale-[1.02] transition-transform">
+        {/* 1. Prominent Logo + Wider Headline: NAMMA THANJAI. + Simplified Core Tagline */}
+        <div className="flex flex-col items-center gap-1.5 sm:gap-2 w-full shrink-0 pt-1">
+          <div className="w-18 h-18 sm:w-24 sm:h-24 md:w-30 md:h-30 rounded-2xl sm:rounded-3xl bg-white shadow-md p-2 sm:p-3 flex items-center justify-center shrink-0 border border-slate-200/90 hover:scale-[1.02] transition-transform">
             <img 
               src="/namma_thanjai_logo.png" 
               alt="namma thanjai logo" 
               className="w-full h-full object-contain" 
             />
           </div>
-          <h1 className="font-heading font-black text-3.5xl xs:text-4.5xl sm:text-7xl md:text-8.5xl lg:text-9.5xl text-slate-955 tracking-tighter leading-none uppercase mt-1 sm:mt-2 w-full text-center drop-shadow-2xs scale-x-[1.03] transform origin-center whitespace-nowrap">
+          <h1 className="font-heading font-black text-4xl xs:text-5xl sm:text-7xl md:text-8.5xl lg:text-9.5xl text-slate-955 tracking-tight leading-none uppercase mt-1 sm:mt-2 w-full text-center drop-shadow-2xs scale-x-[1.04] transform origin-center whitespace-nowrap">
             namma thanjai<span className="text-yellow-500">.</span>
           </h1>
-          <p className="text-[10px] sm:text-xs md:text-sm font-bold text-slate-500 max-w-xl mx-auto leading-normal tracking-wide uppercase mt-0.5 opacity-90">
-            Thanjavur Verified Noticeboard & Local Helper Trades
+          <p className="text-[11px] sm:text-xs md:text-sm font-black text-slate-600 max-w-xl mx-auto leading-normal tracking-wider uppercase mt-1 opacity-90">
+            Sell • Need • Local Services • Local Offers
           </p>
         </div>
 
