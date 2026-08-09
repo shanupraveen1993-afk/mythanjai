@@ -756,6 +756,7 @@ function AntennaNavbar({
   ctaText: string;
   onCtaClick?: () => void;
 }) {
+  const router = useRouter();
   const { scrollY } = useScroll();
   const lineOpacity = useTransform(scrollY, [0, 50], [1, 0]);
 
@@ -765,7 +766,7 @@ function AntennaNavbar({
         <div className="flex items-center justify-between relative">
           {/* Logo on Left side */}
           <div 
-            onClick={() => window.location.href = "/"}
+            onClick={() => router.push("/")}
             className="flex items-center gap-2 cursor-pointer select-none"
           >
             <img src="/namma_thanjai_logo.png" alt="namma thanjai app logo" className="w-8.5 h-8.5 object-contain shrink-0 rounded-lg shadow-xs" />

@@ -20,12 +20,21 @@ export default function NeedCard({ post, onShare }: NeedCardProps) {
   const sharesCount = Math.floor(22 + (post.title?.length || 5) * 2);
 
   // Format phone for WhatsApp link (must start with country code, e.g. 91)
-  const rawPhone = post.phone || "9994837342";
+  const rawPhone = String(post.phone || "9994837342");
   const cleanPhone = rawPhone.replace(/\D/g, "");
   const formattedPhone = cleanPhone.startsWith("91") ? cleanPhone : `91${cleanPhone}`;
   const whatsappUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(
     `Hi, I saw your post "${post.title}" on Namma Thanjai (Area: ${post.area_tag}). Is it still available?`
   )}`;
+
+  const displayPriceText = React.useMemo(() => {
+    if (post.price === null || post.price === undefined || post.price === "") return null;
+    const num = Number(post.price);
+    if (!isNaN(num)) {
+      return `₹${num.toLocaleString("en-IN")}`;
+    }
+    return String(post.price);
+  }, [post.price]);
 
   const handleSharePost = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -99,9 +108,9 @@ export default function NeedCard({ post, onShare }: NeedCardProps) {
         <h3 className="font-heading font-extrabold text-sm text-slate-800 leading-snug line-clamp-1 truncate">
           {post.title}
         </h3>
-        {post.price !== null && (
+        {displayPriceText && (
           <div className="text-yellow-600 font-black text-sm mt-0.5">
-            ₹{post.price.toLocaleString("en-IN")}
+            {displayPriceText}
           </div>
         )}
       </div>

@@ -12,7 +12,7 @@ interface ShopCardProps {
 }
 
 export default function ShopCard({ post, onMapToggle, isMapActive = false }: ShopCardProps) {
-  const rawPhone = post.phone || "9994837342";
+  const rawPhone = String(post.phone || "9994837342");
   const cleanPhone = rawPhone.replace(/\D/g, "");
   const formattedPhone = cleanPhone.startsWith("91") ? cleanPhone : `91${cleanPhone}`;
   

@@ -253,13 +253,15 @@ function ClassifiedsPageContent() {
     if (triggerCreate && !loading) {
       if (!profile?.isVerified) {
         const currentParams = new URLSearchParams(searchParams.toString());
-        currentParams.set("auth", "popup");
-        router.push(`/classifieds?${currentParams.toString()}`);
+        if (currentParams.get("auth") !== "popup") {
+          currentParams.set("auth", "popup");
+          router.push(`/classifieds?${currentParams.toString()}`);
+        }
       } else {
         setIsFormOpen(true);
       }
     }
-  }, [triggerCreate, profile, loading]);
+  }, [triggerCreate, profile, loading, searchParams, router]);
 
 
   // Real-time Firestore Query subscription

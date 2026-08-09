@@ -36,6 +36,7 @@ import { db, storage, auth } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { compressImage } from "@/lib/image-compressor";
+import { useAuth } from "@/hooks/use-auth";
 import {
   TANJORE_LOCALITIES,
   CLASSIFIED_CATEGORIES,
@@ -126,6 +127,8 @@ export default function CreatePostModal({
   const [offerCategory, setOfferCategory] = useState(OFFER_CATEGORIES[0]);
   const [socialLink, setSocialLink] = useState("");
 
+  const { profile } = useAuth();
+
   useEffect(() => {
     if (defaultArea) setArea(defaultArea);
     if (defaultType) setType(defaultType);
@@ -135,7 +138,10 @@ export default function CreatePostModal({
       if (SERVICE_CATEGORIES.includes(defaultCategory as any)) setServiceCategory(defaultCategory as any);
       if (SHOP_CATEGORIES.includes(defaultCategory as any)) setShopCategory(defaultCategory as any);
     }
-  }, [defaultArea, defaultType, defaultCategory, defaultClassifiedType, isOpen]);
+    if (profile?.phone && !phone) {
+      setPhone(profile.phone);
+    }
+  }, [defaultArea, defaultType, defaultCategory, defaultClassifiedType, isOpen, profile]);
 
   if (!isOpen) return null;
 

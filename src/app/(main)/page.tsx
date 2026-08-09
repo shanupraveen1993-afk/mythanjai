@@ -679,7 +679,7 @@ function HomeLandingPageContent() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div 
-              onClick={() => router.push("/sell?category=Plot%20%2f%20Real%20Estate")}
+              onClick={() => router.push("/sell?category=Plots%20%26%20Real%20Estate")}
               className="bg-slate-800/90 border border-slate-700/80 hover:border-yellow-400 p-4 rounded-2xl flex flex-col justify-between gap-3 cursor-pointer transition-all hover:-translate-y-0.5 shadow-sm group"
             >
               <div className="flex flex-col gap-2">
@@ -751,7 +751,7 @@ function HomeLandingPageContent() {
             </div>
 
             <div 
-              onClick={() => router.push("/shops?category=Electronics%20Shop")}
+              onClick={() => router.push("/shops?category=Electronics%20%26%20Mobiles")}
               className="bg-slate-800/90 border border-slate-700/80 hover:border-yellow-400 p-4 rounded-2xl flex flex-col justify-between gap-3 cursor-pointer transition-all hover:-translate-y-0.5 shadow-sm group"
             >
               <div className="flex flex-col gap-2">
@@ -819,14 +819,14 @@ function HomeLandingPageContent() {
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </button>
                 <button 
-                  onClick={() => router.push("/sell?category=Motor%20Vehicles")}
+                  onClick={() => router.push("/sell?category=Used%20Vehicles")}
                   className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
                 >
                   <span>Used Motor Vehicles</span>
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </button>
                 <button 
-                  onClick={() => router.push("/sell?category=Electronics")}
+                  onClick={() => router.push("/sell?category=Electronics%20%26%20Mobiles")}
                   className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
                 >
                   <span>Electronics & Goods</span>
@@ -862,21 +862,21 @@ function HomeLandingPageContent() {
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </button>
                 <button 
-                  onClick={() => router.push("/need?category=Plot%20%2f%20Real%20Estate")}
+                  onClick={() => router.push("/need?category=Plots%20%26%20Real%20Estate")}
                   className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
                 >
                   <span>Wanted Land / Plot</span>
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </button>
                 <button 
-                  onClick={() => router.push("/need?category=Others")}
+                  onClick={() => router.push("/need?category=General%20Requirement")}
                   className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
                 >
                   <span>Job Openings & Hiring</span>
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </button>
                 <button 
-                  onClick={() => router.push("/need?category=Electronics")}
+                  onClick={() => router.push("/need?category=Electronics%20%26%20Mobiles")}
                   className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
                 >
                   <span>Wanted Goods & Vehicle</span>
@@ -919,7 +919,7 @@ function HomeLandingPageContent() {
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </button>
                 <button 
-                  onClick={() => router.push("/services?category=AC%20%26%20Refrigeration")}
+                  onClick={() => router.push("/services?category=AC%20%26%20Fridge%20Repair")}
                   className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
                 >
                   <span>AC & Fridge Repair</span>
@@ -955,7 +955,7 @@ function HomeLandingPageContent() {
               </div>
               <div className="flex flex-col gap-2">
                 <button 
-                  onClick={() => router.push("/shops?category=Electronics%20Shop")}
+                  onClick={() => router.push("/shops?category=Electronics%20%26%20Mobiles")}
                   className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
                 >
                   <span>Kitchen & Electronics</span>
@@ -969,14 +969,14 @@ function HomeLandingPageContent() {
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </button>
                 <button 
-                  onClick={() => router.push("/shops?category=Textiles%20%26%20Clothing")}
+                  onClick={() => router.push("/shops?category=Textiles%20%26%20Readymades")}
                   className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
                 >
                   <span>Handloom Silk & Textiles</span>
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </button>
                 <button 
-                  onClick={() => router.push("/shops?category=Jewelry%20Showroom")}
+                  onClick={() => router.push("/shops?category=Gold%20%26%20Jewelry")}
                   className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
                 >
                   <span>Gold & Jewelry Mart</span>

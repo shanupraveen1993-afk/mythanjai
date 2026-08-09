@@ -62,6 +62,7 @@ export interface ShopPost {
   landmark?: string;
   hours?: string;
   is_claimed: boolean;
+  is_verified?: boolean;
   is_featured?: boolean;
   created_at: any; // Firestore Timestamp
   offer_title?: string;

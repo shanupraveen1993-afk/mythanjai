@@ -172,13 +172,11 @@ function MainLayoutContent({
         {children}
       </main>
 
-      {/* Bottom Navigation Bar (Rendered ONLY when logged in) */}
-      {profile?.isVerified && (
-        <BottomTabBar
-          activeTab={getActiveTab()}
-          onTabChange={handleTabChange}
-        />
-      )}
+      {/* Bottom Navigation Bar */}
+      <BottomTabBar
+        activeTab={getActiveTab()}
+        onTabChange={handleTabChange}
+      />
 
       {/* Sign-In Popup Modal */}
       <SignInModal

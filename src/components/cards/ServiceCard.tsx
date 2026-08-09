@@ -14,7 +14,7 @@ export default function ServiceCard({ post }: ServiceCardProps) {
   const sharesCount = Math.floor(18 + (post.name?.length || 5) * 3);
 
   // Format numbers for dialing and deep linking
-  const rawPhone = post.phone || "9994837342";
+  const rawPhone = String(post.phone || "9994837342");
   const cleanPhone = rawPhone.replace(/\D/g, "");
   const formattedPhone = cleanPhone.startsWith("91") ? cleanPhone : `91${cleanPhone}`;
   

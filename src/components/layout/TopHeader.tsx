@@ -65,19 +65,41 @@ export default function TopHeader({
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 py-2.5 flex items-center justify-between gap-3">
         
         {/* Left: Website Branding Logo across all pages */}
-        <div className="flex items-center gap-3">
-          <div 
-            onClick={() => router.push("/")}
-            className="flex items-center gap-2 cursor-pointer select-none shrink-0"
-          >
-            <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-9 h-9 sm:w-10 sm:h-10 object-contain shrink-0 rounded-xl border-0 shadow-none" />
-            <div className="flex items-center gap-0.5">
-              <span className="font-heading font-black tracking-tight text-slate-900 text-xs sm:text-sm uppercase">
-                namma thanjai
-              </span>
-              <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 ml-0.5" />
+        <div className="flex items-center gap-2">
+          {pathname !== "/" ? (
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={handleBackClick}
+                className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors cursor-pointer flex items-center justify-center border border-slate-200"
+                title="Go Back"
+              >
+                <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
+              </button>
+              <div 
+                onClick={() => router.push("/")}
+                className="flex items-center gap-1.5 cursor-pointer select-none shrink-0"
+              >
+                <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-7 h-7 sm:w-10 sm:h-10 object-contain shrink-0 rounded-xl border-0 shadow-none" />
+                <span className="hidden xs:inline font-heading font-black tracking-tight text-slate-900 text-xs sm:text-sm uppercase">
+                  {sectionTitle ? sectionTitle : "namma thanjai"}
+                </span>
+              </div>
             </div>
-          </div>
+          ) : (
+            <div 
+              onClick={() => router.push("/")}
+              className="flex items-center gap-2 cursor-pointer select-none shrink-0"
+            >
+              <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-9 h-9 sm:w-10 sm:h-10 object-contain shrink-0 rounded-xl border-0 shadow-none" />
+              <div className="flex items-center gap-0.5">
+                <span className="font-heading font-black tracking-tight text-slate-900 text-xs sm:text-sm uppercase">
+                  namma thanjai
+                </span>
+                <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 ml-0.5" />
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Center: 5 Channel Navigation Tabs (Home, Sell, Need, Local Service, Local Offer) */}

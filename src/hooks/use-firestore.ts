@@ -85,8 +85,9 @@ export function useFirestore<T = any>({
           if (areaTag !== "All Areas" && docData.area_tag !== areaTag) return;
 
           if (category && category !== "All") {
-            const catField = collectionName === "services" ? docData.skill_category : docData.category;
-            if (catField !== category) return;
+            const catField = (collectionName === "services" ? docData.skill_category : docData.category) || "";
+            const normalizeCat = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+            if (normalizeCat(catField) !== normalizeCat(category)) return;
           }
 
           if (postType && collectionName === "needs_and_sales") {
@@ -103,12 +104,16 @@ export function useFirestore<T = any>({
 
           // 7-day auto-expiry check: filter out expired posts
           if (docData.expires_at) {
-            const expiryDate = docData.expires_at.toDate
-              ? docData.expires_at.toDate()
-              : new Date(docData.expires_at);
+            try {
+              const expiryDate = typeof docData.expires_at?.toDate === "function"
+                ? docData.expires_at.toDate()
+                : new Date(docData.expires_at);
 
-            if (expiryDate <= now) {
-              return;
+              if (expiryDate instanceof Date && !isNaN(expiryDate.getTime()) && expiryDate <= now) {
+                return;
+              }
+            } catch (e) {
+              console.warn("Expiry date parse warning:", e);
             }
           }
 

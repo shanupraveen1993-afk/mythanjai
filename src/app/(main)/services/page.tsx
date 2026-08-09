@@ -39,7 +39,7 @@ function ServicesPageContent() {
   const CATEGORY_STOCK_IMAGES: Record<string, string> = {
     "Electrician": "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=400&q=80",
     "Plumber": "https://images.unsplash.com/photo-1584622650111-993a426fbf0a?auto=format&fit=crop&w=400&q=80",
-    "AC & Refrigeration": "https://images.unsplash.com/photo-1621905252507-b354bc25edac?auto=format&fit=crop&w=400&q=80",
+    "AC & Fridge Repair": "https://images.unsplash.com/photo-1621905252507-b354bc25edac?auto=format&fit=crop&w=400&q=80",
     "Carpenter": "https://images.unsplash.com/photo-1533090161767-e6ffed986c88?auto=format&fit=crop&w=400&q=80",
     "Painter": "https://images.unsplash.com/photo-1562259949-e8e7689d7828?auto=format&fit=crop&w=400&q=80",
     "House Cleaning": "https://images.unsplash.com/photo-1581578731548-c64695cc6952?auto=format&fit=crop&w=400&q=80",
@@ -57,7 +57,7 @@ function ServicesPageContent() {
       experience: "5 Years Experience",
       description: "Specialized in bathroom pipeline repairs, Kaveri water line tap connections, leak detection, and water tank washing. Quality plumbing fixtures installed with warranty."
     },
-    "AC & Refrigeration": {
+    "AC & Fridge Repair": {
       name: "Tanjore AC & Fridge Care",
       experience: "6 Years Experience",
       description: "AC installation, gas filling, copper piping, and double door refrigerator compressor repairs. 100% genuine spare parts used. Call for quick home services."
@@ -77,6 +77,11 @@ function ServicesPageContent() {
       experience: "4 Years Experience",
       description: "Deep house cleaning, kitchen grease wash, sofa shampooing, bathroom descaling, and water tank sterilization. Fast, hygienic team with modern gear."
     },
+    "General Technician": {
+      name: "Arun Trades - Helper & Handyman",
+      experience: "7 Years Experience",
+      description: "Professional handyman available for general home repair services, tiling fixings, mesh fittings, and household works. Prompt local service at honest pricing."
+    },
     "Others": {
       name: "Arun Trades - Helper & Handyman",
       experience: "7 Years Experience",
@@ -86,7 +91,11 @@ function ServicesPageContent() {
 
   const getSamplePost = () => {
     const cat = selectedCategory || "Others";
-    return CATEGORY_SAMPLE_POSTS[cat] || CATEGORY_SAMPLE_POSTS["Others"];
+    return CATEGORY_SAMPLE_POSTS[cat] || CATEGORY_SAMPLE_POSTS["Electrician"] || CATEGORY_SAMPLE_POSTS["Others"] || {
+      name: "Senthil Kumar - Home Electrician",
+      experience: "8+ Years Experience",
+      description: "Available for all home electrical wiring, DB box installations, inverter assemblies, and short circuit repairs."
+    };
   };
 
   // Inline Registration Form State
@@ -100,16 +109,17 @@ function ServicesPageContent() {
   const [ocrLoading, setOcrLoading] = useState(false);
   const [uploading, setUploading] = useState(false);
 
-  const displayName = serviceName || getSamplePost().name;
-  const displayExperience = experience || getSamplePost().experience;
-  const displayDescription = serviceDescription || getSamplePost().description;
-  const previewImage = CATEGORY_STOCK_IMAGES[selectedCategory || "Others"] || CATEGORY_STOCK_IMAGES["Others"];
+  const sample = getSamplePost();
+  const displayName = serviceName || sample?.name || "Local Trade Expert";
+  const displayExperience = experience || sample?.experience || "5+ Years Experience";
+  const displayDescription = serviceDescription || sample?.description || "Available for home service calls.";
+  const previewImage = CATEGORY_STOCK_IMAGES[selectedCategory || "Others"] || CATEGORY_STOCK_IMAGES["Others"] || "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=400&q=80";
 
   const getPreviewIcon = () => {
     switch (selectedCategory) {
       case "Electrician": return <Zap className="w-3.5 h-3.5 text-slate-550" />;
       case "Plumber": return <Droplet className="w-3.5 h-3.5 text-slate-550" />;
-      case "AC & Refrigeration": return <Wind className="w-3.5 h-3.5 text-slate-550" />;
+      case "AC & Fridge Repair": return <Wind className="w-3.5 h-3.5 text-slate-550" />;
       case "Carpenter": return <Hammer className="w-3.5 h-3.5 text-slate-550" />;
       default: return <Wrench className="w-3.5 h-3.5 text-slate-550" />;
     }
@@ -177,13 +187,15 @@ function ServicesPageContent() {
     if (triggerCreate && !loading) {
       if (!profile?.isVerified) {
         const currentParams = new URLSearchParams(searchParams.toString());
-        currentParams.set("auth", "popup");
-        router.push(`/services?${currentParams.toString()}`);
+        if (currentParams.get("auth") !== "popup") {
+          currentParams.set("auth", "popup");
+          router.push(`/services?${currentParams.toString()}`);
+        }
       } else {
         setIsFormOpen(true);
       }
     }
-  }, [triggerCreate, profile, loading]);
+  }, [triggerCreate, profile, loading, searchParams, router]);
 
 
   // Firestore Real-time Query Subscription
@@ -229,8 +241,8 @@ function ServicesPageContent() {
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
     const activeUserId = user?.uid || profile?.uid || "localStorage_user";
-    const phoneNum = profile?.phone || user?.phoneNumber || "";
-    if (!serviceName || !phoneNum || !selectedCategory || !serviceDescription) {
+    const phoneNum = profile?.phone || user?.phoneNumber || altPhone || "919994837342";
+    if (!serviceName || !selectedCategory || !serviceDescription) {
       alert("Please fill in all required fields.");
       return;
     }
