@@ -120,30 +120,32 @@ function MainLayoutContent({
 
   return (
     <div className="min-h-screen w-full flex flex-col relative bg-white font-sans">
-      {/* Top Header Section */}
-      <TopHeader
-        selectedArea={selectedArea}
-        onAreaChange={handleAreaChange}
-        onSignInClick={() => setIsSignInOpen(true)}
-        onPostClick={() => {
-          const currentTab = getActiveTab();
-          let targetPath = "/sell";
-          if (currentTab === "need") targetPath = "/need";
-          else if (currentTab === "services") targetPath = "/services";
-          else if (currentTab === "shops") targetPath = "/shops";
+      {/* Top Header Section (Hidden on Mobile Landing Onboarding Screen for Maximum Height) */}
+      <div className={pathname === "/" ? "hidden sm:block" : "block"}>
+        <TopHeader
+          selectedArea={selectedArea}
+          onAreaChange={handleAreaChange}
+          onSignInClick={() => setIsSignInOpen(true)}
+          onPostClick={() => {
+            const currentTab = getActiveTab();
+            let targetPath = "/sell";
+            if (currentTab === "need") targetPath = "/need";
+            else if (currentTab === "services") targetPath = "/services";
+            else if (currentTab === "shops") targetPath = "/shops";
 
-          const currentParams = new URLSearchParams(searchParams.toString());
+            const currentParams = new URLSearchParams(searchParams.toString());
 
-          if (!profile?.isVerified) {
-            setIsSignInOpen(true);
-          } else {
-            currentParams.set("create", "true");
-            router.push(`${targetPath}?${currentParams.toString()}`);
-          }
-        }}
-        activeTab={getActiveTab()}
-        onTabChange={handleTabChange}
-      />
+            if (!profile?.isVerified) {
+              setIsSignInOpen(true);
+            } else {
+              currentParams.set("create", "true");
+              router.push(`${targetPath}?${currentParams.toString()}`);
+            }
+          }}
+          activeTab={getActiveTab()}
+          onTabChange={handleTabChange}
+        />
+      </div>
 
       {/* Universal Directory Search Bar (Hidden on Home & Profile pages) */}
       {profile?.isVerified && pathname !== "/" && pathname !== "/profile" && <UniversalSearchBar />}

@@ -860,6 +860,7 @@ export function RobotHero({
   const [wordIndex, setWordIndex] = useState(0);
   const [isSpinning, setIsSpinning] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
+  const fastSpinRef = useRef<NodeJS.Timeout | null>(null);
   const words = ["SELL PLOT", "BUY HOUSE", "PLUMBER", "CARPENTER", "HIRE TAXI", "RENT ROOM", "BEST OFFERS", "LOCAL SHOPS"];
 
   useEffect(() => {
@@ -878,17 +879,21 @@ export function RobotHero({
   }, [isSpinning]);
 
   const handleRobotTap = () => {
-    if (isSpinning) return;
+    if (fastSpinRef.current) {
+      clearInterval(fastSpinRef.current);
+      fastSpinRef.current = null;
+    }
     setIsSpinning(true);
     let count = 0;
-    const interval = setInterval(() => {
+    fastSpinRef.current = setInterval(() => {
       setWordIndex((prev) => (prev + 1) % words.length);
       count++;
-      if (count > 16) {
-        clearInterval(interval);
+      if (count > 12) {
+        if (fastSpinRef.current) clearInterval(fastSpinRef.current);
+        fastSpinRef.current = null;
         setIsSpinning(false);
       }
-    }, 75);
+    }, 90);
   };
 
   const entorno = {
@@ -907,33 +912,33 @@ export function RobotHero({
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-[calc(100dvh-60px)] md:h-[calc(100vh-70px)] flex flex-col justify-between items-center bg-white text-slate-800 pt-2 pb-4 sm:py-5 px-3 sm:px-4 overflow-hidden select-none"
+      className="relative w-full h-dvh md:h-[calc(100vh-70px)] flex flex-col justify-between items-center bg-white text-slate-800 pt-2 pb-4 sm:py-5 px-3 sm:px-4 overflow-hidden select-none"
     >
       {/* Light radial glow centered behind hero */}
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_45%,rgba(250,204,21,0.06)_0%,transparent_60%)] pointer-events-none" />
 
       {/* Centered Foreground Hero Content */}
-      <div className="relative z-10 w-full max-w-3xl md:max-w-4xl lg:max-w-5xl mx-auto flex flex-col items-center justify-between text-center gap-1 sm:gap-1.5 md:gap-2 my-auto h-full pointer-events-auto">
+      <div className="relative z-10 w-full max-w-3xl md:max-w-4xl lg:max-w-5xl mx-auto flex flex-col items-center justify-between text-center gap-1.5 sm:gap-2 my-auto h-full pointer-events-auto">
         
-        {/* 1. Extended Prominent Logo + Wider Massive Headline: NAMMA THANJAI. + Small Subtitle Tagline */}
-        <div className="flex flex-col items-center gap-2 sm:gap-3 w-full shrink-0 pt-1">
-          <div className="w-18 h-18 sm:w-24 sm:h-24 md:w-30 md:h-30 rounded-3xl bg-white shadow-xl p-2.5 sm:p-3 flex items-center justify-center shrink-0 border border-slate-200/90 hover:scale-[1.02] transition-transform">
+        {/* 1. Extended Prominent Logo + Single-Line Headline: NAMMA THANJAI. + Small Subtitle Tagline */}
+        <div className="flex flex-col items-center gap-1.5 sm:gap-2.5 w-full shrink-0 pt-1">
+          <div className="w-18 h-18 sm:w-24 sm:h-24 md:w-30 md:h-30 rounded-3xl bg-white shadow-xl p-2 sm:p-3 flex items-center justify-center shrink-0 border border-slate-200/90 hover:scale-[1.02] transition-transform">
             <img 
               src="/namma_thanjai_logo.png" 
               alt="namma thanjai logo" 
               className="w-full h-full object-contain" 
             />
           </div>
-          <h1 className="font-heading font-black text-4.5xl sm:text-7xl md:text-8.5xl lg:text-9.5xl text-slate-955 tracking-tighter leading-none uppercase mt-2 sm:mt-3 w-full text-center drop-shadow-2xs scale-x-[1.03] transform origin-center">
+          <h1 className="font-heading font-black text-3.5xl xs:text-4.5xl sm:text-7xl md:text-8.5xl lg:text-9.5xl text-slate-955 tracking-tighter leading-none uppercase mt-1.5 sm:mt-2.5 w-full text-center drop-shadow-2xs scale-x-[1.03] transform origin-center whitespace-nowrap">
             namma thanjai<span className="text-yellow-500">.</span>
           </h1>
-          <p className="text-[11px] sm:text-xs md:text-sm font-semibold text-slate-500 max-w-xl mx-auto leading-normal tracking-wide uppercase mt-2 sm:mt-2.5 opacity-90">
+          <p className="text-[10px] sm:text-xs md:text-sm font-semibold text-slate-500 max-w-xl mx-auto leading-normal tracking-wide uppercase mt-1 sm:mt-2 opacity-90">
             Thanjavur Verified Noticeboard & Local Helper Trades
           </p>
         </div>
 
-        {/* 2. Rotational Category Switcher Badge */}
-        <div className="h-6 sm:h-8 flex items-center justify-center overflow-hidden shrink-0 my-1 sm:my-2">
+        {/* 2. Rotational Category Switcher Badge (Slightly Larger) */}
+        <div className="h-7 sm:h-9 flex items-center justify-center overflow-hidden shrink-0 my-1 sm:my-2">
           <AnimatePresence mode="wait">
             <motion.div
               key={wordIndex}
@@ -941,7 +946,7 @@ export function RobotHero({
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 6, scale: 1.05 }}
               transition={{ duration: 0.25 }}
-              className="bg-slate-900 border border-slate-800 text-yellow-400 font-black text-[11px] sm:text-xs md:text-sm px-3.5 sm:px-4 py-1 rounded-full uppercase tracking-widest text-center shadow-md flex items-center gap-2 select-none"
+              className="bg-slate-900 border border-slate-800 text-yellow-400 font-black text-xs sm:text-sm md:text-base px-4.5 sm:px-5 py-1.5 rounded-full uppercase tracking-widest text-center shadow-md flex items-center gap-2 select-none"
             >
               <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-ping" />
               <span>{words[wordIndex]}</span>
@@ -952,7 +957,7 @@ export function RobotHero({
         {/* 3. Responsive 3D Mascot Robot Canvas (Unclipped Camera Frustum, Flows Left and Right with Zero Border Cuts) */}
         <div 
           onClick={handleRobotTap} 
-          className="w-full max-w-[260px] sm:max-w-[340px] md:max-w-[420px] flex-1 min-h-[150px] sm:min-h-[200px] md:min-h-[250px] max-h-[220px] sm:max-h-[280px] md:max-h-[340px] relative flex items-center justify-center cursor-pointer overflow-visible my-0.5 bg-transparent"
+          className="w-full max-w-[280px] sm:max-w-[360px] md:max-w-[440px] flex-1 min-h-[170px] sm:min-h-[220px] md:min-h-[260px] max-h-[260px] sm:max-h-[300px] md:max-h-[360px] relative flex items-center justify-center cursor-pointer overflow-visible my-0.5 bg-transparent"
         >
           <Canvas camera={{ position: [0, 0, 4.2], fov: 46 }} className="overflow-visible bg-transparent">
             <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
