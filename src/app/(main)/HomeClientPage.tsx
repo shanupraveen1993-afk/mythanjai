@@ -115,12 +115,10 @@ export default function HomeClientPage() {
               >
                 <span>View All Sell Posts →</span>
               </button>
-            </div>
-
-            <div className="flex overflow-x-auto snap-x scrollbar-none pb-2 gap-4 md:grid md:grid-cols-3 md:overflow-visible">
+            </div>            <div className="flex overflow-x-auto snap-x scrollbar-none pb-2 gap-4 md:grid md:grid-cols-3 md:overflow-visible">
               {/* Card 1: Popular */}
               <div 
-                onClick={() => router.push("/sell?category=Plots%20%26%20Real%20Estate&post=cmda_plot")}
+                onClick={() => router.push("/sell")}
                 className="shrink-0 w-[285px] sm:w-[330px] md:w-auto snap-start bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
               >
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
@@ -161,7 +159,7 @@ export default function HomeClientPage() {
 
               {/* Card 2: Trending */}
               <div 
-                onClick={() => router.push("/sell?category=Property%20Rental&post=house_rental")}
+                onClick={() => router.push("/sell")}
                 className="shrink-0 w-[285px] sm:w-[330px] md:w-auto snap-start bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
               >
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
@@ -202,7 +200,7 @@ export default function HomeClientPage() {
 
               {/* Card 3: Recent */}
               <div 
-                onClick={() => router.push("/sell?category=Used%20Vehicles&post=hero_bike")}
+                onClick={() => router.push("/sell")}
                 className="shrink-0 w-[285px] sm:w-[330px] md:w-auto snap-start bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
               >
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
@@ -265,7 +263,7 @@ export default function HomeClientPage() {
             <div className="flex overflow-x-auto snap-x scrollbar-none pb-2 gap-4 md:grid md:grid-cols-3 md:overflow-visible">
               {/* Need Card 1: Urgent */}
               <div 
-                onClick={() => router.push("/need?post=need_3bhk_medical")}
+                onClick={() => router.push("/need")}
                 className="shrink-0 w-[285px] sm:w-[330px] md:w-auto snap-start bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
               >
                 <div className="flex justify-between items-center">
@@ -290,7 +288,7 @@ export default function HomeClientPage() {
 
               {/* Need Card 2: Trending */}
               <div 
-                onClick={() => router.push("/need?post=need_goods_auto")}
+                onClick={() => router.push("/need")}
                 className="shrink-0 w-[285px] sm:w-[330px] md:w-auto snap-start bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
               >
                 <div className="flex justify-between items-center">
@@ -315,7 +313,7 @@ export default function HomeClientPage() {
 
               {/* Need Card 3: Recent */}
               <div 
-                onClick={() => router.push("/need?post=need_accountant")}
+                onClick={() => router.push("/need")}
                 className="shrink-0 w-[285px] sm:w-[330px] md:w-auto snap-start bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer relative"
               >
                 <div className="flex justify-between items-center">
@@ -362,7 +360,7 @@ export default function HomeClientPage() {
             <div className="flex overflow-x-auto snap-x scrollbar-none pb-2 gap-4 md:grid md:grid-cols-3 md:overflow-visible">
               {/* Tech 1: Top Rated */}
               <div 
-                onClick={() => router.push("/services?category=Electrician&post=senthil_electrician")}
+                onClick={() => router.push("/services")}
                 className="shrink-0 w-[285px] sm:w-[330px] md:w-auto snap-start bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
               >
                 <div className="flex justify-between items-center">
@@ -387,7 +385,7 @@ export default function HomeClientPage() {
 
               {/* Tech 2: High Demand */}
               <div 
-                onClick={() => router.push("/services?category=Plumber&post=rajesh_plumber")}
+                onClick={() => router.push("/services")}
                 className="shrink-0 w-[285px] sm:w-[330px] md:w-auto snap-start bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
               >
                 <div className="flex justify-between items-center">
@@ -412,7 +410,7 @@ export default function HomeClientPage() {
 
               {/* Tech 3: Active Today */}
               <div 
-                onClick={() => router.push("/services?category=Carpenter&post=venu_carpenter")}
+                onClick={() => router.push("/services")}
                 className="shrink-0 w-[285px] sm:w-[330px] md:w-auto snap-start bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
               >
                 <div className="flex justify-between items-center">
@@ -459,7 +457,7 @@ export default function HomeClientPage() {
             <div className="flex overflow-x-auto snap-x scrollbar-none pb-2 gap-4 md:grid md:grid-cols-3 md:overflow-visible">
               {/* Featured Video Offer: GLEN EXCLUSIVE GALLERY */}
               <div 
-                onClick={() => router.push("/shops?category=Electronics%20Shop&post=glen_gallery")}
+                onClick={() => router.push("/shops")}
                 className="shrink-0 w-[285px] sm:w-[330px] md:w-auto snap-start bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow relative cursor-pointer"
               >
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-900 relative group">
@@ -498,7 +496,7 @@ export default function HomeClientPage() {
 
               {/* Offer 2 */}
               <div 
-                onClick={() => router.push("/shops?category=Cafe%20%26%20Restaurant&post=degree_coffee")}
+                onClick={() => router.push("/shops")}
                 className="shrink-0 w-[285px] sm:w-[330px] md:w-auto snap-start bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
               >
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
@@ -531,7 +529,7 @@ export default function HomeClientPage() {
 
               {/* Offer 3 */}
               <div 
-                onClick={() => router.push("/shops?category=Textiles%20%26%20Clothing")}
+                onClick={() => router.push("/shops")}
                 className="shrink-0 w-[285px] sm:w-[330px] md:w-auto snap-start bg-white border border-slate-200/90 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 hover:shadow-md transition-shadow cursor-pointer"
               >
                 <div className="w-full h-36 rounded-xl overflow-hidden bg-slate-100 relative">
@@ -546,7 +544,7 @@ export default function HomeClientPage() {
                   </span>
                 </div>
                 <div className="flex justify-between items-center mt-1">
-                  <h3 className="font-heading font-extrabold text-sm text-slate-800">
+                  <h3 className="font-heading font-extrabold text-sm text-slate-900">
                     Handloom Silk Saree Sale
                   </h3>
                   <span className="text-xs font-black text-slate-900">20% Off</span>
@@ -671,7 +669,7 @@ export default function HomeClientPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             <div 
-              onClick={() => router.push("/sell?category=Plots%20%26%20Real%20Estate")}
+              onClick={() => router.push("/sell")}
               className="bg-slate-800/90 border border-slate-700/80 hover:border-yellow-400 p-4 rounded-2xl flex flex-col justify-between gap-3 cursor-pointer transition-all hover:-translate-y-0.5 shadow-sm group"
             >
               <div className="flex flex-col gap-2">
@@ -695,7 +693,7 @@ export default function HomeClientPage() {
             </div>
 
             <div 
-              onClick={() => router.push("/services?category=Electrician")}
+              onClick={() => router.push("/services")}
               className="bg-slate-800/90 border border-slate-700/80 hover:border-yellow-400 p-4 rounded-2xl flex flex-col justify-between gap-3 cursor-pointer transition-all hover:-translate-y-0.5 shadow-sm group"
             >
               <div className="flex flex-col gap-2">
@@ -719,7 +717,7 @@ export default function HomeClientPage() {
             </div>
 
             <div 
-              onClick={() => router.push("/need?category=Property%20Rental")}
+              onClick={() => router.push("/need")}
               className="bg-slate-800/90 border border-slate-700/80 hover:border-yellow-400 p-4 rounded-2xl flex flex-col justify-between gap-3 cursor-pointer transition-all hover:-translate-y-0.5 shadow-sm group"
             >
               <div className="flex flex-col gap-2">
@@ -743,7 +741,7 @@ export default function HomeClientPage() {
             </div>
 
             <div 
-              onClick={() => router.push("/shops?category=Electronics%20%26%20Mobiles")}
+              onClick={() => router.push("/shops")}
               className="bg-slate-800/90 border border-slate-700/80 hover:border-yellow-400 p-4 rounded-2xl flex flex-col justify-between gap-3 cursor-pointer transition-all hover:-translate-y-0.5 shadow-sm group"
             >
               <div className="flex flex-col gap-2">
@@ -797,28 +795,28 @@ export default function HomeClientPage() {
               </div>
               <div className="flex flex-col gap-2">
                 <button 
-                  onClick={() => router.push("/sell?category=Plots%20%26%20Real%20Estate")}
+                  onClick={() => router.push("/sell")}
                   className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
                 >
                   <span>Plots & Real Estate</span>
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </button>
                 <button 
-                  onClick={() => router.push("/sell?category=Property%20Rental")}
+                  onClick={() => router.push("/sell")}
                   className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
                 >
                   <span>House / Commercial Rental</span>
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </button>
                 <button 
-                  onClick={() => router.push("/sell?category=Used%20Vehicles")}
+                  onClick={() => router.push("/sell")}
                   className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
                 >
                   <span>Used Vehicles</span>
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </button>
                 <button 
-                  onClick={() => router.push("/sell?category=Electronics%20%26%20Mobiles")}
+                  onClick={() => router.push("/sell")}
                   className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
                 >
                   <span>Electronics & Mobiles</span>
@@ -847,28 +845,28 @@ export default function HomeClientPage() {
               </div>
               <div className="flex flex-col gap-2">
                 <button 
-                  onClick={() => router.push("/need?category=Property%20Rental")}
+                  onClick={() => router.push("/need")}
                   className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
                 >
                   <span>Wanted House / Rental</span>
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </button>
                 <button 
-                  onClick={() => router.push("/need?category=Plots%20%26%20Real%20Estate")}
+                  onClick={() => router.push("/need")}
                   className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
                 >
                   <span>Wanted Land / Plot</span>
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </button>
                 <button 
-                  onClick={() => router.push("/need?category=General%20Requirement")}
+                  onClick={() => router.push("/need")}
                   className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
                 >
                   <span>Job Openings & Hiring</span>
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </button>
                 <button 
-                  onClick={() => router.push("/need?category=Electronics%20%26%20Mobiles")}
+                  onClick={() => router.push("/need")}
                   className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
                 >
                   <span>Wanted Goods & Vehicle</span>
@@ -897,28 +895,28 @@ export default function HomeClientPage() {
               </div>
               <div className="flex flex-col gap-2">
                 <button 
-                  onClick={() => router.push("/services?category=Electrician")}
+                  onClick={() => router.push("/services")}
                   className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
                 >
                   <span>Home Electrician</span>
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </button>
                 <button 
-                  onClick={() => router.push("/services?category=Plumber")}
+                  onClick={() => router.push("/services")}
                   className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
                 >
                   <span>Expert Plumber</span>
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </button>
                 <button 
-                  onClick={() => router.push("/services?category=AC%20%26%20Fridge%20Repair")}
+                  onClick={() => router.push("/services")}
                   className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
                 >
                   <span>AC & Fridge Repair</span>
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </button>
                 <button 
-                  onClick={() => router.push("/services?category=Carpenter")}
+                  onClick={() => router.push("/services")}
                   className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
                 >
                   <span>Wood Carpenter</span>
@@ -947,28 +945,28 @@ export default function HomeClientPage() {
               </div>
               <div className="flex flex-col gap-2">
                 <button 
-                  onClick={() => router.push("/shops?category=Electronics%20%26%20Mobiles")}
+                  onClick={() => router.push("/shops")}
                   className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
                 >
                   <span>Kitchen & Electronics</span>
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </button>
                 <button 
-                  onClick={() => router.push("/shops?category=Cafe%20%26%20Restaurant")}
+                  onClick={() => router.push("/shops")}
                   className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
                 >
                   <span>Degree Coffee & Food Deals</span>
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </button>
                 <button 
-                  onClick={() => router.push("/shops?category=Textiles%20%26%20Readymades")}
+                  onClick={() => router.push("/shops")}
                   className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
                 >
                   <span>Handloom Silk & Textiles</span>
                   <ChevronRight className="w-4 h-4 text-slate-400" />
                 </button>
                 <button 
-                  onClick={() => router.push("/shops?category=Gold%20%26%20Jewelry")}
+                  onClick={() => router.push("/shops")}
                   className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
                 >
                   <span>Gold & Jewelry Mart</span>
