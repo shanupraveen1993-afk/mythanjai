@@ -47,7 +47,7 @@ export default function ServicesClientPage() {
       {/* Control Bar */}
       <div className="sticky top-[57px] z-30 bg-white border-b border-slate-200 py-2.5 flex items-center justify-between gap-3">
         <span className="text-xs font-black text-slate-500 uppercase tracking-wider">{allPosts.length} Active Technicians</span>
-        <button onClick={() => router.push("/post?type=service")} className="flex items-center gap-1.5 bg-green-600 hover:bg-green-500 active:scale-95 text-white font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all border border-green-500 shadow-sm cursor-pointer">
+        <button onClick={() => router.push("/post/service")} className="flex items-center gap-1.5 bg-green-600 hover:bg-green-500 active:scale-95 text-white font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all border border-green-500 shadow-sm cursor-pointer">
           <Plus className="w-3.5 h-3.5 stroke-[3]" /> Register Service
         </button>
       </div>
@@ -59,7 +59,7 @@ export default function ServicesClientPage() {
         <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
           <Wrench className="w-8 h-8 text-slate-300" />
           <p className="text-sm font-black text-slate-500">No service providers listed yet.</p>
-          <button onClick={() => router.push("/post?type=service")} className="bg-green-600 text-white font-black text-xs px-5 py-2.5 rounded-xl border border-green-500 hover:bg-green-500 transition-all cursor-pointer">+ Register Service</button>
+          <button onClick={() => router.push("/post/service")} className="bg-green-600 text-white font-black text-xs px-5 py-2.5 rounded-xl border border-green-500 hover:bg-green-500 transition-all cursor-pointer">+ Register Service</button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

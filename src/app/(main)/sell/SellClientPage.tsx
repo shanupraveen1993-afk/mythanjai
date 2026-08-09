@@ -56,7 +56,7 @@ export default function SellClientPage() {
           <option value="price_low">Price: Low → High</option>
           <option value="price_high">Price: High → Low</option>
         </select>
-        <button onClick={() => router.push("/post?type=sell")} className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-slate-950 font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all border border-yellow-400 shadow-sm cursor-pointer">
+        <button onClick={() => router.push("/post/sell")} className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-slate-950 font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all border border-yellow-400 shadow-sm cursor-pointer">
           <Plus className="w-3.5 h-3.5 stroke-[3]" /> Post Sale
         </button>
       </div>
@@ -68,7 +68,7 @@ export default function SellClientPage() {
         <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
           <ShoppingBag className="w-8 h-8 text-slate-300" />
           <p className="text-sm font-black text-slate-500">No listings yet — be the first to post!</p>
-          <button onClick={() => router.push("/post?type=sell")} className="bg-yellow-500 text-slate-900 font-black text-xs px-5 py-2.5 rounded-xl border border-yellow-400 hover:bg-yellow-400 transition-all cursor-pointer">+ Post Sale</button>
+          <button onClick={() => router.push("/post/sell")} className="bg-yellow-500 text-slate-900 font-black text-xs px-5 py-2.5 rounded-xl border border-yellow-400 hover:bg-yellow-400 transition-all cursor-pointer">+ Post Sale</button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

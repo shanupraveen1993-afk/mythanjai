@@ -56,7 +56,7 @@ export default function NeedClientPage() {
           <option value="price_low">Budget: Low → High</option>
           <option value="price_high">Budget: High → Low</option>
         </select>
-        <button onClick={() => router.push("/post?type=need")} className="flex items-center gap-1.5 bg-blue-500 hover:bg-blue-400 active:scale-95 text-white font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all border border-blue-400 shadow-sm cursor-pointer">
+        <button onClick={() => router.push("/post/need")} className="flex items-center gap-1.5 bg-blue-500 hover:bg-blue-400 active:scale-95 text-white font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all border border-blue-400 shadow-sm cursor-pointer">
           <Plus className="w-3.5 h-3.5 stroke-[3]" /> Post Requirement
         </button>
       </div>
@@ -68,7 +68,7 @@ export default function NeedClientPage() {
         <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
           <Search className="w-8 h-8 text-slate-300" />
           <p className="text-sm font-black text-slate-500">No requirements yet — post what you need!</p>
-          <button onClick={() => router.push("/post?type=need")} className="bg-blue-500 text-white font-black text-xs px-5 py-2.5 rounded-xl border border-blue-400 hover:bg-blue-400 transition-all cursor-pointer">+ Post Requirement</button>
+          <button onClick={() => router.push("/post/need")} className="bg-blue-500 text-white font-black text-xs px-5 py-2.5 rounded-xl border border-blue-400 hover:bg-blue-400 transition-all cursor-pointer">+ Post Requirement</button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

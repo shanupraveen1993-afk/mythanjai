@@ -134,7 +134,7 @@ function MainLayoutContent({
             onAreaChange={handleAreaChange}
             onSignInClick={() => setIsSignInOpen(true)}
             onPostClick={() => {
-              router.push("/post");
+              router.push("/post/sell");
             }}
             activeTab={getActiveTab()}
             onTabChange={handleTabChange}
