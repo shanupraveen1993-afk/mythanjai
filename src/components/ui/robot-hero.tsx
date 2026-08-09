@@ -912,7 +912,7 @@ export function RobotHero({
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-dvh md:h-[calc(100vh-70px)] flex flex-col justify-between items-center bg-white text-slate-800 pt-2 pb-4 sm:py-5 px-3 sm:px-4 overflow-hidden select-none"
+      className="relative w-full h-dvh md:h-[calc(100vh-70px)] flex flex-col justify-between items-center bg-white text-slate-800 pt-5 sm:pt-6 pb-4 sm:py-5 px-3 sm:px-4 overflow-hidden select-none"
     >
       {/* Light radial glow centered behind hero */}
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_45%,rgba(250,204,21,0.06)_0%,transparent_60%)] pointer-events-none" />
@@ -921,7 +921,7 @@ export function RobotHero({
       <div className="relative z-10 w-full max-w-3xl md:max-w-4xl lg:max-w-5xl mx-auto flex flex-col items-center justify-between text-center gap-1 my-auto h-full pointer-events-auto">
         
         {/* 1. Tight Unified Header Group: Logo + Headline + Subline + Rotational Switcher Badge (ZERO GAPS) */}
-        <div className="flex flex-col items-center gap-1 sm:gap-1.5 w-full shrink-0 pt-0.5">
+        <div className="flex flex-col items-center gap-1 sm:gap-1.5 w-full shrink-0 pt-2 sm:pt-3">
           <div className="w-18 h-18 sm:w-24 sm:h-24 md:w-30 md:h-30 rounded-2xl sm:rounded-3xl bg-white shadow-md p-2 sm:p-3 flex items-center justify-center shrink-0 border border-slate-200/90 hover:scale-[1.02] transition-transform">
             <img 
               src="/namma_thanjai_logo.png" 
@@ -933,7 +933,7 @@ export function RobotHero({
             namma thanjai<span className="text-yellow-500">.</span>
           </h1>
           <p className="text-[11px] sm:text-xs md:text-sm font-black text-slate-600 max-w-xl mx-auto leading-normal tracking-wider uppercase opacity-90">
-            SELL • NEED • LOCAL SERVICES • LOCAL OFFERS
+            SELL, NEED, SERVICES & OFFERS
           </p>
 
           {/* 2. Rotational Category Switcher Badge (Locked Directly Under Subline with Zero Space) */}
