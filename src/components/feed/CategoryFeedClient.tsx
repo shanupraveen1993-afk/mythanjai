@@ -1,10 +1,8 @@
 "use client";
 
 import React, { useState } from "react";
-import { useSearchParams } from "next/navigation";
 import { useFirestore } from "@/hooks/use-firestore";
 import { useAuth } from "@/hooks/use-auth";
-import { TanjoreLocality } from "@/lib/constants";
 import { NeedOrSalePost, ServiceProviderPost, ShopPost } from "@/types";
 import { Plus, Loader2, Search, SlidersHorizontal } from "lucide-react";
 import CreatePostModal from "@/components/modals/CreatePostModal";
@@ -135,8 +133,10 @@ interface CategoryFeedClientProps {
 
 export default function CategoryFeedClient({ segmentType }: CategoryFeedClientProps) {
   const config = SEGMENT_CONFIG[segmentType];
-  const searchParams = useSearchParams();
-  const area = (searchParams.get("area") || "All Areas") as TanjoreLocality | "All Areas";
+  const { user, profile } = useAuth();
+
+  // Always use All Areas — no URL query params (prevents Vercel RSC crash)
+  const area: "All Areas" = "All Areas";
 
   // Pure client-side state — zero URL updates
   const [selectedSub, setSelectedSub] = useState<string | null>(null);
