@@ -11,6 +11,9 @@ import SignInModal from "@/components/auth/SignInModal";
 import CreatePostModal from "@/components/modals/CreatePostModal";
 import UniversalSearchBar from "@/components/layout/UniversalSearchBar";
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export default function MainLayout({
   children,
 }: {
