@@ -918,10 +918,10 @@ export function RobotHero({
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_45%,rgba(250,204,21,0.06)_0%,transparent_60%)] pointer-events-none" />
 
       {/* Centered Foreground Hero Content */}
-      <div className="relative z-10 w-full max-w-3xl md:max-w-4xl lg:max-w-5xl mx-auto flex flex-col items-center justify-between text-center gap-1 sm:gap-2 my-auto h-full pointer-events-auto">
+      <div className="relative z-10 w-full max-w-3xl md:max-w-4xl lg:max-w-5xl mx-auto flex flex-col items-center justify-between text-center gap-1 my-auto h-full pointer-events-auto">
         
-        {/* 1. Prominent Logo + Wider Headline: NAMMA THANJAI. + Simplified Core Tagline */}
-        <div className="flex flex-col items-center gap-1.5 sm:gap-2 w-full shrink-0 pt-1">
+        {/* 1. Tight Unified Header Group: Logo + Headline + Subline + Rotational Switcher Badge (ZERO GAPS) */}
+        <div className="flex flex-col items-center gap-1 sm:gap-1.5 w-full shrink-0 pt-0.5">
           <div className="w-18 h-18 sm:w-24 sm:h-24 md:w-30 md:h-30 rounded-2xl sm:rounded-3xl bg-white shadow-md p-2 sm:p-3 flex items-center justify-center shrink-0 border border-slate-200/90 hover:scale-[1.02] transition-transform">
             <img 
               src="/namma_thanjai_logo.png" 
@@ -929,35 +929,35 @@ export function RobotHero({
               className="w-full h-full object-contain" 
             />
           </div>
-          <h1 className="font-heading font-black text-4xl xs:text-5xl sm:text-7xl md:text-8.5xl lg:text-9.5xl text-slate-955 tracking-tight leading-none uppercase mt-1 sm:mt-2 w-full text-center drop-shadow-2xs scale-x-[1.04] transform origin-center whitespace-nowrap">
+          <h1 className="font-heading font-black text-4xl xs:text-5xl sm:text-7xl md:text-8.5xl lg:text-9.5xl text-slate-955 tracking-tight leading-none uppercase mt-0.5 sm:mt-1.5 w-full text-center drop-shadow-2xs scale-x-[1.04] transform origin-center whitespace-nowrap">
             namma thanjai<span className="text-yellow-500">.</span>
           </h1>
-          <p className="text-[11px] sm:text-xs md:text-sm font-black text-slate-600 max-w-xl mx-auto leading-normal tracking-wider uppercase mt-1 opacity-90">
-            Sell • Need • Local Services • Local Offers
+          <p className="text-[11px] sm:text-xs md:text-sm font-black text-slate-600 max-w-xl mx-auto leading-normal tracking-wider uppercase opacity-90">
+            SELL • NEED • LOCAL SERVICES • LOCAL OFFERS
           </p>
-        </div>
 
-        {/* 2. Rotational Category Switcher Badge (Unclipped Container & Prominent Size) */}
-        <div className="flex items-center justify-center overflow-visible shrink-0 my-0.5 py-1">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={wordIndex}
-              initial={{ opacity: 0, y: -6, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: 6, scale: 1.05 }}
-              transition={{ duration: 0.25 }}
-              className="bg-slate-950 border border-slate-800 text-yellow-400 font-black text-xs sm:text-sm md:text-base px-4.5 sm:px-5 py-1.5 rounded-full uppercase tracking-widest text-center shadow-lg flex items-center gap-2 select-none"
-            >
-              <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-ping" />
-              <span>{words[wordIndex]}</span>
-            </motion.div>
-          </AnimatePresence>
+          {/* 2. Rotational Category Switcher Badge (Locked Directly Under Subline with Zero Space) */}
+          <div className="flex items-center justify-center overflow-visible shrink-0 mt-1 py-0.5">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={wordIndex}
+                initial={{ opacity: 0, y: -6, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 6, scale: 1.05 }}
+                transition={{ duration: 0.25 }}
+                className="bg-slate-955 border border-slate-800 text-yellow-400 font-black text-xs sm:text-sm md:text-base px-4.5 sm:px-5 py-1.5 rounded-full uppercase tracking-widest text-center shadow-lg flex items-center gap-2 select-none"
+              >
+                <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-ping" />
+                <span>{words[wordIndex]}</span>
+              </motion.div>
+            </AnimatePresence>
+          </div>
         </div>
 
         {/* 3. Responsive 3D Mascot Robot Canvas (Unclipped Camera Frustum with Ample Top & Bottom Margin) */}
         <div 
           onClick={handleRobotTap} 
-          className="w-full max-w-[290px] sm:max-w-[370px] md:max-w-[450px] flex-1 min-h-[190px] sm:min-h-[240px] md:min-h-[280px] max-h-[290px] sm:max-h-[330px] md:max-h-[380px] relative flex items-center justify-center cursor-pointer overflow-visible my-1 bg-transparent"
+          className="w-full max-w-[290px] sm:max-w-[370px] md:max-w-[450px] flex-1 min-h-[190px] sm:min-h-[240px] md:min-h-[280px] max-h-[290px] sm:max-h-[330px] md:max-h-[380px] relative flex items-center justify-center cursor-pointer overflow-visible my-0.5 bg-transparent"
         >
           <Canvas camera={{ position: [0, 0.1, 4.5], fov: 42 }} className="overflow-visible bg-transparent">
             <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
@@ -969,8 +969,8 @@ export function RobotHero({
           </Canvas>
         </div>
 
-        {/* 4. Snug Action Footer Group (REGISTER TO POST + LIVE ALERT TICKER) */}
-        <div className="w-full max-w-xs sm:max-w-sm md:max-w-md shrink-0 flex flex-col gap-2 sm:gap-2.5 px-1 pb-1 mt-0.5">
+        {/* 4. Snug Action Footer Group (Only CTA button on Mobile, Live alert ticker hidden on mobile) */}
+        <div className="w-full max-w-xs sm:max-w-sm md:max-w-md shrink-0 flex flex-col gap-2 sm:gap-2.5 px-1 pb-1">
           <button
             type="button"
             onClick={onCtaClick}
@@ -981,7 +981,7 @@ export function RobotHero({
           </button>
 
           {alerts.length > 0 && (
-            <div className="w-full bg-slate-900 border border-slate-800 text-white rounded-xl py-1.5 px-3.5 shadow-sm flex items-center justify-between text-[11px] sm:text-xs font-black select-none tracking-wide">
+            <div className="hidden md:flex w-full bg-slate-900 border border-slate-800 text-white rounded-xl py-1.5 px-3.5 shadow-sm items-center justify-between text-xs font-black select-none tracking-wide">
               <div className="flex items-center gap-2 overflow-hidden w-full text-left">
                 <span className="bg-yellow-500 text-slate-950 font-black text-[8px] px-1.5 py-0.5 rounded-md uppercase shrink-0 animate-pulse">
                   LIVE
@@ -994,7 +994,7 @@ export function RobotHero({
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.3 }}
-                      className="absolute left-0 text-slate-100 truncate w-full font-bold text-left text-[11px] sm:text-xs"
+                      className="absolute left-0 text-slate-100 truncate w-full font-bold text-left text-xs"
                     >
                       {alerts[activeAlertIdx]}
                     </motion.span>
