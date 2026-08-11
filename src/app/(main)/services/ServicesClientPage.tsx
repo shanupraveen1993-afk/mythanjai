@@ -60,8 +60,8 @@ export default function ServicesClientPage() {
         </div>
       </div>
 
-      {/* STICKY TITLE & POST BAR (100% FLUSH TO 56PX FIXED HEADER WITH 0 TOP GAP) */}
-      <div className="sticky top-14 z-40 bg-white border-b border-slate-200 py-2.5 px-4 sm:px-6 lg:px-8 -mx-4 sm:-mx-6 lg:-mx-8 flex items-center justify-between gap-2 shadow-2xs">
+      {/* STICKY TITLE & POST BAR (ALIGNED TO MAX-W-7XL GRID WITH 0 TOP GAP) */}
+      <div className="sticky top-14 z-40 bg-white border-b border-slate-200 py-2.5 flex items-center justify-between gap-2 shadow-2xs">
         <h2 className="font-heading font-bold text-base text-slate-900 tracking-tight">
           Skilled Services
         </h2>
