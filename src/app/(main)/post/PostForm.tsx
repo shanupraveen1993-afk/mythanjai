@@ -47,6 +47,9 @@ const SEGMENT_CONFIG: Record<
     redirectPath: string;
     categories: readonly string[];
     accentColor: string;
+    imagePlaceholder: string;
+    maxTitleChars: number;
+    maxDescChars: number;
   }
 > = {
   sell: {
@@ -56,6 +59,9 @@ const SEGMENT_CONFIG: Record<
     redirectPath: "/sell",
     categories: CLASSIFIED_CATEGORIES,
     accentColor: "bg-yellow-500 hover:bg-yellow-400 border-yellow-400 text-slate-950 font-bold",
+    imagePlaceholder: "📷 Upload product photo (JPEG/PNG, max 5MB)",
+    maxTitleChars: 70,
+    maxDescChars: 1000,
   },
   need: {
     title: "Post Buyer Requirement",
@@ -64,6 +70,9 @@ const SEGMENT_CONFIG: Record<
     redirectPath: "/need",
     categories: CLASSIFIED_CATEGORIES,
     accentColor: "bg-blue-600 hover:bg-blue-500 border-blue-500 text-white font-bold",
+    imagePlaceholder: "📷 Upload reference photo (Optional)",
+    maxTitleChars: 70,
+    maxDescChars: 500,
   },
   service: {
     title: "Register Skilled Service",
@@ -72,6 +81,9 @@ const SEGMENT_CONFIG: Record<
     redirectPath: "/services",
     categories: SERVICE_CATEGORIES,
     accentColor: "bg-emerald-600 hover:bg-emerald-500 border-emerald-500 text-white font-bold",
+    imagePlaceholder: "📷 Upload profile or workplace photo",
+    maxTitleChars: 60,
+    maxDescChars: 800,
   },
   offer: {
     title: "Post Store Offer & Deal",
@@ -80,6 +92,9 @@ const SEGMENT_CONFIG: Record<
     redirectPath: "/shops",
     categories: SHOP_CATEGORIES,
     accentColor: "bg-purple-600 hover:bg-purple-500 border-purple-500 text-white font-bold",
+    imagePlaceholder: "📷 Upload visiting card or deal poster",
+    maxTitleChars: 70,
+    maxDescChars: 800,
   },
 };
 
@@ -91,7 +106,7 @@ export default function PostForm({ segment }: PostFormProps) {
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
-  // Common Form Fields
+  // Form Fields
   const [phone, setPhone] = useState("");
   const [area, setArea] = useState<string>(TANJORE_LOCALITIES[0]);
   const [category, setCategory] = useState<string>(config.categories[0]);
@@ -225,7 +240,7 @@ export default function PostForm({ segment }: PostFormProps) {
     }
   };
 
-  // Direct 1:1 Live Interactive Preview Cards Data
+  // Direct 1:1 Live Preview Cards Data
   const previewSellOrNeedPost = useMemo<NeedOrSalePost>(() => {
     return {
       id: "preview_post",
@@ -249,24 +264,25 @@ export default function PostForm({ segment }: PostFormProps) {
     return {
       id: "preview_service",
       userId: user?.uid || "preview_user",
-      name: title.trim() || "Technician / Provider Name",
+      name: title.trim() || "Senthil Kumar — Electrician",
       skill_category: category || config.categories[0],
       experience: experience || "5+ Years",
-      area_tag: area || TANJORE_LOCALITIES[0],
+      working_hours: workingHours || "9 AM – 8 PM",
       phone: phone || "9876543210",
+      area_tag: area || TANJORE_LOCALITIES[0],
       rating: 5.0,
-      description: description.trim() || "Skilled service description and availability details...",
-      image_url: imagePreview || "/hero_building_visual.png",
+      description: description.trim() || "Professional trade service details...",
+      image_url: imagePreview || "",
       is_verified: true,
       created_at: new Date() as any,
     };
-  }, [title, description, category, area, experience, phone, imagePreview, user, config.categories]);
+  }, [title, description, category, area, experience, workingHours, phone, imagePreview, user, config.categories]);
 
   const previewShopPost = useMemo<ShopPost>(() => {
     return {
       id: "preview_shop",
       userId: user?.uid || "preview_user",
-      shop_name: title.trim() || "Store Name & Deal Title",
+      shop_name: title.trim() || "GLEN Exclusive Store",
       category: category || config.categories[0],
       address_text: `${area}, Thanjavur`,
       landmark: "Near Main Road",
@@ -309,17 +325,23 @@ export default function PostForm({ segment }: PostFormProps) {
         /* PURE HUMAN 2-COLUMN SPLIT LAYOUT (OLX STANDARD) */
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
-          {/* LEFT COLUMN: Clean Form */}
-          <form onSubmit={handleSubmit} className="lg:col-span-7 flex flex-col gap-4 bg-white border border-slate-200 rounded-xl p-5 sm:p-6 shadow-2xs">
+          {/* LEFT COLUMN: Form Controls */}
+          <form onSubmit={handleSubmit} className="lg:col-span-7 flex flex-col gap-3.5 bg-white border border-slate-200 rounded-xl p-5 sm:p-6 shadow-2xs">
             
-            {/* Title */}
+            {/* Title with Character Limit Counter */}
             <div className="flex flex-col gap-1">
-              <label className="text-xs font-semibold text-slate-700">
-                {segment === "service" ? "Service or technician name *" : segment === "offer" ? "Store name & deal title *" : "Posting title or item name *"}
-              </label>
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-semibold text-slate-700">
+                  {segment === "service" ? "Service or technician name *" : segment === "offer" ? "Store name & deal title *" : "Posting title or item name *"}
+                </label>
+                <span className={`text-[10px] font-medium ${title.length >= config.maxTitleChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>
+                  {title.length}/{config.maxTitleChars}
+                </span>
+              </div>
               <input
                 type="text"
                 required
+                maxLength={config.maxTitleChars}
                 placeholder={
                   segment === "sell"
                     ? "e.g. 2 BHK House / Hero Splendor / Commercial Land"
@@ -373,7 +395,7 @@ export default function PostForm({ segment }: PostFormProps) {
               </select>
             </div>
 
-            {/* PRICE INPUT WITH CONCISE INLINE BADGE (e.g. ₹2.5 Cr / ₹25 Lakhs) */}
+            {/* PRICE INPUT WITH INLINE BADGE (e.g. ₹2.5 Cr / ₹25 Lakhs) */}
             {(segment === "sell" || segment === "need") && (
               <div className="flex flex-col gap-1">
                 <div className="flex items-center justify-between">
@@ -501,7 +523,7 @@ export default function PostForm({ segment }: PostFormProps) {
               </div>
             )}
 
-            {/* Phone */}
+            {/* Contact Phone */}
             <div className="flex flex-col gap-1">
               <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                 <Phone className="w-3.5 h-3.5 text-slate-400" />
@@ -517,13 +539,19 @@ export default function PostForm({ segment }: PostFormProps) {
               />
             </div>
 
-            {/* Description */}
+            {/* Description with Character Limit Counter */}
             <div className="flex flex-col gap-1">
-              <label className="text-xs font-semibold text-slate-700">
-                Description or details
-              </label>
+              <div className="flex items-center justify-between">
+                <label className="text-xs font-semibold text-slate-700">
+                  Description or details
+                </label>
+                <span className={`text-[10px] font-medium ${description.length >= config.maxDescChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>
+                  {description.length}/{config.maxDescChars}
+                </span>
+              </div>
               <textarea
                 rows={4}
+                maxLength={config.maxDescChars}
                 placeholder="Describe your item, features, or service details..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -531,11 +559,11 @@ export default function PostForm({ segment }: PostFormProps) {
               />
             </div>
 
-            {/* Photo Upload */}
+            {/* Segment Specific Photo Upload */}
             <div className="flex flex-col gap-1">
               <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                 <Camera className="w-3.5 h-3.5 text-slate-400" />
-                {segment === "offer" ? "Visiting card or poster photo" : "Attach photo (optional)"}
+                <span>{config.imagePlaceholder}</span>
               </label>
               <input
                 type="file"
