@@ -98,7 +98,7 @@ export default function TopHeader({
               type="button"
               onClick={() => router.push("/sell")}
               className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                pathname === "/sell"
+                pathname === "/sell" || pathname.startsWith("/post/sell")
                   ? "bg-white text-slate-900 shadow-2xs border border-slate-200"
                   : "text-slate-600 hover:text-slate-900"
               }`}
@@ -109,7 +109,7 @@ export default function TopHeader({
               type="button"
               onClick={() => router.push("/need")}
               className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                pathname === "/need"
+                pathname === "/need" || pathname.startsWith("/post/need")
                   ? "bg-white text-slate-900 shadow-2xs border border-slate-200"
                   : "text-slate-600 hover:text-slate-900"
               }`}
@@ -120,7 +120,7 @@ export default function TopHeader({
               type="button"
               onClick={() => router.push("/services")}
               className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                pathname === "/services"
+                pathname === "/services" || pathname.startsWith("/post/service")
                   ? "bg-white text-slate-900 shadow-2xs border border-slate-200"
                   : "text-slate-600 hover:text-slate-900"
               }`}
@@ -131,7 +131,7 @@ export default function TopHeader({
               type="button"
               onClick={() => router.push("/shops")}
               className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                pathname === "/shops"
+                pathname === "/shops" || pathname === "/offers" || pathname.startsWith("/post/offer")
                   ? "bg-white text-slate-900 shadow-2xs border border-slate-200"
                   : "text-slate-600 hover:text-slate-900"
               }`}
