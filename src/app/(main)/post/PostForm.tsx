@@ -326,8 +326,42 @@ export default function PostForm({ segment }: PostFormProps) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
           {/* LEFT COLUMN: Form Controls */}
-          <form onSubmit={handleSubmit} className="lg:col-span-7 flex flex-col gap-3.5 bg-white border border-slate-200 rounded-xl p-5 sm:p-6 shadow-2xs">
+          <form onSubmit={handleSubmit} className="lg:col-span-7 flex flex-col gap-4 bg-white border border-slate-200 rounded-xl p-5 sm:p-6 shadow-2xs">
             
+            {/* TOP PRIMARY VISITING CARD / SHOP BANNER UPLOADER (FOR OFFERS & SERVICES) */}
+            {(segment === "offer" || segment === "service") && (
+              <div className="w-full bg-gradient-to-br from-yellow-500/10 via-amber-500/5 to-purple-500/10 border-2 border-dashed border-yellow-400 p-5 rounded-2xl flex flex-col items-center justify-center text-center gap-2.5 transition-all hover:border-yellow-500 group relative">
+                {imagePreview ? (
+                  <div className="relative w-full max-h-48 rounded-xl overflow-hidden border border-slate-200 shadow-sm">
+                    <img src={imagePreview} alt="Visiting card preview" className="w-full h-48 object-cover" />
+                    <label className="absolute bottom-2 right-2 bg-slate-950/85 hover:bg-slate-950 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg cursor-pointer flex items-center gap-1 backdrop-blur-xs">
+                      <Camera className="w-3.5 h-3.5" />
+                      <span>Change Photo</span>
+                      <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+                    </label>
+                  </div>
+                ) : (
+                  <label className="w-full flex flex-col items-center justify-center gap-2 cursor-pointer py-3">
+                    <div className="w-12 h-12 rounded-2xl bg-yellow-500 text-slate-950 flex items-center justify-center font-bold shadow-md group-hover:scale-105 transition-transform">
+                      <Camera className="w-6 h-6 stroke-[2.5]" />
+                    </div>
+                    <div className="flex flex-col items-center">
+                      <span className="font-heading font-black text-xs sm:text-sm text-slate-900 uppercase tracking-tight">
+                        🎴 Snap or Upload Store Visiting Card / Banner *
+                      </span>
+                      <span className="text-[11px] font-medium text-slate-500 mt-0.5 max-w-sm">
+                        Upload your physical shop visiting card, store board photo, or offer flyer image for 1-tap local posting.
+                      </span>
+                    </div>
+                    <span className="bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl transition-all border border-yellow-400 shadow-2xs mt-1">
+                      Upload Visiting Card Photo →
+                    </span>
+                    <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+                  </label>
+                )}
+              </div>
+            )}
+
             {/* Title with Character Limit Counter */}
             <div className="flex flex-col gap-1">
               <div className="flex items-center justify-between">

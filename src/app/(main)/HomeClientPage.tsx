@@ -126,33 +126,16 @@ export default function HomeClientPage() {
               className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-25 pointer-events-none"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent" />
-            <div className="relative z-10 flex flex-col gap-3 max-w-lg">
+            <div className="relative z-10 flex flex-col gap-3 max-w-xl">
               <span className="text-[10px] font-black uppercase tracking-widest text-yellow-400 bg-yellow-400/10 border border-yellow-400/30 px-3 py-1 rounded-full w-fit">
-                Namma Thanjavur — Hyper Local
+                THANJAVUR DIRECT DIRECTORY & MARKETPLACE
               </span>
               <h1 className="font-heading font-black text-2xl sm:text-3xl md:text-4xl text-white leading-tight">
-                Thanjavur's Local Marketplace & Services
+                Thanjavur's Direct Local Community Directory
               </h1>
               <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                Buy, sell, find skilled services and discover local store offers — all from Thanjavur residents.
+                Connect directly with Tanjore residents to buy, sell, hire verified tradesmen, and claim exclusive local store offers.
               </p>
-              {/* Quick nav segment buttons */}
-              <div className="flex gap-2 mt-1 flex-wrap">
-                {[
-                  { label: "Sell", path: "/sell" },
-                  { label: "Need", path: "/need" },
-                  { label: "Services", path: "/services" },
-                  { label: "Offers", path: "/shops" },
-                ].map((seg) => (
-                  <button
-                    key={seg.label}
-                    onClick={() => router.push(seg.path)}
-                    className="bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl transition-all border border-yellow-400 cursor-pointer shadow-2xs"
-                  >
-                    {seg.label}
-                  </button>
-                ))}
-              </div>
             </div>
           </div>
 
