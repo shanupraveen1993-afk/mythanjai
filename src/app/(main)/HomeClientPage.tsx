@@ -215,34 +215,29 @@ export default function HomeClientPage() {
         </div>
 
       ) : (
-        /* ── GUEST LANDING PAGE HERO ──────────────────────────── */
-        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 mt-4 flex flex-col gap-6">
-          <div className="relative w-full min-h-[220px] sm:min-h-[260px] rounded-3xl overflow-hidden bg-slate-950 text-white flex items-center px-6 sm:px-10 py-10 shadow-lg">
-            <img
-              src="/thanjavur_temple_illustration.png"
-              alt="Namma Thanjavur"
-              className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-25 pointer-events-none"
+        /* ── GUEST ONBOARDING LANDING HERO ──────────────────────────── */
+        <div className="w-full relative flex flex-col h-[100dvh] overflow-hidden justify-between py-1 md:h-auto md:min-h-[85vh] md:overflow-visible">
+          <div className="w-full">
+            <RobotHero
+              backgroundText="NAMMA THANJAI"
+              navItemsLeft={[]}
+              ctaText="Register / Get Started"
+              onCtaClick={() => {
+                router.push("/?auth=popup");
+              }}
+              onCategoryClick={(targetRoute) => {
+                if (targetRoute) {
+                  router.push(`/${targetRoute}`);
+                } else {
+                  router.push("/sell");
+                }
+              }}
+              color="#eab308"
+              pantallaColor="#fbbf24"
+              pantallaBrillo={1.6}
+              alerts={alerts}
+              activeAlertIdx={activeAlertIdx}
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/85 to-transparent" />
-            <div className="relative z-10 flex flex-col gap-3 max-w-xl">
-              <span className="text-[10px] font-bold uppercase tracking-wider text-yellow-500 bg-yellow-500/10 border border-yellow-500/30 px-3 py-1 rounded-md w-fit">
-                Namma Thanjavur — Direct Marketplace
-              </span>
-              <h1 className="font-heading font-bold text-2xl sm:text-3xl md:text-4xl text-white leading-tight">
-                Thanjavur's Verified Local Community Directory
-              </h1>
-              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-                Connect directly with Tanjore residents to buy, sell, hire verified skilled tradesmen, and claim exclusive store offers.
-              </p>
-              <div className="flex gap-3 mt-2 flex-wrap">
-                <button
-                  onClick={() => router.push("/?auth=popup")}
-                  className="bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl transition-all border border-yellow-400 shadow-2xs cursor-pointer"
-                >
-                  Register to Post & Connect →
-                </button>
-              </div>
-            </div>
           </div>
         </div>
       )}

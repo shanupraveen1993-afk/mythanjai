@@ -872,29 +872,15 @@ export function RobotHero({
   }, []);
 
   useEffect(() => {
-    if (isSpinning) return;
     const interval = setInterval(() => {
       setWordIndex((prev) => (prev + 1) % words.length);
-    }, 1500); // 1.5s fast rotation so 3-4 topics rotate within 5-6 seconds
+    }, 2500); // Standardized 2.5s steady rhythm for smooth rotation
     return () => clearInterval(interval);
-  }, [isSpinning]);
+  }, [words.length]);
 
   const handleRobotTap = () => {
-    if (fastSpinRef.current) {
-      clearInterval(fastSpinRef.current);
-      fastSpinRef.current = null;
-    }
-    setIsSpinning(true);
-    let count = 0;
-    fastSpinRef.current = setInterval(() => {
-      setWordIndex((prev) => (prev + 1) % words.length);
-      count++;
-      if (count > 12) {
-        if (fastSpinRef.current) clearInterval(fastSpinRef.current);
-        fastSpinRef.current = null;
-        setIsSpinning(false);
-      }
-    }, 90);
+    // Smoothly advance to next word on tap without flickering 90ms canvas re-renders
+    setWordIndex((prev) => (prev + 1) % words.length);
   };
 
   const entorno = {
@@ -975,10 +961,10 @@ export function RobotHero({
           <button
             type="button"
             onClick={onCtaClick}
-            className="w-full py-3 sm:py-3.5 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-black text-xs sm:text-sm uppercase tracking-wider transition-all hover:scale-[1.01] active:scale-[0.98] shadow-lg shadow-yellow-500/25 border-0 text-center flex items-center justify-center gap-2 cursor-pointer scale-[1.01]"
+            className="w-full py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-950 font-heading font-bold text-sm sm:text-base uppercase tracking-wider transition-all hover:scale-[1.01] active:scale-[0.98] shadow-lg shadow-yellow-500/25 border border-yellow-400 text-center flex items-center justify-center gap-2 cursor-pointer"
           >
-            <span>{ctaText === "Verified" ? "Verified Profile" : "Register to Post"}</span>
-            <ArrowRight className="w-4 h-4 text-slate-955 stroke-[2.5]" />
+            <span>{ctaText || "Register / Get Started"}</span>
+            <ArrowRight className="w-4 h-4 text-slate-950 stroke-[2.5]" />
           </button>
 
           {alerts.length > 0 && (

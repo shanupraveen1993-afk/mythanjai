@@ -120,27 +120,31 @@ function MainLayoutContent({
     router.push(`${pathname}${queryString ? `?${queryString}` : ""}`);
   };
 
+  const isGuestLanding = pathname === "/" && !profile?.isVerified;
+
   return (
-    <div className={`w-full flex flex-col relative bg-white font-sans ${pathname === "/" && !profile?.isVerified ? "h-dvh max-h-dvh overflow-hidden md:h-auto md:max-h-none md:min-h-screen md:overflow-visible" : "min-h-screen"}`}>
+    <div className={`w-full flex flex-col relative bg-white font-sans ${isGuestLanding ? "h-dvh max-h-dvh overflow-hidden md:h-auto md:max-h-none md:min-h-screen md:overflow-visible" : "min-h-screen"}`}>
       <React.Suspense fallback={null}>
         <SearchParamSync onAreaSync={setSelectedArea} onAuthSync={setIsSignInOpen} />
       </React.Suspense>
 
-      {/* Top Header Section */}
-      <div className="block">
-        <React.Suspense fallback={null}>
-          <TopHeader
-            selectedArea={selectedArea}
-            onAreaChange={handleAreaChange}
-            onSignInClick={() => setIsSignInOpen(true)}
-            onPostClick={() => {
-              router.push("/post/sell");
-            }}
-            activeTab={getActiveTab()}
-            onTabChange={handleTabChange}
-          />
-        </React.Suspense>
-      </div>
+      {/* Top Header Section (Hidden for unauthenticated guest onboarding landing) */}
+      {!isGuestLanding && (
+        <div className="block">
+          <React.Suspense fallback={null}>
+            <TopHeader
+              selectedArea={selectedArea}
+              onAreaChange={handleAreaChange}
+              onSignInClick={() => setIsSignInOpen(true)}
+              onPostClick={() => {
+                router.push("/post/sell");
+              }}
+              activeTab={getActiveTab()}
+              onTabChange={handleTabChange}
+            />
+          </React.Suspense>
+        </div>
+      )}
 
       {/* Universal Directory Search Bar (Hidden on Home & Profile pages) */}
       {profile?.isVerified && pathname !== "/" && pathname !== "/profile" && (
@@ -149,16 +153,18 @@ function MainLayoutContent({
         </React.Suspense>
       )}
 
-      {/* Main Content Panel with Consistent Container Margins & Fixed Header Offset */}
-      <main className="flex-1 w-full max-w-7xl mx-auto bg-white px-4 sm:px-6 lg:px-8 pt-14 pb-20 md:pb-8">
+      {/* Main Content Panel (0 Padding for Guest Onboarding View) */}
+      <main className={`flex-1 w-full bg-white ${isGuestLanding ? "p-0 max-w-none m-0" : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-20 md:pb-8"}`}>
         {children}
       </main>
 
-      {/* Bottom Navigation Bar */}
-      <BottomTabBar
-        activeTab={getActiveTab()}
-        onTabChange={handleTabChange}
-      />
+      {/* Bottom Navigation Bar (Hidden for unauthenticated guest onboarding landing) */}
+      {!isGuestLanding && (
+        <BottomTabBar
+          activeTab={getActiveTab()}
+          onTabChange={handleTabChange}
+        />
+      )}
 
       {/* Sign-In Popup Modal */}
       <React.Suspense fallback={null}>
