@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { MessageSquare, Calendar, Tag, MapPin, Share2, Home, Cpu, Car, Eye, Bookmark, ShieldCheck, Lock } from "lucide-react";
 import { NeedOrSalePost } from "@/types";
 import { formatIndianCurrencyText } from "@/lib/constants";
@@ -194,14 +195,13 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
             <Lock className="w-3 h-3 text-slate-400" />
             <span>Protected Contact</span>
           </div>
-          <button
-            type="button"
-            onClick={() => setIsChatOpen(true)}
-            className="flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 active:scale-95 text-white font-black px-3.5 py-1.5 rounded-xl text-xs transition-all shadow-xs cursor-pointer"
+          <Link
+            href={`/chat?listingId=${post.id}&sellerId=${post.userId || "seller_id"}&title=${encodeURIComponent(post.title || "Item")}`}
+            className="flex items-center gap-1.5 bg-[#00a884] hover:bg-[#008f6f] text-white font-bold px-3 py-1.5 rounded-lg text-xs transition-all shadow-2xs cursor-pointer"
           >
-            <MessageSquare className="w-3.5 h-3.5 text-yellow-400" />
+            <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
             <span>In-App Chat</span>
-          </button>
+          </Link>
         </div>
       </div>
 
