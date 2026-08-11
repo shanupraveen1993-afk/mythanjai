@@ -45,7 +45,7 @@ export default function SellClientPage() {
   }, [firestorePosts, selectedCategory, sortBy]);
 
   return (
-    <div className="flex flex-col gap-4 mt-3 pb-24 max-w-7xl mx-auto px-4 sm:px-6">
+    <div className="flex flex-col gap-4 mt-3 pb-24 w-full">
 
       {/* Hero */}
       <div className="relative w-full min-h-[160px] sm:min-h-[200px] rounded-3xl overflow-hidden bg-slate-950 text-white flex items-center px-6 sm:px-10 py-8 shadow-md">
