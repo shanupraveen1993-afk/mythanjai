@@ -62,14 +62,14 @@ export const SERVICE_CATEGORIES = [
 
 export type ServiceCategory = typeof SERVICE_CATEGORIES[number];
 
-// Categories for Tab 3: Shops & Business Directory
+// Categories for Tab 3: Shops & Offers
 export const SHOP_CATEGORIES = [
+  "Electronics & Mobiles",
   "Cafe & Restaurant",
   "Grocery & Supermarket",
   "Textiles & Readymades",
   "Gold & Jewelry",
   "Medical & Pharmacy",
-  "Electronics & Mobiles",
   "Hardware & Electricals",
   "Automobile Showroom",
   "Education & Coaching",
@@ -78,22 +78,19 @@ export const SHOP_CATEGORIES = [
 
 export type ShopCategory = typeof SHOP_CATEGORIES[number];
 
-// Categories for Tab 4: Offers & Social Buzz
 export const OFFER_CATEGORIES = [
-  "Food & Dining",
-  "Clothing & Shopping",
-  "Real Estate Launch",
-  "Electronics Sale",
-  "Festival Special",
-  "Local Event",
+  "Grand Opening Sale",
+  "Festival Offer",
+  "Special Discount",
+  "Clearance Sale",
+  "Buy 1 Get 1",
+  "Weekend Deal",
 ] as const;
 
-export type OfferCategory = typeof OFFER_CATEGORIES[number];
-
-// High quality square medium category illustrations
-export const CATEGORY_ILLUSTRATIONS: Record<string, string> = {
+// Unsplash high quality localized category cover fallbacks
+export const CATEGORY_IMAGE_MAP: Record<string, string> = {
   // Classifieds
-  "Property Rental": "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=600&auto=format&fit=crop",
+  "Property Rental": "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&auto=format&fit=crop",
   "Plots & Real Estate": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&auto=format&fit=crop",
   "Used Vehicles": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600&auto=format&fit=crop",
   "Electronics & Mobiles": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&auto=format&fit=crop",
@@ -124,3 +121,29 @@ export const CATEGORY_ILLUSTRATIONS: Record<string, string> = {
   "Education & Coaching": "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=600&auto=format&fit=crop",
   "General Store": "https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=600&auto=format&fit=crop",
 };
+
+export const CATEGORY_ILLUSTRATIONS = CATEGORY_IMAGE_MAP;
+
+/**
+ * Format raw numbers into standard Indian Lakhs / Crores text (e.g. 25000000 -> ₹2.5 Crore)
+ */
+export function formatIndianCurrencyText(amount: number | string | null | undefined): string {
+  if (amount === null || amount === undefined || amount === "") return "";
+  const num = typeof amount === "number" ? amount : parseFloat(String(amount).replace(/,/g, ""));
+  if (isNaN(num) || num <= 0) return String(amount);
+
+  if (num >= 10000000) {
+    const cr = num / 10000000;
+    const formattedCr = cr % 1 === 0 ? cr : cr.toFixed(2);
+    return `₹${formattedCr} Crore`;
+  }
+  if (num >= 100000) {
+    const lakh = num / 100000;
+    const formattedLakh = lakh % 1 === 0 ? lakh : lakh.toFixed(2);
+    return `₹${formattedLakh} Lakhs`;
+  }
+  if (num >= 1000) {
+    return `₹${num.toLocaleString("en-IN")}`;
+  }
+  return `₹${num.toLocaleString("en-IN")}`;
+}

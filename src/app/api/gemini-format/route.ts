@@ -10,7 +10,8 @@ const ai = new GoogleGenAI({
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { rawDescription, type } = body;
+    const rawDescription = body.rawDescription || body.raw_text || "";
+    const type = body.type || "sell";
 
     if (!rawDescription) {
       return NextResponse.json(

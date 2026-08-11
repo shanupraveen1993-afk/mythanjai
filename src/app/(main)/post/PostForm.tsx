@@ -12,6 +12,7 @@ import {
   CLASSIFIED_CATEGORIES,
   SERVICE_CATEGORIES,
   SHOP_CATEGORIES,
+  formatIndianCurrencyText,
 } from "@/lib/constants";
 import {
   Check,
@@ -25,6 +26,8 @@ import {
   Globe,
   Clock,
   Calendar,
+  IndianRupee,
+  Wand2,
 } from "lucide-react";
 import NeedCard from "@/components/cards/NeedCard";
 import ServiceCard from "@/components/cards/ServiceCard";
@@ -117,36 +120,40 @@ export default function PostForm({ segment }: PostFormProps) {
     }
   }, [profile, phone]);
 
-  // Automated AI Description Refinement (1.5s debounced trigger)
+  // Trigger AI formatting explicitly
+  const runAiPolisher = async (textToFormat: string) => {
+    if (!textToFormat.trim() || textToFormat.trim().length < 6) return;
+    setAiLoading(true);
+
+    try {
+      const res = await fetch("/api/gemini-format", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ rawDescription: textToFormat, type: segment }),
+      });
+      if (res.ok) {
+        const data = await res.json();
+        if (data.formattedText) {
+          setAiPolishedDesc(data.formattedText);
+        }
+      }
+    } catch (err) {
+      console.warn("AI Polish error:", err);
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  // Automated AI Description Refinement (800ms debounced trigger)
   useEffect(() => {
     if (!description.trim() || description.trim().length < 8) {
       setAiPolishedDesc(description);
       return;
     }
 
-    const timer = setTimeout(async () => {
-      setAiLoading(true);
-      try {
-        const res = await fetch("/api/gemini-format", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ raw_text: description }),
-        });
-        if (res.ok) {
-          const data = await res.json();
-          if (data.formatted_text) {
-            setAiPolishedDesc(data.formatted_text);
-          } else {
-            setAiPolishedDesc(description);
-          }
-        }
-      } catch (err) {
-        console.warn("AI Polish auto-format fallback:", err);
-        setAiPolishedDesc(description);
-      } finally {
-        setAiLoading(false);
-      }
-    }, 1500);
+    const timer = setTimeout(() => {
+      runAiPolisher(description);
+    }, 800);
 
     return () => clearTimeout(timer);
   }, [description]);
@@ -161,6 +168,13 @@ export default function PostForm({ segment }: PostFormProps) {
       };
       reader.readAsDataURL(file);
     }
+  };
+
+  // Indian Currency Quick Selectors
+  const handleAddPrice = (addAmount: number) => {
+    const current = parseFloat(price) || 0;
+    const nextVal = current + addAmount;
+    setPrice(String(nextVal));
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -271,7 +285,7 @@ export default function PostForm({ segment }: PostFormProps) {
       description: aiPolishedDesc.trim() || description.trim() || "Live AI preview description will appear here as you type...",
       category: category || config.categories[0],
       area_tag: area || TANJORE_LOCALITIES[0],
-      price: price || (segment === "sell" ? "15000" : "10000"),
+      price: price || (segment === "sell" ? "2500000" : "10000"),
       phone: phone || "9876543210",
       image_url: imagePreview || "/thanjavur_temple_illustration.png",
       is_verified: true,
@@ -318,6 +332,8 @@ export default function PostForm({ segment }: PostFormProps) {
     };
   }, [title, description, aiPolishedDesc, category, area, workingHours, phone, imagePreview, user, config.categories]);
 
+  const formattedPriceBadge = formatIndianCurrencyText(price);
+
   return (
     <div className="w-full max-w-6xl mx-auto px-4 py-6 pb-24 flex flex-col gap-6 font-sans">
       {/* Header */}
@@ -355,7 +371,7 @@ export default function PostForm({ segment }: PostFormProps) {
                 required
                 placeholder={
                   segment === "sell"
-                    ? "e.g. 2400 Sqft CMDA Plot / Hero Splendor 2022"
+                    ? "e.g. 2 BHK House / Hero Splendor / Commercial Land"
                     : segment === "need"
                     ? "e.g. Need 2 BHK House near Medical College"
                     : segment === "service"
@@ -406,19 +422,70 @@ export default function PostForm({ segment }: PostFormProps) {
               </select>
             </div>
 
-            {/* Price / Budget (Sell & Need) */}
+            {/* PRICE INPUT WITH INDIAN CURRENCY FORMATTER & QUICK BUTTONS */}
             {(segment === "sell" || segment === "need") && (
-              <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-black text-slate-700 uppercase tracking-wider">
-                  {segment === "sell" ? "Price (₹)" : "Budget (₹)"}
-                </label>
+              <div className="flex flex-col gap-2 bg-slate-50 border border-slate-200/90 rounded-2xl p-3.5">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-black text-slate-700 uppercase tracking-wider flex items-center gap-1">
+                    <IndianRupee className="w-3.5 h-3.5 text-emerald-600" />
+                    {segment === "sell" ? "Price (₹)" : "Budget (₹)"}
+                  </label>
+                  {formattedPriceBadge && (
+                    <span className="text-xs font-black text-emerald-700 bg-emerald-100 px-2.5 py-0.5 rounded-lg border border-emerald-200">
+                      💰 {formattedPriceBadge}
+                    </span>
+                  )}
+                </div>
+
                 <input
                   type="number"
-                  placeholder="e.g. 12500"
+                  placeholder="e.g. 2500000 (25 Lakhs) or 25000000 (2.5 Crore)"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
-                  className="w-full px-4 py-2.5 text-sm font-semibold border border-slate-200 rounded-2xl bg-slate-50 focus:bg-white focus:outline-none focus:border-slate-900"
+                  className="w-full px-4 py-2.5 text-sm font-bold border border-slate-200 rounded-xl bg-white focus:outline-none focus:border-slate-900"
                 />
+
+                {/* Indian Unit Quick Buttons */}
+                <div className="flex items-center gap-1.5 flex-wrap pt-1">
+                  <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider mr-1">Quick Add:</span>
+                  <button
+                    type="button"
+                    onClick={() => handleAddPrice(100000)}
+                    className="text-[11px] font-bold bg-white hover:bg-slate-100 border border-slate-250 text-slate-700 px-2.5 py-1 rounded-lg cursor-pointer transition-colors shadow-2xs"
+                  >
+                    + ₹1 Lakh
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleAddPrice(500000)}
+                    className="text-[11px] font-bold bg-white hover:bg-slate-100 border border-slate-250 text-slate-700 px-2.5 py-1 rounded-lg cursor-pointer transition-colors shadow-2xs"
+                  >
+                    + ₹5 Lakhs
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleAddPrice(1000000)}
+                    className="text-[11px] font-bold bg-white hover:bg-slate-100 border border-slate-250 text-slate-700 px-2.5 py-1 rounded-lg cursor-pointer transition-colors shadow-2xs"
+                  >
+                    + ₹10 Lakhs
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => handleAddPrice(10000000)}
+                    className="text-[11px] font-bold bg-white hover:bg-slate-100 border border-slate-250 text-slate-700 px-2.5 py-1 rounded-lg cursor-pointer transition-colors shadow-2xs"
+                  >
+                    + ₹1 Crore
+                  </button>
+                  {price && (
+                    <button
+                      type="button"
+                      onClick={() => setPrice("")}
+                      className="text-[10px] font-bold text-red-600 hover:text-red-800 ml-auto cursor-pointer"
+                    >
+                      Clear
+                    </button>
+                  )}
+                </div>
               </div>
             )}
 
@@ -541,20 +608,35 @@ export default function PostForm({ segment }: PostFormProps) {
               />
             </div>
 
-            {/* Description with Automated AI Formatting Indicator */}
+            {/* DESCRIPTION WITH AI POLISH BUTTON & AUTOMATED TRIGGER */}
             <div className="flex flex-col gap-1.5">
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between flex-wrap gap-2">
                 <label className="text-xs font-black text-slate-700 uppercase tracking-wider">
                   Description / Details
                 </label>
-                {aiLoading && (
-                  <span className="flex items-center gap-1 text-[10px] font-black text-yellow-600 animate-pulse">
-                    <Sparkles className="w-3 h-3" /> Formatting AI Copy...
-                  </span>
-                )}
+
+                <button
+                  type="button"
+                  onClick={() => runAiPolisher(description)}
+                  disabled={aiLoading || !description.trim()}
+                  className="flex items-center gap-1 text-[11px] font-black text-yellow-950 bg-yellow-400 hover:bg-yellow-300 disabled:opacity-50 px-2.5 py-1 rounded-xl transition-all cursor-pointer shadow-2xs border border-yellow-300"
+                >
+                  {aiLoading ? (
+                    <>
+                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      <span>Formatting AI Copy...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Sparkles className="w-3.5 h-3.5 fill-yellow-950" />
+                      <span>✨ AI Format & Polish</span>
+                    </>
+                  )}
+                </button>
               </div>
+
               <textarea
-                rows={3}
+                rows={4}
                 placeholder="Describe your item, features, or service details..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
@@ -600,10 +682,24 @@ export default function PostForm({ segment }: PostFormProps) {
                 <Sparkles className="w-3.5 h-3.5 text-yellow-500" />
                 Live Interactive Preview
               </span>
-              <span className="text-[10px] font-bold text-slate-400">Updates in real-time</span>
+              {aiLoading ? (
+                <span className="text-[10px] font-black text-yellow-600 animate-pulse flex items-center gap-1">
+                  <Loader2 className="w-3 h-3 animate-spin" /> Polishing Copy...
+                </span>
+              ) : (
+                <span className="text-[10px] font-bold text-slate-400">Updates in real-time</span>
+              )}
             </div>
 
-            <div className="bg-slate-50 border border-slate-200/90 rounded-3xl p-4 shadow-sm flex flex-col gap-3">
+            <div className="bg-slate-50 border border-slate-200/90 rounded-3xl p-4 shadow-sm flex flex-col gap-3 relative">
+              {aiLoading && (
+                <div className="absolute inset-0 bg-white/70 backdrop-blur-2xs z-30 rounded-3xl flex flex-col items-center justify-center gap-2 text-center p-4">
+                  <Loader2 className="w-7 h-7 text-yellow-500 animate-spin" />
+                  <span className="text-xs font-black text-slate-900">✨ AI Refining Tamil/English Copy...</span>
+                  <span className="text-[11px] text-slate-500 font-semibold">Applying competitor-standard structured layout</span>
+                </div>
+              )}
+
               {segment === "sell" || segment === "need" ? (
                 <NeedCard post={previewSellOrNeedPost} />
               ) : segment === "service" ? (

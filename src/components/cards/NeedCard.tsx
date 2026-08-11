@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { MessageSquare, Calendar, Tag, MapPin, Share2, Home, Cpu, Car, Eye, Bookmark, ShieldCheck, Lock } from "lucide-react";
 import { NeedOrSalePost } from "@/types";
+import { formatIndianCurrencyText } from "@/lib/constants";
 import InAppChatModal from "@/components/chat/InAppChatModal";
 
 interface NeedCardProps {
@@ -38,11 +39,7 @@ export default function NeedCard({ post, onShare }: NeedCardProps) {
 
   const displayPriceText = React.useMemo(() => {
     if (post.price === null || post.price === undefined || post.price === "") return null;
-    const num = Number(post.price);
-    if (!isNaN(num)) {
-      return `₹${num.toLocaleString("en-IN")}`;
-    }
-    return String(post.price);
+    return formatIndianCurrencyText(post.price);
   }, [post.price]);
 
   const handleSharePost = (e: React.MouseEvent) => {
