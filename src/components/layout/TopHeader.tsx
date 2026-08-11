@@ -61,8 +61,8 @@ export default function TopHeader({
   };
 
   return (
-    <header className="sticky top-0 z-40 bg-white border-b border-slate-200/90 shadow-xs">
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2.5 flex items-center justify-between gap-3">
+    <header className="sticky top-0 z-50 bg-white border-b border-slate-200 shadow-2xs h-14 flex items-center">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3">
         
         {/* Left: Website Branding Logo across all pages */}
         <div className="flex items-center gap-2">

@@ -149,8 +149,8 @@ function MainLayoutContent({
         </React.Suspense>
       )}
 
-      {/* Main Content Panel with Container Margins */}
-      <main className={`flex-1 w-full bg-white ${pathname === "/chat" ? "max-w-none p-0" : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 md:pb-8"}`}>
+      {/* Main Content Panel with Consistent Container Margins */}
+      <main className="flex-1 w-full max-w-7xl mx-auto bg-white px-4 sm:px-6 lg:px-8 pb-20 md:pb-8">
         {children}
       </main>
 

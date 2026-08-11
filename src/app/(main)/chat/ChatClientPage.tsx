@@ -232,7 +232,7 @@ export default function ChatClientPage() {
   };
 
   return (
-    <div className="w-full h-[calc(100vh-57px)] flex flex-col bg-white overflow-hidden font-sans">
+    <div className="w-full flex flex-col pt-3 font-sans">
       
       {/* Contextual Scam Alert Modal Overlay */}
       {scamAlertTriggered && (
@@ -261,8 +261,8 @@ export default function ChatClientPage() {
         </div>
       )}
 
-      {/* FULL-PAGE WHATSAPP CONTAINER (100% SCREEN VIEWPORT) */}
-      <div className="bg-white border-0 rounded-none overflow-hidden h-full flex flex-1">
+      {/* WHATSAPP APP CONTAINER (ALIGNED TO MAX-W-7XL HEADER GRID) */}
+      <div className="bg-white border border-slate-200 rounded-xl shadow-2xs overflow-hidden h-[calc(100vh-140px)] min-h-[550px] flex">
         
         {/* LEFT COLUMN: WhatsApp Threads List (Desktop ALWAYS visible, Mobile toggled) */}
         <div className={`w-full lg:w-80 border-r border-slate-200 flex-col bg-white ${showMobileChat ? "hidden lg:flex" : "flex"}`}>
