@@ -50,7 +50,7 @@ export default function ShopsClientPage() {
         <img src="/hero_building_visual.png" alt="Offers" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent" />
         <div className="relative z-10 flex flex-col gap-1 max-w-lg">
-          <span className="bg-yellow-500 text-slate-950 font-bold text-[10px] px-2 py-0.5 rounded-md uppercase tracking-wider w-fit">Store Discounts</span>
+          <span className="bg-yellow-500 text-slate-955 font-bold text-[10px] px-2 py-0.5 rounded-md tracking-wider w-fit">Store discounts</span>
           <h1 className="font-heading font-bold text-lg sm:text-xl text-white">Local Store Offers</h1>
           <p className="text-xs text-slate-300">Grand opening deals, festival sales & discounts from Tanjore stores.</p>
         </div>

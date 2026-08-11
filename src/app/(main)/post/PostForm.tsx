@@ -346,15 +346,15 @@ export default function PostForm({ segment }: PostFormProps) {
                       <Camera className="w-6 h-6 stroke-[2.5]" />
                     </div>
                     <div className="flex flex-col items-center">
-                      <span className="font-heading font-black text-xs sm:text-sm text-slate-900 uppercase tracking-tight">
-                        🎴 Snap or Upload Store Visiting Card / Banner *
+                      <span className="font-heading font-bold text-sm text-slate-900">
+                        Upload store visiting card or banner *
                       </span>
-                      <span className="text-[11px] font-medium text-slate-500 mt-0.5 max-w-sm">
-                        Upload your physical shop visiting card, store board photo, or offer flyer image for 1-tap local posting.
+                      <span className="text-xs text-slate-500 mt-0.5 max-w-sm font-medium">
+                        Add a photo of your shop visiting card, store board, or offer flyer.
                       </span>
                     </div>
-                    <span className="bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl transition-all border border-yellow-400 shadow-2xs mt-1">
-                      Upload Visiting Card Photo →
+                    <span className="bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-bold text-xs px-4 py-2 rounded-xl transition-all border border-yellow-400 shadow-2xs mt-1">
+                      Upload Photo →
                     </span>
                     <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
                   </label>

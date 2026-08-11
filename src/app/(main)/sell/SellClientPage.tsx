@@ -55,7 +55,7 @@ export default function SellClientPage() {
         <img src="/thanjavur_temple_illustration.png" alt="Sell" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent" />
         <div className="relative z-10 flex flex-col gap-1 max-w-lg">
-          <span className="bg-yellow-500 text-slate-950 font-bold text-[10px] px-2 py-0.5 rounded-md uppercase tracking-wider w-fit">Direct Marketplace</span>
+          <span className="bg-yellow-500 text-slate-955 font-bold text-[10px] px-2 py-0.5 rounded-md tracking-wider w-fit">Direct marketplace</span>
           <h1 className="font-heading font-bold text-lg sm:text-xl text-white">Buy & Sell in Thanjavur</h1>
           <p className="text-xs text-slate-300">Plots, rentals, vehicles & electronics directly from Tanjore locals.</p>
         </div>

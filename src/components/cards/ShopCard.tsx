@@ -41,7 +41,7 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false, isPre
     <div className="bg-white border border-slate-200/90 rounded-xl overflow-hidden shadow-2xs flex flex-col relative transition-all hover:shadow-xs w-full font-sans">
       {/* Featured Star Overlay */}
       {post.is_featured && (
-        <div className="absolute top-2.5 left-2.5 z-20 bg-yellow-500 text-slate-950 text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-xl flex items-center gap-1 shadow-md animate-pulse">
+        <div className="absolute top-2.5 left-2.5 z-20 bg-yellow-500 text-slate-955 text-[9px] font-bold px-2 py-0.5 rounded-xl flex items-center gap-1 shadow-md animate-pulse">
           <Sparkles className="w-2.5 h-2.5 fill-current" />
           <span>Featured</span>
         </div>

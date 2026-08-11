@@ -76,15 +76,15 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
             </h3>
 
             {isPendingVerification && (
-              <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-900 border border-amber-300 font-black px-2 py-0.5 rounded-md text-[9px] uppercase tracking-wide">
+              <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-900 border border-amber-300 font-bold px-2 py-0.5 rounded-md text-[9px]">
                 <AlertTriangle className="w-3 h-3 text-amber-600" />
-                <span>Pending Verification</span>
+                <span>Pending verification</span>
               </span>
             )}
           </div>
 
           <div className="flex items-center gap-2 mt-1.5">
-            <span className="inline-flex items-center gap-1 bg-emerald-50 border border-emerald-200 text-emerald-800 font-bold px-2 py-0.5 rounded-xl text-[9px] uppercase tracking-wide">
+            <span className="inline-flex items-center gap-1 bg-emerald-50 border border-emerald-200 text-emerald-800 font-bold px-2 py-0.5 rounded-xl text-[9px]">
               {getCategoryIllustration(post.skill_category)}
               <span>{post.skill_category}</span>
             </span>
