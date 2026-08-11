@@ -60,8 +60,8 @@ export default function NeedClientPage() {
         </div>
       </div>
 
-      {/* TIER 1: STICKY TITLE BAR (100% FLUSH TO HEADER WITH 0 TOP GAP) */}
-      <div className="sticky top-[52px] sm:top-[57px] z-30 bg-white border-b border-slate-200/90 py-2.5 px-4 -mx-4 flex items-center justify-between gap-2 shadow-2xs">
+      {/* TIER 1: STICKY TITLE BAR (100% FULL-BLEED FLUSH TO HEADER WITH 0 TOP GAP) */}
+      <div className="sticky top-[51px] sm:top-[57px] z-30 bg-white border-b border-slate-200 py-3 px-4 sm:px-6 lg:px-8 -mx-4 sm:-mx-6 lg:-mx-8 flex items-center justify-between gap-2 shadow-2xs">
         <h2 className="font-heading font-bold text-base text-slate-900 tracking-tight">
           Buying Needs
         </h2>

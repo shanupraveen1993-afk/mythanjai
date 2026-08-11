@@ -150,7 +150,7 @@ function MainLayoutContent({
       )}
 
       {/* Main Content Panel with Container Margins */}
-      <main className={`flex-1 w-full max-w-7xl mx-auto bg-white ${pathname === "/" && !profile?.isVerified ? "px-0 py-0 pb-0" : "px-4 sm:px-6 lg:px-8 pb-20 md:pb-8"}`}>
+      <main className={`flex-1 w-full bg-white ${pathname === "/chat" ? "max-w-none p-0" : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 md:pb-8"}`}>
         {children}
       </main>
 
