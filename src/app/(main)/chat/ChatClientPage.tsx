@@ -231,6 +231,32 @@ export default function ChatClientPage() {
     }
   };
 
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  const handleDeleteChat = () => {
+    if (confirm("Are you sure you want to delete this conversation thread?")) {
+      setThreads((prev) => prev.filter((t) => t.chatId !== activeChatId));
+      setMessages([]);
+      setIsMenuOpen(false);
+      setShowMobileChat(false);
+    }
+  };
+
+  const handleShareChat = async () => {
+    try {
+      if (navigator.share) {
+        await navigator.share({
+          title: activeListingTitle,
+          url: window.location.href,
+        });
+      } else {
+        await navigator.clipboard.writeText(window.location.href);
+        alert("Listing chat link copied to clipboard!");
+      }
+    } catch (err) {}
+    setIsMenuOpen(false);
+  };
+
   return (
     <div className="w-full h-dvh max-h-dvh flex flex-col bg-[#075e54] font-sans overflow-hidden">
       
@@ -262,7 +288,7 @@ export default function ChatClientPage() {
       )}
 
       {/* DEDICATED WHATSAPP TOP HEADER (DARK TEAL #075e54) */}
-      <div className="w-full bg-[#075e54] text-white px-4 py-2.5 flex items-center justify-between shadow-md shrink-0 border-b border-[#054c44]">
+      <div className="w-full bg-[#075e54] text-white px-4 py-2.5 flex items-center justify-between shadow-md shrink-0 border-b border-[#054c44] relative z-40">
         <div className="flex items-center gap-3">
           <div 
             onClick={() => router.push("/")}
@@ -285,14 +311,55 @@ export default function ChatClientPage() {
           </div>
         </div>
 
-        {/* Far-Right Close (X) Button to return to feed */}
-        <button
-          onClick={() => router.back()}
-          aria-label="Close Chat"
-          className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer"
-        >
-          <X className="w-5 h-5" />
-        </button>
+        {/* Right Action Icons: Three-Dot Menu & Close (X) Button */}
+        <div className="flex items-center gap-1.5 relative">
+          {/* Three-Dot Option Menu Toggle */}
+          <div className="relative">
+            <button
+              onClick={() => setIsMenuOpen((prev) => !prev)}
+              aria-label="Chat options menu"
+              className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer"
+            >
+              <MoreVertical className="w-4 h-4" />
+            </button>
+
+            {/* Three-Dot Dropdown Popup */}
+            {isMenuOpen && (
+              <div className="absolute right-0 top-10 w-48 bg-white border border-slate-200 rounded-xl shadow-xl py-1 text-slate-800 text-xs font-semibold z-50 animate-fade-in">
+                <button
+                  onClick={handleShareChat}
+                  className="w-full text-left px-3.5 py-2 hover:bg-slate-50 flex items-center gap-2 text-slate-700 cursor-pointer"
+                >
+                  <Send className="w-3.5 h-3.5 text-slate-500" />
+                  <span>Share Listing Chat</span>
+                </button>
+                <button
+                  onClick={handleDeleteChat}
+                  className="w-full text-left px-3.5 py-2 hover:bg-red-50 flex items-center gap-2 text-red-600 cursor-pointer border-t border-slate-100"
+                >
+                  <X className="w-3.5 h-3.5 text-red-500" />
+                  <span>Delete Conversation</span>
+                </button>
+                <button
+                  onClick={() => router.push("/sell")}
+                  className="w-full text-left px-3.5 py-2 hover:bg-slate-50 flex items-center gap-2 text-slate-700 cursor-pointer border-t border-slate-100"
+                >
+                  <ArrowLeft className="w-3.5 h-3.5 text-slate-500" />
+                  <span>Exit to Marketplace</span>
+                </button>
+              </div>
+            )}
+          </div>
+
+          {/* Close (X) Button */}
+          <button
+            onClick={() => router.back()}
+            aria-label="Close Chat"
+            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        </div>
       </div>
 
       {/* WHATSAPP MAIN CONTAINER */}
