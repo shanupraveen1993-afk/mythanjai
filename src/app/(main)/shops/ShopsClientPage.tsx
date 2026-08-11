@@ -56,36 +56,6 @@ export default function ShopsClientPage() {
         </div>
       </div>
 
-      {/* NATURAL SCROLL FILTER BAR (Category & Sort By) */}
-      <div className="py-2 flex items-center justify-between gap-2 bg-white">
-        {/* Category Dropdown (Far Left) */}
-        <select
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          className="text-xs font-semibold bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-slate-800 focus:outline-none cursor-pointer"
-        >
-          <option value="All">All Offers</option>
-          {SHOP_CATEGORIES.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
-          ))}
-        </select>
-
-        {/* Sort By Dropdown (Far Right) */}
-        <div className="flex items-center gap-1">
-          <ArrowUpDown className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
-            className="text-xs font-semibold bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-slate-800 focus:outline-none cursor-pointer"
-          >
-            <option value="recent">Recently Added</option>
-            <option value="name">Store Name (A-Z)</option>
-          </select>
-        </div>
-      </div>
-
       {/* STICKY TITLE & POST BAR (100% FLUSH TO 56PX FIXED HEADER WITH 0 TOP GAP) */}
       <div className="sticky top-14 z-40 bg-white border-b border-slate-200 py-2.5 px-4 sm:px-6 lg:px-8 -mx-4 sm:-mx-6 lg:-mx-8 flex items-center justify-between gap-2 shadow-2xs">
         <h2 className="font-heading font-bold text-base text-slate-900 tracking-tight">
@@ -99,6 +69,38 @@ export default function ShopsClientPage() {
           <span>Post Offer</span>
         </button>
       </div>
+
+      {/* LISTING CONTAINER (Category & Sort By + Feed Cards - SCROLLS UNDER STICKY TITLE BAR) */}
+      <div className="flex flex-col gap-3">
+        {/* Category & Sort Filter Bar */}
+        <div className="py-2 flex items-center justify-between gap-2 bg-white">
+          {/* Category Dropdown (Far Left) */}
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="text-xs font-semibold bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-slate-800 focus:outline-none cursor-pointer"
+          >
+            <option value="All">All Offers</option>
+            {SHOP_CATEGORIES.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+
+          {/* Sort By Dropdown (Far Right) */}
+          <div className="flex items-center gap-1">
+            <ArrowUpDown className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as any)}
+              className="text-xs font-semibold bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-slate-800 focus:outline-none cursor-pointer"
+            >
+              <option value="recent">Recently Added</option>
+              <option value="name">Store Name (A-Z)</option>
+            </select>
+          </div>
+        </div>
 
       {/* Feed */}
       {loading ? (
@@ -114,6 +116,7 @@ export default function ShopsClientPage() {
           {filteredPosts.map((post) => <ShopCard key={post.id} post={post} />)}
         </div>
       )}
+      </div>
     </div>
   );
 }
