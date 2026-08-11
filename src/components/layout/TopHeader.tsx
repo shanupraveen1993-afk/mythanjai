@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { MapPin, Plus, User, ShieldCheck, Check } from "lucide-react";
+import { MapPin, Plus, User, ShieldCheck, Check, MessageSquare } from "lucide-react";
 import { TANJORE_LOCALITIES, TanjoreLocality } from "@/lib/constants";
 import { AppTab } from "./BottomTabBar";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -166,20 +166,15 @@ export default function TopHeader({
 
 
 
-        {/* Right: Persistent + Post CTA & Profile Button */}
+        {/* Right: Chat Notification Icon & Profile Button */}
         <div className="flex items-center gap-2 shrink-0">
           <button
-            onClick={() => {
-              if (pathname.includes("/sell")) router.push("/post/sell");
-              else if (pathname.includes("/need")) router.push("/post/need");
-              else if (pathname.includes("/services")) router.push("/post/service");
-              else if (pathname.includes("/shops")) router.push("/post/offer");
-              else onPostClick();
-            }}
-            className="flex items-center gap-1 bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs transition-all shadow-2xs cursor-pointer border border-yellow-400"
+            onClick={() => router.push("/chat")}
+            className="relative flex items-center justify-center bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200 text-slate-800 p-2 rounded-lg text-xs transition-all shadow-2xs cursor-pointer group"
+            title="In-App Safety Chat"
           >
-            <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-            <span>Post</span>
+            <MessageSquare className="w-4 h-4 text-slate-700 group-hover:text-emerald-600" />
+            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#00a884] border border-white" />
           </button>
 
           {isAuthVerified ? (

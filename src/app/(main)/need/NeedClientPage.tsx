@@ -47,10 +47,10 @@ export default function NeedClientPage() {
   }, [firestorePosts, selectedCategory, sortBy]);
 
   return (
-    <div className="flex flex-col gap-3 mt-2 pb-24 w-full font-sans">
+    <div className="flex flex-col gap-3 pb-24 w-full font-sans">
 
       {/* Hero Banner */}
-      <div className="relative w-full min-h-[120px] rounded-xl overflow-hidden bg-slate-950 text-white flex items-center px-5 sm:px-8 py-5 shadow-2xs">
+      <div className="relative w-full min-h-[120px] rounded-xl overflow-hidden bg-slate-950 text-white flex items-center px-5 sm:px-8 py-5 shadow-2xs mt-2">
         <img src="/hero_building_visual.png" alt="Need" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent" />
         <div className="relative z-10 flex flex-col gap-1 max-w-lg">
@@ -60,8 +60,8 @@ export default function NeedClientPage() {
         </div>
       </div>
 
-      {/* TIER 1: STICKY TITLE & + POST BUTTON BAR */}
-      <div className="sticky top-[57px] z-30 bg-white/95 backdrop-blur-xs border-b border-slate-200 py-2.5 flex items-center justify-between gap-2">
+      {/* TIER 1: STICKY TITLE BAR (100% FLUSH TO HEADER WITH 0 TOP GAP) */}
+      <div className="sticky top-[52px] sm:top-[57px] z-30 bg-white border-b border-slate-200/90 py-2.5 px-4 -mx-4 flex items-center justify-between gap-2 shadow-2xs">
         <h2 className="font-heading font-bold text-base text-slate-900 tracking-tight">
           Buying Needs
         </h2>
