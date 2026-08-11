@@ -138,17 +138,6 @@ export default function TopHeader({
             >
               Local Offer
             </button>
-            <button
-              type="button"
-              onClick={() => router.push("/chat")}
-              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                pathname === "/chat"
-                  ? "bg-white text-slate-900 shadow-2xs border border-slate-200"
-                  : "text-slate-600 hover:text-slate-900"
-              }`}
-            >
-              Chat
-            </button>
           </div>
         )}
 
