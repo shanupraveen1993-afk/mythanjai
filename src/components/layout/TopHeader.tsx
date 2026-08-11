@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { MapPin, Plus, User, ShieldCheck, ArrowLeft, Check } from "lucide-react";
+import { MapPin, Plus, User, ShieldCheck, Check } from "lucide-react";
 import { TANJORE_LOCALITIES, TanjoreLocality } from "@/lib/constants";
 import { AppTab } from "./BottomTabBar";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -67,24 +67,14 @@ export default function TopHeader({
         {/* Left: Website Branding Logo across all pages */}
         <div className="flex items-center gap-2">
           {pathname !== "/" ? (
-            <div className="flex items-center gap-2">
-              <button
-                type="button"
-                onClick={handleBackClick}
-                className="p-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors cursor-pointer flex items-center justify-center border border-slate-200"
-                title="Go Back"
-              >
-                <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
-              </button>
-              <div 
-                onClick={() => router.push("/")}
-                className="flex items-center gap-1.5 cursor-pointer select-none shrink-0"
-              >
-                <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-7 h-7 sm:w-10 sm:h-10 object-contain shrink-0 rounded-xl border-0 shadow-none" />
-                <span className="hidden xs:inline font-heading font-black tracking-tight text-slate-900 text-xs sm:text-sm uppercase">
-                  {sectionTitle ? sectionTitle : "namma thanjai"}
-                </span>
-              </div>
+            <div 
+              onClick={() => router.push("/")}
+              className="flex items-center gap-1.5 cursor-pointer select-none shrink-0"
+            >
+              <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-7 h-7 sm:w-10 sm:h-10 object-contain shrink-0 rounded-xl border-0 shadow-none" />
+              <span className="hidden xs:inline font-heading font-black tracking-tight text-slate-900 text-xs sm:text-sm uppercase">
+                {sectionTitle ? sectionTitle : "namma thanjai"}
+              </span>
             </div>
           ) : (
             <div 
