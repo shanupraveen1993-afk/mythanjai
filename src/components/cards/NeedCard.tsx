@@ -82,7 +82,7 @@ export default function NeedCard({ post, onShare }: NeedCardProps) {
   const isNeedType = post.type?.toUpperCase() === "NEED";
 
   return (
-    <div className="bg-white border border-slate-200/90 rounded-2xl p-4 flex flex-col gap-3 shadow-xs hover:shadow-md transition-all duration-300 relative group overflow-hidden font-sans">
+    <div className="bg-white border border-slate-200/90 rounded-xl p-4 flex flex-col gap-3 shadow-2xs hover:shadow-sm transition-all duration-300 relative group overflow-hidden font-sans">
       
       {/* Top Header Tags */}
       <div className="flex items-center justify-between gap-2">

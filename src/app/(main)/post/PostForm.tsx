@@ -21,7 +21,6 @@ import {
   MapPin,
   Phone,
   Camera,
-  Sparkles,
   Video,
   Globe,
   Clock,
@@ -56,7 +55,7 @@ const SEGMENT_CONFIG: Record<
     buttonLabel: "Publish Post →",
     redirectPath: "/sell",
     categories: CLASSIFIED_CATEGORIES,
-    accentColor: "bg-yellow-500 hover:bg-yellow-400 border-yellow-400 text-slate-950",
+    accentColor: "bg-yellow-500 hover:bg-yellow-400 border-yellow-400 text-slate-950 font-bold",
   },
   need: {
     title: "Post Buyer Requirement",
@@ -64,7 +63,7 @@ const SEGMENT_CONFIG: Record<
     buttonLabel: "Publish Requirement →",
     redirectPath: "/need",
     categories: CLASSIFIED_CATEGORIES,
-    accentColor: "bg-blue-500 hover:bg-blue-400 border-blue-400 text-white",
+    accentColor: "bg-blue-600 hover:bg-blue-500 border-blue-500 text-white font-bold",
   },
   service: {
     title: "Register Skilled Service",
@@ -72,7 +71,7 @@ const SEGMENT_CONFIG: Record<
     buttonLabel: "Publish Listing →",
     redirectPath: "/services",
     categories: SERVICE_CATEGORIES,
-    accentColor: "bg-green-600 hover:bg-green-500 border-green-500 text-white",
+    accentColor: "bg-emerald-600 hover:bg-emerald-500 border-emerald-500 text-white font-bold",
   },
   offer: {
     title: "Post Store Offer & Deal",
@@ -80,7 +79,7 @@ const SEGMENT_CONFIG: Record<
     buttonLabel: "Publish Store Offer →",
     redirectPath: "/shops",
     categories: SHOP_CATEGORIES,
-    accentColor: "bg-purple-600 hover:bg-purple-500 border-purple-500 text-white",
+    accentColor: "bg-purple-600 hover:bg-purple-500 border-purple-500 text-white font-bold",
   },
 };
 
@@ -98,8 +97,6 @@ export default function PostForm({ segment }: PostFormProps) {
   const [category, setCategory] = useState<string>(config.categories[0]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
-  const [aiPolishedDesc, setAiPolishedDesc] = useState("");
-  const [aiLoading, setAiLoading] = useState(false);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
 
@@ -118,44 +115,6 @@ export default function PostForm({ segment }: PostFormProps) {
       setPhone(profile.phone);
     }
   }, [profile, phone]);
-
-  // Trigger AI formatting explicitly
-  const runAiPolisher = async (textToFormat: string) => {
-    if (!textToFormat.trim() || textToFormat.trim().length < 6) return;
-    setAiLoading(true);
-
-    try {
-      const res = await fetch("/api/gemini-format", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ rawDescription: textToFormat, type: segment }),
-      });
-      if (res.ok) {
-        const data = await res.json();
-        if (data.formattedText) {
-          setAiPolishedDesc(data.formattedText);
-        }
-      }
-    } catch (err) {
-      console.warn("AI Polish error:", err);
-    } finally {
-      setAiLoading(false);
-    }
-  };
-
-  // Automated AI Description Refinement (800ms debounced trigger)
-  useEffect(() => {
-    if (!description.trim() || description.trim().length < 8) {
-      setAiPolishedDesc(description);
-      return;
-    }
-
-    const timer = setTimeout(() => {
-      runAiPolisher(description);
-    }, 800);
-
-    return () => clearTimeout(timer);
-  }, [description]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -195,15 +154,15 @@ export default function PostForm({ segment }: PostFormProps) {
 
       const timestamp = serverTimestamp();
       const uid = user?.uid || "guest_user";
-      const finalDesc = aiPolishedDesc.trim() || description.trim();
+      const cleanDesc = description.trim();
 
       if (segment === "sell" || segment === "need") {
         await addDoc(collection(db, "needs_and_sales"), {
           userId: uid,
           type: segment === "sell" ? "SELL" : "NEED",
           title: title.trim(),
-          description: finalDesc,
-          raw_text: description.trim(),
+          description: cleanDesc,
+          raw_text: cleanDesc,
           category,
           area_tag: area,
           price: price ? parseFloat(price) : null,
@@ -227,7 +186,7 @@ export default function PostForm({ segment }: PostFormProps) {
           rating: 5.0,
           negative_reports_count: 0,
           status: "active",
-          description: finalDesc,
+          description: cleanDesc,
           image_url: imageUrl,
           is_verified: true,
           created_at: timestamp,
@@ -248,7 +207,7 @@ export default function PostForm({ segment }: PostFormProps) {
           is_claimed: true,
           created_at: timestamp,
           offer_title: title.trim(),
-          offer_description: finalDesc,
+          offer_description: cleanDesc,
           valid_from: validFrom || null,
           valid_to: validTo || null,
         });
@@ -266,7 +225,7 @@ export default function PostForm({ segment }: PostFormProps) {
     }
   };
 
-  // Live Interactive Preview Cards Data
+  // Direct 1:1 Live Interactive Preview Cards Data
   const previewSellOrNeedPost = useMemo<NeedOrSalePost>(() => {
     return {
       id: "preview_post",
@@ -274,7 +233,7 @@ export default function PostForm({ segment }: PostFormProps) {
       type: segment === "sell" ? "SELL" : "NEED",
       raw_text: description.trim(),
       title: title.trim() || (segment === "sell" ? "Sample Item Title" : "Sample Requirement Title"),
-      description: aiPolishedDesc.trim() || description.trim() || "Live AI preview description will appear here as you type...",
+      description: description.trim() || "Live preview description will appear here as you type...",
       category: category || config.categories[0],
       area_tag: area || TANJORE_LOCALITIES[0],
       price: price || (segment === "sell" ? "2500000" : "10000"),
@@ -284,7 +243,7 @@ export default function PostForm({ segment }: PostFormProps) {
       created_at: new Date() as any,
       expires_at: new Date(Date.now() + 30 * 86400000) as any,
     };
-  }, [title, description, aiPolishedDesc, category, area, price, phone, imagePreview, segment, user, config.categories]);
+  }, [title, description, category, area, price, phone, imagePreview, segment, user, config.categories]);
 
   const previewServicePost = useMemo<ServiceProviderPost>(() => {
     return {
@@ -296,12 +255,12 @@ export default function PostForm({ segment }: PostFormProps) {
       area_tag: area || TANJORE_LOCALITIES[0],
       phone: phone || "9876543210",
       rating: 5.0,
-      description: aiPolishedDesc.trim() || description.trim() || "Skilled service description and availability details...",
+      description: description.trim() || "Skilled service description and availability details...",
       image_url: imagePreview || "/hero_building_visual.png",
       is_verified: true,
       created_at: new Date() as any,
     };
-  }, [title, description, aiPolishedDesc, category, area, experience, phone, imagePreview, user, config.categories]);
+  }, [title, description, category, area, experience, phone, imagePreview, user, config.categories]);
 
   const previewShopPost = useMemo<ShopPost>(() => {
     return {
@@ -315,48 +274,48 @@ export default function PostForm({ segment }: PostFormProps) {
       phone: phone || "9876543210",
       area_tag: area || TANJORE_LOCALITIES[0],
       offer_title: title.trim() || "Exclusive Discount Offer",
-      offer_description: aiPolishedDesc.trim() || description.trim() || "Special offer details and promotion terms...",
+      offer_description: description.trim() || "Special offer details and promotion terms...",
       image_url: imagePreview || "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&auto=format&fit=crop",
       latitude: 10.7870,
       longitude: 79.1378,
       is_claimed: true,
       created_at: new Date() as any,
     };
-  }, [title, description, aiPolishedDesc, category, area, workingHours, phone, imagePreview, user, config.categories]);
+  }, [title, description, category, area, workingHours, phone, imagePreview, user, config.categories]);
 
   const formattedPriceBadge = formatIndianCurrencyText(price);
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4 py-6 pb-24 flex flex-col gap-6 font-sans">
-      {/* Header */}
+      {/* Page Header */}
       <div className="flex flex-col items-center border-b border-slate-200 pb-3">
-        <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
           {config.badge}
         </span>
-        <h1 className="font-heading font-black text-lg sm:text-xl text-slate-900 uppercase tracking-tight">
+        <h1 className="font-heading font-bold text-lg sm:text-xl text-slate-900 tracking-tight mt-0.5">
           {config.title}
         </h1>
       </div>
 
       {success ? (
-        <div className="bg-green-50 border border-green-200 rounded-3xl p-8 flex flex-col items-center text-center gap-3 animate-fade-in my-8 max-w-xl mx-auto">
-          <div className="w-14 h-14 rounded-full bg-green-500 text-white flex items-center justify-center shadow-md">
-            <Check className="w-8 h-8 stroke-[3]" />
+        <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-8 flex flex-col items-center text-center gap-3 animate-fade-in my-8 max-w-xl mx-auto">
+          <div className="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-xs">
+            <Check className="w-7 h-7 stroke-[2.5]" />
           </div>
-          <h2 className="font-heading font-black text-xl text-green-900">Post Published Successfully!</h2>
-          <p className="text-xs text-green-700 font-semibold">Redirecting to feed...</p>
+          <h2 className="font-heading font-bold text-lg text-emerald-900">Post Published Successfully!</h2>
+          <p className="text-xs text-emerald-700 font-medium">Redirecting to feed...</p>
         </div>
       ) : (
-        /* SLEEK 2-COLUMN SPLIT LAYOUT */
+        /* PURE HUMAN 2-COLUMN SPLIT LAYOUT (OLX STANDARD) */
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
-          {/* LEFT COLUMN: Minimalist OLX-Style Form */}
-          <form onSubmit={handleSubmit} className="lg:col-span-7 flex flex-col gap-4 bg-white border border-slate-200/90 rounded-3xl p-5 sm:p-7 shadow-xs">
+          {/* LEFT COLUMN: Clean Form */}
+          <form onSubmit={handleSubmit} className="lg:col-span-7 flex flex-col gap-4 bg-white border border-slate-200 rounded-xl p-5 sm:p-6 shadow-2xs">
             
             {/* Title */}
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-black text-slate-700 uppercase tracking-wider">
-                {segment === "service" ? "Service / Technician Name *" : segment === "offer" ? "Store Name & Deal Title *" : "Posting Title / Item Name *"}
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-semibold text-slate-700">
+                {segment === "service" ? "Service or technician name *" : segment === "offer" ? "Store name & deal title *" : "Posting title or item name *"}
               </label>
               <input
                 type="text"
@@ -372,20 +331,20 @@ export default function PostForm({ segment }: PostFormProps) {
                 }
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
-                className="w-full px-4 py-2.5 text-sm font-semibold border border-slate-200 rounded-2xl bg-slate-50/50 focus:bg-white focus:outline-none focus:border-slate-900 transition-colors"
+                className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-colors"
               />
             </div>
 
             {/* Category Dropdown */}
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-black text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                 <Tag className="w-3.5 h-3.5 text-slate-400" />
                 Category *
               </label>
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-4 py-2.5 text-sm font-bold border border-slate-200 rounded-2xl bg-slate-50/50 focus:bg-white focus:outline-none focus:border-slate-900 cursor-pointer"
+                className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 cursor-pointer"
               >
                 {config.categories.map((cat) => (
                   <option key={cat} value={cat}>
@@ -396,15 +355,15 @@ export default function PostForm({ segment }: PostFormProps) {
             </div>
 
             {/* Location Dropdown */}
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-black text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                 <MapPin className="w-3.5 h-3.5 text-slate-400" />
                 Location in Thanjavur *
               </label>
               <select
                 value={area}
                 onChange={(e) => setArea(e.target.value)}
-                className="w-full px-4 py-2.5 text-sm font-bold border border-slate-200 rounded-2xl bg-slate-50/50 focus:bg-white focus:outline-none focus:border-slate-900 cursor-pointer"
+                className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 cursor-pointer"
               >
                 {TANJORE_LOCALITIES.map((loc) => (
                   <option key={loc} value={loc}>
@@ -414,16 +373,16 @@ export default function PostForm({ segment }: PostFormProps) {
               </select>
             </div>
 
-            {/* SLEEK PRICE INPUT WITH CONCISE INLINE BADGE (e.g. ₹2.5 Cr / ₹25 Lakhs) */}
+            {/* PRICE INPUT WITH CONCISE INLINE BADGE (e.g. ₹2.5 Cr / ₹25 Lakhs) */}
             {(segment === "sell" || segment === "need") && (
-              <div className="flex flex-col gap-1.5">
+              <div className="flex flex-col gap-1">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-black text-slate-700 uppercase tracking-wider flex items-center gap-1">
+                  <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
                     <IndianRupee className="w-3.5 h-3.5 text-emerald-600" />
                     {segment === "sell" ? "Price (₹)" : "Budget (₹)"}
                   </label>
                   {formattedPriceBadge && (
-                    <span className="text-xs font-black text-emerald-700 bg-emerald-50 px-2.5 py-0.5 rounded-lg border border-emerald-200">
+                    <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
                       {formattedPriceBadge}
                     </span>
                   )}
@@ -434,7 +393,7 @@ export default function PostForm({ segment }: PostFormProps) {
                   placeholder="Enter amount (e.g. 2500000 or 25000000)"
                   value={price}
                   onChange={(e) => setPrice(e.target.value)}
-                  className="w-full px-4 py-2.5 text-sm font-bold border border-slate-200 rounded-2xl bg-slate-50/50 focus:bg-white focus:outline-none focus:border-slate-900"
+                  className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400"
                 />
               </div>
             )}
@@ -442,8 +401,8 @@ export default function PostForm({ segment }: PostFormProps) {
             {/* Service Specific Fields */}
             {segment === "service" && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-black text-slate-700 uppercase tracking-wider">
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-semibold text-slate-700">
                     Experience
                   </label>
                   <input
@@ -451,11 +410,11 @@ export default function PostForm({ segment }: PostFormProps) {
                     placeholder="e.g. 8+ Years Experience"
                     value={experience}
                     onChange={(e) => setExperience(e.target.value)}
-                    className="w-full px-4 py-2.5 text-sm font-semibold border border-slate-200 rounded-2xl bg-slate-50/50 focus:bg-white focus:outline-none focus:border-slate-900"
+                    className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
                   />
                 </div>
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-black text-slate-700 uppercase tracking-wider flex items-center gap-1">
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
                     <Clock className="w-3.5 h-3.5 text-slate-400" /> Working Hours
                   </label>
                   <input
@@ -463,7 +422,7 @@ export default function PostForm({ segment }: PostFormProps) {
                     placeholder="e.g. 9 AM – 8 PM"
                     value={workingHours}
                     onChange={(e) => setWorkingHours(e.target.value)}
-                    className="w-full px-4 py-2.5 text-sm font-semibold border border-slate-200 rounded-2xl bg-slate-50/50 focus:bg-white focus:outline-none focus:border-slate-900"
+                    className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
                   />
                 </div>
               </div>
@@ -473,40 +432,40 @@ export default function PostForm({ segment }: PostFormProps) {
             {segment === "offer" && (
               <>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-black text-slate-700 uppercase tracking-wider flex items-center gap-1">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
                       <Calendar className="w-3.5 h-3.5 text-slate-400" /> Valid From Date
                     </label>
                     <input
                       type="date"
                       value={validFrom}
                       onChange={(e) => setValidFrom(e.target.value)}
-                      className="w-full px-4 py-2.5 text-sm font-semibold border border-slate-200 rounded-2xl bg-slate-50/50 focus:bg-white focus:outline-none focus:border-slate-900"
+                      className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
                     />
                   </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-xs font-black text-slate-700 uppercase tracking-wider flex items-center gap-1">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
                       <Calendar className="w-3.5 h-3.5 text-slate-400" /> Valid To Date
                     </label>
                     <input
                       type="date"
                       value={validTo}
                       onChange={(e) => setValidTo(e.target.value)}
-                      className="w-full px-4 py-2.5 text-sm font-semibold border border-slate-200 rounded-2xl bg-slate-50/50 focus:bg-white focus:outline-none focus:border-slate-900"
+                      className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
                     />
                   </div>
                 </div>
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-black text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                     <Globe className="w-3.5 h-3.5 text-slate-400" />
-                    Exact Google Maps Link (Optional)
+                    Exact Google Maps link (optional)
                   </label>
                   <input
                     type="url"
                     placeholder="https://maps.google.com/..."
                     value={googleMapsUrl}
                     onChange={(e) => setGoogleMapsUrl(e.target.value)}
-                    className="w-full px-4 py-2.5 text-sm font-semibold border border-slate-200 rounded-2xl bg-slate-50/50 focus:bg-white focus:outline-none focus:border-slate-900"
+                    className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
                   />
                 </div>
               </>
@@ -515,20 +474,20 @@ export default function PostForm({ segment }: PostFormProps) {
             {/* Sell Specific Links */}
             {segment === "sell" && (
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-black text-slate-700 uppercase tracking-wider flex items-center gap-1">
-                    <Video className="w-3.5 h-3.5 text-red-500" /> YouTube Video URL
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
+                    <Video className="w-3.5 h-3.5 text-red-500" /> YouTube video URL
                   </label>
                   <input
                     type="url"
                     placeholder="https://youtube.com/watch?v=..."
                     value={youtubeUrl}
                     onChange={(e) => setYoutubeUrl(e.target.value)}
-                    className="w-full px-4 py-2.5 text-sm font-semibold border border-slate-200 rounded-2xl bg-slate-50/50 focus:bg-white focus:outline-none focus:border-slate-900"
+                    className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
                   />
                 </div>
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-xs font-black text-slate-700 uppercase tracking-wider flex items-center gap-1">
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
                     <Globe className="w-3.5 h-3.5 text-blue-500" /> Google Maps URL
                   </label>
                   <input
@@ -536,17 +495,17 @@ export default function PostForm({ segment }: PostFormProps) {
                     placeholder="https://maps.google.com/..."
                     value={googleMapsUrl}
                     onChange={(e) => setGoogleMapsUrl(e.target.value)}
-                    className="w-full px-4 py-2.5 text-sm font-semibold border border-slate-200 rounded-2xl bg-slate-50/50 focus:bg-white focus:outline-none focus:border-slate-900"
+                    className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
                   />
                 </div>
               </div>
             )}
 
             {/* Phone */}
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-black text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                 <Phone className="w-3.5 h-3.5 text-slate-400" />
-                Contact Phone Number *
+                Contact phone number *
               </label>
               <input
                 type="tel"
@@ -554,57 +513,35 @@ export default function PostForm({ segment }: PostFormProps) {
                 placeholder="e.g. 9876543210"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
-                className="w-full px-4 py-2.5 text-sm font-semibold border border-slate-200 rounded-2xl bg-slate-50/50 focus:bg-white focus:outline-none focus:border-slate-900"
+                className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
               />
             </div>
 
-            {/* DESCRIPTION WITH AI POLISH BUTTON & AUTOMATED TRIGGER */}
-            <div className="flex flex-col gap-1.5">
-              <div className="flex items-center justify-between flex-wrap gap-2">
-                <label className="text-xs font-black text-slate-700 uppercase tracking-wider">
-                  Description / Details
-                </label>
-
-                <button
-                  type="button"
-                  onClick={() => runAiPolisher(description)}
-                  disabled={aiLoading || !description.trim()}
-                  className="flex items-center gap-1 text-[11px] font-black text-slate-800 bg-slate-100 hover:bg-slate-200 disabled:opacity-50 px-2.5 py-1 rounded-xl transition-all cursor-pointer border border-slate-200"
-                >
-                  {aiLoading ? (
-                    <>
-                      <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                      <span>Refining...</span>
-                    </>
-                  ) : (
-                    <>
-                      <Sparkles className="w-3.5 h-3.5 text-yellow-500 fill-yellow-400" />
-                      <span>✨ AI Polish</span>
-                    </>
-                  )}
-                </button>
-              </div>
-
+            {/* Description */}
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-semibold text-slate-700">
+                Description or details
+              </label>
               <textarea
                 rows={4}
                 placeholder="Describe your item, features, or service details..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
-                className="w-full px-4 py-2.5 text-sm font-semibold border border-slate-200 rounded-2xl bg-slate-50/50 focus:bg-white focus:outline-none focus:border-slate-900 resize-none"
+                className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 resize-none"
               />
             </div>
 
             {/* Photo Upload */}
-            <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-black text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+            <div className="flex flex-col gap-1">
+              <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                 <Camera className="w-3.5 h-3.5 text-slate-400" />
-                {segment === "offer" ? "Visiting Card / Poster Photo" : "Attach Photo (Optional)"}
+                {segment === "offer" ? "Visiting card or poster photo" : "Attach photo (optional)"}
               </label>
               <input
                 type="file"
                 accept="image/*"
                 onChange={handleImageChange}
-                className="text-xs text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-slate-100 file:text-slate-800 hover:file:bg-slate-200 cursor-pointer"
+                className="text-xs text-slate-600 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-800 hover:file:bg-slate-200 cursor-pointer"
               />
             </div>
 
@@ -612,7 +549,7 @@ export default function PostForm({ segment }: PostFormProps) {
             <button
               type="submit"
               disabled={loading}
-              className={`w-full py-3.5 ${config.accentColor} font-black text-xs uppercase tracking-wider rounded-2xl border shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer mt-2`}
+              className={`w-full py-3 ${config.accentColor} text-xs uppercase tracking-wider rounded-lg border shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer mt-2`}
             >
               {loading ? (
                 <>
@@ -625,31 +562,16 @@ export default function PostForm({ segment }: PostFormProps) {
             </button>
           </form>
 
-          {/* RIGHT COLUMN: Sleek Live Interactive Preview Card */}
-          <div className="lg:col-span-5 sticky top-20 flex flex-col gap-3">
+          {/* RIGHT COLUMN: Instant 1:1 Live Preview Card */}
+          <div className="lg:col-span-5 sticky top-20 flex flex-col gap-2">
             <div className="flex items-center justify-between px-1">
-              <span className="text-xs font-black text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5 text-yellow-500" />
-                Live Preview
+              <span className="text-xs font-bold text-slate-700">
+                Live Card Preview
               </span>
-              {aiLoading ? (
-                <span className="text-[10px] font-black text-yellow-600 animate-pulse flex items-center gap-1">
-                  <Loader2 className="w-3 h-3 animate-spin" /> Refining Copy...
-                </span>
-              ) : (
-                <span className="text-[10px] font-bold text-slate-400">Updates live</span>
-              )}
+              <span className="text-[10px] text-slate-400">Instant preview</span>
             </div>
 
-            <div className="bg-white border border-slate-200/90 rounded-3xl p-4 shadow-sm flex flex-col gap-3 relative">
-              {aiLoading && (
-                <div className="absolute inset-0 bg-white/80 backdrop-blur-2xs z-30 rounded-3xl flex flex-col items-center justify-center gap-2 text-center p-4">
-                  <Loader2 className="w-7 h-7 text-yellow-500 animate-spin" />
-                  <span className="text-xs font-black text-slate-900">✨ AI Refining & Polishing Copy...</span>
-                  <span className="text-[11px] text-slate-500 font-semibold">Formatting structured plain text preview</span>
-                </div>
-              )}
-
+            <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-2xs flex flex-col gap-3">
               {segment === "sell" || segment === "need" ? (
                 <NeedCard post={previewSellOrNeedPost} />
               ) : segment === "service" ? (

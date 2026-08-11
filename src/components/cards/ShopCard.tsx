@@ -37,7 +37,7 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false }: Sho
   };
 
   return (
-    <div className="bg-white border border-slate-200/90 rounded-2xl overflow-hidden shadow-xs flex flex-col relative transition-all active:scale-[0.99] hover:shadow-sm w-full">
+    <div className="bg-white border border-slate-200/90 rounded-xl overflow-hidden shadow-2xs flex flex-col relative transition-all hover:shadow-xs w-full font-sans">
       {/* Featured Star Overlay */}
       {post.is_featured && (
         <div className="absolute top-2.5 left-2.5 z-20 bg-yellow-500 text-slate-950 text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-xl flex items-center gap-1 shadow-md animate-pulse">
