@@ -45,6 +45,8 @@ export interface ServiceProviderPost {
   is_verified: boolean;
   created_at: any; // Firestore Timestamp
   description?: string;
+  negative_reports_count?: number;
+  status?: "active" | "pending" | "inactive";
   pinned?: boolean;
 }
 
