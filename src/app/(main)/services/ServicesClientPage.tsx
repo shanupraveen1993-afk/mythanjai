@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useFirestore } from "@/hooks/use-firestore";
 import ServiceCard from "@/components/cards/ServiceCard";
 import { ServiceProviderPost } from "@/types";
-import { Plus, Loader2, Wrench } from "lucide-react";
+import { Plus, Loader2, Wrench, ArrowUpDown } from "lucide-react";
 import { SERVICE_CATEGORIES } from "@/lib/constants";
 
 const SAMPLE_POSTS: ServiceProviderPost[] = [
@@ -19,6 +19,7 @@ const SAMPLE_POSTS: ServiceProviderPost[] = [
 export default function ServicesClientPage() {
   const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [sortBy, setSortBy] = useState<"recent" | "rating" | "name">("recent");
 
   const { data: firestorePosts, loading } = useFirestore<ServiceProviderPost>({
     collectionName: "services",
@@ -36,31 +37,37 @@ export default function ServicesClientPage() {
         (p) => (p.skill_category || "").toLowerCase() === selectedCategory.toLowerCase()
       );
     }
+
+    if (sortBy === "rating") {
+      list.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+    } else if (sortBy === "name") {
+      list.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+    }
     return list;
-  }, [firestorePosts, selectedCategory]);
+  }, [firestorePosts, selectedCategory, sortBy]);
 
   return (
-    <div className="flex flex-col gap-4 mt-3 pb-24 w-full">
+    <div className="flex flex-col gap-4 mt-3 pb-24 w-full font-sans">
 
-      {/* Hero */}
-      <div className="relative w-full min-h-[160px] sm:min-h-[200px] rounded-3xl overflow-hidden bg-slate-950 text-white flex items-center px-6 sm:px-10 py-8 shadow-md">
+      {/* Hero Banner */}
+      <div className="relative w-full min-h-[140px] sm:min-h-[180px] rounded-xl overflow-hidden bg-slate-950 text-white flex items-center px-6 sm:px-10 py-6 shadow-xs">
         <img src="/thanjavur_temple_illustration.png" alt="Services" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-25 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent" />
-        <div className="relative z-10 flex flex-col gap-2 max-w-lg">
-          <span className="bg-green-600 text-white font-black text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-widest w-fit">Verified Tradespeople · Thanjavur</span>
-          <h1 className="font-heading font-black text-2xl sm:text-3xl text-white leading-tight">Local Skilled Services</h1>
-          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-sm">Verified electricians, plumbers, carpenters, painters & AC technicians available across Thanjavur.</p>
+        <div className="relative z-10 flex flex-col gap-1.5 max-w-lg">
+          <span className="bg-emerald-600 text-white font-bold text-[10px] px-2.5 py-0.5 rounded-md uppercase tracking-wider w-fit">Verified Tradespeople · Thanjavur</span>
+          <h1 className="font-heading font-bold text-xl sm:text-2xl text-white leading-tight">Local Skilled Services</h1>
+          <p className="text-xs text-slate-300 leading-relaxed max-w-sm">Electricians, plumbers, carpenters & technicians available in Thanjavur.</p>
         </div>
       </div>
 
-      {/* Control Bar */}
-      <div className="sticky top-[57px] z-30 bg-white border-b border-slate-200 py-2.5 flex flex-wrap items-center justify-between gap-2.5">
-        <div className="flex items-center gap-2">
+      {/* Natural Scrolling Control Bar (Category & Sort By) */}
+      <div className="py-2 flex flex-wrap items-center justify-between gap-2.5 border-b border-slate-200 bg-white">
+        <div className="flex items-center gap-2 flex-wrap">
           {/* Category Dropdown */}
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="text-xs font-black bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none cursor-pointer shadow-sm"
+            className="text-xs font-semibold bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-slate-800 focus:outline-none cursor-pointer"
           >
             <option value="All">All Trade Services</option>
             {SERVICE_CATEGORIES.map((cat) => (
@@ -69,7 +76,22 @@ export default function ServicesClientPage() {
               </option>
             ))}
           </select>
-          <span className="text-xs font-black text-slate-500 uppercase tracking-wider hidden sm:inline">
+
+          {/* Sort By Dropdown */}
+          <div className="flex items-center gap-1">
+            <ArrowUpDown className="w-3.5 h-3.5 text-slate-400" />
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as any)}
+              className="text-xs font-semibold bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-slate-800 focus:outline-none cursor-pointer"
+            >
+              <option value="recent">Recently Added</option>
+              <option value="rating">Highest Rated</option>
+              <option value="name">Name (A-Z)</option>
+            </select>
+          </div>
+
+          <span className="text-xs font-medium text-slate-500 hidden sm:inline">
             ({filteredPosts.length} Available)
           </span>
         </div>
@@ -77,22 +99,22 @@ export default function ServicesClientPage() {
         {/* Register Service Button */}
         <button
           onClick={() => router.push("/post/service")}
-          className="flex items-center gap-1.5 bg-green-600 hover:bg-green-500 active:scale-95 text-white font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all border border-green-500 shadow-sm cursor-pointer ml-auto"
+          className="flex items-center gap-1.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3.5 py-1.5 rounded-lg text-xs transition-all shadow-2xs cursor-pointer ml-auto"
         >
-          <Plus className="w-3.5 h-3.5 stroke-[3]" /> Register Service
+          <Plus className="w-3.5 h-3.5 stroke-[2.5]" /> Register Service
         </button>
       </div>
 
       {/* Feed */}
       {loading ? (
-        <div className="flex justify-center py-16"><Loader2 className="w-6 h-6 text-green-600 animate-spin" /></div>
+        <div className="flex justify-center py-16"><Loader2 className="w-6 h-6 text-emerald-600 animate-spin" /></div>
       ) : filteredPosts.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
           <Wrench className="w-8 h-8 text-slate-300" />
-          <p className="text-sm font-black text-slate-500">
+          <p className="text-sm font-bold text-slate-500">
             {selectedCategory !== "All" ? `No technicians found for "${selectedCategory}"` : "No service providers listed yet."}
           </p>
-          <button onClick={() => router.push("/post/service")} className="bg-green-600 text-white font-black text-xs px-5 py-2.5 rounded-xl border border-green-500 hover:bg-green-500 transition-all cursor-pointer">+ Register Service</button>
+          <button onClick={() => router.push("/post/service")} className="bg-emerald-600 text-white font-bold text-xs px-4 py-2 rounded-lg border border-emerald-500 hover:bg-emerald-500 transition-all cursor-pointer">+ Register Service</button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

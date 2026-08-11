@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useFirestore } from "@/hooks/use-firestore";
 import ShopCard from "@/components/cards/ShopCard";
 import { ShopPost } from "@/types";
-import { Plus, Loader2, Store } from "lucide-react";
+import { Plus, Loader2, Store, ArrowUpDown } from "lucide-react";
 import { SHOP_CATEGORIES } from "@/lib/constants";
 
 const SAMPLE_POSTS: ShopPost[] = [
@@ -19,6 +19,7 @@ const SAMPLE_POSTS: ShopPost[] = [
 export default function ShopsClientPage() {
   const router = useRouter();
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [sortBy, setSortBy] = useState<"recent" | "name">("recent");
 
   const { data: firestorePosts, loading } = useFirestore<ShopPost>({
     collectionName: "shops",
@@ -36,31 +37,35 @@ export default function ShopsClientPage() {
         (p) => (p.category || "").toLowerCase() === selectedCategory.toLowerCase()
       );
     }
+
+    if (sortBy === "name") {
+      list.sort((a, b) => (a.shop_name || "").localeCompare(b.shop_name || ""));
+    }
     return list;
-  }, [firestorePosts, selectedCategory]);
+  }, [firestorePosts, selectedCategory, sortBy]);
 
   return (
-    <div className="flex flex-col gap-4 mt-3 pb-24 w-full">
+    <div className="flex flex-col gap-4 mt-3 pb-24 w-full font-sans">
 
-      {/* Hero */}
-      <div className="relative w-full min-h-[160px] sm:min-h-[200px] rounded-3xl overflow-hidden bg-slate-950 text-white flex items-center px-6 sm:px-10 py-8 shadow-md">
+      {/* Hero Banner */}
+      <div className="relative w-full min-h-[140px] sm:min-h-[180px] rounded-xl overflow-hidden bg-slate-950 text-white flex items-center px-6 sm:px-10 py-6 shadow-xs">
         <img src="/hero_building_visual.png" alt="Offers" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-25 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent" />
-        <div className="relative z-10 flex flex-col gap-2 max-w-lg">
-          <span className="bg-purple-600 text-white font-black text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-widest w-fit">Store Discounts · Thanjavur</span>
-          <h1 className="font-heading font-black text-2xl sm:text-3xl text-white leading-tight">Local Store Offers & Deals</h1>
-          <p className="text-xs sm:text-sm text-slate-300 leading-relaxed max-w-sm">Grand opening discounts, festival sales & silk saree offers exclusively from Thanjavur stores.</p>
+        <div className="relative z-10 flex flex-col gap-1.5 max-w-lg">
+          <span className="bg-purple-600 text-white font-bold text-[10px] px-2.5 py-0.5 rounded-md uppercase tracking-wider w-fit">Store Discounts · Thanjavur</span>
+          <h1 className="font-heading font-bold text-xl sm:text-2xl text-white leading-tight">Local Store Offers & Deals</h1>
+          <p className="text-xs text-slate-300 leading-relaxed max-w-sm">Grand opening discounts, festival sales & handloom saree offers from Thanjavur stores.</p>
         </div>
       </div>
 
-      {/* Control Bar */}
-      <div className="sticky top-[57px] z-30 bg-white border-b border-slate-200 py-2.5 flex flex-wrap items-center justify-between gap-2.5">
-        <div className="flex items-center gap-2">
+      {/* Natural Scrolling Control Bar (Category & Sort By) */}
+      <div className="py-2 flex flex-wrap items-center justify-between gap-2.5 border-b border-slate-200 bg-white">
+        <div className="flex items-center gap-2 flex-wrap">
           {/* Category Dropdown */}
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="text-xs font-black bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none cursor-pointer shadow-sm"
+            className="text-xs font-semibold bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-slate-800 focus:outline-none cursor-pointer"
           >
             <option value="All">All Store Offers</option>
             {SHOP_CATEGORIES.map((cat) => (
@@ -69,7 +74,21 @@ export default function ShopsClientPage() {
               </option>
             ))}
           </select>
-          <span className="text-xs font-black text-slate-500 uppercase tracking-wider hidden sm:inline">
+
+          {/* Sort By Dropdown */}
+          <div className="flex items-center gap-1">
+            <ArrowUpDown className="w-3.5 h-3.5 text-slate-400" />
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as any)}
+              className="text-xs font-semibold bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-slate-800 focus:outline-none cursor-pointer"
+            >
+              <option value="recent">Recently Added</option>
+              <option value="name">Store Name (A-Z)</option>
+            </select>
+          </div>
+
+          <span className="text-xs font-medium text-slate-500 hidden sm:inline">
             ({filteredPosts.length} Active Offers)
           </span>
         </div>
@@ -77,9 +96,9 @@ export default function ShopsClientPage() {
         {/* Post Offer Button */}
         <button
           onClick={() => router.push("/post/offer")}
-          className="flex items-center gap-1.5 bg-purple-600 hover:bg-purple-500 active:scale-95 text-white font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all border border-purple-500 shadow-sm cursor-pointer ml-auto"
+          className="flex items-center gap-1.5 bg-purple-600 hover:bg-purple-500 text-white font-bold px-3.5 py-1.5 rounded-lg text-xs transition-all shadow-2xs cursor-pointer ml-auto"
         >
-          <Plus className="w-3.5 h-3.5 stroke-[3]" /> Post Offer
+          <Plus className="w-3.5 h-3.5 stroke-[2.5]" /> Post Offer
         </button>
       </div>
 
@@ -89,10 +108,10 @@ export default function ShopsClientPage() {
       ) : filteredPosts.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
           <Store className="w-8 h-8 text-slate-300" />
-          <p className="text-sm font-black text-slate-500">
+          <p className="text-sm font-bold text-slate-500">
             {selectedCategory !== "All" ? `No store offers found in "${selectedCategory}"` : "No store offers listed yet."}
           </p>
-          <button onClick={() => router.push("/post/offer")} className="bg-purple-600 text-white font-black text-xs px-5 py-2.5 rounded-xl border border-purple-500 hover:bg-purple-500 transition-all cursor-pointer">+ Post Offer</button>
+          <button onClick={() => router.push("/post/offer")} className="bg-purple-600 text-white font-bold text-xs px-4 py-2 rounded-lg border border-purple-500 hover:bg-purple-500 transition-all cursor-pointer">+ Post Offer</button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

@@ -166,26 +166,35 @@ export default function TopHeader({
 
 
 
-        {/* Right: Verified Profile Icon Button / Verify Mobile */}
+        {/* Right: Persistent + Post CTA & Profile Button */}
         <div className="flex items-center gap-2 shrink-0">
+          <button
+            onClick={() => {
+              if (pathname.includes("/sell")) router.push("/post/sell");
+              else if (pathname.includes("/need")) router.push("/post/need");
+              else if (pathname.includes("/services")) router.push("/post/service");
+              else if (pathname.includes("/shops")) router.push("/post/offer");
+              else onPostClick();
+            }}
+            className="flex items-center gap-1 bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs transition-all shadow-2xs cursor-pointer border border-yellow-400"
+          >
+            <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+            <span>Post</span>
+          </button>
+
           {isAuthVerified ? (
             <button
               onClick={() => onTabChange?.("profile")}
-              className="relative flex items-center gap-2 bg-slate-100/90 hover:bg-slate-200/80 border border-slate-250/80 text-slate-800 font-extrabold px-3 py-1.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer group"
+              className="relative flex items-center gap-1.5 bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200 text-slate-800 font-bold px-3 py-1.5 rounded-lg text-xs transition-all shadow-2xs cursor-pointer group"
               title={`Verified Profile (${phoneDisplay})`}
             >
-              <div className="relative">
-                <User className="w-4 h-4 text-slate-700 group-hover:text-slate-900" />
-                <span className="absolute -top-1.5 -right-1.5 w-3.5 h-3.5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[8px] font-black shadow-xs border border-white">
-                  ✓
-                </span>
-              </div>
-              <span className="hidden md:inline text-xs font-black text-slate-700">Profile</span>
+              <User className="w-3.5 h-3.5 text-slate-700 group-hover:text-slate-900" />
+              <span className="hidden md:inline text-xs font-bold text-slate-700">Profile</span>
             </button>
           ) : (
             <button
               onClick={onSignInClick}
-              className="flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold px-3.5 py-1.5 rounded-xl text-xs transition-all cursor-pointer border border-slate-250 shadow-2xs"
+              className="flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-3 py-1.5 rounded-lg text-xs transition-all cursor-pointer border border-slate-200 shadow-2xs"
             >
               <User className="w-3.5 h-3.5 text-slate-700" />
               <span>Profile</span>

@@ -23,9 +23,9 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false, isPre
   )}`;
 
   // OpenStreetMap/Google Maps external navigation link
-  const navUrl = post.latitude && post.longitude
+  const navUrl = post.google_maps_url || (post.latitude && post.longitude
     ? `https://www.google.com/maps/dir/?api=1&destination=${post.latitude},${post.longitude}`
-    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${post.shop_name}, ${post.area_tag}, Thanjavur`)}`;
+    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${post.shop_name}, ${post.area_tag}, Thanjavur`)}`);
 
   const getCategoryIllustration = (cat: string) => {
     switch (cat) {
@@ -146,13 +146,44 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false, isPre
                 href={post.offer_social_link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-1 flex items-center justify-center gap-1.5 bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white font-black px-3 py-2.5 rounded-xl text-xs transition-all shadow-xs active:scale-95 cursor-pointer"
+                className="mt-1 flex items-center justify-center gap-1.5 bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white font-bold px-3 py-2 rounded-lg text-xs transition-all shadow-2xs active:scale-95 cursor-pointer"
               >
                 <span>Watch Reel on Instagram 📸</span>
               </a>
             )}
           </div>
         )}
+
+        {/* Action Buttons: Call, WhatsApp, and 📍 Get Directions */}
+        <div className="flex items-center gap-1.5 pt-2 border-t border-slate-100 mt-1">
+          <a
+            href={callUrl}
+            className="flex items-center justify-center gap-1 flex-1 border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-bold py-1.5 rounded-lg text-xs transition-colors"
+          >
+            <Phone className="w-3.5 h-3.5 text-slate-600" />
+            <span>Call</span>
+          </a>
+
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-1 flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-1.5 rounded-lg text-xs transition-all shadow-2xs"
+          >
+            <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
+            <span>WhatsApp</span>
+          </a>
+
+          <a
+            href={navUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center justify-center gap-1 flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-1.5 rounded-lg text-xs transition-all shadow-2xs"
+          >
+            <Navigation className="w-3.5 h-3.5 fill-white stroke-none" />
+            <span>Directions</span>
+          </a>
+        </div>
       </div>
     </div>
   );

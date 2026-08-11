@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useFirestore } from "@/hooks/use-firestore";
 import NeedCard from "@/components/cards/NeedCard";
 import { NeedOrSalePost } from "@/types";
-import { Plus, Loader2, ShoppingBag } from "lucide-react";
+import { Plus, Loader2, ArrowUpDown, ShoppingBag } from "lucide-react";
 import { CLASSIFIED_CATEGORIES } from "@/lib/constants";
 
 const SAMPLE_POSTS: NeedOrSalePost[] = [
@@ -58,14 +58,14 @@ export default function SellClientPage() {
         </div>
       </div>
 
-      {/* Category Dropdown + Sort + Post */}
-      <div className="sticky top-[57px] z-30 bg-white border-b border-slate-200 py-2.5 flex flex-wrap items-center justify-between gap-2.5">
+      {/* Natural Scrolling Control Bar */}
+      <div className="py-2 flex flex-wrap items-center justify-between gap-2.5 border-b border-slate-200 bg-white">
         <div className="flex items-center gap-2 flex-wrap">
           {/* Category Dropdown */}
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="text-xs font-black bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none cursor-pointer shadow-sm max-w-[180px] sm:max-w-none"
+            className="text-xs font-semibold bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-slate-800 focus:outline-none cursor-pointer"
           >
             <option value="All">All Categories</option>
             {CLASSIFIED_CATEGORIES.map((cat) => (
@@ -76,23 +76,30 @@ export default function SellClientPage() {
           </select>
 
           {/* Sort Dropdown */}
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
-            className="text-xs font-black bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none cursor-pointer shadow-sm"
-          >
-            <option value="recent">Newest First</option>
-            <option value="price_low">Price: Low → High</option>
-            <option value="price_high">Price: High → Low</option>
-          </select>
+          <div className="flex items-center gap-1">
+            <ArrowUpDown className="w-3.5 h-3.5 text-slate-400" />
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as any)}
+              className="text-xs font-semibold bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-slate-800 focus:outline-none cursor-pointer"
+            >
+              <option value="recent">Recently Added</option>
+              <option value="price_low">Price: Low to High</option>
+              <option value="price_high">Price: High to Low</option>
+            </select>
+          </div>
+
+          <span className="text-xs font-medium text-slate-500 hidden sm:inline">
+            ({filteredPosts.length} Items)
+          </span>
         </div>
 
         {/* Post Button */}
         <button
           onClick={() => router.push("/post/sell")}
-          className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-slate-950 font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all border border-yellow-400 shadow-sm cursor-pointer ml-auto"
+          className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold px-3.5 py-1.5 rounded-lg text-xs transition-all shadow-2xs border border-yellow-400 cursor-pointer ml-auto"
         >
-          <Plus className="w-3.5 h-3.5 stroke-[3]" /> Post Sale
+          <Plus className="w-3.5 h-3.5 stroke-[2.5]" /> Post Item
         </button>
       </div>
 

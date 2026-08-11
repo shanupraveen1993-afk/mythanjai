@@ -60,6 +60,7 @@ export interface ShopPost {
   image_url: string;
   latitude: number | null;
   longitude: number | null;
+  google_maps_url?: string;
   address_text: string;
   landmark?: string;
   hours?: string;
