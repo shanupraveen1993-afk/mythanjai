@@ -84,13 +84,13 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
   const isNeedType = post.type?.toUpperCase() === "NEED";
 
   return (
-    <div className="bg-white border border-slate-200/90 rounded-xl p-4 flex flex-col gap-3 shadow-2xs hover:shadow-sm transition-all duration-300 relative group overflow-hidden font-sans">
+    <div className="bg-white border border-slate-200/90 rounded-xl p-4 flex flex-col gap-3 shadow-2xs hover:border-slate-300 hover:shadow-xs transition-all duration-200 relative group overflow-hidden font-sans">
       
       {/* Top Header Tags */}
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-1.5 flex-wrap">
           {post.category && (
-            <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md border border-slate-200">
+            <span className="inline-flex items-center gap-1 text-[10px] font-semibold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md border border-slate-200">
               <Tag className="w-3 h-3 text-slate-400" />
               <span>{post.category}</span>
             </span>
@@ -105,12 +105,12 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
 
       {/* Main Title & Price */}
       <div className="flex flex-col gap-1">
-        <h3 className="font-heading font-black text-base text-slate-900 leading-snug group-hover:text-amber-600 transition-colors">
+        <h3 className="font-heading font-bold text-sm sm:text-base text-slate-900 leading-snug group-hover:text-slate-700 transition-colors">
           {post.title}
         </h3>
 
         {displayPriceText && (
-          <div className="text-sm font-black text-emerald-600 tracking-tight">
+          <div className="text-xs sm:text-sm font-bold text-emerald-600 tracking-tight">
             {displayPriceText}
           </div>
         )}
@@ -118,7 +118,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
 
       {/* YouTube Video Embed Preview */}
       {youtubeId && isPlayingVideo ? (
-        <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-black shadow-inner">
+        <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-black shadow-inner">
           <iframe
             src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1`}
             title={post.title}
@@ -128,7 +128,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
           />
         </div>
       ) : images.length > 0 ? (
-        <div className="relative w-full aspect-video rounded-xl overflow-hidden bg-slate-100 border border-slate-200/80">
+        <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-slate-100 border border-slate-200/80">
           <Image
             src={images[activeImgIndex] || "/thanjavur_temple_illustration.png"}
             alt={post.title}
@@ -148,7 +148,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
 
       {/* Facebook-Style Social Bar (Hidden in Live Preview Mode) */}
       {!isPreview && (
-        <div className="flex items-center justify-between text-[11px] text-slate-500 font-bold border-t border-b border-slate-100 py-2 my-0.5">
+        <div className="flex items-center justify-between text-[11px] text-slate-500 font-semibold border-t border-b border-slate-100 py-2 my-0.5">
           <div className="flex items-center gap-1.5 text-slate-500">
             <Eye className="w-3.5 h-3.5 text-slate-400" />
             <span>{viewsCount} Views</span>
@@ -156,16 +156,16 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
           <div className="flex items-center gap-4">
             <button 
               onClick={handleSharePost}
-              className="flex items-center gap-1 hover:text-amber-600 cursor-pointer transition-colors"
+              className="flex items-center gap-1 hover:text-slate-800 cursor-pointer transition-colors"
             >
               <Share2 className="w-3.5 h-3.5 text-slate-400" />
               <span>{sharesCount} Shares</span>
             </button>
             <button 
               onClick={handleToggleSave}
-              className={`flex items-center gap-1 cursor-pointer transition-colors ${saved ? "text-amber-600 font-extrabold" : "hover:text-amber-600"}`}
+              className={`flex items-center gap-1 cursor-pointer transition-colors ${saved ? "text-yellow-600 font-bold" : "hover:text-slate-800"}`}
             >
-              <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-amber-500 text-amber-500" : "text-slate-400"}`} />
+              <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-yellow-500 text-yellow-600" : "text-slate-400"}`} />
               <span>{saved ? "Saved" : "Save"}</span>
             </button>
           </div>
@@ -174,20 +174,20 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
 
       {/* Footer Info & Action CTAs — MASKED PHONE & IN-APP CHAT */}
       <div className="flex items-center justify-between pt-1">
-        <div className="flex items-center gap-1 text-[10px] text-slate-500 font-bold">
+        <div className="flex items-center gap-1 text-[10px] text-slate-500 font-semibold">
           <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
           <span className="truncate max-w-[110px]">{post.area_tag}</span>
         </div>
 
         {/* Contact Masking Notice & Chat CTA */}
         <div className="flex items-center gap-2">
-          <div className="hidden sm:flex items-center gap-1 text-[9px] font-extrabold text-slate-400 bg-slate-100 px-2 py-1 rounded-md">
+          <div className="hidden sm:flex items-center gap-1 text-[9px] font-semibold text-slate-400 bg-slate-100 px-2 py-1 rounded-md">
             <Lock className="w-3 h-3 text-slate-400" />
             <span>Protected Contact</span>
           </div>
           <Link
             href={`/chat?listingId=${post.id}&sellerId=${post.userId || "seller_id"}&title=${encodeURIComponent(post.title || "Item")}`}
-            className="flex items-center gap-1.5 bg-[#00a884] hover:bg-[#008f6f] text-white font-bold px-3 py-1.5 rounded-lg text-xs transition-all shadow-2xs cursor-pointer"
+            className="flex items-center gap-1.5 h-9 bg-[#00a884] hover:bg-[#008f6f] text-white font-bold px-3.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer"
           >
             <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
             <span>In-App Chat</span>

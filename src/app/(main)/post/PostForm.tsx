@@ -330,7 +330,7 @@ export default function PostForm({ segment }: PostFormProps) {
             
             {/* TOP PRIMARY VISITING CARD / SHOP BANNER UPLOADER (FOR OFFERS & SERVICES) */}
             {(segment === "offer" || segment === "service") && (
-              <div className="w-full bg-gradient-to-br from-yellow-500/10 via-amber-500/5 to-purple-500/10 border-2 border-dashed border-yellow-400 p-5 rounded-2xl flex flex-col items-center justify-center text-center gap-2.5 transition-all hover:border-yellow-500 group relative">
+              <div className="w-full bg-slate-50 border-2 border-dashed border-slate-300 hover:border-yellow-500 p-5 rounded-2xl flex flex-col items-center justify-center text-center gap-2.5 transition-all duration-200 group relative">
                 {imagePreview ? (
                   <div className="relative w-full max-h-48 rounded-xl overflow-hidden border border-slate-200 shadow-sm">
                     <img src={imagePreview} alt="Visiting card preview" className="w-full h-48 object-cover" />

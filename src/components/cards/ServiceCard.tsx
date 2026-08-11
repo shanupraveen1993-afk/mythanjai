@@ -65,18 +65,18 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
   };
 
   return (
-    <div className="bg-white border border-slate-200/95 rounded-xl p-4 shadow-2xs flex flex-col gap-3.5 transition-all hover:shadow-xs w-full font-sans relative">
+    <div className="bg-white border border-slate-200/95 rounded-xl p-4 shadow-2xs hover:border-slate-300 hover:shadow-xs flex flex-col gap-3.5 transition-all duration-200 w-full font-sans relative">
       
       {/* Top Section: Name & Category Badge */}
       <div className="flex items-start justify-between">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5 flex-wrap">
-            <h3 className="font-heading font-extrabold text-sm text-slate-800 line-clamp-1 truncate">
+            <h3 className="font-heading font-bold text-sm sm:text-base text-slate-900 line-clamp-1 truncate">
               {post.name}
             </h3>
 
             {isPendingVerification && (
-              <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-900 border border-amber-300 font-bold px-2 py-0.5 rounded-md text-[9px]">
+              <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-900 border border-amber-300 font-medium px-2 py-0.5 rounded-md text-[9px]">
                 <AlertTriangle className="w-3 h-3 text-amber-600" />
                 <span>Pending verification</span>
               </span>
@@ -84,12 +84,12 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
           </div>
 
           <div className="flex items-center gap-2 mt-1.5">
-            <span className="inline-flex items-center gap-1 bg-emerald-50 border border-emerald-200 text-emerald-800 font-bold px-2 py-0.5 rounded-xl text-[9px]">
+            <span className="inline-flex items-center gap-1 bg-emerald-50 border border-emerald-200 text-emerald-800 font-semibold px-2 py-0.5 rounded-xl text-[9px]">
               {getCategoryIllustration(post.skill_category)}
               <span>{post.skill_category}</span>
             </span>
 
-            <span className="text-[10px] font-black text-slate-700 bg-slate-100 px-2 py-0.5 rounded-xl border border-slate-200">
+            <span className="text-[10px] font-semibold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-xl border border-slate-200">
               📞 +91 {cleanPhone}
             </span>
           </div>
@@ -97,7 +97,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
       </div>
 
       {/* Experience and Locality */}
-      <div className="flex items-center justify-between text-xs text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-200/60 font-bold">
+      <div className="flex items-center justify-between text-xs text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-200/60 font-semibold">
         <div className="flex items-center gap-1">
           <Award className="w-3.5 h-3.5 text-slate-400 shrink-0" />
           <span className="truncate max-w-[110px]">{post.experience || "Expert tradesman"}</span>
@@ -117,7 +117,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
 
       {/* Social Engagement Bar (Hidden in Live Preview Mode) */}
       {!isPreview && (
-        <div className="flex items-center justify-between text-[11px] text-slate-500 font-bold border-t border-b border-slate-100 py-2 my-0.5">
+        <div className="flex items-center justify-between text-[11px] text-slate-500 font-semibold border-t border-b border-slate-100 py-2 my-0.5">
           <div className="flex items-center gap-1.5 text-slate-500">
             <Eye className="w-3.5 h-3.5 text-slate-400" />
             <span>{viewsCount} Views</span>
@@ -125,16 +125,16 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
           <div className="flex items-center gap-4">
             <button 
               onClick={handleShare}
-              className="flex items-center gap-1 hover:text-emerald-600 cursor-pointer transition-colors"
+              className="flex items-center gap-1 hover:text-slate-800 cursor-pointer transition-colors"
             >
               <Share2 className="w-3.5 h-3.5 text-slate-400" />
               <span>{sharesCount} Shares</span>
             </button>
             <button 
               onClick={handleToggleSave}
-              className={`flex items-center gap-1 cursor-pointer transition-colors ${saved ? "text-amber-600 font-extrabold" : "hover:text-amber-600"}`}
+              className={`flex items-center gap-1 cursor-pointer transition-colors ${saved ? "text-yellow-600 font-bold" : "hover:text-slate-800"}`}
             >
-              <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-amber-500 text-amber-500" : "text-slate-400"}`} />
+              <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-yellow-500 text-yellow-600" : "text-slate-400"}`} />
               <span>{saved ? "Saved" : "Save"}</span>
             </button>
           </div>
@@ -147,7 +147,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
         <a
           href={callUrl}
           onClick={handleInitiateContact}
-          className="flex items-center justify-center gap-1.5 flex-1 border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 font-black py-2 rounded-xl text-xs transition-colors cursor-pointer shadow-2xs"
+          className="flex items-center justify-center gap-1.5 flex-1 h-9 border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 font-bold rounded-xl text-xs transition-colors cursor-pointer shadow-2xs"
         >
           <Phone className="w-3.5 h-3.5 text-slate-700" />
           <span>Call Now</span>
@@ -159,7 +159,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
           target="_blank"
           rel="noopener noreferrer"
           onClick={handleInitiateContact}
-          className="flex items-center justify-center gap-1.5 flex-1 bg-emerald-500 hover:bg-emerald-600 active:scale-95 text-white font-black py-2 rounded-xl text-xs transition-all shadow-xs cursor-pointer"
+          className="flex items-center justify-center gap-1.5 flex-1 h-9 bg-[#00a884] hover:bg-[#008f6f] text-white font-bold rounded-xl text-xs transition-all shadow-2xs cursor-pointer"
         >
           <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
           <span>WhatsApp</span>

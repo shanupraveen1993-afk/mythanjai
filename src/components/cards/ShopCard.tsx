@@ -38,17 +38,17 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false, isPre
   };
 
   return (
-    <div className="bg-white border border-slate-200/90 rounded-xl overflow-hidden shadow-2xs flex flex-col relative transition-all hover:shadow-xs w-full font-sans">
+    <div className="bg-white border border-slate-200/90 rounded-xl overflow-hidden shadow-2xs hover:border-slate-300 hover:shadow-xs transition-all duration-200 flex flex-col relative w-full font-sans">
       {/* Featured Star Overlay */}
       {post.is_featured && (
-        <div className="absolute top-2.5 left-2.5 z-20 bg-yellow-500 text-slate-955 text-[9px] font-bold px-2 py-0.5 rounded-xl flex items-center gap-1 shadow-md animate-pulse">
+        <div className="absolute top-2.5 left-2.5 z-20 bg-yellow-500 text-slate-955 text-[9px] font-semibold px-2 py-0.5 rounded-xl flex items-center gap-1 shadow-md animate-pulse">
           <Sparkles className="w-2.5 h-2.5 fill-current" />
           <span>Featured</span>
         </div>
       )}
 
       {/* Storefront Image / Video Player */}
-      <div className="relative aspect-video w-full bg-slate-900 border-b border-slate-100 overflow-hidden">
+      <div className="relative aspect-[4/3] w-full bg-slate-900 border-b border-slate-100 overflow-hidden">
         {post.video_url ? (
           <video
             src={post.video_url}
@@ -69,7 +69,7 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false, isPre
           />
         )}
         {/* Category tag */}
-        <span className="absolute bottom-2.5 right-2.5 bg-black/77 backdrop-blur-sm text-white text-[9px] font-black px-2.5 py-0.5 rounded-xl flex items-center gap-1 shadow-xs border border-white/10 z-20">
+        <span className="absolute bottom-2.5 right-2.5 bg-black/77 backdrop-blur-sm text-white text-[9px] font-semibold px-2.5 py-0.5 rounded-xl flex items-center gap-1 shadow-xs border border-white/10 z-20">
           {getCategoryIllustration(post.category)}
           <span className="capitalize">{post.category}</span>
         </span>
@@ -82,11 +82,11 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false, isPre
             rel="noopener noreferrer"
             className="absolute inset-0 bg-black/40 hover:bg-black/25 flex items-center justify-center transition-all cursor-pointer group z-10"
           >
-            <div className="w-12 h-12 rounded-full bg-gradient-to-tr from-purple-600 via-pink-500 to-amber-400 text-white flex items-center justify-center shadow-xl transform group-hover:scale-115 transition-transform border-2 border-white/80">
-              <span className="text-lg font-black ml-0.5">▶</span>
+            <div className="w-12 h-12 rounded-full bg-slate-900/90 text-white flex items-center justify-center shadow-xl transform group-hover:scale-105 transition-transform border border-white/80">
+              <span className="text-lg font-bold ml-0.5">▶</span>
             </div>
-            <span className="absolute top-2.5 left-2.5 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-[9px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-lg shadow-md flex items-center gap-1">
-              <span>📸 Instagram Reel</span>
+            <span className="absolute top-2.5 left-2.5 bg-yellow-500 text-slate-955 text-[9px] font-bold px-2.5 py-0.5 rounded-lg shadow-md flex items-center gap-1">
+              <span>Instagram Reel</span>
             </span>
           </a>
         )}
@@ -95,28 +95,28 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false, isPre
       {/* Info Details */}
       <div className="p-3.5 flex flex-col gap-2 flex-1">
         <div className="flex items-start justify-between gap-1">
-          <h3 className="font-heading font-extrabold text-sm text-slate-800 leading-snug line-clamp-1 truncate min-w-0 flex-1">
+          <h3 className="font-heading font-bold text-sm sm:text-base text-slate-900 leading-snug line-clamp-1 truncate min-w-0 flex-1">
             {post.shop_name}
           </h3>
           {post.is_claimed && (
-            <span className="text-[8px] bg-slate-105 text-slate-700 border border-slate-200 font-bold px-1.5 py-0.5 rounded shrink-0">
+            <span className="text-[8px] bg-slate-100 text-slate-700 border border-slate-200 font-semibold px-1.5 py-0.5 rounded shrink-0">
               Claimed
             </span>
           )}
         </div>
 
-        {/* Address and Landmark (Max 2 lines short) */}
+        {/* Address and Landmark */}
         <p className="text-[11px] text-slate-500 leading-relaxed font-sans bg-slate-50 p-2.5 rounded-xl border border-slate-200/60 line-clamp-2">
           {post.address_text}
           {post.landmark && (
-            <span className="block mt-0.5 font-semibold text-slate-700 truncate">
+            <span className="block mt-0.5 font-medium text-slate-700 truncate">
               Near: {post.landmark}
             </span>
           )}
         </p>
 
         {/* Operating Hours and Area */}
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[10px] text-slate-500 font-bold mt-1">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[10px] text-slate-500 font-semibold mt-1">
           <div className="flex items-center gap-1">
             <MapPin className="w-3 h-3 text-slate-400" />
             <span className="truncate max-w-[120px]">{post.area_tag}</span>
@@ -129,15 +129,15 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false, isPre
           )}
         </div>
 
-        {/* Active Promotion Offer Details & Full Reel Caption Content */}
+        {/* Active Promotion Offer Details */}
         {post.offer_title && (
-          <div className="bg-gradient-to-b from-yellow-50 to-amber-50/40 border border-yellow-250/70 rounded-xl p-3 flex flex-col gap-1.5 mt-1 text-slate-800 font-sans shadow-2xs">
-            <div className="flex items-center gap-1.5 text-yellow-800 font-black text-[11px] uppercase tracking-wider line-clamp-1 truncate">
+          <div className="bg-yellow-50/50 border border-yellow-200/80 rounded-xl p-3 flex flex-col gap-1.5 mt-1 text-slate-800 font-sans shadow-2xs">
+            <div className="flex items-center gap-1.5 text-yellow-800 font-bold text-[11px] line-clamp-1 truncate">
               <Sparkles className="w-3.5 h-3.5 fill-yellow-500 stroke-none shrink-0" />
               <span className="truncate">{post.offer_title}</span>
             </div>
             {post.offer_description && (
-              <p className="text-[11px] text-slate-600 font-semibold leading-relaxed bg-white/90 p-2.5 rounded-lg border border-yellow-200/50 line-clamp-2">
+              <p className="text-[11px] text-slate-600 font-medium leading-relaxed bg-white/90 p-2.5 rounded-lg border border-yellow-200/50 line-clamp-2">
                 {post.offer_description}
               </p>
             )}
@@ -146,7 +146,7 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false, isPre
                 href={post.offer_social_link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mt-1 flex items-center justify-center gap-1.5 bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 hover:from-purple-700 hover:to-amber-600 text-white font-bold px-3 py-2 rounded-lg text-xs transition-all shadow-2xs active:scale-95 cursor-pointer"
+                className="mt-1 flex items-center justify-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-bold h-9 px-3 rounded-lg text-xs transition-all shadow-2xs cursor-pointer border border-yellow-400"
               >
                 <span>Watch Reel on Instagram 📸</span>
               </a>
@@ -158,7 +158,7 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false, isPre
         <div className="flex items-center gap-1.5 pt-2 border-t border-slate-100 mt-1">
           <a
             href={callUrl}
-            className="flex items-center justify-center gap-1 flex-1 border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-bold py-1.5 rounded-lg text-xs transition-colors"
+            className="flex items-center justify-center gap-1 flex-1 h-9 border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-bold rounded-xl text-xs transition-colors"
           >
             <Phone className="w-3.5 h-3.5 text-slate-600" />
             <span>Call</span>
@@ -168,7 +168,7 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false, isPre
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-1 flex-1 bg-[#00a884] hover:bg-[#008f6f] text-white font-bold py-1.5 rounded-lg text-xs transition-all shadow-2xs"
+            className="flex items-center justify-center gap-1 flex-1 h-9 bg-[#00a884] hover:bg-[#008f6f] text-white font-bold rounded-xl text-xs transition-all shadow-2xs"
           >
             <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
             <span>WhatsApp</span>
@@ -178,7 +178,7 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false, isPre
             href={navUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-1 flex-1 bg-slate-900 hover:bg-slate-800 text-white font-bold py-1.5 rounded-lg text-xs transition-all shadow-2xs"
+            className="flex items-center justify-center gap-1 flex-1 h-9 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs transition-all shadow-2xs"
           >
             <Navigation className="w-3.5 h-3.5 text-white" />
             <span>Directions</span>
