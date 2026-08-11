@@ -232,7 +232,7 @@ export default function ChatClientPage() {
   };
 
   return (
-    <div className="w-full flex flex-col pt-3 font-sans">
+    <div className="w-full h-dvh max-h-dvh flex flex-col bg-[#075e54] font-sans overflow-hidden">
       
       {/* Contextual Scam Alert Modal Overlay */}
       {scamAlertTriggered && (
@@ -261,8 +261,42 @@ export default function ChatClientPage() {
         </div>
       )}
 
-      {/* WHATSAPP APP CONTAINER (ALIGNED TO MAX-W-7XL HEADER GRID) */}
-      <div className="bg-white border border-slate-200 rounded-xl shadow-2xs overflow-hidden h-[calc(100vh-140px)] min-h-[550px] flex">
+      {/* DEDICATED WHATSAPP TOP HEADER (DARK TEAL #075e54) */}
+      <div className="w-full bg-[#075e54] text-white px-4 py-2.5 flex items-center justify-between shadow-md shrink-0 border-b border-[#054c44]">
+        <div className="flex items-center gap-3">
+          <div 
+            onClick={() => router.push("/")}
+            className="flex items-center gap-2 cursor-pointer select-none"
+          >
+            <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-8 h-8 sm:w-9 sm:h-9 object-contain shrink-0 rounded-xl border border-white/20" />
+            <div className="flex flex-col">
+              <div className="flex items-center gap-1">
+                <span className="font-heading font-bold tracking-tight text-white text-xs sm:text-sm uppercase">
+                  namma thanjai
+                </span>
+                <span className="bg-emerald-400 text-slate-950 font-black text-[9px] px-1.5 py-0.2 rounded-md uppercase">
+                  CHAT
+                </span>
+              </div>
+              <span className="text-[10px] text-emerald-100 font-medium line-clamp-1">
+                {activePeerName} • {activeListingTitle}
+              </span>
+            </div>
+          </div>
+        </div>
+
+        {/* Far-Right Close (X) Button to return to feed */}
+        <button
+          onClick={() => router.back()}
+          aria-label="Close Chat"
+          className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer"
+        >
+          <X className="w-5 h-5" />
+        </button>
+      </div>
+
+      {/* WHATSAPP MAIN CONTAINER */}
+      <div className="flex-1 w-full flex bg-white overflow-hidden">
         
         {/* LEFT COLUMN: WhatsApp Threads List (Desktop ALWAYS visible, Mobile toggled) */}
         <div className={`w-full lg:w-80 border-r border-slate-200 flex-col bg-white ${showMobileChat ? "hidden lg:flex" : "flex"}`}>
@@ -270,7 +304,7 @@ export default function ChatClientPage() {
           {/* Threads List Header */}
           <div className="bg-slate-100 p-3.5 border-b border-slate-200 flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-[#00a884] text-white flex items-center justify-center font-bold text-xs">
+              <div className="w-8 h-8 rounded-full bg-[#128c7e] text-white flex items-center justify-center font-bold text-xs">
                 <MessageSquare className="w-4 h-4" />
               </div>
               <h2 className="font-heading font-bold text-sm text-slate-800">In-App Chats</h2>
@@ -304,7 +338,7 @@ export default function ChatClientPage() {
                   setShowMobileChat(true);
                 }}
                 className={`p-3 flex items-center gap-3 cursor-pointer transition-colors hover:bg-slate-50 ${
-                  activeChatId === t.chatId ? "bg-slate-100/80 border-l-4 border-[#00a884]" : ""
+                  activeChatId === t.chatId ? "bg-slate-100/80 border-l-4 border-[#128c7e]" : ""
                 }`}
               >
                 <div className="w-10 h-10 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs shrink-0">
@@ -334,32 +368,26 @@ export default function ChatClientPage() {
         {/* RIGHT COLUMN: WhatsApp Active Chat Window */}
         <div className={`flex-1 flex-col bg-[#efeae2] relative ${showMobileChat ? "flex" : "hidden lg:flex"}`}>
           
-          {/* Active Chat Header */}
-          <div className="bg-[#00a884] text-white px-4 py-3 flex items-center justify-between shadow-xs">
+          {/* Mobile Active Contact Bar */}
+          <div className="bg-[#128c7e] text-white px-4 py-2.5 flex items-center justify-between shadow-xs lg:hidden">
             <div className="flex items-center gap-3">
               <button
                 onClick={() => setShowMobileChat(false)}
-                className="lg:hidden p-1 text-white hover:bg-white/10 rounded-lg cursor-pointer"
+                className="p-1 text-white hover:bg-white/10 rounded-lg cursor-pointer"
               >
                 <ArrowLeft className="w-5 h-5" />
               </button>
 
-              <div className="w-9 h-9 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-xs">
-                <User className="w-5 h-5" />
+              <div className="w-8 h-8 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-xs">
+                <User className="w-4 h-4" />
               </div>
 
               <div>
-                <h3 className="font-bold text-xs sm:text-sm leading-tight text-white">{activePeerName}</h3>
-                <p className="text-[10px] text-emerald-100 truncate max-w-[200px] sm:max-w-[300px]">
-                  Listing: {activeListingTitle}
+                <h3 className="font-bold text-xs leading-tight text-white">{activePeerName}</h3>
+                <p className="text-[10px] text-emerald-100 truncate max-w-[200px]">
+                  {activeListingTitle}
                 </p>
               </div>
-            </div>
-
-            <div className="flex items-center gap-2 text-white">
-              <button onClick={() => router.push("/sell")} className="p-1.5 hover:bg-white/10 rounded-lg text-xs font-semibold cursor-pointer">
-                Back to Feed
-              </button>
             </div>
           </div>
 

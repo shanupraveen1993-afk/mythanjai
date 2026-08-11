@@ -121,15 +121,17 @@ function MainLayoutContent({
   };
 
   const isGuestLanding = pathname === "/" && !profile?.isVerified;
+  const isChatRoute = pathname === "/chat";
+  const isStandaloneView = isGuestLanding || isChatRoute;
 
   return (
-    <div className={`w-full flex flex-col relative bg-white font-sans ${isGuestLanding ? "h-dvh max-h-dvh overflow-hidden md:h-auto md:max-h-none md:min-h-screen md:overflow-visible" : "min-h-screen"}`}>
+    <div className={`w-full flex flex-col relative bg-white font-sans ${isStandaloneView ? "h-dvh max-h-dvh overflow-hidden" : "min-h-screen"}`}>
       <React.Suspense fallback={null}>
         <SearchParamSync onAreaSync={setSelectedArea} onAuthSync={setIsSignInOpen} />
       </React.Suspense>
 
-      {/* Top Header Section (Hidden for unauthenticated guest onboarding landing) */}
-      {!isGuestLanding && (
+      {/* Top Header Section (Hidden for guest onboarding landing & dedicated /chat view) */}
+      {!isStandaloneView && (
         <div className="block">
           <React.Suspense fallback={null}>
             <TopHeader
@@ -146,20 +148,20 @@ function MainLayoutContent({
         </div>
       )}
 
-      {/* Universal Directory Search Bar (Hidden on Home & Profile pages) */}
-      {profile?.isVerified && pathname !== "/" && pathname !== "/profile" && (
+      {/* Universal Directory Search Bar (Hidden on Home, Profile, & Chat pages) */}
+      {profile?.isVerified && pathname !== "/" && pathname !== "/profile" && !isChatRoute && (
         <React.Suspense fallback={null}>
           <UniversalSearchBar />
         </React.Suspense>
       )}
 
-      {/* Main Content Panel (0 Padding for Guest Onboarding View) */}
-      <main className={`flex-1 w-full bg-white ${isGuestLanding ? "p-0 max-w-none m-0" : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-20 md:pb-8"}`}>
+      {/* Main Content Panel (0 Padding for Guest Onboarding View & Full-Screen Chat) */}
+      <main className={`flex-1 w-full bg-white ${isStandaloneView ? "p-0 max-w-none m-0" : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-20 md:pb-8"}`}>
         {children}
       </main>
 
-      {/* Bottom Navigation Bar (Hidden for unauthenticated guest onboarding landing) */}
-      {!isGuestLanding && (
+      {/* Bottom Navigation Bar (Hidden for guest onboarding landing & dedicated /chat view) */}
+      {!isStandaloneView && (
         <BottomTabBar
           activeTab={getActiveTab()}
           onTabChange={handleTabChange}

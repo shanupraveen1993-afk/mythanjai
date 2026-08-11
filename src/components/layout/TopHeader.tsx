@@ -66,30 +66,18 @@ export default function TopHeader({
         
         {/* Left: Website Branding Logo across all pages */}
         <div className="flex items-center gap-2">
-          {pathname !== "/" ? (
-            <div 
-              onClick={() => router.push("/")}
-              className="flex items-center gap-1.5 cursor-pointer select-none shrink-0"
-            >
-              <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-7 h-7 sm:w-10 sm:h-10 object-contain shrink-0 rounded-xl border-0 shadow-none" />
-              <span className="hidden xs:inline font-heading font-black tracking-tight text-slate-900 text-xs sm:text-sm uppercase">
-                {sectionTitle ? sectionTitle : "namma thanjai"}
+          <div 
+            onClick={() => router.push("/")}
+            className="flex items-center gap-2 cursor-pointer select-none shrink-0"
+          >
+            <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-8 h-8 sm:w-9 sm:h-9 object-contain shrink-0 rounded-xl border-0 shadow-none" />
+            <div className="flex items-center gap-0.5">
+              <span className="font-heading font-black tracking-tight text-slate-900 text-xs sm:text-sm uppercase">
+                namma thanjai
               </span>
+              <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 ml-0.5" />
             </div>
-          ) : (
-            <div 
-              onClick={() => router.push("/")}
-              className="flex items-center gap-2 cursor-pointer select-none shrink-0"
-            >
-              <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-9 h-9 sm:w-10 sm:h-10 object-contain shrink-0 rounded-xl border-0 shadow-none" />
-              <div className="flex items-center gap-0.5">
-                <span className="font-heading font-black tracking-tight text-slate-900 text-xs sm:text-sm uppercase">
-                  namma thanjai
-                </span>
-                <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 ml-0.5" />
-              </div>
-            </div>
-          )}
+          </div>
         </div>
 
         {/* Center: 6 Channel Navigation Tabs (Visible post-login & on internal pages) */}
