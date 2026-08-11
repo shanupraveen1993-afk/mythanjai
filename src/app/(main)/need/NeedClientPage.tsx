@@ -54,7 +54,7 @@ export default function NeedClientPage() {
         <img src="/hero_building_visual.png" alt="Need" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent" />
         <div className="relative z-10 flex flex-col gap-1 max-w-lg">
-          <span className="bg-blue-600 text-white font-bold text-[10px] px-2 py-0.5 rounded-md uppercase tracking-wider w-fit">Buyer Requirements</span>
+          <span className="bg-yellow-500 text-slate-950 font-bold text-[10px] px-2 py-0.5 rounded-md uppercase tracking-wider w-fit">Buyer Requirements</span>
           <h1 className="font-heading font-bold text-lg sm:text-xl text-white">Find What You Need</h1>
           <p className="text-xs text-slate-300">Post your requirement — land, vehicles or rentals — connect with sellers.</p>
         </div>
@@ -67,7 +67,7 @@ export default function NeedClientPage() {
         </h2>
         <button
           onClick={() => router.push("/post/need")}
-          className="flex items-center gap-1 bg-blue-600 hover:bg-blue-500 text-white font-bold px-3.5 py-1.5 rounded-lg text-xs transition-all border border-blue-500 cursor-pointer shadow-2xs"
+          className="flex items-center gap-1 bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold px-3.5 py-1.5 rounded-lg text-xs transition-all border border-yellow-400 cursor-pointer shadow-2xs"
         >
           <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
           <span>Post Need</span>
@@ -114,7 +114,7 @@ export default function NeedClientPage() {
         <div className="flex flex-col items-center justify-center py-16 gap-2 text-center">
           <Search className="w-8 h-8 text-slate-300" />
           <p className="text-sm font-bold text-slate-500">No requirements listed yet.</p>
-          <button onClick={() => router.push("/post/need")} className="bg-blue-600 text-white font-bold text-xs px-4 py-2 rounded-lg border border-blue-500 hover:bg-blue-500 transition-all cursor-pointer">+ Post Need</button>
+          <button onClick={() => router.push("/post/need")} className="bg-yellow-500 text-slate-950 font-bold text-xs px-4 py-2 rounded-lg border border-yellow-400 hover:bg-yellow-400 transition-all cursor-pointer">+ Post Need</button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

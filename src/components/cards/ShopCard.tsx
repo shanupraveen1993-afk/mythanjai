@@ -168,7 +168,7 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false, isPre
             href={whatsappUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-1 flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-1.5 rounded-lg text-xs transition-all shadow-2xs"
+            className="flex items-center justify-center gap-1 flex-1 bg-[#00a884] hover:bg-[#008f6f] text-white font-bold py-1.5 rounded-lg text-xs transition-all shadow-2xs"
           >
             <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
             <span>WhatsApp</span>
@@ -178,9 +178,9 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false, isPre
             href={navUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-1 flex-1 bg-blue-600 hover:bg-blue-500 text-white font-bold py-1.5 rounded-lg text-xs transition-all shadow-2xs"
+            className="flex items-center justify-center gap-1 flex-1 bg-slate-900 hover:bg-slate-800 text-white font-bold py-1.5 rounded-lg text-xs transition-all shadow-2xs"
           >
-            <Navigation className="w-3.5 h-3.5 fill-white stroke-none" />
+            <Navigation className="w-3.5 h-3.5 text-white" />
             <span>Directions</span>
           </a>
         </div>

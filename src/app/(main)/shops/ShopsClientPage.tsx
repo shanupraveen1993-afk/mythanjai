@@ -50,7 +50,7 @@ export default function ShopsClientPage() {
         <img src="/hero_building_visual.png" alt="Offers" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent" />
         <div className="relative z-10 flex flex-col gap-1 max-w-lg">
-          <span className="bg-purple-600 text-white font-bold text-[10px] px-2 py-0.5 rounded-md uppercase tracking-wider w-fit">Store Discounts</span>
+          <span className="bg-yellow-500 text-slate-950 font-bold text-[10px] px-2 py-0.5 rounded-md uppercase tracking-wider w-fit">Store Discounts</span>
           <h1 className="font-heading font-bold text-lg sm:text-xl text-white">Local Store Offers</h1>
           <p className="text-xs text-slate-300">Grand opening deals, festival sales & discounts from Tanjore stores.</p>
         </div>
@@ -63,7 +63,7 @@ export default function ShopsClientPage() {
         </h2>
         <button
           onClick={() => router.push("/post/offer")}
-          className="flex items-center gap-1 bg-purple-600 hover:bg-purple-500 text-white font-bold px-3.5 py-1.5 rounded-lg text-xs transition-all border border-purple-500 cursor-pointer shadow-2xs"
+          className="flex items-center gap-1 bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold px-3.5 py-1.5 rounded-lg text-xs transition-all border border-yellow-400 cursor-pointer shadow-2xs"
         >
           <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
           <span>Post Offer</span>
@@ -104,12 +104,12 @@ export default function ShopsClientPage() {
 
       {/* Feed */}
       {loading ? (
-        <div className="flex justify-center py-16"><Loader2 className="w-6 h-6 text-purple-600 animate-spin" /></div>
+        <div className="flex justify-center py-16"><Loader2 className="w-6 h-6 text-amber-600 animate-spin" /></div>
       ) : filteredPosts.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 gap-2 text-center">
           <Store className="w-8 h-8 text-slate-300" />
           <p className="text-sm font-bold text-slate-500">No store offers listed yet.</p>
-          <button onClick={() => router.push("/post/offer")} className="bg-purple-600 text-white font-bold text-xs px-4 py-2 rounded-lg border border-purple-500 hover:bg-purple-500 transition-all cursor-pointer">+ Post Offer</button>
+          <button onClick={() => router.push("/post/offer")} className="bg-yellow-500 text-slate-950 font-bold text-xs px-4 py-2 rounded-lg border border-yellow-400 hover:bg-yellow-400 transition-all cursor-pointer">+ Post Offer</button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

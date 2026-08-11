@@ -54,7 +54,7 @@ export default function ServicesClientPage() {
         <img src="/thanjavur_temple_illustration.png" alt="Services" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent" />
         <div className="relative z-10 flex flex-col gap-1 max-w-lg">
-          <span className="bg-emerald-600 text-white font-bold text-[10px] px-2 py-0.5 rounded-md uppercase tracking-wider w-fit">Verified Tradespeople</span>
+          <span className="bg-yellow-500 text-slate-950 font-bold text-[10px] px-2 py-0.5 rounded-md uppercase tracking-wider w-fit">Verified Tradespeople</span>
           <h1 className="font-heading font-bold text-lg sm:text-xl text-white">Local Skilled Services</h1>
           <p className="text-xs text-slate-300">Electricians, plumbers, carpenters & technicians in Thanjavur.</p>
         </div>
@@ -67,7 +67,7 @@ export default function ServicesClientPage() {
         </h2>
         <button
           onClick={() => router.push("/post/service")}
-          className="flex items-center gap-1 bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-3.5 py-1.5 rounded-lg text-xs transition-all border border-emerald-500 cursor-pointer shadow-2xs"
+          className="flex items-center gap-1 bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold px-3.5 py-1.5 rounded-lg text-xs transition-all border border-yellow-400 cursor-pointer shadow-2xs"
         >
           <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
           <span>Add Service</span>
@@ -109,12 +109,12 @@ export default function ServicesClientPage() {
 
       {/* Feed */}
       {loading ? (
-        <div className="flex justify-center py-16"><Loader2 className="w-6 h-6 text-emerald-600 animate-spin" /></div>
+        <div className="flex justify-center py-16"><Loader2 className="w-6 h-6 text-amber-600 animate-spin" /></div>
       ) : filteredPosts.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 gap-2 text-center">
           <Wrench className="w-8 h-8 text-slate-300" />
           <p className="text-sm font-bold text-slate-500">No service providers listed yet.</p>
-          <button onClick={() => router.push("/post/service")} className="bg-emerald-600 text-white font-bold text-xs px-4 py-2 rounded-lg border border-emerald-500 hover:bg-emerald-500 transition-all cursor-pointer">+ Add Service</button>
+          <button onClick={() => router.push("/post/service")} className="bg-yellow-500 text-slate-950 font-bold text-xs px-4 py-2 rounded-lg border border-yellow-400 hover:bg-yellow-400 transition-all cursor-pointer">+ Add Service</button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

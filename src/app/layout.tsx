@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Outfit } from "next/font/google";
+import { Inter, Red_Hat_Display } from "next/font/google";
 import "./globals.css";
 
 const inter = Inter({
@@ -7,7 +7,7 @@ const inter = Inter({
   variable: "--font-sans",
 });
 
-const outfit = Outfit({
+const redHatDisplay = Red_Hat_Display({
   subsets: ["latin"],
   variable: "--font-heading",
 });
@@ -37,7 +37,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${outfit.variable} h-full`}>
+    <html lang="en" className={`${inter.variable} ${redHatDisplay.variable} h-full`}>
       <body className="h-full bg-white font-sans antialiased text-slate-900 flex flex-col min-h-screen overflow-x-hidden">
         {children}
       </body>
