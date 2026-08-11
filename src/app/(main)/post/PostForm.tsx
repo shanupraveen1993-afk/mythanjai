@@ -573,11 +573,11 @@ export default function PostForm({ segment }: PostFormProps) {
 
             <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-2xs flex flex-col gap-3">
               {segment === "sell" || segment === "need" ? (
-                <NeedCard post={previewSellOrNeedPost} />
+                <NeedCard post={previewSellOrNeedPost} isPreview={true} />
               ) : segment === "service" ? (
-                <ServiceCard post={previewServicePost} />
+                <ServiceCard post={previewServicePost} isPreview={true} />
               ) : (
-                <ShopCard post={previewShopPost} />
+                <ShopCard post={previewShopPost} isPreview={true} />
               )}
             </div>
           </div>

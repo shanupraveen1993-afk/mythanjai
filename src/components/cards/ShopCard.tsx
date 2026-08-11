@@ -9,9 +9,10 @@ interface ShopCardProps {
   post: ShopPost;
   onMapToggle?: (post: ShopPost) => void;
   isMapActive?: boolean;
+  isPreview?: boolean;
 }
 
-export default function ShopCard({ post, onMapToggle, isMapActive = false }: ShopCardProps) {
+export default function ShopCard({ post, onMapToggle, isMapActive = false, isPreview = false }: ShopCardProps) {
   const rawPhone = String(post.phone || "9994837342");
   const cleanPhone = rawPhone.replace(/\D/g, "");
   const formattedPhone = cleanPhone.startsWith("91") ? cleanPhone : `91${cleanPhone}`;

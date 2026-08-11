@@ -10,9 +10,10 @@ import InAppChatModal from "@/components/chat/InAppChatModal";
 interface NeedCardProps {
   post: NeedOrSalePost;
   onShare?: (post: NeedOrSalePost) => void;
+  isPreview?: boolean;
 }
 
-export default function NeedCard({ post, onShare }: NeedCardProps) {
+export default function NeedCard({ post, onShare, isPreview = false }: NeedCardProps) {
   const [activeImgIndex, setActiveImgIndex] = useState(0);
   const [isPlayingVideo, setIsPlayingVideo] = useState(false);
   const [saved, setSaved] = useState(false);
@@ -154,29 +155,31 @@ export default function NeedCard({ post, onShare }: NeedCardProps) {
         </p>
       )}
 
-      {/* Facebook-Style Social Bar */}
-      <div className="flex items-center justify-between text-[11px] text-slate-500 font-bold border-t border-b border-slate-100 py-2 my-0.5">
-        <div className="flex items-center gap-1.5 text-slate-500">
-          <Eye className="w-3.5 h-3.5 text-slate-400" />
-          <span>{viewsCount} Views</span>
+      {/* Facebook-Style Social Bar (Hidden in Live Preview Mode) */}
+      {!isPreview && (
+        <div className="flex items-center justify-between text-[11px] text-slate-500 font-bold border-t border-b border-slate-100 py-2 my-0.5">
+          <div className="flex items-center gap-1.5 text-slate-500">
+            <Eye className="w-3.5 h-3.5 text-slate-400" />
+            <span>{viewsCount} Views</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={handleSharePost}
+              className="flex items-center gap-1 hover:text-amber-600 cursor-pointer transition-colors"
+            >
+              <Share2 className="w-3.5 h-3.5 text-slate-400" />
+              <span>{sharesCount} Shares</span>
+            </button>
+            <button 
+              onClick={handleToggleSave}
+              className={`flex items-center gap-1 cursor-pointer transition-colors ${saved ? "text-amber-600 font-extrabold" : "hover:text-amber-600"}`}
+            >
+              <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-amber-500 text-amber-500" : "text-slate-400"}`} />
+              <span>{saved ? "Saved" : "Save"}</span>
+            </button>
+          </div>
         </div>
-        <div className="flex items-center gap-4">
-          <button 
-            onClick={handleSharePost}
-            className="flex items-center gap-1 hover:text-amber-600 cursor-pointer transition-colors"
-          >
-            <Share2 className="w-3.5 h-3.5 text-slate-400" />
-            <span>{sharesCount} Shares</span>
-          </button>
-          <button 
-            onClick={handleToggleSave}
-            className={`flex items-center gap-1 cursor-pointer transition-colors ${saved ? "text-amber-600 font-extrabold" : "hover:text-amber-600"}`}
-          >
-            <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-amber-500 text-amber-500" : "text-slate-400"}`} />
-            <span>{saved ? "Saved" : "Save"}</span>
-          </button>
-        </div>
-      </div>
+      )}
 
       {/* Footer Info & Action CTAs — MASKED PHONE & IN-APP CHAT */}
       <div className="flex items-center justify-between pt-1">

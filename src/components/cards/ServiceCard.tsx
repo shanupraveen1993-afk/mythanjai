@@ -7,9 +7,10 @@ import ServiceFeedbackModal from "@/components/modals/ServiceFeedbackModal";
 
 interface ServiceCardProps {
   post: ServiceProviderPost;
+  isPreview?: boolean;
 }
 
-export default function ServiceCard({ post }: ServiceCardProps) {
+export default function ServiceCard({ post, isPreview = false }: ServiceCardProps) {
   const [saved, setSaved] = useState(false);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
@@ -114,29 +115,31 @@ export default function ServiceCard({ post }: ServiceCardProps) {
         </p>
       )}
 
-      {/* Social Engagement Bar */}
-      <div className="flex items-center justify-between text-[11px] text-slate-500 font-bold border-t border-b border-slate-100 py-2 my-0.5">
-        <div className="flex items-center gap-1.5 text-slate-500">
-          <Eye className="w-3.5 h-3.5 text-slate-400" />
-          <span>{viewsCount} Views</span>
+      {/* Social Engagement Bar (Hidden in Live Preview Mode) */}
+      {!isPreview && (
+        <div className="flex items-center justify-between text-[11px] text-slate-500 font-bold border-t border-b border-slate-100 py-2 my-0.5">
+          <div className="flex items-center gap-1.5 text-slate-500">
+            <Eye className="w-3.5 h-3.5 text-slate-400" />
+            <span>{viewsCount} Views</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={handleShare}
+              className="flex items-center gap-1 hover:text-emerald-600 cursor-pointer transition-colors"
+            >
+              <Share2 className="w-3.5 h-3.5 text-slate-400" />
+              <span>{sharesCount} Shares</span>
+            </button>
+            <button 
+              onClick={handleToggleSave}
+              className={`flex items-center gap-1 cursor-pointer transition-colors ${saved ? "text-amber-600 font-extrabold" : "hover:text-amber-600"}`}
+            >
+              <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-amber-500 text-amber-500" : "text-slate-400"}`} />
+              <span>{saved ? "Saved" : "Save"}</span>
+            </button>
+          </div>
         </div>
-        <div className="flex items-center gap-4">
-          <button 
-            onClick={handleShare}
-            className="flex items-center gap-1 hover:text-emerald-600 cursor-pointer transition-colors"
-          >
-            <Share2 className="w-3.5 h-3.5 text-slate-400" />
-            <span>{sharesCount} Shares</span>
-          </button>
-          <button 
-            onClick={handleToggleSave}
-            className={`flex items-center gap-1 cursor-pointer transition-colors ${saved ? "text-amber-600 font-extrabold" : "hover:text-amber-600"}`}
-          >
-            <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-amber-500 text-amber-500" : "text-slate-400"}`} />
-            <span>{saved ? "Saved" : "Save"}</span>
-          </button>
-        </div>
-      </div>
+      )}
 
       {/* Public Contact Action Buttons + Verification Trigger */}
       <div className="flex gap-2 pt-1">
