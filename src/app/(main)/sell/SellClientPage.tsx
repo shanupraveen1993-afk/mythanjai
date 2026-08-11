@@ -50,7 +50,7 @@ export default function SellClientPage() {
   return (
     <div className="flex flex-col gap-3 pb-24 w-full font-sans">
 
-      {/* Hero & Section Header */}
+      {/* Hero Banner */}
       <div className="relative w-full min-h-[120px] rounded-xl overflow-hidden bg-slate-950 text-white flex items-center px-5 sm:px-8 py-5 shadow-2xs mt-2">
         <img src="/thanjavur_temple_illustration.png" alt="Sell" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent" />
@@ -61,22 +61,8 @@ export default function SellClientPage() {
         </div>
       </div>
 
-      {/* Section Title & Post CTA Header */}
-      <div className="flex items-center justify-between pt-1">
-        <h2 className="font-heading font-bold text-base text-slate-900 tracking-tight">
-          Items for Sale
-        </h2>
-        <button
-          onClick={() => router.push("/post/sell")}
-          className="flex items-center gap-1 bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold px-3.5 py-1.5 rounded-lg text-xs transition-all border border-yellow-400 cursor-pointer shadow-2xs"
-        >
-          <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-          <span>Post Item</span>
-        </button>
-      </div>
-
-      {/* STICKY FILTER BAR (100% FLUSH TO 56PX FIXED HEADER WITH 0 TOP GAP) */}
-      <div className="sticky top-14 z-40 bg-white/95 backdrop-blur-xs border-y border-slate-200 py-2 px-4 sm:px-6 lg:px-8 -mx-4 sm:-mx-6 lg:-mx-8 flex items-center justify-between gap-2 shadow-2xs">
+      {/* NATURAL SCROLL FILTER BAR (Category & Sort By) */}
+      <div className="py-2 flex items-center justify-between gap-2 bg-white">
         {/* Category Dropdown (Far Left) */}
         <select
           value={selectedCategory}
@@ -104,6 +90,20 @@ export default function SellClientPage() {
             <option value="price_high">Price: High to Low</option>
           </select>
         </div>
+      </div>
+
+      {/* STICKY TITLE & POST BAR (100% FLUSH TO 56PX FIXED HEADER WITH 0 TOP GAP) */}
+      <div className="sticky top-14 z-40 bg-white border-b border-slate-200 py-2.5 px-4 sm:px-6 lg:px-8 -mx-4 sm:-mx-6 lg:-mx-8 flex items-center justify-between gap-2 shadow-2xs">
+        <h2 className="font-heading font-bold text-base text-slate-900 tracking-tight">
+          Items for Sale
+        </h2>
+        <button
+          onClick={() => router.push("/post/sell")}
+          className="flex items-center gap-1 bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold px-3.5 py-1.5 rounded-lg text-xs transition-all border border-yellow-400 cursor-pointer shadow-2xs"
+        >
+          <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+          <span>Post Item</span>
+        </button>
       </div>
 
       {/* Feed */}
