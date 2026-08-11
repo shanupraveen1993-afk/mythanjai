@@ -21,49 +21,39 @@ export async function POST(request: NextRequest) {
     }
 
     const systemPrompt = `
-      You are an expert AI editor for Namma Thanjai (a local hyper-local noticeboard app in Tanjore, Tamil Nadu).
-      Your task is to take a raw description written by a user and format it into a clean, structured, standard layout using markdown.
-      
-      COMPETITOR-STANDARD LAYOUTS TO APPLY:
-      
-      1. For "sell" (OLX / classified selling posts):
-         Format exactly as:
-         **Product Specifications:**
-         • **Model / Item:** [Item Name & Model]
-         • **Condition:** [e.g. Brand New / Like New / Good / Fair]
-         • **Key Features:** [Bullet points of specs]
-         **Pricing:** [e.g. ₹X,XXX (Negotiable/Fixed)]
-         
-      2. For "need" (99acres / buyer requirements):
-         Format exactly as:
-         **Requirement Details:**
-         • **Looking For:** [What user is buying/renting]
-         • **Specific Requirements:** [Size, specifications, area preferences]
-         **Target Budget:** [e.g. Up to ₹X,XXX or Negotiable]
-         **Timeline:** [Urgent / Flexible / Within 15 Days]
+      You are an expert AI copy editor for Namma Thanjai (a local marketplace & directory app in Tanjore, Tamil Nadu).
+      Your task is to convert raw user descriptions into clean, professional, readable plain text.
 
-      3. For "services" (Urban Company / Sulekha services):
-         Format exactly as:
-         **Services Offered:**
-         • [Bullet list of specific job types, repairs, or skill sets]
-         **Expertise & Timings:**
-         • **Experience:** [Years of experience]
-         • **Coverage:** [Areas covered in Thanjavur]
-         • **Visiting Charge:** [e.g. Free consultation / ₹100 visiting charge]
+      CRITICAL FORMATTING RULE:
+      DO NOT USE ANY MARKDOWN ASTERISKS (** or *), HASHES (#), OR CODE BLOCKS.
+      Output ONLY clean plain text with standard capital headings and bullet points (•).
 
-      4. For "shops" or "offers" (Justdial / Google Maps business style):
-         Format exactly as:
-         **Business Overview:**
-         • **Category Focus:** [What the shop sells or specializes in]
-         • **Store Timings:** [e.g. 9:00 AM - 9:00 PM]
-         **Active Offer details:**
-         • **Discount Campaign:** [e.g. Flat 15% Off / Buy 1 Get 1]
-         • **Terms:** [e.g. Valid till end of month / Minimum purchase requirements]
-      
+      LAYOUT TEMPLATES:
+
+      1. For "sell" (Marketplace items / property / vehicles):
+         Product Details:
+         • Item / Model: [Name & Details]
+         • Condition: [Condition]
+         • Key Features: [Key bullet points]
+
+      2. For "need" (Buyer requirements):
+         Requirement Summary:
+         • Looking For: [What user is buying/renting]
+         • Preferences: [Size, specs, location preferences]
+
+      3. For "services" (Local tradespeople & services):
+         Services Offered:
+         • [List of specific jobs/services]
+         • Experience & Coverage: [Details]
+
+      4. For "shops" / "offers" (Local store deals):
+         Offer Details:
+         • Promotion: [Discount / Offer details]
+         • Terms: [Validity & Store hours]
+
       CRITICAL RULES:
-      1. Correct spelling and grammar mistakes, but strictly PRESERVE the user's original words and facts. Do NOT over-amplify, add fake hype, or invent unmentioned claims.
-      2. Do NOT add conversational replies, markdown code blocks, or introductory text (like "Here is your formatted text:"). Only return the clean formatted text itself.
-      3. Keep it concise, simple, mobile-friendly, and faithful to what the user wrote.
+      1. Correct spelling and grammar, but PRESERVE the user's facts. Do NOT add fake hype or unmentioned claims.
+      2. ZERO MARKDOWN SYMBOLS. NO ASTERISKS. NO BOLD SYMBOLS. Plain readable text only.
     `;
 
     const response = await ai.models.generateContent({
@@ -79,7 +69,15 @@ export async function POST(request: NextRequest) {
       ],
     });
 
-    const formattedText = response.text?.trim() || rawDescription;
+    let formattedText = response.text?.trim() || rawDescription;
+
+    // Post-processing sanitizer: strip all raw markdown asterisks, hashes, and double underlines
+    formattedText = formattedText
+      .replace(/\*\*/g, "")
+      .replace(/\*/g, "•")
+      .replace(/#/g, "")
+      .replace(/__/g, "")
+      .replace(/• • /g, "• ");
 
     return NextResponse.json({
       success: true,

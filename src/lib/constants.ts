@@ -135,15 +135,12 @@ export function formatIndianCurrencyText(amount: number | string | null | undefi
   if (num >= 10000000) {
     const cr = num / 10000000;
     const formattedCr = cr % 1 === 0 ? cr : cr.toFixed(2);
-    return `₹${formattedCr} Crore`;
+    return `₹${formattedCr} Cr`;
   }
   if (num >= 100000) {
     const lakh = num / 100000;
     const formattedLakh = lakh % 1 === 0 ? lakh : lakh.toFixed(2);
     return `₹${formattedLakh} Lakhs`;
-  }
-  if (num >= 1000) {
-    return `₹${num.toLocaleString("en-IN")}`;
   }
   return `₹${num.toLocaleString("en-IN")}`;
 }
