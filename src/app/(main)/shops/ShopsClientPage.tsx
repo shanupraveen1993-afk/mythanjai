@@ -1,11 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useFirestore } from "@/hooks/use-firestore";
 import ShopCard from "@/components/cards/ShopCard";
 import { ShopPost } from "@/types";
 import { Plus, Loader2, Store } from "lucide-react";
+import { SHOP_CATEGORIES } from "@/lib/constants";
 
 const SAMPLE_POSTS: ShopPost[] = [
   { id: "sh_glen", userId: "sample", shop_name: "GLEN Exclusive Gallery", category: "Electronics & Mobiles", address_text: "New Busstand Road, Thanjavur", landmark: "Near New Bus Stand", hours: "9:30 AM – 9 PM", phone: "9876543225", area_tag: "New Bus Stand", offer_title: "Up to 60% OFF — Grand Opening Sale", offer_description: "Massive discounts on kitchen chimneys, hobs, cooktops & gas stoves.", image_url: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&auto=format&fit=crop", latitude: 10.7852, longitude: 79.1162, is_claimed: true, created_at: new Date() as any },
@@ -17,6 +18,7 @@ const SAMPLE_POSTS: ShopPost[] = [
 
 export default function ShopsClientPage() {
   const router = useRouter();
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
 
   const { data: firestorePosts, loading } = useFirestore<ShopPost>({
     collectionName: "shops",
@@ -24,11 +26,18 @@ export default function ShopsClientPage() {
     category: "All",
   });
 
-  const allPosts = React.useMemo(() => {
+  const filteredPosts = React.useMemo(() => {
     const ids = new Set((firestorePosts || []).map((p) => p.id));
     const seeds = SAMPLE_POSTS.filter((p) => !ids.has(p.id));
-    return [...seeds, ...(firestorePosts || [])];
-  }, [firestorePosts]);
+    let list = [...seeds, ...(firestorePosts || [])];
+
+    if (selectedCategory !== "All") {
+      list = list.filter(
+        (p) => (p.category || "").toLowerCase() === selectedCategory.toLowerCase()
+      );
+    }
+    return list;
+  }, [firestorePosts, selectedCategory]);
 
   return (
     <div className="flex flex-col gap-4 mt-3 pb-24 max-w-7xl mx-auto px-4 sm:px-6">
@@ -45,9 +54,31 @@ export default function ShopsClientPage() {
       </div>
 
       {/* Control Bar */}
-      <div className="sticky top-[57px] z-30 bg-white border-b border-slate-200 py-2.5 flex items-center justify-between gap-3">
-        <span className="text-xs font-black text-slate-500 uppercase tracking-wider">{allPosts.length} Active Store Offers</span>
-        <button onClick={() => router.push("/post/offer")} className="flex items-center gap-1.5 bg-purple-600 hover:bg-purple-500 active:scale-95 text-white font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all border border-purple-500 shadow-sm cursor-pointer">
+      <div className="sticky top-[57px] z-30 bg-white border-b border-slate-200 py-2.5 flex flex-wrap items-center justify-between gap-2.5">
+        <div className="flex items-center gap-2">
+          {/* Category Dropdown */}
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="text-xs font-black bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none cursor-pointer shadow-sm"
+          >
+            <option value="All">All Store Offers</option>
+            {SHOP_CATEGORIES.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+          <span className="text-xs font-black text-slate-500 uppercase tracking-wider hidden sm:inline">
+            ({filteredPosts.length} Active Offers)
+          </span>
+        </div>
+
+        {/* Post Offer Button */}
+        <button
+          onClick={() => router.push("/post/offer")}
+          className="flex items-center gap-1.5 bg-purple-600 hover:bg-purple-500 active:scale-95 text-white font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all border border-purple-500 shadow-sm cursor-pointer ml-auto"
+        >
           <Plus className="w-3.5 h-3.5 stroke-[3]" /> Post Offer
         </button>
       </div>
@@ -55,15 +86,17 @@ export default function ShopsClientPage() {
       {/* Feed */}
       {loading ? (
         <div className="flex justify-center py-16"><Loader2 className="w-6 h-6 text-purple-600 animate-spin" /></div>
-      ) : allPosts.length === 0 ? (
+      ) : filteredPosts.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
           <Store className="w-8 h-8 text-slate-300" />
-          <p className="text-sm font-black text-slate-500">No store offers listed yet.</p>
+          <p className="text-sm font-black text-slate-500">
+            {selectedCategory !== "All" ? `No store offers found in "${selectedCategory}"` : "No store offers listed yet."}
+          </p>
           <button onClick={() => router.push("/post/offer")} className="bg-purple-600 text-white font-black text-xs px-5 py-2.5 rounded-xl border border-purple-500 hover:bg-purple-500 transition-all cursor-pointer">+ Post Offer</button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {allPosts.map((post) => <ShopCard key={post.id} post={post} />)}
+          {filteredPosts.map((post) => <ShopCard key={post.id} post={post} />)}
         </div>
       )}
     </div>

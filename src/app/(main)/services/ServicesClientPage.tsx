@@ -1,11 +1,12 @@
 "use client";
 
-import React from "react";
+import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useFirestore } from "@/hooks/use-firestore";
 import ServiceCard from "@/components/cards/ServiceCard";
 import { ServiceProviderPost } from "@/types";
 import { Plus, Loader2, Wrench } from "lucide-react";
+import { SERVICE_CATEGORIES } from "@/lib/constants";
 
 const SAMPLE_POSTS: ServiceProviderPost[] = [
   { id: "sv_elec", userId: "sample", name: "Senthil Kumar — Home Electrician", skill_category: "Electrician", experience: "8+ Years", area_tag: "Tanjore Town (General)", phone: "9876543220", rating: 4.9, description: "Expert house wiring, DB box installation, inverter assembly, three-phase connections.", is_verified: true, created_at: new Date() as any },
@@ -17,6 +18,7 @@ const SAMPLE_POSTS: ServiceProviderPost[] = [
 
 export default function ServicesClientPage() {
   const router = useRouter();
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
 
   const { data: firestorePosts, loading } = useFirestore<ServiceProviderPost>({
     collectionName: "services",
@@ -24,11 +26,18 @@ export default function ServicesClientPage() {
     category: "All",
   });
 
-  const allPosts = React.useMemo(() => {
+  const filteredPosts = React.useMemo(() => {
     const ids = new Set((firestorePosts || []).map((p) => p.id));
     const seeds = SAMPLE_POSTS.filter((p) => !ids.has(p.id));
-    return [...seeds, ...(firestorePosts || [])];
-  }, [firestorePosts]);
+    let list = [...seeds, ...(firestorePosts || [])];
+
+    if (selectedCategory !== "All") {
+      list = list.filter(
+        (p) => (p.skill_category || "").toLowerCase() === selectedCategory.toLowerCase()
+      );
+    }
+    return list;
+  }, [firestorePosts, selectedCategory]);
 
   return (
     <div className="flex flex-col gap-4 mt-3 pb-24 max-w-7xl mx-auto px-4 sm:px-6">
@@ -45,9 +54,31 @@ export default function ServicesClientPage() {
       </div>
 
       {/* Control Bar */}
-      <div className="sticky top-[57px] z-30 bg-white border-b border-slate-200 py-2.5 flex items-center justify-between gap-3">
-        <span className="text-xs font-black text-slate-500 uppercase tracking-wider">{allPosts.length} Active Technicians</span>
-        <button onClick={() => router.push("/post/service")} className="flex items-center gap-1.5 bg-green-600 hover:bg-green-500 active:scale-95 text-white font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all border border-green-500 shadow-sm cursor-pointer">
+      <div className="sticky top-[57px] z-30 bg-white border-b border-slate-200 py-2.5 flex flex-wrap items-center justify-between gap-2.5">
+        <div className="flex items-center gap-2">
+          {/* Category Dropdown */}
+          <select
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+            className="text-xs font-black bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-slate-800 focus:outline-none cursor-pointer shadow-sm"
+          >
+            <option value="All">All Trade Services</option>
+            {SERVICE_CATEGORIES.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+          <span className="text-xs font-black text-slate-500 uppercase tracking-wider hidden sm:inline">
+            ({filteredPosts.length} Available)
+          </span>
+        </div>
+
+        {/* Register Service Button */}
+        <button
+          onClick={() => router.push("/post/service")}
+          className="flex items-center gap-1.5 bg-green-600 hover:bg-green-500 active:scale-95 text-white font-black px-4 py-2 rounded-xl text-xs uppercase tracking-wider transition-all border border-green-500 shadow-sm cursor-pointer ml-auto"
+        >
           <Plus className="w-3.5 h-3.5 stroke-[3]" /> Register Service
         </button>
       </div>
@@ -55,15 +86,17 @@ export default function ServicesClientPage() {
       {/* Feed */}
       {loading ? (
         <div className="flex justify-center py-16"><Loader2 className="w-6 h-6 text-green-600 animate-spin" /></div>
-      ) : allPosts.length === 0 ? (
+      ) : filteredPosts.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-16 gap-3 text-center">
           <Wrench className="w-8 h-8 text-slate-300" />
-          <p className="text-sm font-black text-slate-500">No service providers listed yet.</p>
+          <p className="text-sm font-black text-slate-500">
+            {selectedCategory !== "All" ? `No technicians found for "${selectedCategory}"` : "No service providers listed yet."}
+          </p>
           <button onClick={() => router.push("/post/service")} className="bg-green-600 text-white font-black text-xs px-5 py-2.5 rounded-xl border border-green-500 hover:bg-green-500 transition-all cursor-pointer">+ Register Service</button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {allPosts.map((post) => <ServiceCard key={post.id} post={post} />)}
+          {filteredPosts.map((post) => <ServiceCard key={post.id} post={post} />)}
         </div>
       )}
     </div>

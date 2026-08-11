@@ -184,10 +184,10 @@ export default function TopHeader({
           ) : (
             <button
               onClick={onSignInClick}
-              className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black px-3.5 py-1.5 rounded-xl text-xs transition-all cursor-pointer border border-yellow-400 shadow-2xs"
+              className="flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold px-3.5 py-1.5 rounded-xl text-xs transition-all cursor-pointer border border-slate-250 shadow-2xs"
             >
-              <User className="w-3.5 h-3.5 text-slate-955" />
-              <span>Verify Mobile</span>
+              <User className="w-3.5 h-3.5 text-slate-700" />
+              <span>Profile</span>
             </button>
           )}
         </div>

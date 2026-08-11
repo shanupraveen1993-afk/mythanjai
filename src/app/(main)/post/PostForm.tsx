@@ -14,7 +14,6 @@ import {
   SHOP_CATEGORIES,
 } from "@/lib/constants";
 import {
-  ArrowLeft,
   Check,
   Loader2,
   Tag,
@@ -208,23 +207,13 @@ export default function PostForm({ segment }: PostFormProps) {
   return (
     <div className="w-full max-w-xl mx-auto px-4 py-6 pb-24 flex flex-col gap-5 font-sans">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-slate-200 pb-3">
-        <button
-          onClick={() => router.push(config.redirectPath)}
-          className="flex items-center gap-1.5 text-xs font-black text-slate-600 hover:text-slate-900 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Back</span>
-        </button>
-        <div className="flex flex-col items-center">
-          <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
-            {config.badge}
-          </span>
-          <h1 className="font-heading font-black text-base sm:text-lg text-slate-900 uppercase tracking-tight">
-            {config.title}
-          </h1>
-        </div>
-        <div className="w-12" />
+      <div className="flex flex-col items-center border-b border-slate-200 pb-3">
+        <span className="text-[10px] font-black uppercase tracking-widest text-slate-400">
+          {config.badge}
+        </span>
+        <h1 className="font-heading font-black text-base sm:text-lg text-slate-900 uppercase tracking-tight">
+          {config.title}
+        </h1>
       </div>
 
       {success ? (
