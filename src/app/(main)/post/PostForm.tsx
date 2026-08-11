@@ -593,19 +593,21 @@ export default function PostForm({ segment }: PostFormProps) {
               />
             </div>
 
-            {/* Segment Specific Photo Upload */}
-            <div className="flex flex-col gap-1">
-              <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-                <Camera className="w-3.5 h-3.5 text-slate-400" />
-                <span>{config.imagePlaceholder}</span>
-              </label>
-              <input
-                type="file"
-                accept="image/*"
-                onChange={handleImageChange}
-                className="text-xs text-slate-600 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-800 hover:file:bg-slate-200 cursor-pointer"
-              />
-            </div>
+            {/* Photo Upload (Only for Sell & Need, since Offer & Service use top visiting card upload container) */}
+            {segment !== "offer" && segment !== "service" && (
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                  <Camera className="w-3.5 h-3.5 text-slate-400" />
+                  <span>{config.imagePlaceholder}</span>
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageChange}
+                  className="text-xs text-slate-600 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-800 hover:file:bg-slate-200 cursor-pointer"
+                />
+              </div>
+            )}
 
             {/* Submit Button */}
             <button

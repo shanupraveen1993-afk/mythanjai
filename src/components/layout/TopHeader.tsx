@@ -158,28 +158,29 @@ export default function TopHeader({
         <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={() => router.push("/chat")}
-            className="relative flex items-center justify-center bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200 text-slate-800 p-2 rounded-lg text-xs transition-all shadow-2xs cursor-pointer group"
+            className="relative flex items-center gap-1.5 h-8 px-2.5 bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200 text-slate-800 rounded-lg text-xs font-bold transition-all shadow-2xs cursor-pointer group"
             title="In-App Safety Chat"
           >
-            <MessageSquare className="w-4 h-4 text-slate-700 group-hover:text-emerald-600" />
+            <MessageSquare className="w-4 h-4 text-slate-700 group-hover:text-emerald-600 shrink-0" />
+            <span className="hidden sm:inline text-xs font-bold text-slate-700">Chat</span>
             <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#00a884] border border-white" />
           </button>
 
           {isAuthVerified ? (
             <button
               onClick={() => onTabChange?.("profile")}
-              className="relative flex items-center gap-1.5 bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200 text-slate-800 font-bold px-3 py-1.5 rounded-lg text-xs transition-all shadow-2xs cursor-pointer group"
+              className="relative flex items-center gap-1.5 h-8 px-3 bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200 text-slate-800 font-bold rounded-lg text-xs transition-all shadow-2xs cursor-pointer group"
               title={`Verified Profile (${phoneDisplay})`}
             >
-              <User className="w-3.5 h-3.5 text-slate-700 group-hover:text-slate-900" />
+              <User className="w-4 h-4 text-slate-700 group-hover:text-slate-900 shrink-0" />
               <span className="hidden md:inline text-xs font-bold text-slate-700">Profile</span>
             </button>
           ) : (
             <button
               onClick={onSignInClick}
-              className="flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-3 py-1.5 rounded-lg text-xs transition-all cursor-pointer border border-slate-200 shadow-2xs"
+              className="flex items-center gap-1.5 h-8 px-3 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition-all cursor-pointer border border-slate-200 shadow-2xs rounded-lg"
             >
-              <User className="w-3.5 h-3.5 text-slate-700" />
+              <User className="w-4 h-4 text-slate-700 shrink-0" />
               <span>Profile</span>
             </button>
           )}
