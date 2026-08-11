@@ -139,15 +139,15 @@ export default function HomeClientPage() {
               {/* Quick nav segment buttons */}
               <div className="flex gap-2 mt-1 flex-wrap">
                 {[
-                  { label: "Sell", path: "/sell", color: "bg-orange-500 hover:bg-orange-400" },
-                  { label: "Need", path: "/need", color: "bg-blue-500 hover:bg-blue-400" },
-                  { label: "Services", path: "/services", color: "bg-green-600 hover:bg-green-500" },
-                  { label: "Offers", path: "/shops", color: "bg-purple-600 hover:bg-purple-500" },
+                  { label: "Sell", path: "/sell" },
+                  { label: "Need", path: "/need" },
+                  { label: "Services", path: "/services" },
+                  { label: "Offers", path: "/shops" },
                 ].map((seg) => (
                   <button
                     key={seg.label}
                     onClick={() => router.push(seg.path)}
-                    className={`${seg.color} text-white font-black text-xs px-4 py-2 rounded-xl transition-all active:scale-95 shadow-sm`}
+                    className="bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold text-xs px-4 py-2 rounded-xl transition-all border border-yellow-400 cursor-pointer shadow-2xs"
                   >
                     {seg.label}
                   </button>
@@ -161,7 +161,7 @@ export default function HomeClientPage() {
             title="Sell"
             subtitle="Items for sale by local residents"
             seeAllPath="/sell"
-            accentColor="bg-orange-500"
+            accentColor="bg-yellow-500"
             onCardClick={() => router.push("/sell")}
             cards={[
               { title: "2400 Sqft CMDA Plot", sub: "Plots & Real Estate", price: "₹24,50,000", area: "Vallam", img: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&auto=format&fit=crop" },
@@ -175,7 +175,7 @@ export default function HomeClientPage() {
             title="Need"
             subtitle="Requirements from local buyers"
             seeAllPath="/need"
-            accentColor="bg-blue-500"
+            accentColor="bg-yellow-500"
             onCardClick={() => router.push("/need")}
             cards={[
               { title: "Need 1-2 Acres Commercial Land", sub: "Plots & Real Estate", price: "Budget ₹50L+", area: "Vallam", img: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&auto=format&fit=crop" },
@@ -189,7 +189,7 @@ export default function HomeClientPage() {
             title="Services"
             subtitle="Verified skilled tradespeople near you"
             seeAllPath="/services"
-            accentColor="bg-green-600"
+            accentColor="bg-yellow-500"
             onCardClick={() => router.push("/services")}
             cards={[
               { title: "Senthil Kumar — Electrician", sub: "Electrician", price: "★ 4.9", area: "Tanjore Town", img: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&auto=format&fit=crop" },
@@ -203,7 +203,7 @@ export default function HomeClientPage() {
             title="Local Offers"
             subtitle="Store discounts & deals from Thanjavur shops"
             seeAllPath="/shops"
-            accentColor="bg-purple-600"
+            accentColor="bg-yellow-500"
             onCardClick={() => router.push("/shops")}
             cards={[
               { title: "GLEN Gallery — Up to 60% OFF", sub: "Electronics & Mobiles", price: "Grand Sale", area: "New Bus Stand", img: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=400&auto=format&fit=crop" },
@@ -215,29 +215,34 @@ export default function HomeClientPage() {
         </div>
 
       ) : (
-        /* ── GUEST LANDING PAGE ──────────────────────────── */
-        <div className="w-full relative flex flex-col h-[100dvh] overflow-hidden justify-between py-1 md:h-auto md:min-h-[85vh] md:overflow-visible">
-          <div className="w-full">
-            <RobotHero
-              backgroundText="NAMMA THANJAI"
-              navItemsLeft={[]}
-              ctaText="Register to Post"
-              onCtaClick={() => {
-                router.push("/?auth=popup");
-              }}
-              onCategoryClick={(targetRoute) => {
-                if (targetRoute) {
-                  router.push(`/${targetRoute}`);
-                } else {
-                  router.push("/sell");
-                }
-              }}
-              color="#eab308"
-              pantallaColor="#fbbf24"
-              pantallaBrillo={1.6}
-              alerts={alerts}
-              activeAlertIdx={activeAlertIdx}
+        /* ── GUEST LANDING PAGE HERO ──────────────────────────── */
+        <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 mt-4 flex flex-col gap-6">
+          <div className="relative w-full min-h-[220px] sm:min-h-[260px] rounded-3xl overflow-hidden bg-slate-950 text-white flex items-center px-6 sm:px-10 py-10 shadow-lg">
+            <img
+              src="/thanjavur_temple_illustration.png"
+              alt="Namma Thanjavur"
+              className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-25 pointer-events-none"
             />
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/85 to-transparent" />
+            <div className="relative z-10 flex flex-col gap-3 max-w-xl">
+              <span className="text-[10px] font-bold uppercase tracking-wider text-yellow-500 bg-yellow-500/10 border border-yellow-500/30 px-3 py-1 rounded-md w-fit">
+                Namma Thanjavur — Direct Marketplace
+              </span>
+              <h1 className="font-heading font-bold text-2xl sm:text-3xl md:text-4xl text-white leading-tight">
+                Thanjavur's Verified Local Community Directory
+              </h1>
+              <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
+                Connect directly with Tanjore residents to buy, sell, hire verified skilled tradesmen, and claim exclusive store offers.
+              </p>
+              <div className="flex gap-3 mt-2 flex-wrap">
+                <button
+                  onClick={() => router.push("/?auth=popup")}
+                  className="bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold text-xs sm:text-sm px-5 py-2.5 rounded-xl transition-all border border-yellow-400 shadow-2xs cursor-pointer"
+                >
+                  Register to Post & Connect →
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       )}

@@ -304,10 +304,10 @@ export default function ProfileClientPage() {
           <span className="text-[9px] font-black uppercase tracking-wider text-yellow-800 bg-yellow-500/10 border border-yellow-250/60 px-2.5 py-1 rounded-full inline-block">
             User Dashboard
           </span>
-          <h2 className="font-heading font-black text-lg text-slate-900 mt-2.5 leading-tight">
+          <h2 className="font-heading font-bold text-lg text-slate-900 mt-2.5 leading-tight">
             Namma Thanjai Account
           </h2>
-          <p className="text-[11px] text-slate-600 mt-1 max-w-[280px] leading-relaxed font-semibold">
+          <p className="text-[11px] text-slate-600 mt-1 max-w-[280px] leading-relaxed font-medium">
             Link your WhatsApp account to post ads, manage active directory items, and access admin rights.
           </p>
         </div>
@@ -323,25 +323,25 @@ export default function ProfileClientPage() {
                 <User className="w-6 h-6" />
               </div>
               <div>
-                <h3 className="font-heading font-extrabold text-sm text-slate-900">{profile?.displayName || "Resident Guest"}</h3>
+                <h3 className="font-heading font-bold text-sm text-slate-900">{profile?.displayName || "Resident Guest"}</h3>
                 <p className="text-[10px] text-slate-500 truncate max-w-[150px]">UID: {user?.uid}</p>
               </div>
             </div>
 
             {/* Subscription badge */}
             <div className="bg-yellow-50 border border-yellow-250/60 rounded-xl p-3 flex flex-col gap-1 shadow-2xs">
-              <span className="text-[9px] font-black text-yellow-755 uppercase tracking-wider flex items-center gap-1">
+              <span className="text-[9px] font-bold text-yellow-800 uppercase tracking-wider flex items-center gap-1">
                 <Sparkles className="w-3.5 h-3.5 fill-yellow-500 stroke-none" />
                 Subscription: <span className="line-through text-slate-400 font-normal">₹100</span> Free
               </span>
-              <p className="text-[9px] text-slate-500 leading-normal font-bold">
+              <p className="text-[9px] text-slate-500 leading-normal font-medium">
                 Active listings will be automatically removed after 30 days.
               </p>
             </div>
 
             {/* Profile Display Name Edit Form */}
             <div className="flex flex-col gap-1.5 border-t border-slate-100 pt-2.5">
-              <label className="text-[10px] font-black text-slate-500 uppercase tracking-wider">
+              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
                 Profile Display Name
               </label>
               <div className="flex gap-2">
@@ -357,7 +357,7 @@ export default function ProfileClientPage() {
                   type="button"
                   onClick={handleSaveDisplayName}
                   disabled={displayNameUpdating}
-                  className="bg-yellow-500 hover:bg-yellow-600 active:scale-95 text-slate-955 font-black px-3.5 py-1.5 rounded-xl text-xs transition-all shadow-xs cursor-pointer border border-yellow-450"
+                  className="bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-slate-950 font-bold px-3.5 py-1.5 rounded-xl text-xs transition-all shadow-xs cursor-pointer border border-yellow-400"
                 >
                   Save
                 </button>
@@ -367,7 +367,7 @@ export default function ProfileClientPage() {
             {/* Verification Status */}
             {isDbVerified ? (
               <div className="flex flex-col gap-2 border-t border-slate-100 pt-2.5">
-                <label className="text-[10px] font-black text-slate-500 uppercase tracking-wider">
+                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
                   Registered Mobile Number (Locked)
                 </label>
                 <div className="flex items-center justify-between bg-emerald-500/10 text-emerald-700 border border-emerald-500/20 px-3 py-2.5 rounded-xl text-xs font-semibold">
@@ -376,7 +376,7 @@ export default function ProfileClientPage() {
                     <span className="truncate max-w-[150px] font-bold">+{profile?.phone || phoneNumber}</span>
                   </div>
                   {profile?.isAdmin && (
-                    <span className="text-[9px] bg-amber-500/20 text-amber-700 border border-amber-500/30 px-2 py-0.5 rounded-md flex items-center gap-1 font-black uppercase shrink-0">
+                    <span className="text-[9px] bg-amber-500/20 text-amber-700 border border-amber-500/30 px-2 py-0.5 rounded-md flex items-center gap-1 font-bold uppercase shrink-0">
                       <ShieldCheck className="w-3 h-3" />
                       Admin
                     </span>
@@ -385,7 +385,7 @@ export default function ProfileClientPage() {
                 <button
                   type="button"
                   onClick={() => alert("Your request to change your registered mobile number has been submitted to support. Admin will contact you on WhatsApp.")}
-                  className="text-[10px] font-bold text-yellow-600 hover:text-yellow-750 text-left cursor-pointer hover:underline pt-0.5"
+                  className="text-[10px] font-bold text-amber-700 hover:text-amber-800 text-left cursor-pointer hover:underline pt-0.5"
                 >
                   Request Mobile Number Change →
                 </button>
@@ -413,7 +413,7 @@ export default function ProfileClientPage() {
                     <button
                       type="submit"
                       disabled={phoneUpdating}
-                      className="bg-amber-500 hover:bg-amber-600 active:scale-95 text-slate-950 font-bold w-full py-2 rounded-lg text-xs transition-all shadow-sm"
+                      className="bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-slate-950 font-bold w-full py-2 rounded-lg text-xs transition-all border border-yellow-400 shadow-sm cursor-pointer"
                     >
                       Verify WhatsApp
                     </button>

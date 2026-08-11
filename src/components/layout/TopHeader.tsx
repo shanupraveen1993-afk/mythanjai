@@ -92,15 +92,15 @@ export default function TopHeader({
           )}
         </div>
 
-        {/* Center: 5 Channel Navigation Tabs (Visible post-login & on internal pages, hidden ONLY on public unauthenticated landing page) */}
+        {/* Center: 6 Channel Navigation Tabs (Visible post-login & on internal pages) */}
         {showCenterNav && (
-          <div className="hidden sm:flex items-center gap-1 bg-slate-100/80 p-1 rounded-2xl border border-slate-200/60">
+          <div className="hidden sm:flex items-center gap-1 bg-slate-100/80 p-1 rounded-xl border border-slate-200/60 font-heading">
             <button
               type="button"
               onClick={() => router.push("/")}
-              className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
+              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 pathname === "/"
-                  ? "bg-white text-slate-900 shadow-xs border border-slate-250"
+                  ? "bg-white text-slate-900 shadow-2xs border border-slate-200"
                   : "text-slate-600 hover:text-slate-900"
               }`}
             >
@@ -109,9 +109,9 @@ export default function TopHeader({
             <button
               type="button"
               onClick={() => router.push("/sell")}
-              className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
+              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 pathname === "/sell"
-                  ? "bg-white text-slate-900 shadow-xs border border-slate-250"
+                  ? "bg-white text-slate-900 shadow-2xs border border-slate-200"
                   : "text-slate-600 hover:text-slate-900"
               }`}
             >
@@ -120,9 +120,9 @@ export default function TopHeader({
             <button
               type="button"
               onClick={() => router.push("/need")}
-              className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
+              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 pathname === "/need"
-                  ? "bg-white text-slate-900 shadow-xs border border-slate-250"
+                  ? "bg-white text-slate-900 shadow-2xs border border-slate-200"
                   : "text-slate-600 hover:text-slate-900"
               }`}
             >
@@ -131,9 +131,9 @@ export default function TopHeader({
             <button
               type="button"
               onClick={() => router.push("/services")}
-              className={`px-2.5 sm:px-3 py-1 rounded-xl text-[11px] sm:text-xs font-black transition-all cursor-pointer ${
+              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 pathname === "/services"
-                  ? "bg-white text-slate-900 shadow-xs border border-slate-250"
+                  ? "bg-white text-slate-900 shadow-2xs border border-slate-200"
                   : "text-slate-600 hover:text-slate-900"
               }`}
             >
@@ -142,9 +142,9 @@ export default function TopHeader({
             <button
               type="button"
               onClick={() => router.push("/shops")}
-              className={`px-2.5 sm:px-3 py-1 rounded-lg text-[11px] sm:text-xs font-bold transition-all cursor-pointer ${
+              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 pathname === "/shops"
-                  ? "bg-white text-slate-900 shadow-xs border border-slate-200"
+                  ? "bg-white text-slate-900 shadow-2xs border border-slate-200"
                   : "text-slate-600 hover:text-slate-900"
               }`}
             >
@@ -153,10 +153,10 @@ export default function TopHeader({
             <button
               type="button"
               onClick={() => router.push("/chat")}
-              className={`px-2.5 sm:px-3 py-1 rounded-lg text-[11px] sm:text-xs font-bold transition-all cursor-pointer ${
+              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
                 pathname === "/chat"
-                  ? "bg-[#00a884] text-white shadow-xs"
-                  : "text-emerald-700 hover:text-emerald-800"
+                  ? "bg-white text-slate-900 shadow-2xs border border-slate-200"
+                  : "text-slate-600 hover:text-slate-900"
               }`}
             >
               Chat
