@@ -899,7 +899,7 @@ export function RobotHero({
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-dvh md:h-[calc(100vh-70px)] flex flex-col justify-between items-center bg-white text-slate-800 pt-6 md:pt-2 pb-2 md:pb-1 px-3 sm:px-4 overflow-hidden select-none"
+      className="relative w-full h-dvh md:h-[calc(100vh-70px)] flex flex-col justify-between items-center bg-white text-slate-800 pt-4 md:pt-2 pb-2 md:pb-1 px-3 sm:px-4 overflow-hidden select-none"
     >
       {/* Light radial glow centered behind hero */}
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_45%,rgba(250,204,21,0.06)_0%,transparent_60%)] pointer-events-none" />
@@ -944,7 +944,7 @@ export function RobotHero({
         {/* 3. Responsive 3D Mascot Robot Canvas (Standard Proportions) */}
         <div 
           onClick={handleRobotTap} 
-          className="w-full max-w-[260px] sm:max-w-[320px] md:max-w-[400px] flex-1 h-full min-h-[160px] sm:min-h-[200px] md:min-h-[220px] max-h-[240px] sm:max-h-[280px] md:max-h-[300px] relative flex items-center justify-center cursor-pointer overflow-visible my-0 bg-transparent"
+          className="w-full max-w-[260px] sm:max-w-[320px] md:max-w-[400px] flex-1 h-full min-h-[160px] sm:min-h-[200px] md:min-h-[220px] max-h-[280px] sm:max-h-[300px] md:max-h-[300px] relative flex items-center justify-center cursor-pointer overflow-visible my-0 bg-transparent"
         >
           <Canvas camera={{ position: [0, 0.1, 4.4], fov: 42 }} className="overflow-visible bg-transparent">
             <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
