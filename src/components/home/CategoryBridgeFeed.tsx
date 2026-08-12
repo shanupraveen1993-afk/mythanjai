@@ -119,7 +119,7 @@ export default function CategoryBridgeFeed() {
   }, [allCombinedPosts, activeCategory, activeType]);
 
   return (
-    <div className="w-full bg-slate-50/70 border border-slate-200/90 rounded-2xl p-5 flex flex-col gap-4 font-sans my-1 shadow-2xs">
+    <div className="w-full bg-slate-200/60 rounded-3xl p-4 sm:p-5 flex flex-col gap-4 font-sans my-1 border-0 shadow-inner">
       {/* Header Banner */}
       <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
         <h2 className="font-heading font-black text-base md:text-lg text-slate-900 flex items-center gap-2">

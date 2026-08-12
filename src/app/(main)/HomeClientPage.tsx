@@ -58,7 +58,7 @@ function PreviewSection({
           <div
             key={i}
             onClick={onCardClick}
-            className="shrink-0 w-[260px] sm:w-[290px] md:w-auto snap-start bg-white border border-slate-200 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all cursor-pointer hover:-translate-y-0.5 active:scale-[0.98]"
+            className="shrink-0 w-[260px] sm:w-[290px] md:w-auto snap-start bg-white rounded-2xl overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08)] transition-all cursor-pointer border-0 hover:-translate-y-0.5 active:scale-[0.98]"
           >
             <div className="w-full h-28 overflow-hidden bg-slate-100 relative">
               <img
@@ -113,7 +113,7 @@ export default function HomeClientPage() {
   }, []);
 
   return (
-    <div className="w-full flex flex-col bg-white text-slate-800 min-h-screen font-sans">
+    <div className="w-full flex flex-col bg-transparent text-slate-800 min-h-screen font-sans">
 
       {profile?.isVerified ? (
         /* ── LOGGED-IN FEED ──────────────────────────────── */
