@@ -26,9 +26,17 @@ export default function NeedClientPage() {
   });
 
   const filteredPosts = React.useMemo(() => {
-    const ids = new Set((firestorePosts || []).map((p) => p.id));
+    let localPosts: NeedOrSalePost[] = [];
+    if (typeof window !== "undefined") {
+      try {
+        const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+        localPosts = stored.filter((p: any) => p.type?.toUpperCase() === "NEED");
+      } catch (e) {}
+    }
+
+    const ids = new Set([...(firestorePosts || []).map((p) => p.id), ...localPosts.map((p) => p.id)]);
     const seeds = SAMPLE_POSTS.filter((p) => !ids.has(p.id));
-    let list = [...seeds, ...(firestorePosts || [])];
+    let list = [...localPosts, ...seeds, ...(firestorePosts || [])];
 
     list = list.filter((p) => p.type?.toUpperCase() === "NEED");
 

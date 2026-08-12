@@ -28,9 +28,17 @@ export default function ServicesClientPage() {
   });
 
   const filteredPosts = React.useMemo(() => {
-    const ids = new Set((firestorePosts || []).map((p) => p.id));
+    let localPosts: ServiceProviderPost[] = [];
+    if (typeof window !== "undefined") {
+      try {
+        const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+        localPosts = stored.filter((p: any) => p.name || p.skill_category);
+      } catch (e) {}
+    }
+
+    const ids = new Set([...(firestorePosts || []).map((p) => p.id), ...localPosts.map((p) => p.id)]);
     const seeds = SAMPLE_POSTS.filter((p) => !ids.has(p.id));
-    let list = [...seeds, ...(firestorePosts || [])];
+    let list = [...localPosts, ...seeds, ...(firestorePosts || [])];
 
     if (selectedCategory !== "All") {
       list = list.filter(
