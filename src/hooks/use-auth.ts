@@ -11,6 +11,7 @@ interface AuthContextType {
   profile: UserProfile | null;
   loading: boolean;
   updatePhone: (phone: string) => Promise<{ success: boolean }>;
+  updateDisplayName: (name: string) => Promise<{ success: boolean }>;
   setAdminStatus: (isAdmin: boolean) => Promise<void>;
   signOutUser: () => Promise<void>;
 }
@@ -48,23 +49,47 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               await updateDoc(userRef, { isAdmin: true });
               data.isAdmin = true;
             }
-            setProfile(data);
-          } else {
-            const storedPhone = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_phone") || "") : "";
-            const storedVerified = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_verified") === "true") : false;
-            const newProfile: UserProfile = {
-              uid: currentUser.uid,
-              phone: storedPhone || "",
-              isVerified: storedVerified || false,
-              isAdmin: storedPhone.includes("9994837342"),
-              createdAt: new Date(),
-            };
-            await setDoc(userRef, newProfile);
-            setProfile(newProfile);
-          }
-        } catch (error) {
-          console.error("Error fetching user profile:", error);
-        }
+    const storedDisplayName = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_display_name") || "") : "";
+    if (storedDisplayName && data) data.displayName = storedDisplayName;
+
+    setProfile(data);
+  } else {
+    const storedPhone = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_phone") || "") : "";
+    const storedVerified = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_verified") === "true") : false;
+    const storedDisplayName = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_display_name") || "") : "";
+    const newProfile: UserProfile = {
+      uid: currentUser.uid,
+      phone: storedPhone || "",
+      isVerified: storedVerified || false,
+      isAdmin: storedPhone.includes("9994837342"),
+      displayName: storedDisplayName || currentUser.displayName || "",
+      createdAt: new Date(),
+    };
+    await setDoc(userRef, newProfile, { merge: true });
+    setProfile(newProfile);
+  }
+} catch (error) {
+  console.error("Error fetching user profile:", error);
+}
+
+  const updateDisplayName = async (name: string) => {
+    const trimmed = name.trim();
+    if (typeof window !== "undefined") {
+      localStorage.setItem("my_thanjai_display_name", trimmed);
+    }
+    if (user) {
+      try {
+        const userRef = doc(db, "users", user.uid);
+        await setDoc(userRef, { displayName: trimmed }, { merge: true });
+        const { updateProfile } = await import("firebase/auth");
+        await updateProfile(user, { displayName: trimmed });
+      } catch (e) {
+        console.warn("Firestore/Auth displayName update error:", e);
+      }
+    }
+    setProfile((prev) => prev ? { ...prev, displayName: trimmed } : { uid: user?.uid || "user", phone: "", isVerified: false, createdAt: new Date(), displayName: trimmed });
+    return { success: true };
+  };
       } else {
         const storedPhone = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_phone") || "") : "";
         const storedVerified = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_verified") === "true") : false;
@@ -168,7 +193,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return React.createElement(
     AuthContext.Provider,
-    { value: { user, profile, loading, updatePhone, setAdminStatus, signOutUser } },
+    { value: { user, profile, loading, updatePhone, updateDisplayName, setAdminStatus, signOutUser } },
     children
   );
 }
@@ -181,6 +206,7 @@ export function useAuth() {
       profile: null,
       loading: true,
       updatePhone: async () => ({ success: false }),
+      updateDisplayName: async () => ({ success: false }),
       setAdminStatus: async () => {},
       signOutUser: async () => {},
     };

@@ -31,7 +31,7 @@ import {
 } from "lucide-react";
 
 export default function ProfileClientPage() {
-  const { user, profile, loading: authLoading, updatePhone, signOutUser } = useAuth();
+  const { user, profile, loading: authLoading, updatePhone, updateDisplayName, signOutUser } = useAuth();
   const router = useRouter();
   const [phoneNumber, setPhoneNumber] = useState("");
   const [phoneUpdating, setPhoneUpdating] = useState(false);
@@ -146,21 +146,17 @@ export default function ProfileClientPage() {
   }, [profile, user]);
 
   const handleSaveDisplayName = async () => {
-    if (!user) return;
     if (!displayName.trim()) {
-      alert("Please enter a display name.");
+      alert("Please enter a name.");
       return;
     }
     setDisplayNameUpdating(true);
     try {
-      const { doc, setDoc } = await import("firebase/firestore");
-      const userRef = doc(db, "users", user.uid);
-      await setDoc(userRef, { displayName: displayName.trim() }, { merge: true });
+      await updateDisplayName(displayName);
       try {
         const confetti = (await import("canvas-confetti")).default;
         confetti({ particleCount: 30, spread: 30 });
       } catch (err) {}
-      alert("Profile name updated successfully!");
     } catch (error) {
       console.error("Error saving name:", error);
       alert("Failed to update profile name.");
@@ -294,24 +290,7 @@ export default function ProfileClientPage() {
   }
 
   return (
-    <div className="flex flex-col gap-6 mt-6 md:mt-8 pt-2 pb-12">
-      {/* HERO BANNER WIDGET: PROFILE */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-yellow-600/10 to-amber-500/10 border border-yellow-500/20 rounded-3xl p-5 shadow-sm flex flex-col gap-1.5 animate-fade-in text-slate-800">
-        <div className="absolute top-[-30px] right-[-30px] w-28 h-28 rounded-full bg-yellow-500/10 blur-xl pointer-events-none" />
-        <div className="absolute bottom-[-20px] left-[-20px] w-24 h-24 rounded-full bg-amber-500/10 blur-xl pointer-events-none" />
-
-        <div className="relative z-10">
-          <span className="text-[9px] font-black uppercase tracking-wider text-yellow-800 bg-yellow-500/10 border border-yellow-250/60 px-2.5 py-1 rounded-full inline-block">
-            User Dashboard
-          </span>
-          <h2 className="font-heading font-bold text-lg text-slate-900 mt-2.5 leading-tight">
-            Namma Thanjai Account
-          </h2>
-          <p className="text-[11px] text-slate-600 mt-1 max-w-[280px] leading-relaxed font-medium">
-            Link your WhatsApp account to post ads, manage active directory items, and access admin rights.
-          </p>
-        </div>
-      </div>
+    <div className="flex flex-col gap-6 mt-4 pt-2 pb-12">
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
         {/* Left Column: Profile settings, installation and instructions (1/3 width) */}
@@ -337,29 +316,33 @@ export default function ProfileClientPage() {
               <p className="text-[9px] text-slate-500 leading-normal font-medium">
                 Active listings will be automatically removed after 30 days.
               </p>
-            </div>
-
-            {/* Profile Display Name Edit Form */}
-            <div className="flex flex-col gap-1.5 border-t border-slate-100 pt-2.5">
+            </div>            {/* Profile Display Name Single Line Input with Tick */}
+            <div className="flex flex-col gap-1 border-t border-slate-100 pt-2.5">
               <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                Profile Display Name
+                Your Name
               </label>
-              <div className="flex gap-2">
+              <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 focus-within:ring-1 focus-within:ring-yellow-500 focus-within:border-yellow-500">
+                <User className="w-4 h-4 text-slate-400 shrink-0" />
                 <input
                   type="text"
                   value={displayName}
                   onChange={(e) => setDisplayName(e.target.value)}
                   placeholder="Enter your name"
                   disabled={displayNameUpdating}
-                  className="flex-1 bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3 py-1.5 text-xs focus:ring-1 focus:ring-amber-500 focus:outline-none font-bold"
+                  className="flex-1 bg-transparent text-xs font-bold text-slate-900 focus:outline-none"
                 />
                 <button
                   type="button"
                   onClick={handleSaveDisplayName}
                   disabled={displayNameUpdating}
-                  className="bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-slate-950 font-bold px-3.5 py-1.5 rounded-xl text-xs transition-all shadow-xs cursor-pointer border border-yellow-400"
+                  className="w-7 h-7 rounded-lg bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-slate-955 flex items-center justify-center transition-all cursor-pointer border border-yellow-400 shrink-0 shadow-2xs"
+                  title="Save Name"
                 >
-                  Save
+                  {displayNameUpdating ? (
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                  ) : (
+                    <CheckCircle className="w-4 h-4 stroke-[2.5]" />
+                  )}
                 </button>
               </div>
             </div>
@@ -461,20 +444,7 @@ export default function ProfileClientPage() {
               </div>
             )}
 
-            {/* Logout / Switch Mobile Button */}
-            <div className="border-t border-slate-100 pt-3 mt-1">
-              <button
-                type="button"
-                onClick={async () => {
-                  await signOutUser();
-                  router.push("/");
-                }}
-                className="w-full flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 font-black px-4 py-2.5 rounded-xl text-xs transition-all shadow-xs cursor-pointer active:scale-95"
-              >
-                <LogOut className="w-4 h-4 text-red-600" />
-                <span>Logout / Switch Mobile Number</span>
-              </button>
-            </div>
+
           </div>
 
           {/* PWA INSTALL WIDGET CARD */}
@@ -636,6 +606,21 @@ export default function ProfileClientPage() {
             </div>
           )}
         </div>
+      </div>
+
+      {/* Centered Small Logout Button at Bottom */}
+      <div className="flex justify-center pt-8 pb-4 w-full">
+        <button
+          type="button"
+          onClick={async () => {
+            await signOutUser();
+            router.push("/");
+          }}
+          className="flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-red-50 hover:border-red-200 text-slate-600 hover:text-red-600 border border-slate-200 text-xs font-bold px-5 py-2 rounded-full transition-all shadow-2xs cursor-pointer active:scale-95"
+        >
+          <LogOut className="w-3.5 h-3.5" />
+          <span>Logout Account</span>
+        </button>
       </div>
     </div>
   );
