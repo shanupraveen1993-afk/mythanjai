@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { Phone, MessageSquare, MapPin, Store, Sparkles, ShoppingBag, Utensils, Shirt, Calendar, Tag, Camera } from "lucide-react";
+import { Phone, MessageSquare, MapPin, Store, Sparkles, ShoppingBag, Utensils, Shirt, Calendar, Tag, Camera, Navigation } from "lucide-react";
 import { ShopPost } from "@/types";
 import { formatRelativeTime } from "@/lib/constants";
 
@@ -35,6 +35,7 @@ export default function ShopCard({ post, isPreview = false }: ShopCardProps) {
   const whatsappUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(
     `Hello ${post.shop_name}, I saw your offer "${post.offer_title || "Special Offer"}" on Namma Thanjai! Is it currently available?`
   )}`;
+  const directionUrl = post.google_maps_url || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${post.shop_name} ${post.area_tag} Thanjavur`)}`;
 
   const images = React.useMemo(() => {
     const rawList = (post as any).image_urls || [];
@@ -129,24 +130,36 @@ export default function ShopCard({ post, isPreview = false }: ShopCardProps) {
         )}
 
         {/* Footer CTAs */}
-        <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-100 mt-auto">
+        <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-100 mt-auto">
           <a
-            href={callUrl}
-            className="flex items-center gap-1.5 h-9 bg-slate-900 hover:bg-slate-800 text-white font-bold px-3.5 rounded-xl text-xs transition-all cursor-pointer"
-          >
-            <Phone className="w-3.5 h-3.5 fill-current" />
-            <span>Call Store</span>
-          </a>
-
-          <a
-            href={whatsappUrl}
+            href={directionUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1.5 h-9 bg-[#00a884] hover:bg-[#008f6f] text-white font-bold px-3.5 rounded-xl text-xs transition-all cursor-pointer"
+            className="flex items-center gap-1 h-9 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-3 rounded-xl text-xs transition-all border border-slate-200/80 cursor-pointer"
           >
-            <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
-            <span>WhatsApp Offer</span>
+            <Navigation className="w-3.5 h-3.5 text-blue-600 fill-blue-600" />
+            <span>Get Direction</span>
           </a>
+
+          <div className="flex items-center gap-2">
+            <a
+              href={callUrl}
+              className="flex items-center gap-1.5 h-9 bg-slate-900 hover:bg-slate-800 text-white font-bold px-3 rounded-xl text-xs transition-all cursor-pointer"
+            >
+              <Phone className="w-3.5 h-3.5 fill-current" />
+              <span>Call</span>
+            </a>
+
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 h-9 bg-[#00a884] hover:bg-[#008f6f] text-white font-bold px-3.5 rounded-xl text-xs transition-all cursor-pointer"
+            >
+              <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
+              <span>WhatsApp</span>
+            </a>
+          </div>
         </div>
       </div>
     </div>
