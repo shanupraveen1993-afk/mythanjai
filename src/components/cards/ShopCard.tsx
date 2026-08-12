@@ -115,16 +115,23 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false, isPre
           )}
         </p>
 
-        {/* Operating Hours and Area */}
+        {/* Operating Area and Offer Validity */}
         <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 text-[10px] text-slate-500 font-semibold mt-1">
           <div className="flex items-center gap-1">
             <MapPin className="w-3 h-3 text-slate-400" />
             <span className="truncate max-w-[120px]">{post.area_tag}</span>
           </div>
-          {post.hours && (
-            <div className="flex items-center gap-1">
-              <Clock className="w-3 h-3 text-slate-400" />
-              <span>{post.hours}</span>
+          {(post.valid_from || post.valid_to) ? (
+            <div className="flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200/60 font-bold">
+              <Calendar className="w-3 h-3 text-amber-600" />
+              <span>
+                Offer Valid: {post.valid_from ? post.valid_from : "Now"} {post.valid_to ? `to ${post.valid_to}` : ""}
+              </span>
+            </div>
+          ) : (
+            <div className="flex items-center gap-1 text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200/60 font-bold">
+              <Calendar className="w-3 h-3 text-emerald-600" />
+              <span>Limited Time Offer</span>
             </div>
           )}
         </div>
@@ -154,34 +161,16 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false, isPre
           </div>
         )}
 
-        {/* Action Buttons: Call, WhatsApp, and 📍 Get Directions */}
-        <div className="flex items-center gap-1.5 pt-2 border-t border-slate-100 mt-1">
-          <a
-            href={callUrl}
-            className="flex items-center justify-center gap-1 flex-1 h-9 border border-slate-200 bg-white hover:bg-slate-50 text-slate-800 font-bold rounded-xl text-xs transition-colors"
-          >
-            <Phone className="w-3.5 h-3.5 text-slate-600" />
-            <span>Call</span>
-          </a>
-
-          <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="flex items-center justify-center gap-1 flex-1 h-9 bg-[#00a884] hover:bg-[#008f6f] text-white font-bold rounded-xl text-xs transition-all shadow-2xs"
-          >
-            <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
-            <span>WhatsApp</span>
-          </a>
-
+        {/* Action Button: 📍 Get Directions Only */}
+        <div className="pt-2 border-t border-slate-100 mt-1">
           <a
             href={navUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center justify-center gap-1 flex-1 h-9 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs transition-all shadow-2xs"
+            className="flex items-center justify-center gap-2 w-full h-9 bg-slate-900 hover:bg-slate-800 text-white font-bold rounded-xl text-xs transition-all shadow-2xs"
           >
             <Navigation className="w-3.5 h-3.5 text-white" />
-            <span>Directions</span>
+            <span>Get Directions</span>
           </a>
         </div>
       </div>

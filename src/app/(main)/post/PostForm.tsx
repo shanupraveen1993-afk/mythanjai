@@ -26,6 +26,8 @@ import {
   Clock,
   Calendar,
   IndianRupee,
+  Lock,
+  Sparkles,
 } from "lucide-react";
 import NeedCard from "@/components/cards/NeedCard";
 import ServiceCard from "@/components/cards/ServiceCard";
@@ -115,14 +117,26 @@ export default function PostForm({ segment }: PostFormProps) {
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
 
-  // Custom Segment Specific Fields
   const [price, setPrice] = useState("");
   const [youtubeUrl, setYoutubeUrl] = useState("");
   const [googleMapsUrl, setGoogleMapsUrl] = useState("");
-  const [experience, setExperience] = useState("5+ Years");
-  const [workingHours, setWorkingHours] = useState("9 AM – 8 PM");
+  const [allWorkingDays, setAllWorkingDays] = useState("Yes");
+  const [sundayLeave, setSundayLeave] = useState("Yes");
   const [validFrom, setValidFrom] = useState("");
   const [validTo, setValidTo] = useState("");
+
+  // AI Description Rewrite Preview States
+  const [previewDescription, setPreviewDescription] = useState("");
+  const [isAiRewriting, setIsAiRewriting] = useState(false);
+
+  const handleBlurDescription = () => {
+    if (!description.trim()) return;
+    setIsAiRewriting(true);
+    setTimeout(() => {
+      setPreviewDescription(description.trim());
+      setIsAiRewriting(false);
+    }, 1200);
+  };
 
   // Auto-fill user profile phone
   useEffect(() => {
@@ -220,8 +234,8 @@ export default function PostForm({ segment }: PostFormProps) {
       } else if (segment === "service") {
         localPostRecord.name = title.trim();
         localPostRecord.skill_category = category;
-        localPostRecord.experience = experience || "5+ Years";
-        localPostRecord.working_hours = workingHours || "9 AM – 8 PM";
+        localPostRecord.experience = allWorkingDays === "Yes" ? "All Working Days" : "Flexible Days";
+        localPostRecord.working_hours = sundayLeave === "Yes" ? "Sunday Off" : "Open 7 Days";
         localPostRecord.description = cleanDesc;
 
         try {
@@ -229,8 +243,8 @@ export default function PostForm({ segment }: PostFormProps) {
             userId: uid,
             name: title.trim(),
             skill_category: category,
-            experience: experience || "5+ Years",
-            working_hours: workingHours || "9 AM – 8 PM",
+            experience: allWorkingDays === "Yes" ? "All Working Days" : "Flexible Days",
+            working_hours: sundayLeave === "Yes" ? "Sunday Off" : "Open 7 Days",
             area_tag: area,
             phone: phone || "9876543210",
             rating: 5.0,
@@ -306,7 +320,7 @@ export default function PostForm({ segment }: PostFormProps) {
       type: segment === "sell" ? "SELL" : "NEED",
       raw_text: description.trim(),
       title: title.trim() || (segment === "sell" ? "Sample Item Title" : "Sample Requirement Title"),
-      description: description.trim() || "Live preview description will appear here as you type...",
+      description: previewDescription || "Live preview description will appear here after AI optimization...",
       category: category || config.categories[0],
       area_tag: area || TANJORE_LOCALITIES[0],
       price: price || (segment === "sell" ? "2500000" : "10000"),
@@ -324,12 +338,12 @@ export default function PostForm({ segment }: PostFormProps) {
       userId: user?.uid || "preview_user",
       name: title.trim() || "Senthil Kumar — Electrician",
       skill_category: category || config.categories[0],
-      experience: experience || "5+ Years",
-      working_hours: workingHours || "9 AM – 8 PM",
+      experience: allWorkingDays === "Yes" ? "All Working Days" : "Flexible Days",
+      working_hours: sundayLeave === "Yes" ? "Sunday Off" : "Open 7 Days",
       phone: phone || "9876543210",
       area_tag: area || TANJORE_LOCALITIES[0],
       rating: 5.0,
-      description: description.trim() || "Professional trade service details...",
+      description: previewDescription || "Professional trade service details...",
       image_url: imagePreview || "",
       is_verified: true,
       created_at: new Date() as any,
@@ -348,7 +362,7 @@ export default function PostForm({ segment }: PostFormProps) {
       phone: phone || "9876543210",
       area_tag: area || TANJORE_LOCALITIES[0],
       offer_title: title.trim() || "Exclusive Discount Offer",
-      offer_description: description.trim() || "Special offer details and promotion terms...",
+      offer_description: previewDescription || "Special offer details and promotion terms...",
       image_url: imagePreview || "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&auto=format&fit=crop",
       latitude: 10.7870,
       longitude: 79.1378,
@@ -514,62 +528,70 @@ export default function PostForm({ segment }: PostFormProps) {
                 <div className="flex flex-col gap-1">
                   <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                     <Phone className="w-3.5 h-3.5 text-slate-400" />
-                    Contact phone *
+                    <Lock className="w-3 h-3 text-slate-400" />
+                    Contact phone (Locked) *
                   </label>
                   <input
                     type="tel"
+                    disabled
+                    readOnly
                     required
-                    placeholder="e.g. 9876543210"
+                    placeholder="Auto-filled from account"
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
+                    className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-slate-100 text-slate-500 cursor-not-allowed select-none"
                   />
                 </div>
               </div>
             )}
 
-            {/* SERVICE SPECIFIC FIELDS: Experience & Working Hours in 1 Row */}
+            {/* SERVICE SPECIFIC FIELDS: Availability Dropdowns in 1 Row */}
             {segment === "service" && (
               <>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="flex flex-col gap-1">
-                    <label className="text-xs font-semibold text-slate-700">
-                      Experience
+                    <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
+                      <Clock className="w-3.5 h-3.5 text-slate-400" />
+                      All Working Days *
                     </label>
-                    <input
-                      type="text"
-                      placeholder="e.g. 8+ Years Experience"
-                      value={experience}
-                      onChange={(e) => setExperience(e.target.value)}
-                      className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
-                    />
+                    <select
+                      value={allWorkingDays}
+                      onChange={(e) => setAllWorkingDays(e.target.value)}
+                      className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 cursor-pointer"
+                    >
+                      <option value="Yes">Yes — Open All Working Days</option>
+                      <option value="No">No — Flexible / On Demand</option>
+                    </select>
                   </div>
                   <div className="flex flex-col gap-1">
                     <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
-                      <Clock className="w-3.5 h-3.5 text-slate-400" /> Working Hours
+                      <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                      Sunday Leave *
                     </label>
-                    <input
-                      type="text"
-                      placeholder="e.g. 9 AM – 8 PM"
-                      value={workingHours}
-                      onChange={(e) => setWorkingHours(e.target.value)}
-                      className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
-                    />
+                    <select
+                      value={sundayLeave}
+                      onChange={(e) => setSundayLeave(e.target.value)}
+                      className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 cursor-pointer"
+                    >
+                      <option value="Yes">Yes — Sunday Off</option>
+                      <option value="No">No — Open On Sunday</option>
+                    </select>
                   </div>
                 </div>
 
                 <div className="flex flex-col gap-1">
                   <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                     <Phone className="w-3.5 h-3.5 text-slate-400" />
-                    Contact phone number *
+                    <Lock className="w-3 h-3 text-slate-400" />
+                    Contact phone number (Locked) *
                   </label>
                   <input
                     type="tel"
+                    disabled
+                    readOnly
                     required
-                    placeholder="e.g. 9876543210"
+                    placeholder="Auto-filled from account"
                     value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
+                    className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-slate-100 text-slate-500 cursor-not-allowed select-none"
                   />
                 </div>
               </>
@@ -609,15 +631,17 @@ export default function PostForm({ segment }: PostFormProps) {
                   <div className="flex flex-col gap-1">
                     <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                       <Phone className="w-3.5 h-3.5 text-slate-400" />
-                      Contact phone number *
+                      <Lock className="w-3 h-3 text-slate-400" />
+                      Contact phone number (Locked) *
                     </label>
                     <input
                       type="tel"
+                      disabled
+                      readOnly
                       required
-                      placeholder="e.g. 9876543210"
+                      placeholder="Auto-filled from account"
                       value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
-                      className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
+                      className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-slate-100 text-slate-500 cursor-not-allowed select-none"
                     />
                   </div>
 
@@ -684,6 +708,7 @@ export default function PostForm({ segment }: PostFormProps) {
                 placeholder="Describe your item, features, or service details..."
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
+                onBlur={handleBlurDescription}
                 className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 resize-none"
               />
             </div>
@@ -730,7 +755,13 @@ export default function PostForm({ segment }: PostFormProps) {
               <span className="text-[10px] text-slate-400">Instant preview</span>
             </div>
 
-            <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-2xs flex flex-col gap-3">
+            <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-2xs flex flex-col gap-3 relative">
+              {isAiRewriting && (
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-center justify-center gap-2 text-amber-800 font-bold text-xs animate-pulse shadow-2xs">
+                  <Sparkles className="w-4 h-4 text-amber-600 fill-amber-400 animate-spin" />
+                  <span>AI is rewriting & optimizing description...</span>
+                </div>
+              )}
               {segment === "sell" || segment === "need" ? (
                 <NeedCard post={previewSellOrNeedPost} isPreview={true} />
               ) : segment === "service" ? (

@@ -73,6 +73,8 @@ export interface ShopPost {
   offer_social_link?: string;
   video_url?: string;
   offer_expires_at?: any; // Firestore Timestamp
+  valid_from?: string;
+  valid_to?: string;
 }
 
 export interface OfferPost {
