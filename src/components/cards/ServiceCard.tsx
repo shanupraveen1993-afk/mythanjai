@@ -92,11 +92,6 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
             </span>
           </div>
         </div>
-
-        <div className="flex items-center gap-1 text-[10px] text-slate-400 font-medium shrink-0">
-          <Calendar className="w-3 h-3 text-slate-400" />
-          <span>{formatRelativeTime(post.created_at)}</span>
-        </div>
       </div>
 
       {/* Locality Tag */}
@@ -114,20 +109,20 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
         </div>
       )}
 
-      {/* Social Engagement Bar (Hidden in Live Preview Mode) */}
+      {/* Social Engagement Bar (FB Insights Style) with Right-Aligned Timestamp */}
       {!isPreview && (
         <div className="flex items-center justify-between text-[11px] text-slate-500 font-semibold border-t border-b border-slate-100 py-2 my-0.5">
-          <div className="flex items-center gap-1.5 text-slate-500">
-            <Eye className="w-3.5 h-3.5 text-slate-400" />
-            <span>{viewsCount} Views</span>
-          </div>
           <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1 text-slate-500">
+              <Eye className="w-3.5 h-3.5 text-slate-400" />
+              <span>{viewsCount}</span>
+            </div>
             <button 
               onClick={handleShare}
               className="flex items-center gap-1 hover:text-slate-800 cursor-pointer transition-colors"
             >
               <Share2 className="w-3.5 h-3.5 text-slate-400" />
-              <span>{sharesCount} Shares</span>
+              <span>{sharesCount}</span>
             </button>
             <button 
               onClick={handleToggleSave}
@@ -136,6 +131,11 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
               <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-yellow-500 text-yellow-600" : "text-slate-400"}`} />
               <span>{saved ? "Saved" : "Save"}</span>
             </button>
+          </div>
+
+          <div className="flex items-center gap-1 text-[10px] text-slate-400 font-medium shrink-0">
+            <Calendar className="w-3 h-3 text-slate-400" />
+            <span>{formatRelativeTime(post.created_at)}</span>
           </div>
         </div>
       )}

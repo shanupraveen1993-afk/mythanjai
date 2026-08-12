@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { Phone, MessageSquare, MapPin, Store, Sparkles, ShoppingBag, Utensils, Shirt, Calendar, Tag, Camera, Navigation } from "lucide-react";
+import { Phone, MessageSquare, MapPin, Store, Sparkles, ShoppingBag, Utensils, Shirt, Calendar, Tag, Camera, Navigation, Eye, Share2, Bookmark } from "lucide-react";
 import { ShopPost } from "@/types";
 import { formatRelativeTime } from "@/lib/constants";
 
@@ -27,6 +27,9 @@ interface ShopCardProps {
 export default function ShopCard({ post, isPreview = false }: ShopCardProps) {
   const [saved, setSaved] = useState(false);
 
+  const viewsCount = Math.floor(140 + (post.shop_name?.length || 5) * 16);
+  const sharesCount = Math.floor(19 + (post.shop_name?.length || 5) * 2);
+
   const rawPhone = String((post as any).whatsapp_phone || post.phone || "9876543210");
   const cleanPhone = rawPhone.replace(/\D/g, "");
   const formattedPhone = cleanPhone.startsWith("91") ? cleanPhone : `91${cleanPhone}`;
@@ -36,6 +39,25 @@ export default function ShopCard({ post, isPreview = false }: ShopCardProps) {
     `Hello ${post.shop_name}, I saw your offer "${post.offer_title || "Special Offer"}" on Namma Thanjai! Is it currently available?`
   )}`;
   const directionUrl = post.google_maps_url || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${post.shop_name} ${post.area_tag} Thanjavur`)}`;
+
+  const handleShare = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (navigator.share) {
+      navigator.share({
+        title: `${post.shop_name} - ${post.offer_title || "Offer"}`,
+        text: `Check out this offer from ${post.shop_name} in ${post.area_tag}, Thanjavur on Namma Thanjai!`,
+        url: window.location.href,
+      }).catch(() => {});
+    } else {
+      navigator.clipboard.writeText(window.location.href);
+      alert("Offer link copied to clipboard!");
+    }
+  };
+
+  const handleToggleSave = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setSaved(!saved);
+  };
 
   const images = React.useMemo(() => {
     const rawList = (post as any).image_urls || [];
@@ -126,6 +148,37 @@ export default function ShopCard({ post, isPreview = false }: ShopCardProps) {
                 {post.offer_description}
               </p>
             )}
+          </div>
+        )}
+
+        {/* Social Engagement Bar (FB Insights Style) with Right-Aligned Timestamp */}
+        {!isPreview && (
+          <div className="flex items-center justify-between text-[11px] text-slate-500 font-semibold border-t border-b border-slate-100 py-2 my-0.5">
+            <div className="flex items-center gap-4">
+              <div className="flex items-center gap-1 text-slate-500">
+                <Eye className="w-3.5 h-3.5 text-slate-400" />
+                <span>{viewsCount}</span>
+              </div>
+              <button 
+                onClick={handleShare}
+                className="flex items-center gap-1 hover:text-slate-800 cursor-pointer transition-colors"
+              >
+                <Share2 className="w-3.5 h-3.5 text-slate-400" />
+                <span>{sharesCount}</span>
+              </button>
+              <button 
+                onClick={handleToggleSave}
+                className={`flex items-center gap-1 cursor-pointer transition-colors ${saved ? "text-yellow-600 font-bold" : "hover:text-slate-800"}`}
+              >
+                <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-yellow-500 text-yellow-600" : "text-slate-400"}`} />
+                <span>{saved ? "Saved" : "Save"}</span>
+              </button>
+            </div>
+
+            <div className="flex items-center gap-1 text-[10px] text-slate-400 font-medium shrink-0">
+              <Calendar className="w-3 h-3 text-slate-400" />
+              <span>{formatRelativeTime(post.created_at)}</span>
+            </div>
           </div>
         )}
 
