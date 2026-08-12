@@ -99,16 +99,10 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
         </div>
       </div>
 
-      {/* Experience and Locality */}
-      <div className="flex items-center justify-between text-xs text-slate-500 bg-slate-50 p-2.5 rounded-xl border border-slate-200/60 font-semibold">
-        <div className="flex items-center gap-1">
-          <Award className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-          <span className="truncate max-w-[130px]">{post.experience || "Expert tradesman"}</span>
-        </div>
-        <div className="flex items-center gap-1">
-          <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-          <span className="truncate max-w-[120px]">{post.area_tag}</span>
-        </div>
+      {/* Locality Tag */}
+      <div className="flex items-center gap-1.5 text-xs text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-200/60 font-semibold">
+        <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+        <span>Location: <strong className="text-slate-800">{post.area_tag}</strong></span>
       </div>
 
       {/* Description */}
