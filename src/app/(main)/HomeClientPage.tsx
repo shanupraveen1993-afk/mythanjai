@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import { MapPin, ChevronRight, ShoppingBag, Search, Wrench, Store, ArrowRight } from "lucide-react";
 import RobotHero from "@/components/ui/robot-hero";
+import CategoryBridgeFeed from "@/components/home/CategoryBridgeFeed";
 
 // ── Shared Preview Card ───────────────────────────────────────────────────────
 
@@ -138,6 +139,9 @@ export default function HomeClientPage() {
               </p>
             </div>
           </div>
+
+          {/* ── Category Matchmaker Bridge ────────────────── */}
+          <CategoryBridgeFeed />
 
           {/* ── SELL Preview ───────────────────────── */}
           <PreviewSection

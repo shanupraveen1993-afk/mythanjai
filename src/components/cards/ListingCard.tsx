@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { Eye, Share2, Bookmark, Phone, MessageSquare, MapPin } from "lucide-react";
+import { Eye, Share2, Bookmark, Phone, MessageSquare, MapPin, UserCheck } from "lucide-react";
 import { doc, updateDoc, increment, arrayUnion, arrayRemove } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/hooks/use-auth";
@@ -38,6 +38,18 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
   );
   const [views, setViews] = useState(listing.views_count || 12);
   const [shares, setShares] = useState(listing.shares_count || 3);
+
+  const isOwnPost = React.useMemo(() => {
+    if (user?.uid && listing.seller_id === user.uid) return true;
+    if (profile?.phone && listing.phone && profile.phone === listing.phone) return true;
+    if (typeof window !== "undefined") {
+      try {
+        const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+        if (stored.some((p: any) => p.id === listing.id)) return true;
+      } catch (e) {}
+    }
+    return false;
+  }, [user, profile, listing]);
 
   // Increment views count on card interaction
   const handleCardView = async () => {
@@ -186,27 +198,36 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
 
             {/* Action Buttons Row */}
             <div className="flex items-center gap-2">
-              {!isLookingFor && (
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setIsChatOpen(true);
-                  }}
-                  className="flex-1 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors border border-slate-200"
-                >
-                  <MessageSquare className="w-3.5 h-3.5 text-yellow-600" />
-                  <span>Chat</span>
-                </button>
-              )}
+              {isOwnPost ? (
+                <div className="w-full py-2 rounded-xl bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1.5">
+                  <UserCheck className="w-3.5 h-3.5 text-slate-500" />
+                  <span>Your Listing</span>
+                </div>
+              ) : (
+                <>
+                  {!isLookingFor && (
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsChatOpen(true);
+                      }}
+                      className="flex-1 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors border border-slate-200"
+                    >
+                      <MessageSquare className="w-3.5 h-3.5 text-yellow-600" />
+                      <span>Chat</span>
+                    </button>
+                  )}
 
-              <a
-                href={`tel:${listing.phone || "919994837342"}`}
-                onClick={(e) => e.stopPropagation()}
-                className="flex-1 py-2 rounded-xl bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black text-xs flex items-center justify-center gap-1.5 transition-colors border border-yellow-400"
-              >
-                <Phone className="w-3.5 h-3.5 fill-current" />
-                <span>Call</span>
-              </a>
+                  <a
+                    href={`tel:${listing.phone || "919994837342"}`}
+                    onClick={(e) => e.stopPropagation()}
+                    className="flex-1 py-2 rounded-xl bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black text-xs flex items-center justify-center gap-1.5 transition-colors border border-yellow-400"
+                  >
+                    <Phone className="w-3.5 h-3.5 fill-current" />
+                    <span>Call</span>
+                  </a>
+                </>
+              )}
             </div>
           </div>
         </div>

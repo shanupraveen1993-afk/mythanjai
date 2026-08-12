@@ -3,10 +3,11 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { MessageSquare, Calendar, Tag, MapPin, Share2, Home, Cpu, Car, Eye, Bookmark, ShieldCheck, Lock } from "lucide-react";
+import { MessageSquare, Calendar, Tag, MapPin, Share2, Home, Cpu, Car, Eye, Bookmark, ShieldCheck, Lock, UserCheck } from "lucide-react";
 import { NeedOrSalePost } from "@/types";
 import { formatIndianCurrencyText } from "@/lib/constants";
 import InAppChatModal from "@/components/chat/InAppChatModal";
+import { useAuth } from "@/hooks/use-auth";
 
 interface NeedCardProps {
   post: NeedOrSalePost;
@@ -15,10 +16,24 @@ interface NeedCardProps {
 }
 
 export default function NeedCard({ post, onShare, isPreview = false }: NeedCardProps) {
+  const { user, profile } = useAuth();
   const [activeImgIndex, setActiveImgIndex] = useState(0);
   const [isPlayingVideo, setIsPlayingVideo] = useState(false);
   const [saved, setSaved] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
+
+  const isOwnPost = React.useMemo(() => {
+    if (isPreview) return false;
+    if (user?.uid && post.userId === user.uid) return true;
+    if (profile?.phone && post.phone && profile.phone === post.phone) return true;
+    if (typeof window !== "undefined") {
+      try {
+        const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+        if (stored.some((p: any) => p.id === post.id)) return true;
+      } catch (e) {}
+    }
+    return false;
+  }, [user, profile, post, isPreview]);
 
   const youtubeId = React.useMemo(() => {
     if (!post.youtube_url || typeof post.youtube_url !== "string") return null;
@@ -181,13 +196,20 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
 
         {/* Contact CTA */}
         <div className="flex items-center gap-2">
-          <Link
-            href={`/chat?listingId=${post.id}&sellerId=${post.userId || "seller_id"}&title=${encodeURIComponent(post.title || "Item")}`}
-            className="flex items-center gap-1.5 h-9 bg-[#00a884] hover:bg-[#008f6f] text-white font-bold px-3.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer"
-          >
-            <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
-            <span>In-App Chat</span>
-          </Link>
+          {isOwnPost ? (
+            <span className="flex items-center gap-1.5 h-9 bg-slate-100 border border-slate-200 text-slate-700 font-bold px-3.5 rounded-xl text-xs">
+              <UserCheck className="w-3.5 h-3.5 text-slate-500" />
+              <span>Your Post</span>
+            </span>
+          ) : (
+            <Link
+              href={`/chat?listingId=${post.id}&sellerId=${post.userId || "seller_id"}&title=${encodeURIComponent(post.title || "Item")}`}
+              className="flex items-center gap-1.5 h-9 bg-[#00a884] hover:bg-[#008f6f] text-white font-bold px-3.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer"
+            >
+              <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
+              <span>In-App Chat</span>
+            </Link>
+          )}
         </div>
       </div>
 
