@@ -142,8 +142,8 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
 
       {/* Footer Info & Action CTAs — Contacted Count Badge in First Position */}
       <div className="flex items-center justify-between pt-1">
-        <span className="inline-flex items-center gap-1 bg-blue-50 border border-blue-200 text-blue-800 font-bold px-2.5 py-1.5 rounded-xl text-xs">
-          <span>{contactedCount} Contacted</span>
+        <span className="text-xs text-slate-500 font-medium">
+          <strong className="text-slate-800 font-bold">{contactedCount}</strong> Contacted
         </span>
 
         <div className="flex items-center gap-2">
