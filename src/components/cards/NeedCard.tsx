@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { MessageSquare, Calendar, Tag, MapPin, Share2, Eye, Bookmark, UserCheck } from "lucide-react";
+import { MessageSquare, Calendar, Tag, MapPin, Share2, Eye, Bookmark, UserCheck, Camera } from "lucide-react";
 import { NeedOrSalePost } from "@/types";
 import { formatIndianCurrencyText, formatRelativeTime } from "@/lib/constants";
 import InAppChatModal from "@/components/chat/InAppChatModal";
@@ -84,7 +84,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
   const isNeedType = post.type?.toUpperCase() === "NEED";
 
   return (
-    <div className="bg-white rounded-2xl p-4 flex flex-col gap-3 shadow-[0_4px_16px_rgba(0,0,0,0.06)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.09)] transition-all duration-200 relative group overflow-hidden font-sans border border-slate-200/80">
+    <div className="bg-white rounded-2xl p-4 flex flex-col gap-3 shadow-[0_3px_8px_rgba(0,0,0,0.03)] transition-all duration-200 relative group overflow-hidden font-sans border border-slate-200/80">
       
       {/* Top Header Tags */}
       <div className="flex items-center justify-between gap-2">
@@ -116,33 +116,41 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
         )}
       </div>
 
-      {/* YouTube Video Embed Preview */}
-      {youtubeId && isPlayingVideo ? (
-        <div className="relative w-full h-44 sm:h-52 rounded-xl overflow-hidden bg-black shadow-inner">
-          <iframe
-            src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1`}
-            title={post.title}
-            className="w-full h-full border-0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowFullScreen
-          />
-        </div>
-      ) : images.length > 0 ? (
-        <div className="relative w-full h-44 sm:h-52 rounded-xl overflow-hidden bg-slate-100 border border-slate-100">
-          <Image
-            src={images[activeImgIndex] || "/thanjavur_temple_illustration.png"}
-            alt={post.title}
-            fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
-            unoptimized
-          />
-          {images.length > 1 && (
-            <div className="absolute bottom-2 right-2 bg-black/60 text-white text-[10px] font-bold px-2 py-0.5 rounded-md backdrop-blur-xs">
-              {activeImgIndex + 1}/{images.length}
-            </div>
-          )}
-        </div>
-      ) : null}
+      {/* Media Box — ONLY RENDERED FOR SELL POSTS (COMPULSORY WITH PLACEHOLDER FOR UNIFORM HEIGHT). HIDDEN FOR NEED POSTS */}
+      {!isNeedType && (
+        youtubeId && isPlayingVideo ? (
+          <div className="relative w-full h-44 sm:h-52 rounded-xl overflow-hidden bg-black shadow-inner">
+            <iframe
+              src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1`}
+              title={post.title}
+              className="w-full h-full border-0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            />
+          </div>
+        ) : images.length > 0 ? (
+          <div className="relative w-full h-44 sm:h-52 rounded-xl overflow-hidden bg-slate-100 border border-slate-100">
+            <Image
+              src={images[activeImgIndex] || "/thanjavur_temple_illustration.png"}
+              alt={post.title}
+              fill
+              className="object-cover group-hover:scale-105 transition-transform duration-300"
+              unoptimized
+            />
+            {images.length > 1 && (
+              <div className="absolute bottom-2 right-2 bg-black/60 text-white text-[10px] font-bold px-2 py-0.5 rounded-md backdrop-blur-xs">
+                {activeImgIndex + 1}/{images.length}
+              </div>
+            )}
+          </div>
+        ) : (
+          /* Placeholder Box for Sell Posts without Images for 100% Uniform Height */
+          <div className="relative w-full h-44 sm:h-52 rounded-xl overflow-hidden bg-slate-50 border border-slate-200/60 flex flex-col items-center justify-center gap-1.5 text-slate-400">
+            <Camera className="w-6 h-6 stroke-[1.5] text-slate-300" />
+            <span className="text-xs font-semibold text-slate-400">No Image Provided</span>
+          </div>
+        )
+      )}
 
       {/* Description Box */}
       {post.description && (
@@ -179,7 +187,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
         </div>
       )}
 
-      {/* Footer Info & Action CTAs — MASKED PHONE & IN-APP CHAT */}
+      {/* Footer Info & Action CTAs */}
       <div className="flex items-center justify-between pt-1">
         <div className="flex items-center gap-1 text-[11px] text-slate-500 font-semibold">
           <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />

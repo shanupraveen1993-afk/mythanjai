@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { Phone, MessageSquare, MapPin, Store, Sparkles, ShoppingBag, Utensils, Shirt, Calendar, Tag } from "lucide-react";
+import { Phone, MessageSquare, MapPin, Store, Sparkles, ShoppingBag, Utensils, Shirt, Calendar, Tag, Camera } from "lucide-react";
 import { ShopPost } from "@/types";
 import { formatRelativeTime } from "@/lib/constants";
 
@@ -44,13 +44,13 @@ export default function ShopCard({ post, isPreview = false }: ShopCardProps) {
     if (typeof post.image_url === "string" && post.image_url.trim().length > 0) {
       return [post.image_url];
     }
-    return ["https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&auto=format&fit=crop"];
+    return [];
   }, [post]);
 
   const validityText = formatOfferValidity(post.valid_from, post.valid_to, post.created_at);
 
   return (
-    <div className="bg-white rounded-2xl overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.06)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.09)] transition-all duration-200 flex flex-col relative font-sans border border-slate-200/80">
+    <div className="bg-white rounded-2xl overflow-hidden shadow-[0_3px_8px_rgba(0,0,0,0.03)] transition-all duration-200 flex flex-col relative font-sans border border-slate-200/80">
       
       {/* Featured Overlay */}
       {post.is_featured && (
@@ -60,16 +60,23 @@ export default function ShopCard({ post, isPreview = false }: ShopCardProps) {
         </div>
       )}
 
-      {/* Main Image Box */}
-      <div className="relative w-full h-44 sm:h-52 bg-slate-900 overflow-hidden">
-        <Image
-          src={images[0]}
-          alt={post.shop_name}
-          fill
-          className="object-cover group-hover:scale-105 transition-transform duration-300"
-          unoptimized
-        />
-      </div>
+      {/* Main Image Box (Compulsory Image / Placeholder Box for 100% Uniform Height) */}
+      {images.length > 0 ? (
+        <div className="relative w-full h-44 sm:h-52 bg-slate-900 overflow-hidden">
+          <Image
+            src={images[0]}
+            alt={post.shop_name}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
+            unoptimized
+          />
+        </div>
+      ) : (
+        <div className="relative w-full h-44 sm:h-52 bg-slate-50 border-b border-slate-200/60 flex flex-col items-center justify-center gap-1.5 text-slate-400">
+          <Camera className="w-6 h-6 stroke-[1.5] text-slate-300" />
+          <span className="text-xs font-semibold text-slate-400">No Offer Image Provided</span>
+        </div>
+      )}
 
       {/* Info Details */}
       <div className="p-4 flex flex-col gap-2.5 flex-1">
