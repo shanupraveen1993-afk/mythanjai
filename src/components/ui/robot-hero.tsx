@@ -899,7 +899,7 @@ export function RobotHero({
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-dvh md:h-[calc(100vh-70px)] flex flex-col justify-between items-center bg-white text-slate-800 pt-12 md:pt-2 pb-2 md:pb-1 px-3 sm:px-4 overflow-hidden select-none"
+      className="relative w-full h-dvh md:h-[calc(100vh-70px)] flex flex-col justify-between items-center bg-white text-slate-800 pt-6 md:pt-2 pb-2 md:pb-1 px-3 sm:px-4 overflow-hidden select-none"
     >
       {/* Light radial glow centered behind hero */}
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_45%,rgba(250,204,21,0.06)_0%,transparent_60%)] pointer-events-none" />
@@ -909,17 +909,17 @@ export function RobotHero({
         
         {/* 1. Clean Spaced Header Group: Logo + Headline + Subline + Rotational Switcher Badge */}
         <div className="flex flex-col items-center gap-1.5 sm:gap-2 w-full shrink-0 pt-1 md:pt-0">
-          <div className="w-14 h-14 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-2xl sm:rounded-3xl bg-white shadow-md p-2 flex items-center justify-center shrink-0 border border-slate-200/90 hover:scale-[1.02] transition-transform">
+          <div className="w-14 h-14 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-2xl sm:rounded-3xl shadow-lg border border-slate-200/50 hover:scale-[1.05] transition-transform shrink-0 overflow-hidden bg-white flex items-center justify-center">
             <img 
               src="/namma_thanjai_logo.png" 
               alt="namma thanjai logo" 
-              className="w-full h-full object-contain" 
+              className="w-full h-full object-cover scale-[1.02]" 
             />
           </div>
-          <h1 className="font-heading font-black text-3xl xs:text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-slate-955 tracking-tight leading-none uppercase mt-1 w-full text-center drop-shadow-2xs scale-x-[1.04] transform origin-center whitespace-nowrap">
+          <h1 className="font-heading font-black text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tighter leading-none uppercase mt-1 w-full text-center drop-shadow-sm scale-x-[1.02] transform origin-center whitespace-nowrap bg-gradient-to-b from-slate-950 via-slate-800 to-slate-900 bg-clip-text text-transparent">
             namma thanjai<span className="text-yellow-500">.</span>
           </h1>
-          <p className="text-[10px] sm:text-xs md:text-sm font-black text-slate-600 max-w-xl mx-auto leading-normal tracking-wider uppercase mt-0.5 opacity-90">
+          <p className="text-[10px] sm:text-xs md:text-sm font-black text-slate-500 max-w-xl mx-auto leading-normal tracking-widest uppercase mt-0.5 opacity-90">
             SELL, NEED, SERVICES & OFFERS
           </p>
 
