@@ -113,7 +113,7 @@ export default function HomeClientPage() {
   }, []);
 
   return (
-    <div className="w-full flex flex-col bg-transparent text-slate-800 min-h-screen font-sans">
+    <div className="w-full flex flex-col bg-[#f4f5f8] text-slate-800 min-h-screen font-sans">
 
       {profile?.isVerified ? (
         /* ── LOGGED-IN FEED ──────────────────────────────── */

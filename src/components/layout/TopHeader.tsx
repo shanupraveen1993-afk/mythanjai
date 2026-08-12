@@ -74,10 +74,10 @@ export default function TopHeader({
               <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-full h-full object-contain mix-blend-multiply" />
             </div>
             <div className="flex items-center gap-0.5">
-              <span className="font-heading font-bold tracking-tight text-slate-900 text-xs sm:text-sm">
+              <span className="font-heading font-black tracking-tight text-slate-900 text-sm sm:text-base md:text-lg leading-none">
                 namma thanjai
               </span>
-              <div className="w-1.5 h-1.5 rounded-full bg-yellow-500 ml-0.5" />
+              <div className="w-2 h-2 rounded-full bg-yellow-500 ml-0.5 shrink-0" />
             </div>
           </div>
         </div>
