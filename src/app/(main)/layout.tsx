@@ -181,7 +181,9 @@ function MainLayoutContent({
       {/* Main Website Footer */}
       {!isChatRoute && (
         <React.Suspense fallback={null}>
-          <Footer />
+          <div className="hidden md:block">
+            <Footer />
+          </div>
         </React.Suspense>
       )}
 

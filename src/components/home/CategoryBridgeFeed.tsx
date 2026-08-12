@@ -121,28 +121,16 @@ export default function CategoryBridgeFeed() {
   return (
     <div className="w-full bg-slate-50/70 border border-slate-200/90 rounded-2xl p-5 flex flex-col gap-4 font-sans my-1 shadow-2xs">
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200/80 pb-3">
-        <div className="flex items-center gap-2.5">
-          <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-900 font-bold text-[10px] uppercase px-2.5 py-0.5 rounded-md border border-amber-300/80">
-            <Sparkles className="w-3 h-3 text-amber-700 fill-amber-500" />
-            <span>Category Matchmaker</span>
-          </span>
-          <div>
-            <h2 className="font-heading font-black text-base md:text-lg text-slate-900 leading-snug">
-              Matched Listings for <span className="text-amber-700">{activeCategory}</span>
-            </h2>
-            <p className="text-[11px] text-slate-500 font-medium">
-              Bridging buyers & sellers in {activeCategory}
-            </p>
-          </div>
-        </div>
-
+      <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
+        <h2 className="font-heading font-black text-base md:text-lg text-slate-900 flex items-center gap-2">
+          <span className="inline-block w-2.5 h-2.5 rounded-full bg-amber-500" />
+          Your Matches
+        </h2>
         <button
           onClick={() => router.push(activeType === "SELL" ? "/sell" : "/need")}
-          className="flex items-center gap-1 text-xs font-bold text-slate-700 hover:text-slate-900 transition-colors cursor-pointer self-start sm:self-auto"
+          className="flex items-center gap-1 text-xs font-black text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
         >
-          <span>Explore All {activeCategory}</span>
-          <ArrowRight className="w-3.5 h-3.5" />
+          View All <ArrowRight className="w-3.5 h-3.5" />
         </button>
       </div>
 
