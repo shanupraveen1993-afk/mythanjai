@@ -142,7 +142,8 @@ export default function CategoryBridgeFeed() {
       {/* Matching Listings (Identical Compact PreviewCard Design across all 5 sections) */}
       <div className="-mx-4 px-4 flex md:grid overflow-x-auto md:overflow-visible snap-x snap-mandatory gap-3 pb-2 scrollbar-none">
         {matchingListings.map((post) => {
-          const imgUrl = (post.images && post.images.length > 0) ? post.images[0] : (post.image_url || "/thanjavur_temple_illustration.png");
+          const imgList = post.image_urls || (post as any).images || [];
+          const imgUrl = imgList.length > 0 ? imgList[0] : (post.image_url || "/thanjavur_temple_illustration.png");
           const priceText = post.price ? (typeof post.price === "number" ? `₹${post.price.toLocaleString("en-IN")}` : String(post.price)) : "Best Offer";
           const seePath = activeType === "SELL" ? "/need" : "/sell";
 
