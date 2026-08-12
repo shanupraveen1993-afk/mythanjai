@@ -119,13 +119,18 @@ export default function CategoryBridgeFeed() {
   }, [allCombinedPosts, activeCategory, activeType]);
 
   return (
-    <div className="w-full bg-slate-200/60 rounded-3xl p-4 sm:p-5 flex flex-col gap-4 font-sans my-1 border-0 shadow-inner">
-      {/* Header Banner */}
-      <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
-        <h2 className="font-heading font-black text-base md:text-lg text-slate-900 flex items-center gap-2">
-          <span className="inline-block w-2.5 h-2.5 rounded-full bg-amber-500" />
-          Your Matches
-        </h2>
+    <div className="flex flex-col gap-3">
+      {/* Section Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h2 className="font-heading font-black text-base md:text-lg text-slate-900 flex items-center gap-2">
+            <span className="inline-block w-2.5 h-2.5 rounded-full bg-yellow-500" />
+            Your Matches
+          </h2>
+          <p className="text-[11px] text-slate-500 font-medium mt-0.5">
+            Matched listings based on your active requirement
+          </p>
+        </div>
         <button
           onClick={() => router.push(activeType === "SELL" ? "/sell" : "/need")}
           className="flex items-center gap-1 text-xs font-black text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
@@ -134,12 +139,10 @@ export default function CategoryBridgeFeed() {
         </button>
       </div>
 
-
-
       {/* Matching Listings (Horizontal Carousel on Mobile, 3-Col Grid on Desktop) */}
-      <div className="flex md:grid overflow-x-auto md:overflow-visible snap-x snap-mandatory gap-3 pb-2 scrollbar-none -mx-1 px-1">
+      <div className="flex md:grid overflow-x-auto md:overflow-visible snap-x snap-mandatory gap-3 pb-1 scrollbar-none">
         {matchingListings.map((post) => (
-          <div key={post.id} className="w-[82vw] sm:w-[300px] md:w-auto shrink-0 snap-start">
+          <div key={post.id} className="w-[260px] sm:w-[290px] md:w-auto shrink-0 snap-start">
             <NeedCard post={post} />
           </div>
         ))}
