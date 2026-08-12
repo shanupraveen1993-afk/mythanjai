@@ -66,7 +66,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
   };
 
   return (
-    <div className="bg-white border border-slate-200/95 rounded-xl p-4 shadow-2xs hover:border-slate-300 hover:shadow-xs flex flex-col gap-3.5 transition-all duration-200 w-full font-sans relative">
+    <div className="bg-white rounded-2xl p-3.5 flex flex-col gap-3 shadow-[0_2px_10px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08)] transition-all duration-200 w-full font-sans border-0 relative">
       
       {/* Top Section: Name & Category Badge */}
       <div className="flex items-start justify-between gap-2">

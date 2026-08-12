@@ -136,10 +136,12 @@ export default function CategoryBridgeFeed() {
 
 
 
-      {/* Matching Listings Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      {/* Matching Listings (Horizontal Carousel on Mobile, 3-Col Grid on Desktop) */}
+      <div className="flex md:grid overflow-x-auto md:overflow-visible snap-x snap-mandatory gap-3 pb-2 scrollbar-none -mx-1 px-1">
         {matchingListings.map((post) => (
-          <NeedCard key={post.id} post={post} />
+          <div key={post.id} className="w-[82vw] sm:w-[300px] md:w-auto shrink-0 snap-start">
+            <NeedCard post={post} />
+          </div>
         ))}
       </div>
     </div>

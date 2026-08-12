@@ -73,7 +73,7 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false, isPre
   const validityText = formatOfferValidity(post.valid_from, post.valid_to, post.created_at);
 
   return (
-    <div className="bg-white border border-slate-200/90 rounded-xl overflow-hidden shadow-2xs hover:border-slate-300 hover:shadow-xs transition-all duration-200 flex flex-col relative w-full font-sans">
+    <div className="bg-white rounded-2xl overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08)] transition-all duration-200 flex flex-col relative w-full font-sans border-0">
       {/* Featured Star Overlay */}
       {post.is_featured && (
         <div className="absolute top-2.5 left-2.5 z-20 bg-yellow-500 text-slate-955 text-[9px] font-semibold px-2 py-0.5 rounded-xl flex items-center gap-1 shadow-md animate-pulse">

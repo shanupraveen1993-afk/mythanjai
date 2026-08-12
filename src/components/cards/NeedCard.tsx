@@ -85,13 +85,13 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
   const isNeedType = post.type?.toUpperCase() === "NEED";
 
   return (
-    <div className="bg-white border border-slate-200/90 rounded-xl p-4 flex flex-col gap-3 shadow-2xs hover:border-slate-300 hover:shadow-xs transition-all duration-200 relative group overflow-hidden font-sans">
+    <div className="bg-white rounded-2xl p-3.5 flex flex-col gap-2.5 shadow-[0_2px_10px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08)] transition-all duration-200 relative group overflow-hidden font-sans border-0 w-full">
       
       {/* Top Header Tags */}
       <div className="flex items-center justify-between gap-2">
         <div className="flex items-center gap-1.5 flex-wrap">
           {post.category && (
-            <span className="inline-flex items-center gap-1 text-[10px] font-semibold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md border border-slate-200">
+            <span className="inline-flex items-center gap-1 text-[10px] font-semibold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md border-0">
               <Tag className="w-3 h-3 text-slate-400" />
               <span>{post.category}</span>
             </span>
@@ -105,13 +105,13 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
       </div>
 
       {/* Main Title & Price */}
-      <div className="flex flex-col gap-1">
-        <h3 className="font-heading font-bold text-sm sm:text-base text-slate-900 leading-snug group-hover:text-slate-700 transition-colors">
+      <div className="flex flex-col gap-0.5">
+        <h3 className="font-heading font-bold text-sm text-slate-900 leading-snug group-hover:text-slate-700 transition-colors line-clamp-1">
           {post.title}
         </h3>
 
         {displayPriceText && (
-          <div className="text-xs sm:text-sm font-bold text-emerald-600 tracking-tight">
+          <div className="text-xs font-bold text-emerald-600 tracking-tight">
             {displayPriceText}
           </div>
         )}
@@ -119,7 +119,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
 
       {/* YouTube Video Embed Preview */}
       {youtubeId && isPlayingVideo ? (
-        <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-black shadow-inner">
+        <div className="relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-black shadow-inner">
           <iframe
             src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1`}
             title={post.title}
@@ -129,7 +129,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
           />
         </div>
       ) : images.length > 0 ? (
-        <div className="relative w-full aspect-[4/3] rounded-xl overflow-hidden bg-slate-100 border border-slate-200/80">
+        <div className="relative w-full aspect-[16/10] rounded-xl overflow-hidden bg-slate-100 border-0">
           <Image
             src={images[activeImgIndex] || "/thanjavur_temple_illustration.png"}
             alt={post.title}
@@ -142,7 +142,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
 
       {/* Description Body */}
       {post.description && (
-        <p className="text-xs text-slate-600 font-medium leading-relaxed line-clamp-3 bg-slate-50/80 p-2.5 rounded-xl border border-slate-100">
+        <p className="text-xs text-slate-600 font-medium leading-relaxed line-clamp-2 bg-slate-50/80 p-2 rounded-xl border-0">
           {post.description}
         </p>
       )}
