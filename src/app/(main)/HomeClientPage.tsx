@@ -140,6 +140,8 @@ export default function HomeClientPage() {
             </div>
           </div>
 
+          {/* ── Category Matchmaker Bridge ────────────────── */}
+          <CategoryBridgeFeed />
 
           {/* ── SELL Preview ───────────────────────── */}
           <PreviewSection
