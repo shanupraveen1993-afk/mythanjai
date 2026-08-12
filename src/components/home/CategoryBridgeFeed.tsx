@@ -30,9 +30,41 @@ export default function CategoryBridgeFeed() {
     return { userLatestPost: latest, allCombinedPosts: combined };
   }, [firestorePosts]);
 
-  // Real Logic Rule 1: If user has 0 active listings (or deleted them from profile), hide component completely
+  // If user has 0 active listings, show high-converting Matchmaker Onboarding Card
   if (!userLatestPost) {
-    return null;
+    return (
+      <div className="w-full bg-gradient-to-br from-yellow-500/10 via-amber-500/15 to-yellow-500/10 border border-amber-400/40 rounded-2xl p-5 shadow-xs font-sans my-3 flex flex-col sm:flex-row items-center justify-between gap-4">
+        <div className="flex items-center gap-3">
+          <div className="w-12 h-12 rounded-2xl bg-yellow-500 text-slate-955 flex items-center justify-center font-bold shadow-sm shrink-0">
+            <span className="text-xl">🤝</span>
+          </div>
+          <div className="flex flex-col gap-0.5">
+            <h4 className="font-heading font-extrabold text-sm text-slate-900 flex items-center gap-1.5">
+              <span>AI Matchmaker — Post & Connect in Tanjore</span>
+              <span className="text-[9px] bg-yellow-500 text-slate-955 px-2 py-0.5 rounded font-black uppercase">Instant</span>
+            </h4>
+            <p className="text-xs text-slate-600 font-medium">
+              Post what you want to Buy, Sell, or Rent. We automatically match you with local buyers & sellers!
+            </p>
+          </div>
+        </div>
+
+        <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
+          <button
+            onClick={() => router.push("/post/need")}
+            className="flex-1 sm:flex-none px-3.5 py-2 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-extrabold text-xs rounded-xl border border-yellow-400 shadow-2xs transition-all cursor-pointer text-center"
+          >
+            + Post Requirement
+          </button>
+          <button
+            onClick={() => router.push("/post/sell")}
+            className="flex-1 sm:flex-none px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white font-heading font-extrabold text-xs rounded-xl transition-all cursor-pointer text-center"
+          >
+            + Sell Item
+          </button>
+        </div>
+      </div>
+    );
   }
 
   // Determine active category & opposite type for real match

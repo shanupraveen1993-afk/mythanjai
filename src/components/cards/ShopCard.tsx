@@ -147,6 +147,19 @@ export default function ShopCard({ post, isPreview = false }: ShopCardProps) {
           </div>
         )}
 
+        {/* Video Reel Promo (Data-Saver Optimized Preload) */}
+        {post.offer_social_link && (
+          <div className="relative w-full rounded-xl overflow-hidden bg-black border border-slate-200 shadow-xs my-1 font-sans">
+            <video
+              src={post.offer_social_link}
+              controls
+              preload="metadata"
+              playsInline
+              className="w-full max-h-56 object-contain"
+            />
+          </div>
+        )}
+
         {/* Social Engagement Bar: Left = Date & Views, Right = Share & Save */}
         {!isPreview && (
           <div className="flex items-center justify-between text-[11px] text-slate-500 font-semibold border-t border-b border-slate-100 py-2 my-0.5">
