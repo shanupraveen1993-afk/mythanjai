@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { db } from "@/lib/firebase";
+import { db, storage } from "@/lib/firebase";
 import {
   collection,
   getDocs,
@@ -9,7 +9,9 @@ import {
   deleteDoc,
   updateDoc,
   addDoc,
+  serverTimestamp,
 } from "firebase/firestore";
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import {
   Shield,
   Trash2,
@@ -21,8 +23,15 @@ import {
   MessageSquare,
   ArrowLeft,
   Loader2,
+  Video,
+  Upload,
+  Copy,
+  Film,
+  Sparkles,
 } from "lucide-react";
 import Link from "next/link";
+import { useAuth } from "@/hooks/use-auth";
+import { useToast } from "@/context/ToastContext";
 
 type ModerationItem = {
   id: string;
@@ -40,11 +49,29 @@ type ModerationItem = {
 };
 
 export default function AdminClientPage() {
+  const { toast } = useToast();
+  const { user, profile } = useAuth();
   const [items, setItems] = useState<ModerationItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<string>("all");
   const [passcode, setPasscode] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
+
+  // Video Upload States
+  const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
+  const [videoTitle, setVideoTitle] = useState("");
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [videoUploading, setVideoUploading] = useState(false);
+  const [uploadedVideoUrl, setUploadedVideoUrl] = useState("");
+
+  // Auto-verify Admin if user mobile is 9994837342
+  useEffect(() => {
+    const rawPhone = String(profile?.phone || user?.phoneNumber || "");
+    const cleanPhone = rawPhone.replace(/\D/g, "");
+    if (cleanPhone.includes("9994837342") || profile?.isAdmin) {
+      setIsAdmin(true);
+    }
+  }, [profile, user]);
 
   const fetchModerationQueue = async () => {
     setLoading(true);
@@ -155,6 +182,80 @@ export default function AdminClientPage() {
     } catch (error) {
       alert("Error updating promotion: " + error);
     }
+  };
+
+  const handleVideoFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (!file.type.startsWith("video/")) {
+        toast.error("Please select a valid video file (.mp4, .webm, .mov).");
+        return;
+      }
+      setSelectedVideo(file);
+      if (!videoTitle) {
+        setVideoTitle(file.name.replace(/\.[^/.]+$/, ""));
+      }
+    }
+  };
+
+  const handleUploadVideo = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedVideo) {
+      toast.error("Please select a video file to upload.");
+      return;
+    }
+
+    setVideoUploading(true);
+    setUploadProgress(0);
+
+    try {
+      const storageRef = ref(storage, `admin_videos/${Date.now()}_${selectedVideo.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, selectedVideo);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+          setUploadProgress(progress);
+        },
+        (error) => {
+          console.error("Video upload error:", error);
+          toast.error("Video upload failed. Check network or storage rules.");
+          setVideoUploading(false);
+        },
+        async () => {
+          const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
+          setUploadedVideoUrl(downloadUrl);
+
+          // Record in Firestore admin_videos collection
+          try {
+            await addDoc(collection(db, "admin_videos"), {
+              title: videoTitle || selectedVideo.name,
+              video_url: downloadUrl,
+              created_at: serverTimestamp(),
+              uploaded_by: profile?.phone || "admin_9994837342",
+            });
+          } catch (e) {}
+
+          toast.success("Video uploaded successfully to Firebase Storage!");
+          setVideoUploading(false);
+          try {
+            const confetti = (await import("canvas-confetti")).default;
+            confetti({ particleCount: 50, spread: 60 });
+          } catch (err) {}
+        }
+      );
+    } catch (error: any) {
+      console.error("Upload initiation error:", error);
+      toast.error("Failed to start video upload.");
+      setVideoUploading(false);
+    }
+  };
+
+  const handleCopyVideoUrl = () => {
+    if (!uploadedVideoUrl) return;
+    navigator.clipboard.writeText(uploadedVideoUrl);
+    toast.success("Firebase Video URL copied to clipboard!");
   };
 
   const [seeding, setSeeding] = useState(false);
@@ -615,20 +716,139 @@ export default function AdminClientPage() {
       <div className="flex-1 px-4 py-4 flex flex-col gap-4 max-w-7xl mx-auto w-full">
         {/* Tab Filters */}
         <div className="flex gap-1.5 bg-slate-200 p-1.5 rounded-2xl border border-slate-300/40 overflow-x-auto no-scrollbar">
-          {["all", "needs_and_sales", "services", "shops", "offers"].map((tab) => (
+          {["all", "needs_and_sales", "services", "shops", "offers", "video_upload"].map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
-              className={`px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-wider shrink-0 transition-colors ${
+              className={`px-3 py-1.5 rounded-xl text-[10px] font-bold uppercase tracking-wider shrink-0 transition-colors flex items-center gap-1.5 ${
                 activeTab === tab
-                  ? "bg-slate-955 text-white"
+                  ? "bg-slate-900 text-white shadow-xs"
                   : "text-slate-600 hover:bg-slate-300/40"
               }`}
             >
-              {tab === "all" ? "All Queue" : tab.replace(/_and_/, "/").replace(/_/, " ")}
+              {tab === "video_upload" && <Video className="w-3.5 h-3.5 text-yellow-400" />}
+              <span>{tab === "all" ? "All Queue" : tab === "video_upload" ? "📹 Upload Video" : tab.replace(/_and_/, "/").replace(/_/, " ")}</span>
             </button>
           ))}
         </div>
+
+        {/* DEDICATED FIREBASE STORAGE VIDEO UPLOADER SECTION */}
+        {activeTab === "video_upload" ? (
+          <div className="bg-white border border-slate-200/80 rounded-2xl p-5 shadow-sm flex flex-col gap-5 max-w-2xl mx-auto w-full my-4 font-sans">
+            <div className="flex items-center gap-3 border-b border-slate-100 pb-3">
+              <div className="w-10 h-10 rounded-xl bg-yellow-500/10 text-yellow-600 flex items-center justify-center border border-yellow-500/20 shrink-0">
+                <Video className="w-5 h-5" />
+              </div>
+              <div>
+                <h3 className="font-heading font-extrabold text-sm text-slate-900 flex items-center gap-1.5">
+                  <span>Firebase Storage Video Uploader</span>
+                  <span className="text-[9px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md font-bold uppercase">Admin 9994837342</span>
+                </h3>
+                <p className="text-xs text-slate-500 mt-0.5 font-medium">
+                  Upload video files directly to Firebase Storage bucket. Get direct CDN video URLs instantly.
+                </p>
+              </div>
+            </div>
+
+            <form onSubmit={handleUploadVideo} className="flex flex-col gap-4">
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-bold text-slate-700">Video Title / Name (Optional)</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Tanjore Hub Promotional Reel 2026"
+                  value={videoTitle}
+                  onChange={(e) => setVideoTitle(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3.5 py-2 text-xs font-semibold focus:outline-none focus:border-yellow-500"
+                />
+              </div>
+
+              {/* Video File Input Dropzone */}
+              <div className="w-full bg-slate-50 border-2 border-dashed border-slate-300 hover:border-yellow-500 p-6 rounded-2xl flex flex-col items-center justify-center text-center gap-2 transition-all cursor-pointer">
+                <label className="w-full flex flex-col items-center justify-center gap-2 cursor-pointer">
+                  <div className="w-12 h-12 rounded-2xl bg-yellow-500/15 text-yellow-600 flex items-center justify-center font-bold">
+                    <Film className="w-6 h-6" />
+                  </div>
+                  <span className="font-heading font-bold text-xs text-slate-900">
+                    {selectedVideo ? selectedVideo.name : "Select or drag Video File (.mp4, .webm, .mov)"}
+                  </span>
+                  <span className="text-[10px] text-slate-400 font-medium">
+                    {selectedVideo ? `${(selectedVideo.size / (1024 * 1024)).toFixed(2)} MB` : "Files up to 100MB supported on Firebase Storage"}
+                  </span>
+                  <input
+                    type="file"
+                    accept="video/*"
+                    onChange={handleVideoFileChange}
+                    className="hidden"
+                  />
+                </label>
+              </div>
+
+              {/* Real-time Progress Bar */}
+              {videoUploading && (
+                <div className="flex flex-col gap-1.5 bg-yellow-50 border border-yellow-200 p-3 rounded-xl">
+                  <div className="flex justify-between text-xs font-bold text-slate-800">
+                    <span className="flex items-center gap-1.5">
+                      <Loader2 className="w-3.5 h-3.5 animate-spin text-yellow-600" />
+                      <span>Uploading to Firebase Storage...</span>
+                    </span>
+                    <span>{uploadProgress}%</span>
+                  </div>
+                  <div className="w-full h-2 bg-slate-200 rounded-full overflow-hidden">
+                    <div
+                      className="h-full bg-yellow-500 transition-all duration-200"
+                      style={{ width: `${uploadProgress}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={videoUploading || !selectedVideo}
+                className="w-full py-3 bg-yellow-500 hover:bg-yellow-400 disabled:opacity-50 text-slate-950 font-heading font-extrabold text-xs uppercase tracking-wider rounded-xl border border-yellow-400 shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+              >
+                {videoUploading ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
+                    <span>Uploading Video ({uploadProgress}%)...</span>
+                  </>
+                ) : (
+                  <>
+                    <Upload className="w-4 h-4 stroke-[2.5]" />
+                    <span>Upload Video to Firebase Storage</span>
+                  </>
+                )}
+              </button>
+            </form>
+
+            {/* Uploaded Video Success & Copy URL Result Card */}
+            {uploadedVideoUrl && (
+              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4 flex flex-col gap-3 animate-slide-up">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-emerald-900 flex items-center gap-1.5">
+                    <CheckCircle className="w-4 h-4 text-emerald-600" />
+                    <span>Video Uploaded & Live!</span>
+                  </span>
+                  <button
+                    onClick={handleCopyVideoUrl}
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors cursor-pointer"
+                  >
+                    <Copy className="w-3.5 h-3.5" />
+                    <span>Copy Video URL</span>
+                  </button>
+                </div>
+
+                <div className="relative rounded-lg overflow-hidden border border-emerald-200 bg-black max-h-56">
+                  <video src={uploadedVideoUrl} controls className="w-full h-48 object-contain" />
+                </div>
+
+                <p className="text-[10px] text-emerald-700 font-mono break-all bg-white p-2 rounded border border-emerald-200">
+                  {uploadedVideoUrl}
+                </p>
+              </div>
+            )}
+          </div>
+        ) : null}
 
         {/* List items */}
         {loading ? (
