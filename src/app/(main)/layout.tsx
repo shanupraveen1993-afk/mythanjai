@@ -166,7 +166,7 @@ function MainLayoutContent({
       )}
 
       {/* Main Content Panel (0 Padding for Guest Onboarding View & Full-Screen Chat) */}
-      <main className={`flex-1 w-full bg-white ${isStandaloneView ? "p-0 max-w-none m-0" : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-24 md:pb-12"}`}>
+      <main className={`flex-1 w-full bg-white ${isStandaloneView ? "p-0 max-w-none m-0" : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-14 pb-24 md:pb-8"}`}>
         {children}
       </main>
 
