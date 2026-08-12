@@ -958,6 +958,15 @@ export function RobotHero({
 
         {/* 4. Action Footer Group (CTA button lifted higher up with bottom padding) */}
         <div className="w-full max-w-xs sm:max-w-sm md:max-w-md shrink-0 flex flex-col gap-2 sm:gap-2.5 px-1 pb-3 sm:pb-4 mb-2">
+          {/* 3 Small Steps Explanation */}
+          <div className="flex items-center justify-center gap-2 sm:gap-3 mb-3 text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-tight">
+            <span className="flex items-center gap-1"><Megaphone className="w-3.5 h-3.5 text-emerald-500"/> Post</span>
+            <span className="text-slate-300">➔</span>
+            <span className="flex items-center gap-1"><Phone className="w-3.5 h-3.5 text-emerald-500"/> Connect</span>
+            <span className="text-slate-300">➔</span>
+            <span className="flex items-center gap-1"><CheckCircle className="w-3.5 h-3.5 text-emerald-500"/> Done</span>
+          </div>
+
           <button
             type="button"
             onClick={onCtaClick}
@@ -968,7 +977,7 @@ export function RobotHero({
           </button>
 
           {alerts.length > 0 && (
-            <div className="hidden md:flex w-full bg-slate-900 border border-slate-800 text-white rounded-xl py-1.5 px-3.5 shadow-sm items-center justify-between text-xs font-black select-none tracking-wide">
+            <div className="flex w-full bg-slate-900 border border-slate-800 text-white rounded-xl py-1.5 px-3.5 shadow-sm items-center justify-between text-xs font-black select-none tracking-wide mt-1">
               <div className="flex items-center gap-2 overflow-hidden w-full text-left">
                 <span className="bg-yellow-500 text-slate-950 font-black text-[8px] px-1.5 py-0.5 rounded-md uppercase shrink-0 animate-pulse">
                   LIVE
