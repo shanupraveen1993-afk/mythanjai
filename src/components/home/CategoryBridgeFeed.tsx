@@ -139,13 +139,44 @@ export default function CategoryBridgeFeed() {
         </button>
       </div>
 
-      {/* Matching Listings (Horizontal Scroll Carousel on Mobile, 3-Col Grid on Desktop) */}
+      {/* Matching Listings (Identical Compact PreviewCard Design across all 5 sections) */}
       <div className="-mx-4 px-4 flex md:grid overflow-x-auto md:overflow-visible snap-x snap-mandatory gap-3 pb-2 scrollbar-none">
-        {matchingListings.map((post) => (
-          <div key={post.id} className="w-[260px] sm:w-[290px] md:w-auto shrink-0 snap-start [&>div]:mx-0 [&>div]:w-full [&>div]:rounded-2xl [&>div]:border-b-0">
-            <NeedCard post={post} />
-          </div>
-        ))}
+        {matchingListings.map((post) => {
+          const imgUrl = (post.images && post.images.length > 0) ? post.images[0] : (post.image_url || "/thanjavur_temple_illustration.png");
+          const priceText = post.price ? (typeof post.price === "number" ? `₹${post.price.toLocaleString("en-IN")}` : String(post.price)) : "Best Offer";
+          const seePath = activeType === "SELL" ? "/need" : "/sell";
+
+          return (
+            <div
+              key={post.id}
+              onClick={() => router.push(seePath)}
+              className="shrink-0 w-[260px] sm:w-[290px] md:w-auto snap-start bg-white rounded-2xl overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08)] transition-all cursor-pointer border-0 hover:-translate-y-0.5 active:scale-[0.98]"
+            >
+              <div className="w-full h-28 overflow-hidden bg-slate-100 relative">
+                <img
+                  src={imgUrl}
+                  alt={post.title}
+                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                />
+                <span className="absolute top-2 left-2 text-[9px] font-black bg-white/95 text-slate-700 border border-slate-200 px-2 py-0.5 rounded-md shadow-sm">
+                  {post.category || "Matched Item"}
+                </span>
+              </div>
+              <div className="p-3 flex flex-col gap-1">
+                <div className="flex items-start justify-between gap-2">
+                  <h3 className="font-heading font-extrabold text-xs text-slate-900 leading-snug line-clamp-2 flex-1">
+                    {post.title}
+                  </h3>
+                  <span className="text-xs font-black text-slate-800 shrink-0">{priceText}</span>
+                </div>
+                <div className="flex items-center gap-1 text-[10px] text-slate-400 font-medium">
+                  <MapPin className="w-3 h-3 shrink-0" />
+                  <span>{post.area_tag || "Thanjavur"}</span>
+                </div>
+              </div>
+            </div>
+          );
+        })}
       </div>
     </div>
   );
