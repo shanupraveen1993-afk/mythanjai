@@ -65,7 +65,7 @@ export default function ShopsClientPage() {
       </div>
 
       {/* STICKY TITLE & POST BAR (Canvas-Matching Backdrop Bar) */}
-      <div className="sticky top-14 z-40 bg-[#eaf0f6]/95 backdrop-blur-md py-2.5 flex items-center justify-between gap-3 w-full border-b border-slate-300/40">
+      <div className="sticky top-14 z-40 bg-[#f4f5f8]/95 backdrop-blur-md py-3 flex items-center justify-between gap-3 w-full border-b border-slate-300/40">
         <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight">
           Local Offers
         </h2>
