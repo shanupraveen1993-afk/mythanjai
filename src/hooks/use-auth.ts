@@ -49,28 +49,50 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               await updateDoc(userRef, { isAdmin: true });
               data.isAdmin = true;
             }
-    const storedDisplayName = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_display_name") || "") : "";
-    if (storedDisplayName && data) data.displayName = storedDisplayName;
+            const storedDisplayName = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_display_name") || "") : "";
+            if (storedDisplayName && data) data.displayName = storedDisplayName;
 
-    setProfile(data);
-  } else {
-    const storedPhone = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_phone") || "") : "";
-    const storedVerified = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_verified") === "true") : false;
-    const storedDisplayName = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_display_name") || "") : "";
-    const newProfile: UserProfile = {
-      uid: currentUser.uid,
-      phone: storedPhone || "",
-      isVerified: storedVerified || false,
-      isAdmin: storedPhone.includes("9994837342"),
-      displayName: storedDisplayName || currentUser.displayName || "",
-      createdAt: new Date(),
-    };
-    await setDoc(userRef, newProfile, { merge: true });
-    setProfile(newProfile);
-  }
-} catch (error) {
-  console.error("Error fetching user profile:", error);
-}
+            setProfile(data);
+          } else {
+            const storedPhone = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_phone") || "") : "";
+            const storedVerified = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_verified") === "true") : false;
+            const storedDisplayName = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_display_name") || "") : "";
+            const newProfile: UserProfile = {
+              uid: currentUser.uid,
+              phone: storedPhone || "",
+              isVerified: storedVerified || false,
+              isAdmin: storedPhone.includes("9994837342"),
+              displayName: storedDisplayName || currentUser.displayName || "",
+              createdAt: new Date(),
+            };
+            await setDoc(userRef, newProfile, { merge: true });
+            setProfile(newProfile);
+          }
+        } catch (error) {
+          console.error("Error fetching user profile:", error);
+        }
+      } else {
+        const storedPhone = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_phone") || "") : "";
+        const storedVerified = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_verified") === "true") : false;
+        const storedDisplayName = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_display_name") || "") : "";
+        if (storedVerified && storedPhone) {
+          setProfile({
+            uid: "localStorage_user",
+            phone: storedPhone,
+            isVerified: true,
+            isAdmin: storedPhone.includes("9994837342"),
+            displayName: storedDisplayName || "",
+            createdAt: new Date(),
+          });
+        } else {
+          setProfile(null);
+        }
+      }
+      setLoading(false);
+    });
+
+    return () => unsubscribe();
+  }, []);
 
   const updateDisplayName = async (name: string) => {
     const trimmed = name.trim();
@@ -90,26 +112,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setProfile((prev) => prev ? { ...prev, displayName: trimmed } : { uid: user?.uid || "user", phone: "", isVerified: false, createdAt: new Date(), displayName: trimmed });
     return { success: true };
   };
-      } else {
-        const storedPhone = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_phone") || "") : "";
-        const storedVerified = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_verified") === "true") : false;
-        if (storedVerified && storedPhone) {
-          setProfile({
-            uid: "localStorage_user",
-            phone: storedPhone,
-            isVerified: true,
-            isAdmin: storedPhone.includes("9994837342"),
-            createdAt: new Date(),
-          });
-        } else {
-          setProfile(null);
-        }
-      }
-      setLoading(false);
-    });
-
-    return () => unsubscribe();
-  }, []);
 
   const updatePhone = async (phone: string) => {
     let activeUser = user;
