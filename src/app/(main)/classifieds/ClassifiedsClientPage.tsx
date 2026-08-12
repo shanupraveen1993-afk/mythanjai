@@ -168,7 +168,7 @@ export default function ClassifiedsClientPage() {
     <div className="flex flex-col gap-5 mt-3 md:mt-4 pt-1 pb-12 max-w-7xl mx-auto px-4 sm:px-6">
       {/* Active Category Title Bar */}
       {selectedCategory && (
-        <div className="flex items-center justify-between bg-slate-100/90 border border-slate-200/90 rounded-2xl p-3 shadow-2xs">
+        <div className="flex items-center justify-between bg-[#f0f2f5]/90 backdrop-blur-md py-2 -mx-4 px-4 sm:mx-0 sm:px-0 border-0">
           <div className="flex items-center gap-2">
             <span className="bg-yellow-500 text-slate-955 font-black text-xs px-2.5 py-1 rounded-xl shadow-2xs">
               {selectedCategory}
@@ -179,7 +179,7 @@ export default function ClassifiedsClientPage() {
           </div>
           <button
             onClick={handleClearCategory}
-            className="text-xs font-black text-slate-700 hover:text-slate-900 bg-white border border-slate-250 px-3 py-1 rounded-xl shadow-2xs cursor-pointer hover:bg-slate-50 transition-colors"
+            className="text-xs font-black text-slate-700 hover:text-slate-900 bg-white border border-slate-200/80 px-3 py-1 rounded-xl shadow-2xs cursor-pointer hover:bg-slate-50 transition-colors"
           >
             ✕ All Categories
           </button>
