@@ -120,7 +120,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
     <>
       <div 
         onClick={handleCardView}
-        className="bg-white -mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full sm:rounded-2xl overflow-hidden shadow-2xs sm:shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-200 flex flex-col justify-between cursor-pointer font-sans group border-b border-slate-200/60 sm:border-0"
+        className="bg-white -mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full sm:rounded-2xl overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.06)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.09)] transition-all duration-200 flex flex-col justify-between cursor-pointer font-sans group border-b border-slate-200/80 sm:border sm:border-slate-200/90"
       >
         {/* Card Header Media Container */}
         <div className="w-full h-32 sm:h-36 bg-slate-100 relative overflow-hidden">

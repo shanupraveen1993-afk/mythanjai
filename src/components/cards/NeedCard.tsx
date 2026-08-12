@@ -85,7 +85,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
   const isNeedType = post.type?.toUpperCase() === "NEED";
 
   return (
-    <div className="bg-white -mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full sm:rounded-2xl p-3 sm:p-3.5 flex flex-col gap-2 shadow-2xs sm:shadow-[0_2px_8px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_12px_rgba(0,0,0,0.06)] transition-all duration-200 relative group overflow-hidden font-sans border-b border-slate-200/60 sm:border-0">
+    <div className="bg-white -mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full sm:rounded-2xl p-3.5 sm:p-4 flex flex-col gap-2.5 shadow-[0_4px_16px_rgba(0,0,0,0.06)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.09)] transition-all duration-200 relative group overflow-hidden font-sans border-b border-slate-200/80 sm:border sm:border-slate-200/90">
       
       {/* Top Header Tags */}
       <div className="flex items-center justify-between gap-2">
@@ -140,11 +140,13 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
         </div>
       ) : null}
 
-      {/* Description Body */}
+      {/* Description Box */}
       {post.description && (
-        <p className="text-xs text-slate-600 font-medium leading-relaxed line-clamp-2 bg-slate-50/80 p-2 rounded-xl border-0">
-          {post.description}
-        </p>
+        <div className="bg-slate-50 border border-slate-200/80 p-2.5 rounded-xl">
+          <p className="text-xs text-slate-700 font-medium leading-relaxed line-clamp-2">
+            {post.description}
+          </p>
+        </div>
       )}
 
       {/* Facebook-Style Social Bar (Hidden in Live Preview Mode) */}

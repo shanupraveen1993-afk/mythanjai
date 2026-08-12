@@ -65,15 +65,15 @@ export default function ShopsClientPage() {
       </div>
 
       {/* STICKY TITLE & POST BAR */}
-      <div className="sticky top-14 z-40 bg-[#f0f2f5]/90 backdrop-blur-md py-2 flex items-center justify-between gap-2 border-0 -mx-4 px-4 sm:mx-0 sm:px-0">
-        <h2 className="font-heading font-bold text-base text-slate-900 tracking-tight">
+      <div className="sticky top-14 z-40 bg-[#eaf0f6]/95 backdrop-blur-md py-2.5 flex items-center justify-between gap-3 border-0 -mx-4 px-4 sm:mx-0 sm:px-0">
+        <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight">
           Local Offers
         </h2>
         <button
           onClick={() => router.push("/post/offer")}
-          className="flex items-center gap-1 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-bold px-3.5 py-1.5 rounded-xl text-xs transition-all border border-yellow-400 cursor-pointer shadow-2xs active:scale-95"
+          className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-black px-4 py-2 rounded-xl text-xs sm:text-sm transition-all border border-yellow-400 cursor-pointer shadow-md active:scale-95 shrink-0"
         >
-          <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+          <Plus className="w-4 h-4 stroke-[3]" />
           <span>Post Offer</span>
         </button>
       </div>
@@ -86,7 +86,7 @@ export default function ShopsClientPage() {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="text-xs font-bold bg-white border border-slate-200/90 rounded-xl px-3 py-1.5 text-slate-800 focus:ring-1 focus:ring-yellow-500 focus:outline-none cursor-pointer shadow-2xs max-w-[55%] truncate"
+            className="appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23475569%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[right_0.6rem_center] bg-no-repeat pr-8 pl-3.5 py-2 text-xs sm:text-sm font-bold bg-white border border-slate-300 rounded-xl shadow-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 cursor-pointer max-w-[55%] truncate"
           >
             <option value="All">All Offers</option>
             {SHOP_CATEGORIES.map((cat) => (
@@ -98,11 +98,11 @@ export default function ShopsClientPage() {
 
           {/* Sort By Dropdown (Far Right) */}
           <div className="flex items-center gap-1.5 shrink-0">
-            <ArrowUpDown className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+            <ArrowUpDown className="w-4 h-4 text-slate-400 shrink-0 hidden sm:block" />
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="text-xs font-bold bg-white border border-slate-200/90 rounded-xl px-3 py-1.5 text-slate-800 focus:ring-1 focus:ring-yellow-500 focus:outline-none cursor-pointer shadow-2xs"
+              className="appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23475569%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[right_0.6rem_center] bg-no-repeat pr-8 pl-3.5 py-2 text-xs sm:text-sm font-bold bg-white border border-slate-300 rounded-xl shadow-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 cursor-pointer"
             >
               <option value="recent">Recently Added</option>
               <option value="name">Store Name (A-Z)</option>
