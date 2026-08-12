@@ -27,7 +27,8 @@ import {
   MessageSquare,
   ShieldCheck,
   Zap,
-  LogOut
+  LogOut,
+  Pencil
 } from "lucide-react";
 
 export default function ProfileClientPage() {
@@ -37,6 +38,7 @@ export default function ProfileClientPage() {
   const [phoneUpdating, setPhoneUpdating] = useState(false);
   const [displayName, setDisplayName] = useState("");
   const [displayNameUpdating, setDisplayNameUpdating] = useState(false);
+  const [isEditingName, setIsEditingName] = useState(false);
 
   // WhatsApp verification state variables
   const [verificationToken, setVerificationToken] = useState<string | null>(null);
@@ -153,6 +155,7 @@ export default function ProfileClientPage() {
     setDisplayNameUpdating(true);
     try {
       await updateDisplayName(displayName);
+      setIsEditingName(false);
       try {
         const confetti = (await import("canvas-confetti")).default;
         confetti({ particleCount: 30, spread: 30 });
@@ -298,12 +301,55 @@ export default function ProfileClientPage() {
           {/* Profile / Phone Verification Info */}
           <div className="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm flex flex-col gap-3.5">
             <div className="flex items-center gap-3">
-              <div className="w-12 h-12 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center border border-amber-500/20 shadow-inner">
-                <User className="w-6 h-6" />
+              <div className="w-11 h-11 rounded-xl bg-amber-500/10 text-amber-600 flex items-center justify-center border border-amber-500/20 shadow-inner shrink-0">
+                <User className="w-5 h-5" />
               </div>
-              <div>
-                <h3 className="font-heading font-bold text-sm text-slate-900">{profile?.displayName || "Resident Guest"}</h3>
-                <p className="text-[10px] text-slate-500 truncate max-w-[150px]">UID: {user?.uid}</p>
+              <div className="min-w-0 flex-1">
+                {isEditingName ? (
+                  <div className="flex items-center gap-1.5">
+                    <input
+                      type="text"
+                      value={displayName}
+                      onChange={(e) => setDisplayName(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") handleSaveDisplayName();
+                      }}
+                      placeholder="Enter your name"
+                      disabled={displayNameUpdating}
+                      autoFocus
+                      className="px-2 py-1 text-xs font-bold text-slate-900 border border-slate-300 rounded-lg bg-white focus:outline-none focus:border-yellow-500 w-full"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleSaveDisplayName}
+                      disabled={displayNameUpdating}
+                      className="w-7 h-7 rounded-lg bg-yellow-500 hover:bg-yellow-400 text-slate-955 flex items-center justify-center transition-all cursor-pointer border border-yellow-400 shrink-0 shadow-2xs"
+                      title="Save Name (Press Enter)"
+                    >
+                      {displayNameUpdating ? (
+                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                      ) : (
+                        <CheckCircle className="w-4 h-4 stroke-[2.5]" />
+                      )}
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center justify-between gap-2">
+                    <div className="min-w-0">
+                      <h3 className="font-heading font-bold text-sm sm:text-base text-slate-900 line-clamp-1">
+                        {profile?.displayName || displayName || "Resident Guest"}
+                      </h3>
+                      <p className="text-[10px] text-slate-500 truncate max-w-[140px]">UID: {user?.uid}</p>
+                    </div>
+                    <button
+                      onClick={() => setIsEditingName(true)}
+                      className="p-1.5 text-slate-400 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer shrink-0"
+                      title="Edit Name"
+                    >
+                      <Pencil className="w-4 h-4 text-slate-500" />
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
 
@@ -316,35 +362,6 @@ export default function ProfileClientPage() {
               <p className="text-[9px] text-slate-500 leading-normal font-medium">
                 Active listings will be automatically removed after 30 days.
               </p>
-            </div>            {/* Profile Display Name Single Line Input with Tick */}
-            <div className="flex flex-col gap-1 border-t border-slate-100 pt-2.5">
-              <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                Your Name
-              </label>
-              <div className="flex items-center gap-2 bg-slate-50 border border-slate-200 rounded-xl px-3 py-1.5 focus-within:ring-1 focus-within:ring-yellow-500 focus-within:border-yellow-500">
-                <User className="w-4 h-4 text-slate-400 shrink-0" />
-                <input
-                  type="text"
-                  value={displayName}
-                  onChange={(e) => setDisplayName(e.target.value)}
-                  placeholder="Enter your name"
-                  disabled={displayNameUpdating}
-                  className="flex-1 bg-transparent text-xs font-bold text-slate-900 focus:outline-none"
-                />
-                <button
-                  type="button"
-                  onClick={handleSaveDisplayName}
-                  disabled={displayNameUpdating}
-                  className="w-7 h-7 rounded-lg bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-slate-955 flex items-center justify-center transition-all cursor-pointer border border-yellow-400 shrink-0 shadow-2xs"
-                  title="Save Name"
-                >
-                  {displayNameUpdating ? (
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  ) : (
-                    <CheckCircle className="w-4 h-4 stroke-[2.5]" />
-                  )}
-                </button>
-              </div>
             </div>
 
             {/* Verification Status */}
