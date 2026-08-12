@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { Phone, MessageSquare, Award, MapPin, ShieldCheck, Zap, Droplet, Hammer, Wind, Wrench, Eye, Share2, Bookmark, AlertTriangle } from "lucide-react";
+import { Phone, MessageSquare, Award, MapPin, ShieldCheck, Zap, Droplet, Hammer, Wind, Wrench, Eye, Share2, Bookmark, AlertTriangle, Calendar } from "lucide-react";
 import { ServiceProviderPost } from "@/types";
+import { formatRelativeTime } from "@/lib/constants";
 import ServiceFeedbackModal from "@/components/modals/ServiceFeedbackModal";
 
 interface ServiceCardProps {
@@ -68,7 +69,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
     <div className="bg-white border border-slate-200/95 rounded-xl p-4 shadow-2xs hover:border-slate-300 hover:shadow-xs flex flex-col gap-3.5 transition-all duration-200 w-full font-sans relative">
       
       {/* Top Section: Name & Category Badge */}
-      <div className="flex items-start justify-between">
+      <div className="flex items-start justify-between gap-2">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5 flex-wrap">
             <h3 className="font-heading font-bold text-sm sm:text-base text-slate-900 line-clamp-1 truncate">
@@ -93,6 +94,11 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
               📞 +91 {cleanPhone}
             </span>
           </div>
+        </div>
+
+        <div className="flex items-center gap-1 text-[10px] text-slate-400 font-medium shrink-0">
+          <Calendar className="w-3 h-3 text-slate-400" />
+          <span>{formatRelativeTime(post.created_at)}</span>
         </div>
       </div>
 

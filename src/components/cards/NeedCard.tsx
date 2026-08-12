@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { MessageSquare, Calendar, Tag, MapPin, Share2, Home, Cpu, Car, Eye, Bookmark, ShieldCheck, Lock, UserCheck } from "lucide-react";
 import { NeedOrSalePost } from "@/types";
-import { formatIndianCurrencyText } from "@/lib/constants";
+import { formatIndianCurrencyText, formatRelativeTime } from "@/lib/constants";
 import InAppChatModal from "@/components/chat/InAppChatModal";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -80,21 +80,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
     setSaved(!saved);
   };
 
-  const formatDate = (timestamp: any) => {
-    if (!timestamp) return "Just now";
-    try {
-      const date = typeof timestamp?.toDate === "function" ? timestamp.toDate() : new Date(timestamp);
-      if (date instanceof Date && !isNaN(date.getTime())) {
-        return date.toLocaleDateString("en-IN", {
-          day: "numeric",
-          month: "short",
-        });
-      }
-    } catch (e) {
-      // Fallback
-    }
-    return "Just now";
-  };
+  const formatDate = (timestamp: any) => formatRelativeTime(timestamp);
 
   const isNeedType = post.type?.toUpperCase() === "NEED";
 

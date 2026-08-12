@@ -4,6 +4,7 @@ import React from "react";
 import Image from "next/image";
 import { Phone, MessageSquare, MapPin, Clock, Calendar, Compass, Sparkles, Navigation, Utensils, Shirt, ShoppingBag, Store } from "lucide-react";
 import { ShopPost } from "@/types";
+import { formatRelativeTime } from "@/lib/constants";
 
 interface ShopCardProps {
   post: ShopPost;
@@ -72,6 +73,12 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false, isPre
         <span className="absolute bottom-2.5 right-2.5 bg-black/77 backdrop-blur-sm text-white text-[9px] font-semibold px-2.5 py-0.5 rounded-xl flex items-center gap-1 shadow-xs border border-white/10 z-20">
           {getCategoryIllustration(post.category)}
           <span className="capitalize">{post.category}</span>
+        </span>
+
+        {/* Relative Posted Date Tag */}
+        <span className="absolute top-2.5 right-2.5 bg-black/77 backdrop-blur-sm text-slate-200 text-[9px] font-medium px-2 py-0.5 rounded-xl flex items-center gap-1 shadow-xs border border-white/10 z-20">
+          <Calendar className="w-2.5 h-2.5 text-slate-300" />
+          <span>{formatRelativeTime(post.created_at)}</span>
         </span>
 
         {/* Play Reel overlay if Instagram Reel link is present and no native video */}

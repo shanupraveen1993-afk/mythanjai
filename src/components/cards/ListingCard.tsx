@@ -2,10 +2,11 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { Eye, Share2, Bookmark, Phone, MessageSquare, MapPin, UserCheck } from "lucide-react";
+import { Eye, Share2, Bookmark, Phone, MessageSquare, MapPin, UserCheck, Calendar } from "lucide-react";
 import { doc, updateDoc, increment, arrayUnion, arrayRemove } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/hooks/use-auth";
+import { formatRelativeTime } from "@/lib/constants";
 import InAppChatModal from "@/components/chat/InAppChatModal";
 
 export interface ListingItem {
@@ -28,6 +29,7 @@ export interface ListingItem {
   seller_name?: string;
   youtube_link?: string;
   google_maps_link?: string;
+  created_at?: any;
 }
 
 export default function ListingCard({ listing }: { listing: ListingItem }) {
@@ -129,10 +131,16 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
             className="object-cover group-hover:scale-105 transition-transform duration-300"
           />
           
-          {/* Category Tag */}
-          <span className="absolute top-3 left-3 bg-slate-900/80 backdrop-blur-xs text-white font-bold text-[9px] uppercase tracking-wider px-2.5 py-1 rounded-md">
-            {listing.category || listing.type || "Classified"}
-          </span>
+          {/* Category & Relative Date Tag */}
+          <div className="absolute top-3 left-3 flex items-center gap-1.5 z-10">
+            <span className="bg-slate-900/80 backdrop-blur-xs text-white font-bold text-[9px] uppercase tracking-wider px-2.5 py-1 rounded-md">
+              {listing.category || listing.type || "Classified"}
+            </span>
+            <span className="bg-slate-900/80 backdrop-blur-xs text-slate-200 font-medium text-[9px] px-2 py-1 rounded-md flex items-center gap-1">
+              <Calendar className="w-2.5 h-2.5 text-slate-300" />
+              <span>{formatRelativeTime(listing.created_at)}</span>
+            </span>
+          </div>
 
           {/* Save / Bookmark Icon Button */}
           <button

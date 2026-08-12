@@ -144,3 +144,48 @@ export function formatIndianCurrencyText(amount: number | string | null | undefi
   }
   return `₹${num.toLocaleString("en-IN")}`;
 }
+
+/**
+ * Format timestamp into user-friendly relative duration:
+ * - < 1 hr: "Xm ago" or "Just now"
+ * - < 24 hrs: "Xh ago"
+ * - 1 to 30 days: "1 day ago", "20 days ago", "30 days ago"
+ * - > 30 days: "1 month 2 days ago", "2 months 5 days ago"
+ */
+export function formatRelativeTime(timestamp: any): string {
+  if (!timestamp) return "Just now";
+  let date: Date;
+  try {
+    date = typeof timestamp?.toDate === "function" ? timestamp.toDate() : new Date(timestamp);
+    if (!(date instanceof Date) || isNaN(date.getTime())) return "Just now";
+  } catch (e) {
+    return "Just now";
+  }
+
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  if (diffMs < 0) return "Just now";
+
+  const diffSecs = Math.floor(diffMs / 1000);
+  const diffMins = Math.floor(diffSecs / 60);
+  const diffHours = Math.floor(diffMins / 60);
+  const diffDays = Math.floor(diffHours / 24);
+
+  if (diffSecs < 60) return "Just now";
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  
+  if (diffDays <= 30) {
+    return diffDays === 1 ? "1 day ago" : `${diffDays} days ago`;
+  }
+
+  const months = Math.floor(diffDays / 30);
+  const remainingDays = diffDays % 30;
+
+  const monthStr = months === 1 ? "1 month" : `${months} months`;
+  if (remainingDays === 0) {
+    return `${monthStr} ago`;
+  }
+  const dayStr = remainingDays === 1 ? "1 day" : `${remainingDays} days`;
+  return `${monthStr} ${dayStr} ago`;
+}
