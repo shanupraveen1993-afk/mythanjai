@@ -713,7 +713,9 @@ export default function PostForm({ segment }: PostFormProps) {
                 {/* Description with Character Limit Counter */}
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-semibold text-slate-700">Details / Description *</label>
+                    <label className="text-xs font-semibold text-slate-700">
+                      {segment === "service" ? "Work Experience & Skill Details *" : "Description or details *"}
+                    </label>
                     <span className={`text-[10px] font-medium ${description.length >= config.maxDescChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>
                       {description.length}/{config.maxDescChars}
                     </span>
@@ -722,11 +724,15 @@ export default function PostForm({ segment }: PostFormProps) {
                     required
                     rows={3}
                     maxLength={config.maxDescChars}
-                    placeholder="Describe requirement, item condition, or work experience..."
+                    placeholder={
+                      segment === "service"
+                        ? "Describe your trade skills, work experience, and services offered..."
+                        : "Describe your requirement, item condition, or service details..."
+                    }
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     onBlur={handleBlurDescription}
-                    className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-colors leading-relaxed"
+                    className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 resize-none leading-relaxed"
                   />
                 </div>
               </>
@@ -762,31 +768,6 @@ export default function PostForm({ segment }: PostFormProps) {
               </div>
             )}
 
-            {/* Description with Character Limit Counter */}
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center justify-between">
-                <label className="text-xs font-semibold text-slate-700">
-                  {segment === "service" ? "Work Experience & Skill Details *" : "Description or details"}
-                </label>
-                <span className={`text-[10px] font-medium ${description.length >= config.maxDescChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>
-                  {description.length}/{config.maxDescChars}
-                </span>
-              </div>
-              <textarea
-                rows={4}
-                maxLength={config.maxDescChars}
-                placeholder={
-                  segment === "service"
-                    ? "Describe your trade skills, work experience, and services offered (e.g. 10 years experience in house wiring, DB box, motor connection)..."
-                    : "Describe your item, features, or service details..."
-                }
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                onBlur={handleBlurDescription}
-                className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 resize-none"
-              />
-            </div>
-
             {/* Photo Upload (Only for Sell & Need, since Offer uses top visiting card upload container) */}
             {segment !== "offer" && segment !== "service" && (
               <div className="flex flex-col gap-1">
@@ -803,15 +784,15 @@ export default function PostForm({ segment }: PostFormProps) {
               </div>
             )}
 
-            {/* Submit Button */}
+            {/* Submit Button (Primary Yellow Brand Color) */}
             <button
               type="submit"
               disabled={loading}
-              className={`w-full py-3 ${config.accentColor} text-xs uppercase tracking-wider rounded-lg border shadow-xs transition-all flex items-center justify-center gap-2 cursor-pointer mt-2`}
+              className="w-full py-3.5 bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-heading font-extrabold text-xs uppercase tracking-wider rounded-xl border border-yellow-400 shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer mt-2 hover:shadow-lg active:scale-[0.99]"
             >
               {loading ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
                   <span>Publishing Post...</span>
                 </>
               ) : (
