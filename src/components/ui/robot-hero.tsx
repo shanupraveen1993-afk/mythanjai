@@ -899,7 +899,7 @@ export function RobotHero({
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-dvh md:h-[calc(100vh-70px)] flex flex-col justify-between items-center bg-white text-slate-800 pt-4 md:pt-2 pb-2 md:pb-1 px-3 sm:px-4 overflow-hidden select-none"
+      className="relative w-full h-dvh md:h-[calc(100vh-70px)] flex flex-col justify-between items-center bg-white text-slate-800 pt-10 md:pt-2 pb-6 md:pb-1 px-3 sm:px-4 overflow-hidden select-none"
     >
       {/* Light radial glow centered behind hero */}
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_45%,rgba(250,204,21,0.06)_0%,transparent_60%)] pointer-events-none" />
@@ -909,11 +909,11 @@ export function RobotHero({
         
         {/* 1. Clean Spaced Header Group: Logo + Headline + Subline + Rotational Switcher Badge */}
         <div className="flex flex-col items-center gap-1.5 sm:gap-2 w-full shrink-0 pt-1 md:pt-0">
-          <div className="w-14 h-14 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-2xl sm:rounded-3xl shadow-lg border border-slate-200/50 hover:scale-[1.05] transition-transform shrink-0 overflow-hidden bg-white flex items-center justify-center">
+          <div className="w-14 h-14 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-2xl sm:rounded-3xl hover:scale-[1.05] transition-transform shrink-0 overflow-hidden flex items-center justify-center bg-transparent drop-shadow-md">
             <img 
               src="/namma_thanjai_logo.png" 
               alt="namma thanjai logo" 
-              className="w-full h-full object-cover scale-[1.02]" 
+              className="w-full h-full object-cover scale-[1.05]" 
             />
           </div>
           <h1 className="font-heading font-black text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tighter leading-none uppercase mt-1 w-full text-center drop-shadow-sm scale-x-[1.02] transform origin-center whitespace-nowrap bg-gradient-to-b from-slate-950 via-slate-800 to-slate-900 bg-clip-text text-transparent">
@@ -950,7 +950,7 @@ export function RobotHero({
             <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
             <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} shadow-bias={-0.0005} />
             <Environment preset="studio" blur={0.5} />
-            <ResponsiveGroup scale={scale * 1.35}>
+            <ResponsiveGroup scale={scale * 1.55}>
               <RobotPrototype neckParams={{ baseR: 0.215, baseH: -0.05, midR: 0.28, midH: 0.02, lipBottomR: 0.295, lipBottomH: 0.045, lipTopR: 0.27, lipTopH: 0.055, innerR: 0.1, innerDropH: 0.0 }} bodyParams={{ bodyBevelR: 0.235, bodyBevelY: 0.34, bodyBevelT: 0.025 }} color={color} pantallaColor={pantallaColor} pantallaBrillo={pantallaBrillo} blinkCycle={blinkCycle} metalness={metalness} />
             </ResponsiveGroup>
           </Canvas>
