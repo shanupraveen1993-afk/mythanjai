@@ -9,6 +9,8 @@ import { useAuth, AuthProvider } from "@/hooks/use-auth";
 import SignInModal from "@/components/auth/SignInModal";
 import UniversalSearchBar from "@/components/layout/UniversalSearchBar";
 
+import Footer from "@/components/layout/Footer";
+
 export default function MainLayout({
   children,
 }: {
@@ -174,6 +176,13 @@ function MainLayoutContent({
           activeTab={getActiveTab()}
           onTabChange={handleTabChange}
         />
+      )}
+
+      {/* Main Website Footer */}
+      {!isChatRoute && (
+        <React.Suspense fallback={null}>
+          <Footer />
+        </React.Suspense>
       )}
 
       {/* Sign-In Popup Modal */}
