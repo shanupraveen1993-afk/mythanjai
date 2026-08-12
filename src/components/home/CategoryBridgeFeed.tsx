@@ -134,26 +134,7 @@ export default function CategoryBridgeFeed() {
         </button>
       </div>
 
-      {/* User's Posted Requirement Summary Badge (If active requirement exists) */}
-      {userLatestPost && (
-        <div className="bg-white border border-amber-200/80 rounded-xl p-3 flex items-center justify-between gap-3 text-xs shadow-2xs">
-          <div className="flex items-center gap-2.5 truncate">
-            <span className="w-7 h-7 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xs shrink-0">
-              {userLatestPost.type === "NEED" ? "🛒" : "🏷️"}
-            </span>
-            <div className="flex flex-col truncate">
-              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wide">
-                Your Requirement
-              </span>
-              <span className="font-bold text-slate-900 truncate">{userLatestPost.title}</span>
-            </div>
-          </div>
-          <span className="text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-md shrink-0 flex items-center gap-1">
-            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
-            <span>Matched Live</span>
-          </span>
-        </div>
-      )}
+
 
       {/* Matching Listings Grid */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
