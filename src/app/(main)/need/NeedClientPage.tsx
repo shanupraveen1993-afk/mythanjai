@@ -85,12 +85,12 @@ export default function NeedClientPage() {
       {/* LISTING CONTAINER */}
       <div className="flex flex-col gap-3">
         {/* Category & Sort Filter Bar */}
-        <div className="py-1 flex items-center justify-between gap-2 bg-transparent">
+        <div className="-mx-4 px-4 sm:mx-0 sm:px-0 py-1.5 flex items-center justify-between gap-2 bg-transparent">
           {/* Category Dropdown (Far Left) */}
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="text-xs font-bold bg-white border border-slate-200/80 rounded-xl px-3 py-1.5 text-slate-800 focus:outline-none cursor-pointer shadow-2xs"
+            className="text-xs font-bold bg-white border border-slate-200/90 rounded-xl px-3 py-1.5 text-slate-800 focus:ring-1 focus:ring-yellow-500 focus:outline-none cursor-pointer shadow-2xs max-w-[55%] truncate"
           >
             <option value="All">All Categories</option>
             {CLASSIFIED_CATEGORIES.map((cat) => (
@@ -101,12 +101,12 @@ export default function NeedClientPage() {
           </select>
 
           {/* Sort By Dropdown (Far Right) */}
-          <div className="flex items-center gap-1">
+          <div className="flex items-center gap-1.5 shrink-0">
             <ArrowUpDown className="w-3.5 h-3.5 text-slate-400 shrink-0" />
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="text-xs font-bold bg-white border border-slate-200/80 rounded-xl px-3 py-1.5 text-slate-800 focus:outline-none cursor-pointer shadow-2xs"
+              className="text-xs font-bold bg-white border border-slate-200/90 rounded-xl px-3 py-1.5 text-slate-800 focus:ring-1 focus:ring-yellow-500 focus:outline-none cursor-pointer shadow-2xs"
             >
               <option value="recent">Recently Added</option>
               <option value="price_low">Budget: Low to High</option>
