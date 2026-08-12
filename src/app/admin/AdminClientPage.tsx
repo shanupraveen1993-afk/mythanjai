@@ -32,6 +32,7 @@ import {
 import Link from "next/link";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/context/ToastContext";
+import { TANJORE_LOCALITIES } from "@/lib/constants";
 
 type ModerationItem = {
   id: string;
@@ -57,9 +58,13 @@ export default function AdminClientPage() {
   const [passcode, setPasscode] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
 
-  // Video Upload States
+  // Video Upload & AI Offer Publisher States
   const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
   const [videoTitle, setVideoTitle] = useState("");
+  const [videoDescription, setVideoDescription] = useState("");
+  const [videoArea, setVideoArea] = useState<string>(TANJORE_LOCALITIES[0]);
+  const [publishToOffers, setPublishToOffers] = useState(true);
+  const [isAiFormatting, setIsAiFormatting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [videoUploading, setVideoUploading] = useState(false);
   const [uploadedVideoUrl, setUploadedVideoUrl] = useState("");
@@ -184,6 +189,36 @@ export default function AdminClientPage() {
     }
   };
 
+  const handleFormatWithAi = async () => {
+    if (!videoDescription.trim()) {
+      toast.error("Please enter raw offer notes or details to analyze with AI.");
+      return;
+    }
+    setIsAiFormatting(true);
+    try {
+      const res = await fetch("/api/gemini-format", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          type: "shops",
+          rawDescription: videoDescription,
+        }),
+      });
+      const data = await res.json();
+      if (data.success && data.formattedText) {
+        setVideoDescription(data.formattedText);
+        toast.success("Gemini AI analyzed and polished your offer summary!");
+      } else {
+        toast.error(data.error || "Failed to format description with AI.");
+      }
+    } catch (err) {
+      console.error("AI format error:", err);
+      toast.error("Network error while formatting with AI.");
+    } finally {
+      setIsAiFormatting(false);
+    }
+  };
+
   const handleVideoFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -227,7 +262,7 @@ export default function AdminClientPage() {
           const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
           setUploadedVideoUrl(downloadUrl);
 
-          // Record in Firestore admin_videos collection
+          // 1. Record in Firestore admin_videos collection
           try {
             await addDoc(collection(db, "admin_videos"), {
               title: videoTitle || selectedVideo.name,
@@ -237,11 +272,42 @@ export default function AdminClientPage() {
             });
           } catch (e) {}
 
-          toast.success("Video uploaded successfully to Firebase Storage!");
+          // 2. Publish Live Offer to Firestore shops & offers collections if toggle checked
+          if (publishToOffers) {
+            try {
+              const offerRecord = {
+                userId: user?.uid || "admin_9994837342",
+                shop_name: videoTitle.trim() || selectedVideo.name.replace(/\.[^/.]+$/, ""),
+                category: "Local Offers & Deals",
+                area_tag: videoArea,
+                address_text: `${videoArea}, Thanjavur`,
+                phone: profile?.phone || "9994837342",
+                image_url: "/thanjavur_temple_illustration.png",
+                offer_social_link: downloadUrl,
+                offer_title: videoTitle.trim() || "Exclusive Discount Offer",
+                offer_description: videoDescription.trim() || "Special promotional offer with video reel.",
+                is_featured: true,
+                is_verified: true,
+                is_claimed: true,
+                hours: "Limited Time Offer",
+                created_at: serverTimestamp(),
+                show_phone: true,
+              };
+
+              await addDoc(collection(db, "shops"), offerRecord);
+              await addDoc(collection(db, "offers"), offerRecord);
+              toast.success("Video Offer Published Live to Offers Page (/offers)!");
+            } catch (pubErr) {
+              console.warn("Live offer publishing error:", pubErr);
+            }
+          } else {
+            toast.success("Video uploaded successfully to Firebase Storage!");
+          }
+
           setVideoUploading(false);
           try {
             const confetti = (await import("canvas-confetti")).default;
-            confetti({ particleCount: 50, spread: 60 });
+            confetti({ particleCount: 70, spread: 80 });
           } catch (err) {}
         }
       );
@@ -745,34 +811,87 @@ export default function AdminClientPage() {
                   <span className="text-[9px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md font-bold uppercase">Admin 9994837342</span>
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5 font-medium">
-                  Upload video files directly to Firebase Storage bucket. Get direct CDN video URLs instantly.
+                  Upload video reels to Firebase Storage & publish AI-analyzed live offers to /offers.
                 </p>
               </div>
             </div>
 
             <form onSubmit={handleUploadVideo} className="flex flex-col gap-4">
-              <div className="flex flex-col gap-1">
-                <label className="text-xs font-bold text-slate-700">Video Title / Name (Optional)</label>
-                <input
-                  type="text"
-                  placeholder="e.g. Tanjore Hub Promotional Reel 2026"
-                  value={videoTitle}
-                  onChange={(e) => setVideoTitle(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3.5 py-2 text-xs font-semibold focus:outline-none focus:border-yellow-500"
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-bold text-slate-700">Store / Offer Title *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. GLEN Kitchen Chimney — 50% OFF"
+                    value={videoTitle}
+                    onChange={(e) => setVideoTitle(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3.5 py-2 text-xs font-semibold focus:outline-none focus:border-yellow-500"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-bold text-slate-700">Location in Thanjavur</label>
+                  <select
+                    value={videoArea}
+                    onChange={(e) => setVideoArea(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3.5 py-2 text-xs font-semibold focus:outline-none focus:border-yellow-500 cursor-pointer"
+                  >
+                    {TANJORE_LOCALITIES.map((loc) => (
+                      <option key={loc} value={loc}>
+                        {loc}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              </div>
+
+              {/* Offer Description with Gemini AI Polish Engine */}
+              <div className="flex flex-col gap-1.5">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                    <span>Offer Details & Notes</span>
+                    <span className="text-[10px] text-slate-400 font-normal">(AI Analyzed)</span>
+                  </label>
+                  <button
+                    type="button"
+                    onClick={handleFormatWithAi}
+                    disabled={isAiFormatting || !videoDescription.trim()}
+                    className="text-[10px] font-bold text-amber-700 hover:text-amber-800 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all cursor-pointer disabled:opacity-50"
+                  >
+                    {isAiFormatting ? (
+                      <>
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                        <span>Analyzing with AI...</span>
+                      </>
+                    ) : (
+                      <>
+                        <Sparkles className="w-3 h-3 fill-amber-500 text-amber-600" />
+                        <span>✨ AI Polish Summary</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+                <textarea
+                  rows={3}
+                  placeholder="Enter raw offer notes (e.g. 50% discount on GLEN Chimney, free installation, valid till Sunday near Medical College Road)..."
+                  value={videoDescription}
+                  onChange={(e) => setVideoDescription(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3.5 py-2 text-xs font-medium focus:outline-none focus:border-yellow-500 leading-relaxed resize-none"
                 />
               </div>
 
               {/* Video File Input Dropzone */}
-              <div className="w-full bg-slate-50 border-2 border-dashed border-slate-300 hover:border-yellow-500 p-6 rounded-2xl flex flex-col items-center justify-center text-center gap-2 transition-all cursor-pointer">
+              <div className="w-full bg-slate-50 border-2 border-dashed border-slate-300 hover:border-yellow-500 p-5 rounded-2xl flex flex-col items-center justify-center text-center gap-2 transition-all cursor-pointer">
                 <label className="w-full flex flex-col items-center justify-center gap-2 cursor-pointer">
-                  <div className="w-12 h-12 rounded-2xl bg-yellow-500/15 text-yellow-600 flex items-center justify-center font-bold">
-                    <Film className="w-6 h-6" />
+                  <div className="w-11 h-11 rounded-2xl bg-yellow-500/15 text-yellow-600 flex items-center justify-center font-bold">
+                    <Film className="w-5 h-5" />
                   </div>
                   <span className="font-heading font-bold text-xs text-slate-900">
-                    {selectedVideo ? selectedVideo.name : "Select or drag Video File (.mp4, .webm, .mov)"}
+                    {selectedVideo ? selectedVideo.name : "Select or drag Video Reel (.mp4, .webm, .mov) *"}
                   </span>
                   <span className="text-[10px] text-slate-400 font-medium">
-                    {selectedVideo ? `${(selectedVideo.size / (1024 * 1024)).toFixed(2)} MB` : "Files up to 100MB supported on Firebase Storage"}
+                    {selectedVideo ? `${(selectedVideo.size / (1024 * 1024)).toFixed(2)} MB` : "Video stored on Firebase Storage CDN & linked to live offer"}
                   </span>
                   <input
                     type="file"
@@ -783,13 +902,35 @@ export default function AdminClientPage() {
                 </label>
               </div>
 
+              {/* Toggle: Publish directly to Local Offers directory */}
+              <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3 flex items-center justify-between gap-3">
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                    <Tag className="w-3.5 h-3.5 text-pink-600" />
+                    <span>Publish live to Offers directory (/offers)</span>
+                  </span>
+                  <span className="text-[10px] text-slate-500 font-medium">
+                    Creates an active video offer card visible to all Tanjore users immediately!
+                  </span>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                  <input
+                    type="checkbox"
+                    checked={publishToOffers}
+                    onChange={(e) => setPublishToOffers(e.target.checked)}
+                    className="sr-only peer"
+                  />
+                  <div className="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-yellow-500"></div>
+                </label>
+              </div>
+
               {/* Real-time Progress Bar */}
               {videoUploading && (
                 <div className="flex flex-col gap-1.5 bg-yellow-50 border border-yellow-200 p-3 rounded-xl">
                   <div className="flex justify-between text-xs font-bold text-slate-800">
                     <span className="flex items-center gap-1.5">
                       <Loader2 className="w-3.5 h-3.5 animate-spin text-yellow-600" />
-                      <span>Uploading to Firebase Storage...</span>
+                      <span>Uploading Video & Publishing Live Offer...</span>
                     </span>
                     <span>{uploadProgress}%</span>
                   </div>
@@ -805,17 +946,17 @@ export default function AdminClientPage() {
               <button
                 type="submit"
                 disabled={videoUploading || !selectedVideo}
-                className="w-full py-3 bg-yellow-500 hover:bg-yellow-400 disabled:opacity-50 text-slate-950 font-heading font-extrabold text-xs uppercase tracking-wider rounded-xl border border-yellow-400 shadow-sm transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs"
+                className="w-full py-3.5 bg-yellow-500 hover:bg-yellow-400 disabled:opacity-50 text-slate-955 font-heading font-extrabold text-xs uppercase tracking-wider rounded-xl border border-yellow-400 shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer shadow-xs active:scale-[0.99]"
               >
                 {videoUploading ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
-                    <span>Uploading Video ({uploadProgress}%)...</span>
+                    <Loader2 className="w-4 h-4 animate-spin text-slate-955" />
+                    <span>Uploading & Publishing ({uploadProgress}%)...</span>
                   </>
                 ) : (
                   <>
                     <Upload className="w-4 h-4 stroke-[2.5]" />
-                    <span>Upload Video to Firebase Storage</span>
+                    <span>Upload Video & Publish Live Offer</span>
                   </>
                 )}
               </button>
