@@ -73,7 +73,7 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false, isPre
   const validityText = formatOfferValidity(post.valid_from, post.valid_to, post.created_at);
 
   return (
-    <div className="bg-white rounded-2xl overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08)] transition-all duration-200 flex flex-col relative w-full font-sans border-0">
+    <div className="bg-white -mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full sm:rounded-2xl overflow-hidden shadow-2xs sm:shadow-[0_2px_10px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08)] transition-all duration-200 flex flex-col relative font-sans border-b-8 border-slate-200/80 sm:border-0">
       {/* Featured Star Overlay */}
       {post.is_featured && (
         <div className="absolute top-2.5 left-2.5 z-20 bg-yellow-500 text-slate-955 text-[9px] font-semibold px-2 py-0.5 rounded-xl flex items-center gap-1 shadow-md animate-pulse">
@@ -83,7 +83,7 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false, isPre
       )}
 
       {/* Storefront Image / Video Player */}
-      <div className="relative aspect-[4/3] w-full bg-slate-900 border-b border-slate-100 overflow-hidden">
+      <div className="relative aspect-[16/10] w-full bg-slate-900 border-b border-slate-100 overflow-hidden">
         {post.video_url ? (
           <video
             src={post.video_url}

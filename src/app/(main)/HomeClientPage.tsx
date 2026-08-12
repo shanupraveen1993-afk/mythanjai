@@ -52,8 +52,8 @@ function PreviewSection({
         </button>
       </div>
 
-      {/* Cards row */}
-      <div className="flex overflow-x-auto snap-x scrollbar-none gap-3 pb-1 md:grid md:grid-cols-3 md:overflow-visible">
+      {/* Cards row with edge-to-edge bleed scroll on mobile */}
+      <div className="-mx-4 px-4 flex overflow-x-auto snap-x snap-mandatory scrollbar-none gap-3 pb-2 md:grid md:grid-cols-3 md:overflow-visible md:mx-0 md:px-0">
         {cards.map((card, i) => (
           <div
             key={i}
