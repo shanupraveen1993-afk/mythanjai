@@ -4,22 +4,24 @@ import React, { useState } from "react";
 import { Check, Star, AlertCircle, PhoneOff, ThumbsDown, ShieldAlert, Loader2 } from "lucide-react";
 import { db } from "@/lib/firebase";
 import { doc, updateDoc, increment } from "firebase/firestore";
+import { useToast } from "@/context/ToastContext";
 
 interface ServiceFeedbackModalProps {
   isOpen: boolean;
   onClose: () => void;
-  serviceId: string;
-  serviceName: string;
-  phone: string;
+  serviceId?: string;
+  serviceName?: string;
+  phone?: string;
 }
 
 export default function ServiceFeedbackModal({
   isOpen,
   onClose,
   serviceId,
-  serviceName,
+  serviceName = "this Tradesman",
   phone,
 }: ServiceFeedbackModalProps) {
+  const { toast } = useToast();
   const [selectedOption, setSelectedOption] = useState<"satisfied" | "unanswered" | "unsatisfied" | null>(null);
   const [rating, setRating] = useState(5);
   const [issueDescription, setIssueDescription] = useState("");
@@ -30,7 +32,7 @@ export default function ServiceFeedbackModal({
 
   const handleSubmitFeedback = async () => {
     if (selectedOption === "unsatisfied" && !issueDescription.trim()) {
-      alert("Please describe the issue or experience briefly.");
+      toast.error("Please describe the issue or experience briefly.");
       return;
     }
 

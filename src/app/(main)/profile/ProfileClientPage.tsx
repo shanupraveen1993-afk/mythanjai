@@ -30,8 +30,10 @@ import {
   LogOut,
   Pencil
 } from "lucide-react";
+import { useToast } from "@/context/ToastContext";
 
 export default function ProfileClientPage() {
+  const { toast } = useToast();
   const { user, profile, loading: authLoading, updatePhone, updateDisplayName, signOutUser } = useAuth();
   const router = useRouter();
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -149,20 +151,21 @@ export default function ProfileClientPage() {
 
   const handleSaveDisplayName = async () => {
     if (!displayName.trim()) {
-      alert("Please enter a name.");
+      toast.error("Please enter a name.");
       return;
     }
     setDisplayNameUpdating(true);
     try {
       await updateDisplayName(displayName);
       setIsEditingName(false);
+      toast.success("Profile name updated successfully!");
       try {
         const confetti = (await import("canvas-confetti")).default;
         confetti({ particleCount: 30, spread: 30 });
       } catch (err) {}
     } catch (error) {
       console.error("Error saving name:", error);
-      alert("Failed to update profile name.");
+      toast.error("Failed to update profile name.");
     } finally {
       setDisplayNameUpdating(false);
     }
@@ -172,7 +175,7 @@ export default function ProfileClientPage() {
   const handleInitiateWhatsAppVerify = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!phoneNumber || phoneNumber.length !== 10) {
-      alert("Please enter a valid 10-digit phone number.");
+      toast.error("Please enter a valid 10-digit phone number.");
       return;
     }
 
@@ -234,6 +237,7 @@ export default function ProfileClientPage() {
 
           setIsDbVerified(true);
           setVerificationPending(false);
+          toast.success("Mobile number verified successfully!");
           try {
             const confetti = (await import("canvas-confetti")).default;
             confetti({
@@ -274,13 +278,14 @@ export default function ProfileClientPage() {
       const docRef = doc(db, colName, id);
       await deleteDoc(docRef);
       setMyPosts((prev) => prev.filter((p) => p.id !== id));
+      toast.success("Listing deleted successfully!");
       try {
         const confetti = (await import("canvas-confetti")).default;
         confetti({ particleCount: 20, colors: ["#ef4444"] });
       } catch (err) {}
     } catch (error) {
       console.error("Error deleting post:", error);
-      alert("Failed to delete post.");
+      toast.error("Failed to delete post.");
     }
   };
 

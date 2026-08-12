@@ -20,6 +20,8 @@ import {
 import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, getDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/hooks/use-auth";
+import { formatRelativeTime } from "@/lib/constants";
+import { useToast } from "@/context/ToastContext";
 
 interface ChatMessage {
   id: string;
@@ -55,6 +57,7 @@ const SCAM_KEYWORDS = [
 ];
 
 export default function ChatClientPage() {
+  const { toast } = useToast();
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, profile } = useAuth();
@@ -311,7 +314,7 @@ export default function ChatClientPage() {
         });
       } else {
         await navigator.clipboard.writeText(window.location.href);
-        alert("Listing chat link copied to clipboard!");
+        toast.success("Listing chat link copied to clipboard!");
       }
     } catch (err) {}
     setIsMenuOpen(false);

@@ -8,6 +8,7 @@ import { NeedOrSalePost } from "@/types";
 import { formatIndianCurrencyText, formatRelativeTime } from "@/lib/constants";
 import InAppChatModal from "@/components/chat/InAppChatModal";
 import { useAuth } from "@/hooks/use-auth";
+import { useToast } from "@/context/ToastContext";
 
 interface NeedCardProps {
   post: NeedOrSalePost;
@@ -16,6 +17,7 @@ interface NeedCardProps {
 }
 
 export default function NeedCard({ post, onShare, isPreview = false }: NeedCardProps) {
+  const { toast } = useToast();
   const { user, profile } = useAuth();
   const [activeImgIndex, setActiveImgIndex] = useState(0);
   const [isPlayingVideo, setIsPlayingVideo] = useState(false);
@@ -71,7 +73,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
       }).catch(() => {});
     } else {
       navigator.clipboard.writeText(window.location.href);
-      alert("Post link copied to clipboard!");
+      toast.success("Post link copied to clipboard!");
     }
   };
 

@@ -5,6 +5,7 @@ import Image from "next/image";
 import { Phone, MessageSquare, MapPin, Store, Sparkles, ShoppingBag, Utensils, Shirt, Calendar, Tag, Camera, Navigation, Eye, Share2, Bookmark } from "lucide-react";
 import { ShopPost } from "@/types";
 import { formatRelativeTime } from "@/lib/constants";
+import { useToast } from "@/context/ToastContext";
 
 function formatOfferValidity(validFrom?: any, validTo?: any, createdAt?: any) {
   if (validFrom && validTo) {
@@ -25,6 +26,7 @@ interface ShopCardProps {
 }
 
 export default function ShopCard({ post, isPreview = false }: ShopCardProps) {
+  const { toast } = useToast();
   const [saved, setSaved] = useState(false);
 
   const viewsCount = Math.floor(140 + (post.shop_name?.length || 5) * 16);
@@ -50,7 +52,7 @@ export default function ShopCard({ post, isPreview = false }: ShopCardProps) {
       }).catch(() => {});
     } else {
       navigator.clipboard.writeText(window.location.href);
-      alert("Offer link copied to clipboard!");
+      toast.success("Offer link copied to clipboard!");
     }
   };
 

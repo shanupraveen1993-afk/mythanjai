@@ -1,10 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { Phone, MessageSquare, Award, MapPin, Zap, Droplet, Hammer, Wind, Wrench, Eye, Share2, Bookmark, AlertTriangle, Calendar } from "lucide-react";
+import { Phone, MessageSquare, Award, MapPin, Zap, Droplet, Hammer, Wind, Wrench, Eye, Share2, Bookmark, AlertTriangle, Calendar, Paintbrush, Car, Sparkles } from "lucide-react";
 import { ServiceProviderPost } from "@/types";
 import { formatRelativeTime } from "@/lib/constants";
 import ServiceFeedbackModal from "@/components/modals/ServiceFeedbackModal";
+import { useToast } from "@/context/ToastContext";
 
 interface ServiceCardProps {
   post: ServiceProviderPost;
@@ -12,12 +13,13 @@ interface ServiceCardProps {
 }
 
 export default function ServiceCard({ post, isPreview = false }: ServiceCardProps) {
+  const { toast } = useToast();
   const [saved, setSaved] = useState(false);
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
-  const viewsCount = Math.floor(120 + (post.name?.length || 5) * 19);
-  const sharesCount = Math.floor(18 + (post.name?.length || 5) * 3);
-  const contactedCount = Math.floor(11 + (post.name?.length || 5) * 1.8);
+  const viewsCount = Math.floor(180 + (post.name?.length || 5) * 14);
+  const sharesCount = Math.floor(12 + (post.name?.length || 5) * 2);
+  const contactedCount = Math.floor(45 + (post.name?.length || 5) * 3);
 
   // Public visible phone number
   const rawPhone = String(post.phone || "9876543210");
@@ -26,17 +28,20 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
   
   const callUrl = `tel:${cleanPhone}`;
   const whatsappUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(
-    `Hello ${post.name}, I found your listing as an ${post.skill_category} on Namma Thanjai (Area: ${post.area_tag}). Are you available for a work request?`
+    `Hello ${post.name}! I found your service listing (${post.skill_category}) in ${post.area_tag} on Namma Thanjai. Are you available for work?`
   )}`;
 
-  const isPendingVerification = (post.negative_reports_count || 0) >= 5 || post.status === "pending";
+  const isPendingVerification = (post as any).status === "pending" || !post.is_verified;
 
-  const getCategoryIllustration = (cat: string) => {
-    switch (cat) {
-      case "Electrician": return <Zap className="w-3.5 h-3.5 text-emerald-600" />;
-      case "Plumber": return <Droplet className="w-3.5 h-3.5 text-emerald-600" />;
-      case "Carpenter": return <Hammer className="w-3.5 h-3.5 text-emerald-600" />;
-      case "AC & Refrigeration": return <Wind className="w-3.5 h-3.5 text-emerald-600" />;
+  const getCategoryIllustration = (category: string) => {
+    switch (category?.toLowerCase()) {
+      case "plumber": return <Wrench className="w-3.5 h-3.5 text-emerald-600" />;
+      case "electrician": return <Zap className="w-3.5 h-3.5 text-amber-600" />;
+      case "carpenter": return <Hammer className="w-3.5 h-3.5 text-amber-700" />;
+      case "painter": return <Paintbrush className="w-3.5 h-3.5 text-purple-600" />;
+      case "ac technician": return <Wind className="w-3.5 h-3.5 text-blue-600" />;
+      case "auto mechanic": return <Car className="w-3.5 h-3.5 text-rose-600" />;
+      case "cleaning & housekeeping": return <Sparkles className="w-3.5 h-3.5 text-cyan-600" />;
       default: return <Wrench className="w-3.5 h-3.5 text-emerald-600" />;
     }
   };
@@ -51,7 +56,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
       }).catch(() => {});
     } else {
       navigator.clipboard.writeText(window.location.href);
-      alert("Profile link copied to clipboard!");
+      toast.success("Profile link copied to clipboard!");
     }
   };
 

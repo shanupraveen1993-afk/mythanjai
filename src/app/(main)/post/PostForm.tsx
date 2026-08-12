@@ -7,6 +7,7 @@ import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { compressImage } from "@/lib/image-compressor";
 import { useAuth } from "@/hooks/use-auth";
+import { useToast } from "@/context/ToastContext";
 import {
   TANJORE_LOCALITIES,
   CLASSIFIED_CATEGORIES,
@@ -32,7 +33,7 @@ import {
 import NeedCard from "@/components/cards/NeedCard";
 import ServiceCard from "@/components/cards/ServiceCard";
 import ShopCard from "@/components/cards/ShopCard";
-import { NeedOrSalePost, ServiceProviderPost, ShopPost } from "@/types";
+import { NeedOrSalePost, ServiceProviderPost, ShopPost, OfferPost } from "@/types";
 
 type SegmentType = "sell" | "need" | "service" | "offer";
 
@@ -101,6 +102,7 @@ const SEGMENT_CONFIG: Record<
 };
 
 export default function PostForm({ segment }: PostFormProps) {
+  const { toast } = useToast();
   const router = useRouter();
   const config = SEGMENT_CONFIG[segment];
   const { user, profile } = useAuth();
@@ -160,7 +162,7 @@ export default function PostForm({ segment }: PostFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!title.trim()) {
-      alert("Please enter a title for your posting.");
+      toast.error("Please enter a title for your posting.");
       return;
     }
 

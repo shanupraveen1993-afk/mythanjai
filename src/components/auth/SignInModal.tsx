@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { X, Phone, MessageSquare, Zap, Loader2, CheckCircle } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { useSearchParams, useRouter } from "next/navigation";
+import { useToast } from "@/context/ToastContext";
 
 interface SignInModalProps {
   isOpen: boolean;
@@ -11,6 +12,7 @@ interface SignInModalProps {
 }
 
 export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
+  const { toast } = useToast();
   const { profile, updatePhone } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -36,7 +38,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
   const handleInitiateWhatsAppVerify = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!phoneNumber || phoneNumber.length < 10) {
-      alert("Please enter a valid 10-digit mobile number.");
+      toast.error("Please enter a valid 10-digit mobile number.");
       return;
     }
 
@@ -44,11 +46,13 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
     try {
       // Mock bypass: immediately verify and register the phone number
       const result = await updatePhone(phoneNumber);
-      if (!result?.success) {
-        alert("Verification failed.");
+      if (result?.success) {
+        toast.success("Login successful!");
+      } else {
+        toast.error("Verification failed.");
       }
     } catch (err: any) {
-      alert("Verification failed: " + err.message);
+      toast.error("Verification failed: " + err.message);
     } finally {
       setPhoneUpdating(false);
     }

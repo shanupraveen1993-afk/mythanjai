@@ -44,6 +44,7 @@ import {
   OFFER_CATEGORIES,
   TanjoreLocality,
 } from "@/lib/constants";
+import { useToast } from "@/context/ToastContext";
 
 interface CreatePostModalProps {
   isOpen: boolean;
@@ -88,6 +89,7 @@ export default function CreatePostModal({
   defaultCategory,
   defaultClassifiedType,
 }: CreatePostModalProps) {
+  const { toast } = useToast();
   const [step, setStep] = useState(1);
   const [type, setType] = useState<PostType>(defaultType);
   const [loading, setLoading] = useState(false);
@@ -181,17 +183,17 @@ export default function CreatePostModal({
         }
         if (extractedPhone) setPhone(extractedPhone);
 
-        // Flash message or visual cue
+        toast.success("Visiting card scanned successfully!");
         try {
           const confetti = (await import("canvas-confetti")).default;
           confetti({ particleCount: 30, spread: 40, colors: ["#fbbf24"] });
         } catch (err) {}
       } else {
-        alert("Could not extract details. Please fill manually.");
+        toast.error("Could not extract details. Please fill manually.");
       }
     } catch (error) {
       console.error("OCR error:", error);
-      alert("Error scanning card. Please fill manually.");
+      toast.error("Error scanning card. Please fill manually.");
     } finally {
       setOcrLoading(false);
     }
@@ -207,12 +209,12 @@ export default function CreatePostModal({
 
   const handlePublish = async () => {
     if (!phone) {
-      alert("Please enter your contact phone number.");
+      toast.error("Please enter your contact phone number.");
       return;
     }
 
     if (!area || !area.trim()) {
-      alert("Please add a specific location in Thanjavur District.");
+      toast.error("Please add a specific location in Thanjavur District.");
       return;
     }
 
@@ -222,7 +224,7 @@ export default function CreatePostModal({
     const { aiLocalityCheck } = await import("@/lib/ai-locality-check");
     const isThanjavur = await aiLocalityCheck(area);
     if (!isThanjavur) {
-      alert("Please add a specific location in Thanjavur District.");
+      toast.error("Please add a specific location in Thanjavur District.");
       setLoading(false);
       return;
     }
