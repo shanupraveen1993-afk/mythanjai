@@ -13,6 +13,38 @@ interface ShopCardProps {
   isPreview?: boolean;
 }
 
+function formatOfferValidity(validFrom?: string, validTo?: string, createdAt?: any): string {
+  const formatDateStr = (val: string | Date) => {
+    try {
+      const d = new Date(val);
+      if (!isNaN(d.getTime())) {
+        return d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+      }
+    } catch (e) {}
+    return String(val);
+  };
+
+  if (validFrom && validTo) {
+    return `Valid: ${formatDateStr(validFrom)} – ${formatDateStr(validTo)}`;
+  }
+  if (validFrom) {
+    return `Valid from ${formatDateStr(validFrom)}`;
+  }
+  if (validTo) {
+    return `Valid till ${formatDateStr(validTo)}`;
+  }
+
+  // Realistic 15-day default validity window from post creation date
+  const baseDate = createdAt
+    ? (typeof createdAt?.toDate === "function" ? createdAt.toDate() : new Date(createdAt))
+    : new Date();
+  
+  const startDate = isNaN(baseDate.getTime()) ? new Date() : baseDate;
+  const endDate = new Date(startDate.getTime() + 15 * 86400000);
+
+  return `Valid: ${formatDateStr(startDate)} – ${formatDateStr(endDate)}`;
+}
+
 export default function ShopCard({ post, onMapToggle, isMapActive = false, isPreview = false }: ShopCardProps) {
   const rawPhone = String(post.phone || "9994837342");
   const cleanPhone = rawPhone.replace(/\D/g, "");
@@ -37,6 +69,8 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false, isPre
       default: return <Store className="w-3 h-3 text-white" />;
     }
   };
+
+  const validityText = formatOfferValidity(post.valid_from, post.valid_to, post.created_at);
 
   return (
     <div className="bg-white border border-slate-200/90 rounded-xl overflow-hidden shadow-2xs hover:border-slate-300 hover:shadow-xs transition-all duration-200 flex flex-col relative w-full font-sans">
@@ -128,19 +162,10 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false, isPre
             <MapPin className="w-3 h-3 text-slate-400" />
             <span className="truncate max-w-[120px]">{post.area_tag}</span>
           </div>
-          {(post.valid_from || post.valid_to) ? (
-            <div className="flex items-center gap-1 text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200/60 font-bold">
-              <Calendar className="w-3 h-3 text-amber-600" />
-              <span>
-                Offer Valid: {post.valid_from ? post.valid_from : "Now"} {post.valid_to ? `to ${post.valid_to}` : ""}
-              </span>
-            </div>
-          ) : (
-            <div className="flex items-center gap-1 text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200/60 font-bold">
-              <Calendar className="w-3 h-3 text-emerald-600" />
-              <span>Limited Time Offer</span>
-            </div>
-          )}
+          <div className="flex items-center gap-1 text-amber-800 bg-amber-50 px-2 py-0.5 rounded border border-amber-200/80 font-bold">
+            <Calendar className="w-3 h-3 text-amber-600" />
+            <span>{validityText}</span>
+          </div>
         </div>
 
         {/* Active Promotion Offer Details */}
