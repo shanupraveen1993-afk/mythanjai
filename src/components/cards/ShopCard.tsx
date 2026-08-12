@@ -151,14 +151,24 @@ export default function ShopCard({ post, isPreview = false }: ShopCardProps) {
           </div>
         )}
 
-        {/* Social Engagement Bar (FB Insights Style) with Right-Aligned Timestamp */}
+        {/* Social Engagement Bar: Left = Date & Views, Right = Share & Save */}
         {!isPreview && (
           <div className="flex items-center justify-between text-[11px] text-slate-500 font-semibold border-t border-b border-slate-100 py-2 my-0.5">
-            <div className="flex items-center gap-4">
-              <div className="flex items-center gap-1 text-slate-500">
+            {/* Left: Meta Info (Date & Views) */}
+            <div className="flex items-center gap-2.5">
+              <span className="flex items-center gap-1 text-slate-400 font-medium">
+                <Calendar className="w-3 h-3 text-slate-400" />
+                <span>{formatRelativeTime(post.created_at)}</span>
+              </span>
+              <span className="text-slate-300">•</span>
+              <span className="flex items-center gap-1 text-slate-500 font-medium">
                 <Eye className="w-3.5 h-3.5 text-slate-400" />
-                <span>{viewsCount}</span>
-              </div>
+                <span>{viewsCount} views</span>
+              </span>
+            </div>
+
+            {/* Right: Actions (Share & Save) */}
+            <div className="flex items-center gap-3">
               <button 
                 onClick={handleShare}
                 className="flex items-center gap-1 hover:text-slate-800 cursor-pointer transition-colors"
@@ -173,11 +183,6 @@ export default function ShopCard({ post, isPreview = false }: ShopCardProps) {
                 <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-yellow-500 text-yellow-600" : "text-slate-400"}`} />
                 <span>{saved ? "Saved" : "Save"}</span>
               </button>
-            </div>
-
-            <div className="flex items-center gap-1 text-[10px] text-slate-400 font-medium shrink-0">
-              <Calendar className="w-3 h-3 text-slate-400" />
-              <span>{formatRelativeTime(post.created_at)}</span>
             </div>
           </div>
         )}
