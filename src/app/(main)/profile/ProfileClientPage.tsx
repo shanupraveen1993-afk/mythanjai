@@ -28,8 +28,10 @@ import {
   ShieldCheck,
   Zap,
   LogOut,
-  Pencil
+  Pencil,
+  Shield,
 } from "lucide-react";
+import Link from "next/link";
 import { useToast } from "@/context/ToastContext";
 
 export default function ProfileClientPage() {
@@ -46,6 +48,12 @@ export default function ProfileClientPage() {
   const [verificationToken, setVerificationToken] = useState<string | null>(null);
   const [verificationPending, setVerificationPending] = useState(false);
   const [isDbVerified, setIsDbVerified] = useState(false);
+
+  const isSuperAdmin = React.useMemo(() => {
+    const rawPhone = String(profile?.phone || phoneNumber || user?.phoneNumber || "");
+    const cleanPhone = rawPhone.replace(/\D/g, "");
+    return cleanPhone.includes("9994837342") || profile?.isAdmin;
+  }, [profile, phoneNumber, user]);
 
   // My Postings & Saved Bookmarks states
   const [profileTab, setProfileTab] = useState<"my_posts" | "saved_posts">("my_posts");
@@ -385,7 +393,7 @@ export default function ProfileClientPage() {
                     <CheckCircle className="w-4 h-4 shrink-0 text-emerald-600" />
                     <span className="truncate max-w-[150px] font-bold">+{profile?.phone || phoneNumber}</span>
                   </div>
-                  {profile?.isAdmin && (
+                  {isSuperAdmin && (
                     <span className="text-[9px] bg-amber-500/20 text-amber-700 border border-amber-500/30 px-2 py-0.5 rounded-md flex items-center gap-1 font-bold uppercase shrink-0">
                       <ShieldCheck className="w-3 h-3" />
                       Admin
@@ -423,21 +431,16 @@ export default function ProfileClientPage() {
                     <button
                       type="submit"
                       disabled={phoneUpdating}
-                      className="bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-slate-950 font-bold w-full py-2 rounded-lg text-xs transition-all border border-yellow-400 shadow-sm cursor-pointer"
+                      className="bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-slate-955 font-bold w-full py-2 rounded-lg text-xs transition-all border border-yellow-400 shadow-2xs cursor-pointer"
                     >
                       Verify WhatsApp
                     </button>
                   </form>
                 ) : (
                   <div className="flex flex-col gap-3">
-                    {/* Pending Verification Widget */}
                     <div className="flex flex-col gap-1.5 bg-white p-3 rounded-lg border border-slate-200 text-center text-xs">
                       <span className="text-amber-600 font-extrabold text-sm">{verificationToken}</span>
-                      <span className="text-[10px] text-slate-500">
-                        Send token on WhatsApp.
-                      </span>
-                      
-                      {/* WhatsApp Action Button */}
+                      <span className="text-[10px] text-slate-500">Send token on WhatsApp.</span>
                       <a
                         href={`https://wa.me/${process.env.NEXT_PUBLIC_ADMIN_PHONE || "919994837342"}?text=${encodeURIComponent(`Verify Namma Thanjai App: ${verificationToken}`)}`}
                         target="_blank"
@@ -448,30 +451,38 @@ export default function ProfileClientPage() {
                         <span>Send Text Code</span>
                       </a>
                     </div>
- 
-                    {/* Meta Webhook Simulation Widget */}
-                    <div className="border border-dashed border-slate-300 rounded-xl p-3 flex flex-col gap-2 bg-slate-50 text-center">
-                      <span className="text-[9px] font-black text-amber-600 uppercase tracking-widest flex items-center justify-center gap-1">
-                        <Zap className="w-3 h-3 fill-current" />
-                        AI Webhook Simulator
-                      </span>
-                      <p className="text-[9px] text-slate-500 leading-normal">
-                        Meta Cloud webhook hasn't caught the WhatsApp message? Run the simulation to trigger verification.
-                      </p>
-                      <button
-                        onClick={handleSimulateWebhook}
-                        disabled={phoneUpdating}
-                        className="w-full bg-slate-200 hover:bg-slate-300 text-slate-700 border border-slate-300 font-bold py-1.5 rounded-lg text-[10px] transition-colors"
-                      >
-                        {phoneUpdating ? "Verifying..." : "Simulate Verification Hook"}
-                      </button>
-                    </div>
                   </div>
                 )}
               </div>
             )}
 
+            {/* DEDICATED ADMIN CONSOLE BANNER FOR 9994837342 */}
+            {isSuperAdmin && (
+              <div className="bg-gradient-to-br from-amber-500/10 via-yellow-500/15 to-amber-600/10 border border-amber-500/30 rounded-2xl p-4 flex flex-col gap-3 shadow-xs font-sans">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-xl bg-amber-500 text-slate-955 flex items-center justify-center font-bold shadow-xs shrink-0">
+                    <Shield className="w-5 h-5 stroke-[2.5]" />
+                  </div>
+                  <div>
+                    <h4 className="font-heading font-extrabold text-xs text-slate-900 flex items-center gap-1.5">
+                      <span>Admin Moderation & Video Console</span>
+                      <span className="bg-amber-500 text-slate-955 text-[8px] font-black px-1.5 py-0.5 rounded uppercase">9994837342</span>
+                    </h4>
+                    <p className="text-[10px] text-slate-600 font-medium leading-tight mt-0.5">
+                      Approve listings, pin featured deals & upload promo videos to Firebase.
+                    </p>
+                  </div>
+                </div>
 
+                <Link
+                  href="/admin"
+                  className="w-full py-2.5 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-extrabold text-xs uppercase tracking-wider rounded-xl border border-yellow-400 shadow-sm flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-98"
+                >
+                  <Shield className="w-3.5 h-3.5" />
+                  <span>Open Admin Console →</span>
+                </Link>
+              </div>
+            )}
           </div>
 
           {/* PWA INSTALL WIDGET CARD */}
