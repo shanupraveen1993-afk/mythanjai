@@ -277,7 +277,7 @@ export default function PostForm({ segment }: PostFormProps) {
             longitude: 79.1378,
             google_maps_url: googleMapsUrl.trim() || "",
             address_text: `${area}, Thanjavur`,
-            hours: workingHours || "9 AM – 9 PM",
+            hours: "Limited Offer",
             is_claimed: true,
             created_at: timestamp,
             offer_title: title.trim(),
@@ -348,7 +348,7 @@ export default function PostForm({ segment }: PostFormProps) {
       is_verified: true,
       created_at: new Date() as any,
     };
-  }, [title, description, category, area, experience, workingHours, phone, imagePreview, user, config.categories]);
+  }, [title, description, category, area, allWorkingDays, sundayLeave, phone, imagePreview, user, config.categories]);
 
   const previewShopPost = useMemo<ShopPost>(() => {
     return {
@@ -358,7 +358,9 @@ export default function PostForm({ segment }: PostFormProps) {
       category: category || config.categories[0],
       address_text: `${area}, Thanjavur`,
       landmark: "Near Main Road",
-      hours: workingHours || "9 AM – 9 PM",
+      hours: "Limited Offer",
+      valid_from: validFrom || undefined,
+      valid_to: validTo || undefined,
       phone: phone || "9876543210",
       area_tag: area || TANJORE_LOCALITIES[0],
       offer_title: title.trim() || "Exclusive Discount Offer",
@@ -369,7 +371,7 @@ export default function PostForm({ segment }: PostFormProps) {
       is_claimed: true,
       created_at: new Date() as any,
     };
-  }, [title, description, category, area, workingHours, phone, imagePreview, user, config.categories]);
+  }, [title, description, category, area, validFrom, validTo, phone, imagePreview, user, config.categories]);
 
   const formattedPriceBadge = formatIndianCurrencyText(price);
 

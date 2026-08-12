@@ -2,7 +2,7 @@
 
 import React from "react";
 import Image from "next/image";
-import { Phone, MessageSquare, MapPin, Clock, Compass, Sparkles, Navigation, Utensils, Shirt, ShoppingBag, Store } from "lucide-react";
+import { Phone, MessageSquare, MapPin, Clock, Calendar, Compass, Sparkles, Navigation, Utensils, Shirt, ShoppingBag, Store } from "lucide-react";
 import { ShopPost } from "@/types";
 
 interface ShopCardProps {
