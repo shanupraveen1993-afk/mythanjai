@@ -237,23 +237,26 @@ export default function HomeClientPage() {
         }`}
       >
         {/* Live bulletin */}
-        <div className="w-full bg-slate-900 border border-slate-800 rounded-3xl p-6 sm:p-8 text-white shadow-xl flex flex-col gap-6 relative overflow-hidden">
-          <div className="absolute top-0 right-0 w-80 h-80 bg-yellow-500/10 blur-3xl rounded-full pointer-events-none" />
-          <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-800 pb-5">
+        <div className="w-full bg-gradient-to-br from-white via-white to-amber-50/50 border border-slate-200/80 rounded-3xl p-6 sm:p-8 text-slate-900 shadow-xl shadow-slate-200/50 flex flex-col gap-6 relative overflow-hidden ring-1 ring-slate-100">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-yellow-400/15 blur-3xl rounded-full pointer-events-none" />
+          <div className="absolute -bottom-20 -left-20 w-80 h-80 bg-amber-400/10 blur-3xl rounded-full pointer-events-none" />
+          
+          <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-3 border-b border-slate-100 pb-5">
             <div className="flex items-center gap-3">
-              <span className="flex items-center gap-1.5 bg-yellow-400 text-slate-950 font-black text-[10px] uppercase px-3 py-1 rounded-lg tracking-wider">
+              <span className="flex items-center gap-1.5 bg-yellow-400 text-slate-950 font-black text-[10px] uppercase px-3 py-1 rounded-lg tracking-wider shadow-sm">
                 <span className="w-2 h-2 rounded-full bg-slate-950 animate-ping" />
                 LIVE BULLETIN
               </span>
-              <h2 className="font-heading font-black text-xl sm:text-2xl text-white tracking-tight">
+              <h2 className="font-heading font-black text-xl sm:text-2xl text-slate-900 tracking-tight">
                 Thanjavur Verified Activity Stream
               </h2>
             </div>
-            <span className="text-xs font-medium text-slate-400">
+            <span className="text-xs font-medium text-slate-500 bg-white/60 backdrop-blur-sm px-3 py-1.5 rounded-full border border-slate-100">
               Live updates from verified residents & tradesmen
             </span>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          
+          <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
             {[
               { tag: "REAL ESTATE", title: "2,400 Sqft CMDA Plot", desc: "Approved residential plot with tar road frontage & Kaveri water line in Vallam.", time: "Just Now", area: "Vallam", path: "/sell" },
               { tag: "LOCAL SERVICE", title: "Senthil Kumar (Electrician)", desc: "Available for DB box assemblies, inverter setups & short circuit repairs.", time: "5m ago", area: "Tanjore Town", path: "/services" },
@@ -263,23 +266,26 @@ export default function HomeClientPage() {
               <div
                 key={i}
                 onClick={() => router.push(item.path)}
-                className="bg-slate-800/90 border border-slate-700/80 hover:border-yellow-400 p-4 rounded-2xl flex flex-col justify-between gap-3 cursor-pointer transition-all hover:-translate-y-0.5 shadow-sm group"
+                className="bg-white/80 backdrop-blur-md border border-slate-200/80 hover:border-yellow-400 hover:bg-gradient-to-b hover:from-white hover:to-yellow-50/50 p-4 sm:p-5 rounded-2xl flex flex-col justify-between gap-3 cursor-pointer transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-yellow-900/5 shadow-sm group"
               >
-                <div className="flex flex-col gap-2">
+                <div className="flex flex-col gap-3">
                   <div className="flex items-center justify-between">
-                    <span className="text-[9px] font-black text-yellow-400 uppercase tracking-widest bg-yellow-400/10 px-2.5 py-0.5 rounded-md border border-yellow-400/30">
+                    <span className="text-[9px] font-black text-yellow-700 uppercase tracking-widest bg-yellow-100/80 px-2.5 py-1 rounded-md border border-yellow-200/50">
                       {item.tag}
                     </span>
-                    <span className="text-[10px] text-slate-400 font-bold">{item.time}</span>
+                    <span className="text-[10px] text-slate-400 font-bold flex items-center gap-1">
+                      <span className="w-1.5 h-1.5 rounded-full bg-green-500"></span>
+                      {item.time}
+                    </span>
                   </div>
-                  <h4 className="text-sm font-extrabold text-white group-hover:text-yellow-400 transition-colors">
+                  <h4 className="text-sm font-extrabold text-slate-900 group-hover:text-yellow-600 transition-colors leading-snug">
                     {item.title}
                   </h4>
-                  <p className="text-xs text-slate-300 font-medium line-clamp-2 leading-relaxed">{item.desc}</p>
+                  <p className="text-xs text-slate-500 font-medium line-clamp-2 leading-relaxed">{item.desc}</p>
                 </div>
-                <div className="flex items-center justify-between pt-2 border-t border-slate-700/60 text-[11px] font-bold text-slate-400">
-                  <span>{item.area}</span>
-                  <span className="text-yellow-400 font-black group-hover:underline">Explore →</span>
+                <div className="flex items-center justify-between pt-3 mt-1 border-t border-slate-100 text-[11px] font-bold text-slate-400 group-hover:text-slate-500 transition-colors">
+                  <span className="flex items-center gap-1"><MapPin className="w-3 h-3" /> {item.area}</span>
+                  <span className="text-yellow-600 font-black group-hover:translate-x-0.5 transition-transform flex items-center gap-0.5">Explore <ArrowRight className="w-3 h-3" /></span>
                 </div>
               </div>
             ))}

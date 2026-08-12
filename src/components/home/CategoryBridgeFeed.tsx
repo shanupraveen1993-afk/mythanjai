@@ -119,53 +119,50 @@ export default function CategoryBridgeFeed() {
   }, [allCombinedPosts, activeCategory, activeType]);
 
   return (
-    <div className="w-full bg-slate-900 border border-slate-800 rounded-3xl p-5 sm:p-7 text-white shadow-xl flex flex-col gap-6 relative overflow-hidden font-sans my-2">
-      {/* Background Glow Effect */}
-      <div className="absolute -top-12 -right-12 w-72 h-72 bg-yellow-500/10 blur-3xl rounded-full pointer-events-none" />
-
+    <div className="w-full bg-slate-50/70 border border-slate-200/90 rounded-2xl p-5 flex flex-col gap-4 font-sans my-1 shadow-2xs">
       {/* Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800 pb-4">
-        <div className="flex items-center gap-3">
-          <span className="flex items-center gap-1.5 bg-yellow-400 text-slate-955 font-black text-[10px] uppercase px-3 py-1 rounded-lg tracking-wider">
-            <Sparkles className="w-3 h-3 fill-current" />
-            CATEGORY MATCHMAKER
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200/80 pb-3">
+        <div className="flex items-center gap-2.5">
+          <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-900 font-bold text-[10px] uppercase px-2.5 py-0.5 rounded-md border border-amber-300/80">
+            <Sparkles className="w-3 h-3 text-amber-700 fill-amber-500" />
+            <span>Category Matchmaker</span>
           </span>
           <div>
-            <h2 className="font-heading font-black text-lg sm:text-xl text-white tracking-tight">
-              Matched Sellers for <span className="text-yellow-400">{activeCategory}</span>
+            <h2 className="font-heading font-black text-base md:text-lg text-slate-900 leading-snug">
+              Matched Listings for <span className="text-amber-700">{activeCategory}</span>
             </h2>
-            <p className="text-[11px] text-slate-400 font-medium">
-              Connecting buyers & sellers in {activeCategory} across Thanjavur
+            <p className="text-[11px] text-slate-500 font-medium">
+              Bridging buyers & sellers in {activeCategory}
             </p>
           </div>
         </div>
 
         <button
           onClick={() => router.push(activeType === "SELL" ? "/sell" : "/need")}
-          className="flex items-center gap-1.5 text-xs font-black text-yellow-400 hover:text-yellow-300 transition-colors cursor-pointer self-start sm:self-auto"
+          className="flex items-center gap-1 text-xs font-bold text-slate-700 hover:text-slate-900 transition-colors cursor-pointer self-start sm:self-auto"
         >
           <span>Explore All {activeCategory}</span>
-          <ArrowRight className="w-4 h-4" />
+          <ArrowRight className="w-3.5 h-3.5" />
         </button>
       </div>
 
       {/* User's Posted Requirement Summary Badge (If active requirement exists) */}
       {userLatestPost && (
-        <div className="bg-slate-800/80 border border-slate-700/80 rounded-2xl p-3.5 flex items-center justify-between gap-3 text-xs">
-          <div className="flex items-center gap-2.5 overflow-hidden">
-            <span className="w-8 h-8 rounded-xl bg-yellow-500/20 text-yellow-400 flex items-center justify-center font-bold text-sm shrink-0">
+        <div className="bg-white border border-amber-200/80 rounded-xl p-3 flex items-center justify-between gap-3 text-xs shadow-2xs">
+          <div className="flex items-center gap-2.5 truncate">
+            <span className="w-7 h-7 rounded-lg bg-amber-100 text-amber-800 flex items-center justify-center font-bold text-xs shrink-0">
               {userLatestPost.type === "NEED" ? "🛒" : "🏷️"}
             </span>
             <div className="flex flex-col truncate">
-              <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">
-                Your Active Requirement
+              <span className="text-[9px] font-bold text-slate-400 uppercase tracking-wide">
+                Your Requirement
               </span>
-              <span className="font-extrabold text-white truncate">{userLatestPost.title}</span>
+              <span className="font-bold text-slate-900 truncate">{userLatestPost.title}</span>
             </div>
           </div>
-          <span className="text-[10px] font-black bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 px-2.5 py-1 rounded-lg shrink-0 flex items-center gap-1">
-            <CheckCircle2 className="w-3 h-3" />
-            <span>Matching Live</span>
+          <span className="text-[10px] font-bold bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-md shrink-0 flex items-center gap-1">
+            <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+            <span>Matched Live</span>
           </span>
         </div>
       )}
