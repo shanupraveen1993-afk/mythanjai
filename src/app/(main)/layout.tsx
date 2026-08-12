@@ -135,7 +135,7 @@ function MainLayoutContent({
   const isStandaloneView = isGuestLanding || isChatRoute;
 
   return (
-    <div className={`w-full flex flex-col relative bg-[#eaf0f6] font-sans ${layoutClasses}`}>
+    <div className={`w-full flex flex-col relative bg-[#f4f5f8] font-sans ${layoutClasses}`}>
       <React.Suspense fallback={null}>
         <SearchParamSync onAreaSync={setSelectedArea} onAuthSync={setIsSignInOpen} />
       </React.Suspense>
@@ -166,7 +166,7 @@ function MainLayoutContent({
       )}
 
       {/* Main Content Panel (0 Padding for Guest Onboarding View & Full-Screen Chat) */}
-      <main className={`flex-1 w-full bg-[#eaf0f6] ${isStandaloneView ? "p-0 max-w-none m-0" : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-14 pb-24 md:pb-8"}`}>
+      <main className={`flex-1 w-full bg-[#f4f5f8] ${isStandaloneView ? "p-0 max-w-none m-0" : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-14 pb-24 md:pb-8"}`}>
         {children}
       </main>
 

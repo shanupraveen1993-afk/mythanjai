@@ -3,11 +3,10 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { MessageSquare, Calendar, Tag, MapPin, Share2, Eye, Bookmark, UserCheck, Maximize2 } from "lucide-react";
+import { MessageSquare, Calendar, Tag, MapPin, Share2, Eye, Bookmark, UserCheck } from "lucide-react";
 import { NeedOrSalePost } from "@/types";
 import { formatIndianCurrencyText, formatRelativeTime } from "@/lib/constants";
 import InAppChatModal from "@/components/chat/InAppChatModal";
-import ImageLightboxModal from "@/components/modals/ImageLightboxModal";
 import { useAuth } from "@/hooks/use-auth";
 
 interface NeedCardProps {
@@ -19,10 +18,9 @@ interface NeedCardProps {
 export default function NeedCard({ post, onShare, isPreview = false }: NeedCardProps) {
   const { user, profile } = useAuth();
   const [activeImgIndex, setActiveImgIndex] = useState(0);
+  const [isPlayingVideo, setIsPlayingVideo] = useState(false);
   const [saved, setSaved] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [isLightboxOpen, setIsLightboxOpen] = useState(false);
-  const [isDescExpanded, setIsDescExpanded] = useState(false);
 
   const isOwnPost = React.useMemo(() => {
     if (isPreview) return false;
@@ -86,158 +84,126 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
   const isNeedType = post.type?.toUpperCase() === "NEED";
 
   return (
-    <div className="bg-white -mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full sm:rounded-2xl shadow-[0_4px_16px_rgba(0,0,0,0.06)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.09)] transition-all duration-200 relative group overflow-hidden font-sans border-b border-slate-200/80 sm:border sm:border-slate-200/90 flex flex-row items-stretch">
+    <div className="bg-white rounded-2xl p-4 flex flex-col gap-3 shadow-[0_4px_16px_rgba(0,0,0,0.06)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.09)] transition-all duration-200 relative group overflow-hidden font-sans border border-slate-200/80">
       
-      {/* LEFT COLUMN: Fixed Media Box + Lightbox Trigger + Image Scroll */}
-      <div className="w-28 sm:w-36 shrink-0 relative bg-slate-100 overflow-hidden flex flex-col group/img cursor-pointer border-r border-slate-100">
-        {youtubeId ? (
-          <div className="w-full h-full relative bg-black flex items-center justify-center">
-            <iframe
-              src={`https://www.youtube.com/embed/${youtubeId}`}
-              title={post.title}
-              className="w-full h-full border-0 pointer-events-none"
-            />
-            <div
-              onClick={() => setIsLightboxOpen(true)}
-              className="absolute inset-0 bg-black/20 hover:bg-black/40 flex items-center justify-center transition-colors"
-            >
-              <Maximize2 className="w-5 h-5 text-white shadow-md" />
-            </div>
-          </div>
-        ) : images.length > 0 ? (
-          <div
-            onClick={() => setIsLightboxOpen(true)}
-            className="w-full h-full relative overflow-hidden flex snap-x snap-mandatory scrollbar-none"
-          >
-            <Image
-              src={images[activeImgIndex] || "/thanjavur_temple_illustration.png"}
-              alt={post.title}
-              fill
-              className="object-cover group-hover/img:scale-105 transition-transform duration-300"
-              unoptimized
-            />
-            <div className="absolute inset-0 bg-black/0 hover:bg-black/10 transition-colors flex items-top justify-end p-1.5">
-              <span className="bg-black/50 text-white p-1 rounded-md text-[9px] flex items-center gap-0.5 backdrop-blur-xs">
-                <Maximize2 className="w-3 h-3" />
-                {images.length > 1 && <span>{images.length}</span>}
-              </span>
-            </div>
-          </div>
-        ) : (
-          <div className="w-full h-full bg-slate-100 flex items-center justify-center p-2 text-center text-slate-400 text-[10px] font-semibold">
-            Namma Thanjai
+      {/* Top Header Tags */}
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-1.5 flex-wrap">
+          {post.category && (
+            <span className="inline-flex items-center gap-1 text-[10px] font-semibold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md">
+              <Tag className="w-3 h-3 text-slate-400" />
+              <span>{post.category}</span>
+            </span>
+          )}
+        </div>
+
+        <div className="flex items-center gap-1 text-[10px] text-slate-400 font-medium">
+          <Calendar className="w-3 h-3 text-slate-400" />
+          <span>{formatDate(post.created_at)}</span>
+        </div>
+      </div>
+
+      {/* Main Title & Price */}
+      <div className="flex flex-col gap-0.5">
+        <h3 className="font-heading font-bold text-sm sm:text-base text-slate-900 leading-snug group-hover:text-slate-700 transition-colors line-clamp-2">
+          {post.title}
+        </h3>
+
+        {displayPriceText && (
+          <div className="text-xs sm:text-sm font-bold text-emerald-600 tracking-tight">
+            {displayPriceText}
           </div>
         )}
       </div>
 
-      {/* RIGHT COLUMN: Compact Content Details */}
-      <div className="flex-1 p-3.5 flex flex-col justify-between gap-2 min-w-0">
-        
-        {/* Header: Category Tag & Date */}
-        <div className="flex items-center justify-between gap-2">
-          <div className="flex items-center gap-1.5 flex-wrap min-w-0">
-            {post.category && (
-              <span className="inline-flex items-center gap-1 text-[9px] font-bold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md">
-                <Tag className="w-2.5 h-2.5 text-slate-400" />
-                <span className="truncate max-w-[90px]">{post.category}</span>
-              </span>
-            )}
-          </div>
-          <span className="text-[10px] text-slate-400 font-medium shrink-0 flex items-center gap-1">
-            <Calendar className="w-2.5 h-2.5" />
-            {formatDate(post.created_at)}
-          </span>
+      {/* YouTube Video Embed Preview */}
+      {youtubeId && isPlayingVideo ? (
+        <div className="relative w-full h-44 sm:h-52 rounded-xl overflow-hidden bg-black shadow-inner">
+          <iframe
+            src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1`}
+            title={post.title}
+            className="w-full h-full border-0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
         </div>
-
-        {/* Title & Price */}
-        <div className="flex flex-col gap-0.5">
-          <h3 className="font-heading font-bold text-xs sm:text-sm text-slate-900 leading-snug line-clamp-1 truncate">
-            {post.title}
-          </h3>
-          {displayPriceText && (
-            <div className="text-xs font-black text-emerald-600 tracking-tight">
-              {displayPriceText}
+      ) : images.length > 0 ? (
+        <div className="relative w-full h-44 sm:h-52 rounded-xl overflow-hidden bg-slate-100 border border-slate-100">
+          <Image
+            src={images[activeImgIndex] || "/thanjavur_temple_illustration.png"}
+            alt={post.title}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
+            unoptimized
+          />
+          {images.length > 1 && (
+            <div className="absolute bottom-2 right-2 bg-black/60 text-white text-[10px] font-bold px-2 py-0.5 rounded-md backdrop-blur-xs">
+              {activeImgIndex + 1}/{images.length}
             </div>
           )}
         </div>
+      ) : null}
 
-        {/* Description Snippet with Inline Read More Expander */}
-        {post.description && (
-          <div className="bg-slate-50 border border-slate-200/70 p-2 rounded-lg">
-            <p className={`text-[11px] text-slate-700 font-medium leading-normal ${isDescExpanded ? "" : "line-clamp-2"}`}>
-              {post.description}
-            </p>
-            {post.description.length > 80 && (
-              <button
-                onClick={() => setIsDescExpanded(!isDescExpanded)}
-                className="text-[10px] font-bold text-yellow-600 hover:text-yellow-700 mt-0.5 cursor-pointer"
-              >
-                {isDescExpanded ? "Show Less" : "...Read More"}
-              </button>
-            )}
+      {/* Description Box */}
+      {post.description && (
+        <div className="bg-slate-50 border border-slate-200/80 p-3 rounded-xl">
+          <p className="text-xs text-slate-700 font-medium leading-relaxed">
+            {post.description}
+          </p>
+        </div>
+      )}
+
+      {/* Social Engagement Bar (Hidden in Live Preview Mode) */}
+      {!isPreview && (
+        <div className="flex items-center justify-between text-[11px] text-slate-500 font-semibold border-t border-b border-slate-100 py-2 my-0.5">
+          <div className="flex items-center gap-1.5 text-slate-500">
+            <Eye className="w-3.5 h-3.5 text-slate-400" />
+            <span>{viewsCount} Views</span>
           </div>
-        )}
-
-        {/* Social Bar & Location */}
-        <div className="flex items-center justify-between text-[10px] text-slate-500 font-semibold pt-1 border-t border-slate-100">
-          <div className="flex items-center gap-1.5 text-slate-500 min-w-0">
-            <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
-            <span className="truncate max-w-[80px] sm:max-w-[120px]">{post.area_tag}</span>
+          <div className="flex items-center gap-4">
+            <button 
+              onClick={handleSharePost}
+              className="flex items-center gap-1 hover:text-slate-800 cursor-pointer transition-colors"
+            >
+              <Share2 className="w-3.5 h-3.5 text-slate-400" />
+              <span>{sharesCount} Shares</span>
+            </button>
+            <button 
+              onClick={handleToggleSave}
+              className={`flex items-center gap-1 cursor-pointer transition-colors ${saved ? "text-yellow-600 font-bold" : "hover:text-slate-800"}`}
+            >
+              <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-yellow-500 text-yellow-600" : "text-slate-400"}`} />
+              <span>{saved ? "Saved" : "Save"}</span>
+            </button>
           </div>
+        </div>
+      )}
 
-          {!isPreview && (
-            <div className="flex items-center gap-3 shrink-0">
-              <span className="flex items-center gap-1 text-slate-400 text-[9px]">
-                <Eye className="w-3 h-3 text-slate-400" />
-                {viewsCount}
-              </span>
-              <button 
-                onClick={handleSharePost}
-                className="flex items-center gap-1 hover:text-slate-800 cursor-pointer transition-colors text-[9px]"
-              >
-                <Share2 className="w-3 h-3 text-slate-400" />
-                <span>{sharesCount}</span>
-              </button>
-              <button 
-                onClick={handleToggleSave}
-                className={`flex items-center gap-1 cursor-pointer transition-colors text-[9px] ${saved ? "text-yellow-600 font-bold" : "hover:text-slate-800"}`}
-              >
-                <Bookmark className={`w-3 h-3 ${saved ? "fill-yellow-500 text-yellow-600" : "text-slate-400"}`} />
-                <span>{saved ? "Saved" : "Save"}</span>
-              </button>
-            </div>
-          )}
+      {/* Footer Info & Action CTAs — MASKED PHONE & IN-APP CHAT */}
+      <div className="flex items-center justify-between pt-1">
+        <div className="flex items-center gap-1 text-[11px] text-slate-500 font-semibold">
+          <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+          <span className="truncate max-w-[140px]">{post.area_tag}</span>
         </div>
 
-        {/* Bottom CTA Action Bar */}
-        <div className="pt-0.5 flex justify-end">
+        {/* Contact CTA */}
+        <div className="flex items-center gap-2">
           {isOwnPost ? (
-            <span className="flex items-center gap-1 h-7 bg-slate-100 border border-slate-200 text-slate-700 font-bold px-2.5 rounded-lg text-[10px]">
-              <UserCheck className="w-3 h-3 text-slate-500" />
+            <span className="flex items-center gap-1.5 h-9 bg-slate-100 border border-slate-200 text-slate-700 font-bold px-3.5 rounded-xl text-xs">
+              <UserCheck className="w-3.5 h-3.5 text-slate-500" />
               <span>Your Post</span>
             </span>
           ) : (
             <Link
               href={`/chat?listingId=${post.id}&sellerId=${post.userId || "seller_id"}&title=${encodeURIComponent(post.title || "Item")}`}
-              className="flex items-center gap-1 h-7 bg-[#00a884] hover:bg-[#008f6f] text-white font-bold px-3 rounded-lg text-[10px] transition-all shadow-2xs cursor-pointer"
+              className="flex items-center gap-1.5 h-9 bg-[#00a884] hover:bg-[#008f6f] text-white font-bold px-3.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer"
             >
-              <MessageSquare className="w-3 h-3 fill-white stroke-none" />
+              <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
               <span>In-App Chat</span>
             </Link>
           )}
         </div>
       </div>
-
-      {/* Full Screen Image Lightbox Modal */}
-      {isLightboxOpen && images.length > 0 && (
-        <ImageLightboxModal
-          isOpen={isLightboxOpen}
-          images={images}
-          initialIndex={activeImgIndex}
-          title={post.title}
-          onClose={() => setIsLightboxOpen(false)}
-        />
-      )}
 
       {/* In-App Chat Modal */}
       {isChatOpen && (
