@@ -899,32 +899,32 @@ export function RobotHero({
   return (
     <section
       ref={containerRef}
-      className="relative w-full h-dvh md:h-[calc(100vh-70px)] flex flex-col justify-between items-center bg-white text-slate-800 pt-14 md:pt-3 pb-4 md:pb-3 px-3 sm:px-4 overflow-hidden select-none"
+      className="relative w-full h-dvh md:h-[calc(100vh-70px)] flex flex-col justify-between items-center bg-white text-slate-800 pt-12 md:pt-2 pb-2 md:pb-1 px-3 sm:px-4 overflow-hidden select-none"
     >
       {/* Light radial glow centered behind hero */}
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_45%,rgba(250,204,21,0.06)_0%,transparent_60%)] pointer-events-none" />
 
       {/* Centered Foreground Hero Content */}
-      <div className="relative z-10 w-full max-w-3xl md:max-w-4xl lg:max-w-5xl mx-auto flex flex-col items-center justify-between text-center gap-1 my-auto h-full pointer-events-auto">
+      <div className="relative z-10 w-full max-w-3xl md:max-w-4xl lg:max-w-5xl mx-auto flex flex-col items-center justify-between text-center gap-0.5 my-auto h-full pointer-events-auto">
         
         {/* 1. Clean Spaced Header Group: Logo + Headline + Subline + Rotational Switcher Badge */}
-        <div className="flex flex-col items-center gap-2 sm:gap-2.5 w-full shrink-0 pt-2 md:pt-1">
-          <div className="w-18 h-18 sm:w-24 sm:h-24 md:w-30 md:h-30 rounded-2xl sm:rounded-3xl bg-white shadow-md p-2 sm:p-3 flex items-center justify-center shrink-0 border border-slate-200/90 hover:scale-[1.02] transition-transform">
+        <div className="flex flex-col items-center gap-1.5 sm:gap-2 w-full shrink-0 pt-1 md:pt-0">
+          <div className="w-14 h-14 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-2xl sm:rounded-3xl bg-white shadow-md p-2 flex items-center justify-center shrink-0 border border-slate-200/90 hover:scale-[1.02] transition-transform">
             <img 
               src="/namma_thanjai_logo.png" 
               alt="namma thanjai logo" 
               className="w-full h-full object-contain" 
             />
           </div>
-          <h1 className="font-heading font-black text-4xl xs:text-5xl sm:text-7xl md:text-8.5xl lg:text-9.5xl text-slate-955 tracking-tight leading-none uppercase mt-1 sm:mt-2 w-full text-center drop-shadow-2xs scale-x-[1.04] transform origin-center whitespace-nowrap">
+          <h1 className="font-heading font-black text-3xl xs:text-4xl sm:text-6xl md:text-7xl lg:text-8xl text-slate-955 tracking-tight leading-none uppercase mt-1 w-full text-center drop-shadow-2xs scale-x-[1.04] transform origin-center whitespace-nowrap">
             namma thanjai<span className="text-yellow-500">.</span>
           </h1>
-          <p className="text-[11px] sm:text-xs md:text-sm font-black text-slate-600 max-w-xl mx-auto leading-normal tracking-wider uppercase mt-1 opacity-90">
+          <p className="text-[10px] sm:text-xs md:text-sm font-black text-slate-600 max-w-xl mx-auto leading-normal tracking-wider uppercase mt-0.5 opacity-90">
             SELL, NEED, SERVICES & OFFERS
           </p>
 
           {/* 2. Rotational Category Switcher Badge */}
-          <div className="flex items-center justify-center overflow-visible shrink-0 mt-2 sm:mt-2.5 py-0.5">
+          <div className="flex items-center justify-center overflow-visible shrink-0 mt-1 sm:mt-1.5 py-0.5">
             <AnimatePresence mode="wait">
               <motion.div
                 key={wordIndex}
@@ -932,7 +932,7 @@ export function RobotHero({
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 6, scale: 1.05 }}
                 transition={{ duration: 0.25 }}
-                className="bg-slate-955 border border-slate-800 text-yellow-400 font-black text-xs sm:text-sm md:text-base px-4.5 sm:px-5 py-1.5 rounded-full uppercase tracking-widest text-center shadow-lg flex items-center gap-2 select-none"
+                className="bg-slate-955 border border-slate-800 text-yellow-400 font-black text-xs sm:text-sm px-4 py-1 rounded-full uppercase tracking-widest text-center shadow-lg flex items-center gap-2 select-none"
               >
                 <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-ping" />
                 <span>{words[wordIndex]}</span>
@@ -944,7 +944,7 @@ export function RobotHero({
         {/* 3. Responsive 3D Mascot Robot Canvas (Standard Proportions) */}
         <div 
           onClick={handleRobotTap} 
-          className="w-full max-w-[300px] sm:max-w-[370px] md:max-w-[450px] flex-1 h-full min-h-[200px] sm:min-h-[240px] md:min-h-[280px] max-h-[310px] sm:max-h-[340px] md:max-h-[380px] relative flex items-center justify-center cursor-pointer overflow-visible my-1 bg-transparent"
+          className="w-full max-w-[260px] sm:max-w-[320px] md:max-w-[400px] flex-1 h-full min-h-[160px] sm:min-h-[200px] md:min-h-[220px] max-h-[240px] sm:max-h-[280px] md:max-h-[300px] relative flex items-center justify-center cursor-pointer overflow-visible my-0 bg-transparent"
         >
           <Canvas camera={{ position: [0, 0.1, 4.4], fov: 42 }} className="overflow-visible bg-transparent">
             <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
@@ -957,9 +957,9 @@ export function RobotHero({
         </div>
 
         {/* 4. Action Footer Group (CTA button lifted higher up with bottom padding) */}
-        <div className="w-full max-w-xs sm:max-w-sm md:max-w-md shrink-0 flex flex-col gap-2 sm:gap-2.5 px-1 pb-3 sm:pb-4 mb-2">
+        <div className="w-full max-w-xs sm:max-w-sm md:max-w-md shrink-0 flex flex-col gap-1.5 sm:gap-2 px-1 pb-1 sm:pb-2 mb-0">
           {/* 3 Small Steps Explanation */}
-          <div className="flex items-center justify-center gap-2 sm:gap-3 mb-3 text-[10px] sm:text-xs font-black text-slate-500 uppercase tracking-tight">
+          <div className="flex items-center justify-center gap-2 sm:gap-3 mb-1.5 text-[10px] sm:text-[11px] font-black text-slate-500 uppercase tracking-tight">
             <span className="flex items-center gap-1"><Megaphone className="w-3.5 h-3.5 text-emerald-500"/> Post</span>
             <span className="text-slate-300">➔</span>
             <span className="flex items-center gap-1"><Phone className="w-3.5 h-3.5 text-emerald-500"/> Connect</span>
