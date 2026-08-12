@@ -53,32 +53,29 @@ export default function ShopsClientPage() {
   return (
     <div className="flex flex-col gap-3 pb-24 w-full font-sans">
 
-      {/* UNIFIED WHITE HERO & STICKY CONTAINER */}
-      <div className="bg-white rounded-3xl p-4 sm:p-5 shadow-sm border border-slate-200/80 flex flex-col gap-4 mt-2">
-        {/* Inner Hero Banner */}
-        <div className="relative w-full min-h-[120px] rounded-2xl overflow-hidden bg-slate-950 text-white flex items-center px-5 sm:px-8 py-5 shadow-2xs">
-          <img src="/hero_building_visual.png" alt="Offers" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent" />
-          <div className="relative z-10 flex flex-col gap-1 max-w-lg">
-            <span className="bg-yellow-500 text-slate-955 font-bold text-[10px] px-2 py-0.5 rounded-md tracking-wider w-fit">Store discounts</span>
-            <h1 className="font-heading font-bold text-lg sm:text-xl text-white">Local Store Offers</h1>
-            <p className="text-xs text-slate-300">Grand opening deals, festival sales & discounts from Tanjore stores.</p>
-          </div>
+      {/* Hero Banner */}
+      <div className="relative w-full min-h-[120px] rounded-2xl overflow-hidden bg-slate-950 text-white flex items-center px-5 sm:px-8 py-5 shadow-2xs mt-2">
+        <img src="/hero_building_visual.png" alt="Offers" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent" />
+        <div className="relative z-10 flex flex-col gap-1 max-w-lg">
+          <span className="bg-yellow-500 text-slate-955 font-bold text-[10px] px-2 py-0.5 rounded-md tracking-wider w-fit">Store discounts</span>
+          <h1 className="font-heading font-bold text-lg sm:text-xl text-white">Local Store Offers</h1>
+          <p className="text-xs text-slate-300">Grand opening deals, festival sales & discounts from Tanjore stores.</p>
         </div>
+      </div>
 
-        {/* STICKY TITLE & POST BAR (Crisp White Backdrop) */}
-        <div className="sticky top-14 z-40 bg-white/95 backdrop-blur-md py-2.5 -mx-4 px-4 sm:-mx-5 sm:px-5 flex items-center justify-between gap-3 w-full border-b border-slate-100 rounded-b-2xl">
-          <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight">
-            Local Offers
-          </h2>
-          <button
-            onClick={() => router.push("/post/offer")}
-            className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-black px-4 py-2 rounded-xl text-xs sm:text-sm transition-all border border-yellow-400 cursor-pointer shadow-md active:scale-95 shrink-0"
-          >
-            <Plus className="w-4 h-4 stroke-[3]" />
-            <span>Post Offer</span>
-          </button>
-        </div>
+      {/* STICKY TITLE & POST BAR (Canvas-Matching Backdrop Bar) */}
+      <div className="sticky top-14 z-40 bg-[#f4f5f8]/95 backdrop-blur-md py-3 flex items-center justify-between gap-3 w-full border-0">
+        <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight">
+          Local Offers
+        </h2>
+        <button
+          onClick={() => router.push("/post/offer")}
+          className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-black px-4 py-2 rounded-xl text-xs sm:text-sm transition-all border border-yellow-400 cursor-pointer shadow-md active:scale-95 shrink-0"
+        >
+          <Plus className="w-4 h-4 stroke-[3]" />
+          <span>Post Offer</span>
+        </button>
       </div>
 
       {/* LISTING CONTAINER */}
