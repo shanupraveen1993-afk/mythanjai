@@ -86,17 +86,9 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
           </div>
 
           <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-            <span className="inline-flex items-center gap-1 bg-emerald-50 border border-emerald-200 text-emerald-800 font-semibold px-2 py-0.5 rounded-xl text-[9px]">
+            <span className="inline-flex items-center gap-1 bg-emerald-50 border border-emerald-200 text-emerald-800 font-semibold px-2.5 py-0.5 rounded-xl text-[10px]">
               {getCategoryIllustration(post.skill_category)}
               <span>{post.skill_category}</span>
-            </span>
-
-            <span className="inline-flex items-center gap-1 bg-blue-50 border border-blue-200 text-blue-800 font-bold px-2 py-0.5 rounded-xl text-[9px]">
-              <span>{contactedCount} Contacted</span>
-            </span>
-
-            <span className="text-[10px] font-semibold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-xl border border-slate-200">
-              📞 +91 {cleanPhone}
             </span>
           </div>
         </div>
@@ -154,27 +146,33 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
         </div>
       )}
 
-      {/* Footer Info & Action CTAs */}
-      <div className="flex items-center justify-end gap-2 pt-1">
-        <a
-          href={callUrl}
-          onClick={handleInitiateContact}
-          className="flex items-center gap-1.5 h-9 bg-slate-900 hover:bg-slate-800 text-white font-bold px-3.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer"
-        >
-          <Phone className="w-3.5 h-3.5 fill-current" />
-          <span>Call Now</span>
-        </a>
+      {/* Footer Info & Action CTAs — Contacted Count Badge in First Position */}
+      <div className="flex items-center justify-between pt-1">
+        <span className="inline-flex items-center gap-1 bg-blue-50 border border-blue-200 text-blue-800 font-bold px-2.5 py-1.5 rounded-xl text-xs">
+          <span>{contactedCount} Contacted</span>
+        </span>
 
-        <a
-          href={whatsappUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={handleInitiateContact}
-          className="flex items-center gap-1.5 h-9 bg-[#00a884] hover:bg-[#008f6f] text-white font-bold px-3.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer"
-        >
-          <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
-          <span>WhatsApp</span>
-        </a>
+        <div className="flex items-center gap-2">
+          <a
+            href={callUrl}
+            onClick={handleInitiateContact}
+            className="flex items-center gap-1.5 h-9 bg-slate-900 hover:bg-slate-800 text-white font-bold px-3.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer"
+          >
+            <Phone className="w-3.5 h-3.5 fill-current" />
+            <span>Call Now</span>
+          </a>
+
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={handleInitiateContact}
+            className="flex items-center gap-1.5 h-9 bg-[#00a884] hover:bg-[#008f6f] text-white font-bold px-3.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer"
+          >
+            <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
+            <span>WhatsApp</span>
+          </a>
+        </div>
       </div>
 
       {/* Feedback Modal */}
