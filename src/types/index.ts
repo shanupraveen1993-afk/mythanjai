@@ -75,6 +75,7 @@ export interface ShopPost {
   offer_expires_at?: any; // Firestore Timestamp
   valid_from?: string;
   valid_to?: string;
+  show_phone?: boolean;
 }
 
 export interface OfferPost {

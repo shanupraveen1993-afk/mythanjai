@@ -127,6 +127,7 @@ export default function CreatePostModal({
   const [offerDesc, setOfferDesc] = useState("");
   const [offerCategory, setOfferCategory] = useState(OFFER_CATEGORIES[0]);
   const [socialLink, setSocialLink] = useState("");
+  const [showPhone, setShowPhone] = useState(false);
 
   const { profile } = useAuth();
 
@@ -350,6 +351,7 @@ export default function CreatePostModal({
             offer_title: offerTitle || "",
             offer_description: finalOfferDesc || "",
             offer_social_link: socialLink || "",
+            show_phone: showPhone,
           });
         } else if (type === "offers") {
           // Detect platform from link

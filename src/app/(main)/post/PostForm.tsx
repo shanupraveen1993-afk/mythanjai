@@ -126,6 +126,7 @@ export default function PostForm({ segment }: PostFormProps) {
   const [sundayLeave, setSundayLeave] = useState("Yes");
   const [validFrom, setValidFrom] = useState("");
   const [validTo, setValidTo] = useState("");
+  const [showPhone, setShowPhone] = useState(false);
 
   // AI Description Rewrite Preview States
   const [previewDescription, setPreviewDescription] = useState("");
@@ -286,6 +287,7 @@ export default function PostForm({ segment }: PostFormProps) {
             offer_description: cleanDesc,
             valid_from: validFrom || null,
             valid_to: validTo || null,
+            show_phone: showPhone,
           });
         } catch (fErr) {
           console.warn("Firestore write skipped, relying on local storage persistence:", fErr);
@@ -370,10 +372,11 @@ export default function PostForm({ segment }: PostFormProps) {
       image_url: imagePreview || "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&auto=format&fit=crop",
       latitude: 10.7870,
       longitude: 79.1378,
+      show_phone: showPhone,
       is_claimed: true,
       created_at: new Date() as any,
     };
-  }, [title, description, category, area, validFrom, validTo, phone, imagePreview, user, config.categories]);
+  }, [title, description, category, area, validFrom, validTo, showPhone, phone, imagePreview, user, config.categories]);
 
   const formattedPriceBadge = formatIndianCurrencyText(price);
 
@@ -629,6 +632,28 @@ export default function PostForm({ segment }: PostFormProps) {
                       className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
                     />
                   </div>
+                </div>
+
+                {/* TOGGLE BUTTON FOR SHOWING PHONE NUMBER ON OFFER CARD */}
+                <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 flex items-center justify-between gap-3">
+                  <div className="flex flex-col gap-0.5">
+                    <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                      <Phone className="w-3.5 h-3.5 text-slate-500" />
+                      <span>Show Call & WhatsApp buttons on Offer Card</span>
+                    </span>
+                    <span className="text-[10px] text-slate-500 font-medium">
+                      Default is OFF (Only Get Direction is shown). Turn ON if you want customers to call or WhatsApp directly.
+                    </span>
+                  </div>
+                  <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                    <input
+                      type="checkbox"
+                      checked={showPhone}
+                      onChange={(e) => setShowPhone(e.target.checked)}
+                      className="sr-only peer"
+                    />
+                    <div className="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-yellow-500"></div>
+                  </label>
                 </div>
               </>
             )}
