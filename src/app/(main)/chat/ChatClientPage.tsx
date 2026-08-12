@@ -354,7 +354,7 @@ export default function ChatClientPage() {
             onClick={() => router.push("/")}
             className="flex items-center gap-2 cursor-pointer select-none"
           >
-            <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-8 h-8 sm:w-9 sm:h-9 object-contain shrink-0 rounded-xl border border-white/20" />
+            <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-8 h-8 sm:w-9 sm:h-9 object-contain shrink-0 mix-blend-multiply" />
             <div className="flex flex-col">
               <div className="flex items-center gap-1">
                 <span className="font-heading font-bold tracking-tight text-white text-xs sm:text-sm uppercase">

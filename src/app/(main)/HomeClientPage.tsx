@@ -208,7 +208,7 @@ export default function HomeClientPage() {
             <RobotHero
               backgroundText="NAMMA THANJAI"
               navItemsLeft={[]}
-              ctaText="Register / Get Started"
+              ctaText="Register to Post Ad"
               onCtaClick={() => {
                 router.push("/?auth=popup");
               }}

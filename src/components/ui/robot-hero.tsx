@@ -769,7 +769,7 @@ function AntennaNavbar({
             onClick={() => router.push("/")}
             className="flex items-center gap-2 cursor-pointer select-none"
           >
-            <img src="/namma_thanjai_logo.png" alt="namma thanjai app logo" className="w-8.5 h-8.5 object-contain shrink-0 rounded-lg shadow-xs" />
+            <img src="/namma_thanjai_logo.png" alt="namma thanjai app logo" className="w-8.5 h-8.5 object-contain shrink-0 mix-blend-multiply" />
             <div className="flex items-center gap-0.5">
               <span className="font-sans font-black tracking-tight text-slate-900 text-sm">
                 namma thanjai
@@ -913,7 +913,7 @@ export function RobotHero({
             <img 
               src="/namma_thanjai_logo.png" 
               alt="namma thanjai logo" 
-              className="w-full h-full object-cover scale-[1.05]" 
+              className="w-full h-full object-contain mix-blend-multiply scale-[1.05]" 
             />
           </div>
           <h1 className="font-heading font-black text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tighter leading-none uppercase mt-1 w-full text-center drop-shadow-sm scale-x-[1.02] transform origin-center whitespace-nowrap bg-gradient-to-b from-slate-950 via-slate-800 to-slate-900 bg-clip-text text-transparent">
@@ -950,7 +950,7 @@ export function RobotHero({
             <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
             <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} shadow-bias={-0.0005} />
             <Environment preset="studio" blur={0.5} />
-            <ResponsiveGroup scale={scale * 1.55}>
+            <ResponsiveGroup scale={scale * (isDesktop ? 1.35 : 1.55)}>
               <RobotPrototype neckParams={{ baseR: 0.215, baseH: -0.05, midR: 0.28, midH: 0.02, lipBottomR: 0.295, lipBottomH: 0.045, lipTopR: 0.27, lipTopH: 0.055, innerR: 0.1, innerDropH: 0.0 }} bodyParams={{ bodyBevelR: 0.235, bodyBevelY: 0.34, bodyBevelT: 0.025 }} color={color} pantallaColor={pantallaColor} pantallaBrillo={pantallaBrillo} blinkCycle={blinkCycle} metalness={metalness} />
             </ResponsiveGroup>
           </Canvas>

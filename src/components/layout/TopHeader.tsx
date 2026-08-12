@@ -70,8 +70,8 @@ export default function TopHeader({
             onClick={() => router.push("/")}
             className="flex items-center gap-2 cursor-pointer select-none shrink-0 group"
           >
-            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl overflow-hidden shrink-0 group-hover:scale-[1.05] transition-transform">
-              <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-full h-full object-cover scale-[1.02]" />
+            <div className="w-8 h-8 sm:w-9 sm:h-9 shrink-0 group-hover:scale-[1.05] transition-transform flex items-center justify-center">
+              <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-full h-full object-contain mix-blend-multiply" />
             </div>
             <div className="flex items-center gap-0.5">
               <span className="font-heading font-bold tracking-tight text-slate-900 text-xs sm:text-sm">
