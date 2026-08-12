@@ -9,7 +9,7 @@ import CategoryBridgeFeed from "@/components/home/CategoryBridgeFeed";
 
 // ── Shared Preview Card ───────────────────────────────────────────────────────
 
-interface PreviewCard {
+export interface PreviewCard {
   title: string;
   sub: string;
   price: string;
@@ -17,7 +17,7 @@ interface PreviewCard {
   img: string;
 }
 
-function PreviewSection({
+export function PreviewSection({
   title,
   subtitle,
   seeAllPath,
@@ -179,9 +179,9 @@ export default function HomeClientPage() {
             accentColor="bg-yellow-500"
             onCardClick={() => router.push("/services")}
             cards={[
-              { title: "Senthil Kumar — Electrician", sub: "Electrician", price: "★ 4.9", area: "Tanjore Town", img: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&auto=format&fit=crop" },
-              { title: "Rajesh K — Expert Plumber", sub: "Plumber", price: "★ 4.8", area: "Medical College Rd", img: "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=400&auto=format&fit=crop" },
-              { title: "Venu Gopal — Wood Architect", sub: "Carpenter", price: "★ 5.0", area: "South Rampart", img: "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?w=400&auto=format&fit=crop" },
+              { title: "Senthil Kumar — Electrician", sub: "Electrician", price: "14 Contacted", area: "Tanjore Town", img: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&auto=format&fit=crop" },
+              { title: "Rajesh K — Expert Plumber", sub: "Plumber", price: "18 Contacted", area: "Medical College Rd", img: "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=400&auto=format&fit=crop" },
+              { title: "Venu Gopal — Wood Architect", sub: "Carpenter", price: "22 Contacted", area: "South Rampart", img: "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?w=400&auto=format&fit=crop" },
             ]}
           />
 

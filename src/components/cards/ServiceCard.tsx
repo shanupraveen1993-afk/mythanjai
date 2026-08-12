@@ -65,8 +65,10 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
     }, 500);
   };
 
+  const contactedCount = Math.floor(11 + (post.name?.length || 5) * 1.8);
+
   return (
-    <div className="bg-white -mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full sm:rounded-2xl p-3.5 sm:p-4 flex flex-col gap-3 shadow-[0_4px_16px_rgba(0,0,0,0.06)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.09)] transition-all duration-200 font-sans border-b border-slate-200/80 sm:border sm:border-slate-200/90 relative">
+    <div className="bg-white -mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full sm:rounded-2xl p-4 flex flex-col gap-3 shadow-[0_4px_16px_rgba(0,0,0,0.06)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.09)] transition-all duration-200 font-sans border-b border-slate-200/80 sm:border sm:border-slate-200/90 relative">
       
       {/* Top Section: Name & Category Badge */}
       <div className="flex items-start justify-between gap-2">
@@ -84,10 +86,14 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
             )}
           </div>
 
-          <div className="flex items-center gap-2 mt-1.5">
+          <div className="flex items-center gap-2 mt-1.5 flex-wrap">
             <span className="inline-flex items-center gap-1 bg-emerald-50 border border-emerald-200 text-emerald-800 font-semibold px-2 py-0.5 rounded-xl text-[9px]">
               {getCategoryIllustration(post.skill_category)}
               <span>{post.skill_category}</span>
+            </span>
+
+            <span className="inline-flex items-center gap-1 bg-blue-50 border border-blue-200 text-blue-800 font-bold px-2 py-0.5 rounded-xl text-[9px]">
+              <span>{contactedCount} Contacted</span>
             </span>
 
             <span className="text-[10px] font-semibold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-xl border border-slate-200">

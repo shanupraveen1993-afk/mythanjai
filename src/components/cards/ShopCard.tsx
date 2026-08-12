@@ -134,7 +134,7 @@ export default function ShopCard({ post, onMapToggle, isMapActive = false, isPre
       </div>
 
       {/* Info Details */}
-      <div className="p-3.5 flex flex-col gap-2 flex-1">
+      <div className="p-4 flex flex-col gap-2.5 flex-1">
         <div className="flex items-start justify-between gap-1">
           <h3 className="font-heading font-bold text-sm sm:text-base text-slate-900 leading-snug line-clamp-1 truncate min-w-0 flex-1">
             {post.shop_name}
