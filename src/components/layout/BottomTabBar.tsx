@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { Home, MessageSquare, Wrench, Store, User } from "lucide-react";
+import { Home, MessageSquare, Wrench, Store, User, Tag, ClipboardList } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 
 export type AppTab = "home" | "sell" | "need" | "services" | "shops" | "profile";
@@ -28,13 +28,13 @@ export default function BottomTabBar({
     {
       id: "sell" as AppTab,
       label: "Sell",
-      icon: MessageSquare,
+      icon: Tag,
       route: "/sell",
     },
     {
       id: "need" as AppTab,
       label: "Need",
-      icon: MessageSquare,
+      icon: ClipboardList,
       route: "/need",
     },
     {

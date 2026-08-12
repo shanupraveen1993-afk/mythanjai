@@ -61,16 +61,18 @@ export default function TopHeader({
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-white border-b border-slate-200 shadow-2xs h-14 flex items-center">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-white/85 backdrop-blur-md border-b border-slate-200 shadow-sm h-14 flex items-center">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-3">
         
         {/* Left: Website Branding Logo across all pages */}
         <div className="flex items-center gap-2">
           <div 
             onClick={() => router.push("/")}
-            className="flex items-center gap-2 cursor-pointer select-none shrink-0"
+            className="flex items-center gap-2 cursor-pointer select-none shrink-0 group"
           >
-            <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-8 h-8 sm:w-9 sm:h-9 object-contain shrink-0 rounded-xl border-0 shadow-none" />
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl overflow-hidden shrink-0 group-hover:scale-[1.05] transition-transform">
+              <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-full h-full object-cover scale-[1.02]" />
+            </div>
             <div className="flex items-center gap-0.5">
               <span className="font-heading font-bold tracking-tight text-slate-900 text-xs sm:text-sm">
                 namma thanjai
@@ -141,36 +143,34 @@ export default function TopHeader({
           </div>
         )}
 
-
-
         {/* Right: Chat Notification Icon & Profile Button */}
         <div className="flex items-center gap-2 shrink-0">
           <button
             onClick={() => router.push("/chat")}
-            className="relative flex items-center gap-1.5 h-8 px-2.5 bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200 text-slate-800 rounded-lg text-xs font-bold transition-all shadow-2xs cursor-pointer group"
+            className="relative flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3.5 bg-slate-100/90 hover:bg-slate-200 border border-slate-200/80 text-slate-800 rounded-full text-xs font-bold transition-all shadow-[0_2px_8px_-3px_rgba(0,0,0,0.1)] cursor-pointer group"
             title="In-App Safety Chat"
           >
-            <MessageSquare className="w-4 h-4 text-slate-700 group-hover:text-emerald-600 shrink-0" />
-            <span className="hidden sm:inline text-xs font-bold text-slate-700">Chat</span>
-            <span className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full bg-[#00a884] border border-white" />
+            <MessageSquare className="w-4 h-4 text-slate-600 group-hover:text-emerald-600 shrink-0" />
+            <span className="hidden sm:inline text-xs font-bold text-slate-700 ml-1.5">Chat</span>
+            <span className="absolute top-0 right-0 sm:right-2 w-2.5 h-2.5 rounded-full bg-red-500 border-2 border-white animate-pulse" />
           </button>
 
           {isAuthVerified ? (
             <button
               onClick={() => onTabChange?.("profile")}
-              className="relative flex items-center gap-1.5 h-8 px-3 bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200 text-slate-800 font-bold rounded-lg text-xs transition-all shadow-2xs cursor-pointer group"
+              className="relative flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3.5 bg-slate-100/90 hover:bg-slate-200 border border-slate-200/80 text-slate-800 font-bold rounded-full text-xs transition-all shadow-[0_2px_8px_-3px_rgba(0,0,0,0.1)] cursor-pointer group"
               title={`Verified Profile (${phoneDisplay})`}
             >
-              <User className="w-4 h-4 text-slate-700 group-hover:text-slate-900 shrink-0" />
-              <span className="hidden md:inline text-xs font-bold text-slate-700">Profile</span>
+              <User className="w-4 h-4 text-slate-600 group-hover:text-slate-900 shrink-0" />
+              <span className="hidden md:inline text-xs font-bold text-slate-700 ml-1.5">Profile</span>
             </button>
           ) : (
             <button
               onClick={onSignInClick}
-              className="flex items-center gap-1.5 h-8 px-3 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs transition-all cursor-pointer border border-slate-200 shadow-2xs rounded-lg"
+              className="flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3.5 bg-slate-100/90 hover:bg-slate-200 border border-slate-200/80 text-slate-800 font-bold text-xs transition-all shadow-[0_2px_8px_-3px_rgba(0,0,0,0.1)] cursor-pointer rounded-full group"
             >
-              <User className="w-4 h-4 text-slate-700 shrink-0" />
-              <span>Profile</span>
+              <User className="w-4 h-4 text-slate-600 group-hover:text-slate-900 shrink-0" />
+              <span className="hidden sm:inline text-xs font-bold text-slate-700 ml-1.5">Profile</span>
             </button>
           )}
         </div>

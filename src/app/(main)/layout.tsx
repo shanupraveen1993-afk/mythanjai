@@ -82,10 +82,10 @@ function MainLayoutContent({
 
   // Determine current active tab based on pathname
   const getActiveTab = (): AppTab => {
-    if (pathname.includes("/sell")) return "sell";
-    if (pathname.includes("/need")) return "need";
-    if (pathname.includes("/services")) return "services";
-    if (pathname.includes("/shops")) return "shops";
+    if (pathname.includes("/sell") || pathname.includes("/post/sell")) return "sell";
+    if (pathname.includes("/need") || pathname.includes("/post/need")) return "need";
+    if (pathname.includes("/services") || pathname.includes("/post/service")) return "services";
+    if (pathname.includes("/shops") || pathname.includes("/post/offer")) return "shops";
     if (pathname.includes("/profile")) return "profile";
     return "home";
   };
@@ -166,7 +166,7 @@ function MainLayoutContent({
       )}
 
       {/* Main Content Panel (0 Padding for Guest Onboarding View & Full-Screen Chat) */}
-      <main className={`flex-1 w-full bg-white ${isStandaloneView ? "p-0 max-w-none m-0" : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-14 pb-20 md:pb-8"}`}>
+      <main className={`flex-1 w-full bg-white ${isStandaloneView ? "p-0 max-w-none m-0" : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-24 md:pb-12"}`}>
         {children}
       </main>
 
