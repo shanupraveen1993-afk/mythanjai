@@ -353,14 +353,19 @@ export default function ProfileClientPage() {
               </div>
             </div>
 
-            {/* Subscription badge */}
-            <div className="bg-yellow-50 border border-yellow-250/60 rounded-xl p-3 flex flex-col gap-1 shadow-2xs">
-              <span className="text-[9px] font-bold text-yellow-800 uppercase tracking-wider flex items-center gap-1">
-                <Sparkles className="w-3.5 h-3.5 fill-yellow-500 stroke-none" />
-                Subscription: <span className="line-through text-slate-400 font-normal">₹100</span> Free
-              </span>
-              <p className="text-[9px] text-slate-500 leading-normal font-medium">
-                Active listings will be automatically removed after 30 days.
+            {/* Account Subscription & Listing Policy Card */}
+            <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 flex flex-col gap-1.5 font-sans">
+              <div className="flex items-center justify-between text-xs">
+                <span className="font-bold text-slate-800 flex items-center gap-1.5">
+                  <Sparkles className="w-3.5 h-3.5 text-yellow-600 fill-yellow-500 shrink-0" />
+                  <span>Account Plan</span>
+                </span>
+                <span className="font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-md text-[11px]">
+                  Free Access
+                </span>
+              </div>
+              <p className="text-xs text-slate-600 font-medium leading-relaxed">
+                Active listings remain live for <strong className="text-slate-900 font-semibold">30 days</strong>.
               </p>
             </div>
 
