@@ -300,10 +300,10 @@ export default function HomeClientPage() {
             { label: "Services", icon: <Wrench className="w-5 h-5" />, path: "/services", items: ["Home Electrician", "Expert Plumber", "AC & Fridge Repair", "Carpenter"] },
             { label: "Offers", icon: <Store className="w-5 h-5" />, path: "/shops", items: ["Kitchen & Electronics", "Degree Coffee Deals", "Handloom Silk & Textiles", "Gold & Jewelry Mart"] },
           ].map((seg) => (
-            <div key={seg.label} className="bg-white border border-slate-200 rounded-3xl p-5 shadow-xs flex flex-col gap-4 hover:shadow-md transition-shadow">
+            <div key={seg.label} className="group bg-white border border-slate-200 rounded-3xl p-5 shadow-xs flex flex-col gap-4 hover:shadow-md hover:border-yellow-200 transition-all duration-300">
               <div className="flex items-center gap-2 border-b border-slate-100 pb-3">
-                <span className="bg-slate-100 text-slate-900 p-2 rounded-xl border border-slate-200">{seg.icon}</span>
-                <h3 className="font-heading font-black text-sm text-slate-900">{seg.label}</h3>
+                <span className="bg-yellow-50 text-yellow-600 p-2 rounded-xl border border-yellow-100/50 group-hover:scale-105 transition-transform">{seg.icon}</span>
+                <h3 className="font-heading font-black text-sm text-slate-900 group-hover:text-yellow-600 transition-colors">{seg.label}</h3>
               </div>
               <div className="flex flex-col gap-2">
                 {seg.items.map((item) => (
@@ -313,13 +313,13 @@ export default function HomeClientPage() {
                     className="w-full text-left p-2.5 rounded-xl bg-slate-50 hover:bg-slate-100 text-xs font-bold text-slate-800 transition-colors flex items-center justify-between border border-slate-100"
                   >
                     <span>{item}</span>
-                    <ChevronRight className="w-4 h-4 text-slate-400" />
+                    <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-yellow-500 transition-colors" />
                   </button>
                 ))}
               </div>
               <button
                 onClick={() => router.push(seg.path)}
-                className="w-full py-2.5 bg-slate-900 text-white rounded-xl text-xs font-black uppercase tracking-wider text-center cursor-pointer hover:bg-slate-800 transition-colors"
+                className="w-full py-2.5 bg-slate-900 text-white rounded-xl text-xs font-black uppercase tracking-wider text-center cursor-pointer group-hover:bg-yellow-400 group-hover:text-slate-950 transition-colors"
               >
                 Open {seg.label} →
               </button>
