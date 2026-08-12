@@ -203,7 +203,7 @@ export default function HomeClientPage() {
 
       ) : (
         /* ── GUEST ONBOARDING LANDING HERO ──────────────────────────── */
-        <div className="w-full relative flex flex-col h-[100dvh] overflow-hidden justify-between py-1 md:h-auto md:min-h-[85vh] md:overflow-visible">
+        <div className="w-full relative flex flex-col min-h-[100dvh] justify-between py-1 md:h-auto md:min-h-[85vh]">
           <div className="w-full">
             <RobotHero
               backgroundText="NAMMA THANJAI"
