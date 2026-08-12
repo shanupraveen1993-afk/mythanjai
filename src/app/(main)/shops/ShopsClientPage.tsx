@@ -65,7 +65,7 @@ export default function ShopsClientPage() {
       </div>
 
       {/* STICKY TITLE & POST BAR */}
-      <div className="sticky top-14 z-40 bg-[#eaf0f6]/95 backdrop-blur-md py-2.5 flex items-center justify-between gap-3 border-0 -mx-4 px-4 sm:mx-0 sm:px-0">
+      <div className="sticky top-14 z-40 bg-[#eaf0f6]/95 backdrop-blur-md py-2.5 flex items-center justify-between gap-3 border-0 w-full">
         <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight">
           Local Offers
         </h2>
@@ -80,13 +80,13 @@ export default function ShopsClientPage() {
 
       {/* LISTING CONTAINER */}
       <div className="flex flex-col gap-3">
-        {/* Category & Sort Filter Bar */}
-        <div className="-mx-4 px-4 sm:mx-0 sm:px-0 py-1.5 flex items-center justify-between gap-2 bg-transparent">
-          {/* Category Dropdown (Far Left) */}
+        {/* Category & Sort Side-by-Side Filter Bar */}
+        <div className="py-1 flex items-center gap-2 sm:gap-3 bg-transparent w-full">
+          {/* Category Dropdown */}
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23475569%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[right_0.6rem_center] bg-no-repeat pr-8 pl-3.5 py-2 text-xs sm:text-sm font-bold bg-white border border-slate-300 rounded-xl shadow-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 cursor-pointer max-w-[55%] truncate"
+            className="appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23475569%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[right_0.6rem_center] bg-no-repeat pr-8 pl-3.5 py-2 text-xs sm:text-sm font-bold bg-white border border-slate-300 rounded-xl shadow-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 cursor-pointer max-w-[170px] sm:max-w-[220px] truncate"
           >
             <option value="All">All Offers</option>
             {SHOP_CATEGORIES.map((cat) => (
@@ -96,18 +96,15 @@ export default function ShopsClientPage() {
             ))}
           </select>
 
-          {/* Sort By Dropdown (Far Right) */}
-          <div className="flex items-center gap-1.5 shrink-0">
-            <ArrowUpDown className="w-4 h-4 text-slate-400 shrink-0 hidden sm:block" />
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
-              className="appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23475569%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[right_0.6rem_center] bg-no-repeat pr-8 pl-3.5 py-2 text-xs sm:text-sm font-bold bg-white border border-slate-300 rounded-xl shadow-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 cursor-pointer"
-            >
-              <option value="recent">Recently Added</option>
-              <option value="name">Store Name (A-Z)</option>
-            </select>
-          </div>
+          {/* Sort By Dropdown (Side-by-Side directly next to Category) */}
+          <select
+            value={sortBy}
+            onChange={(e) => setSortBy(e.target.value as any)}
+            className="appearance-none bg-[url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%2220%22%20height%3D%2220%22%20viewBox%3D%220%200%2024%2024%22%20fill%3D%22none%22%20stroke%3D%22%23475569%22%20stroke-width%3D%222.5%22%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%3E%3Cpath%20d%3D%22m6%209%206%206%206-6%22%2F%3E%3C%2Fsvg%3E')] bg-[right_0.6rem_center] bg-no-repeat pr-8 pl-3.5 py-2 text-xs sm:text-sm font-bold bg-white border border-slate-300 rounded-xl shadow-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 cursor-pointer shrink-0"
+          >
+            <option value="recent">Recently Added</option>
+            <option value="name">Store Name (A-Z)</option>
+          </select>
         </div>
 
       {/* Feed */}

@@ -37,8 +37,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${redHatDisplay.variable} h-full`}>
-      <body className="h-full bg-white font-sans antialiased text-slate-900 flex flex-col min-h-screen overflow-x-hidden">
+    <html lang="en" className={`${inter.variable} ${redHatDisplay.variable} h-full bg-[#eaf0f6]`}>
+      <body className="h-full bg-[#eaf0f6] font-sans antialiased text-slate-900 flex flex-col min-h-screen overflow-x-hidden">
         {children}
       </body>
     </html>

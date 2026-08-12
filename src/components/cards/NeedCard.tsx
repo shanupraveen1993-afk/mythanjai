@@ -85,7 +85,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
   const isNeedType = post.type?.toUpperCase() === "NEED";
 
   return (
-    <div className="bg-white -mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full sm:rounded-2xl p-3.5 sm:p-4 flex flex-col gap-2.5 shadow-[0_4px_16px_rgba(0,0,0,0.06)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.09)] transition-all duration-200 relative group overflow-hidden font-sans border-b border-slate-200/80 sm:border sm:border-slate-200/90">
+    <div className="bg-white -mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full sm:rounded-2xl p-4 flex flex-col gap-3 shadow-[0_4px_16px_rgba(0,0,0,0.06)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.09)] transition-all duration-200 relative group overflow-hidden font-sans border-b border-slate-200/80 sm:border sm:border-slate-200/90">
       
       {/* Top Header Tags */}
       <div className="flex items-center justify-between gap-2">
@@ -119,7 +119,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
 
       {/* YouTube Video Embed Preview */}
       {youtubeId && isPlayingVideo ? (
-        <div className="relative -mx-3 sm:mx-0 w-[calc(100%+1.5rem)] sm:w-full h-32 sm:h-36 sm:rounded-xl overflow-hidden bg-black shadow-inner">
+        <div className="relative -mx-4 w-[calc(100%+2rem)] sm:mx-0 sm:w-full h-36 sm:h-40 sm:rounded-xl overflow-hidden bg-black shadow-inner">
           <iframe
             src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1`}
             title={post.title}
@@ -129,7 +129,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
           />
         </div>
       ) : images.length > 0 ? (
-        <div className="relative -mx-3 sm:mx-0 w-[calc(100%+1.5rem)] sm:w-full h-32 sm:h-36 sm:rounded-xl overflow-hidden bg-slate-100 border-0">
+        <div className="relative -mx-4 w-[calc(100%+2rem)] sm:mx-0 sm:w-full h-36 sm:h-40 sm:rounded-xl overflow-hidden bg-slate-100 border-0">
           <Image
             src={images[activeImgIndex] || "/thanjavur_temple_illustration.png"}
             alt={post.title}
