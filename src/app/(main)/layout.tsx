@@ -122,10 +122,18 @@ function MainLayoutContent({
 
   const isGuestLanding = pathname === "/" && !profile?.isVerified;
   const isChatRoute = pathname === "/chat";
+
+  let layoutClasses = "min-h-screen";
+  if (isChatRoute) {
+    layoutClasses = "h-dvh max-h-dvh overflow-hidden";
+  } else if (isGuestLanding) {
+    layoutClasses = "h-dvh max-h-dvh overflow-hidden md:h-auto md:max-h-none md:overflow-visible md:min-h-screen";
+  }
+
   const isStandaloneView = isGuestLanding || isChatRoute;
 
   return (
-    <div className={`w-full flex flex-col relative bg-white font-sans ${isStandaloneView ? "h-dvh max-h-dvh overflow-hidden" : "min-h-screen"}`}>
+    <div className={`w-full flex flex-col relative bg-white font-sans ${layoutClasses}`}>
       <React.Suspense fallback={null}>
         <SearchParamSync onAreaSync={setSelectedArea} onAuthSync={setIsSignInOpen} />
       </React.Suspense>
