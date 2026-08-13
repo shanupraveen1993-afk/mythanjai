@@ -11,6 +11,9 @@ import UniversalSearchBar from "@/components/layout/UniversalSearchBar";
 
 import Footer from "@/components/layout/Footer";
 
+import SplashScreen from "@/components/ui/SplashScreen";
+import SwipeUpOnboarding from "@/components/ui/SwipeUpOnboarding";
+
 export default function MainLayout({
   children,
 }: {
@@ -62,6 +65,23 @@ function MainLayoutContent({
   // Selected Area filter state, synced with URL query params
   const [selectedArea, setSelectedArea] = useState<TanjoreLocality | "All Areas">("All Areas");
   const [isSignInOpen, setIsSignInOpen] = useState(false);
+
+  // Splash & Onboarding state
+  const [showSplash, setShowSplash] = useState(true);
+  const [showOnboarding, setShowOnboarding] = useState(false);
+
+  useEffect(() => {
+    // Check if user has already onboarded
+    const onboarded = localStorage.getItem("namma_thanjai_onboarded");
+    if (!onboarded) {
+      setShowOnboarding(true);
+    }
+  }, []);
+
+  const handleDismissOnboarding = () => {
+    setShowOnboarding(false);
+    localStorage.setItem("namma_thanjai_onboarded", "true");
+  };
 
   const handleCloseSignIn = () => {
     setIsSignInOpen(false);
@@ -136,6 +156,20 @@ function MainLayoutContent({
 
   return (
     <div className={`w-full flex flex-col relative bg-[#f4f5f8] font-sans ${layoutClasses}`}>
+      {/* 1. Animated Splash Screen */}
+      {showSplash && (
+        <SplashScreen
+          onComplete={() => {
+            setShowSplash(false);
+          }}
+        />
+      )}
+
+      {/* 2. Swipe-Up Onboarding Screen (Renders after splash finishes) */}
+      {!showSplash && showOnboarding && (
+        <SwipeUpOnboarding onDismiss={handleDismissOnboarding} />
+      )}
+
       <React.Suspense fallback={null}>
         <SearchParamSync onAreaSync={setSelectedArea} onAuthSync={setIsSignInOpen} />
       </React.Suspense>
