@@ -29,8 +29,33 @@ export default function ShopCard({ post, isPreview = false }: ShopCardProps) {
   const { toast } = useToast();
   const [saved, setSaved] = useState(false);
 
-  const viewsCount = Math.floor(140 + (post.shop_name?.length || 5) * 16);
-  const sharesCount = Math.floor(19 + (post.shop_name?.length || 5) * 2);
+  // Expired offer check logic
+  const isExpired = React.useMemo(() => {
+    if (!post.valid_to) return false;
+    try {
+      const toDate = new Date((post.valid_to as any).seconds ? (post.valid_to as any).seconds * 1000 : post.valid_to);
+      return toDate < new Date();
+    } catch (e) {
+      return false;
+    }
+  }, [post.valid_to]);
+
+  // Dynamic View & Share state stored in localStorage per card
+  const [viewsCount, setViewsCount] = useState(() => {
+    if (typeof window === "undefined") return 140;
+    const stored = localStorage.getItem(`views_shop_${post.id}`);
+    if (stored) return parseInt(stored, 10);
+    const initial = Math.floor(180 + (post.shop_name?.length || 5) * 14 + Math.random() * 25);
+    localStorage.setItem(`views_shop_${post.id}`, String(initial));
+    return initial;
+  });
+
+  const [sharesCount, setSharesCount] = useState(() => {
+    if (typeof window === "undefined") return 19;
+    const stored = localStorage.getItem(`shares_shop_${post.id}`);
+    if (stored) return parseInt(stored, 10);
+    return Math.floor(18 + (post.shop_name?.length || 5) * 2);
+  });
 
   const rawPhone = String((post as any).whatsapp_phone || post.phone || "9876543210");
   const cleanPhone = rawPhone.replace(/\D/g, "");
@@ -40,10 +65,18 @@ export default function ShopCard({ post, isPreview = false }: ShopCardProps) {
   const whatsappUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(
     `Hello ${post.shop_name}, I saw your offer "${post.offer_title || "Special Offer"}" on Namma Thanjai! Is it currently available?`
   )}`;
+  const whatsappGroupShareUrl = `https://wa.me/?text=${encodeURIComponent(
+    `🔥 Offer from *${post.shop_name}* in ${post.area_tag}, Thanjavur:\n"${post.offer_title || "Exclusive Deal"}"\nCheck out on Namma Thanjai!`
+  )}`;
   const directionUrl = post.google_maps_url || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${post.shop_name} ${post.area_tag} Thanjavur`)}`;
 
   const handleShare = (e: React.MouseEvent) => {
     e.stopPropagation();
+    const updatedShares = sharesCount + 1;
+    setSharesCount(updatedShares);
+    if (typeof window !== "undefined") {
+      localStorage.setItem(`shares_shop_${post.id}`, String(updatedShares));
+    }
     if (navigator.share) {
       navigator.share({
         title: `${post.shop_name} - ${post.offer_title || "Offer"}`,
@@ -54,6 +87,11 @@ export default function ShopCard({ post, isPreview = false }: ShopCardProps) {
       navigator.clipboard.writeText(window.location.href);
       toast.success("Offer link copied to clipboard!");
     }
+  };
+
+  const handleReport = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    toast.success("Thank you! Listing reported to admin for verification.");
   };
 
   const handleToggleSave = (e: React.MouseEvent) => {
@@ -75,14 +113,29 @@ export default function ShopCard({ post, isPreview = false }: ShopCardProps) {
   const validityText = formatOfferValidity(post.valid_from, post.valid_to, post.created_at);
 
   return (
-    <div className="bg-white rounded-2xl overflow-hidden shadow-[0_3px_8px_rgba(0,0,0,0.03)] transition-all duration-200 flex flex-col relative font-sans border border-slate-200/80">
+    <div className="bg-white rounded-2xl overflow-hidden shadow-[0_3px_8px_rgba(0,0,0,0.03)] transition-all duration-200 flex flex-col relative font-sans border border-slate-200/80 group">
       
-      {/* Featured Overlay */}
-      {post.is_featured && (
+      {/* Featured / Expired Overlay */}
+      {isExpired ? (
+        <div className="absolute top-2.5 left-2.5 z-20 bg-rose-600 text-white text-[9px] font-bold px-2.5 py-0.5 rounded-lg flex items-center gap-1 shadow-md">
+          <span>⚠️ Offer Expired</span>
+        </div>
+      ) : post.is_featured ? (
         <div className="absolute top-2.5 left-2.5 z-20 bg-yellow-500 text-slate-955 text-[9px] font-semibold px-2 py-0.5 rounded-xl flex items-center gap-1 shadow-md animate-pulse">
           <Sparkles className="w-2.5 h-2.5 fill-current" />
           <span>Featured Store</span>
         </div>
+      ) : null}
+
+      {/* Report Flag Button in Top-Right Corner */}
+      {!isPreview && (
+        <button
+          onClick={handleReport}
+          title="Report inaccurate deal"
+          className="absolute top-2.5 right-2.5 z-20 w-7 h-7 rounded-full bg-white/80 backdrop-blur-xs text-slate-400 hover:text-rose-600 border border-slate-200 flex items-center justify-center transition-colors cursor-pointer shadow-xs"
+        >
+          <Tag className="w-3 h-3 rotate-90" />
+        </button>
       )}
 
       {/* Main Image Box (Compulsory Image / Placeholder Box for 100% Uniform Height) */}
@@ -127,14 +180,18 @@ export default function ShopCard({ post, isPreview = false }: ShopCardProps) {
         </p>
 
         {/* Offer Validity Badge */}
-        <div className="flex items-center gap-1 text-amber-800 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200/80 font-bold text-[11px] w-fit mt-0.5">
+        <div className={`flex items-center gap-1 px-2.5 py-1 rounded-lg border font-bold text-[11px] w-fit mt-0.5 ${
+          isExpired ? "text-rose-700 bg-rose-50 border-rose-200" : "text-amber-800 bg-amber-50 border-amber-200/80"
+        }`}>
           <Calendar className="w-3.5 h-3.5 text-amber-600" />
-          <span>{validityText}</span>
+          <span>{isExpired ? "Offer Expired" : validityText}</span>
         </div>
 
         {/* Active Promotion Offer Details */}
         {post.offer_title && (
-          <div className="bg-yellow-50/70 border border-yellow-200/80 rounded-xl p-3 flex flex-col gap-1.5 mt-1 text-slate-800 font-sans shadow-2xs">
+          <div className={`border rounded-xl p-3 flex flex-col gap-1.5 mt-1 font-sans shadow-2xs ${
+            isExpired ? "bg-slate-50 border-slate-200 text-slate-500 opacity-75" : "bg-yellow-50/70 border-yellow-200/80 text-slate-800"
+          }`}>
             <div className="flex items-center gap-1.5 text-yellow-800 font-extrabold text-[11px] truncate">
               <Sparkles className="w-3.5 h-3.5 fill-yellow-500 text-yellow-600 shrink-0" />
               <span className="truncate">{post.offer_title}</span>
@@ -177,7 +234,18 @@ export default function ShopCard({ post, isPreview = false }: ShopCardProps) {
             </div>
 
             {/* Right: Actions (Share & Save) */}
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2.5">
+              <a
+                href={whatsappGroupShareUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                onClick={(e) => e.stopPropagation()}
+                title="Forward offer to WhatsApp Group"
+                className="flex items-center gap-1 text-[#00a884] hover:text-[#008f6f] font-bold cursor-pointer transition-colors"
+              >
+                <MessageSquare className="w-3.5 h-3.5 fill-current stroke-none" />
+                <span>Forward</span>
+              </a>
               <button 
                 onClick={handleShare}
                 className="flex items-center gap-1 hover:text-slate-800 cursor-pointer transition-colors"

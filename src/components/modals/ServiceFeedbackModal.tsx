@@ -84,10 +84,10 @@ export default function ServiceFeedbackModal({
             {/* Header Title */}
             <div className="flex flex-col items-center text-center gap-1">
               <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-                Service Verification Check
+                Service Experience Check
               </span>
               <h3 className="font-heading font-black text-base text-slate-900 leading-snug">
-                How was your contact with {serviceName}?
+                How was the experience with {serviceName}?
               </h3>
               <p className="text-xs text-slate-500 font-semibold">
                 Phone: +91 {phone}
@@ -97,7 +97,7 @@ export default function ServiceFeedbackModal({
             {/* Options Selector */}
             <div className="flex flex-col gap-2 my-1">
               
-              {/* Option 1: Satisfied / Service Confirmed */}
+              {/* Option 1: Answered & Service Confirmed */}
               <button
                 type="button"
                 onClick={() => setSelectedOption("satisfied")}
@@ -111,12 +111,12 @@ export default function ServiceFeedbackModal({
                   <Check className="w-4 h-4 stroke-[3]" />
                 </div>
                 <div>
-                  <h4 className="font-black text-xs">Satisfied / Service Confirmed</h4>
-                  <p className="text-[10px] text-slate-500 font-bold">Technician responded and confirmed work</p>
+                  <h4 className="font-black text-xs">Answered & Service Confirmed</h4>
+                  <p className="text-[10px] text-slate-500 font-bold">Responded, verified work & pricing</p>
                 </div>
               </button>
 
-              {/* Option 2: Call Not Answered */}
+              {/* Option 2: Not Answered */}
               <button
                 type="button"
                 onClick={() => setSelectedOption("unanswered")}
@@ -130,12 +130,12 @@ export default function ServiceFeedbackModal({
                   <PhoneOff className="w-4 h-4" />
                 </div>
                 <div>
-                  <h4 className="font-black text-xs">Call Not Answered</h4>
+                  <h4 className="font-black text-xs">Not Answered</h4>
                   <p className="text-[10px] text-slate-500 font-bold">Line busy or no response</p>
                 </div>
               </button>
 
-              {/* Option 3: Not Satisfied / Report Issue */}
+              {/* Option 3: Report Issue */}
               <button
                 type="button"
                 onClick={() => setSelectedOption("unsatisfied")}
@@ -149,8 +149,8 @@ export default function ServiceFeedbackModal({
                   <ThumbsDown className="w-4 h-4" />
                 </div>
                 <div>
-                  <h4 className="font-black text-xs">Not Satisfied / Report Issue</h4>
-                  <p className="text-[10px] text-slate-500 font-bold">Incorrect details, poor service, or misconduct</p>
+                  <h4 className="font-black text-xs">Report Issue</h4>
+                  <p className="text-[10px] text-slate-500 font-bold">Incorrect details or misconduct</p>
                 </div>
               </button>
 

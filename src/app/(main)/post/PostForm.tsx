@@ -438,11 +438,11 @@ export default function PostForm({ segment }: PostFormProps) {
             {segment === "offer" ? (
               <>
                 {/* 1. UPLOAD VISITING CARD / FLYER PHOTO (TOP) */}
-                <div className="w-full bg-slate-50 border-2 border-dashed border-slate-300 hover:border-yellow-500 p-4 rounded-2xl flex flex-col items-center justify-center text-center gap-2 transition-all group relative">
+                <div className="w-full bg-slate-50 border-2 border-dashed border-slate-300 hover:border-slate-400 p-4 rounded-2xl flex flex-col items-center justify-center text-center gap-2 transition-all group relative">
                   {isOcrScanning && (
                     <div className="absolute inset-0 bg-white/90 backdrop-blur-xs rounded-2xl z-20 flex flex-col items-center justify-center gap-2">
-                      <Loader2 className="w-6 h-6 animate-spin text-yellow-600" />
-                      <span className="text-xs font-bold text-slate-800">AI Extracting Company Name & Location...</span>
+                      <Loader2 className="w-6 h-6 animate-spin text-slate-800" />
+                      <span className="text-xs font-bold text-slate-800">Reading Store Name & Location from Card...</span>
                     </div>
                   )}
                   {imagePreview ? (
@@ -456,16 +456,15 @@ export default function PostForm({ segment }: PostFormProps) {
                     </div>
                   ) : (
                     <label className="w-full flex flex-col items-center justify-center gap-2 cursor-pointer py-2">
-                      <div className="w-11 h-11 rounded-2xl bg-yellow-500 text-slate-950 flex items-center justify-center font-bold shadow-sm group-hover:scale-105 transition-transform">
+                      <div className="w-11 h-11 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-bold shadow-sm group-hover:scale-105 transition-transform">
                         <Camera className="w-5 h-5 stroke-[2.5]" />
                       </div>
                       <div className="flex flex-col items-center">
-                        <span className="font-heading font-bold text-xs text-slate-900 flex items-center gap-1">
-                          <Sparkles className="w-3.5 h-3.5 text-yellow-600 fill-yellow-500" />
-                          <span>Upload Visiting Card / Flyer Photo *</span>
+                        <span className="font-heading font-bold text-xs text-slate-900">
+                          Upload Visiting Card / Flyer Photo *
                         </span>
                         <span className="text-[10px] text-slate-500 mt-0.5 max-w-sm font-medium">
-                          Auto-extracts Company Name & Location directly into Live Preview!
+                          Fills Store Name & Location directly into Live Preview!
                         </span>
                       </div>
                       <span className="bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-bold text-xs px-3.5 py-1.5 rounded-xl transition-all border border-yellow-400 shadow-2xs mt-0.5">
@@ -474,6 +473,30 @@ export default function PostForm({ segment }: PostFormProps) {
                       <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
                     </label>
                   )}
+                </div>
+
+                {/* 1B. EXPLICIT STORE NAME / OFFER TITLE INPUT */}
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-semibold text-slate-700">
+                      Store Name / Offer Title *
+                    </label>
+                    <span className={`text-[10px] font-medium ${title.length >= config.maxTitleChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>
+                      {title.length}/{config.maxTitleChars}
+                    </span>
+                  </div>
+                  <input
+                    type="text"
+                    required
+                    maxLength={config.maxTitleChars}
+                    placeholder="e.g. GLEN Exclusive Gallery / Sri Kumaran Silks"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-colors"
+                  />
+                  <span className="text-[10px] text-slate-400 font-medium">
+                    Fills from visiting card photo or type manually above.
+                  </span>
                 </div>
 
                 {/* 2. OFFER DETAILS / DESCRIPTION */}
@@ -519,6 +542,45 @@ export default function PostForm({ segment }: PostFormProps) {
                       onChange={(e) => setValidTo(e.target.value)}
                       className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
                     />
+                  </div>
+                </div>
+
+                {/* 3B. CATEGORY & LOCATION IN THANJAVUR (BELOW OFFER COMPONENT) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50 border border-slate-200/80 p-3.5 rounded-xl">
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                      <Tag className="w-3.5 h-3.5 text-slate-400" />
+                      Store Category *
+                    </label>
+                    <select
+                      value={category}
+                      onChange={(e) => setCategory(e.target.value)}
+                      className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 cursor-pointer"
+                    >
+                      {config.categories.map((cat) => (
+                        <option key={cat} value={cat}>
+                          {cat}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                      <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                      Location in Thanjavur *
+                    </label>
+                    <select
+                      value={area}
+                      onChange={(e) => setArea(e.target.value)}
+                      className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 cursor-pointer"
+                    >
+                      {TANJORE_LOCALITIES.map((loc) => (
+                        <option key={loc} value={loc}>
+                          {loc}
+                        </option>
+                      ))}
+                    </select>
                   </div>
                 </div>
 

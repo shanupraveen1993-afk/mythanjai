@@ -124,14 +124,14 @@ export default function AdminClientPage() {
 
   const handleVerifyPasscode = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (passcode === "tanjoreadmin") {
+    if (passcode === "shanu70#") {
       setIsAdmin(true);
       try {
         const confetti = (await import("canvas-confetti")).default;
         confetti({ particleCount: 50, spread: 60 });
       } catch (err) {}
     } else {
-      alert("Invalid Admin Passcode! (Hint: use 'tanjoreadmin')");
+      alert("Invalid Admin Passcode!");
     }
   };
 

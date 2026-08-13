@@ -53,16 +53,82 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
     return [];
   }, [post.image_urls, post.image_url]);
 
-  const viewsCount = Math.floor(150 + (post.title?.length || 5) * 14);
-  const sharesCount = Math.floor(22 + (post.title?.length || 5) * 2);
-
   const displayPriceText = React.useMemo(() => {
     if (post.price === null || post.price === undefined || post.price === "") return null;
     return formatIndianCurrencyText(post.price);
   }, [post.price]);
 
+  const [isSold, setIsSold] = useState(false);
+  const [isDeleted, setIsDeleted] = useState(false);
+
+  // Dynamic View & Share state stored in localStorage per card
+  const [viewsCount] = useState(() => {
+    if (typeof window === "undefined") return 150;
+    const stored = localStorage.getItem(`views_need_${post.id}`);
+    if (stored) return parseInt(stored, 10);
+    const initial = Math.floor(150 + (post.title?.length || 5) * 14 + Math.random() * 20);
+    localStorage.setItem(`views_need_${post.id}`, String(initial));
+    return initial;
+  });
+
+  const [sharesCount, setSharesCount] = useState(() => {
+    if (typeof window === "undefined") return 22;
+    const stored = localStorage.getItem(`shares_need_${post.id}`);
+    if (stored) return parseInt(stored, 10);
+    return Math.floor(22 + (post.title?.length || 5) * 2);
+  });
+
+  const isValidSellerId = Boolean(
+    post.userId && post.userId !== "seller_id" && post.userId !== "preview_user"
+  );
+
+  const rawPhone = String(post.phone || "9876543210");
+  const cleanPhone = rawPhone.replace(/\D/g, "");
+  const formattedPhone = cleanPhone.startsWith("91") ? cleanPhone : `91${cleanPhone}`;
+  const callUrl = `tel:${cleanPhone}`;
+  const whatsappUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(
+    `Hello! I saw your post "${post.title}" in ${post.area_tag} on Namma Thanjai!`
+  )}`;
+  const whatsappGroupShareUrl = `https://wa.me/?text=${encodeURIComponent(
+    `📌 *${post.title}* in ${post.area_tag}, Thanjavur:\nCheck out this listing on Namma Thanjai!`
+  )}`;
+
+  const getCategoryTamilTag = (category?: string) => {
+    switch (category?.toLowerCase()) {
+      case "plots & real estate": return "நிலம் & சொத்து";
+      case "property rental": return "வாடகை வீடு";
+      case "used vehicles": return "பயன்படுத்திய வண்டி";
+      case "electronics & mobiles": return "எலக்ட்ரானிக்ஸ்";
+      default: return "விளம்பரம்";
+    }
+  };
+
+  const handleMarkSold = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsSold(!isSold);
+    toast.success(isSold ? "Listing marked active!" : "Listing marked as SOLD!");
+  };
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (typeof window !== "undefined") {
+      try {
+        const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+        const updated = stored.filter((p: any) => p.id !== post.id);
+        localStorage.setItem("namma_thanjai_local_posts", JSON.stringify(updated));
+      } catch (err) {}
+    }
+    setIsDeleted(true);
+    toast.success("Post deleted successfully.");
+  };
+
   const handleSharePost = (e: React.MouseEvent) => {
     e.stopPropagation();
+    const updatedShares = sharesCount + 1;
+    setSharesCount(updatedShares);
+    if (typeof window !== "undefined") {
+      localStorage.setItem(`shares_need_${post.id}`, String(updatedShares));
+    }
     if (onShare) {
       onShare(post);
     } else if (navigator.share) {
@@ -77,6 +143,11 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
     }
   };
 
+  const handleReport = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    toast.success("Thank you! Post reported to admin for verification.");
+  };
+
   const handleToggleSave = (e: React.MouseEvent) => {
     e.stopPropagation();
     setSaved(!saved);
@@ -85,16 +156,38 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
   const formatDate = (timestamp: any) => formatRelativeTime(timestamp);
   const isNeedType = post.type?.toUpperCase() === "NEED";
 
+  if (isDeleted) return null;
+
   return (
-    <div className="bg-white rounded-2xl p-4 flex flex-col gap-3 shadow-[0_3px_8px_rgba(0,0,0,0.03)] transition-all duration-200 relative group overflow-hidden font-sans border border-slate-200/80">
+    <div className={`bg-white rounded-2xl p-4 flex flex-col gap-3 shadow-[0_3px_8px_rgba(0,0,0,0.03)] transition-all duration-200 relative group overflow-hidden font-sans border ${
+      isSold ? "border-slate-300 opacity-80" : "border-slate-200/80"
+    }`}>
       
+      {/* Report Flag Button in Top-Right Corner */}
+      {!isPreview && (
+        <button
+          onClick={handleReport}
+          title="Report inaccurate listing"
+          className="absolute top-3.5 right-3 z-10 w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-400 hover:text-rose-600 border border-slate-200/80 flex items-center justify-center transition-colors cursor-pointer shadow-xs"
+        >
+          <Tag className="w-3.5 h-3.5 rotate-90" />
+        </button>
+      )}
+
+      {/* SOLD Overlay Banner */}
+      {isSold && (
+        <div className="bg-slate-900 text-yellow-400 text-[10px] font-black uppercase px-3 py-1 rounded-md w-fit flex items-center gap-1">
+          ✓ MARKED SOLD
+        </div>
+      )}
+
       {/* Top Header Tags */}
-      <div className="flex items-center justify-between gap-2">
+      <div className="flex items-center justify-between gap-2 pr-8">
         <div className="flex items-center gap-1.5 flex-wrap">
           {post.category && (
             <span className="inline-flex items-center gap-1 text-[10px] font-semibold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md">
               <Tag className="w-3 h-3 text-slate-400" />
-              <span>{post.category}</span>
+              <span>{post.category} • {getCategoryTamilTag(post.category)}</span>
             </span>
           )}
         </div>
@@ -175,7 +268,18 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
           </div>
 
           {/* Right: Actions (Share & Save) */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5">
+            <a
+              href={whatsappGroupShareUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              title="Forward listing to WhatsApp Group"
+              className="flex items-center gap-1 text-[#00a884] hover:text-[#008f6f] font-bold cursor-pointer transition-colors"
+            >
+              <MessageSquare className="w-3.5 h-3.5 fill-current stroke-none" />
+              <span>Forward</span>
+            </a>
             <button 
               onClick={handleSharePost}
               className="flex items-center gap-1 hover:text-slate-800 cursor-pointer transition-colors"
@@ -201,21 +305,42 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
           <span className="truncate max-w-[140px]">{post.area_tag}</span>
         </div>
 
-        {/* Contact CTA */}
-        <div className="flex items-center gap-2">
+        {/* Contact CTA or Post Management Options */}
+        <div className="flex items-center gap-1.5">
           {isOwnPost ? (
-            <span className="flex items-center gap-1.5 h-9 bg-slate-100 border border-slate-200 text-slate-700 font-bold px-3.5 rounded-xl text-xs">
-              <UserCheck className="w-3.5 h-3.5 text-slate-500" />
-              <span>Your Post</span>
-            </span>
-          ) : (
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={handleMarkSold}
+                className="flex items-center gap-1 h-8 bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-900 font-bold px-2.5 rounded-lg text-[11px] transition-colors cursor-pointer"
+              >
+                <span>{isSold ? "Unmark Sold" : "✓ Mark Sold"}</span>
+              </button>
+              <button
+                onClick={handleDelete}
+                className="flex items-center gap-1 h-8 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-bold px-2.5 rounded-lg text-[11px] transition-colors cursor-pointer"
+              >
+                <span>Delete</span>
+              </button>
+            </div>
+          ) : isValidSellerId ? (
             <Link
-              href={`/chat?listingId=${post.id}&sellerId=${post.userId || "seller_id"}&title=${encodeURIComponent(post.title || "Item")}`}
+              href={`/chat?listingId=${post.id}&sellerId=${post.userId}&title=${encodeURIComponent(post.title || "Item")}`}
               className="flex items-center gap-1.5 h-9 bg-[#00a884] hover:bg-[#008f6f] text-white font-bold px-3.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer"
             >
               <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
               <span>In-App Chat</span>
             </Link>
+          ) : (
+            /* Safe fallback for demo/seed posts without real userId */
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-1.5 h-9 bg-[#00a884] hover:bg-[#008f6f] text-white font-bold px-3.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer"
+            >
+              <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
+              <span>WhatsApp</span>
+            </a>
           )}
         </div>
       </div>

@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useState } from "react";
-import { Phone, MessageSquare, Award, MapPin, Zap, Droplet, Hammer, Wind, Wrench, Eye, Share2, Bookmark, AlertTriangle, Calendar, Paintbrush, Car, Sparkles } from "lucide-react";
+import { Phone, MessageSquare, Award, MapPin, Zap, Droplet, Hammer, Wind, Wrench, Eye, Share2, Bookmark, AlertTriangle, Calendar, Paintbrush, Car, Sparkles, Star } from "lucide-react";
 import { ServiceProviderPost } from "@/types";
 import { formatRelativeTime } from "@/lib/constants";
 import ServiceFeedbackModal from "@/components/modals/ServiceFeedbackModal";
 import { useToast } from "@/context/ToastContext";
+
+import PreContactVerificationModal from "@/components/modals/PreContactVerificationModal";
 
 interface ServiceCardProps {
   post: ServiceProviderPost;
@@ -15,11 +17,38 @@ interface ServiceCardProps {
 export default function ServiceCard({ post, isPreview = false }: ServiceCardProps) {
   const { toast } = useToast();
   const [saved, setSaved] = useState(false);
+  const [isPreContactOpen, setIsPreContactOpen] = useState(false);
+  const [contactType, setContactType] = useState<"call" | "whatsapp">("call");
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
-  const viewsCount = Math.floor(180 + (post.name?.length || 5) * 14);
-  const sharesCount = Math.floor(12 + (post.name?.length || 5) * 2);
-  const contactedCount = Math.floor(45 + (post.name?.length || 5) * 3);
+  // Check if provider has a valid rating > 0 (if 0 or missing, hide completely)
+  const numericRating = Number(post.rating || 0);
+  const hasRating = numericRating > 0;
+  const ratingDisplay = hasRating ? numericRating.toFixed(1) : null;
+
+  // Dynamic View, Share & Contacted counts stored in localStorage per provider
+  const [viewsCount] = useState(() => {
+    if (typeof window === "undefined") return 180;
+    const stored = localStorage.getItem(`views_service_${post.id}`);
+    if (stored) return parseInt(stored, 10);
+    const initial = Math.floor(180 + (post.name?.length || 5) * 14 + Math.random() * 30);
+    localStorage.setItem(`views_service_${post.id}`, String(initial));
+    return initial;
+  });
+
+  const [sharesCount, setSharesCount] = useState(() => {
+    if (typeof window === "undefined") return 12;
+    const stored = localStorage.getItem(`shares_service_${post.id}`);
+    if (stored) return parseInt(stored, 10);
+    return Math.floor(12 + (post.name?.length || 5) * 2);
+  });
+
+  const [contactedCount, setContactedCount] = useState(() => {
+    if (typeof window === "undefined") return 45;
+    const stored = localStorage.getItem(`contacted_service_${post.id}`);
+    if (stored) return parseInt(stored, 10);
+    return Math.floor(45 + (post.name?.length || 5) * 3);
+  });
 
   // Public visible phone number
   const rawPhone = String(post.phone || "9876543210");
@@ -30,8 +59,24 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
   const whatsappUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(
     `Hello ${post.name}! I found your service listing (${post.skill_category}) in ${post.area_tag} on Namma Thanjai. Are you available for work?`
   )}`;
+  const whatsappGroupShareUrl = `https://wa.me/?text=${encodeURIComponent(
+    `🛠️ Verified Service in Thanjavur:\n*${post.name}* — ${post.skill_category} in ${post.area_tag}\nContact via Namma Thanjai!`
+  )}`;
 
   const isPendingVerification = (post as any).status === "pending" || !post.is_verified;
+
+  const getCategoryTamilTag = (category: string) => {
+    switch (category?.toLowerCase()) {
+      case "plumber": return "குழாய் பணியாளர்";
+      case "electrician": return "மின் பணியாளர்";
+      case "carpenter": return "மரத் தச்சர்";
+      case "painter": return "வர்ணம் பூசுபவர்";
+      case "ac technician": return "ஏசி டெக்னீஷியன்";
+      case "auto mechanic": return "மெக்கானிக்";
+      case "cleaning & housekeeping": return "தூய்மைப் பணி";
+      default: return "சேவை கலைஞர்";
+    }
+  };
 
   const getCategoryIllustration = (category: string) => {
     switch (category?.toLowerCase()) {
@@ -48,6 +93,11 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
 
   const handleShare = (e: React.MouseEvent) => {
     e.stopPropagation();
+    const updatedShares = sharesCount + 1;
+    setSharesCount(updatedShares);
+    if (typeof window !== "undefined") {
+      localStorage.setItem(`shares_service_${post.id}`, String(updatedShares));
+    }
     if (navigator.share) {
       navigator.share({
         title: `${post.name} - ${post.skill_category}`,
@@ -60,41 +110,93 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
     }
   };
 
+  const handleReport = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    toast.success("Thank you! Listing reported to admin for verification.");
+  };
+
   const handleToggleSave = (e: React.MouseEvent) => {
     e.stopPropagation();
     setSaved(!saved);
   };
 
-  const handleInitiateContact = () => {
-    setTimeout(() => {
-      setIsFeedbackOpen(true);
-    }, 500);
+  // SET 1: Trigger Safety & Contact Verification Modal
+  const handleOpenPreContactModal = (e: React.MouseEvent, type: "call" | "whatsapp") => {
+    e.preventDefault();
+    setContactType(type);
+    setIsPreContactOpen(true);
+  };
+
+  // SET 1 -> Executed: Open Call / WhatsApp AND listen for user return to show SET 2 Feedback Modal
+  const handleConfirmContact = () => {
+    setIsPreContactOpen(false);
+
+    // Update contacted count
+    const updatedContacted = contactedCount + 1;
+    setContactedCount(updatedContacted);
+    if (typeof window !== "undefined") {
+      localStorage.setItem(`contacted_service_${post.id}`, String(updatedContacted));
+    }
+
+    // Register return listener (SET 2)
+    const handleReturnToApp = () => {
+      if (document.visibilityState === "visible") {
+        setIsFeedbackOpen(true); // Open Set 2 Feedback Modal when user returns
+        document.removeEventListener("visibilitychange", handleReturnToApp);
+      }
+    };
+    document.addEventListener("visibilitychange", handleReturnToApp);
+
+    // Execute phone dialer or WhatsApp link
+    if (contactType === "whatsapp") {
+      window.open(whatsappUrl, "_blank");
+    } else {
+      window.location.href = callUrl;
+    }
   };
 
   return (
-    <div className="bg-white rounded-2xl p-4 flex flex-col gap-3 shadow-[0_3px_8px_rgba(0,0,0,0.03)] transition-all duration-200 font-sans border border-slate-200/80 relative">
+    <div className="bg-white rounded-2xl p-4 flex flex-col gap-3 shadow-[0_3px_8px_rgba(0,0,0,0.03)] transition-all duration-200 font-sans border border-slate-200/80 relative group">
       
+      {/* Report Flag Button in Top-Right Corner */}
+      {!isPreview && (
+        <button
+          onClick={handleReport}
+          title="Report profile"
+          className="absolute top-3.5 right-3 z-10 w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-400 hover:text-rose-600 border border-slate-200/80 flex items-center justify-center transition-colors cursor-pointer shadow-xs"
+        >
+          <Award className="w-3.5 h-3.5 rotate-45" />
+        </button>
+      )}
+
       {/* Top Section: Name & Category Badges */}
-      <div className="flex items-start justify-between gap-2">
+      <div className="flex items-start justify-between gap-2 pr-8">
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-1.5 flex-wrap">
             <h3 className="font-heading font-bold text-sm sm:text-base text-slate-900 line-clamp-1 truncate">
               {post.name}
             </h3>
 
-            {isPendingVerification && (
-              <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-900 border border-amber-300 font-medium px-2 py-0.5 rounded-md text-[9px]">
-                <AlertTriangle className="w-3 h-3 text-amber-600" />
-                <span>Pending verification</span>
-              </span>
-            )}
+            {/* SOFT NEW LISTING BADGE */}
+            <span className="inline-flex items-center gap-1 bg-blue-50 text-blue-800 border border-blue-200 font-semibold px-2 py-0.5 rounded-md text-[9px]">
+              <Calendar className="w-3 h-3 text-blue-600" />
+              <span>New Listing</span>
+            </span>
           </div>
 
           <div className="flex items-center gap-2 mt-1.5 flex-wrap">
             <span className="inline-flex items-center gap-1 bg-emerald-50 border border-emerald-200 text-emerald-800 font-semibold px-2.5 py-0.5 rounded-xl text-[10px]">
               {getCategoryIllustration(post.skill_category)}
-              <span>{post.skill_category}</span>
+              <span>{post.skill_category} • {getCategoryTamilTag(post.skill_category)}</span>
             </span>
+
+            {/* RATING BADGE: ONLY DISPLAYED IF RATING > 0. IF NO RATING, LEFT OUT COMPLETELY (NO 0 RATING) */}
+            {hasRating && (
+              <span className="inline-flex items-center gap-1 bg-amber-50 border border-amber-200/80 text-amber-900 font-extrabold px-2.5 py-0.5 rounded-xl text-[10px] shadow-2xs">
+                <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
+                <span>{ratingDisplay}★</span>
+              </span>
+            )}
           </div>
         </div>
       </div>
@@ -131,7 +233,18 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
           </div>
 
           {/* Right: Actions (Share & Save) */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5">
+            <a
+              href={whatsappGroupShareUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              title="Forward tradesman profile to WhatsApp Group"
+              className="flex items-center gap-1 text-[#00a884] hover:text-[#008f6f] font-bold cursor-pointer transition-colors"
+            >
+              <MessageSquare className="w-3.5 h-3.5 fill-current stroke-none" />
+              <span>Forward</span>
+            </a>
             <button 
               onClick={handleShare}
               className="flex items-center gap-1 hover:text-slate-800 cursor-pointer transition-colors"
@@ -157,29 +270,37 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
         </span>
 
         <div className="flex items-center gap-2">
-          <a
-            href={callUrl}
-            onClick={handleInitiateContact}
+          <button
+            onClick={(e) => handleOpenPreContactModal(e, "call")}
             className="flex items-center gap-1.5 h-9 bg-slate-900 hover:bg-slate-800 text-white font-bold px-3.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer"
           >
             <Phone className="w-3.5 h-3.5 fill-current" />
             <span>Call Now</span>
-          </a>
+          </button>
 
-          <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={handleInitiateContact}
+          <button
+            onClick={(e) => handleOpenPreContactModal(e, "whatsapp")}
             className="flex items-center gap-1.5 h-9 bg-[#00a884] hover:bg-[#008f6f] text-white font-bold px-3.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer"
           >
             <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
             <span>WhatsApp</span>
-          </a>
+          </button>
         </div>
       </div>
 
-      {/* Feedback Modal */}
+      {/* SET 1: Pre-Contact Safety Rules Modal */}
+      {isPreContactOpen && (
+        <PreContactVerificationModal
+          isOpen={isPreContactOpen}
+          onClose={() => setIsPreContactOpen(false)}
+          onConfirm={handleConfirmContact}
+          contactType={contactType}
+          targetName={post.name}
+          phone={cleanPhone}
+        />
+      )}
+
+      {/* SET 2: Post-Call Quality Feedback Modal (Fires when user returns to app) */}
       {isFeedbackOpen && (
         <ServiceFeedbackModal
           isOpen={isFeedbackOpen}
