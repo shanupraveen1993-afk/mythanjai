@@ -1,24 +1,26 @@
 {
   "name": "Namma Thanjai",
   "short_name": "NammaThanjai",
-  "description": "Thanjavur's Hyper-Local Network",
+  "description": "Thanjavur's Hyper-Local Network for Need, Sell, Services & Offers",
+  "id": "/",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#fafaf9",
+  "background_color": "#0f172a",
   "theme_color": "#0f172a",
+  "categories": ["shopping", "lifestyle", "business"],
   "icons": [
     {
       "src": "/icons/icon-192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     },
     {
       "src": "/icons/icon-512x512.png",
       "sizes": "512x512",
       "type": "image/png",
-      "purpose": "any"
+      "purpose": "any maskable"
     }
   ]
 }
