@@ -6,9 +6,11 @@ import { Handshake } from "lucide-react";
 import { NeedOrSalePost } from "@/types";
 import { useFirestore } from "@/hooks/use-firestore";
 import { PreviewSection, PreviewCard } from "@/app/(main)/HomeClientPage";
+import { useLanguage } from "@/context/LanguageContext";
 
 export default function CategoryBridgeFeed() {
   const router = useRouter();
+  const { t } = useLanguage();
   const { data: firestorePosts } = useFirestore<NeedOrSalePost>({
     collectionName: "needs_and_sales",
     areaTag: "All Areas",
@@ -37,16 +39,16 @@ export default function CategoryBridgeFeed() {
       <div className="w-full bg-slate-900 text-white rounded-2xl p-5 shadow-md font-sans my-3 flex flex-col sm:flex-row items-center justify-between gap-4 border border-slate-800">
         <div className="flex items-center gap-3.5">
           {/* Clean White Two Hands Connecting Icon Container */}
-          <div className="w-12 h-12 rounded-2xl bg-yellow-500 text-slate-950 flex items-center justify-center font-bold shadow-md shrink-0">
+          <div className="w-12 h-12 rounded-2xl bg-yellow-500 text-slate-955 flex items-center justify-center font-bold shadow-md shrink-0">
             <Handshake className="w-6 h-6 text-slate-950 stroke-[2.5]" />
           </div>
           <div className="flex flex-col gap-0.5">
             <h4 className="font-heading font-extrabold text-sm text-white flex items-center gap-2">
-              <span>Local Matchmaker — Connect in Tanjore</span>
+              <span>{t("matchmakerTitle")}</span>
               <span className="text-[9px] bg-yellow-500 text-slate-955 px-2 py-0.5 rounded font-black uppercase">Instant</span>
             </h4>
             <p className="text-xs text-slate-300 font-medium leading-relaxed">
-              Post what you want to Buy, Sell, or Rent. We automatically match you directly with Tanjore residents!
+              {t("matchmakerDesc")}
             </p>
           </div>
         </div>
@@ -56,13 +58,13 @@ export default function CategoryBridgeFeed() {
             onClick={() => router.push("/post/need")}
             className="flex-1 sm:flex-none px-3.5 py-2 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-extrabold text-xs rounded-xl border border-yellow-400 shadow-2xs transition-all cursor-pointer text-center"
           >
-            + Post Requirement
+            {t("postRequirement")}
           </button>
           <button
             onClick={() => router.push("/post/sell")}
-            className="flex-1 sm:flex-none px-3.5 py-2 bg-slate-900 hover:bg-slate-800 text-white font-heading font-extrabold text-xs rounded-xl transition-all cursor-pointer text-center"
+            className="flex-1 sm:flex-none px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-white font-heading font-extrabold text-xs rounded-xl transition-all cursor-pointer text-center border border-slate-700"
           >
-            + Sell Item
+            {t("sellItem")}
           </button>
         </div>
       </div>

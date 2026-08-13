@@ -2,6 +2,7 @@
 
 import React from "react";
 import { ShieldCheck, Phone, MessageSquare, AlertTriangle, X } from "lucide-react";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface PreContactVerificationModalProps {
   isOpen: boolean;
@@ -20,6 +21,7 @@ export default function PreContactVerificationModal({
   targetName,
   phone,
 }: PreContactVerificationModalProps) {
+  const { t } = useLanguage();
   if (!isOpen) return null;
 
   return (
@@ -38,14 +40,14 @@ export default function PreContactVerificationModal({
           
           {/* Header */}
           <div className="flex flex-col items-center text-center gap-2 pt-1">
-            <div className="w-12 h-12 rounded-2xl bg-yellow-500 text-slate-950 flex items-center justify-center shadow-md">
+            <div className="w-12 h-12 rounded-2xl bg-yellow-500 text-slate-955 flex items-center justify-center shadow-md">
               <ShieldCheck className="w-6 h-6 stroke-[2.5]" />
             </div>
             <h3 className="font-heading font-black text-base text-slate-900 leading-snug">
-              Contact & Safety Verification
+              {t("safetyTitle")}
             </h3>
             <p className="text-xs text-slate-500 font-medium">
-              Connecting with <strong className="text-slate-800">{targetName}</strong> (+91 {phone})
+              {t("connectingWith")} <strong className="text-slate-800">{targetName}</strong> (+91 {phone})
             </p>
           </div>
 
@@ -53,16 +55,16 @@ export default function PreContactVerificationModal({
           <div className="bg-slate-50 border border-slate-200 rounded-2xl p-3.5 flex flex-col gap-2.5 text-xs text-slate-700 font-medium">
             <div className="flex items-start gap-2">
               <span className="text-yellow-600 font-bold">1.</span>
-              <p>Confirm pricing upfront & verify availability before scheduling work.</p>
+              <p>{t("safetyRule1")}</p>
             </div>
             <div className="flex items-start gap-2">
               <span className="text-yellow-600 font-bold">2.</span>
-              <p>Verify exact shop/workplace location in Thanjavur.</p>
+              <p>{t("safetyRule2")}</p>
             </div>
             <div className="flex items-start gap-2 text-rose-700 font-semibold bg-rose-50 p-2 rounded-xl border border-rose-200/60">
               <AlertTriangle className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" />
               <p className="text-[11px] leading-tight">
-                Never pay advance money online to unverified callers.
+                {t("safetyWarning")}
               </p>
             </div>
           </div>
@@ -80,12 +82,12 @@ export default function PreContactVerificationModal({
               {contactType === "whatsapp" ? (
                 <>
                   <MessageSquare className="w-4 h-4 fill-white stroke-none" />
-                  <span>Proceed to WhatsApp →</span>
+                  <span>{t("proceedWhatsApp")}</span>
                 </>
               ) : (
                 <>
                   <Phone className="w-4 h-4 fill-current" />
-                  <span>Proceed to Call →</span>
+                  <span>{t("proceedCall")}</span>
                 </>
               )}
             </button>
@@ -94,7 +96,7 @@ export default function PreContactVerificationModal({
               onClick={onClose}
               className="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-colors cursor-pointer text-center"
             >
-              Cancel
+              {t("cancel")}
             </button>
           </div>
 

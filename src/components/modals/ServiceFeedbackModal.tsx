@@ -5,6 +5,7 @@ import { Check, Star, AlertCircle, PhoneOff, ThumbsDown, ShieldAlert, Loader2 } 
 import { db } from "@/lib/firebase";
 import { doc, updateDoc, increment } from "firebase/firestore";
 import { useToast } from "@/context/ToastContext";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface ServiceFeedbackModalProps {
   isOpen: boolean;
@@ -22,6 +23,7 @@ export default function ServiceFeedbackModal({
   phone,
 }: ServiceFeedbackModalProps) {
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [selectedOption, setSelectedOption] = useState<"satisfied" | "unanswered" | "unsatisfied" | null>(null);
   const [rating, setRating] = useState(5);
   const [issueDescription, setIssueDescription] = useState("");
@@ -84,10 +86,10 @@ export default function ServiceFeedbackModal({
             {/* Header Title */}
             <div className="flex flex-col items-center text-center gap-1">
               <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
-                Service Experience Check
+                {t("experienceBadge")}
               </span>
               <h3 className="font-heading font-black text-base text-slate-900 leading-snug">
-                How was the experience with {serviceName}?
+                {t("experienceTitle")} {serviceName}?
               </h3>
               <p className="text-xs text-slate-500 font-semibold">
                 Phone: +91 {phone}
@@ -111,8 +113,8 @@ export default function ServiceFeedbackModal({
                   <Check className="w-4 h-4 stroke-[3]" />
                 </div>
                 <div>
-                  <h4 className="font-black text-xs">Answered & Service Confirmed</h4>
-                  <p className="text-[10px] text-slate-500 font-bold">Responded, verified work & pricing</p>
+                  <h4 className="font-black text-xs">{t("optAnswered")}</h4>
+                  <p className="text-[10px] text-slate-500 font-bold">{t("optAnsweredSub")}</p>
                 </div>
               </button>
 
@@ -130,8 +132,8 @@ export default function ServiceFeedbackModal({
                   <PhoneOff className="w-4 h-4" />
                 </div>
                 <div>
-                  <h4 className="font-black text-xs">Not Answered</h4>
-                  <p className="text-[10px] text-slate-500 font-bold">Line busy or no response</p>
+                  <h4 className="font-black text-xs">{t("optUnanswered")}</h4>
+                  <p className="text-[10px] text-slate-500 font-bold">{t("optUnansweredSub")}</p>
                 </div>
               </button>
 
@@ -149,8 +151,8 @@ export default function ServiceFeedbackModal({
                   <ThumbsDown className="w-4 h-4" />
                 </div>
                 <div>
-                  <h4 className="font-black text-xs">Report Issue</h4>
-                  <p className="text-[10px] text-slate-500 font-bold">Incorrect details or misconduct</p>
+                  <h4 className="font-black text-xs">{t("optReport")}</h4>
+                  <p className="text-[10px] text-slate-500 font-bold">{t("optReportSub")}</p>
                 </div>
               </button>
 
@@ -159,7 +161,7 @@ export default function ServiceFeedbackModal({
             {/* Additional Fields based on option */}
             {selectedOption === "satisfied" && (
               <div className="flex flex-col items-center gap-1.5 p-3 bg-emerald-50/60 rounded-2xl border border-emerald-200">
-                <span className="text-xs font-black text-emerald-900">Rate Service Quality:</span>
+                <span className="text-xs font-black text-emerald-900">{t("rateQuality")}</span>
                 <div className="flex gap-1">
                   {[1, 2, 3, 4, 5].map((star) => (
                     <button
@@ -178,7 +180,7 @@ export default function ServiceFeedbackModal({
             {selectedOption === "unsatisfied" && (
               <div className="flex flex-col gap-1.5">
                 <label className="text-[11px] font-black text-red-900">
-                  Describe Issue (Required):
+                  {t("describeIssue")}
                 </label>
                 <textarea
                   rows={2}
@@ -198,7 +200,7 @@ export default function ServiceFeedbackModal({
                 onClick={handleSubmitFeedback}
                 className="w-full py-3 bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white font-black text-xs uppercase tracking-wider rounded-2xl shadow-sm cursor-pointer flex items-center justify-center gap-2"
               >
-                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <span>Submit Verification</span>}
+                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <span>{t("submitFeedback")}</span>}
               </button>
 
               <button
@@ -206,7 +208,7 @@ export default function ServiceFeedbackModal({
                 onClick={onClose}
                 className="w-full py-2 text-slate-500 hover:text-slate-800 font-extrabold text-xs text-center cursor-pointer transition-colors"
               >
-                Ask Later
+                {t("askLater")}
               </button>
             </div>
 

@@ -9,6 +9,7 @@ import { formatIndianCurrencyText, formatRelativeTime } from "@/lib/constants";
 import InAppChatModal from "@/components/chat/InAppChatModal";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/context/ToastContext";
+import { useLanguage } from "@/context/LanguageContext";
 
 interface NeedCardProps {
   post: NeedOrSalePost;
@@ -18,6 +19,7 @@ interface NeedCardProps {
 
 export default function NeedCard({ post, onShare, isPreview = false }: NeedCardProps) {
   const { toast } = useToast();
+  const { t } = useLanguage();
   const { user, profile } = useAuth();
   const [activeImgIndex, setActiveImgIndex] = useState(0);
   const [isPlayingVideo, setIsPlayingVideo] = useState(false);
@@ -177,7 +179,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
       {/* SOLD Overlay Banner */}
       {isSold && (
         <div className="bg-slate-900 text-yellow-400 text-[10px] font-black uppercase px-3 py-1 rounded-md w-fit flex items-center gap-1">
-          ✓ MARKED SOLD
+          {t("markedSold")}
         </div>
       )}
 
@@ -206,7 +208,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
         )}
       </div>
 
-      {/* Media Box — ONLY RENDERED FOR SELL POSTS (COMPULSORY WITH PLACEHOLDER FOR UNIFORM HEIGHT). HIDDEN FOR NEED POSTS */}
+      {/* Media Box — ONLY RENDERED FOR SELL POSTS */}
       {!isNeedType && (
         youtubeId && isPlayingVideo ? (
           <div className="relative w-full h-44 sm:h-52 rounded-xl overflow-hidden bg-black shadow-inner">
@@ -263,7 +265,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
             <span className="text-slate-300">•</span>
             <span className="flex items-center gap-1 text-slate-500 font-medium">
               <Eye className="w-3.5 h-3.5 text-slate-400" />
-              <span>{viewsCount} views</span>
+              <span>{viewsCount} {t("views")}</span>
             </span>
           </div>
 
@@ -278,7 +280,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
               className="flex items-center gap-1 text-[#00a884] hover:text-[#008f6f] font-bold cursor-pointer transition-colors"
             >
               <MessageSquare className="w-3.5 h-3.5 fill-current stroke-none" />
-              <span>Forward</span>
+              <span>{t("forward")}</span>
             </a>
             <button 
               onClick={handleSharePost}
@@ -292,7 +294,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
               className={`flex items-center gap-1 cursor-pointer transition-colors ${saved ? "text-yellow-600 font-bold" : "hover:text-slate-800"}`}
             >
               <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-yellow-500 text-yellow-600" : "text-slate-400"}`} />
-              <span>{saved ? "Saved" : "Save"}</span>
+              <span>{saved ? t("saved") : t("save")}</span>
             </button>
           </div>
         </div>
@@ -313,13 +315,13 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
                 onClick={handleMarkSold}
                 className="flex items-center gap-1 h-8 bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-900 font-bold px-2.5 rounded-lg text-[11px] transition-colors cursor-pointer"
               >
-                <span>{isSold ? "Unmark Sold" : "✓ Mark Sold"}</span>
+                <span>{isSold ? t("unmarkSold") : t("markSold")}</span>
               </button>
               <button
                 onClick={handleDelete}
                 className="flex items-center gap-1 h-8 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-bold px-2.5 rounded-lg text-[11px] transition-colors cursor-pointer"
               >
-                <span>Delete</span>
+                <span>{t("delete")}</span>
               </button>
             </div>
           ) : isValidSellerId ? (
@@ -328,7 +330,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
               className="flex items-center gap-1.5 h-9 bg-[#00a884] hover:bg-[#008f6f] text-white font-bold px-3.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer"
             >
               <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
-              <span>In-App Chat</span>
+              <span>{t("chat")}</span>
             </Link>
           ) : (
             /* Safe fallback for demo/seed posts without real userId */
@@ -339,7 +341,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
               className="flex items-center gap-1.5 h-9 bg-[#00a884] hover:bg-[#008f6f] text-white font-bold px-3.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer"
             >
               <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
-              <span>WhatsApp</span>
+              <span>{t("whatsApp")}</span>
             </a>
           )}
         </div>

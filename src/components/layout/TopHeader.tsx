@@ -8,6 +8,8 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/context/ToastContext";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 interface TopHeaderProps {
   selectedArea: TanjoreLocality | "All Areas";
   onAreaChange: (area: TanjoreLocality | "All Areas") => void;
@@ -28,25 +30,7 @@ export default function TopHeader({
   const router = useRouter();
   const pathname = usePathname();
   const { profile } = useAuth();
-  const { toast } = useToast();
-
-  const [lang, setLang] = useState<"en" | "ta">("en");
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("namma_thanjai_lang");
-      if (saved === "ta" || saved === "en") setLang(saved);
-    }
-  }, []);
-
-  const toggleLanguage = () => {
-    const nextLang = lang === "en" ? "ta" : "en";
-    setLang(nextLang);
-    if (typeof window !== "undefined") {
-      localStorage.setItem("namma_thanjai_lang", nextLang);
-    }
-    toast.success(nextLang === "ta" ? "தமிழ் மொழி தேர்வு செய்யப்பட்டது" : "Switched to English");
-  };
+  const { lang, toggleLanguage, t } = useLanguage();
   
   const isAuthVerified = Boolean(profile?.isVerified);
   const showCenterNav = isAuthVerified || pathname !== "/";

@@ -4,6 +4,8 @@ import React from "react";
 import { Home, MessageSquare, Wrench, Store, User, Tag, ClipboardList } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 export type AppTab = "home" | "sell" | "need" | "services" | "shops" | "profile";
 
 interface BottomTabBarProps {
@@ -17,35 +19,36 @@ export default function BottomTabBar({
 }: BottomTabBarProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const { t } = useLanguage();
 
   const tabs = [
     {
       id: "home" as AppTab,
-      label: "Home",
+      label: t("home"),
       icon: Home,
       route: "/",
     },
     {
       id: "sell" as AppTab,
-      label: "Sell",
+      label: t("sell"),
       icon: Tag,
       route: "/sell",
     },
     {
       id: "need" as AppTab,
-      label: "Need",
+      label: t("need"),
       icon: ClipboardList,
       route: "/need",
     },
     {
       id: "services" as AppTab,
-      label: "Service",
+      label: t("services"),
       icon: Wrench,
       route: "/services",
     },
     {
       id: "shops" as AppTab,
-      label: "Offer",
+      label: t("offers"),
       icon: Store,
       route: "/shops",
     },

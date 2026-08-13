@@ -9,6 +9,8 @@ import { useToast } from "@/context/ToastContext";
 
 import PreContactVerificationModal from "@/components/modals/PreContactVerificationModal";
 
+import { useLanguage } from "@/context/LanguageContext";
+
 interface ServiceCardProps {
   post: ServiceProviderPost;
   isPreview?: boolean;
@@ -16,6 +18,7 @@ interface ServiceCardProps {
 
 export default function ServiceCard({ post, isPreview = false }: ServiceCardProps) {
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [saved, setSaved] = useState(false);
   const [isPreContactOpen, setIsPreContactOpen] = useState(false);
   const [contactType, setContactType] = useState<"call" | "whatsapp">("call");
@@ -180,7 +183,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
             {/* SOFT NEW LISTING BADGE */}
             <span className="inline-flex items-center gap-1 bg-blue-50 text-blue-800 border border-blue-200 font-semibold px-2 py-0.5 rounded-md text-[9px]">
               <Calendar className="w-3 h-3 text-blue-600" />
-              <span>New Listing</span>
+              <span>{t("newListing")}</span>
             </span>
           </div>
 
@@ -204,7 +207,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
       {/* Locality Tag */}
       <div className="flex items-center gap-1.5 text-xs text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-200/60 font-semibold">
         <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-        <span>Location: <strong className="text-slate-800">{post.area_tag}</strong></span>
+        <span>{t("location")}: <strong className="text-slate-800">{post.area_tag}</strong></span>
       </div>
 
       {/* Description */}
@@ -228,7 +231,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
             <span className="text-slate-300">•</span>
             <span className="flex items-center gap-1 text-slate-500 font-medium">
               <Eye className="w-3.5 h-3.5 text-slate-400" />
-              <span>{viewsCount} views</span>
+              <span>{viewsCount} {t("views")}</span>
             </span>
           </div>
 
@@ -243,7 +246,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
               className="flex items-center gap-1 text-[#00a884] hover:text-[#008f6f] font-bold cursor-pointer transition-colors"
             >
               <MessageSquare className="w-3.5 h-3.5 fill-current stroke-none" />
-              <span>Forward</span>
+              <span>{t("forward")}</span>
             </a>
             <button 
               onClick={handleShare}
@@ -257,7 +260,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
               className={`flex items-center gap-1 cursor-pointer transition-colors ${saved ? "text-yellow-600 font-bold" : "hover:text-slate-800"}`}
             >
               <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-yellow-500 text-yellow-600" : "text-slate-400"}`} />
-              <span>{saved ? "Saved" : "Save"}</span>
+              <span>{saved ? t("saved") : t("save")}</span>
             </button>
           </div>
         </div>
@@ -266,7 +269,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
       {/* Footer Info & Action CTAs — Contacted Count Badge in First Position */}
       <div className="flex items-center justify-between pt-1">
         <span className="text-xs text-slate-500 font-medium">
-          <strong className="text-slate-800 font-bold">{contactedCount}</strong> Contacted
+          <strong className="text-slate-800 font-bold">{contactedCount}</strong> {t("contacted")}
         </span>
 
         <div className="flex items-center gap-2">
@@ -275,7 +278,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
             className="flex items-center gap-1.5 h-9 bg-slate-900 hover:bg-slate-800 text-white font-bold px-3.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer"
           >
             <Phone className="w-3.5 h-3.5 fill-current" />
-            <span>Call Now</span>
+            <span>{t("callNow")}</span>
           </button>
 
           <button
@@ -283,7 +286,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
             className="flex items-center gap-1.5 h-9 bg-[#00a884] hover:bg-[#008f6f] text-white font-bold px-3.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer"
           >
             <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
-            <span>WhatsApp</span>
+            <span>{t("whatsApp")}</span>
           </button>
         </div>
       </div>

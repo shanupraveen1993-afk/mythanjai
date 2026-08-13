@@ -20,6 +20,8 @@ function formatOfferValidity(validFrom?: any, validTo?: any, createdAt?: any) {
   return "Limited Time Offer";
 }
 
+import { useLanguage } from "@/context/LanguageContext";
+
 interface ShopCardProps {
   post: ShopPost;
   isPreview?: boolean;
@@ -27,6 +29,7 @@ interface ShopCardProps {
 
 export default function ShopCard({ post, isPreview = false }: ShopCardProps) {
   const { toast } = useToast();
+  const { t } = useLanguage();
   const [saved, setSaved] = useState(false);
 
   // Expired offer check logic
@@ -244,7 +247,7 @@ export default function ShopCard({ post, isPreview = false }: ShopCardProps) {
                 className="flex items-center gap-1 text-[#00a884] hover:text-[#008f6f] font-bold cursor-pointer transition-colors"
               >
                 <MessageSquare className="w-3.5 h-3.5 fill-current stroke-none" />
-                <span>Forward</span>
+                <span>{t("forward")}</span>
               </a>
               <button 
                 onClick={handleShare}
@@ -258,7 +261,7 @@ export default function ShopCard({ post, isPreview = false }: ShopCardProps) {
                 className={`flex items-center gap-1 cursor-pointer transition-colors ${saved ? "text-yellow-600 font-bold" : "hover:text-slate-800"}`}
               >
                 <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-yellow-500 text-yellow-600" : "text-slate-400"}`} />
-                <span>{saved ? "Saved" : "Save"}</span>
+                <span>{saved ? t("saved") : t("save")}</span>
               </button>
             </div>
           </div>
@@ -273,7 +276,7 @@ export default function ShopCard({ post, isPreview = false }: ShopCardProps) {
             className="flex-1 flex items-center justify-center gap-1.5 h-9 bg-slate-900 hover:bg-slate-800 text-white font-bold px-4 rounded-xl text-xs transition-all border border-slate-800 cursor-pointer shadow-xs"
           >
             <Navigation className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" />
-            <span>Get Direction</span>
+            <span>{t("getDirection")}</span>
           </a>
 
           {post.show_phone && (
@@ -283,7 +286,7 @@ export default function ShopCard({ post, isPreview = false }: ShopCardProps) {
                 className="flex items-center gap-1.5 h-9 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-3 rounded-xl text-xs transition-all border border-slate-200 cursor-pointer"
               >
                 <Phone className="w-3.5 h-3.5 fill-current" />
-                <span>Call</span>
+                <span>{t("call")}</span>
               </a>
 
               <a
@@ -293,7 +296,7 @@ export default function ShopCard({ post, isPreview = false }: ShopCardProps) {
                 className="flex items-center gap-1.5 h-9 bg-[#00a884] hover:bg-[#008f6f] text-white font-bold px-3.5 rounded-xl text-xs transition-all cursor-pointer"
               >
                 <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
-                <span>WhatsApp</span>
+                <span>{t("whatsApp")}</span>
               </a>
             </div>
           )}

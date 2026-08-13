@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Inter, Red_Hat_Display } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/context/ToastContext";
+import { LanguageProvider } from "@/context/LanguageContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -41,7 +42,9 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${redHatDisplay.variable} h-full bg-[#f4f5f8]`}>
       <body className="h-full bg-[#f4f5f8] font-sans antialiased text-slate-900 flex flex-col min-h-screen overflow-x-hidden">
         <ToastProvider>
-          {children}
+          <LanguageProvider>
+            {children}
+          </LanguageProvider>
         </ToastProvider>
       </body>
     </html>
