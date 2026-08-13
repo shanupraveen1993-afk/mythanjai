@@ -66,22 +66,17 @@ function MainLayoutContent({
   const [selectedArea, setSelectedArea] = useState<TanjoreLocality | "All Areas">("All Areas");
   const [isSignInOpen, setIsSignInOpen] = useState(false);
 
-  // Splash & Onboarding state
-  const [showSplash, setShowSplash] = useState(true);
-  const [showOnboarding, setShowOnboarding] = useState(false);
+  // Splash screen disabled — opens directly to main app
+  const [showSplash, setShowSplash] = useState(false);
 
   useEffect(() => {
-    // Check if user has already onboarded
-    const onboarded = localStorage.getItem("namma_thanjai_onboarded");
-    if (!onboarded) {
-      setShowOnboarding(true);
-    }
+    // Dismiss native Capacitor Splash Screen on Android/iOS when React app mounts
+    import("@capacitor/splash-screen")
+      .then(({ SplashScreen }) => {
+        SplashScreen.hide().catch(() => {});
+      })
+      .catch(() => {});
   }, []);
-
-  const handleDismissOnboarding = () => {
-    setShowOnboarding(false);
-    localStorage.setItem("namma_thanjai_onboarded", "true");
-  };
 
   const handleCloseSignIn = () => {
     setIsSignInOpen(false);
@@ -142,17 +137,13 @@ function MainLayoutContent({
     router.push(`${pathname}${queryString ? `?${queryString}` : ""}`);
   };
 
-  const isGuestLanding = pathname === "/" && !profile?.isVerified;
   const isChatRoute = pathname === "/chat";
+  const isStandaloneView = isChatRoute;
 
   let layoutClasses = "min-h-screen";
   if (isChatRoute) {
     layoutClasses = "h-dvh max-h-dvh overflow-hidden";
-  } else if (isGuestLanding) {
-    layoutClasses = "h-dvh max-h-dvh overflow-hidden md:h-auto md:max-h-none md:overflow-visible md:min-h-screen";
   }
-
-  const isStandaloneView = isGuestLanding || isChatRoute;
 
   return (
     <div className={`w-full flex flex-col relative bg-[#f4f5f8] font-sans ${layoutClasses}`}>
@@ -165,18 +156,15 @@ function MainLayoutContent({
         />
       )}
 
-      {/* 2. Swipe-Up Onboarding Screen (Renders after splash finishes) */}
-      {!showSplash && showOnboarding && (
-        <SwipeUpOnboarding onDismiss={handleDismissOnboarding} />
-      )}
+
 
       <React.Suspense fallback={null}>
         <SearchParamSync onAreaSync={setSelectedArea} onAuthSync={setIsSignInOpen} />
       </React.Suspense>
 
-      {/* Top Header Section (Hidden for guest onboarding landing & dedicated /chat view) */}
+      {/* Top Header Section — Always visible except full-screen chat */}
       {!isStandaloneView && (
-        <div className="block">
+        <div className="block" style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}>
           <React.Suspense fallback={null}>
             <TopHeader
               selectedArea={selectedArea}
@@ -193,18 +181,18 @@ function MainLayoutContent({
       )}
 
       {/* Universal Directory Search Bar (Hidden on Home, Profile, & Chat pages) */}
-      {profile?.isVerified && pathname !== "/" && pathname !== "/profile" && !isChatRoute && (
+      {pathname !== "/" && pathname !== "/profile" && !isChatRoute && (
         <React.Suspense fallback={null}>
           <UniversalSearchBar />
         </React.Suspense>
       )}
 
-      {/* Main Content Panel (0 Padding for Guest Onboarding View & Full-Screen Chat) */}
+      {/* Main Content Panel */}
       <main className={`flex-1 w-full bg-[#f4f5f8] ${isStandaloneView ? "p-0 max-w-none m-0" : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-14 pb-24 md:pb-8"}`}>
         {children}
       </main>
 
-      {/* Bottom Navigation Bar (Hidden for guest onboarding landing & dedicated /chat view) */}
+      {/* Bottom Navigation Bar — Always visible except full-screen chat */}
       {!isStandaloneView && (
         <BottomTabBar
           activeTab={getActiveTab()}
