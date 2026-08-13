@@ -160,15 +160,19 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
 
   return (
     <div className="bg-white rounded-2xl p-4 flex flex-col gap-3 shadow-[0_3px_8px_rgba(0,0,0,0.03)] transition-all duration-200 font-sans border border-slate-200/80 relative group">
-      
-      {/* Report Flag Button in Top-Right Corner */}
+
+      {/* Send Request Button — Top Right */}
       {!isPreview && (
         <button
-          onClick={handleReport}
-          title="Report profile"
-          className="absolute top-3.5 right-3 z-10 w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-400 hover:text-rose-600 border border-slate-200/80 flex items-center justify-center transition-colors cursor-pointer shadow-xs"
+          onClick={(e) => {
+            e.stopPropagation();
+            toast.success("Request sent! The service provider will contact you soon.");
+          }}
+          title="Send a request to this service provider"
+          className="absolute top-3.5 right-3 z-10 flex items-center gap-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-[9px] px-2 py-1 rounded-full border border-amber-400 shadow-xs transition-colors cursor-pointer"
         >
-          <Award className="w-3.5 h-3.5 rotate-45" />
+          <Zap className="w-3 h-3" />
+          <span>Send Request</span>
         </button>
       )}
 
@@ -180,17 +184,13 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
               {post.name}
             </h3>
 
-            {/* SOFT NEW LISTING BADGE */}
-            <span className="inline-flex items-center gap-1 bg-blue-50 text-blue-800 border border-blue-200 font-semibold px-2 py-0.5 rounded-md text-[9px]">
-              <Calendar className="w-3 h-3 text-blue-600" />
-              <span>{t("newListing")}</span>
-            </span>
+
           </div>
 
           <div className="flex items-center gap-2 mt-1.5 flex-wrap">
             <span className="inline-flex items-center gap-1 bg-emerald-50 border border-emerald-200 text-emerald-800 font-semibold px-2.5 py-0.5 rounded-xl text-[10px]">
               {getCategoryIllustration(post.skill_category)}
-              <span>{post.skill_category} • {getCategoryTamilTag(post.skill_category)}</span>
+              <span>{post.skill_category}</span>
             </span>
 
             {/* RATING BADGE: ONLY DISPLAYED IF RATING > 0. IF NO RATING, LEFT OUT COMPLETELY (NO 0 RATING) */}
@@ -237,17 +237,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
 
           {/* Right: Actions (Share & Save) */}
           <div className="flex items-center gap-2.5">
-            <a
-              href={whatsappGroupShareUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              title="Forward tradesman profile to WhatsApp Group"
-              className="flex items-center gap-1 text-[#00a884] hover:text-[#008f6f] font-bold cursor-pointer transition-colors"
-            >
-              <MessageSquare className="w-3.5 h-3.5 fill-current stroke-none" />
-              <span>{t("forward")}</span>
-            </a>
+
             <button 
               onClick={handleShare}
               className="flex items-center gap-1 hover:text-slate-800 cursor-pointer transition-colors"

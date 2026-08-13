@@ -230,8 +230,10 @@ export default function CategoryFeedClient({ segmentType }: CategoryFeedClientPr
         </div>
       </div>
 
-      {/* ── Sticky Filter Bar ─────────────────────────── */}
-      <div className="sticky top-[57px] z-30 bg-white border-b border-slate-200 shadow-sm px-4 sm:px-6 py-2.5 flex flex-col gap-2">
+      <div 
+        className="sticky z-30 bg-white border-b border-slate-200 shadow-sm px-4 sm:px-6 py-2.5 flex flex-col gap-2"
+        style={{ top: "calc(3.5rem + env(safe-area-inset-top, 0px))" }}
+      >
         {/* Row 1: Search + Sort + Post button */}
         <div className="flex items-center gap-2">
           <div className="relative flex-1 min-w-0">

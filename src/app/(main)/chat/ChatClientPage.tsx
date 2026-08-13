@@ -350,10 +350,28 @@ export default function ChatClientPage() {
         </div>
       )}
 
-      {/* DEDICATED WHATSAPP TOP HEADER (DARK TEAL #075e54) */}
+      {/* CHAT HEADER: Two-state — List view shows branding, Conversation view shows peer + back */}
       <div className="w-full bg-[#075e54] text-white px-4 py-2.5 flex items-center justify-between shadow-md shrink-0 border-b border-[#054c44] relative z-40">
-        <div className="flex items-center gap-3">
-          <div 
+        {showMobileChat ? (
+          /* Inside a conversation — show back + peer name */
+          <div className="flex items-center gap-3 flex-1">
+            <button
+              onClick={() => setShowMobileChat(false)}
+              className="p-1 text-white hover:bg-white/10 rounded-lg cursor-pointer"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <div className="w-8 h-8 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-xs shrink-0">
+              <User className="w-4 h-4" />
+            </div>
+            <div className="min-w-0">
+              <h3 className="font-bold text-sm leading-tight text-white truncate">{activePeerName}</h3>
+              <p className="text-[10px] text-emerald-100 truncate max-w-[200px]">{activeListingTitle}</p>
+            </div>
+          </div>
+        ) : (
+          /* Chat list — show full branding */
+          <div
             onClick={() => router.push("/")}
             className="flex items-center gap-2 cursor-pointer select-none"
           >
@@ -367,62 +385,19 @@ export default function ChatClientPage() {
                   CHAT
                 </span>
               </div>
-              <span className="text-[10px] text-emerald-100 font-medium line-clamp-1">
-                {activePeerName} • {activeListingTitle}
-              </span>
+              <span className="text-[10px] text-emerald-100 font-medium">All Conversations</span>
             </div>
           </div>
-        </div>
+        )}
 
-        {/* Right Action Icons: Three-Dot Menu & Close (X) Button */}
-        <div className="flex items-center gap-1.5 relative">
-          {/* Three-Dot Option Menu Toggle */}
-          <div className="relative">
-            <button
-              onClick={() => setIsMenuOpen((prev) => !prev)}
-              aria-label="Chat options menu"
-              className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer"
-            >
-              <MoreVertical className="w-4 h-4" />
-            </button>
-
-            {/* Three-Dot Dropdown Popup */}
-            {isMenuOpen && (
-              <div className="absolute right-0 top-10 w-48 bg-white border border-slate-200 rounded-xl shadow-xl py-1 text-slate-800 text-xs font-semibold z-50 animate-fade-in">
-                <button
-                  onClick={handleShareChat}
-                  className="w-full text-left px-3.5 py-2 hover:bg-slate-50 flex items-center gap-2 text-slate-700 cursor-pointer"
-                >
-                  <Send className="w-3.5 h-3.5 text-slate-500" />
-                  <span>Share Listing Chat</span>
-                </button>
-                <button
-                  onClick={handleDeleteChat}
-                  className="w-full text-left px-3.5 py-2 hover:bg-red-50 flex items-center gap-2 text-red-600 cursor-pointer border-t border-slate-100"
-                >
-                  <X className="w-3.5 h-3.5 text-red-500" />
-                  <span>Delete Conversation</span>
-                </button>
-                <button
-                  onClick={() => router.push("/sell")}
-                  className="w-full text-left px-3.5 py-2 hover:bg-slate-50 flex items-center gap-2 text-slate-700 cursor-pointer border-t border-slate-100"
-                >
-                  <ArrowLeft className="w-3.5 h-3.5 text-slate-500" />
-                  <span>Exit to Marketplace</span>
-                </button>
-              </div>
-            )}
-          </div>
-
-          {/* Close (X) Button */}
-          <button
-            onClick={() => router.back()}
-            aria-label="Close Chat"
-            className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer"
-          >
-            <X className="w-5 h-5" />
-          </button>
-        </div>
+        {/* Close button — always visible */}
+        <button
+          onClick={() => router.back()}
+          aria-label="Close Chat"
+          className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer"
+        >
+          <X className="w-5 h-5" />
+        </button>
       </div>
 
       {/* WHATSAPP MAIN CONTAINER */}
@@ -498,28 +473,7 @@ export default function ChatClientPage() {
         {/* RIGHT COLUMN: WhatsApp Active Chat Window */}
         <div className={`flex-1 flex-col bg-[#efeae2] relative ${showMobileChat ? "flex" : "hidden lg:flex"}`}>
           
-          {/* Mobile Active Contact Bar */}
-          <div className="bg-[#128c7e] text-white px-4 py-2.5 flex items-center justify-between shadow-xs lg:hidden">
-            <div className="flex items-center gap-3">
-              <button
-                onClick={() => setShowMobileChat(false)}
-                className="p-1 text-white hover:bg-white/10 rounded-lg cursor-pointer"
-              >
-                <ArrowLeft className="w-5 h-5" />
-              </button>
-
-              <div className="w-8 h-8 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-xs">
-                <User className="w-4 h-4" />
-              </div>
-
-              <div>
-                <h3 className="font-bold text-xs leading-tight text-white">{activePeerName}</h3>
-                <p className="text-[10px] text-emerald-100 truncate max-w-[200px]">
-                  {activeListingTitle}
-                </p>
-              </div>
-            </div>
-          </div>
+          {/* Mobile Active Contact Bar — hidden since header now handles this */}
 
           {/* PERMANENT TOP SCAM SAFETY BANNER */}
           <div className="bg-amber-500 text-slate-950 px-4 py-2 flex items-center gap-2 text-[10px] font-bold border-b border-amber-400">

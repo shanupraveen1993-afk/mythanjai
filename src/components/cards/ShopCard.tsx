@@ -130,16 +130,8 @@ export default function ShopCard({ post, isPreview = false }: ShopCardProps) {
         </div>
       ) : null}
 
-      {/* Report Flag Button in Top-Right Corner */}
-      {!isPreview && (
-        <button
-          onClick={handleReport}
-          title="Report inaccurate deal"
-          className="absolute top-2.5 right-2.5 z-20 w-7 h-7 rounded-full bg-white/80 backdrop-blur-xs text-slate-400 hover:text-rose-600 border border-slate-200 flex items-center justify-center transition-colors cursor-pointer shadow-xs"
-        >
-          <Tag className="w-3 h-3 rotate-90" />
-        </button>
-      )}
+
+
 
       {/* Main Image Box (Compulsory Image / Placeholder Box for 100% Uniform Height) */}
       {images.length > 0 ? (
@@ -238,17 +230,7 @@ export default function ShopCard({ post, isPreview = false }: ShopCardProps) {
 
             {/* Right: Actions (Share & Save) */}
             <div className="flex items-center gap-2.5">
-              <a
-                href={whatsappGroupShareUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
-                title="Forward offer to WhatsApp Group"
-                className="flex items-center gap-1 text-[#00a884] hover:text-[#008f6f] font-bold cursor-pointer transition-colors"
-              >
-                <MessageSquare className="w-3.5 h-3.5 fill-current stroke-none" />
-                <span>{t("forward")}</span>
-              </a>
+
               <button 
                 onClick={handleShare}
                 className="flex items-center gap-1 hover:text-slate-800 cursor-pointer transition-colors"

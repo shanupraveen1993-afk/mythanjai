@@ -164,20 +164,18 @@ function MainLayoutContent({
 
       {/* Top Header Section — Always visible except full-screen chat */}
       {!isStandaloneView && (
-        <div className="block" style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}>
-          <React.Suspense fallback={null}>
-            <TopHeader
-              selectedArea={selectedArea}
-              onAreaChange={handleAreaChange}
-              onSignInClick={() => setIsSignInOpen(true)}
-              onPostClick={() => {
-                router.push("/post/sell");
-              }}
-              activeTab={getActiveTab()}
-              onTabChange={handleTabChange}
-            />
-          </React.Suspense>
-        </div>
+        <React.Suspense fallback={null}>
+          <TopHeader
+            selectedArea={selectedArea}
+            onAreaChange={handleAreaChange}
+            onSignInClick={() => setIsSignInOpen(true)}
+            onPostClick={() => {
+              router.push("/post/sell");
+            }}
+            activeTab={getActiveTab()}
+            onTabChange={handleTabChange}
+          />
+        </React.Suspense>
       )}
 
       {/* Universal Directory Search Bar (Hidden on Home, Profile, & Chat pages) */}
@@ -188,7 +186,13 @@ function MainLayoutContent({
       )}
 
       {/* Main Content Panel */}
-      <main className={`flex-1 w-full bg-[#f4f5f8] ${isStandaloneView ? "p-0 max-w-none m-0" : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 md:pt-14 pb-24 md:pb-8"}`}>
+      <main 
+        className={`flex-1 w-full bg-[#f4f5f8] ${isStandaloneView ? "p-0 max-w-none m-0" : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 md:pb-8"}`}
+        style={!isStandaloneView ? {
+          paddingTop: "calc(3.5rem + env(safe-area-inset-top, 0px))",
+          paddingBottom: "calc(4.5rem + env(safe-area-inset-bottom, 0px))",
+        } : undefined}
+      >
         {children}
       </main>
 

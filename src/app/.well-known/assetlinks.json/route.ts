@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 
+export const dynamic = "force-static";
+
 export async function GET() {
   const assetlinks = [
     {
@@ -7,7 +9,7 @@ export async function GET() {
       target: {
         namespace: "android_app",
         package_name: "com.nammathanjai.app",
-        sha256_cert_fingerprints": [
+        "sha256_cert_fingerprints": [
           "F4:30:B2:A0:45:0B:76:41:97:08:A9:7B:8C:67:95:E4:F2:95:CF:DF:16:4D:A6:FF:CD:C1:77:30:DC:15:88:EE"
         ]
       }

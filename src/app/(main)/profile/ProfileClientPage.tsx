@@ -373,8 +373,9 @@ export default function ProfileClientPage() {
                   <Sparkles className="w-3.5 h-3.5 text-yellow-600 fill-yellow-500 shrink-0" />
                   <span>Account Plan</span>
                 </span>
-                <span className="font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-md text-[11px]">
-                  Free Access
+                <span className="font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-md text-[11px] flex items-center gap-1">
+                  <span className="line-through text-slate-400 font-medium">₹100</span>
+                  <span>₹0 Free</span>
                 </span>
               </div>
               <p className="text-xs text-slate-600 font-medium leading-relaxed">
@@ -400,13 +401,15 @@ export default function ProfileClientPage() {
                     </span>
                   )}
                 </div>
-                <button
-                  type="button"
-                  onClick={() => alert("Your request to change your registered mobile number has been submitted to support. Admin will contact you on WhatsApp.")}
-                  className="text-[10px] font-bold text-amber-700 hover:text-amber-800 text-left cursor-pointer hover:underline pt-0.5"
+                <a
+                  href={`https://wa.me/919994837342?text=${encodeURIComponent(`Hi Admin, I want to change my registered mobile number. My UID is: ${user?.uid}`)}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[10px] font-bold text-amber-700 hover:text-amber-800 text-left cursor-pointer hover:underline pt-0.5 flex items-center gap-1"
                 >
-                  Request Mobile Number Change →
-                </button>
+                  <MessageSquare className="w-3 h-3" />
+                  Request Mobile Number Change via WhatsApp →
+                </a>
               </div>
             ) : (
               <div className="flex flex-col gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
@@ -494,17 +497,17 @@ export default function ProfileClientPage() {
               <div className="relative z-10">
                 <h4 className="font-heading font-black text-sm flex items-center gap-1.5 text-slate-955 font-bold">
                   <Sparkles className="w-4 h-4 text-amber-100 animate-pulse fill-current" />
-                  Install Namma Thanjai App
+                  No Download Needed!
                 </h4>
                 <p className="text-[11px] text-slate-900 mt-1 leading-relaxed">
-                  Add our hyper-local directory to your mobile home screen. It loads instantly and uses zero storage!
+                  Click here to add Namma Thanjai directly to your home screen — instant access, zero storage!
                 </p>
               </div>
               <button
                 onClick={handleInstallClick}
                 className="w-full bg-slate-950 hover:bg-slate-900 text-white font-bold py-2 rounded-xl text-xs transition-colors shadow-md relative z-10 active:scale-[0.98]"
               >
-                Install App Widget
+                🚀 Add to Home Screen
               </button>
             </div>
           )}

@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { MessageSquare, Calendar, Tag, MapPin, Share2, Eye, Bookmark, UserCheck, Camera } from "lucide-react";
+import { MessageSquare, Calendar, Tag, MapPin, Share2, Eye, Bookmark, UserCheck, Camera, MoreVertical, Trash2, Pencil, Flag } from "lucide-react";
 import { NeedOrSalePost } from "@/types";
 import { formatIndianCurrencyText, formatRelativeTime } from "@/lib/constants";
 import InAppChatModal from "@/components/chat/InAppChatModal";
@@ -26,6 +26,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
   const [saved, setSaved] = useState(false);
   const [isChatOpen, setIsChatOpen] = useState(false);
 
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const isOwnPost = React.useMemo(() => {
     if (isPreview) return false;
     if (user?.uid && post.userId === user.uid) return true;
@@ -164,16 +165,47 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
     <div className={`bg-white rounded-2xl p-4 flex flex-col gap-3 shadow-[0_3px_8px_rgba(0,0,0,0.03)] transition-all duration-200 relative group overflow-hidden font-sans border ${
       isSold ? "border-slate-300 opacity-80" : "border-slate-200/80"
     }`}>
-      
-      {/* Report Flag Button in Top-Right Corner */}
+
+      {/* 3-Dot Action Menu — top right */}
       {!isPreview && (
-        <button
-          onClick={handleReport}
-          title="Report inaccurate listing"
-          className="absolute top-3.5 right-3 z-10 w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-400 hover:text-rose-600 border border-slate-200/80 flex items-center justify-center transition-colors cursor-pointer shadow-xs"
-        >
-          <Tag className="w-3.5 h-3.5 rotate-90" />
-        </button>
+        <div className="absolute top-3 right-3 z-10">
+          <button
+            onClick={(e) => { e.stopPropagation(); setIsMenuOpen((p) => !p); }}
+            className="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors cursor-pointer border border-slate-200"
+          >
+            <MoreVertical className="w-3.5 h-3.5" />
+          </button>
+          {isMenuOpen && (
+            <div className="absolute right-0 top-8 w-40 bg-white border border-slate-200 rounded-xl shadow-xl py-1 z-50 text-xs font-semibold">
+              {isOwnPost ? (
+                <>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); toast.success("Edit feature coming soon!"); }}
+                    className="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2 text-slate-700 cursor-pointer"
+                  >
+                    <Pencil className="w-3.5 h-3.5 text-slate-500" />
+                    <span>Edit Listing</span>
+                  </button>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); handleDelete(e); }}
+                    className="w-full text-left px-3 py-2 hover:bg-red-50 flex items-center gap-2 text-red-600 cursor-pointer border-t border-slate-100"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                    <span>Delete Listing</span>
+                  </button>
+                </>
+              ) : isNeedType ? (
+                <button
+                  onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); handleReport(e); }}
+                  className="w-full text-left px-3 py-2 hover:bg-red-50 flex items-center gap-2 text-red-600 cursor-pointer"
+                >
+                  <Flag className="w-3.5 h-3.5" />
+                  <span>Report Post</span>
+                </button>
+              ) : null}
+            </div>
+          )}
+        </div>
       )}
 
       {/* SOLD Overlay Banner */}
@@ -189,7 +221,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
           {post.category && (
             <span className="inline-flex items-center gap-1 text-[10px] font-semibold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md">
               <Tag className="w-3 h-3 text-slate-400" />
-              <span>{post.category} • {getCategoryTamilTag(post.category)}</span>
+              <span>{post.category}</span>
             </span>
           )}
         </div>
@@ -271,17 +303,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
 
           {/* Right: Actions (Share & Save) */}
           <div className="flex items-center gap-2.5">
-            <a
-              href={whatsappGroupShareUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={(e) => e.stopPropagation()}
-              title="Forward listing to WhatsApp Group"
-              className="flex items-center gap-1 text-[#00a884] hover:text-[#008f6f] font-bold cursor-pointer transition-colors"
-            >
-              <MessageSquare className="w-3.5 h-3.5 fill-current stroke-none" />
-              <span>{t("forward")}</span>
-            </a>
+
             <button 
               onClick={handleSharePost}
               className="flex items-center gap-1 hover:text-slate-800 cursor-pointer transition-colors"

@@ -200,7 +200,7 @@ export default function SwipeUpOnboarding({
       <div className="absolute bottom-0 left-0 w-96 h-96 bg-yellow-500/10 blur-[100px] rounded-full pointer-events-none" />
 
       {/* Header Bar */}
-      <div className="w-full max-w-md mx-auto pt-8 px-6 flex items-center justify-between z-10">
+      <div className="w-full max-w-md mx-auto pt-8 px-6 flex items-center justify-between z-20">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 rounded-xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center">
             <span className="font-heading font-black text-amber-400 text-sm">த</span>
@@ -216,51 +216,58 @@ export default function SwipeUpOnboarding({
         </div>
 
         <button
-          onClick={onDismiss}
-          className="text-xs font-extrabold text-slate-400 hover:text-white bg-slate-900 border border-slate-800 px-3.5 py-1.5 rounded-full transition-colors"
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onDismiss();
+          }}
+          onTouchEnd={(e) => {
+            e.stopPropagation();
+            onDismiss();
+          }}
+          className="text-xs font-extrabold text-slate-300 hover:text-white bg-slate-900 border border-slate-700 px-4 py-2 rounded-full transition-colors cursor-pointer active:scale-95 shadow-md"
         >
           {lang === "ta" ? "தவிர் (Skip)" : "Skip"}
         </button>
       </div>
 
-      {/* Main 3D Rotating Cards Section */}
-      <div className="w-full max-w-md mx-auto px-6 flex-1 flex flex-col items-center justify-center my-4 z-10 relative">
-        <div className="text-center mb-6">
+      {/* Main Rotating Cards Section */}
+      <div className="w-full max-w-md mx-auto px-6 flex-1 flex flex-col items-center justify-center my-2 z-10 relative">
+        <div className="text-center mb-4">
           <span className="text-[10px] font-black uppercase tracking-widest text-amber-400 bg-amber-400/10 border border-amber-400/30 px-3 py-1 rounded-full">
             {lang === "ta" ? "தஞ்சாவூர் நேரடி வர்த்தகம்" : "100% Direct Tanjore Directory"}
           </span>
-          <h2 className="font-heading font-black text-xl sm:text-2xl text-white mt-2.5 leading-snug">
+          <h2 className="font-heading font-black text-xl sm:text-2xl text-white mt-2 leading-snug">
             {lang === "ta"
               ? "விற்பனை • தேவை • சர்வீஸ் • ஆஃபர்"
               : "Buy, Sell, Services & Store Deals"}
           </h2>
         </div>
 
-        {/* 3D Stack Rotating Carousel */}
-        <div className="relative w-full h-[320px] sm:h-[340px] flex items-center justify-center perspective-1000">
+        {/* Stack Rotating Carousel (Rock-solid Mobile 2D/3D math) */}
+        <div className="relative w-full h-[300px] sm:h-[320px] flex items-center justify-center">
           {ONBOARDING_CARDS.map((card, idx) => {
             const total = ONBOARDING_CARDS.length;
             let offset = (idx - activeIndex + total) % total;
             if (offset > total / 2) offset -= total;
 
             const isCurrent = offset === 0;
-            const isNext = offset === 1;
-            const isPrev = offset === -1;
 
-            if (Math.abs(offset) > 2) return null; // Render only top 5 cards for performance
+            if (Math.abs(offset) > 2) return null;
 
             return (
               <div
                 key={card.id}
-                onClick={() => setActiveIndex(idx)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setActiveIndex(idx);
+                }}
                 style={{
-                  transform: `translateY(${offset * 18}px) scale(${1 - Math.abs(offset) * 0.08}) translateZ(${
-                    -Math.abs(offset) * 40
-                  }px)`,
-                  opacity: isCurrent ? 1 : Math.abs(offset) === 1 ? 0.6 : 0.25,
+                  transform: `translateY(${offset * 20}px) scale(${1 - Math.abs(offset) * 0.08})`,
+                  opacity: isCurrent ? 1 : Math.abs(offset) === 1 ? 0.65 : 0.3,
                   zIndex: 20 - Math.abs(offset),
                 }}
-                className="absolute inset-x-0 mx-auto w-full max-w-[310px] sm:max-w-[330px] bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.5)] transition-all duration-500 ease-out cursor-pointer hover:border-amber-500/50"
+                className="absolute inset-x-0 mx-auto w-full max-w-[310px] sm:max-w-[330px] bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-[0_10px_30px_rgba(0,0,0,0.6)] transition-all duration-500 ease-out cursor-pointer"
               >
                 {/* Card Image */}
                 <div className="relative w-full h-36 overflow-hidden">
@@ -277,7 +284,7 @@ export default function SwipeUpOnboarding({
                     {card.badge}
                   </span>
 
-                  <span className="absolute bottom-2 right-3 font-heading font-black text-sm text-amber-400 bg-slate-950/80 border border-amber-500/30 px-2.5 py-0.5 rounded-md">
+                  <span className="absolute bottom-2 right-3 font-heading font-black text-sm text-amber-400 bg-slate-950/90 border border-amber-500/30 px-2.5 py-0.5 rounded-md">
                     {card.price}
                   </span>
                 </div>
@@ -305,11 +312,15 @@ export default function SwipeUpOnboarding({
         </div>
 
         {/* Carousel Indicator Dots */}
-        <div className="flex items-center justify-center gap-1.5 mt-4">
+        <div className="flex items-center justify-center gap-1.5 mt-3">
           {ONBOARDING_CARDS.map((_, i) => (
             <button
               key={i}
-              onClick={() => setActiveIndex(i)}
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                setActiveIndex(i);
+              }}
               className={`h-1.5 rounded-full transition-all duration-300 ${
                 i === activeIndex
                   ? "w-6 bg-amber-400"
@@ -321,10 +332,18 @@ export default function SwipeUpOnboarding({
       </div>
 
       {/* Swipe Up CTA Section */}
-      <div className="w-full max-w-md mx-auto pb-10 px-6 flex flex-col items-center gap-3 z-10">
+      <div className="w-full max-w-md mx-auto pb-8 px-6 flex flex-col items-center gap-3 z-20">
         <button
-          onClick={onDismiss}
-          className="w-full bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 font-heading font-black text-base py-3.5 px-6 rounded-2xl shadow-[0_0_25px_rgba(245,158,11,0.4)] hover:shadow-[0_0_35px_rgba(245,158,11,0.6)] hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 group"
+          type="button"
+          onClick={(e) => {
+            e.stopPropagation();
+            onDismiss();
+          }}
+          onTouchEnd={(e) => {
+            e.stopPropagation();
+            onDismiss();
+          }}
+          className="w-full bg-gradient-to-r from-amber-500 to-yellow-400 text-slate-950 font-heading font-black text-base py-3.5 px-6 rounded-2xl shadow-[0_0_25px_rgba(245,158,11,0.5)] active:scale-95 transition-all flex items-center justify-center gap-2 group cursor-pointer"
         >
           <span>{lang === "ta" ? "தஞ்சாவூர் சேவையை துவங்கு" : "Explore Namma Thanjai"}</span>
           <ArrowUp className="w-5 h-5 group-hover:-translate-y-1 transition-transform" />
@@ -332,7 +351,10 @@ export default function SwipeUpOnboarding({
 
         {/* Animated Swipe Up Gesture Helper */}
         <div
-          onClick={onDismiss}
+          onClick={(e) => {
+            e.stopPropagation();
+            onDismiss();
+          }}
           className="flex flex-col items-center gap-1 text-slate-400 text-xs font-semibold cursor-pointer animate-bounce mt-1"
         >
           <ChevronUp className="w-5 h-5 text-amber-400" />
