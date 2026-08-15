@@ -670,24 +670,26 @@ export default function ProfileClientPage() {
         </div>
       </div>
 
-      {/* Centered Small Logout Button at Bottom */}
-      <div className="flex justify-center pt-8 pb-4 w-full">
-        <button
-          type="button"
-          onClick={async () => {
-            await signOutUser();
-            if (typeof window !== "undefined") {
-              localStorage.removeItem("namma_thanjai_guest_mode");
-              localStorage.removeItem("namma_thanjai_has_seen_walkthrough_v3");
-              window.location.href = "/";
-            }
-          }}
-          className="flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-red-50 hover:border-red-200 text-slate-600 hover:text-red-600 border border-slate-200 text-xs font-bold px-5 py-2 rounded-full transition-all shadow-2xs cursor-pointer active:scale-95"
-        >
-          <LogOut className="w-3.5 h-3.5" />
-          <span>Logout Account</span>
-        </button>
-      </div>
+      {/* Centered Small Logout Button at Bottom (Only for Logged-In Users) */}
+      {user && (
+        <div className="flex justify-center pt-8 pb-4 w-full">
+          <button
+            type="button"
+            onClick={async () => {
+              await signOutUser();
+              if (typeof window !== "undefined") {
+                localStorage.removeItem("namma_thanjai_guest_mode");
+                localStorage.removeItem("namma_thanjai_has_seen_walkthrough_v3");
+                window.location.href = "/";
+              }
+            }}
+            className="flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-red-50 hover:border-red-200 text-slate-600 hover:text-red-600 border border-slate-200 text-xs font-bold px-5 py-2 rounded-full transition-all shadow-2xs cursor-pointer active:scale-95"
+          >
+            <LogOut className="w-3.5 h-3.5" />
+            <span>Logout Account</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 }

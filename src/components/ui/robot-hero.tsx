@@ -1067,12 +1067,12 @@ export function RobotHero({
       </div>
 
       {/* ── 2nd Fold: The 4 Core Platform Pillars & 3-Step Process ──────────────── */}
-      <div className="w-full bg-slate-50/80 border-t border-slate-200/80 py-14 md:py-24 px-4 sm:px-6 relative z-10">
+      <div className="w-full bg-white border-t border-slate-200/80 py-14 md:py-24 px-4 sm:px-6 relative z-10">
         <div className="max-w-6xl mx-auto flex flex-col gap-14">
           
           {/* 2nd Fold Header */}
           <div className="text-center flex flex-col items-center gap-2.5 max-w-2xl mx-auto">
-            <span className="bg-yellow-500/15 text-slate-950 border border-yellow-500/30 text-[10px] sm:text-xs font-black uppercase tracking-widest px-4 py-1.5 rounded-full shadow-xs">
+            <span className="bg-yellow-500/15 text-slate-955 border border-yellow-500/30 text-[10px] sm:text-xs font-black uppercase tracking-widest px-4 py-1.5 rounded-full shadow-2xs">
               Why Namma Thanjai?
             </span>
             <h2 className="font-heading font-black text-2xl sm:text-3xl md:text-5xl text-slate-955 tracking-tight uppercase leading-tight">
@@ -1083,22 +1083,22 @@ export function RobotHero({
             </p>
           </div>
 
-          {/* 4 Pillar Grid */}
+          {/* 4 Pillar Grid (Unified Design System Color System) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
             
             {/* Pillar 1: Sell */}
             <div 
               onClick={onCtaClick}
-              className="bg-white border border-slate-200/80 hover:border-amber-400 p-6 rounded-3xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(245,158,11,0.12)] hover:-translate-y-1 transition-all duration-300 flex flex-col gap-3.5 group cursor-pointer"
+              className="bg-white border border-slate-200/90 hover:border-yellow-400 p-6 rounded-3xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_32px_rgba(250,204,21,0.18)] hover:-translate-y-1 transition-all duration-300 flex flex-col gap-3.5 group cursor-pointer"
             >
-              <div className="w-13 h-13 rounded-2xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center text-amber-600 group-hover:scale-110 transition-transform shadow-xs">
+              <div className="w-13 h-13 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-600 group-hover:scale-110 transition-transform shadow-xs">
                 <PiShoppingBagBold size={26} />
               </div>
               <h3 className="font-heading font-black text-base text-slate-955">1. Sell Marketplace</h3>
               <p className="text-xs text-slate-500 font-medium leading-relaxed">
                 Buy & sell CMDA plots, houses, cars, bikes, & electronics directly from owners without broker fees.
               </p>
-              <div className="mt-auto pt-3 flex items-center gap-1 text-xs font-black text-amber-600 group-hover:translate-x-1 transition-transform">
+              <div className="mt-auto pt-3 flex items-center gap-1.5 text-xs font-black text-amber-600 group-hover:translate-x-1 transition-transform">
                 <span>Browse Listings</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </div>
@@ -1107,16 +1107,16 @@ export function RobotHero({
             {/* Pillar 2: Need */}
             <div 
               onClick={onCtaClick}
-              className="bg-white border border-slate-200/80 hover:border-blue-400 p-6 rounded-3xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(59,130,246,0.12)] hover:-translate-y-1 transition-all duration-300 flex flex-col gap-3.5 group cursor-pointer"
+              className="bg-white border border-slate-200/90 hover:border-yellow-400 p-6 rounded-3xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_32px_rgba(250,204,21,0.18)] hover:-translate-y-1 transition-all duration-300 flex flex-col gap-3.5 group cursor-pointer"
             >
-              <div className="w-13 h-13 rounded-2xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform shadow-xs">
+              <div className="w-13 h-13 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-600 group-hover:scale-110 transition-transform shadow-xs">
                 <Megaphone className="w-6 h-6" />
               </div>
               <h3 className="font-heading font-black text-base text-slate-955">2. Post Requirements</h3>
               <p className="text-xs text-slate-500 font-medium leading-relaxed">
                 Need a house, land, or specific item? Post your budget requirements and get direct offers from sellers.
               </p>
-              <div className="mt-auto pt-3 flex items-center gap-1 text-xs font-black text-blue-600 group-hover:translate-x-1 transition-transform">
+              <div className="mt-auto pt-3 flex items-center gap-1.5 text-xs font-black text-amber-600 group-hover:translate-x-1 transition-transform">
                 <span>Post Requirement</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </div>
@@ -1125,16 +1125,16 @@ export function RobotHero({
             {/* Pillar 3: Services */}
             <div 
               onClick={onCtaClick}
-              className="bg-white border border-slate-200/80 hover:border-emerald-400 p-6 rounded-3xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(16,185,129,0.12)] hover:-translate-y-1 transition-all duration-300 flex flex-col gap-3.5 group cursor-pointer"
+              className="bg-white border border-slate-200/90 hover:border-yellow-400 p-6 rounded-3xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_32px_rgba(250,204,21,0.18)] hover:-translate-y-1 transition-all duration-300 flex flex-col gap-3.5 group cursor-pointer"
             >
-              <div className="w-13 h-13 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center text-emerald-600 group-hover:scale-110 transition-transform shadow-xs">
+              <div className="w-13 h-13 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-600 group-hover:scale-110 transition-transform shadow-xs">
                 <Wrench className="w-6 h-6" />
               </div>
               <h3 className="font-heading font-black text-base text-slate-955">3. Local Services</h3>
               <p className="text-xs text-slate-500 font-medium leading-relaxed">
                 4.9★ rated electricians, plumbers, carpenters, & mechanics available with 30-min doorstep arrival.
               </p>
-              <div className="mt-auto pt-3 flex items-center gap-1 text-xs font-black text-emerald-600 group-hover:translate-x-1 transition-transform">
+              <div className="mt-auto pt-3 flex items-center gap-1.5 text-xs font-black text-amber-600 group-hover:translate-x-1 transition-transform">
                 <span>Hire Tradesperson</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </div>
@@ -1143,16 +1143,16 @@ export function RobotHero({
             {/* Pillar 4: Offers */}
             <div 
               onClick={onCtaClick}
-              className="bg-white border border-slate-200/80 hover:border-purple-400 p-6 rounded-3xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_8px_30px_rgba(168,85,247,0.12)] hover:-translate-y-1 transition-all duration-300 flex flex-col gap-3.5 group cursor-pointer"
+              className="bg-white border border-slate-200/90 hover:border-yellow-400 p-6 rounded-3xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_32px_rgba(250,204,21,0.18)] hover:-translate-y-1 transition-all duration-300 flex flex-col gap-3.5 group cursor-pointer"
             >
-              <div className="w-13 h-13 rounded-2xl bg-purple-500/10 border border-purple-500/20 flex items-center justify-center text-purple-600 group-hover:scale-110 transition-transform shadow-xs">
+              <div className="w-13 h-13 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-600 group-hover:scale-110 transition-transform shadow-xs">
                 <Store className="w-6 h-6" />
               </div>
               <h3 className="font-heading font-black text-base text-slate-955">4. Store Offers</h3>
               <p className="text-xs text-slate-500 font-medium leading-relaxed">
                 Exclusive store discounts & deals from Thanjavur silk handlooms, electronics galleries, & cafes.
               </p>
-              <div className="mt-auto pt-3 flex items-center gap-1 text-xs font-black text-purple-600 group-hover:translate-x-1 transition-transform">
+              <div className="mt-auto pt-3 flex items-center gap-1.5 text-xs font-black text-amber-600 group-hover:translate-x-1 transition-transform">
                 <span>Explore Deals</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </div>
@@ -1160,27 +1160,27 @@ export function RobotHero({
 
           </div>
 
-          {/* 3-Step Process Bar */}
-          <div className="bg-slate-955 text-white p-6 md:p-8 rounded-3xl border border-slate-800 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
+          {/* 3-Step Process Bar (High-Contrast Obsidian Card with Crisp Text) */}
+          <div className="bg-slate-955 text-white p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex flex-col text-center md:text-left">
-              <span className="text-yellow-400 font-black text-xs uppercase tracking-widest">3 Simple Steps</span>
-              <h3 className="font-heading font-black text-xl md:text-2xl mt-0.5">How Namma Thanjai Works</h3>
+              <span className="text-amber-400 font-black text-xs uppercase tracking-widest">3 Simple Steps</span>
+              <h3 className="font-heading font-black text-xl md:text-2xl text-white mt-0.5">How Namma Thanjai Works</h3>
             </div>
             
             <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-xs font-black">
-              <div className="flex items-center gap-2 bg-slate-900 border border-slate-800 px-4 py-2.5 rounded-xl shadow-inner">
-                <Megaphone className="w-4 h-4 text-yellow-400 shrink-0" />
-                <span>1. Post Listing</span>
+              <div className="flex items-center gap-2.5 bg-slate-900 border border-slate-700/80 px-4 py-2.5 rounded-xl shadow-md text-amber-400">
+                <Megaphone className="w-4 h-4 text-amber-400 shrink-0" />
+                <span className="text-white">1. Post Listing</span>
               </div>
-              <span className="text-yellow-400 font-bold hidden sm:inline">➔</span>
-              <div className="flex items-center gap-2 bg-slate-900 border border-slate-800 px-4 py-2.5 rounded-xl shadow-inner">
+              <span className="text-amber-400 font-black text-base hidden sm:inline">➔</span>
+              <div className="flex items-center gap-2.5 bg-slate-900 border border-slate-700/80 px-4 py-2.5 rounded-xl shadow-md text-emerald-400">
                 <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span>2. Direct Contact</span>
+                <span className="text-white">2. Direct Contact</span>
               </div>
-              <span className="text-yellow-400 font-bold hidden sm:inline">➔</span>
-              <div className="flex items-center gap-2 bg-slate-900 border border-slate-800 px-4 py-2.5 rounded-xl shadow-inner">
-                <CheckCircle className="w-4 h-4 text-amber-400 shrink-0" />
-                <span>3. Deal Done</span>
+              <span className="text-amber-400 font-black text-base hidden sm:inline">➔</span>
+              <div className="flex items-center gap-2.5 bg-slate-900 border border-slate-700/80 px-4 py-2.5 rounded-xl shadow-md text-yellow-400">
+                <CheckCircle className="w-4 h-4 text-yellow-400 shrink-0" />
+                <span className="text-white">3. Deal Done</span>
               </div>
             </div>
           </div>
