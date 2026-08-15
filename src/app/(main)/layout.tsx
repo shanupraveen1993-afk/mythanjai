@@ -232,11 +232,11 @@ function MainLayoutContent({
         return (
           <main 
             className={`flex-1 w-full max-md:overflow-y-auto max-md:overscroll-contain md:overflow-visible md:h-auto ${
-              isFullWidthPage ? "p-0 max-w-none m-0 bg-white" : "bg-[#f4f5f8] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 md:pb-12"
+              isFullWidthPage ? "p-0 max-w-none m-0 bg-white" : "bg-[#f4f5f8] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-28 md:pb-12"
             }`}
             style={{
               paddingTop: !isStandaloneView && !isOnboardingView ? "calc(3.5rem + env(safe-area-inset-top, 0px))" : undefined,
-              paddingBottom: !isFullWidthPage ? "calc(4.5rem + env(safe-area-inset-bottom, 0px))" : undefined,
+              paddingBottom: !isFullWidthPage ? "calc(6.5rem + env(safe-area-inset-bottom, 0px))" : undefined,
             }}
           >
             {children}
