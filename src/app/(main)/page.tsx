@@ -1,27 +1,16 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from "react";
+import React, { Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import RobotHero from "@/components/ui/robot-hero";
 import OnboardingClientPage from "./onboarding/OnboardingClientPage";
+import HomeClientPage from "./HomeClientPage";
 
 function RootPageContent() {
   const router = useRouter();
   const { user, profile, loading } = useAuth();
   const isAuthVerified = Boolean(profile?.isVerified || user);
-  const [isMobileWeb, setIsMobileWeb] = useState(false);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const checkMobile = () => {
-        setIsMobileWeb(window.innerWidth < 768);
-      };
-      checkMobile();
-      window.addEventListener("resize", checkMobile);
-      return () => window.removeEventListener("resize", checkMobile);
-    }
-  }, []);
 
   if (loading) {
     return (
@@ -31,21 +20,33 @@ function RootPageContent() {
     );
   }
 
-  // 1. Mobile Web App (Unauthenticated): Render ONLY the single-fold Mobile Onboarding Screen with Register & Explore CTA
-  if (isMobileWeb && !isAuthVerified) {
-    return <OnboardingClientPage />;
+  // Verified Logged In User: Render Home Marketplace Dashboard
+  if (isAuthVerified) {
+    return <HomeClientPage />;
   }
 
-  // 2. Desktop Web Visitor / Authenticated User: Render Desktop RobotHero Landing Page
+  // Unauthenticated Visitors:
+  // Mobile Web (< 768px): Render ONLY OnboardingClientPage (Fixed 100vh fold, Register & Explore CTA)
+  // Desktop Web (>= 768px): Render RobotHero Landing Page
   return (
-    <RobotHero
-      onCtaClick={() => router.push("/home")}
-      onSignInClick={() => {
-        if (typeof window !== "undefined") {
-          window.dispatchEvent(new Event("namma_thanjai_open_signin"));
-        }
-      }}
-    />
+    <>
+      {/* Mobile Web App View (< 768px): Pure CSS instant display */}
+      <div className="md:hidden w-full h-screen h-[100dvh] overflow-hidden">
+        <OnboardingClientPage />
+      </div>
+
+      {/* Desktop Website View (>= 768px): Pure CSS instant display */}
+      <div className="hidden md:block w-full">
+        <RobotHero
+          onCtaClick={() => router.push("/home")}
+          onSignInClick={() => {
+            if (typeof window !== "undefined") {
+              window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+            }
+          }}
+        />
+      </div>
+    </>
   );
 }
 

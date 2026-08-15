@@ -249,12 +249,14 @@ function MainLayoutContent({
             {/* Scroll-driven Floating Post Button on Mobile */}
             {!isOnboardingView && <FloatingPostButton />}
 
-            {/* Bottom Navigation Bar */}
+            {/* Bottom Navigation Bar — Instantly hidden via CSS on mobile landing page for unauthenticated visitors */}
             {!isStandaloneView && !isOnboardingView && (
-              <BottomTabBar
-                activeTab={getActiveTab()}
-                onTabChange={handleTabChange}
-              />
+              <div className={!isAuthVerified && pathname === "/" ? "max-md:hidden" : ""}>
+                <BottomTabBar
+                  activeTab={getActiveTab()}
+                  onTabChange={handleTabChange}
+                />
+              </div>
             )}
           </>
         );
