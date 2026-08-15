@@ -914,7 +914,7 @@ export function RobotHero({
   return (
     <section
       ref={containerRef}
-      className="relative w-full min-h-screen flex flex-col justify-between items-center bg-white text-slate-800 pt-14 md:pt-6 pb-0 px-3 sm:px-4 select-none overflow-x-hidden"
+      className="relative w-full max-md:h-[100dvh] max-md:max-h-[100dvh] min-h-screen flex flex-col justify-between items-center bg-white text-slate-800 pt-14 md:pt-6 pb-4 md:pb-12 px-3 sm:px-4 select-none max-md:overflow-hidden overflow-x-hidden"
     >
       {/* Light radial glow centered behind hero */}
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_45%,rgba(250,204,21,0.06)_0%,transparent_60%)] pointer-events-none" />
@@ -993,8 +993,26 @@ export function RobotHero({
             </div>
           ) : (
             <div className="flex flex-col gap-2.5 bg-slate-900/90 backdrop-blur-md border border-slate-800 p-3.5 rounded-2xl shadow-xl w-full">
-              {/* 2 Primary Action Buttons */}
-              <div className="grid grid-cols-2 gap-2 w-full">
+              {/* Mobile CTA: Single Register & Explore Button */}
+              <button
+                type="button"
+                onClick={() => {
+                  if (typeof window !== "undefined") {
+                    window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+                  }
+                  if (onSignInClick) {
+                    onSignInClick();
+                  }
+                }}
+                className="md:hidden w-full bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-black text-xs py-3 rounded-xl border border-yellow-400 shadow-md flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer uppercase tracking-wider"
+              >
+                <Sparkles className="w-4 h-4 fill-slate-955 text-slate-955" />
+                <span>Register & Explore</span>
+                <ArrowRight className="w-4 h-4 stroke-[3]" />
+              </button>
+
+              {/* Desktop CTA: Dual Buttons */}
+              <div className="hidden md:grid grid-cols-2 gap-2 w-full">
                 <button
                   type="button"
                   onClick={() => {
@@ -1098,8 +1116,8 @@ export function RobotHero({
 
       </div>
 
-      {/* ── 2nd Fold: The 4 Core Platform Pillars & 3-Step Process ──────────────── */}
-      <div className="w-full bg-white border-t border-slate-200/80 py-14 md:py-24 px-4 sm:px-6 relative z-10">
+      {/* ── 2nd Fold: The 4 Core Platform Pillars & 3-Step Process (Desktop Only) ──────────────── */}
+      <div className="hidden md:block w-full bg-white border-t border-slate-200/80 py-14 md:py-24 px-4 sm:px-6 relative z-10">
         <div className="max-w-6xl mx-auto flex flex-col gap-14">
           
           {/* 2nd Fold Header */}

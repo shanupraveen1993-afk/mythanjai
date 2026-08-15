@@ -4,7 +4,6 @@ import React, { Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import RobotHero from "@/components/ui/robot-hero";
-import OnboardingClientPage from "./onboarding/OnboardingClientPage";
 import HomeClientPage from "./HomeClientPage";
 
 function RootPageContent() {
@@ -25,28 +24,16 @@ function RootPageContent() {
     return <HomeClientPage />;
   }
 
-  // Unauthenticated Visitors:
-  // Mobile Web (< 768px): Render ONLY OnboardingClientPage (Fixed 100vh fold, Register & Explore CTA)
-  // Desktop Web (>= 768px): Render RobotHero Landing Page
+  // Unauthenticated Visitors (Web App & Website): Render RobotHero (3D Mascot Robo Landing Page)
   return (
-    <>
-      {/* Mobile Web App View (< 768px): Pure CSS instant display */}
-      <div className="md:hidden w-full h-screen h-[100dvh] overflow-hidden">
-        <OnboardingClientPage />
-      </div>
-
-      {/* Desktop Website View (>= 768px): Pure CSS instant display */}
-      <div className="hidden md:block w-full">
-        <RobotHero
-          onCtaClick={() => router.push("/home")}
-          onSignInClick={() => {
-            if (typeof window !== "undefined") {
-              window.dispatchEvent(new Event("namma_thanjai_open_signin"));
-            }
-          }}
-        />
-      </div>
-    </>
+    <RobotHero
+      onCtaClick={() => router.push("/home")}
+      onSignInClick={() => {
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+        }
+      }}
+    />
   );
 }
 
