@@ -666,8 +666,9 @@ export default function ProfileClientPage() {
           onClick={async () => {
             await signOutUser();
             if (typeof window !== "undefined") {
+              localStorage.removeItem("namma_thanjai_guest_mode");
               localStorage.removeItem("namma_thanjai_has_seen_walkthrough_v3");
-              window.location.href = "/onboarding";
+              window.location.href = "/";
             }
           }}
           className="flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-red-50 hover:border-red-200 text-slate-600 hover:text-red-600 border border-slate-200 text-xs font-bold px-5 py-2 rounded-full transition-all shadow-2xs cursor-pointer active:scale-95"
