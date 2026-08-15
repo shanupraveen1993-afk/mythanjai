@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { Language, translations, getTamilCategory } from "@/lib/i18n";
+import { Language, translations } from "@/lib/i18n";
 import { useToast } from "@/context/ToastContext";
 
 interface LanguageContextType {
@@ -20,29 +20,23 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const saved = localStorage.getItem("namma_thanjai_lang") as Language;
-      if (saved === "ta" || saved === "en") {
-        setLangState(saved);
-      }
+      localStorage.setItem("namma_thanjai_lang", "en");
     }
   }, []);
 
   const setLang = (newLang: Language) => {
-    setLangState(newLang);
+    setLangState("en");
     if (typeof window !== "undefined") {
-      localStorage.setItem("namma_thanjai_lang", newLang);
+      localStorage.setItem("namma_thanjai_lang", "en");
     }
   };
 
   const toggleLanguage = () => {
-    const nextLang: Language = lang === "en" ? "ta" : "en";
-    setLang(nextLang);
-    toast.success(nextLang === "ta" ? translations.ta.switchedToTamil : translations.en.switchedToEnglish);
+    setLang("en");
   };
 
   const t = (key: keyof typeof translations.en): string => {
-    const langDict = translations[lang] || translations.en;
-    return langDict[key] || translations.en[key] || String(key);
+    return translations.en[key] || String(key);
   };
 
   const tCategory = (category?: string): string => {
@@ -50,7 +44,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <LanguageContext.Provider value={{ lang, setLang, toggleLanguage, t, tCategory }}>
+    <LanguageContext.Provider value={{ lang: "en", setLang, toggleLanguage, t, tCategory }}>
       {children}
     </LanguageContext.Provider>
   );

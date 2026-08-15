@@ -231,20 +231,20 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
         </div>
       )}
 
-      {/* Footer Info & Action CTAs — Secondary Button System */}
-      <div className="flex items-center justify-between pt-1">
-        <span className="text-xs text-slate-500 font-medium">
+      {/* Footer Info & Action CTAs — Single-Line Action Button System */}
+      <div className="flex items-center justify-between pt-1 gap-2">
+        <span className="text-xs text-slate-500 font-medium shrink-0">
           <strong className="text-slate-800 font-bold">{contactedCount}</strong> {t("contacted")}
         </span>
 
-        <div className="flex items-center gap-2">
+        <div className="flex items-center gap-1.5 shrink-0 whitespace-nowrap">
           {/* SECONDARY BUTTON */}
           <button
             onClick={(e) => handleOpenPreContactModal(e, "call")}
-            className="flex items-center gap-1.5 h-9 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-3.5 rounded-xl text-xs transition-all border border-slate-250 shadow-2xs cursor-pointer active:scale-95"
+            className="flex items-center gap-1.5 h-8.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-3 rounded-xl text-xs transition-all border border-slate-250 shadow-2xs cursor-pointer active:scale-95 whitespace-nowrap"
           >
             <Phone className="w-3.5 h-3.5 fill-current" />
-            <span>Call Now</span>
+            <span>Call</span>
           </button>
 
           {/* PRIMARY BUTTON */}
@@ -253,7 +253,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
               e.stopPropagation();
               toast.success(`Request sent to ${post.name}! They will call you back shortly.`);
             }}
-            className="flex items-center gap-1.5 h-9 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-black px-3.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer border border-yellow-400 active:scale-95"
+            className="flex items-center gap-1.5 h-8.5 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-black px-3 rounded-xl text-xs transition-all shadow-2xs cursor-pointer border border-yellow-400 active:scale-95 whitespace-nowrap"
           >
             <Zap className="w-3.5 h-3.5" />
             <span>Send Request</span>
