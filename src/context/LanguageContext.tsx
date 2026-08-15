@@ -46,12 +46,7 @@ export function LanguageProvider({ children }: { children: React.ReactNode }) {
   };
 
   const tCategory = (category?: string): string => {
-    if (!category) return "";
-    if (lang === "ta") {
-      const taName = getTamilCategory(category);
-      return taName !== category ? `${category} • ${taName}` : category;
-    }
-    return category;
+    return category || "";
   };
 
   return (

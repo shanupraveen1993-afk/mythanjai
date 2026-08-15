@@ -70,19 +70,6 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
 
   const isPendingVerification = (post as any).status === "pending" || !post.is_verified;
 
-  const getCategoryTamilTag = (category: string) => {
-    switch (category?.toLowerCase()) {
-      case "plumber": return "குழாய் பணியாளர்";
-      case "electrician": return "மின் பணியாளர்";
-      case "carpenter": return "மரத் தச்சர்";
-      case "painter": return "வர்ணம் பூசுபவர்";
-      case "ac technician": return "ஏசி டெக்னீஷியன்";
-      case "auto mechanic": return "மெக்கானிக்";
-      case "cleaning & housekeeping": return "தூய்மைப் பணி";
-      default: return "சேவை கலைஞர்";
-    }
-  };
-
   const getCategoryIllustration = (category: string) => {
     switch (category?.toLowerCase()) {
       case "plumber": return <Wrench className="w-3.5 h-3.5 text-emerald-600" />;

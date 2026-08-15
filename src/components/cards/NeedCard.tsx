@@ -96,16 +96,6 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
     `📌 *${post.title}* in ${post.area_tag}, Thanjavur:\nCheck out this listing on Namma Thanjai!`
   )}`;
 
-  const getCategoryTamilTag = (category?: string) => {
-    switch (category?.toLowerCase()) {
-      case "plots & real estate": return "நிலம் & சொத்து";
-      case "property rental": return "வாடகை வீடு";
-      case "used vehicles": return "பயன்படுத்திய வண்டி";
-      case "electronics & mobiles": return "எலக்ட்ரானிக்ஸ்";
-      default: return "விளம்பரம்";
-    }
-  };
-
   const handleMarkSold = (e: React.MouseEvent) => {
     e.stopPropagation();
     setIsSold(!isSold);
