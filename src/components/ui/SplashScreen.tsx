@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import Image from "next/image";
 
 export default function SplashScreen({
   onComplete,
@@ -43,17 +44,16 @@ export default function SplashScreen({
 
       {/* Main Branding Container */}
       <div className="relative flex flex-col items-center justify-center gap-4 px-6 text-center">
-        {/* Tanjore Temple Symbol outline */}
-        <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center mb-2 shadow-[0_0_20px_rgba(245,158,11,0.2)]">
-          <svg
-            className="w-6 h-6 text-amber-400"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-            strokeWidth={2}
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5m0 0h4m-4 0V11m4 10V11m-4 0h4" />
-          </svg>
+        {/* Official Namma Thanjai Logo Image */}
+        <div className="w-20 h-20 rounded-3xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center p-3 mb-2 shadow-[0_0_30px_rgba(245,158,11,0.35)] backdrop-blur-xs animate-scale-up">
+          <Image
+            src="/namma_thanjai_logo.png"
+            alt="Namma Thanjai Logo"
+            width={80}
+            height={80}
+            className="w-full h-full object-contain filter drop-shadow-md"
+            priority
+          />
         </div>
 
         {/* Text Container with Gliding Dot */}

@@ -189,65 +189,74 @@ function MainLayoutContent({
         <SearchParamSync onAreaSync={setSelectedArea} onAuthSync={setIsSignInOpen} />
       </React.Suspense>
 
-      {/* Top Header Section — Always visible except full-screen chat */}
-      {!isStandaloneView && (
-        <React.Suspense fallback={null}>
-          <TopHeader
-            selectedArea={selectedArea}
-            onAreaChange={handleAreaChange}
-            onSignInClick={() => setIsSignInOpen(true)}
-            onPostClick={() => {
-              if (!user) {
-                setIsSignInOpen(true);
-              } else {
-                router.push("/post/sell");
-              }
-            }}
-            activeTab={getActiveTab()}
-            onTabChange={handleTabChange}
-          />
-        </React.Suspense>
-      )}
+      {/* Top Header Section — Hidden for unauthenticated onboarding view or standalone view */}
+      {(() => {
+        const isAuthVerified = Boolean(profile?.isVerified || user);
+        const isOnboardingView = !isAuthVerified && (pathname === "/" || pathname === "/onboarding");
 
-      {/* Universal Directory Search Bar (Hidden on Home, Profile, & Chat pages) */}
-      {pathname !== "/" && pathname !== "/profile" && !isChatRoute && (
-        <React.Suspense fallback={null}>
-          <UniversalSearchBar />
-        </React.Suspense>
-      )}
+        return (
+          <>
+            {!isStandaloneView && !isOnboardingView && (
+              <React.Suspense fallback={null}>
+                <TopHeader
+                  selectedArea={selectedArea}
+                  onAreaChange={handleAreaChange}
+                  onSignInClick={() => setIsSignInOpen(true)}
+                  onPostClick={() => {
+                    if (!isAuthVerified) {
+                      setIsSignInOpen(true);
+                    } else {
+                      router.push("/post/sell");
+                    }
+                  }}
+                  activeTab={getActiveTab()}
+                  onTabChange={handleTabChange}
+                />
+              </React.Suspense>
+            )}
 
-      {/* Main Content Panel — Independent Mobile Viewport Box / Natural Desktop Scroll */}
-      <main 
-        className={`flex-1 w-full max-md:overflow-y-auto max-md:overscroll-contain md:overflow-visible md:h-auto bg-[#f4f5f8] ${
-          isStandaloneView ? "p-0 max-w-none m-0" : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 md:pb-12"
-        }`}
-        style={!isStandaloneView ? {
-          paddingTop: "calc(3.5rem + env(safe-area-inset-top, 0px))",
-          paddingBottom: "calc(4.5rem + env(safe-area-inset-bottom, 0px))",
-        } : undefined}
-      >
-        {children}
+            {/* Universal Directory Search Bar (Hidden on Home, Profile, Chat, & Onboarding pages) */}
+            {pathname !== "/" && pathname !== "/profile" && pathname !== "/onboarding" && !isChatRoute && !isOnboardingView && (
+              <React.Suspense fallback={null}>
+                <UniversalSearchBar />
+              </React.Suspense>
+            )}
 
-        {/* Main Website Footer (Desktop View inside scroll container) */}
-        {!isChatRoute && (
-          <React.Suspense fallback={null}>
-            <div className="hidden md:block mt-12">
-              <Footer />
-            </div>
-          </React.Suspense>
-        )}
-      </main>
+            {/* Main Content Panel */}
+            <main 
+              className={`flex-1 w-full max-md:overflow-y-auto max-md:overscroll-contain md:overflow-visible md:h-auto bg-[#f4f5f8] ${
+                isStandaloneView || isOnboardingView ? "p-0 max-w-none m-0 bg-[#0f172a]" : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 md:pb-12"
+              }`}
+              style={!isStandaloneView && !isOnboardingView ? {
+                paddingTop: "calc(3.5rem + env(safe-area-inset-top, 0px))",
+                paddingBottom: "calc(4.5rem + env(safe-area-inset-bottom, 0px))",
+              } : undefined}
+            >
+              {children}
 
-      {/* Scroll-driven Floating Post Button on Mobile */}
-      <FloatingPostButton />
+              {/* Main Website Footer (Desktop View inside scroll container) */}
+              {!isChatRoute && !isOnboardingView && (
+                <React.Suspense fallback={null}>
+                  <div className="hidden md:block mt-12">
+                    <Footer />
+                  </div>
+                </React.Suspense>
+              )}
+            </main>
 
-      {/* Bottom Navigation Bar — Fixed at thumb position */}
-      {!isStandaloneView && (
-        <BottomTabBar
-          activeTab={getActiveTab()}
-          onTabChange={handleTabChange}
-        />
-      )}
+            {/* Scroll-driven Floating Post Button on Mobile */}
+            {!isOnboardingView && <FloatingPostButton />}
+
+            {/* Bottom Navigation Bar — Hidden for unauthenticated onboarding view */}
+            {!isStandaloneView && !isOnboardingView && (
+              <BottomTabBar
+                activeTab={getActiveTab()}
+                onTabChange={handleTabChange}
+              />
+            )}
+          </>
+        );
+      })()}
 
       {/* Sign-In Popup Modal */}
       <React.Suspense fallback={null}>
