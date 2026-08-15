@@ -75,8 +75,19 @@ export default function NeedClientPage() {
   return (
     <div className="flex flex-col gap-3 pb-24 w-full font-sans">
 
-      {/* STICKY TITLE & POST BAR (Touching Header Bottom) */}
-      <div className="sticky top-[calc(3.5rem+env(safe-area-inset-top,0px))] z-40 bg-[#f4f5f8]/95 backdrop-blur-md pt-2 pb-2 flex items-center justify-between gap-3 w-full border-0 mt-0">
+      {/* 1. Hero Banner */}
+      <div className="relative w-full min-h-[120px] rounded-2xl overflow-hidden bg-slate-950 text-white flex items-center px-5 sm:px-8 py-5 shadow-2xs mt-2">
+        <img src="/hero_building_visual.png" alt="Need" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-955/90 to-transparent" />
+        <div className="relative z-10 flex flex-col gap-1 max-w-lg">
+          <span className="bg-yellow-500 text-slate-955 font-bold text-[10px] px-2 py-0.5 rounded-md tracking-wider w-fit">Buyer requirements</span>
+          <h1 className="font-heading font-bold text-lg sm:text-xl text-white">Find What You Need</h1>
+          <p className="text-xs text-slate-300">Post your requirement — land, vehicles or rentals — connect with sellers.</p>
+        </div>
+      </div>
+
+      {/* 2. STICKY TITLE & POST BAR (Locks under TopHeader when scrolled) */}
+      <div className="sticky top-[calc(3.5rem+env(safe-area-inset-top,0px))] z-40 bg-[#f4f5f8]/95 backdrop-blur-md py-2.5 flex items-center justify-between gap-3 w-full border-b border-slate-200/60">
         <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight">
           Buyer Requirements
         </h2>
@@ -87,17 +98,6 @@ export default function NeedClientPage() {
           <Plus className="w-4 h-4 stroke-[3]" />
           <span>Post Requirement</span>
         </button>
-      </div>
-
-      {/* Hero Banner */}
-      <div className="relative w-full min-h-[120px] rounded-2xl overflow-hidden bg-slate-950 text-white flex items-center px-5 sm:px-8 py-5 shadow-2xs">
-        <img src="/hero_building_visual.png" alt="Need" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-955/90 to-transparent" />
-        <div className="relative z-10 flex flex-col gap-1 max-w-lg">
-          <span className="bg-yellow-500 text-slate-955 font-bold text-[10px] px-2 py-0.5 rounded-md tracking-wider w-fit">Buyer requirements</span>
-          <h1 className="font-heading font-bold text-lg sm:text-xl text-white">Find What You Need</h1>
-          <p className="text-xs text-slate-300">Post your requirement — land, vehicles or rentals — connect with sellers.</p>
-        </div>
       </div>
 
       {/* LISTING CONTAINER */}
