@@ -1176,28 +1176,76 @@ export function RobotHero({
 
           </div>
 
-          {/* 3-Step Process Bar (High-Contrast Obsidian Card with Crisp Text) */}
-          <div className="bg-slate-955 text-white p-6 sm:p-8 rounded-3xl border border-slate-800 shadow-2xl flex flex-col md:flex-row items-center justify-between gap-6">
-            <div className="flex flex-col text-center md:text-left">
-              <span className="text-amber-400 font-black text-xs uppercase tracking-widest">3 Simple Steps</span>
-              <h3 className="font-heading font-black text-xl md:text-2xl text-white mt-0.5">How Namma Thanjai Works</h3>
+          {/* 3-Step Process Card Component (High-End 3-Column Design System Grid) */}
+          <div className="flex flex-col gap-8 pt-6 border-t border-slate-200/80">
+            <div className="text-center flex flex-col items-center gap-2 max-w-xl mx-auto">
+              <span className="text-amber-600 bg-amber-500/10 border border-amber-500/30 font-black text-[10px] uppercase tracking-widest px-3.5 py-1 rounded-full shadow-2xs">
+                30 Seconds to Connect
+              </span>
+              <h3 className="font-heading font-black text-2xl sm:text-3xl text-slate-955 uppercase tracking-tight">
+                How Namma Thanjai Works
+              </h3>
+              <p className="text-xs text-slate-500 font-bold">
+                Direct connection between local buyers, sellers, and service experts
+              </p>
             </div>
-            
-            <div className="flex flex-wrap items-center justify-center gap-3 sm:gap-4 text-xs font-black">
-              <div className="flex items-center gap-2.5 bg-slate-900 border border-slate-700/80 px-4 py-2.5 rounded-xl shadow-md text-amber-400">
-                <Megaphone className="w-4 h-4 text-amber-400 shrink-0" />
-                <span className="text-white">1. Post Listing</span>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              
+              {/* Step 1 */}
+              <div className="bg-white border border-slate-200/90 p-6 rounded-3xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col gap-4 relative overflow-hidden group hover:border-amber-400 transition-all duration-300">
+                <div className="flex items-center justify-between">
+                  <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-600 shadow-xs group-hover:scale-110 transition-transform">
+                    <Megaphone className="w-6 h-6" />
+                  </div>
+                  <span className="font-heading font-black text-3xl text-slate-200 group-hover:text-amber-500/40 transition-colors">
+                    01
+                  </span>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <h4 className="font-heading font-black text-base text-slate-955">1. Post Your Requirement</h4>
+                  <p className="text-xs text-slate-500 font-medium leading-relaxed">
+                    Post items for sale, buyer requirements, or local service details in under 30 seconds.
+                  </p>
+                </div>
               </div>
-              <span className="text-amber-400 font-black text-base hidden sm:inline">➔</span>
-              <div className="flex items-center gap-2.5 bg-slate-900 border border-slate-700/80 px-4 py-2.5 rounded-xl shadow-md text-emerald-400">
-                <Phone className="w-4 h-4 text-emerald-400 shrink-0" />
-                <span className="text-white">2. Direct Contact</span>
+
+              {/* Step 2 */}
+              <div className="bg-white border border-slate-200/90 p-6 rounded-3xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col gap-4 relative overflow-hidden group hover:border-amber-400 transition-all duration-300">
+                <div className="flex items-center justify-between">
+                  <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-600 shadow-xs group-hover:scale-110 transition-transform">
+                    <Phone className="w-6 h-6" />
+                  </div>
+                  <span className="font-heading font-black text-3xl text-slate-200 group-hover:text-amber-500/40 transition-colors">
+                    02
+                  </span>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <h4 className="font-heading font-black text-base text-slate-955">2. Direct Connect</h4>
+                  <p className="text-xs text-slate-500 font-medium leading-relaxed">
+                    Connect directly via WhatsApp or phone call with zero brokers or middleman delays.
+                  </p>
+                </div>
               </div>
-              <span className="text-amber-400 font-black text-base hidden sm:inline">➔</span>
-              <div className="flex items-center gap-2.5 bg-slate-900 border border-slate-700/80 px-4 py-2.5 rounded-xl shadow-md text-yellow-400">
-                <CheckCircle className="w-4 h-4 text-yellow-400 shrink-0" />
-                <span className="text-white">3. Deal Done</span>
+
+              {/* Step 3 */}
+              <div className="bg-white border border-slate-200/90 p-6 rounded-3xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col gap-4 relative overflow-hidden group hover:border-amber-400 transition-all duration-300">
+                <div className="flex items-center justify-between">
+                  <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-600 shadow-xs group-hover:scale-110 transition-transform">
+                    <CheckCircle className="w-6 h-6" />
+                  </div>
+                  <span className="font-heading font-black text-3xl text-slate-200 group-hover:text-amber-500/40 transition-colors">
+                    03
+                  </span>
+                </div>
+                <div className="flex flex-col gap-1">
+                  <h4 className="font-heading font-black text-base text-slate-955">3. Deal Completed</h4>
+                  <p className="text-xs text-slate-500 font-medium leading-relaxed">
+                    Finalize deals directly with local Thanjavur residents with 100% zero commission fees.
+                  </p>
+                </div>
               </div>
+
             </div>
           </div>
 
