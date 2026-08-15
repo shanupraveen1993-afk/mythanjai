@@ -805,6 +805,22 @@ export function RobotHero({
   alerts = [],
   activeAlertIdx = 0,
 }: RobotHeroProps = {}) {
+  const defaultAlerts = [
+    "New 2400 Sqft CMDA Plot listed in Vallam — 2400 Sqft CMDA approved",
+    "Senthil Electrician: 4.9★ rating, available in Tanjore Town",
+    "GLEN Gallery: Up to 60% OFF — Grand Opening Sale",
+    "2 BHK House for Rent near Medical College — ₹10,000/mo",
+    "Rajesh Expert Plumber: 30-min rapid arrival in Medical College Rd",
+  ];
+  const displayAlerts = alerts && alerts.length > 0 ? alerts : defaultAlerts;
+
+  const [tickerIdx, setTickerIdx] = useState(0);
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTickerIdx((prev) => (prev + 1) % displayAlerts.length);
+    }, 3000);
+    return () => clearInterval(timer);
+  }, [displayAlerts.length]);
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -1039,7 +1055,7 @@ export function RobotHero({
             </div>
           )}
 
-          {alerts.length > 0 && (
+          {displayAlerts.length > 0 && (
             <div className="flex w-full bg-slate-900 border border-slate-800 text-white rounded-xl py-1.5 px-3.5 shadow-sm items-center justify-between text-xs font-black select-none tracking-wide mt-1">
               <div className="flex items-center gap-2 overflow-hidden w-full text-left">
                 <span className="bg-yellow-500 text-slate-955 font-black text-[8px] px-1.5 py-0.5 rounded-md uppercase shrink-0 animate-pulse">
@@ -1048,14 +1064,14 @@ export function RobotHero({
                 <div className="relative h-4 flex-1 overflow-hidden">
                   <AnimatePresence mode="wait">
                     <motion.span
-                      key={activeAlertIdx}
+                      key={tickerIdx}
                       initial={{ opacity: 0, y: 10 }}
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.3 }}
                       className="absolute left-0 text-slate-100 truncate w-full font-bold text-left text-xs"
                     >
-                      {alerts[activeAlertIdx]}
+                      {displayAlerts[tickerIdx]}
                     </motion.span>
                   </AnimatePresence>
                 </div>
