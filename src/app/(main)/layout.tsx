@@ -189,10 +189,11 @@ function MainLayoutContent({
         <SearchParamSync onAreaSync={setSelectedArea} onAuthSync={setIsSignInOpen} />
       </React.Suspense>
 
-      {/* Top Header Section — Hidden for unauthenticated onboarding view or standalone view */}
+      {/* Top Header Section */}
       {(() => {
         const isAuthVerified = Boolean(profile?.isVerified || user);
-        const isOnboardingView = !isAuthVerified && (pathname === "/" || pathname === "/onboarding");
+        // Only hide header/footer if explicitly on /onboarding route
+        const isOnboardingView = pathname === "/onboarding";
 
         return (
           <>
@@ -216,7 +217,7 @@ function MainLayoutContent({
             )}
 
             {/* Universal Directory Search Bar (Hidden on Home, Profile, Chat, & Onboarding pages) */}
-            {pathname !== "/" && pathname !== "/profile" && pathname !== "/onboarding" && !isChatRoute && !isOnboardingView && (
+            {pathname !== "/" && pathname !== "/profile" && !isChatRoute && !isOnboardingView && (
               <React.Suspense fallback={null}>
                 <UniversalSearchBar />
               </React.Suspense>
@@ -247,7 +248,7 @@ function MainLayoutContent({
             {/* Scroll-driven Floating Post Button on Mobile */}
             {!isOnboardingView && <FloatingPostButton />}
 
-            {/* Bottom Navigation Bar — Hidden for unauthenticated onboarding view */}
+            {/* Bottom Navigation Bar */}
             {!isStandaloneView && !isOnboardingView && (
               <BottomTabBar
                 activeTab={getActiveTab()}
