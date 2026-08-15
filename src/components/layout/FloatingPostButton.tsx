@@ -14,8 +14,27 @@ export default function FloatingPostButton() {
   const [isVisible, setIsVisible] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
 
-  // Hide on onboarding, chat, or post creation pages
-  const isExcludedRoute = pathname === "/onboarding" || pathname === "/chat" || pathname.startsWith("/post");
+  // Hide on main landing page, onboarding, chat, or post creation pages
+  const isExcludedRoute = pathname === "/" || pathname === "/onboarding" || pathname === "/chat" || pathname.startsWith("/post");
+
+  // Determine button config based on current route
+  const getButtonConfig = () => {
+    if (pathname.includes("/need")) {
+      return { label: "Post Need", route: "/post/need" };
+    }
+    if (pathname.includes("/services")) {
+      return { label: "Post Service", route: "/post/service" };
+    }
+    if (pathname.includes("/shops") || pathname.includes("/offers")) {
+      return { label: "Post Offer", route: "/post/offer" };
+    }
+    if (pathname.includes("/sell")) {
+      return { label: "Post Item", route: "/post/sell" };
+    }
+    return { label: "Post / Sell", route: "/post/sell" };
+  };
+
+  const { label, route } = getButtonConfig();
 
   useEffect(() => {
     if (isExcludedRoute) return;
@@ -30,7 +49,7 @@ export default function FloatingPostButton() {
         if (currentScrollY < lastScrollY - 4) {
           setIsVisible(true); // Scrolling UP -> Arise from bottom
         } else if (currentScrollY > lastScrollY + 8) {
-          setIsVisible(false); // Scrolling DOWN fast -> Hide into bottom
+          setIsVisible(false); // Scrolling DOWN -> Hide into bottom
         } else {
           setIsVisible(true); // Settled on 2nd fold -> Visible
         }
@@ -66,18 +85,19 @@ export default function FloatingPostButton() {
         onClick={() => {
           if (!isAuthVerified) {
             if (typeof window !== "undefined") {
-              localStorage.setItem("namma_thanjai_target_post_route", "/post/sell");
+              localStorage.setItem("namma_thanjai_target_post_route", route);
               window.dispatchEvent(new Event("namma_thanjai_open_signin"));
             }
             return;
           }
-          router.push("/post/sell");
+          router.push(route);
         }}
         className="flex items-center gap-2 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-slate-955 font-heading font-black text-xs px-4 py-3 rounded-full shadow-[0_4px_20px_rgba(234,179,8,0.4)] border border-yellow-300 active:scale-95 transition-transform cursor-pointer"
       >
         <Plus className="w-4 h-4 stroke-[3]" />
-        <span className="uppercase tracking-wider">Post / Sell</span>
+        <span className="uppercase tracking-wider">{label}</span>
       </button>
     </div>
   );
 }
+

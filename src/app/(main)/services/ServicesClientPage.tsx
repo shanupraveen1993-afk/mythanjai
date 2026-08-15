@@ -85,7 +85,7 @@ export default function ServicesClientPage() {
       </div>
 
       {/* STICKY TITLE & POST BAR (Canvas-Matching Backdrop Bar) */}
-      <div className="sticky top-14 z-40 bg-[#f4f5f8]/95 backdrop-blur-md py-3 flex items-center justify-between gap-3 w-full border-0">
+      <div className="sticky top-[calc(3.5rem+env(safe-area-inset-top,0px))] z-40 bg-[#f4f5f8]/95 backdrop-blur-md py-3 flex items-center justify-between gap-3 w-full border-0">
         <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight">
           Skilled Services
         </h2>
