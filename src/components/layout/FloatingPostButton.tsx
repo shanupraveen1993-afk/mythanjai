@@ -25,16 +25,17 @@ export default function FloatingPostButton() {
     const handleScroll = () => {
       const currentScrollY = mainElement ? mainElement.scrollTop : window.scrollY;
 
-      // First fold threshold (200px)
-      if (currentScrollY < 180) {
-        setIsVisible(false);
-      } else {
-        // Show when scrolling UP or settled, hide when scrolling DOWN
-        if (currentScrollY < lastScrollY - 5) {
-          setIsVisible(true); // Scrolling UP -> Rise from bottom
-        } else if (currentScrollY > lastScrollY + 5) {
-          setIsVisible(false); // Scrolling DOWN -> Hide into bottom
+      // Activate on second fold (scrolled past 120px)
+      if (currentScrollY > 120) {
+        if (currentScrollY < lastScrollY - 4) {
+          setIsVisible(true); // Scrolling UP -> Arise from bottom
+        } else if (currentScrollY > lastScrollY + 8) {
+          setIsVisible(false); // Scrolling DOWN fast -> Hide into bottom
+        } else {
+          setIsVisible(true); // Settled on 2nd fold -> Visible
         }
+      } else {
+        setIsVisible(false);
       }
       setLastScrollY(currentScrollY);
     };
