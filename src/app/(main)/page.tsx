@@ -11,6 +11,12 @@ function RootPageContent() {
   const { user, profile, loading } = useAuth();
   const isAuthVerified = Boolean(profile?.isVerified || user);
 
+  React.useEffect(() => {
+    if (!loading && isAuthVerified) {
+      router.replace("/home");
+    }
+  }, [loading, isAuthVerified, router]);
+
   if (loading) {
     return (
       <div className="min-h-screen bg-[#0f172a] flex items-center justify-center font-heading font-black text-xs text-amber-400">
@@ -19,7 +25,7 @@ function RootPageContent() {
     );
   }
 
-  // Verified Logged In User: Render Home Marketplace Dashboard
+  // Verified Logged In User: Render Home Marketplace Dashboard while redirecting
   if (isAuthVerified) {
     return <HomeClientPage />;
   }
