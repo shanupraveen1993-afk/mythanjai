@@ -4,6 +4,8 @@ import React, { Suspense } from "react";
 import { useRouter } from "next/navigation";
 import RobotHero from "@/components/ui/robot-hero";
 
+export const dynamic = "force-dynamic";
+
 function RootPageContent() {
   const router = useRouter();
 
@@ -25,7 +27,7 @@ export default function RootPage() {
     <Suspense
       fallback={
         <div className="min-h-screen bg-slate-950 flex items-center justify-center font-heading font-black text-xs text-yellow-400">
-          Loading Namma Thanjavur...
+          Loading Namma Thanjavur Landing Page...
         </div>
       }
     >
