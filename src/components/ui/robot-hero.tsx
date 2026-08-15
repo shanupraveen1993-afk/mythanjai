@@ -936,8 +936,8 @@ export function RobotHero({
            FIRST FOLD — Full-screen hero (mobile = 100dvh)
          ══════════════════════════════════════════════════════ */}
       <div
-        className="relative z-10 w-full max-md:min-h-[100dvh] min-h-screen flex flex-col items-center justify-between pt-14 px-4 sm:px-6 select-none"
-        style={{ paddingBottom: "max(1.5rem, calc(env(safe-area-inset-bottom, 0px) + 1.25rem))" }}
+        className="relative z-10 w-full max-md:min-h-[100dvh] md:h-[calc(100vh-3.5rem)] md:max-h-[calc(100vh-3.5rem)] flex flex-col items-center justify-between pt-4 sm:pt-6 md:pt-4 px-4 sm:px-6 select-none"
+        style={{ paddingBottom: "max(1.25rem, calc(env(safe-area-inset-bottom, 0px) + 1rem))" }}
       >
 
         {/* ── Header: Logo + Headline + Subtitle ── */}
