@@ -150,27 +150,6 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
   return (
     <div className="bg-white rounded-2xl p-4 flex flex-col gap-3 shadow-[0_3px_8px_rgba(0,0,0,0.03)] transition-all duration-200 font-sans border border-slate-200/80 relative group">
 
-      {/* Send Request Button — Top Right */}
-      {!isPreview && (
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            if (!user) {
-              if (typeof window !== "undefined") {
-                window.dispatchEvent(new Event("namma_thanjai_open_signin"));
-              }
-              return;
-            }
-            toast.success("Request sent! The service provider will contact you soon.");
-          }}
-          title="Send a request to this service provider"
-          className="absolute top-3.5 right-3 z-10 flex items-center gap-1 bg-amber-500 hover:bg-amber-400 text-slate-955 font-bold text-[9px] px-2.5 py-1 rounded-full border border-amber-400 shadow-xs transition-colors cursor-pointer"
-        >
-          <Zap className="w-3 h-3 text-slate-955 fill-slate-955" />
-          <span>Send Request</span>
-        </button>
-      )}
-
       {/* Top Section: Name & Category Badges */}
       <div className="flex items-start justify-between gap-2 pr-8">
         <div className="min-w-0 flex-1">

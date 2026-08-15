@@ -156,20 +156,6 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
       isSold ? "border-slate-300 opacity-80" : "border-slate-200/80"
     }`}>
 
-      {/* Manage Button — top right for own posts */}
-      {isOwnPost && !isPreview && (
-        <div className="absolute top-3 right-3 z-10">
-          <Link
-            href="/profile?tab=my_posts"
-            onClick={(e) => e.stopPropagation()}
-            className="flex items-center gap-1 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-extrabold text-[10px] px-2.5 py-1 rounded-lg border border-yellow-400 shadow-2xs transition-colors cursor-pointer"
-          >
-            <Pencil className="w-3 h-3" />
-            <span>Manage</span>
-          </Link>
-        </div>
-      )}
-
       {/* SOLD Overlay Banner */}
       {isSold && (
         <div className="bg-slate-900 text-yellow-400 text-[10px] font-black uppercase px-3 py-1 rounded-md w-fit flex items-center gap-1">
