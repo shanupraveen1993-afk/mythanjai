@@ -995,7 +995,7 @@ export function RobotHero({
         {/* ── 3D Mascot Robot Canvas ── */}
         <div
           onClick={handleRobotTap}
-          className="relative flex-1 w-full max-w-[260px] sm:max-w-[320px] md:max-w-[400px] min-h-[150px] max-h-[230px] sm:max-h-[270px] md:max-h-[320px] flex items-center justify-center cursor-pointer my-1 select-none"
+          className="relative flex-1 w-full max-w-[250px] sm:max-w-[320px] md:max-w-[400px] min-h-[130px] max-h-[200px] sm:max-h-[260px] md:max-h-[320px] flex items-center justify-center cursor-pointer my-0.5 select-none"
           style={{ touchAction: "none" }}
         >
           {/* Warm radial glow behind robot */}
@@ -1132,9 +1132,9 @@ export function RobotHero({
           )}
         </div>
 
-        {/* ── LIVE Ticker — Full-width, visible on both mobile & desktop first fold ── */}
+        {/* ── LIVE Ticker — Full-width with distinct top gap from CTA buttons ── */}
         {displayAlerts.length > 0 && (
-          <div className="w-full max-w-2xl shrink-0 px-4 sm:px-6 pb-2">
+          <div className="w-full max-w-2xl shrink-0 px-4 sm:px-6 mt-3 sm:mt-4">
             <div className="flex items-center gap-3 w-full bg-slate-950 border border-slate-800/80 rounded-2xl py-2.5 px-4 shadow-[0_4px_18px_rgba(15,23,42,0.22)] overflow-hidden select-none">
               {/* LIVE badge */}
               <span className="shrink-0 bg-amber-500 text-slate-950 font-black text-[8px] px-2 py-0.5 rounded-md uppercase tracking-wider animate-pulse">
