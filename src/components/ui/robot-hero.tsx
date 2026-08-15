@@ -935,7 +935,10 @@ export function RobotHero({
       {/* ══════════════════════════════════════════════════════
            FIRST FOLD — Full-screen hero (mobile = 100dvh)
          ══════════════════════════════════════════════════════ */}
-      <div className="relative z-10 w-full max-md:min-h-[100dvh] min-h-screen flex flex-col items-center justify-between pt-14 pb-6 px-4 sm:px-6 select-none">
+      <div
+        className="relative z-10 w-full max-md:min-h-[100dvh] min-h-screen flex flex-col items-center justify-between pt-14 px-4 sm:px-6 select-none"
+        style={{ paddingBottom: "max(1.5rem, calc(env(safe-area-inset-bottom, 0px) + 1.25rem))" }}
+      >
 
         {/* ── Header: Logo + Headline + Subtitle ── */}
         <div className="flex flex-col items-center gap-1.5 w-full max-w-3xl mx-auto text-center shrink-0">
@@ -1160,7 +1163,7 @@ export function RobotHero({
       {/* ══════════════════════════════════════════════════════
            SECOND FOLD — Platform Pillars + How It Works
          ══════════════════════════════════════════════════════ */}
-      <div className="relative z-10 w-full bg-white border-t border-slate-100 py-16 md:py-24 px-4 sm:px-6">
+      <div className="relative z-10 w-full bg-white border-t border-slate-100 py-16 md:py-24 px-4 sm:px-6 max-md:hidden">
         <div className="max-w-6xl mx-auto flex flex-col gap-16">
 
           {/* Section Header */}
@@ -1323,7 +1326,7 @@ export function RobotHero({
       {/* ══════════════════════════════════════════════════════
            THIRD FOLD — Ready to Buy, Sell or Hire Banner
          ══════════════════════════════════════════════════════ */}
-      <div className="relative z-10 w-full py-14 md:py-20 px-4 sm:px-6 bg-white border-t border-slate-100">
+      <div className="relative z-10 w-full py-14 md:py-20 px-4 sm:px-6 bg-white border-t border-slate-100 max-md:hidden">
         <div className="max-w-5xl mx-auto">
           <div
             className="relative overflow-hidden rounded-[2rem] p-8 md:p-12 flex flex-col sm:flex-row items-center justify-between gap-8 text-center sm:text-left shadow-[0_24px_64px_rgba(180,100,0,0.2)]"
