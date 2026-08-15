@@ -105,7 +105,7 @@ body {
 .animate-marquee {
   display: inline-flex;
   white-space: nowrap;
-  animation: marqueeScroll 18s linear infinite;
+  animation: marqueeScroll 45s linear infinite;
 }
 
 /* Glow pulse ring for rotational badge */
