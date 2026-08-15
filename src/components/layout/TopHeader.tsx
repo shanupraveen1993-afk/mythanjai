@@ -34,15 +34,7 @@ export default function TopHeader({
   const { lang, toggleLanguage, t } = useLanguage();
   
   const isAuthVerified = Boolean(profile?.isVerified);
-  const [isGuestMode, setIsGuestMode] = useState(false);
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      setIsGuestMode(localStorage.getItem("namma_thanjai_guest_mode") === "true");
-    }
-  }, []);
-
-  const isLandingMode = !isAuthVerified && !isGuestMode && pathname === "/";
+  const isLandingMode = pathname === "/";
   const showCenterNav = !isLandingMode;
 
   const phoneDisplay = profile?.phone ? `+${profile.phone}` : "+919994837342";
