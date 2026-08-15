@@ -1,56 +1,40 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from "react";
-import { useRouter } from "next/navigation";
+import React, { Suspense } from "react";
 import { useAuth } from "@/hooks/use-auth";
-import RobotHero from "@/components/ui/robot-hero";
 import HomeClientPage from "./HomeClientPage";
+import OnboardingClientPage from "./onboarding/OnboardingClientPage";
 
 function RootPageContent() {
-  const router = useRouter();
   const { user, profile, loading } = useAuth();
-  const [isGuestMode, setIsGuestMode] = useState<boolean>(() => {
-    if (typeof window === "undefined") return false;
-    return localStorage.getItem("namma_thanjai_guest_mode") === "true";
-  });
-
-  useEffect(() => {
-    if (user || profile?.isVerified || isGuestMode) {
-      router.replace("/home");
-    }
-  }, [user, profile, isGuestMode, router]);
-
-  const handleExploreGuest = () => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("namma_thanjai_guest_mode", "true");
-    }
-    router.push("/home");
-  };
+  const isAuthVerified = Boolean(profile?.isVerified || user);
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center font-bold text-xs text-slate-400">
-        Loading Namma Thanjavur...
+      <div className="h-screen w-full bg-[#0f172a] flex items-center justify-center font-heading font-black text-xs text-amber-400">
+        Loading Namma Thanjai...
       </div>
     );
   }
 
-  // Root URL (/): Render Landing Page with Robot Hero directly on /
-  return (
-    <RobotHero
-      onCtaClick={handleExploreGuest}
-      onSignInClick={() => {
-        if (typeof window !== "undefined") {
-          window.dispatchEvent(new Event("namma_thanjai_open_signin"));
-        }
-      }}
-    />
-  );
+  // Unauthenticated Visitors: Render ONLY the fixed 100vh mobile Onboarding Screen (No extra folds/scroll)
+  if (!isAuthVerified) {
+    return <OnboardingClientPage />;
+  }
+
+  // Authenticated Verified Users: Render full Thanjavur Marketplace & Directory
+  return <HomeClientPage />;
 }
 
-export default function HomeLandingPage() {
+export default function RootPage() {
   return (
-    <Suspense fallback={<div className="min-h-screen bg-white flex items-center justify-center font-bold text-xs text-slate-400">Loading Namma Thanjavur...</div>}>
+    <Suspense
+      fallback={
+        <div className="h-screen w-full bg-[#0f172a] flex items-center justify-center font-heading font-black text-xs text-amber-400">
+          Loading Namma Thanjai...
+        </div>
+      }
+    >
       <RootPageContent />
     </Suspense>
   );
