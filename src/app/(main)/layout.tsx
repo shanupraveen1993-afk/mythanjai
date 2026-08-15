@@ -68,13 +68,6 @@ function MainLayoutContent({
   // Attach native Android event listeners (Back button, Keyboard, Status Bar)
   useNativeApp();
 
-  // Authentication Guard: Unauthenticated users are routed to Onboarding Robo Page
-  useEffect(() => {
-    if (!authLoading && !user && pathname !== "/onboarding") {
-      router.push("/onboarding");
-    }
-  }, [user, authLoading, pathname, router]);
-
   // Selected Area filter state, synced with URL query params
   const [selectedArea, setSelectedArea] = useState<TanjoreLocality | "All Areas">("All Areas");
   const [isSignInOpen, setIsSignInOpen] = useState(false);
