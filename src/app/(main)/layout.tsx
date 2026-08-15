@@ -186,11 +186,12 @@ function MainLayoutContent({
     }
   }, [pathname]);
 
+  const isLandingMode = pathname === "/" && !isAuthVerified;
   const isChatRoute = pathname === "/chat";
   const isPostRoute = pathname.startsWith("/post");
   const isStandaloneView = isChatRoute;
   const isOnboardingView = pathname === "/onboarding";
-  const isFullWidthPage = isStandaloneView || isOnboardingView;
+  const isFullWidthPage = isStandaloneView || isOnboardingView || isLandingMode;
 
   return (
     <div className="w-full min-h-screen max-md:h-dvh max-md:max-h-dvh max-md:overflow-hidden flex flex-col relative bg-[#f4f5f8] font-sans md:h-auto md:max-h-none md:overflow-visible">
@@ -233,7 +234,7 @@ function MainLayoutContent({
       )}
 
       {/* Universal Directory Search Bar */}
-      {pathname !== "/profile" && !isChatRoute && !isOnboardingView && !isPostRoute && (
+      {pathname !== "/profile" && !isChatRoute && !isOnboardingView && !isPostRoute && !isLandingMode && (
         <React.Suspense fallback={null}>
           <UniversalSearchBar />
         </React.Suspense>

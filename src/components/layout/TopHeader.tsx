@@ -34,7 +34,8 @@ export default function TopHeader({
   const { lang, toggleLanguage, t } = useLanguage();
 
   const isAuthVerified = Boolean(profile?.isVerified);
-  const showCenterNav = pathname !== "/onboarding" && pathname !== "/chat";
+  const isLandingMode = pathname === "/" && !isAuthVerified;
+  const showCenterNav = pathname !== "/onboarding" && pathname !== "/chat" && !isLandingMode;
 
   const phoneDisplay = profile?.phone ? `+${profile.phone}` : "+919994837342";
 
