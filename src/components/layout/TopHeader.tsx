@@ -102,14 +102,14 @@ export default function TopHeader({
 
         {/* Center: 5 Category Navigation Tabs (Hidden on Landing Page) */}
         {showCenterNav && (
-          <div className="hidden sm:flex items-center gap-1 bg-slate-100/80 p-1 rounded-xl border border-slate-200/60 font-heading">
+          <div className="hidden sm:flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 font-heading">
             <button
               type="button"
               onClick={() => router.push("/home")}
-              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer ${
                 pathname === "/home" || pathname === "/"
-                  ? "bg-white text-slate-900 shadow-2xs border border-slate-200"
-                  : "text-slate-600 hover:text-slate-900"
+                  ? "bg-yellow-500 text-slate-955 border border-yellow-400 shadow-xs"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-bold"
               }`}
             >
               Home
@@ -117,10 +117,10 @@ export default function TopHeader({
             <button
               type="button"
               onClick={() => router.push("/sell")}
-              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer ${
                 pathname === "/sell" || pathname.startsWith("/post/sell")
-                  ? "bg-white text-slate-900 shadow-2xs border border-slate-200"
-                  : "text-slate-600 hover:text-slate-900"
+                  ? "bg-yellow-500 text-slate-955 border border-yellow-400 shadow-xs"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-bold"
               }`}
             >
               Sell
@@ -128,10 +128,10 @@ export default function TopHeader({
             <button
               type="button"
               onClick={() => router.push("/need")}
-              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer ${
                 pathname === "/need" || pathname.startsWith("/post/need")
-                  ? "bg-white text-slate-900 shadow-2xs border border-slate-200"
-                  : "text-slate-600 hover:text-slate-900"
+                  ? "bg-yellow-500 text-slate-955 border border-yellow-400 shadow-xs"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-bold"
               }`}
             >
               Need
@@ -139,10 +139,10 @@ export default function TopHeader({
             <button
               type="button"
               onClick={() => router.push("/services")}
-              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer ${
                 pathname === "/services" || pathname.startsWith("/post/service")
-                  ? "bg-white text-slate-900 shadow-2xs border border-slate-200"
-                  : "text-slate-600 hover:text-slate-900"
+                  ? "bg-yellow-500 text-slate-955 border border-yellow-400 shadow-xs"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-bold"
               }`}
             >
               Local Service
@@ -150,10 +150,10 @@ export default function TopHeader({
             <button
               type="button"
               onClick={() => router.push("/shops")}
-              className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+              className={`px-3.5 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer ${
                 pathname === "/shops" || pathname === "/offers" || pathname.startsWith("/post/offer")
-                  ? "bg-white text-slate-900 shadow-2xs border border-slate-200"
-                  : "text-slate-600 hover:text-slate-900"
+                  ? "bg-yellow-500 text-slate-955 border border-yellow-400 shadow-xs"
+                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-bold"
               }`}
             >
               Local Offer
