@@ -9,6 +9,7 @@ import { useToast } from "@/context/ToastContext";
 
 import PreContactVerificationModal from "@/components/modals/PreContactVerificationModal";
 
+import { useAuth } from "@/hooks/use-auth";
 import { useLanguage } from "@/context/LanguageContext";
 
 interface ServiceCardProps {
@@ -19,6 +20,7 @@ interface ServiceCardProps {
 export default function ServiceCard({ post, isPreview = false }: ServiceCardProps) {
   const { toast } = useToast();
   const { t } = useLanguage();
+  const { user } = useAuth();
   const [saved, setSaved] = useState(false);
   const [isPreContactOpen, setIsPreContactOpen] = useState(false);
   const [contactType, setContactType] = useState<"call" | "whatsapp">("call");
@@ -166,6 +168,11 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
         <button
           onClick={(e) => {
             e.stopPropagation();
+            if (!user) {
+              toast.error("Please verify your WhatsApp number to contact service providers.");
+              if (typeof window !== "undefined") window.location.href = "/onboarding?auth=signin";
+              return;
+            }
             toast.success("Request sent! The service provider will contact you soon.");
           }}
           title="Send a request to this service provider"
