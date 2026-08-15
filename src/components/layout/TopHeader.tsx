@@ -164,59 +164,79 @@ export default function TopHeader({
 
         {/* Right: Landing Page Login Button vs Logged-In Chat & Profile Controls */}
         <div className="flex items-center gap-2 shrink-0">
-          {isAuthVerified ? (
-            <>
-              {/* Chat Icon & Profile Button for Logged In Verified Users */}
-              <button
-                onClick={() => router.push("/chat")}
-                className="relative flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3.5 bg-slate-100/90 hover:bg-slate-200 border border-slate-200/80 text-slate-800 rounded-full text-xs font-bold transition-all shadow-[0_2px_8px_-3px_rgba(0,0,0,0.1)] cursor-pointer group"
-                title="In-App Safety Chat"
-              >
-                <MessageSquare className="w-4 h-4 text-slate-600 group-hover:text-emerald-600 shrink-0" />
-                <span className="hidden sm:inline text-xs font-bold text-slate-700 ml-1.5">Chat</span>
-                <span className="absolute top-0 right-0 sm:right-2 w-2.5 h-2.5 rounded-full bg-red-500 border-2 border-white animate-pulse" />
-              </button>
+          {(() => {
+            const isChatActive = pathname === "/chat";
+            const isProfileActive = pathname === "/profile" || activeTab === "profile";
 
-              <button
-                onClick={() => onTabChange?.("profile")}
-                className="relative flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3.5 bg-slate-100/90 hover:bg-slate-200 border border-slate-200/80 text-slate-800 font-bold rounded-full text-xs transition-all shadow-[0_2px_8px_-3px_rgba(0,0,0,0.1)] cursor-pointer group"
-                title={`Verified Profile (${phoneDisplay})`}
-              >
-                <User className="w-4 h-4 text-slate-600 group-hover:text-slate-900 shrink-0" />
-                <span className="hidden md:inline text-xs font-bold text-slate-700 ml-1.5">Profile</span>
-              </button>
-            </>
-          ) : isLandingMode ? (
-            /* ONLY Primary Yellow Login Button on Landing Page for Unauthenticated Visitors */
-            <button
-              type="button"
-              onClick={onSignInClick}
-              className="flex items-center justify-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-black text-xs px-4 py-2 rounded-xl shadow-md border border-yellow-400 cursor-pointer active:scale-95 transition-all"
-            >
-              <User className="w-4 h-4 text-slate-955" />
-              <span>Login</span>
-            </button>
-          ) : (
-            <>
-              {/* Primary Yellow Login Button & Profile Button for Guests on App Pages */}
+            return isAuthVerified ? (
+              <>
+                {/* Chat Icon & Profile Button for Logged In Verified Users */}
+                <button
+                  type="button"
+                  onClick={() => router.push("/chat")}
+                  className={`relative flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3.5 rounded-full text-xs font-bold transition-all shadow-xs cursor-pointer group ${
+                    isChatActive
+                      ? "bg-emerald-600 text-white border border-emerald-500 shadow-xs font-black"
+                      : "bg-slate-100/90 hover:bg-slate-200 border border-slate-200/80 text-slate-800"
+                  }`}
+                  title="In-App Safety Chat"
+                >
+                  <MessageSquare className={`w-4 h-4 shrink-0 ${isChatActive ? "text-white fill-current" : "text-slate-600 group-hover:text-emerald-600"}`} />
+                  <span className="hidden sm:inline text-xs ml-1.5 font-black">Chat</span>
+                  <span className="absolute top-0 right-0 sm:right-2 w-2.5 h-2.5 rounded-full bg-red-500 border-2 border-white animate-pulse" />
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => onTabChange?.("profile")}
+                  className={`relative flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3.5 rounded-full text-xs transition-all cursor-pointer group ${
+                    isProfileActive
+                      ? "bg-white text-slate-955 border border-slate-300 shadow-xs font-black"
+                      : "bg-slate-100/90 hover:bg-slate-200 border border-slate-200/80 text-slate-800 font-bold"
+                  }`}
+                  title={`Verified Profile (${phoneDisplay})`}
+                >
+                  <User className={`w-4 h-4 shrink-0 ${isProfileActive ? "text-slate-900" : "text-slate-600 group-hover:text-slate-900"}`} />
+                  <span className="hidden md:inline text-xs ml-1.5 font-black">Profile</span>
+                </button>
+              </>
+            ) : isLandingMode ? (
+              /* ONLY Primary Yellow Login Button on Landing Page for Unauthenticated Visitors */
               <button
                 type="button"
                 onClick={onSignInClick}
-                className="flex items-center justify-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-black text-xs px-3.5 py-1.5 rounded-xl shadow-md border border-yellow-400 cursor-pointer active:scale-95 transition-all"
+                className="flex items-center justify-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-black text-xs px-4 py-2 rounded-xl shadow-md border border-yellow-400 cursor-pointer active:scale-95 transition-all"
               >
                 <User className="w-4 h-4 text-slate-955" />
                 <span>Login</span>
               </button>
+            ) : (
+              <>
+                {/* Primary Yellow Login Button & Profile Button for Guests on App Pages */}
+                <button
+                  type="button"
+                  onClick={onSignInClick}
+                  className="flex items-center justify-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-black text-xs px-3.5 py-1.5 rounded-xl shadow-md border border-yellow-400 cursor-pointer active:scale-95 transition-all"
+                >
+                  <User className="w-4 h-4 text-slate-955" />
+                  <span>Login</span>
+                </button>
 
-              <button
-                onClick={() => onTabChange?.("profile")}
-                className="flex items-center justify-center w-9 h-9 bg-slate-100/90 hover:bg-slate-200 border border-slate-200/80 text-slate-800 font-bold text-xs transition-all shadow-2xs cursor-pointer rounded-full group"
-                title="Profile"
-              >
-                <User className="w-4 h-4 text-slate-600 group-hover:text-slate-900 shrink-0" />
-              </button>
-            </>
-          )}
+                <button
+                  type="button"
+                  onClick={() => onTabChange?.("profile")}
+                  className={`flex items-center justify-center w-9 h-9 rounded-full transition-all cursor-pointer group ${
+                    isProfileActive
+                      ? "bg-white text-slate-955 border border-slate-300 shadow-xs font-black"
+                      : "bg-slate-100/90 hover:bg-slate-200 border border-slate-200/80 text-slate-800 font-bold"
+                  }`}
+                  title="Profile"
+                >
+                  <User className="w-4 h-4 text-slate-600 group-hover:text-slate-900 shrink-0" />
+                </button>
+              </>
+            );
+          })()}
         </div>
       </div>
     </header>

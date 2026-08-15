@@ -93,10 +93,16 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
 
         {/* Header Close */}
         <button
-          onClick={onClose}
-          className="absolute top-4 right-4 p-1 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+          type="button"
+          onClick={() => {
+            setStep("phone");
+            setOtpCode("");
+            onClose();
+          }}
+          className="absolute top-4 right-4 p-2 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer z-50"
+          title="Close Modal"
         >
-          <X className="w-4 h-4" />
+          <X className="w-5 h-5 stroke-[2.5]" />
         </button>
 
         {/* Modal Body */}
