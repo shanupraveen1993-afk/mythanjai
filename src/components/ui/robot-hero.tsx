@@ -1060,6 +1060,7 @@ export function RobotHero({
                   type="button"
                   onClick={() => {
                     if (typeof window !== "undefined") {
+                      localStorage.removeItem("namma_thanjai_target_post_route");
                       window.dispatchEvent(new Event("namma_thanjai_open_signin"));
                     }
                     if (onSignInClick) onSignInClick();
@@ -1359,6 +1360,7 @@ export function RobotHero({
               type="button"
               onClick={() => {
                 if (typeof window !== "undefined") {
+                  localStorage.removeItem("namma_thanjai_target_post_route");
                   window.dispatchEvent(new Event("namma_thanjai_open_signin"));
                 }
                 if (onSignInClick) onSignInClick();

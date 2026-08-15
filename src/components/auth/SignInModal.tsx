@@ -68,27 +68,18 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
         onClose();
 
         const isHeaderLogin = typeof window !== "undefined" && sessionStorage.getItem("namma_thanjai_header_login_active") === "true";
+        const pendingTarget = typeof window !== "undefined" ? localStorage.getItem("namma_thanjai_target_post_route") : null;
+
         if (typeof window !== "undefined") {
           sessionStorage.removeItem("namma_thanjai_header_login_active");
+          localStorage.removeItem("namma_thanjai_target_post_route");
+          window.scrollTo({ top: 0, left: 0, behavior: "instant" });
         }
 
-        if (isHeaderLogin) {
-          if (typeof window !== "undefined") {
-            localStorage.removeItem("namma_thanjai_target_post_route");
-            window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-          }
-          router.refresh();
+        if (!isHeaderLogin && pendingTarget && pendingTarget.startsWith("/post/")) {
+          router.push(pendingTarget);
         } else {
-          const pendingTarget = typeof window !== "undefined" ? localStorage.getItem("namma_thanjai_target_post_route") : null;
-          if (pendingTarget) {
-            localStorage.removeItem("namma_thanjai_target_post_route");
-            router.push(pendingTarget);
-          } else {
-            if (typeof window !== "undefined") {
-              window.scrollTo({ top: 0, left: 0, behavior: "instant" });
-            }
-            router.refresh();
-          }
+          router.refresh();
         }
       } else {
         toast.error("Verification failed.");

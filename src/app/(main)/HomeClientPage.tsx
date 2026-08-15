@@ -145,9 +145,7 @@ export default function HomeClientPage() {
   }, []);
 
   return (
-    <div className="w-full flex flex-col bg-[#f4f5f8] text-slate-800 min-h-screen font-sans">
-      {/* ── UNIVERSAL MARKETPLACE FEED ──────────────────────────────── */}
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-4 pb-24 flex flex-col gap-8">
+    <div className="w-full flex flex-col gap-8 text-slate-800 font-sans mt-4 pb-24">
 
         {/* Hero Banner */}
         <div className="relative w-full min-h-[180px] sm:min-h-[220px] rounded-3xl overflow-hidden bg-slate-950 text-white flex items-center px-6 sm:px-10 py-8 shadow-lg">
@@ -240,6 +238,5 @@ export default function HomeClientPage() {
         />
 
       </div>
-    </div>
   );
 }
