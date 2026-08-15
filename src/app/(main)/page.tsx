@@ -11,7 +11,6 @@ function RootPageContent() {
   const isAuthVerified = Boolean(profile?.isVerified);
 
   useEffect(() => {
-    // If user is already logged in, take them straight to the app home dashboard
     if (!loading && isAuthVerified) {
       router.replace("/home");
     }
@@ -25,12 +24,15 @@ function RootPageContent() {
     );
   }
 
-  // If logged in, return null while redirecting to /home
   if (isAuthVerified) {
-    return null;
+    return (
+      <div className="min-h-screen bg-[#f4f5f8] flex items-center justify-center font-bold text-xs text-slate-400">
+        Redirecting to Home...
+      </div>
+    );
   }
 
-  // Guest Visitor at root /: Render ONLY the rich Robot Hero Landing Page!
+  // Root URL (https://mythanjai.vercel.app/): ONLY renders the 3D Mascot Robot Landing Page!
   return (
     <RobotHero
       onCtaClick={() => router.push("/home")}
