@@ -993,39 +993,23 @@ export function RobotHero({
             </div>
           ) : (
             <div className="flex flex-col gap-2.5 bg-slate-900/90 backdrop-blur-md border border-slate-800 p-3.5 rounded-2xl shadow-xl w-full">
-              {/* 2 Primary Action Buttons */}
-              <div className="grid grid-cols-2 gap-2 w-full">
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (typeof window !== "undefined") {
-                      window.dispatchEvent(new Event("namma_thanjai_open_signin"));
-                    }
-                    if (onSignInClick) {
-                      onSignInClick();
-                    }
-                  }}
-                  className="bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-black text-xs px-3 py-2.5 rounded-xl border border-yellow-400 shadow-md flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer"
-                >
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>Register to Post</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (onCtaClick) {
-                      onCtaClick();
-                    } else {
-                      localStorage.setItem("namma_thanjai_guest_mode", "true");
-                      router.push("/sell");
-                    }
-                  }}
-                  className="bg-white/10 hover:bg-white/20 text-white font-heading font-extrabold text-xs px-3 py-2.5 rounded-xl border border-white/20 shadow-md flex items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer"
-                >
-                  <span>Explore Marketplace</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-yellow-400" />
-                </button>
-              </div>
+              {/* Single Primary Action Button: Register & Explore */}
+              <button
+                type="button"
+                onClick={() => {
+                  if (typeof window !== "undefined") {
+                    window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+                  }
+                  if (onSignInClick) {
+                    onSignInClick();
+                  }
+                }}
+                className="w-full bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-black text-xs sm:text-sm py-3 rounded-xl border border-yellow-400 shadow-md flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer uppercase tracking-wider"
+              >
+                <Sparkles className="w-4 h-4 fill-slate-955 text-slate-955" />
+                <span>Register & Explore</span>
+                <ArrowRight className="w-4 h-4 stroke-[3]" />
+              </button>
 
               {/* Expandable Registered / WhatsApp Verification Input Form */}
               {showRegisterForm && (
