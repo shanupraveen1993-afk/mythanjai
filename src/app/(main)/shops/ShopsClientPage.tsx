@@ -85,11 +85,12 @@ export default function ShopsClientPage() {
         <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight">
           Local Offers
         </h2>
+        {/* SECONDARY POST BUTTON */}
         <button
           onClick={handlePostOffer}
-          className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-black px-4 py-2 rounded-xl text-xs sm:text-sm transition-all border border-yellow-400 cursor-pointer shadow-md active:scale-95 shrink-0"
+          className="flex items-center gap-1.5 bg-slate-100 hover:bg-slate-200/90 text-slate-800 font-bold px-3.5 py-1.5 rounded-xl text-xs transition-all border border-slate-250 cursor-pointer shadow-2xs active:scale-95 shrink-0"
         >
-          <Plus className="w-4 h-4 stroke-[3]" />
+          <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
           <span>Post Offer</span>
         </button>
       </div>
