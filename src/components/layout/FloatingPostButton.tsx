@@ -14,8 +14,8 @@ export default function FloatingPostButton() {
   const [isVisible, setIsVisible] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
 
-  // Hide on main landing page, onboarding, chat, or post creation pages
-  const isExcludedRoute = pathname === "/" || pathname === "/onboarding" || pathname === "/chat" || pathname.startsWith("/post");
+  // Hide on main landing page, home page, onboarding, chat, or post creation pages
+  const isExcludedRoute = pathname === "/" || pathname === "/home" || pathname === "/onboarding" || pathname === "/chat" || pathname.startsWith("/post");
 
   // Determine button config based on current route
   const getButtonConfig = () => {

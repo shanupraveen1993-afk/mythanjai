@@ -80,8 +80,8 @@ export default function ShopsClientPage() {
         </div>
       </div>
 
-      {/* 2. STICKY TITLE & POST BAR (Locks under TopHeader when scrolled) */}
-      <div className="sticky top-[calc(3.5rem+env(safe-area-inset-top,0px))] z-40 bg-[#f4f5f8]/95 backdrop-blur-md py-2.5 flex items-center justify-between gap-3 w-full border-b border-slate-200/60">
+      {/* 2. STICKY TITLE & POST BAR (Normal flow below hero, locks under TopHeader when scrolled) */}
+      <div className="sticky top-0 z-30 bg-[#f4f5f8]/95 backdrop-blur-md py-3 flex items-center justify-between gap-3 w-full border-b border-slate-200/80">
         <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight">
           Local Offers
         </h2>
