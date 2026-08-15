@@ -292,31 +292,34 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
 
         {/* Footer CTAs: Default = Get Direction Full-Width. If show_phone is enabled, show Call/WhatsApp */}
         <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-100 mt-auto">
+          {/* PRIMARY BUTTON: Get Directions */}
           <a
             href={directionUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 flex items-center justify-center gap-1.5 h-9 bg-slate-900 hover:bg-slate-800 text-white font-bold px-4 rounded-xl text-xs transition-all border border-slate-800 cursor-pointer shadow-xs"
+            className="flex-1 flex items-center justify-center gap-1.5 h-9 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-black px-4 rounded-xl text-xs transition-all border border-yellow-400 cursor-pointer shadow-2xs active:scale-95"
           >
-            <Navigation className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" />
+            <Navigation className="w-3.5 h-3.5 fill-current" />
             <span>{t("getDirection")}</span>
           </a>
 
           {post.show_phone && (
             <div className="flex items-center gap-2 shrink-0">
+              {/* SECONDARY BUTTON: Call */}
               <a
                 href={callUrl}
-                className="flex items-center gap-1.5 h-9 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-3 rounded-xl text-xs transition-all border border-slate-200 cursor-pointer"
+                className="flex items-center gap-1.5 h-9 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-3.5 rounded-xl text-xs transition-all border border-slate-250 cursor-pointer active:scale-95 shadow-2xs"
               >
                 <Phone className="w-3.5 h-3.5 fill-current" />
                 <span>{t("call")}</span>
               </a>
 
+              {/* WHATSAPP BUTTON */}
               <a
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 h-9 bg-[#00a884] hover:bg-[#008f6f] text-white font-bold px-3.5 rounded-xl text-xs transition-all cursor-pointer"
+                className="flex items-center gap-1.5 h-9 bg-[#00a884] hover:bg-[#008f6f] text-white font-bold px-3.5 rounded-xl text-xs transition-all cursor-pointer active:scale-95 shadow-2xs"
               >
                 <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
                 <span>{t("whatsApp")}</span>
