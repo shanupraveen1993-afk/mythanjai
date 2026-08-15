@@ -72,7 +72,8 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
           localStorage.removeItem("namma_thanjai_target_post_route");
           router.push(pendingTarget);
         } else {
-          router.push("/post/sell");
+          // If logged in via Header Login button, stay on current page (refresh auth state)
+          router.refresh();
         }
       } else {
         toast.error("Verification failed.");

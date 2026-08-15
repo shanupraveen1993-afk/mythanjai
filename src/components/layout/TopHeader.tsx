@@ -204,7 +204,10 @@ export default function TopHeader({
               /* ONLY Primary Yellow Login Button on Landing Page for Unauthenticated Visitors */
               <button
                 type="button"
-                onClick={onSignInClick}
+                onClick={() => {
+                  if (typeof window !== "undefined") localStorage.removeItem("namma_thanjai_target_post_route");
+                  onSignInClick?.();
+                }}
                 className="flex items-center justify-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-black text-xs px-4 py-2 rounded-xl shadow-md border border-yellow-400 cursor-pointer active:scale-95 transition-all"
               >
                 <User className="w-4 h-4 text-slate-955" />
@@ -215,7 +218,10 @@ export default function TopHeader({
                 {/* Primary Yellow Login Button & Profile Button for Guests on App Pages */}
                 <button
                   type="button"
-                  onClick={onSignInClick}
+                  onClick={() => {
+                    if (typeof window !== "undefined") localStorage.removeItem("namma_thanjai_target_post_route");
+                    onSignInClick?.();
+                  }}
                   className="flex items-center justify-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-black text-xs px-3.5 py-1.5 rounded-xl shadow-md border border-yellow-400 cursor-pointer active:scale-95 transition-all"
                 >
                   <User className="w-4 h-4 text-slate-955" />
