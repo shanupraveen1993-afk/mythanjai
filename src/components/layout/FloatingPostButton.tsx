@@ -21,27 +21,33 @@ export default function FloatingPostButton() {
     if (isExcludedRoute) return;
 
     const mainElement = document.querySelector("main");
-    if (!mainElement) return;
 
     const handleScroll = () => {
-      const currentScrollY = mainElement.scrollTop;
+      const currentScrollY = mainElement ? mainElement.scrollTop : window.scrollY;
 
-      // Only activate after scrolling down past 250px
-      if (currentScrollY < 250) {
+      // First fold threshold (200px)
+      if (currentScrollY < 180) {
         setIsVisible(false);
       } else {
-        // Show when scrolling UP, hide when scrolling DOWN
-        if (currentScrollY < lastScrollY) {
-          setIsVisible(true); // Scrolling UP
-        } else {
-          setIsVisible(false); // Scrolling DOWN
+        // Show when scrolling UP or settled, hide when scrolling DOWN
+        if (currentScrollY < lastScrollY - 5) {
+          setIsVisible(true); // Scrolling UP -> Rise from bottom
+        } else if (currentScrollY > lastScrollY + 5) {
+          setIsVisible(false); // Scrolling DOWN -> Hide into bottom
         }
       }
       setLastScrollY(currentScrollY);
     };
 
-    mainElement.addEventListener("scroll", handleScroll, { passive: true });
-    return () => mainElement.removeEventListener("scroll", handleScroll);
+    if (mainElement) {
+      mainElement.addEventListener("scroll", handleScroll, { passive: true });
+    }
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => {
+      if (mainElement) mainElement.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, [lastScrollY, isExcludedRoute]);
 
   if (isExcludedRoute) return null;
