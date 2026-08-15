@@ -26,6 +26,14 @@ body {
   scrollbar-width: none;
 }
 
+/* Custom Select Dropdown Arrow */
+.custom-select-arrow {
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='20' height='20' viewBox='0 0 24 24' fill='none' stroke='%23475569' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-position: right 0.6rem center;
+  background-repeat: no-repeat;
+}
+
 /* Leaflet map styles container */
 .leaflet-container {
   width: 100%;
