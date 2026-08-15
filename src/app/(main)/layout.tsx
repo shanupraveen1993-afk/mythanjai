@@ -46,12 +46,19 @@ function SearchParamSync({
       onAreaSync("All Areas");
     }
 
-    if (searchParams.get("auth") === "popup") {
+    const authParam = searchParams.get("auth");
+    if (authParam === "popup" || authParam === "signin" || authParam === "register") {
       onAuthSync(true);
     } else {
       onAuthSync(false);
     }
   }, [searchParams, onAreaSync, onAuthSync]);
+
+  useEffect(() => {
+    const handleCustomOpen = () => onAuthSync(true);
+    window.addEventListener("namma_thanjai_open_signin", handleCustomOpen);
+    return () => window.removeEventListener("namma_thanjai_open_signin", handleCustomOpen);
+  }, [onAuthSync]);
 
   return null;
 }

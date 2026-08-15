@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { Phone, MessageSquare, MapPin, Store, Sparkles, ShoppingBag, Utensils, Shirt, Calendar, Tag, Camera, Navigation, Eye, Share2, Bookmark } from "lucide-react";
+import { Phone, MessageSquare, MapPin, Store, Sparkles, ShoppingBag, Utensils, Shirt, Calendar, Tag, Camera, Navigation, Eye, Share2, Bookmark, Lock } from "lucide-react";
 import { ShopPost } from "@/types";
 import { formatRelativeTime } from "@/lib/constants";
 import { useToast } from "@/context/ToastContext";
@@ -25,9 +25,11 @@ import { useLanguage } from "@/context/LanguageContext";
 interface ShopCardProps {
   post: ShopPost;
   isPreview?: boolean;
+  index?: number;
+  isGuest?: boolean;
 }
 
-export default function ShopCard({ post, isPreview = false }: ShopCardProps) {
+export default function ShopCard({ post, isPreview = false, index, isGuest = false }: ShopCardProps) {
   const { toast } = useToast();
   const { t } = useLanguage();
   const [saved, setSaved] = useState(false);
@@ -71,7 +73,51 @@ export default function ShopCard({ post, isPreview = false }: ShopCardProps) {
   const whatsappGroupShareUrl = `https://wa.me/?text=${encodeURIComponent(
     `🔥 Offer from *${post.shop_name}* in ${post.area_tag}, Thanjavur:\n"${post.offer_title || "Exclusive Deal"}"\nCheck out on Namma Thanjai!`
   )}`;
-  const directionUrl = post.google_maps_url || `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${post.shop_name} ${post.area_tag} Thanjavur`)}`;
+  const directionUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+    `${post.shop_name} ${post.address_text || post.area_tag || "Thanjavur"}`
+  )}`;
+
+  const isBlurred = isGuest && index !== undefined && index >= 1;
+
+  if (isBlurred) {
+    return (
+      <div 
+        onClick={() => {
+          if (typeof window !== "undefined") {
+            window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+          }
+        }}
+        className="bg-white rounded-3xl border border-amber-300 p-5 shadow-md relative overflow-hidden cursor-pointer group hover:border-yellow-400 transition-all min-h-[220px] flex flex-col justify-center"
+      >
+        <div className="filter blur-[7px] pointer-events-none opacity-40 select-none">
+          <div className="flex items-center justify-between mb-3">
+            <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-bold">{post.category || "Store Offer"}</span>
+            <span className="text-xs font-bold text-slate-400">{post.area_tag || "Thanjavur"}</span>
+          </div>
+          <h3 className="font-heading font-black text-base text-slate-900 line-clamp-1">{post.shop_name}</h3>
+          <p className="text-xs text-slate-500 font-bold mt-1 line-clamp-2">{post.offer_title}</p>
+          <div className="mt-4 h-24 bg-slate-200 rounded-2xl w-full" />
+        </div>
+        <div className="absolute inset-0 bg-slate-955/75 backdrop-blur-[2px] flex flex-col items-center justify-center p-6 text-center text-white z-20">
+          <div className="w-12 h-12 rounded-2xl bg-yellow-500 text-slate-955 flex items-center justify-center mb-2.5 shadow-xl animate-bounce">
+            <Lock className="w-6 h-6 stroke-[2.5]" />
+          </div>
+          <span className="font-heading font-black text-sm text-yellow-400 uppercase tracking-wider">
+            Unlock 2nd Offer & Beyond
+          </span>
+          <p className="text-xs text-slate-200 font-bold mt-1 max-w-[240px] leading-relaxed">
+            Verify your WhatsApp mobile number to unlock all local store deals & direct contact numbers.
+          </p>
+          <button
+            type="button"
+            className="mt-3.5 bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-500 hover:brightness-105 active:scale-95 text-slate-955 font-heading font-black text-xs px-5 py-2.5 rounded-xl shadow-lg border border-yellow-400 cursor-pointer transition-all"
+          >
+            Verify WhatsApp to Unlock →
+          </button>
+        </div>
+      </div>
+    );
+  }
 
   const handleShare = (e: React.MouseEvent) => {
     e.stopPropagation();

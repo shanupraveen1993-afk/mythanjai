@@ -198,11 +198,11 @@ export default function CategoryFeedClient({ segmentType }: CategoryFeedClientPr
   }, [filteredBySearch, sortBy]);
 
   // Card renderer per type
-  const renderCard = (post: any) => {
+  const renderCard = (post: any, index: number) => {
     if (segmentType === "services") {
       return <ServiceCard post={post as ServiceProviderPost} />;
     } else if (segmentType === "shops") {
-      return <ShopCard post={post as ShopPost} />;
+      return <ShopCard post={post as ShopPost} index={index} isGuest={!user} />;
     }
     return <NeedCard post={post as NeedOrSalePost} />;
   };
@@ -331,9 +331,9 @@ export default function CategoryFeedClient({ segmentType }: CategoryFeedClientPr
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 pb-4">
-            {sortedPosts.map((post: any) => (
+            {sortedPosts.map((post: any, index: number) => (
               <div key={post.id} className="transition-all duration-300">
-                {renderCard(post)}
+                {renderCard(post, index)}
               </div>
             ))}
           </div>

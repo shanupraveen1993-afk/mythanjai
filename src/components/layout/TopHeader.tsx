@@ -34,7 +34,14 @@ export default function TopHeader({
   const { lang, toggleLanguage, t } = useLanguage();
   
   const isAuthVerified = Boolean(profile?.isVerified);
-  const isGuestMode = typeof window !== "undefined" && localStorage.getItem("namma_thanjai_guest_mode") === "true";
+  const [isGuestMode, setIsGuestMode] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsGuestMode(localStorage.getItem("namma_thanjai_guest_mode") === "true");
+    }
+  }, []);
+
   const isLandingMode = !isAuthVerified && !isGuestMode && pathname === "/";
   const showCenterNav = !isLandingMode;
 

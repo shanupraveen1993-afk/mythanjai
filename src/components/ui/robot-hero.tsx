@@ -998,10 +998,11 @@ export function RobotHero({
                 <button
                   type="button"
                   onClick={() => {
+                    if (typeof window !== "undefined") {
+                      window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+                    }
                     if (onSignInClick) {
                       onSignInClick();
-                    } else {
-                      router.push("/?auth=signin");
                     }
                   }}
                   className="bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-black text-xs px-3 py-2.5 rounded-xl border border-yellow-400 shadow-md flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer"
