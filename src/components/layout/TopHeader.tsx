@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { MapPin, Plus, User, ShieldCheck, Check, MessageSquare, Globe } from "lucide-react";
 import { TANJORE_LOCALITIES, TanjoreLocality } from "@/lib/constants";
+import SearchableAreaDropdown from "./SearchableAreaDropdown";
 import { AppTab } from "./BottomTabBar";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
@@ -87,6 +88,11 @@ export default function TopHeader({
               <div className="w-2 h-2 rounded-full bg-yellow-500 ml-0.5 shrink-0" />
             </div>
           </div>
+
+          <SearchableAreaDropdown
+            selectedArea={selectedArea}
+            onAreaChange={onAreaChange}
+          />
         </div>
 
         {/* Center: 6 Channel Navigation Tabs (Visible post-login & on internal pages) */}
@@ -153,20 +159,7 @@ export default function TopHeader({
         {/* Right: Language Switcher, Chat Notification Icon & Profile Button */}
         <div className="flex items-center gap-2 shrink-0">
           
-          {/* Language Switcher Button (E ↔ த Tamil Toggle) */}
-          <button
-            onClick={toggleLanguage}
-            className="flex items-center justify-center h-9 px-2.5 bg-yellow-500/10 hover:bg-yellow-500/20 border border-yellow-500/30 text-slate-900 rounded-full text-xs font-black transition-all shadow-2xs cursor-pointer group"
-            title={lang === "ta" ? "Switch to English" : "தமிழ் மொழியில் மாற்றுக (Switch to Tamil)"}
-          >
-            <Globe className="w-3.5 h-3.5 text-yellow-600 group-hover:scale-110 transition-transform shrink-0 mr-1" />
-            <span className="text-yellow-700 font-heading font-black text-xs">
-              {lang === "ta" ? "EN" : "த"}
-            </span>
-            <span className="hidden md:inline text-[10px] font-extrabold text-slate-600 ml-1">
-              {lang === "ta" ? "English" : "தமிழ்"}
-            </span>
-          </button>
+          {/* Chat Notification Icon & Profile Button */}
 
           <button
             onClick={() => router.push("/chat")}

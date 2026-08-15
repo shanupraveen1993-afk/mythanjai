@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useFirestore } from "@/hooks/use-firestore";
 import NeedCard from "@/components/cards/NeedCard";
@@ -25,15 +25,17 @@ export default function NeedClientPage() {
     category: "All",
   });
 
-  const filteredPosts = React.useMemo(() => {
-    let localPosts: NeedOrSalePost[] = [];
-    if (typeof window !== "undefined") {
-      try {
-        const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-        localPosts = stored.filter((p: any) => p.type?.toUpperCase() === "NEED");
-      } catch (e) {}
-    }
+  const [localPosts, setLocalPosts] = useState<NeedOrSalePost[]>([]);
 
+  useEffect(() => {
+    try {
+      const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+      const needPosts = stored.filter((p: any) => p.type?.toUpperCase() === "NEED");
+      setLocalPosts(needPosts);
+    } catch (e) {}
+  }, []);
+
+  const filteredPosts = React.useMemo(() => {
     const ids = new Set([...(firestorePosts || []).map((p) => p.id), ...localPosts.map((p) => p.id)]);
     const seeds = SAMPLE_POSTS.filter((p) => !ids.has(p.id));
     let list = [...localPosts, ...seeds, ...(firestorePosts || [])];
@@ -52,7 +54,7 @@ export default function NeedClientPage() {
       list.sort((a, b) => (Number(b.price) || 0) - (Number(a.price) || 0));
     }
     return list;
-  }, [firestorePosts, selectedCategory, sortBy]);
+  }, [firestorePosts, localPosts, selectedCategory, sortBy]);
 
   return (
     <div className="flex flex-col gap-3 pb-24 w-full font-sans">

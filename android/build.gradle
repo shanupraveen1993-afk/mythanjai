@@ -34,6 +34,13 @@ subprojects {
                 }
             }
         }
+        if (project.plugins.hasPlugin('java-base') || project.plugins.hasPlugin('java')) {
+            project.java {
+                toolchain {
+                    languageVersion = JavaLanguageVersion.of(17)
+                }
+            }
+        }
     }
 }
 

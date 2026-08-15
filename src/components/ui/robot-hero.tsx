@@ -10,6 +10,7 @@ import { motion, useScroll, useTransform, AnimatePresence } from "framer-motion"
 import { PiShoppingBagBold } from "react-icons/pi";
 import { ArrowRight, Loader2, Phone, CheckCircle, Megaphone, Wrench, Store, Search, MapPin, Sparkles, ChevronDown } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
+import { useToast } from "@/context/ToastContext";
 import { TANJORE_LOCALITIES, TanjoreLocality } from "@/lib/constants";
 
 class HeartCurve extends THREE.Curve<THREE.Vector3> {
@@ -778,16 +779,6 @@ function AntennaNavbar({
             </div>
           </div>
 
-          {/* Simple sign in button on right side */}
-          <div className="flex items-center gap-3">
-            <button
-              onClick={onCtaClick}
-              className="px-6 py-2.5 rounded-full bg-yellow-500 text-slate-950 text-xs font-black hover:bg-yellow-600 transition-colors flex items-center gap-2 shadow-[0_0_20px_rgba(234,179,8,0.4)]"
-            >
-              {ctaText}
-              <PiShoppingBagBold size={14} />
-            </button>
-          </div>
         </div>
 
         <motion.div
@@ -832,6 +823,7 @@ export function RobotHero({
     router.push(`/${searchTab}?${currentParams.toString()}`);
   };
 
+  const { toast } = useToast();
   const { profile, updatePhone } = useAuth();
   const [mobileNumber, setMobileNumber] = useState("");
   const [isVerifying, setIsVerifying] = useState(false);
@@ -839,20 +831,21 @@ export function RobotHero({
   const handleMobileSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!mobileNumber || mobileNumber.length < 10) {
-      alert("Please enter a valid 10-digit mobile number.");
+      toast.error("Please enter a valid 10-digit mobile number.");
       return;
     }
     setIsVerifying(true);
     try {
       const result = await updatePhone(mobileNumber);
       if (result?.success) {
+        toast.success("Mobile number verified successfully!");
         const confetti = (await import("canvas-confetti")).default;
         confetti({ particleCount: 80, spread: 60 });
       } else {
-        alert("Verification login failed.");
+        toast.error("Verification login failed.");
       }
     } catch (err: any) {
-      alert("Verification login error: " + err.message);
+      toast.error("Verification login error: " + (err.message || "Failed"));
     } finally {
       setIsVerifying(false);
     }
@@ -956,25 +949,67 @@ export function RobotHero({
           </Canvas>
         </div>
 
-        {/* 4. Action Footer Group (CTA button lifted higher up with bottom padding) */}
-        <div className="w-full max-w-xs sm:max-w-sm md:max-w-md shrink-0 flex flex-col gap-1.5 sm:gap-2 px-1 pb-1 sm:pb-2 mb-0">
-          {/* 3 Small Steps Explanation */}
-          <div className="flex items-center justify-center gap-2 sm:gap-3 mb-1.5 text-[10px] sm:text-[11px] font-black text-slate-500 uppercase tracking-tight">
-            <span className="flex items-center gap-1"><Megaphone className="w-3.5 h-3.5 text-emerald-500"/> Post</span>
-            <span className="text-slate-300">➔</span>
-            <span className="flex items-center gap-1"><Phone className="w-3.5 h-3.5 text-emerald-500"/> Connect</span>
-            <span className="text-slate-300">➔</span>
-            <span className="flex items-center gap-1"><CheckCircle className="w-3.5 h-3.5 text-emerald-500"/> Done</span>
-          </div>
+        {/* 4. Action Footer Group (Centralized Registration & Mobile Verification) */}
+        <div className="w-full max-w-xs sm:max-w-sm md:max-w-md shrink-0 flex flex-col gap-2 px-1 pb-1 sm:pb-2 mb-0">
+          
+          {profile?.isVerified ? (
+            <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 p-3 rounded-2xl flex items-center justify-between gap-2 shadow-xs">
+              <div className="flex items-center gap-2">
+                <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0" />
+                <div className="text-left">
+                  <span className="font-heading font-black text-xs block text-slate-900">Verified Member</span>
+                  <span className="text-[10px] font-bold text-slate-600">+{profile?.phone || mobileNumber}</span>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={onCtaClick}
+                className="bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-black text-xs px-3.5 py-1.5 rounded-xl border border-yellow-400 cursor-pointer shadow-xs active:scale-95 shrink-0"
+              >
+                Explore Marketplace →
+              </button>
+            </div>
+          ) : (
+            <form onSubmit={handleMobileSubmit} className="flex flex-col gap-2 bg-slate-900/90 backdrop-blur-md border border-slate-800 p-3 rounded-2xl shadow-xl">
+              <div className="flex items-center justify-between text-left">
+                <span className="text-[10px] font-black text-amber-400 uppercase tracking-widest flex items-center gap-1">
+                  <Sparkles className="w-3 h-3" /> Register to Post Listings
+                </span>
+                <span className="text-[9px] text-slate-400 font-bold">10-Digit WhatsApp No</span>
+              </div>
 
-          <button
-            type="button"
-            onClick={onCtaClick}
-            className="w-full py-3.5 sm:py-4 rounded-2xl bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-950 font-heading font-bold text-sm sm:text-base uppercase tracking-wider transition-all hover:scale-[1.01] active:scale-[0.98] shadow-lg shadow-yellow-500/25 border border-yellow-400 text-center flex items-center justify-center gap-2 cursor-pointer"
-          >
-            <span>{ctaText || "Register / Get Started"}</span>
-            <ArrowRight className="w-4 h-4 text-slate-950 stroke-[2.5]" />
-          </button>
+              {/* Registered / Phone Verification Input Form */}
+              <div className="flex items-center gap-1.5">
+                <div className="relative flex-1">
+                  <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs font-black text-amber-400">+91</span>
+                  <input
+                    type="tel"
+                    required
+                    maxLength={10}
+                    value={mobileNumber}
+                    onChange={(e) => setMobileNumber(e.target.value.replace(/\D/g, "").slice(0, 10))}
+                    placeholder="Enter WhatsApp No"
+                    disabled={isVerifying}
+                    className="w-full bg-slate-950 border border-slate-700 text-white rounded-xl pl-10 pr-2 py-2 text-xs font-extrabold focus:outline-none focus:border-amber-400"
+                  />
+                </div>
+                <button
+                  type="submit"
+                  disabled={isVerifying}
+                  className="bg-gradient-to-r from-yellow-400 to-amber-500 hover:from-yellow-500 hover:to-amber-600 text-slate-955 font-heading font-black text-xs px-4 py-2 rounded-xl border border-yellow-400 shadow-md flex items-center gap-1 transition-all active:scale-95 shrink-0 cursor-pointer"
+                >
+                  {isVerifying ? (
+                    <Loader2 className="w-4 h-4 animate-spin text-slate-955" />
+                  ) : (
+                    <>
+                      <span>Register</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
+          )}
 
           {alerts.length > 0 && (
             <div className="flex w-full bg-slate-900 border border-slate-800 text-white rounded-xl py-1.5 px-3.5 shadow-sm items-center justify-between text-xs font-black select-none tracking-wide mt-1">

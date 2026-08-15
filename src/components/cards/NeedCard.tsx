@@ -166,45 +166,17 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
       isSold ? "border-slate-300 opacity-80" : "border-slate-200/80"
     }`}>
 
-      {/* 3-Dot Action Menu — top right */}
-      {!isPreview && (
+      {/* Manage Button — top right for own posts */}
+      {isOwnPost && !isPreview && (
         <div className="absolute top-3 right-3 z-10">
-          <button
-            onClick={(e) => { e.stopPropagation(); setIsMenuOpen((p) => !p); }}
-            className="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center transition-colors cursor-pointer border border-slate-200"
+          <Link
+            href="/profile?tab=my_posts"
+            onClick={(e) => e.stopPropagation()}
+            className="flex items-center gap-1 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-extrabold text-[10px] px-2.5 py-1 rounded-lg border border-yellow-400 shadow-2xs transition-colors cursor-pointer"
           >
-            <MoreVertical className="w-3.5 h-3.5" />
-          </button>
-          {isMenuOpen && (
-            <div className="absolute right-0 top-8 w-40 bg-white border border-slate-200 rounded-xl shadow-xl py-1 z-50 text-xs font-semibold">
-              {isOwnPost ? (
-                <>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); toast.success("Edit feature coming soon!"); }}
-                    className="w-full text-left px-3 py-2 hover:bg-slate-50 flex items-center gap-2 text-slate-700 cursor-pointer"
-                  >
-                    <Pencil className="w-3.5 h-3.5 text-slate-500" />
-                    <span>Edit Listing</span>
-                  </button>
-                  <button
-                    onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); handleDelete(e); }}
-                    className="w-full text-left px-3 py-2 hover:bg-red-50 flex items-center gap-2 text-red-600 cursor-pointer border-t border-slate-100"
-                  >
-                    <Trash2 className="w-3.5 h-3.5" />
-                    <span>Delete Listing</span>
-                  </button>
-                </>
-              ) : isNeedType ? (
-                <button
-                  onClick={(e) => { e.stopPropagation(); setIsMenuOpen(false); handleReport(e); }}
-                  className="w-full text-left px-3 py-2 hover:bg-red-50 flex items-center gap-2 text-red-600 cursor-pointer"
-                >
-                  <Flag className="w-3.5 h-3.5" />
-                  <span>Report Post</span>
-                </button>
-              ) : null}
-            </div>
-          )}
+            <Pencil className="w-3 h-3" />
+            <span>Manage</span>
+          </Link>
         </div>
       )}
 
@@ -332,20 +304,13 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
         {/* Contact CTA or Post Management Options */}
         <div className="flex items-center gap-1.5">
           {isOwnPost ? (
-            <div className="flex items-center gap-1.5">
-              <button
-                onClick={handleMarkSold}
-                className="flex items-center gap-1 h-8 bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-900 font-bold px-2.5 rounded-lg text-[11px] transition-colors cursor-pointer"
-              >
-                <span>{isSold ? t("unmarkSold") : t("markSold")}</span>
-              </button>
-              <button
-                onClick={handleDelete}
-                className="flex items-center gap-1 h-8 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 font-bold px-2.5 rounded-lg text-[11px] transition-colors cursor-pointer"
-              >
-                <span>{t("delete")}</span>
-              </button>
-            </div>
+            <Link
+              href="/profile?tab=my_posts"
+              className="flex items-center gap-1.5 h-8 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-black px-3 rounded-lg text-[11px] transition-colors cursor-pointer border border-yellow-400"
+            >
+              <Pencil className="w-3 h-3" />
+              <span>Manage Listing</span>
+            </Link>
           ) : isValidSellerId ? (
             <Link
               href={`/chat?listingId=${post.id}&sellerId=${post.userId}&title=${encodeURIComponent(post.title || "Item")}`}

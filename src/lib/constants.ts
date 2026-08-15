@@ -29,6 +29,15 @@ export const TANJORE_LOCALITIES = [
   "West Main Street (Melaveethi)",
   "Pillaiyarpatti",
   "Tanjore Town (General)",
+  "Pudukkottai Road",
+  "Trichy Road",
+  "MC Road",
+  "Vilar Road",
+  "Mary's Corner",
+  "Ramanathan Hospital Road",
+  "New Housing Unit",
+  "Rajappa Nagar",
+  "Nataraj Nagar",
 ] as const;
 
 export type TanjoreLocality = typeof TANJORE_LOCALITIES[number];

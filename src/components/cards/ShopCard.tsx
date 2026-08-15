@@ -157,11 +157,6 @@ export default function ShopCard({ post, isPreview = false }: ShopCardProps) {
           <h3 className="font-heading font-bold text-sm sm:text-base text-slate-900 leading-snug line-clamp-1 truncate min-w-0 flex-1">
             {post.shop_name}
           </h3>
-          {post.is_claimed && (
-            <span className="text-[8px] bg-slate-100 text-slate-700 border border-slate-200 font-semibold px-1.5 py-0.5 rounded shrink-0">
-              Claimed
-            </span>
-          )}
         </div>
 
         {/* Address and Landmark */}

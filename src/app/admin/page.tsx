@@ -1,8 +1,6 @@
 import React, { Suspense } from "react";
 import AdminClientPage from "./AdminClientPage";
 
-export const dynamic = "force-dynamic";
-
 export default function AdminPage() {
   return (
     <Suspense fallback={<div className="p-8 text-center text-xs font-bold text-slate-400">Loading Admin Console...</div>}>

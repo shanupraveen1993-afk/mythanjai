@@ -1,9 +1,9 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { db, storage } from "@/lib/firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, addDoc, doc, getDoc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { compressImage } from "@/lib/image-compressor";
 import { useAuth } from "@/hooks/use-auth";
@@ -104,6 +104,9 @@ const SEGMENT_CONFIG: Record<
 export default function PostForm({ segment }: PostFormProps) {
   const { toast } = useToast();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const editId = searchParams?.get("edit");
+  const editCol = searchParams?.get("col");
   const config = SEGMENT_CONFIG[segment];
   const { user, profile } = useAuth();
 
@@ -118,6 +121,30 @@ export default function PostForm({ segment }: PostFormProps) {
   const [description, setDescription] = useState("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
+
+  // Edit Mode Data Loader
+  useEffect(() => {
+    if (!editId) return;
+    const targetCol = editCol || (segment === "service" ? "services" : segment === "offer" ? "shops" : "needs_and_sales");
+    const docRef = doc(db, targetCol, editId);
+    getDoc(docRef).then((snap) => {
+      if (snap.exists()) {
+        const data = snap.data();
+        if (data.title || data.name || data.shop_name) setTitle(data.title || data.name || data.shop_name);
+        if (data.description || data.offer_description) {
+          const desc = data.description || data.offer_description;
+          setDescription(desc);
+          setPreviewDescription(desc);
+        }
+        if (data.category) setCategory(data.category);
+        if (data.area_tag) setArea(data.area_tag);
+        if (data.price) setPrice(String(data.price));
+        if (data.phone) setPhone(data.phone);
+        if (data.image_url) setImagePreview(data.image_url);
+        toast.success("Loaded post data for editing!");
+      }
+    }).catch(() => {});
+  }, [editId, editCol, segment]);
 
   const [price, setPrice] = useState("");
   const [youtubeUrl, setYoutubeUrl] = useState("");
@@ -164,7 +191,11 @@ export default function PostForm({ segment }: PostFormProps) {
       setIsOcrScanning(true);
       try {
         const compressed = await compressImage(file, 800, 800, 0.7);
-        const res = await fetch("/api/gemini-ocr", {
+        const apiEndpoint = typeof window !== "undefined" && (window.location.origin.includes("localhost") || window.location.protocol === "file:")
+          ? "https://mythanjai.vercel.app/api/gemini-ocr"
+          : "/api/gemini-ocr";
+
+        const res = await fetch(apiEndpoint, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({

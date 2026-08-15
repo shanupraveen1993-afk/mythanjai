@@ -14,6 +14,9 @@ import Footer from "@/components/layout/Footer";
 import SplashScreen from "@/components/ui/SplashScreen";
 import SwipeUpOnboarding from "@/components/ui/SwipeUpOnboarding";
 
+import { useNativeApp } from "@/hooks/use-native-app";
+import FloatingPostButton from "@/components/layout/FloatingPostButton";
+
 export default function MainLayout({
   children,
 }: {
@@ -60,14 +63,25 @@ function MainLayoutContent({
 }) {
   const router = useRouter();
   const pathname = usePathname();
-  const { user, profile } = useAuth();
+  const { user, profile, loading: authLoading } = useAuth();
+  
+  // Attach native Android event listeners (Back button, Keyboard, Status Bar)
+  useNativeApp();
+
+  // Authentication Guard: Unauthenticated users are routed to Onboarding Robo Page
+  useEffect(() => {
+    if (!authLoading && !user && pathname !== "/onboarding") {
+      router.push("/onboarding");
+    }
+  }, [user, authLoading, pathname, router]);
 
   // Selected Area filter state, synced with URL query params
   const [selectedArea, setSelectedArea] = useState<TanjoreLocality | "All Areas">("All Areas");
   const [isSignInOpen, setIsSignInOpen] = useState(false);
 
-  // Splash screen disabled — opens directly to main app
-  const [showSplash, setShowSplash] = useState(false);
+  // Startup Flow State: Splash -> Walkthrough -> Robot Hero Onboarding -> Main Feed
+  const [showSplash, setShowSplash] = useState(true);
+  const [showWalkthrough, setShowWalkthrough] = useState(false);
 
   useEffect(() => {
     // Dismiss native Capacitor Splash Screen on Android/iOS when React app mounts
@@ -77,6 +91,24 @@ function MainLayoutContent({
       })
       .catch(() => {});
   }, []);
+
+  const handleSplashComplete = () => {
+    setShowSplash(false);
+    if (typeof window !== "undefined") {
+      const hasSeenWalkthrough = localStorage.getItem("namma_thanjai_has_seen_walkthrough_v3");
+      if (!hasSeenWalkthrough) {
+        setShowWalkthrough(true);
+      }
+    }
+  };
+
+  const handleWalkthroughComplete = () => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("namma_thanjai_has_seen_walkthrough_v3", "true");
+    }
+    setShowWalkthrough(false);
+    router.push("/onboarding");
+  };
 
   const handleCloseSignIn = () => {
     setIsSignInOpen(false);
@@ -140,23 +172,17 @@ function MainLayoutContent({
   const isChatRoute = pathname === "/chat";
   const isStandaloneView = isChatRoute;
 
-  let layoutClasses = "min-h-screen";
-  if (isChatRoute) {
-    layoutClasses = "h-dvh max-h-dvh overflow-hidden";
-  }
-
   return (
-    <div className={`w-full flex flex-col relative bg-[#f4f5f8] font-sans ${layoutClasses}`}>
+    <div className="w-full h-dvh max-h-dvh overflow-hidden flex flex-col relative bg-[#f4f5f8] font-sans">
       {/* 1. Animated Splash Screen */}
       {showSplash && (
-        <SplashScreen
-          onComplete={() => {
-            setShowSplash(false);
-          }}
-        />
+        <SplashScreen onComplete={handleSplashComplete} />
       )}
 
-
+      {/* 2. Interactive 3-Slide Walkthrough Overlay */}
+      {showWalkthrough && (
+        <SwipeUpOnboarding onComplete={handleWalkthroughComplete} />
+      )}
 
       <React.Suspense fallback={null}>
         <SearchParamSync onAreaSync={setSelectedArea} onAuthSync={setIsSignInOpen} />
@@ -185,32 +211,37 @@ function MainLayoutContent({
         </React.Suspense>
       )}
 
-      {/* Main Content Panel */}
+      {/* Main Content Panel — Independent Scroll Viewport Box */}
       <main 
-        className={`flex-1 w-full bg-[#f4f5f8] ${isStandaloneView ? "p-0 max-w-none m-0" : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-24 md:pb-8"}`}
+        className={`flex-1 w-full overflow-y-auto overscroll-contain bg-[#f4f5f8] ${
+          isStandaloneView ? "p-0 max-w-none m-0" : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 md:pb-8"
+        }`}
         style={!isStandaloneView ? {
           paddingTop: "calc(3.5rem + env(safe-area-inset-top, 0px))",
           paddingBottom: "calc(4.5rem + env(safe-area-inset-bottom, 0px))",
         } : undefined}
       >
         {children}
+
+        {/* Main Website Footer (Desktop View inside scroll container) */}
+        {!isChatRoute && (
+          <React.Suspense fallback={null}>
+            <div className="hidden md:block mt-8">
+              <Footer />
+            </div>
+          </React.Suspense>
+        )}
       </main>
 
-      {/* Bottom Navigation Bar — Always visible except full-screen chat */}
+      {/* Scroll-driven Floating Post Button on Mobile */}
+      <FloatingPostButton />
+
+      {/* Bottom Navigation Bar — Fixed at thumb position */}
       {!isStandaloneView && (
         <BottomTabBar
           activeTab={getActiveTab()}
           onTabChange={handleTabChange}
         />
-      )}
-
-      {/* Main Website Footer */}
-      {!isChatRoute && (
-        <React.Suspense fallback={null}>
-          <div className="hidden md:block">
-            <Footer />
-          </div>
-        </React.Suspense>
       )}
 
       {/* Sign-In Popup Modal */}
@@ -220,7 +251,7 @@ function MainLayoutContent({
           onClose={handleCloseSignIn}
         />
       </React.Suspense>
-
     </div>
   );
 }
+

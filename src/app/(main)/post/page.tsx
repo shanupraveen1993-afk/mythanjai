@@ -1,8 +1,6 @@
 import React, { Suspense } from "react";
 import PostClientPage from "./PostClientPage";
 
-export const dynamic = "force-dynamic";
-
 export default function PostPage() {
   return (
     <Suspense

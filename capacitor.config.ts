@@ -4,17 +4,6 @@ const config: CapacitorConfig = {
   appId: 'com.nammathanjai.app',
   appName: 'Namma Thanjai',
   webDir: 'out',
-  server: {
-    url: 'https://mythanjai.vercel.app',
-    allowNavigation: [
-      'mythanjai.vercel.app',
-      '*.vercel.app',
-      'https://mythanjai.vercel.app/*',
-      '*'
-    ],
-    cleartext: true,
-    androidScheme: 'https',
-  },
   android: {
     allowMixedContent: true,
     backgroundColor: '#0F172A',

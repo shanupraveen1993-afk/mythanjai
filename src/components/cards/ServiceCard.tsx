@@ -188,7 +188,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
           </div>
 
           <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-            <span className="inline-flex items-center gap-1 bg-emerald-50 border border-emerald-200 text-emerald-800 font-semibold px-2.5 py-0.5 rounded-xl text-[10px]">
+            <span className="inline-flex items-center gap-1 bg-yellow-500 text-slate-955 font-black px-2.5 py-0.5 rounded-xl text-[10px] shadow-2xs">
               {getCategoryIllustration(post.skill_category)}
               <span>{post.skill_category}</span>
             </span>
@@ -268,15 +268,18 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
             className="flex items-center gap-1.5 h-9 bg-slate-900 hover:bg-slate-800 text-white font-bold px-3.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer"
           >
             <Phone className="w-3.5 h-3.5 fill-current" />
-            <span>{t("callNow")}</span>
+            <span>Call Now</span>
           </button>
 
           <button
-            onClick={(e) => handleOpenPreContactModal(e, "whatsapp")}
-            className="flex items-center gap-1.5 h-9 bg-[#00a884] hover:bg-[#008f6f] text-white font-bold px-3.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer"
+            onClick={(e) => {
+              e.stopPropagation();
+              toast.success(`Request sent to ${post.name}! They will call you back shortly.`);
+            }}
+            className="flex items-center gap-1.5 h-9 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-black px-3.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer border border-yellow-400"
           >
-            <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
-            <span>{t("whatsApp")}</span>
+            <Zap className="w-3.5 h-3.5" />
+            <span>Send Request</span>
           </button>
         </div>
       </div>
