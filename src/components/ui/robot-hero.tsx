@@ -739,6 +739,7 @@ export interface RobotHeroProps {
   navItemsLeft?: NavItem[];
   ctaText?: string;
   onCtaClick?: () => void;
+  onSignInClick?: () => void;
   onCategoryClick?: (tab: string) => void;
   color?: string;
   scale?: number;
@@ -795,6 +796,7 @@ export function RobotHero({
   navItemsLeft = [],
   ctaText = "Buy Now",
   onCtaClick,
+  onSignInClick,
   onCategoryClick,
   color = "#c4c4c4",
   scale = 1,
@@ -995,7 +997,13 @@ export function RobotHero({
               <div className="grid grid-cols-2 gap-2 w-full">
                 <button
                   type="button"
-                  onClick={() => setShowRegisterForm((prev) => !prev)}
+                  onClick={() => {
+                    if (onSignInClick) {
+                      onSignInClick();
+                    } else {
+                      router.push("/?auth=signin");
+                    }
+                  }}
                   className="bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-black text-xs px-3 py-2.5 rounded-xl border border-yellow-400 shadow-md flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer"
                 >
                   <Sparkles className="w-3.5 h-3.5" />
@@ -1003,7 +1011,14 @@ export function RobotHero({
                 </button>
                 <button
                   type="button"
-                  onClick={() => router.push("/")}
+                  onClick={() => {
+                    if (onCtaClick) {
+                      onCtaClick();
+                    } else {
+                      localStorage.setItem("namma_thanjai_guest_mode", "true");
+                      router.push("/sell");
+                    }
+                  }}
                   className="bg-white/10 hover:bg-white/20 text-white font-heading font-extrabold text-xs px-3 py-2.5 rounded-xl border border-white/20 shadow-md flex items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer"
                 >
                   <span>Explore Marketplace</span>

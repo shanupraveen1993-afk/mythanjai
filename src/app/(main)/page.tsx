@@ -35,7 +35,19 @@ function RootPageContent() {
 
   // Root URL (/): If unauthenticated and not guest, render Landing Page with Robot Hero directly on /
   if (!user && !isGuestMode) {
-    return <RobotHero onCtaClick={handleExploreGuest} />;
+    return (
+      <RobotHero
+        onCtaClick={handleExploreGuest}
+        onSignInClick={() => {
+          if (typeof window !== "undefined") {
+            const currentUrl = new URL(window.location.href);
+            currentUrl.searchParams.set("auth", "signin");
+            window.history.pushState({}, "", currentUrl.toString());
+            window.dispatchEvent(new Event("popstate"));
+          }
+        }}
+      />
+    );
   }
 
   // Root URL (/): If logged in or guest mode selected, render Home Dashboard
