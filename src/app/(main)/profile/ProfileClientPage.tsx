@@ -179,42 +179,38 @@ export default function ProfileClientPage() {
     }
   };
 
-  // Phase 1 WhatsApp Verification Token Generator
-  const handleInitiateWhatsAppVerify = async (e: React.FormEvent) => {
+  // 2-Step WhatsApp OTP Verification States & Handlers (Testing Code: 123456)
+  const [otpCode, setOtpCode] = useState("");
+  const [step, setStep] = useState<"phone" | "otp">("phone");
+
+  const handleSendOtp = (e: React.FormEvent) => {
     e.preventDefault();
     if (!phoneNumber || phoneNumber.length !== 10) {
-      toast.error("Please enter a valid 10-digit phone number.");
+      toast.error("Please enter a valid 10-digit mobile number.");
+      return;
+    }
+    setStep("otp");
+    toast.success("WhatsApp OTP sent to +91 " + phoneNumber);
+  };
+
+  const handleVerifyOtp = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (otpCode !== "123456") {
+      toast.error("Invalid WhatsApp OTP. Enter 123456 for testing.");
       return;
     }
 
     setPhoneUpdating(true);
     try {
-      // 1. Generate token TNJ-XXXX
-      const token = `TNJ-${Math.floor(1000 + Math.random() * 9000)}`;
-      setVerificationToken(token);
-
-      // 2. Save token and pending status to Firestore user profile
-      if (user) {
-        const userRef = doc(db, "users", user.uid);
-        await updateDoc(userRef, {
-          verificationToken: token,
-          isVerified: false,
-          phone: `91${phoneNumber}`,
-        });
+      const result = await updatePhone(phoneNumber);
+      if (result?.success) {
+        toast.success("WhatsApp Number Verified Successfully!");
+        setIsDbVerified(true);
+      } else {
+        toast.error("Verification failed.");
       }
-
-      setVerificationPending(true);
-      
-      // 3. Trigger WhatsApp Deep Link
-      const adminPhone = process.env.NEXT_PUBLIC_ADMIN_PHONE || "919994837342";
-      const waUrl = `https://wa.me/${adminPhone}?text=${encodeURIComponent(
-        `Verify My Thanjai App: ${token}`
-      )}`;
-      
-      // Open link in new tab
-      window.open(waUrl, "_blank");
-    } catch (error) {
-      console.error("WhatsApp Verification initialization failed:", error);
+    } catch (err: any) {
+      toast.error("Verification failed: " + err.message);
     } finally {
       setPhoneUpdating(false);
     }
@@ -422,14 +418,14 @@ export default function ProfileClientPage() {
                 </div>
                 <p className="text-[11px] text-slate-600 font-medium">Verify your WhatsApp number to unlock full marketplace contact details, post listings, & chat.</p>
 
-                {!verificationPending ? (
-                  <form onSubmit={handleInitiateWhatsAppVerify} className="flex flex-col gap-2">
+                {step === "phone" ? (
+                  <form onSubmit={handleSendOtp} className="flex flex-col gap-2">
                     <div className="relative">
                       <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-black text-amber-600">+91</span>
                       <input
                         type="tel"
                         value={phoneNumber}
-                        onChange={(e) => setPhoneNumber(e.target.value)}
+                        onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, "").slice(0, 10))}
                         placeholder="Enter 10-digit WhatsApp No"
                         disabled={phoneUpdating}
                         className="w-full bg-white border border-slate-300 text-slate-900 rounded-xl pl-11 pr-3 py-2 text-xs focus:ring-2 focus:ring-amber-500 focus:border-amber-500 focus:outline-none font-bold shadow-2xs"
@@ -440,32 +436,50 @@ export default function ProfileClientPage() {
                       disabled={phoneUpdating}
                       className="bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-500 hover:brightness-105 active:scale-95 text-slate-955 font-heading font-black w-full py-2.5 rounded-xl text-xs transition-all border border-yellow-400 shadow-md cursor-pointer flex items-center justify-center gap-1.5"
                     >
+                      <Zap className="w-4 h-4 text-slate-955 fill-slate-955" />
+                      <span>Send WhatsApp OTP →</span>
+                    </button>
+                  </form>
+                ) : (
+                  <form onSubmit={handleVerifyOtp} className="flex flex-col gap-2 animate-fade-in">
+                    <div className="flex flex-col gap-1">
+                      <label className="text-[9px] font-black text-slate-500 uppercase tracking-wider">
+                        6-Digit OTP (Testing Code: 123456)
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        maxLength={6}
+                        value={otpCode}
+                        onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
+                        placeholder="Enter 123456"
+                        disabled={phoneUpdating}
+                        className="w-full bg-white border border-slate-300 text-slate-900 text-center tracking-[0.4em] font-extrabold rounded-xl py-2 text-base focus:ring-2 focus:ring-amber-500 focus:border-amber-500 focus:outline-none"
+                      />
+                    </div>
+                    <button
+                      type="submit"
+                      disabled={phoneUpdating}
+                      className="bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-black w-full py-2.5 rounded-xl text-xs transition-all border border-yellow-400 shadow-md cursor-pointer flex items-center justify-center gap-1.5 active:scale-95"
+                    >
                       {phoneUpdating ? (
                         <Loader2 className="w-4 h-4 animate-spin text-slate-955" />
                       ) : (
                         <>
-                          <Zap className="w-4 h-4 text-slate-955 fill-slate-955" />
-                          <span>Verify WhatsApp & Unlock</span>
+                          <CheckCircle className="w-4 h-4 text-slate-955" />
+                          <span>Verify OTP & Unlock Profile</span>
                         </>
                       )}
                     </button>
+                    <button
+                      type="button"
+                      onClick={() => setStep("phone")}
+                      disabled={phoneUpdating}
+                      className="text-[11px] font-bold text-slate-500 hover:text-slate-800 text-center cursor-pointer hover:underline mt-1"
+                    >
+                      ← Change Mobile Number
+                    </button>
                   </form>
-                ) : (
-                  <div className="flex flex-col gap-3">
-                    <div className="flex flex-col gap-1.5 bg-white p-3.5 rounded-xl border border-amber-300/80 text-center text-xs shadow-sm">
-                      <span className="text-amber-600 font-black text-base tracking-widest">{verificationToken}</span>
-                      <span className="text-[10px] text-slate-500 font-bold">Click below to send verification code on WhatsApp.</span>
-                      <a
-                        href={`https://wa.me/${process.env.NEXT_PUBLIC_ADMIN_PHONE || "919994837342"}?text=${encodeURIComponent(`Verify Namma Thanjai App: ${verificationToken}`)}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-center gap-1.5 bg-emerald-500 hover:bg-emerald-600 text-white py-2.5 rounded-xl text-xs font-black mt-2 shadow-md transition-all active:scale-95"
-                      >
-                        <MessageSquare className="w-4 h-4 fill-current stroke-none" />
-                        <span>Send WhatsApp Code →</span>
-                      </a>
-                    </div>
-                  </div>
                 )}
               </div>
             )}
