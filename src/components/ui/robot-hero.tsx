@@ -914,7 +914,7 @@ export function RobotHero({
   return (
     <section
       ref={containerRef}
-      className="relative w-full max-md:h-[100dvh] max-md:max-h-[100dvh] min-h-screen flex flex-col justify-between items-center bg-white text-slate-800 pt-16 md:pt-6 pb-6 md:pb-12 px-3 sm:px-4 select-none max-md:overflow-hidden overflow-x-hidden"
+      className="relative w-full min-h-screen flex flex-col justify-between items-center bg-white text-slate-800 pt-14 md:pt-6 pb-0 px-3 sm:px-4 select-none overflow-x-hidden"
     >
       {/* Light radial glow centered behind hero */}
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_45%,rgba(250,204,21,0.06)_0%,transparent_60%)] pointer-events-none" />
@@ -993,23 +993,39 @@ export function RobotHero({
             </div>
           ) : (
             <div className="flex flex-col gap-2.5 bg-slate-900/90 backdrop-blur-md border border-slate-800 p-3.5 rounded-2xl shadow-xl w-full">
-              {/* Single Primary Action Button: Register & Explore */}
-              <button
-                type="button"
-                onClick={() => {
-                  if (typeof window !== "undefined") {
-                    window.dispatchEvent(new Event("namma_thanjai_open_signin"));
-                  }
-                  if (onSignInClick) {
-                    onSignInClick();
-                  }
-                }}
-                className="w-full bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-black text-xs sm:text-sm py-3 rounded-xl border border-yellow-400 shadow-md flex items-center justify-center gap-2 transition-all active:scale-95 cursor-pointer uppercase tracking-wider"
-              >
-                <Sparkles className="w-4 h-4 fill-slate-955 text-slate-955" />
-                <span>Register & Explore</span>
-                <ArrowRight className="w-4 h-4 stroke-[3]" />
-              </button>
+              {/* 2 Primary Action Buttons */}
+              <div className="grid grid-cols-2 gap-2 w-full">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (typeof window !== "undefined") {
+                      window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+                    }
+                    if (onSignInClick) {
+                      onSignInClick();
+                    }
+                  }}
+                  className="bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-black text-xs px-3 py-2.5 rounded-xl border border-yellow-400 shadow-md flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer"
+                >
+                  <Sparkles className="w-3.5 h-3.5" />
+                  <span>Register to Post</span>
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onCtaClick) {
+                      onCtaClick();
+                    } else {
+                      localStorage.setItem("namma_thanjai_guest_mode", "true");
+                      router.push("/sell");
+                    }
+                  }}
+                  className="bg-white/10 hover:bg-white/20 text-white font-heading font-extrabold text-xs px-3 py-2.5 rounded-xl border border-white/20 shadow-md flex items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer"
+                >
+                  <span>Explore Marketplace</span>
+                  <ArrowRight className="w-3.5 h-3.5 text-yellow-400" />
+                </button>
+              </div>
 
               {/* Expandable Registered / WhatsApp Verification Input Form */}
               {showRegisterForm && (
@@ -1082,8 +1098,8 @@ export function RobotHero({
 
       </div>
 
-      {/* ── 2nd Fold: The 4 Core Platform Pillars & 3-Step Process (Desktop Only) ──────────────── */}
-      <div className="hidden md:block w-full bg-white border-t border-slate-200/80 py-14 md:py-24 px-4 sm:px-6 relative z-10">
+      {/* ── 2nd Fold: The 4 Core Platform Pillars & 3-Step Process ──────────────── */}
+      <div className="w-full bg-white border-t border-slate-200/80 py-14 md:py-24 px-4 sm:px-6 relative z-10">
         <div className="max-w-6xl mx-auto flex flex-col gap-14">
           
           {/* 2nd Fold Header */}
