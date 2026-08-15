@@ -186,7 +186,7 @@ function MainLayoutContent({
     }
   }, [pathname]);
 
-  const isLandingMode = pathname === "/" && !isAuthVerified;
+  const isLandingMode = pathname === "/";
   const isChatRoute = pathname === "/chat";
   const isPostRoute = pathname.startsWith("/post");
   const isStandaloneView = isChatRoute;
