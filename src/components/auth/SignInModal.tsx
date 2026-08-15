@@ -85,11 +85,8 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-900/65 backdrop-blur-xs p-0 sm:p-4 animate-fade-in">
-      <div className="bg-white border-t-2 sm:border border-slate-200/90 w-full sm:max-w-sm rounded-t-3xl sm:rounded-2xl p-6 sm:p-5 shadow-2xl relative animate-slide-up sm:animate-scale-up text-slate-800 pb-8 sm:pb-5">
-        
-        {/* Mobile Bottom Sheet Handle Bar */}
-        <div className="w-12 h-1 bg-slate-300 rounded-full mx-auto mb-3 block sm:hidden" />
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4 animate-fade-in">
+      <div className="bg-white border border-slate-200/90 w-full max-w-sm rounded-2xl p-6 shadow-2xl relative text-slate-800">
 
         {/* Header Close */}
         <button
