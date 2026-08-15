@@ -914,7 +914,7 @@ export function RobotHero({
   return (
     <section
       ref={containerRef}
-      className="relative w-full min-h-screen flex flex-col justify-between items-center bg-white text-slate-800 pt-14 md:pt-6 pb-0 px-3 sm:px-4 select-none overflow-x-hidden"
+      className="relative w-full max-md:h-[100dvh] max-md:max-h-[100dvh] min-h-screen flex flex-col justify-between items-center bg-white text-slate-800 pt-16 md:pt-6 pb-6 md:pb-12 px-3 sm:px-4 select-none max-md:overflow-hidden overflow-x-hidden"
     >
       {/* Light radial glow centered behind hero */}
       <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_45%,rgba(250,204,21,0.06)_0%,transparent_60%)] pointer-events-none" />
@@ -1082,8 +1082,8 @@ export function RobotHero({
 
       </div>
 
-      {/* ── 2nd Fold: The 4 Core Platform Pillars & 3-Step Process ──────────────── */}
-      <div className="w-full bg-white border-t border-slate-200/80 py-14 md:py-24 px-4 sm:px-6 relative z-10">
+      {/* ── 2nd Fold: The 4 Core Platform Pillars & 3-Step Process (Desktop Only) ──────────────── */}
+      <div className="hidden md:block w-full bg-white border-t border-slate-200/80 py-14 md:py-24 px-4 sm:px-6 relative z-10">
         <div className="max-w-6xl mx-auto flex flex-col gap-14">
           
           {/* 2nd Fold Header */}
