@@ -30,11 +30,10 @@ export default function TopHeader({
 }: TopHeaderProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const { profile } = useAuth();
+  const { user, profile } = useAuth();
   const { lang, toggleLanguage, t } = useLanguage();
 
-  const isAuthVerified = Boolean(profile?.isVerified);
-  const isLandingMode = pathname === "/" && !isAuthVerified;
+  const isAuthVerified = Boolean(profile?.isVerified || user);
   const showCenterNav = pathname !== "/onboarding" && pathname !== "/chat";
 
   const phoneDisplay = profile?.phone ? `+${profile.phone}` : "+919994837342";
@@ -193,8 +192,8 @@ export default function TopHeader({
                   <span className="hidden md:inline text-xs ml-1.5 font-black">Profile</span>
                 </button>
               </>
-            ) : isLandingMode ? (
-              /* ONLY Primary Yellow Login Button on Landing Page for Unauthenticated Visitors */
+            ) : (
+              /* Login button for all non-authenticated visitors */
               <button
                 type="button"
                 onClick={() => {
@@ -210,37 +209,6 @@ export default function TopHeader({
                 <User className="w-4 h-4 text-slate-955" />
                 <span>Login</span>
               </button>
-            ) : (
-              <>
-                {/* Primary Yellow Login Button & Profile Button for Guests on App Pages */}
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (typeof window !== "undefined") {
-                      sessionStorage.removeItem("namma_thanjai_target_post_route");
-                      localStorage.removeItem("namma_thanjai_target_post_route");
-                      sessionStorage.setItem("namma_thanjai_header_login_active", "true");
-                    }
-                    onSignInClick?.();
-                  }}
-                  className="flex items-center justify-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-black text-xs px-3.5 py-1.5 rounded-xl shadow-md border border-yellow-400 cursor-pointer active:scale-95 transition-all"
-                >
-                  <User className="w-4 h-4 text-slate-955" />
-                  <span>Login</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => onTabChange?.("profile")}
-                  className={`flex items-center justify-center w-9 h-9 rounded-full transition-all duration-200 cursor-pointer group active:scale-95 ${isProfileActive
-                      ? "bg-amber-500/10 text-amber-600 border border-amber-400/80 font-black shadow-2xs"
-                      : "bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200/80 text-slate-700 hover:text-amber-600 font-bold"
-                    }`}
-                  title="Profile"
-                >
-                  <User className={`w-4 h-4 shrink-0 ${isProfileActive ? "text-amber-600" : "text-slate-500 group-hover:text-amber-600"}`} />
-                </button>
-              </>
             );
           })()}
         </div>
