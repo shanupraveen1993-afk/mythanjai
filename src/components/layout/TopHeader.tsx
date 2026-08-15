@@ -101,65 +101,73 @@ export default function TopHeader({
         </div>
 
         {/* Center: 5 Category Navigation Tabs (Hidden on Landing Page) */}
-        {showCenterNav && (
-          <div className="hidden sm:flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 font-heading">
-            <button
-              type="button"
-              onClick={() => router.push("/home")}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer ${
-                pathname === "/home" || pathname === "/"
-                  ? "bg-yellow-500 text-slate-955 border border-yellow-400 shadow-xs"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-bold"
-              }`}
-            >
-              Home
-            </button>
-            <button
-              type="button"
-              onClick={() => router.push("/sell")}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer ${
-                pathname === "/sell" || pathname.startsWith("/post/sell")
-                  ? "bg-yellow-500 text-slate-955 border border-yellow-400 shadow-xs"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-bold"
-              }`}
-            >
-              Sell
-            </button>
-            <button
-              type="button"
-              onClick={() => router.push("/need")}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer ${
-                pathname === "/need" || pathname.startsWith("/post/need")
-                  ? "bg-yellow-500 text-slate-955 border border-yellow-400 shadow-xs"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-bold"
-              }`}
-            >
-              Need
-            </button>
-            <button
-              type="button"
-              onClick={() => router.push("/services")}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer ${
-                pathname === "/services" || pathname.startsWith("/post/service")
-                  ? "bg-yellow-500 text-slate-955 border border-yellow-400 shadow-xs"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-bold"
-              }`}
-            >
-              Local Service
-            </button>
-            <button
-              type="button"
-              onClick={() => router.push("/shops")}
-              className={`px-3.5 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer ${
-                pathname === "/shops" || pathname === "/offers" || pathname.startsWith("/post/offer")
-                  ? "bg-yellow-500 text-slate-955 border border-yellow-400 shadow-xs"
-                  : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-bold"
-              }`}
-            >
-              Local Offer
-            </button>
-          </div>
-        )}
+        {showCenterNav && (() => {
+          const isHomeActive = pathname === "/home" || pathname === "/";
+          const isSellActive = pathname === "/sell" || pathname.includes("/sell");
+          const isNeedActive = pathname === "/need" || pathname.includes("/need");
+          const isServiceActive = pathname === "/services" || pathname.includes("/services") || pathname.includes("/post/service");
+          const isOfferActive = pathname === "/shops" || pathname === "/offers" || pathname.includes("/shops") || pathname.includes("/offers");
+
+          return (
+            <div className="hidden sm:flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 font-heading">
+              <button
+                type="button"
+                onClick={() => router.push("/home")}
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer ${
+                  isHomeActive
+                    ? "bg-yellow-500 text-slate-955 border border-yellow-400 shadow-xs"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-bold"
+                }`}
+              >
+                Home
+              </button>
+              <button
+                type="button"
+                onClick={() => router.push("/sell")}
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer ${
+                  isSellActive
+                    ? "bg-yellow-500 text-slate-955 border border-yellow-400 shadow-xs"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-bold"
+                }`}
+              >
+                Sell
+              </button>
+              <button
+                type="button"
+                onClick={() => router.push("/need")}
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer ${
+                  isNeedActive
+                    ? "bg-yellow-500 text-slate-955 border border-yellow-400 shadow-xs"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-bold"
+                }`}
+              >
+                Need
+              </button>
+              <button
+                type="button"
+                onClick={() => router.push("/services")}
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer ${
+                  isServiceActive
+                    ? "bg-yellow-500 text-slate-955 border border-yellow-400 shadow-xs"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-bold"
+                }`}
+              >
+                Local Service
+              </button>
+              <button
+                type="button"
+                onClick={() => router.push("/shops")}
+                className={`px-3.5 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer ${
+                  isOfferActive
+                    ? "bg-yellow-500 text-slate-955 border border-yellow-400 shadow-xs"
+                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-bold"
+                }`}
+              >
+                Local Offer
+              </button>
+            </div>
+          );
+        })()}
 
         {/* Right: Landing Page Login Button vs Logged-In Chat & Profile Controls */}
         <div className="flex items-center gap-2 shrink-0">

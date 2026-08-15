@@ -49,8 +49,6 @@ function SearchParamSync({
     const authParam = searchParams.get("auth");
     if (authParam === "popup" || authParam === "signin" || authParam === "register") {
       onAuthSync(true);
-    } else {
-      onAuthSync(false);
     }
   }, [searchParams, onAreaSync, onAuthSync]);
 
