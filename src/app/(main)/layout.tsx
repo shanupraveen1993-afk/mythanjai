@@ -182,6 +182,7 @@ function MainLayoutContent({
   }, [pathname]);
 
   const isChatRoute = pathname === "/chat";
+  const isPostRoute = pathname.startsWith("/post");
   const isStandaloneView = isChatRoute;
 
   return (
@@ -229,7 +230,7 @@ function MainLayoutContent({
             )}
 
             {/* Universal Directory Search Bar */}
-            {pathname !== "/profile" && !isChatRoute && !isOnboardingView && (
+            {pathname !== "/profile" && !isChatRoute && !isOnboardingView && !isPostRoute && (
               <React.Suspense fallback={null}>
                 <UniversalSearchBar />
               </React.Suspense>
@@ -253,7 +254,7 @@ function MainLayoutContent({
             {children}
 
             {/* Main Website Footer (Desktop View inside scroll container) */}
-            {!isChatRoute && !isOnboardingView && (
+            {!isChatRoute && !isOnboardingView && !isPostRoute && (
               <React.Suspense fallback={null}>
                 <div className="hidden md:block">
                   <Footer />
@@ -265,7 +266,7 @@ function MainLayoutContent({
       })()}
 
             {/* Scroll-driven Floating Post Button on Mobile */}
-            {!isOnboardingView && <FloatingPostButton />}
+            {!isOnboardingView && !isPostRoute && <FloatingPostButton />}
 
             {/* Bottom Navigation Bar — Instantly hidden via CSS on mobile landing page for unauthenticated visitors */}
             {!isStandaloneView && !isOnboardingView && (

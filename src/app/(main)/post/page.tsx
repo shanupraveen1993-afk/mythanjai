@@ -5,7 +5,7 @@ export default function PostPage() {
   return (
     <Suspense
       fallback={
-        <div className="p-12 text-center text-xs font-bold text-slate-400 animate-pulse">
+        <div className="w-full min-h-[70vh] flex items-center justify-center p-8 text-center text-xs font-bold text-amber-500 animate-pulse">
           Loading Posting Form...
         </div>
       }
