@@ -192,8 +192,9 @@ function MainLayoutContent({
       {/* Top Header Section */}
       {(() => {
         const isAuthVerified = Boolean(profile?.isVerified || user);
-        // Only hide header/footer if explicitly on /onboarding route
-        const isOnboardingView = pathname === "/onboarding";
+        // Hide header and bottom navigation bar on onboarding page or unauthenticated mobile landing screen
+        const isMobileWeb = typeof window !== "undefined" && window.innerWidth < 768;
+        const isOnboardingView = pathname === "/onboarding" || (!isAuthVerified && isMobileWeb && pathname === "/");
 
         return (
           <>

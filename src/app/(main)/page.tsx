@@ -4,19 +4,22 @@ import React, { useState, useEffect, Suspense } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import RobotHero from "@/components/ui/robot-hero";
+import OnboardingClientPage from "./onboarding/OnboardingClientPage";
 
 function RootPageContent() {
   const router = useRouter();
   const { user, profile, loading } = useAuth();
   const isAuthVerified = Boolean(profile?.isVerified || user);
-  const [isNativeApp, setIsNativeApp] = useState(false);
+  const [isMobileWeb, setIsMobileWeb] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const cap = (window as any).Capacitor;
-      if (cap?.isNativePlatform?.()) {
-        setIsNativeApp(true);
-      }
+      const checkMobile = () => {
+        setIsMobileWeb(window.innerWidth < 768);
+      };
+      checkMobile();
+      window.addEventListener("resize", checkMobile);
+      return () => window.removeEventListener("resize", checkMobile);
     }
   }, []);
 
@@ -28,7 +31,12 @@ function RootPageContent() {
     );
   }
 
-  // Root URL (/): ALWAYS render the 3D Mascot Robot Landing Page (RobotHero) for Web!
+  // 1. Mobile Web App (Unauthenticated): Render ONLY the single-fold Mobile Onboarding Screen with Register & Explore CTA
+  if (isMobileWeb && !isAuthVerified) {
+    return <OnboardingClientPage />;
+  }
+
+  // 2. Desktop Web Visitor / Authenticated User: Render Desktop RobotHero Landing Page
   return (
     <RobotHero
       onCtaClick={() => router.push("/home")}
