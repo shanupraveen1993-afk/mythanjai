@@ -144,7 +144,7 @@ function MainLayoutContent({
     const currentParams = new URLSearchParams(typeof window !== "undefined" ? window.location.search : "");
     const area = currentParams.get("area");
     
-    let targetPath = "/";
+    let targetPath = "/home";
     if (tab === "sell") targetPath = "/sell";
     else if (tab === "need") targetPath = "/need";
     else if (tab === "services") targetPath = "/services";
@@ -199,7 +199,11 @@ function MainLayoutContent({
             onAreaChange={handleAreaChange}
             onSignInClick={() => setIsSignInOpen(true)}
             onPostClick={() => {
-              router.push("/post/sell");
+              if (!user) {
+                setIsSignInOpen(true);
+              } else {
+                router.push("/post/sell");
+              }
             }}
             activeTab={getActiveTab()}
             onTabChange={handleTabChange}
