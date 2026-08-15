@@ -105,9 +105,9 @@ export default function TopHeader({
           <div className="hidden sm:flex items-center gap-1 bg-slate-100/80 p-1 rounded-xl border border-slate-200/60 font-heading">
             <button
               type="button"
-              onClick={() => router.push("/")}
+              onClick={() => router.push("/home")}
               className={`px-3 py-1 rounded-lg text-xs font-bold transition-all cursor-pointer ${
-                pathname === "/"
+                pathname === "/home" || pathname === "/"
                   ? "bg-white text-slate-900 shadow-2xs border border-slate-200"
                   : "text-slate-600 hover:text-slate-900"
               }`}

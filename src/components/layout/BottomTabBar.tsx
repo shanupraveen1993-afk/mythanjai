@@ -26,7 +26,7 @@ export default function BottomTabBar({
       id: "home" as AppTab,
       label: t("home"),
       icon: Home,
-      route: "/",
+      route: "/home",
     },
     {
       id: "sell" as AppTab,
