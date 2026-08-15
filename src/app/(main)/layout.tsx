@@ -237,8 +237,7 @@ function MainLayoutContent({
 
       {/* Main Content Panel */}
       {(() => {
-        const isLandingHero = pathname === "/" && !isAuthVerified;
-        const isFullWidthPage = isStandaloneView || isOnboardingView || isLandingHero;
+        const isFullWidthPage = isStandaloneView || isOnboardingView;
 
         return (
           <main 
