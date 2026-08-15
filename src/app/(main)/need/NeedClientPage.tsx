@@ -18,11 +18,13 @@ import { useAuth } from "@/hooks/use-auth";
 
 export default function NeedClientPage() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
 
+  const isAuthVerified = Boolean(profile?.isVerified || user);
+
   const handlePostNeed = () => {
-    if (!user) {
+    if (!isAuthVerified) {
       if (typeof window !== "undefined") {
         window.dispatchEvent(new Event("namma_thanjai_open_signin"));
       }

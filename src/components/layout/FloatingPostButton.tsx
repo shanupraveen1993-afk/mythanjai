@@ -9,7 +9,8 @@ import { useAuth } from "@/hooks/use-auth";
 export default function FloatingPostButton() {
   const router = useRouter();
   const pathname = usePathname();
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
+  const isAuthVerified = Boolean(profile?.isVerified || user);
   const [isVisible, setIsVisible] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
 
@@ -56,7 +57,7 @@ export default function FloatingPostButton() {
       <button
         type="button"
         onClick={() => {
-          if (!user) {
+          if (!isAuthVerified) {
             if (typeof window !== "undefined") {
               window.dispatchEvent(new Event("namma_thanjai_open_signin"));
             }

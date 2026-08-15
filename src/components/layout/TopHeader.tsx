@@ -173,16 +173,6 @@ export default function TopHeader({
         <div className="flex items-center gap-2 shrink-0">
           {isAuthVerified ? (
             <>
-              {/* Primary Yellow + Post Button for Logged In Users */}
-              <button
-                type="button"
-                onClick={onPostClick}
-                className="flex items-center justify-center gap-1 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-black text-xs px-3.5 py-1.5 rounded-xl shadow-md border border-yellow-400 cursor-pointer active:scale-95 transition-all"
-              >
-                <Plus className="w-4 h-4 stroke-[3]" />
-                <span className="hidden sm:inline">Post</span>
-              </button>
-
               {/* Chat Icon & Profile Button for Logged In Verified Users */}
               <button
                 onClick={() => router.push("/chat")}
@@ -215,22 +205,13 @@ export default function TopHeader({
             </button>
           ) : (
             <>
-              {/* Primary Yellow + Post Button & Login Button for Guests on App Pages */}
-              <button
-                type="button"
-                onClick={onPostClick}
-                className="flex items-center justify-center gap-1 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-black text-xs px-3 py-1.5 rounded-xl shadow-md border border-yellow-400 cursor-pointer active:scale-95 transition-all"
-              >
-                <Plus className="w-4 h-4 stroke-[3]" />
-                <span className="hidden sm:inline">Post</span>
-              </button>
-
+              {/* Primary Yellow Login Button & Profile Button for Guests on App Pages */}
               <button
                 type="button"
                 onClick={onSignInClick}
-                className="flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-heading font-bold text-xs px-3.5 py-1.5 rounded-xl border border-slate-200 cursor-pointer active:scale-95 transition-all"
+                className="flex items-center justify-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-black text-xs px-3.5 py-1.5 rounded-xl shadow-md border border-yellow-400 cursor-pointer active:scale-95 transition-all"
               >
-                <User className="w-4 h-4 text-slate-700" />
+                <User className="w-4 h-4 text-slate-955" />
                 <span>Login</span>
               </button>
 

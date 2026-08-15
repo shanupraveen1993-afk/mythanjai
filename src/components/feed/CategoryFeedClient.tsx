@@ -134,6 +134,7 @@ interface CategoryFeedClientProps {
 export default function CategoryFeedClient({ segmentType }: CategoryFeedClientProps) {
   const config = SEGMENT_CONFIG[segmentType];
   const { user, profile } = useAuth();
+  const isAuthVerified = Boolean(profile?.isVerified || user);
 
   // Always use All Areas — no URL query params (prevents Vercel RSC crash)
   const area: "All Areas" = "All Areas";
@@ -257,7 +258,7 @@ export default function CategoryFeedClient({ segmentType }: CategoryFeedClientPr
           </select>
           <button
             onClick={() => {
-              if (!user) {
+              if (!isAuthVerified) {
                 if (typeof window !== "undefined") {
                   window.dispatchEvent(new Event("namma_thanjai_open_signin"));
                 }
