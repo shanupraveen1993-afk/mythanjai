@@ -366,6 +366,25 @@ export default function ProfileClientPage() {
               </div>
             </div>
 
+            {/* Prominent Logout Button for Logged-In User */}
+            <button
+              type="button"
+              onClick={async () => {
+                await signOutUser();
+                if (typeof window !== "undefined") {
+                  localStorage.removeItem("my_thanjai_verified");
+                  localStorage.removeItem("my_thanjai_phone");
+                  localStorage.removeItem("namma_thanjai_guest_mode");
+                }
+                toast.success("Logged out successfully.");
+                router.push("/");
+              }}
+              className="w-full flex items-center justify-center gap-2 bg-red-50 hover:bg-red-100 active:scale-95 text-red-700 font-heading font-black text-xs py-2.5 rounded-xl border border-red-200 cursor-pointer transition-all shadow-2xs"
+            >
+              <LogOut className="w-4 h-4 text-red-600" />
+              <span>Logout Account</span>
+            </button>
+
             {/* Account Subscription & Listing Policy Card */}
             <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 flex flex-col gap-1.5 font-sans">
               <div className="flex items-center justify-between text-xs">

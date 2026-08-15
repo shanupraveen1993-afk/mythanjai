@@ -260,6 +260,11 @@ export default function CategoryFeedClient({ segmentType }: CategoryFeedClientPr
             onClick={() => {
               if (!isAuthVerified) {
                 if (typeof window !== "undefined") {
+                  const target = segmentType === "sell" ? "/post/sell"
+                    : segmentType === "need" ? "/post/need"
+                    : segmentType === "services" ? "/post/service"
+                    : "/post/offer";
+                  localStorage.setItem("namma_thanjai_target_post_route", target);
                   window.dispatchEvent(new Event("namma_thanjai_open_signin"));
                 }
                 return;

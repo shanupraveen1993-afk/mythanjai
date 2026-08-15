@@ -26,6 +26,7 @@ export default function ShopsClientPage() {
   const handlePostOffer = () => {
     if (!isAuthVerified) {
       if (typeof window !== "undefined") {
+        localStorage.setItem("namma_thanjai_target_post_route", "/post/offer");
         window.dispatchEvent(new Event("namma_thanjai_open_signin"));
       }
       return;

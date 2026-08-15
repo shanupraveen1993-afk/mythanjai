@@ -47,7 +47,16 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
       // Mock bypass: immediately verify and register the phone number
       const result = await updatePhone(phoneNumber);
       if (result?.success) {
-        toast.success("Login successful!");
+        toast.success("Verification successful!");
+        onClose();
+
+        const pendingTarget = typeof window !== "undefined" ? localStorage.getItem("namma_thanjai_target_post_route") : null;
+        if (pendingTarget) {
+          localStorage.removeItem("namma_thanjai_target_post_route");
+          router.push(pendingTarget);
+        } else {
+          router.push("/post/sell");
+        }
       } else {
         toast.error("Verification failed.");
       }

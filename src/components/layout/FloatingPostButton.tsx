@@ -59,6 +59,7 @@ export default function FloatingPostButton() {
         onClick={() => {
           if (!isAuthVerified) {
             if (typeof window !== "undefined") {
+              localStorage.setItem("namma_thanjai_target_post_route", "/post/sell");
               window.dispatchEvent(new Event("namma_thanjai_open_signin"));
             }
             return;
