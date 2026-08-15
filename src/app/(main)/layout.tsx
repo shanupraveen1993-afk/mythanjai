@@ -189,6 +189,8 @@ function MainLayoutContent({
   const isChatRoute = pathname === "/chat";
   const isPostRoute = pathname.startsWith("/post");
   const isStandaloneView = isChatRoute;
+  const isOnboardingView = pathname === "/onboarding";
+  const isFullWidthPage = isStandaloneView || isOnboardingView;
 
   return (
     <div className="w-full min-h-screen max-md:h-dvh max-md:max-h-dvh max-md:overflow-hidden flex flex-col relative bg-[#f4f5f8] font-sans md:h-auto md:max-h-none md:overflow-visible">
@@ -206,93 +208,76 @@ function MainLayoutContent({
         <SearchParamSync onAreaSync={setSelectedArea} onAuthSync={setIsSignInOpen} />
       </React.Suspense>
 
-      {/* Top Header Section */}
-      {(() => {
-        const isAuthVerified = Boolean(profile?.isVerified);
-        const isOnboardingView = pathname === "/onboarding";
+      {/* Top Header — always shown except on chat/onboarding */}
+      {!isStandaloneView && !isOnboardingView && (
+        <React.Suspense fallback={null}>
+          <TopHeader
+            selectedArea={selectedArea}
+            onAreaChange={handleAreaChange}
+            onSignInClick={() => setIsSignInOpen(true)}
+            onPostClick={() => {
+              if (!isAuthVerified) {
+                setIsSignInOpen(true);
+              } else {
+                if (typeof window !== "undefined") window.scrollTo(0, 0);
+                router.push("/post/sell");
+              }
+            }}
+            activeTab={getActiveTab()}
+            onTabChange={(tab) => {
+              if (typeof window !== "undefined") window.scrollTo(0, 0);
+              handleTabChange(tab);
+            }}
+          />
+        </React.Suspense>
+      )}
 
-        return (
-          <>
-            {!isStandaloneView && !isOnboardingView && (
-              <div>
-                <React.Suspense fallback={null}>
-                  <TopHeader
-                    selectedArea={selectedArea}
-                    onAreaChange={handleAreaChange}
-                    onSignInClick={() => setIsSignInOpen(true)}
-                    onPostClick={() => {
-                      if (!isAuthVerified) {
-                        setIsSignInOpen(true);
-                      } else {
-                        if (typeof window !== "undefined") window.scrollTo(0, 0);
-                        router.push("/post/sell");
-                      }
-                    }}
-                    activeTab={getActiveTab()}
-                    onTabChange={(tab) => {
-                      if (typeof window !== "undefined") window.scrollTo(0, 0);
-                      handleTabChange(tab);
-                    }}
-                  />
-                </React.Suspense>
-              </div>
-            )}
-
-            {/* Universal Directory Search Bar */}
-            {pathname !== "/profile" && !isChatRoute && !isOnboardingView && !isPostRoute && (
-              <React.Suspense fallback={null}>
-                <UniversalSearchBar />
-              </React.Suspense>
-            )}
+      {/* Universal Directory Search Bar */}
+      {pathname !== "/profile" && !isChatRoute && !isOnboardingView && !isPostRoute && (
+        <React.Suspense fallback={null}>
+          <UniversalSearchBar />
+        </React.Suspense>
+      )}
 
       {/* Main Content Panel */}
-      {(() => {
-        const isFullWidthPage = isStandaloneView || isOnboardingView;
+      <main
+        className={`flex-1 w-full max-md:overflow-y-auto max-md:overscroll-contain md:overflow-visible md:h-auto flex flex-col ${
+          isFullWidthPage
+            ? "p-0 max-w-none m-0 bg-white"
+            : "bg-[#f4f5f8] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+        }`}
+        style={{
+          paddingTop: !isStandaloneView && !isOnboardingView ? "calc(3.5rem + env(safe-area-inset-top, 0px))" : undefined,
+          paddingBottom: !isFullWidthPage ? "calc(6.5rem + env(safe-area-inset-bottom, 0px))" : undefined,
+        }}
+      >
+        {/* Stable height wrapper — prevents page collapse and footer jump on route transitions */}
+        <div className={`w-full flex-1 flex flex-col ${!isFullWidthPage ? "min-h-[85vh]" : ""}`}>
+          {children}
+        </div>
 
-        return (
-          <main 
-            className={`flex-1 w-full max-md:overflow-y-auto max-md:overscroll-contain md:overflow-visible md:h-auto flex flex-col ${
-              isFullWidthPage ? "p-0 max-w-none m-0 bg-white" : "bg-[#f4f5f8] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-28 md:pb-12"
-            }`}
-            style={{
-              paddingTop: !isStandaloneView && !isOnboardingView ? "calc(3.5rem + env(safe-area-inset-top, 0px))" : undefined,
-              paddingBottom: !isFullWidthPage ? "calc(6.5rem + env(safe-area-inset-bottom, 0px))" : undefined,
-            }}
-          >
-            {/* Stable height container to prevent page collapse and footer jumping during route transitions */}
-            <div className={`w-full flex-1 flex flex-col ${!isFullWidthPage ? "min-h-[85vh]" : ""}`}>
-              {children}
+        {/* Footer — desktop only */}
+        {!isChatRoute && !isOnboardingView && !isPostRoute && (
+          <React.Suspense fallback={null}>
+            <div className="hidden md:block mt-auto pt-8">
+              <Footer />
             </div>
+          </React.Suspense>
+        )}
+      </main>
 
-            {/* Main Website Footer (Desktop View inside scroll container) */}
-            {!isChatRoute && !isOnboardingView && !isPostRoute && (
-              <React.Suspense fallback={null}>
-                <div className="hidden md:block mt-auto pt-8">
-                  <Footer />
-                </div>
-              </React.Suspense>
-            )}
-          </main>
-        );
-      })()}
+      {/* Floating Post Button — mobile */}
+      {!isOnboardingView && !isPostRoute && <FloatingPostButton />}
 
-            {/* Scroll-driven Floating Post Button on Mobile */}
-            {!isOnboardingView && !isPostRoute && <FloatingPostButton />}
+      {/* Bottom Navigation Bar */}
+      {!isStandaloneView && !isOnboardingView && (
+        <BottomTabBar
+          activeTab={getActiveTab()}
+          onTabChange={handleTabChange}
+        />
+      )}
 
-            {/* Bottom Navigation Bar */}
-            {!isStandaloneView && !isOnboardingView && (
-              <div>
-                <BottomTabBar
-                  activeTab={getActiveTab()}
-                  onTabChange={handleTabChange}
-                />
-              </div>
-            )}
-          </>
-        );
-      })()}
-
-      {/* Sign-In Popup Modal */}
+      {/* Sign-In Modal */}
       <React.Suspense fallback={null}>
         <SignInModal
           isOpen={isSignInOpen}
