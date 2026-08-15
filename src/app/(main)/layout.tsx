@@ -170,10 +170,14 @@ function MainLayoutContent({
     router.push(`${pathname}${queryString ? `?${queryString}` : ""}`);
   };
 
-  // Reset scroll position to top on every route change (Desktop & Mobile Web App)
-  useEffect(() => {
+  // Synchronous scroll-to-top BEFORE browser paint on route change
+  const useIsomorphicLayoutEffect = typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
+
+  useIsomorphicLayoutEffect(() => {
     if (typeof window !== "undefined") {
-      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
     }
     const mainEl = document.querySelector("main");
     if (mainEl) {
@@ -219,11 +223,15 @@ function MainLayoutContent({
                       if (!isAuthVerified) {
                         setIsSignInOpen(true);
                       } else {
+                        if (typeof window !== "undefined") window.scrollTo(0, 0);
                         router.push("/post/sell");
                       }
                     }}
                     activeTab={getActiveTab()}
-                    onTabChange={handleTabChange}
+                    onTabChange={(tab) => {
+                      if (typeof window !== "undefined") window.scrollTo(0, 0);
+                      handleTabChange(tab);
+                    }}
                   />
                 </React.Suspense>
               </div>
@@ -238,12 +246,13 @@ function MainLayoutContent({
 
       {/* Main Content Panel */}
       {(() => {
+        const isAuthVerified = Boolean(profile?.isVerified || user);
         const isLandingHero = pathname === "/" && !isAuthVerified;
         const isFullWidthPage = isStandaloneView || isOnboardingView || isLandingHero;
 
         return (
           <main 
-            className={`flex-1 w-full max-md:overflow-y-auto max-md:overscroll-contain md:overflow-visible md:h-auto ${
+            className={`flex-1 w-full max-md:overflow-y-auto max-md:overscroll-contain md:overflow-visible md:h-auto flex flex-col ${
               isFullWidthPage ? "p-0 max-w-none m-0 bg-white" : "bg-[#f4f5f8] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-28 md:pb-12"
             }`}
             style={{
@@ -251,12 +260,15 @@ function MainLayoutContent({
               paddingBottom: !isFullWidthPage ? "calc(6.5rem + env(safe-area-inset-bottom, 0px))" : undefined,
             }}
           >
-            {children}
+            {/* Stable height container to prevent page collapse and footer jumping during route transitions */}
+            <div className={`w-full flex-1 flex flex-col ${!isFullWidthPage ? "min-h-[85vh]" : ""}`}>
+              {children}
+            </div>
 
             {/* Main Website Footer (Desktop View inside scroll container) */}
             {!isChatRoute && !isOnboardingView && !isPostRoute && (
               <React.Suspense fallback={null}>
-                <div className="hidden md:block">
+                <div className="hidden md:block mt-auto pt-8">
                   <Footer />
                 </div>
               </React.Suspense>

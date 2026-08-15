@@ -112,7 +112,7 @@ export default function TopHeader({
           const inactiveStyle = "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-bold";
 
           return (
-            <div className="hidden sm:flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200/90 font-heading">
+            <div className="hidden md:flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200/90 font-heading">
               <button
                 type="button"
                 onClick={() => router.push("/home")}
