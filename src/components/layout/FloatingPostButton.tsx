@@ -74,7 +74,7 @@ export default function FloatingPostButton() {
 
   return (
     <div
-      className={`fixed bottom-20 right-4 z-40 md:hidden transition-all duration-300 transform ${
+      className={`fixed bottom-20 left-4 right-4 z-40 md:hidden flex justify-center transition-all duration-300 transform ${
         isVisible
           ? "translate-y-0 opacity-100 scale-100 pointer-events-auto"
           : "translate-y-16 opacity-0 scale-90 pointer-events-none"
@@ -92,12 +92,13 @@ export default function FloatingPostButton() {
           }
           router.push(route);
         }}
-        className="flex items-center gap-2 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-slate-955 font-heading font-black text-xs px-4 py-3 rounded-full shadow-[0_4px_20px_rgba(234,179,8,0.4)] border border-yellow-300 active:scale-95 transition-transform cursor-pointer"
+        className="w-full max-w-sm flex items-center justify-center gap-2 bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-slate-955 font-heading font-black text-sm px-6 py-3.5 rounded-2xl shadow-[0_8px_28px_rgba(245,158,11,0.45)] border border-amber-300/80 active:scale-95 transition-all cursor-pointer uppercase tracking-wider"
       >
-        <Plus className="w-4 h-4 stroke-[3]" />
-        <span className="uppercase tracking-wider">{label}</span>
+        <Plus className="w-5 h-5 stroke-[3]" />
+        <span>{label}</span>
       </button>
     </div>
   );
 }
+
 
