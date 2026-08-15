@@ -14,30 +14,27 @@ export default function FloatingPostButton() {
   const [isVisible, setIsVisible] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
 
-  // Hide on main landing page, home page, onboarding, chat, or post creation pages
-  const isExcludedRoute = pathname === "/" || pathname === "/home" || pathname === "/onboarding" || pathname === "/chat" || pathname.startsWith("/post");
+  // GUARANTEE: Floating Scroll-Up Post Button is strictly enabled ONLY on the 4 category segment pages
+  const isCategoryPage = pathname === "/sell" || pathname === "/need" || pathname === "/services" || pathname === "/shops";
 
   // Determine button config based on current route
   const getButtonConfig = () => {
-    if (pathname.includes("/need")) {
+    if (pathname === "/need") {
       return { label: "Post Need", route: "/post/need" };
     }
-    if (pathname.includes("/services")) {
+    if (pathname === "/services") {
       return { label: "Post Service", route: "/post/service" };
     }
-    if (pathname.includes("/shops") || pathname.includes("/offers")) {
+    if (pathname === "/shops") {
       return { label: "Post Offer", route: "/post/offer" };
     }
-    if (pathname.includes("/sell")) {
-      return { label: "Post Item", route: "/post/sell" };
-    }
-    return { label: "Post / Sell", route: "/post/sell" };
+    return { label: "Post Item", route: "/post/sell" };
   };
 
   const { label, route } = getButtonConfig();
 
   useEffect(() => {
-    if (isExcludedRoute) return;
+    if (!isCategoryPage) return;
 
     const mainElement = document.querySelector("main");
 
@@ -68,9 +65,9 @@ export default function FloatingPostButton() {
       if (mainElement) mainElement.removeEventListener("scroll", handleScroll);
       window.removeEventListener("scroll", handleScroll);
     };
-  }, [lastScrollY, isExcludedRoute]);
+  }, [lastScrollY, isCategoryPage]);
 
-  if (isExcludedRoute) return null;
+  if (!isCategoryPage) return null;
 
   return (
     <div
