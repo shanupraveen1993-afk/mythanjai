@@ -84,6 +84,7 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
       <div 
         onClick={() => {
           if (typeof window !== "undefined") {
+            localStorage.setItem("namma_thanjai_target_post_route", "/shops");
             window.dispatchEvent(new Event("namma_thanjai_open_signin"));
           }
         }}

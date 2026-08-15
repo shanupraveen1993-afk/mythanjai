@@ -226,7 +226,10 @@ export default function HomeClientPage() {
           accentColor="bg-yellow-500"
           isGuest={!user}
           onAuthRequired={() => {
-            if (typeof window !== "undefined") window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+            if (typeof window !== "undefined") {
+              localStorage.setItem("namma_thanjai_target_post_route", "/shops");
+              window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+            }
           }}
           onCardClick={() => router.push("/shops")}
           cards={[

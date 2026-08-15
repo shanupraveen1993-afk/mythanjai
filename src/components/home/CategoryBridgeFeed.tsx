@@ -18,6 +18,7 @@ export default function CategoryBridgeFeed() {
   const handlePostAction = (route: string) => {
     if (!user) {
       if (typeof window !== "undefined") {
+        localStorage.setItem("namma_thanjai_target_post_route", route);
         window.dispatchEvent(new Event("namma_thanjai_open_signin"));
       }
       return;
