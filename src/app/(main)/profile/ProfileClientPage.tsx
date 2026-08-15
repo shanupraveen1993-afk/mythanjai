@@ -412,46 +412,57 @@ export default function ProfileClientPage() {
                 </a>
               </div>
             ) : (
-              <div className="flex flex-col gap-3 bg-slate-50 p-3 rounded-xl border border-slate-200">
-                <label className="text-[11px] font-bold text-slate-500 flex items-center gap-1">
-                  <Phone className="w-3.5 h-3.5 text-amber-600" />
-                  WhatsApp Verification
-                </label>
-                
+              <div className="flex flex-col gap-3 bg-gradient-to-br from-amber-500/10 via-yellow-500/5 to-amber-500/10 p-4 rounded-2xl border border-amber-500/30 shadow-md font-sans">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-heading font-black text-slate-955 flex items-center gap-1.5 uppercase tracking-wide">
+                    <Sparkles className="w-4 h-4 text-amber-500 fill-yellow-400 shrink-0" />
+                    <span>Register WhatsApp Mobile</span>
+                  </label>
+                  <span className="text-[9px] font-extrabold bg-amber-500/20 text-amber-800 border border-amber-500/30 px-2 py-0.5 rounded-md">Free Member</span>
+                </div>
+                <p className="text-[11px] text-slate-600 font-medium">Verify your WhatsApp number to unlock full marketplace contact details, post listings, & chat.</p>
+
                 {!verificationPending ? (
                   <form onSubmit={handleInitiateWhatsAppVerify} className="flex flex-col gap-2">
                     <div className="relative">
-                      <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-500">+91</span>
+                      <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-black text-amber-600">+91</span>
                       <input
                         type="tel"
                         value={phoneNumber}
                         onChange={(e) => setPhoneNumber(e.target.value)}
-                        placeholder="10-digit number"
+                        placeholder="Enter 10-digit WhatsApp No"
                         disabled={phoneUpdating}
-                        className="w-full bg-white border border-slate-200 text-slate-900 rounded-lg pl-10 pr-2 py-1.5 text-xs focus:ring-1 focus:ring-amber-500 focus:outline-none font-bold"
+                        className="w-full bg-white border border-slate-300 text-slate-900 rounded-xl pl-11 pr-3 py-2 text-xs focus:ring-2 focus:ring-amber-500 focus:border-amber-500 focus:outline-none font-bold shadow-2xs"
                       />
                     </div>
                     <button
                       type="submit"
                       disabled={phoneUpdating}
-                      className="bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-slate-955 font-bold w-full py-2 rounded-lg text-xs transition-all border border-yellow-400 shadow-2xs cursor-pointer"
+                      className="bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-500 hover:brightness-105 active:scale-95 text-slate-955 font-heading font-black w-full py-2.5 rounded-xl text-xs transition-all border border-yellow-400 shadow-md cursor-pointer flex items-center justify-center gap-1.5"
                     >
-                      Verify WhatsApp
+                      {phoneUpdating ? (
+                        <Loader2 className="w-4 h-4 animate-spin text-slate-955" />
+                      ) : (
+                        <>
+                          <Zap className="w-4 h-4 text-slate-955 fill-slate-955" />
+                          <span>Verify WhatsApp & Unlock</span>
+                        </>
+                      )}
                     </button>
                   </form>
                 ) : (
                   <div className="flex flex-col gap-3">
-                    <div className="flex flex-col gap-1.5 bg-white p-3 rounded-lg border border-slate-200 text-center text-xs">
-                      <span className="text-amber-600 font-extrabold text-sm">{verificationToken}</span>
-                      <span className="text-[10px] text-slate-500">Send token on WhatsApp.</span>
+                    <div className="flex flex-col gap-1.5 bg-white p-3.5 rounded-xl border border-amber-300/80 text-center text-xs shadow-sm">
+                      <span className="text-amber-600 font-black text-base tracking-widest">{verificationToken}</span>
+                      <span className="text-[10px] text-slate-500 font-bold">Click below to send verification code on WhatsApp.</span>
                       <a
                         href={`https://wa.me/${process.env.NEXT_PUBLIC_ADMIN_PHONE || "919994837342"}?text=${encodeURIComponent(`Verify Namma Thanjai App: ${verificationToken}`)}`}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="flex items-center justify-center gap-1.5 bg-emerald-500 hover:bg-emerald-600 text-white py-2 rounded-xl text-xs font-bold mt-2 shadow-md"
+                        className="flex items-center justify-center gap-1.5 bg-emerald-500 hover:bg-emerald-600 text-white py-2.5 rounded-xl text-xs font-black mt-2 shadow-md transition-all active:scale-95"
                       >
                         <MessageSquare className="w-4 h-4 fill-current stroke-none" />
-                        <span>Send Text Code</span>
+                        <span>Send WhatsApp Code →</span>
                       </a>
                     </div>
                   </div>
