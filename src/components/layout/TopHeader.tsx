@@ -32,7 +32,7 @@ export default function TopHeader({
   const pathname = usePathname();
   const { profile } = useAuth();
   const { lang, toggleLanguage, t } = useLanguage();
-  
+
   const isAuthVerified = Boolean(profile?.isVerified);
   const isLandingMode = pathname === "/" && !isAuthVerified;
   const showCenterNav = pathname !== "/onboarding" && pathname !== "/chat";
@@ -67,15 +67,15 @@ export default function TopHeader({
   };
 
   return (
-    <header 
+    <header
       className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm flex flex-col justify-end"
       style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
     >
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-3">
-        
+
         {/* Left: Website Branding Logo across all pages */}
         <div className="flex items-center gap-2">
-          <div 
+          <div
             onClick={() => {
               if (!isAuthVerified) {
                 if (typeof window !== "undefined") {
@@ -116,45 +116,40 @@ export default function TopHeader({
               <button
                 type="button"
                 onClick={() => router.push("/home")}
-                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${
-                  isHomeActive ? activeStyle : inactiveStyle
-                }`}
+                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${isHomeActive ? activeStyle : inactiveStyle
+                  }`}
               >
                 Home
               </button>
               <button
                 type="button"
                 onClick={() => router.push("/sell")}
-                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${
-                  isSellActive ? activeStyle : inactiveStyle
-                }`}
+                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${isSellActive ? activeStyle : inactiveStyle
+                  }`}
               >
                 Sell
               </button>
               <button
                 type="button"
                 onClick={() => router.push("/need")}
-                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${
-                  isNeedActive ? activeStyle : inactiveStyle
-                }`}
+                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${isNeedActive ? activeStyle : inactiveStyle
+                  }`}
               >
                 Need
               </button>
               <button
                 type="button"
                 onClick={() => router.push("/services")}
-                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${
-                  isServiceActive ? activeStyle : inactiveStyle
-                }`}
+                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${isServiceActive ? activeStyle : inactiveStyle
+                  }`}
               >
                 Local Service
               </button>
               <button
                 type="button"
                 onClick={() => router.push("/shops")}
-                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${
-                  isOfferActive ? activeStyle : inactiveStyle
-                }`}
+                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${isOfferActive ? activeStyle : inactiveStyle
+                  }`}
               >
                 Local Offer
               </button>
@@ -174,11 +169,10 @@ export default function TopHeader({
                 <button
                   type="button"
                   onClick={() => router.push("/chat")}
-                  className={`relative flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3.5 rounded-full text-xs font-bold transition-all duration-200 cursor-pointer group active:scale-95 ${
-                    isChatActive
+                  className={`relative flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3.5 rounded-full text-xs font-bold transition-all duration-200 cursor-pointer group active:scale-95 ${isChatActive
                       ? "bg-amber-500/10 text-amber-600 border border-amber-400/80 font-black shadow-2xs"
                       : "bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200/80 text-slate-700 hover:text-amber-600"
-                  }`}
+                    }`}
                   title="In-App Safety Chat"
                 >
                   <MessageSquare className={`w-4 h-4 shrink-0 ${isChatActive ? "text-amber-600 fill-amber-500/20" : "text-slate-500 group-hover:text-amber-600"}`} />
@@ -189,11 +183,10 @@ export default function TopHeader({
                 <button
                   type="button"
                   onClick={() => onTabChange?.("profile")}
-                  className={`relative flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3.5 rounded-full text-xs transition-all duration-200 cursor-pointer group active:scale-95 ${
-                    isProfileActive
+                  className={`relative flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3.5 rounded-full text-xs transition-all duration-200 cursor-pointer group active:scale-95 ${isProfileActive
                       ? "bg-amber-500/10 text-amber-600 border border-amber-400/80 font-black shadow-2xs"
                       : "bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200/80 text-slate-700 hover:text-amber-600 font-bold"
-                  }`}
+                    }`}
                   title={`Verified Profile (${phoneDisplay})`}
                 >
                   <User className={`w-4 h-4 shrink-0 ${isProfileActive ? "text-amber-600" : "text-slate-500 group-hover:text-amber-600"}`} />
@@ -239,11 +232,10 @@ export default function TopHeader({
                 <button
                   type="button"
                   onClick={() => onTabChange?.("profile")}
-                  className={`flex items-center justify-center w-9 h-9 rounded-full transition-all duration-200 cursor-pointer group active:scale-95 ${
-                    isProfileActive
+                  className={`flex items-center justify-center w-9 h-9 rounded-full transition-all duration-200 cursor-pointer group active:scale-95 ${isProfileActive
                       ? "bg-amber-500/10 text-amber-600 border border-amber-400/80 font-black shadow-2xs"
                       : "bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200/80 text-slate-700 hover:text-amber-600 font-bold"
-                  }`}
+                    }`}
                   title="Profile"
                 >
                   <User className={`w-4 h-4 shrink-0 ${isProfileActive ? "text-amber-600" : "text-slate-500 group-hover:text-amber-600"}`} />

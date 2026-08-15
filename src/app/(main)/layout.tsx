@@ -213,7 +213,7 @@ function MainLayoutContent({
         return (
           <>
             {!isStandaloneView && !isOnboardingView && (
-              <div className={!isAuthVerified && pathname === "/" ? "max-md:hidden" : ""}>
+              <div>
                 <React.Suspense fallback={null}>
                   <TopHeader
                     selectedArea={selectedArea}
@@ -278,9 +278,9 @@ function MainLayoutContent({
             {/* Scroll-driven Floating Post Button on Mobile */}
             {!isOnboardingView && !isPostRoute && <FloatingPostButton />}
 
-            {/* Bottom Navigation Bar — Instantly hidden via CSS on mobile landing page for unauthenticated visitors */}
+            {/* Bottom Navigation Bar */}
             {!isStandaloneView && !isOnboardingView && (
-              <div className={!isAuthVerified && pathname === "/" ? "max-md:hidden" : ""}>
+              <div>
                 <BottomTabBar
                   activeTab={getActiveTab()}
                   onTabChange={handleTabChange}
