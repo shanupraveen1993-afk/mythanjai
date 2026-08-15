@@ -205,7 +205,10 @@ export default function TopHeader({
               <button
                 type="button"
                 onClick={() => {
-                  if (typeof window !== "undefined") localStorage.removeItem("namma_thanjai_target_post_route");
+                  if (typeof window !== "undefined") {
+                    localStorage.removeItem("namma_thanjai_target_post_route");
+                    sessionStorage.setItem("namma_thanjai_header_login_active", "true");
+                  }
                   onSignInClick?.();
                 }}
                 className="flex items-center justify-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-black text-xs px-4 py-2 rounded-xl shadow-md border border-yellow-400 cursor-pointer active:scale-95 transition-all"
@@ -219,7 +222,10 @@ export default function TopHeader({
                 <button
                   type="button"
                   onClick={() => {
-                    if (typeof window !== "undefined") localStorage.removeItem("namma_thanjai_target_post_route");
+                    if (typeof window !== "undefined") {
+                      localStorage.removeItem("namma_thanjai_target_post_route");
+                      sessionStorage.setItem("namma_thanjai_header_login_active", "true");
+                    }
                     onSignInClick?.();
                   }}
                   className="flex items-center justify-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-black text-xs px-3.5 py-1.5 rounded-xl shadow-md border border-yellow-400 cursor-pointer active:scale-95 transition-all"

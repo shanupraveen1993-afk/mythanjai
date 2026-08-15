@@ -67,13 +67,28 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
         toast.success("WhatsApp Number Verified Successfully!");
         onClose();
 
-        const pendingTarget = typeof window !== "undefined" ? localStorage.getItem("namma_thanjai_target_post_route") : null;
-        if (pendingTarget) {
-          localStorage.removeItem("namma_thanjai_target_post_route");
-          router.push(pendingTarget);
-        } else {
-          // If logged in via Header Login button, stay on current page (refresh auth state)
+        const isHeaderLogin = typeof window !== "undefined" && sessionStorage.getItem("namma_thanjai_header_login_active") === "true";
+        if (typeof window !== "undefined") {
+          sessionStorage.removeItem("namma_thanjai_header_login_active");
+        }
+
+        if (isHeaderLogin) {
+          if (typeof window !== "undefined") {
+            localStorage.removeItem("namma_thanjai_target_post_route");
+            window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+          }
           router.refresh();
+        } else {
+          const pendingTarget = typeof window !== "undefined" ? localStorage.getItem("namma_thanjai_target_post_route") : null;
+          if (pendingTarget) {
+            localStorage.removeItem("namma_thanjai_target_post_route");
+            router.push(pendingTarget);
+          } else {
+            if (typeof window !== "undefined") {
+              window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+            }
+            router.refresh();
+          }
         }
       } else {
         toast.error("Verification failed.");
