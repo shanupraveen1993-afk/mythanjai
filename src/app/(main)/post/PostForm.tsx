@@ -110,12 +110,23 @@ export default function PostForm({ segment }: PostFormProps) {
   const config = SEGMENT_CONFIG[segment];
   const { user, profile } = useAuth();
 
-  // Unauthenticated Guest Protection: Redirect to WhatsApp sign-in modal
+  // Unauthenticated Guest Protection: Block form rendering & open WhatsApp verification popup
   useEffect(() => {
     if (!user) {
-      toast.error("Please verify your WhatsApp number to post listings.");
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+      }
+      router.replace("/home");
     }
   }, [user, router]);
+
+  if (!user) {
+    return (
+      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-6 text-white font-heading font-black text-center text-sm">
+        Please verify your WhatsApp number to access posting...
+      </div>
+    );
+  }
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);

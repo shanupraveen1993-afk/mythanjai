@@ -147,6 +147,14 @@ export default function CreatePostModal({
 
   if (!isOpen) return null;
 
+  if (!auth.currentUser) {
+    if (typeof window !== "undefined") {
+      window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+    }
+    onClose();
+    return null;
+  }
+
   // Handle OCR scanning of visiting card
   const handleOcrScan = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];

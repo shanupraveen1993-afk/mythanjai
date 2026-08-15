@@ -256,8 +256,16 @@ export default function CategoryFeedClient({ segmentType }: CategoryFeedClientPr
             <option value="price_high">Price ↓</option>
           </select>
           <button
-            onClick={() => setIsModalOpen(true)}
-            className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-slate-950 font-black px-3 py-1.5 rounded-xl text-xs uppercase tracking-wider transition-all border border-yellow-400 shrink-0 shadow-sm"
+            onClick={() => {
+              if (!user) {
+                if (typeof window !== "undefined") {
+                  window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+                }
+                return;
+              }
+              setIsModalOpen(true);
+            }}
+            className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-slate-950 font-black px-3 py-1.5 rounded-xl text-xs uppercase tracking-wider transition-all border border-yellow-400 shrink-0 shadow-sm cursor-pointer"
           >
             <Plus className="w-3.5 h-3.5 stroke-[3]" />
             <span className="hidden sm:inline">{config.postLabel}</span>
