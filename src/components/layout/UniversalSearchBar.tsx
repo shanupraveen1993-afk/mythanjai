@@ -17,11 +17,6 @@ export default function UniversalSearchBar() {
   const searchParams = useSearchParams();
   const selectedCategory = searchParams.get("category");
 
-  // Render SearchBar ONLY when user enters into a specific category feed
-  if (!selectedCategory) {
-    return null;
-  }
-
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const [loading, setLoading] = useState(false);

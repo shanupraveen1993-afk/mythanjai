@@ -228,8 +228,8 @@ function MainLayoutContent({
               </div>
             )}
 
-            {/* Universal Directory Search Bar (Hidden on Home, Profile, Chat, & Onboarding pages) */}
-            {pathname !== "/" && pathname !== "/profile" && !isChatRoute && !isOnboardingView && (
+            {/* Universal Directory Search Bar */}
+            {pathname !== "/profile" && !isChatRoute && !isOnboardingView && (
               <React.Suspense fallback={null}>
                 <UniversalSearchBar />
               </React.Suspense>
@@ -237,7 +237,8 @@ function MainLayoutContent({
 
       {/* Main Content Panel */}
       {(() => {
-        const isFullWidthPage = isStandaloneView || isOnboardingView || pathname === "/" || pathname === "/home";
+        const isLandingHero = pathname === "/" && !isAuthVerified;
+        const isFullWidthPage = isStandaloneView || isOnboardingView || isLandingHero;
 
         return (
           <main 
