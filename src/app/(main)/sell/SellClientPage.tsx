@@ -15,9 +15,22 @@ const SAMPLE_POSTS: NeedOrSalePost[] = [
   { id: "sl_teak", userId: "sample", type: "SELL", raw_text: "Teakwood 6 Seater Dining Table with Cushion Chairs.", title: "Teakwood 6-Seater Dining Set", description: "Pure Burma teakwood table with glass top and 6 cushioned matching chairs.", category: "Household Goods", area_tag: "Srinivasapuram", price: 24000, phone: "9876543213", is_verified: true, created_at: new Date() as any, expires_at: new Date() as any },
 ];
 
+import { useAuth } from "@/hooks/use-auth";
+
 export default function SellClientPage() {
   const router = useRouter();
+  const { user } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
+
+  const handlePostItem = () => {
+    if (!user) {
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+      }
+      return;
+    }
+    router.push("/post/sell");
+  };
   const [sortBy, setSortBy] = useState<"recent" | "price_low" | "price_high">("recent");
 
   const { data: firestorePosts, loading } = useFirestore<NeedOrSalePost>({
@@ -77,7 +90,7 @@ export default function SellClientPage() {
           Items for Sale
         </h2>
         <button
-          onClick={() => router.push("/post/sell")}
+          onClick={handlePostItem}
           className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-black px-4 py-2 rounded-xl text-xs sm:text-sm transition-all border border-yellow-400 cursor-pointer shadow-md active:scale-95 shrink-0"
         >
           <Plus className="w-4 h-4 stroke-[3]" />
@@ -122,7 +135,7 @@ export default function SellClientPage() {
         <div className="flex flex-col items-center justify-center py-16 gap-2 text-center">
           <ShoppingBag className="w-8 h-8 text-slate-300" />
           <p className="text-sm font-bold text-slate-500">No items listed yet.</p>
-          <button onClick={() => router.push("/post/sell")} className="bg-yellow-500 text-slate-950 font-bold text-xs px-4 py-2 rounded-lg border border-yellow-400 hover:bg-yellow-400 transition-all cursor-pointer">+ Post Item</button>
+          <button onClick={handlePostItem} className="bg-yellow-500 text-slate-950 font-bold text-xs px-4 py-2 rounded-lg border border-yellow-400 hover:bg-yellow-400 transition-all cursor-pointer">+ Post Item</button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

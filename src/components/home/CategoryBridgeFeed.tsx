@@ -8,9 +8,22 @@ import { useFirestore } from "@/hooks/use-firestore";
 import { PreviewSection, PreviewCard } from "@/app/(main)/HomeClientPage";
 import { useLanguage } from "@/context/LanguageContext";
 
+import { useAuth } from "@/hooks/use-auth";
+
 export default function CategoryBridgeFeed() {
   const router = useRouter();
+  const { user } = useAuth();
   const { t } = useLanguage();
+
+  const handlePostAction = (route: string) => {
+    if (!user) {
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+      }
+      return;
+    }
+    router.push(route);
+  };
   const { data: firestorePosts } = useFirestore<NeedOrSalePost>({
     collectionName: "needs_and_sales",
     areaTag: "All Areas",
@@ -55,13 +68,13 @@ export default function CategoryBridgeFeed() {
 
         <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
           <button
-            onClick={() => router.push("/post/need")}
+            onClick={() => handlePostAction("/post/need")}
             className="flex-1 sm:flex-none px-3.5 py-2 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-extrabold text-xs rounded-xl border border-yellow-400 shadow-2xs transition-all cursor-pointer text-center"
           >
             {t("postRequirement")}
           </button>
           <button
-            onClick={() => router.push("/post/sell")}
+            onClick={() => handlePostAction("/post/sell")}
             className="flex-1 sm:flex-none px-3.5 py-2 bg-slate-800 hover:bg-slate-700 text-white font-heading font-extrabold text-xs rounded-xl transition-all cursor-pointer text-center border border-slate-700"
           >
             {t("sellItem")}

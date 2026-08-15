@@ -14,9 +14,22 @@ const SAMPLE_POSTS: ShopPost[] = [
   { id: "sh_silk", userId: "sample", shop_name: "Thanjavur Silk Handloom House", category: "Textiles & Readymades", address_text: "Karanthai Main Road, Thanjavur", landmark: "Opposite Karandhai Tamil Sangam", hours: "9 AM – 9 PM", valid_from: "2026-08-05", valid_to: "2026-08-30", phone: "9876543227", area_tag: "Karanthai", offer_title: "Flat 25% OFF Wedding Pure Zari Silks", offer_description: "Direct handloom weavers price. Flat 25% off Kanchipuram & Thanjavur pure silk sarees.", image_url: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=600&auto=format&fit=crop", latitude: 10.8095, longitude: 79.1415, is_claimed: true, created_at: new Date() as any },
 ];
 
+import { useAuth } from "@/hooks/use-auth";
+
 export default function ShopsClientPage() {
   const router = useRouter();
+  const { user } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
+
+  const handlePostOffer = () => {
+    if (!user) {
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+      }
+      return;
+    }
+    router.push("/post/offer");
+  };
   const [sortBy, setSortBy] = useState<"recent" | "name">("recent");
 
   const { data: firestorePosts, loading } = useFirestore<ShopPost>({
@@ -56,7 +69,7 @@ export default function ShopsClientPage() {
       {/* Hero Banner */}
       <div className="relative w-full min-h-[120px] rounded-2xl overflow-hidden bg-slate-950 text-white flex items-center px-5 sm:px-8 py-5 shadow-2xs mt-2">
         <img src="/hero_building_visual.png" alt="Offers" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-955/90 to-transparent" />
         <div className="relative z-10 flex flex-col gap-1 max-w-lg">
           <span className="bg-yellow-500 text-slate-955 font-bold text-[10px] px-2 py-0.5 rounded-md tracking-wider w-fit">Store discounts</span>
           <h1 className="font-heading font-bold text-lg sm:text-xl text-white">Local Store Offers</h1>
@@ -70,7 +83,7 @@ export default function ShopsClientPage() {
           Local Offers
         </h2>
         <button
-          onClick={() => router.push("/post/offer")}
+          onClick={handlePostOffer}
           className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-black px-4 py-2 rounded-xl text-xs sm:text-sm transition-all border border-yellow-400 cursor-pointer shadow-md active:scale-95 shrink-0"
         >
           <Plus className="w-4 h-4 stroke-[3]" />
@@ -114,7 +127,7 @@ export default function ShopsClientPage() {
         <div className="flex flex-col items-center justify-center py-16 gap-2 text-center">
           <Store className="w-8 h-8 text-slate-300" />
           <p className="text-sm font-bold text-slate-500">No store offers listed yet.</p>
-          <button onClick={() => router.push("/post/offer")} className="bg-yellow-500 text-slate-950 font-bold text-xs px-4 py-2 rounded-lg border border-yellow-400 hover:bg-yellow-400 transition-all cursor-pointer">+ Post Offer</button>
+          <button onClick={handlePostOffer} className="bg-yellow-500 text-slate-950 font-bold text-xs px-4 py-2 rounded-lg border border-yellow-400 hover:bg-yellow-400 transition-all cursor-pointer">+ Post Offer</button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
