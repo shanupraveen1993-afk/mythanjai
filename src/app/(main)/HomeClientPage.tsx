@@ -167,21 +167,6 @@ export default function HomeClientPage() {
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
               Connect directly with Tanjore residents to buy, sell, hire verified tradesmen, and claim exclusive local store offers.
             </p>
-            <div className="flex items-center gap-2 mt-1">
-              <button
-                onClick={() => router.push("/post/sell")}
-                className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-slate-955 font-black text-xs px-4 py-2.5 rounded-xl transition-all shadow-lg border border-yellow-400 cursor-pointer"
-              >
-                <ShoppingBag className="w-3.5 h-3.5" />
-                <span>Post to Sell</span>
-              </button>
-              <button
-                onClick={() => router.push("/sell")}
-                className="flex items-center gap-1.5 bg-white/10 hover:bg-white/20 text-white font-bold text-xs px-4 py-2.5 rounded-xl transition-all border border-white/20 cursor-pointer"
-              >
-                <span>Browse Listings</span>
-              </button>
-            </div>
           </div>
         </div>
 
