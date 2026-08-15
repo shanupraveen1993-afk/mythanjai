@@ -176,12 +176,12 @@ export default function TopHeader({
                   onClick={() => router.push("/chat")}
                   className={`relative flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3.5 rounded-full text-xs font-bold transition-all cursor-pointer group ${
                     isChatActive
-                      ? "bg-emerald-600 text-white border-2 border-emerald-400 font-black shadow-md scale-[1.03]"
+                      ? "bg-yellow-500 text-slate-955 border-2 border-yellow-400 font-black shadow-md scale-[1.03]"
                       : "bg-slate-100/90 hover:bg-slate-200 border border-slate-200/80 text-slate-800"
                   }`}
                   title="In-App Safety Chat"
                 >
-                  <MessageSquare className={`w-4 h-4 shrink-0 ${isChatActive ? "text-white fill-current" : "text-slate-600 group-hover:text-emerald-600"}`} />
+                  <MessageSquare className={`w-4 h-4 shrink-0 ${isChatActive ? "text-slate-955 fill-current" : "text-slate-600 group-hover:text-emerald-600"}`} />
                   <span className="hidden sm:inline text-xs ml-1.5 font-black">Chat</span>
                   <span className="absolute top-0 right-0 sm:right-2 w-2.5 h-2.5 rounded-full bg-red-500 border-2 border-white animate-pulse" />
                 </button>
@@ -191,12 +191,12 @@ export default function TopHeader({
                   onClick={() => onTabChange?.("profile")}
                   className={`relative flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3.5 rounded-full text-xs transition-all cursor-pointer group ${
                     isProfileActive
-                      ? "bg-slate-900 text-yellow-400 border-2 border-yellow-400 font-black shadow-md scale-[1.03]"
+                      ? "bg-yellow-500 text-slate-955 border-2 border-yellow-400 font-black shadow-md scale-[1.03]"
                       : "bg-slate-100/90 hover:bg-slate-200 border border-slate-200/80 text-slate-800 font-bold"
                   }`}
                   title={`Verified Profile (${phoneDisplay})`}
                 >
-                  <User className={`w-4 h-4 shrink-0 ${isProfileActive ? "text-yellow-400" : "text-slate-600 group-hover:text-slate-900"}`} />
+                  <User className={`w-4 h-4 shrink-0 ${isProfileActive ? "text-slate-955" : "text-slate-600 group-hover:text-slate-900"}`} />
                   <span className="hidden md:inline text-xs ml-1.5 font-black">Profile</span>
                 </button>
               </>
@@ -227,12 +227,12 @@ export default function TopHeader({
                   onClick={() => onTabChange?.("profile")}
                   className={`flex items-center justify-center w-9 h-9 rounded-full transition-all cursor-pointer group ${
                     isProfileActive
-                      ? "bg-slate-900 text-yellow-400 border-2 border-yellow-400 font-black shadow-md scale-[1.03]"
+                      ? "bg-yellow-500 text-slate-955 border-2 border-yellow-400 font-black shadow-md scale-[1.03]"
                       : "bg-slate-100/90 hover:bg-slate-200 border border-slate-200/80 text-slate-800 font-bold"
                   }`}
                   title="Profile"
                 >
-                  <User className={`w-4 h-4 shrink-0 ${isProfileActive ? "text-yellow-400" : "text-slate-600 group-hover:text-slate-900"}`} />
+                  <User className={`w-4 h-4 shrink-0 ${isProfileActive ? "text-slate-955" : "text-slate-600 group-hover:text-slate-900"}`} />
                 </button>
               </>
             );
