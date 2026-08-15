@@ -841,6 +841,9 @@ export function RobotHero({
         toast.success("Mobile number verified successfully!");
         const confetti = (await import("canvas-confetti")).default;
         confetti({ particleCount: 80, spread: 60 });
+        setTimeout(() => {
+          router.push("/");
+        }, 500);
       } else {
         toast.error("Verification login failed.");
       }
@@ -1008,6 +1011,16 @@ export function RobotHero({
                   )}
                 </button>
               </div>
+
+              {/* Guest Exploration Option */}
+              <button
+                type="button"
+                onClick={() => router.push("/")}
+                className="w-full text-center text-[10px] font-extrabold text-slate-300 hover:text-yellow-400 py-1 transition-colors cursor-pointer flex items-center justify-center gap-1"
+              >
+                <span>Or explore marketplace as guest</span>
+                <ArrowRight className="w-3 h-3 text-yellow-400" />
+              </button>
             </form>
           )}
 

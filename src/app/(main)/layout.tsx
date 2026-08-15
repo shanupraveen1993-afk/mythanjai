@@ -79,8 +79,11 @@ function MainLayoutContent({
   const [selectedArea, setSelectedArea] = useState<TanjoreLocality | "All Areas">("All Areas");
   const [isSignInOpen, setIsSignInOpen] = useState(false);
 
-  // Startup Flow State: Splash -> Walkthrough -> Robot Hero Onboarding -> Main Feed
-  const [showSplash, setShowSplash] = useState(true);
+  // Startup Flow State: Splash Screen strictly for Capacitor Native App (disabled on website)
+  const [showSplash, setShowSplash] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return Boolean((window as any).Capacitor?.isNativePlatform());
+  });
   const [showWalkthrough, setShowWalkthrough] = useState(false);
 
   useEffect(() => {
@@ -173,7 +176,7 @@ function MainLayoutContent({
   const isStandaloneView = isChatRoute;
 
   return (
-    <div className="w-full h-dvh max-h-dvh overflow-hidden flex flex-col relative bg-[#f4f5f8] font-sans">
+    <div className="w-full min-h-screen max-md:h-dvh max-md:max-h-dvh max-md:overflow-hidden flex flex-col relative bg-[#f4f5f8] font-sans md:h-auto md:max-h-none md:overflow-visible">
       {/* 1. Animated Splash Screen */}
       {showSplash && (
         <SplashScreen onComplete={handleSplashComplete} />
@@ -211,10 +214,10 @@ function MainLayoutContent({
         </React.Suspense>
       )}
 
-      {/* Main Content Panel — Independent Scroll Viewport Box */}
+      {/* Main Content Panel — Independent Mobile Viewport Box / Natural Desktop Scroll */}
       <main 
-        className={`flex-1 w-full overflow-y-auto overscroll-contain bg-[#f4f5f8] ${
-          isStandaloneView ? "p-0 max-w-none m-0" : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 md:pb-8"
+        className={`flex-1 w-full max-md:overflow-y-auto max-md:overscroll-contain md:overflow-visible md:h-auto bg-[#f4f5f8] ${
+          isStandaloneView ? "p-0 max-w-none m-0" : "max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-20 md:pb-12"
         }`}
         style={!isStandaloneView ? {
           paddingTop: "calc(3.5rem + env(safe-area-inset-top, 0px))",
@@ -226,7 +229,7 @@ function MainLayoutContent({
         {/* Main Website Footer (Desktop View inside scroll container) */}
         {!isChatRoute && (
           <React.Suspense fallback={null}>
-            <div className="hidden md:block mt-8">
+            <div className="hidden md:block mt-12">
               <Footer />
             </div>
           </React.Suspense>
