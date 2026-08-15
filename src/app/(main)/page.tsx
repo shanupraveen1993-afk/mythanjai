@@ -8,17 +8,17 @@ import HomeClientPage from "./HomeClientPage";
 
 function RootPageContent() {
   const router = useRouter();
-  const { user, loading } = useAuth();
+  const { user, profile, loading } = useAuth();
   const [isGuestMode, setIsGuestMode] = useState<boolean>(() => {
     if (typeof window === "undefined") return false;
     return localStorage.getItem("namma_thanjai_guest_mode") === "true";
   });
 
   useEffect(() => {
-    if (user || isGuestMode) {
+    if (user || profile?.isVerified || isGuestMode) {
       router.replace("/home");
     }
-  }, [user, isGuestMode, router]);
+  }, [user, profile, isGuestMode, router]);
 
   const handleExploreGuest = () => {
     if (typeof window !== "undefined") {
