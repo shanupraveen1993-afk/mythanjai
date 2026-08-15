@@ -116,14 +116,15 @@ export default function PostForm({ segment }: PostFormProps) {
       if (typeof window !== "undefined") {
         window.dispatchEvent(new Event("namma_thanjai_open_signin"));
       }
-      router.replace("/home");
     }
-  }, [user, router]);
+  }, [user]);
 
   if (!user) {
     return (
-      <div className="min-h-screen bg-slate-900 flex items-center justify-center p-6 text-white font-heading font-black text-center text-sm">
-        Please verify your WhatsApp number to access posting...
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6 text-slate-900 font-heading font-black text-center text-sm">
+        <p className="max-w-xs leading-relaxed text-slate-600 font-bold">
+          Please verify your WhatsApp mobile number to create and publish listings on Namma Thanjai.
+        </p>
       </div>
     );
   }
