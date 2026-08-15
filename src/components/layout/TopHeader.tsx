@@ -102,21 +102,22 @@ export default function TopHeader({
 
         {/* Center: 5 Category Navigation Tabs (Hidden on Landing Page) */}
         {showCenterNav && (() => {
-          const isHomeActive = pathname === "/home" || pathname === "/";
-          const isSellActive = pathname === "/sell" || pathname.includes("/sell");
-          const isNeedActive = pathname === "/need" || pathname.includes("/need");
-          const isServiceActive = pathname === "/services" || pathname.includes("/services") || pathname.includes("/post/service");
-          const isOfferActive = pathname === "/shops" || pathname === "/offers" || pathname.includes("/shops") || pathname.includes("/offers");
+          const isHomeActive = pathname === "/home" || pathname === "/" || activeTab === "home";
+          const isSellActive = (pathname.includes("/sell") && !pathname.includes("/post/service")) || activeTab === "sell";
+          const isNeedActive = pathname.includes("/need") || activeTab === "need";
+          const isServiceActive = pathname.includes("/services") || pathname.includes("/post/service") || activeTab === "services";
+          const isOfferActive = pathname.includes("/shops") || pathname.includes("/offers") || activeTab === "shops";
+
+          const activeStyle = "bg-white text-slate-950 border border-slate-300 shadow-xs font-black";
+          const inactiveStyle = "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-bold";
 
           return (
-            <div className="hidden sm:flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200 font-heading">
+            <div className="hidden sm:flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200/90 font-heading">
               <button
                 type="button"
                 onClick={() => router.push("/home")}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer ${
-                  isHomeActive
-                    ? "bg-yellow-500 text-slate-955 border border-yellow-400 shadow-xs"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-bold"
+                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${
+                  isHomeActive ? activeStyle : inactiveStyle
                 }`}
               >
                 Home
@@ -124,10 +125,8 @@ export default function TopHeader({
               <button
                 type="button"
                 onClick={() => router.push("/sell")}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer ${
-                  isSellActive
-                    ? "bg-yellow-500 text-slate-955 border border-yellow-400 shadow-xs"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-bold"
+                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${
+                  isSellActive ? activeStyle : inactiveStyle
                 }`}
               >
                 Sell
@@ -135,10 +134,8 @@ export default function TopHeader({
               <button
                 type="button"
                 onClick={() => router.push("/need")}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer ${
-                  isNeedActive
-                    ? "bg-yellow-500 text-slate-955 border border-yellow-400 shadow-xs"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-bold"
+                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${
+                  isNeedActive ? activeStyle : inactiveStyle
                 }`}
               >
                 Need
@@ -146,10 +143,8 @@ export default function TopHeader({
               <button
                 type="button"
                 onClick={() => router.push("/services")}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer ${
-                  isServiceActive
-                    ? "bg-yellow-500 text-slate-955 border border-yellow-400 shadow-xs"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-bold"
+                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${
+                  isServiceActive ? activeStyle : inactiveStyle
                 }`}
               >
                 Local Service
@@ -157,10 +152,8 @@ export default function TopHeader({
               <button
                 type="button"
                 onClick={() => router.push("/shops")}
-                className={`px-3.5 py-1.5 rounded-lg text-xs font-black transition-all cursor-pointer ${
-                  isOfferActive
-                    ? "bg-yellow-500 text-slate-955 border border-yellow-400 shadow-xs"
-                    : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-bold"
+                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${
+                  isOfferActive ? activeStyle : inactiveStyle
                 }`}
               >
                 Local Offer
