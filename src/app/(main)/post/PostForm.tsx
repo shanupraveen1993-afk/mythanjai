@@ -109,17 +109,18 @@ export default function PostForm({ segment }: PostFormProps) {
   const editCol = searchParams?.get("col");
   const config = SEGMENT_CONFIG[segment];
   const { user, profile } = useAuth();
+  const isAuthVerified = Boolean(profile?.isVerified || user);
 
   // Unauthenticated Guest Protection: Block form rendering & open WhatsApp verification popup
   useEffect(() => {
-    if (!user) {
+    if (!isAuthVerified) {
       if (typeof window !== "undefined") {
         window.dispatchEvent(new Event("namma_thanjai_open_signin"));
       }
     }
-  }, [user]);
+  }, [isAuthVerified]);
 
-  if (!user) {
+  if (!isAuthVerified) {
     return (
       <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6 text-slate-900 font-heading font-black text-center text-sm">
         <p className="max-w-xs leading-relaxed text-slate-600 font-bold">
