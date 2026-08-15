@@ -108,17 +108,26 @@ export default function PostForm({ segment }: PostFormProps) {
   const editId = searchParams?.get("edit");
   const editCol = searchParams?.get("col");
   const config = SEGMENT_CONFIG[segment];
-  const { user, profile } = useAuth();
+  const { user, profile, loading: authLoading } = useAuth();
   const isAuthVerified = Boolean(profile?.isVerified || user);
 
-  // Unauthenticated Guest Protection: Block form rendering & open WhatsApp verification popup
+  // Unauthenticated Guest Protection: Wait for auth to finish loading before checking guest status
   useEffect(() => {
-    if (!isAuthVerified) {
+    if (!authLoading && !isAuthVerified) {
       if (typeof window !== "undefined") {
         window.dispatchEvent(new Event("namma_thanjai_open_signin"));
       }
     }
-  }, [isAuthVerified]);
+  }, [authLoading, isAuthVerified]);
+
+  if (authLoading) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center p-6 text-slate-500 font-heading font-bold text-xs gap-3">
+        <Loader2 className="w-7 h-7 animate-spin text-amber-500" />
+        <span>Loading details...</span>
+      </div>
+    );
+  }
 
   if (!isAuthVerified) {
     return (

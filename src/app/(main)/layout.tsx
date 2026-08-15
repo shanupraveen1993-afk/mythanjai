@@ -170,6 +170,17 @@ function MainLayoutContent({
     router.push(`${pathname}${queryString ? `?${queryString}` : ""}`);
   };
 
+  // Reset scroll position to top on every route change (Desktop & Mobile Web App)
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      window.scrollTo({ top: 0, left: 0, behavior: "instant" });
+    }
+    const mainEl = document.querySelector("main");
+    if (mainEl) {
+      mainEl.scrollTop = 0;
+    }
+  }, [pathname]);
+
   const isChatRoute = pathname === "/chat";
   const isStandaloneView = isChatRoute;
 
@@ -226,8 +237,8 @@ function MainLayoutContent({
 
       {/* Main Content Panel */}
       {(() => {
-        const isLandingPage = pathname === "/";
-        const isFullWidthPage = isStandaloneView || isOnboardingView || isLandingPage;
+        const isLandingHero = pathname === "/" && !isAuthVerified;
+        const isFullWidthPage = isStandaloneView || isOnboardingView || isLandingHero;
 
         return (
           <main 
