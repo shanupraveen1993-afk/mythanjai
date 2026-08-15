@@ -1,22 +1,23 @@
 "use client";
 
 import React, { useEffect, Suspense } from "react";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import RobotHero from "@/components/ui/robot-hero";
 
 function RootPageContent() {
-  const router = useRouter();
   const { profile, loading } = useAuth();
   const isAuthVerified = Boolean(profile?.isVerified);
 
   useEffect(() => {
+    // Logged-in user on root / -> perform hard location replace to /home so browser URL becomes /home
     if (!loading && isAuthVerified) {
-      router.replace("/home");
+      if (typeof window !== "undefined") {
+        window.location.replace("/home");
+      }
     }
-  }, [isAuthVerified, loading, router]);
+  }, [isAuthVerified, loading]);
 
-  if (loading) {
+  if (loading || isAuthVerified) {
     return (
       <div className="min-h-screen bg-slate-950 flex items-center justify-center font-heading font-black text-xs text-yellow-400">
         Loading Namma Thanjavur...
@@ -24,18 +25,14 @@ function RootPageContent() {
     );
   }
 
-  if (isAuthVerified) {
-    return (
-      <div className="min-h-screen bg-[#f4f5f8] flex items-center justify-center font-bold text-xs text-slate-400">
-        Redirecting to Home...
-      </div>
-    );
-  }
-
-  // Root URL (https://mythanjai.vercel.app/): ONLY renders the 3D Mascot Robot Landing Page!
+  // Unauthenticated Guest Visitor at root /: Render ONLY the rich Robot Hero Landing Page!
   return (
     <RobotHero
-      onCtaClick={() => router.push("/home")}
+      onCtaClick={() => {
+        if (typeof window !== "undefined") {
+          window.location.href = "/home";
+        }
+      }}
       onSignInClick={() => {
         if (typeof window !== "undefined") {
           window.dispatchEvent(new Event("namma_thanjai_open_signin"));
