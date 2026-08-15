@@ -61,7 +61,7 @@ export default function TopHeader({
       const queryString = params.toString();
       router.push(queryString ? `${pathname}?${queryString}` : pathname);
     } else {
-      router.push("/");
+      router.push("/home");
     }
   };
 
@@ -75,16 +75,7 @@ export default function TopHeader({
         {/* Left: Website Branding Logo across all pages */}
         <div className="flex items-center gap-2">
           <div
-            onClick={() => {
-              if (!isAuthVerified) {
-                if (typeof window !== "undefined") {
-                  localStorage.removeItem("namma_thanjai_guest_mode");
-                }
-                router.push("/");
-              } else {
-                router.push("/home");
-              }
-            }}
+            onClick={() => router.push("/home")}
             className="flex items-center gap-2 cursor-pointer select-none shrink-0 group"
           >
             <div className="w-8 h-8 sm:w-9 sm:h-9 shrink-0 group-hover:scale-[1.05] transition-transform flex items-center justify-center">
