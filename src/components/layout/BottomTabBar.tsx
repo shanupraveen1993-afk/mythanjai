@@ -61,8 +61,8 @@ export default function BottomTabBar({
 
   return (
     <nav 
-      className="shrink-0 w-full z-50 bg-white/95 backdrop-blur-md border-t border-slate-200/80 shadow-[0_-4px_20px_rgba(0,0,0,0.08)] md:hidden"
-      style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 8px)" }}
+      className="fixed bottom-0 left-0 right-0 z-[9999] w-full bg-white/95 backdrop-blur-xl border-t border-slate-200/90 shadow-[0_-4px_25px_rgba(0,0,0,0.12)] md:hidden pointer-events-auto select-none"
+      style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 10px)" }}
     >
       <div className="flex justify-around items-center h-16 px-2">
         {tabs.map((tab) => {

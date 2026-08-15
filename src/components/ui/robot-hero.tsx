@@ -986,15 +986,15 @@ export function RobotHero({
               <button
                 type="button"
                 onClick={onCtaClick}
-                className="bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-black text-xs px-3.5 py-1.5 rounded-xl border border-yellow-400 cursor-pointer shadow-xs active:scale-95 shrink-0"
+                className="bg-amber-500 hover:bg-amber-400 text-slate-955 font-black text-xs px-3.5 py-1.5 rounded-xl border border-amber-400 cursor-pointer shadow-xs active:scale-95 shrink-0"
               >
                 Explore Marketplace →
               </button>
             </div>
           ) : (
-            <div className="flex flex-col gap-2.5 bg-slate-900/90 backdrop-blur-md border border-slate-800 p-3.5 rounded-2xl shadow-xl w-full">
+            <div className="flex flex-col gap-2.5 w-full">
               {/* 2 Primary Action Buttons: Register Primary + Explore Secondary */}
-              <div className="grid grid-cols-2 gap-2 w-full">
+              <div className="grid grid-cols-2 gap-2.5 w-full">
                 <button
                   type="button"
                   onClick={() => {
@@ -1005,9 +1005,9 @@ export function RobotHero({
                       onSignInClick();
                     }
                   }}
-                  className="bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-black text-xs px-3 py-2.5 rounded-xl border border-yellow-400 shadow-md flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer uppercase tracking-wider"
+                  className="bg-amber-500 hover:bg-amber-400 text-slate-955 font-heading font-black text-xs sm:text-sm px-4 py-3 rounded-2xl border border-amber-400 shadow-lg flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer uppercase tracking-wider"
                 >
-                  <Sparkles className="w-3.5 h-3.5 fill-slate-955 text-slate-955" />
+                  <Sparkles className="w-4 h-4 fill-slate-955 text-slate-955" />
                   <span>Register</span>
                 </button>
                 <button
@@ -1020,26 +1020,26 @@ export function RobotHero({
                       router.push("/home");
                     }
                   }}
-                  className="bg-white/10 hover:bg-white/20 text-white font-heading font-extrabold text-xs px-3 py-2.5 rounded-xl border border-white/20 shadow-md flex items-center justify-center gap-1 transition-all active:scale-95 cursor-pointer uppercase tracking-wider"
+                  className="bg-slate-950 hover:bg-slate-900 text-white font-heading font-extrabold text-xs sm:text-sm px-4 py-3 rounded-2xl border border-slate-800 shadow-lg flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer uppercase tracking-wider"
                 >
                   <span>Explore</span>
-                  <ArrowRight className="w-3.5 h-3.5 text-yellow-400" />
+                  <ArrowRight className="w-4 h-4 text-amber-400" />
                 </button>
               </div>
 
               {/* Expandable Registered / WhatsApp Verification Input Form */}
               {showRegisterForm && (
-                <form onSubmit={handleMobileSubmit} className="flex flex-col gap-2 pt-1 border-t border-slate-800 animate-fade-in mt-1">
+                <form onSubmit={handleMobileSubmit} className="flex flex-col gap-2 pt-2 border-t border-slate-200 animate-fade-in mt-1">
                   <div className="flex items-center justify-between text-left">
-                    <span className="text-[10px] font-black text-amber-400 uppercase tracking-widest flex items-center gap-1">
+                    <span className="text-[10px] font-black text-amber-600 uppercase tracking-widest flex items-center gap-1">
                       <Sparkles className="w-3 h-3" /> Enter WhatsApp Number
                     </span>
-                    <span className="text-[9px] text-slate-400 font-bold">10-Digit Mobile</span>
+                    <span className="text-[9px] text-slate-500 font-bold">10-Digit Mobile</span>
                   </div>
 
                   <div className="flex items-center gap-1.5">
                     <div className="relative flex-1">
-                      <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs font-black text-amber-400">+91</span>
+                      <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs font-black text-amber-600">+91</span>
                       <input
                         type="tel"
                         required
@@ -1048,13 +1048,13 @@ export function RobotHero({
                         onChange={(e) => setMobileNumber(e.target.value.replace(/\D/g, "").slice(0, 10))}
                         placeholder="Enter WhatsApp No"
                         disabled={isVerifying}
-                        className="w-full bg-slate-950 border border-slate-700 text-white rounded-xl pl-10 pr-2 py-2 text-xs font-extrabold focus:outline-none focus:border-amber-400"
+                        className="w-full bg-white border border-slate-300 text-slate-900 rounded-xl pl-10 pr-2 py-2 text-xs font-extrabold focus:outline-none focus:border-amber-500 shadow-xs"
                       />
                     </div>
                     <button
                       type="submit"
                       disabled={isVerifying}
-                      className="bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-black text-xs px-4 py-2 rounded-xl border border-yellow-400 shadow-md flex items-center gap-1 transition-all active:scale-95 shrink-0 cursor-pointer"
+                      className="bg-amber-500 hover:bg-amber-400 text-slate-955 font-heading font-black text-xs px-4 py-2 rounded-xl border border-amber-400 shadow-md flex items-center gap-1 transition-all active:scale-95 shrink-0 cursor-pointer"
                     >
                       {isVerifying ? (
                         <Loader2 className="w-4 h-4 animate-spin text-slate-955" />
@@ -1072,9 +1072,9 @@ export function RobotHero({
           )}
 
           {displayAlerts.length > 0 && (
-            <div className="flex w-full bg-slate-900 border border-slate-800 text-white rounded-xl py-1.5 px-3.5 shadow-sm items-center justify-between text-xs font-black select-none tracking-wide mt-1">
+            <div className="flex w-full bg-slate-50 border border-slate-200/90 text-slate-800 rounded-2xl py-2 px-3.5 shadow-2xs items-center justify-between text-xs font-black select-none tracking-wide mt-1">
               <div className="flex items-center gap-2 overflow-hidden w-full text-left">
-                <span className="bg-yellow-500 text-slate-955 font-black text-[8px] px-1.5 py-0.5 rounded-md uppercase shrink-0 animate-pulse">
+                <span className="bg-amber-500 text-slate-955 font-black text-[8px] px-1.5 py-0.5 rounded-md uppercase shrink-0 animate-pulse">
                   LIVE
                 </span>
                 <div className="relative h-4 flex-1 overflow-hidden">
@@ -1085,7 +1085,7 @@ export function RobotHero({
                       animate={{ opacity: 1, y: 0 }}
                       exit={{ opacity: 0, y: -10 }}
                       transition={{ duration: 0.3 }}
-                      className="absolute left-0 text-slate-100 truncate w-full font-bold text-left text-xs"
+                      className="absolute left-0 text-slate-800 truncate w-full font-bold text-left text-xs"
                     >
                       {displayAlerts[tickerIdx]}
                     </motion.span>
