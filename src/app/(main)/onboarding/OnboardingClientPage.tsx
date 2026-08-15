@@ -45,7 +45,7 @@ export default function OnboardingClientPage() {
             <span className="w-3 h-3 rounded-full bg-yellow-400 shadow-[0_0_10px_rgba(250,204,21,0.9)] shrink-0" />
           </h1>
           <p className="text-xs sm:text-sm text-slate-300 font-bold tracking-wide">
-            தஞ்சாவூர் நேரடி வர்த்தகம் & சேவை நெட்வொர்க்
+            Thanjavur Direct Trade & Service Network
           </p>
           <p className="text-[11px] text-slate-400 font-medium leading-relaxed mt-1">
             Connect directly with verified local residents, trade services, and shop deals across Thanjavur.

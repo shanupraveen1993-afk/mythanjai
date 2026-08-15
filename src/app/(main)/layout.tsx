@@ -203,29 +203,29 @@ function MainLayoutContent({
       {/* Top Header Section */}
       {(() => {
         const isAuthVerified = Boolean(profile?.isVerified || user);
-        // Hide header and bottom navigation bar on onboarding page or unauthenticated mobile landing screen
-        const isMobileWeb = typeof window !== "undefined" && window.innerWidth < 768;
-        const isOnboardingView = pathname === "/onboarding" || (!isAuthVerified && isMobileWeb && pathname === "/");
+        const isOnboardingView = pathname === "/onboarding";
 
         return (
           <>
             {!isStandaloneView && !isOnboardingView && (
-              <React.Suspense fallback={null}>
-                <TopHeader
-                  selectedArea={selectedArea}
-                  onAreaChange={handleAreaChange}
-                  onSignInClick={() => setIsSignInOpen(true)}
-                  onPostClick={() => {
-                    if (!isAuthVerified) {
-                      setIsSignInOpen(true);
-                    } else {
-                      router.push("/post/sell");
-                    }
-                  }}
-                  activeTab={getActiveTab()}
-                  onTabChange={handleTabChange}
-                />
-              </React.Suspense>
+              <div className={!isAuthVerified && pathname === "/" ? "max-md:hidden" : ""}>
+                <React.Suspense fallback={null}>
+                  <TopHeader
+                    selectedArea={selectedArea}
+                    onAreaChange={handleAreaChange}
+                    onSignInClick={() => setIsSignInOpen(true)}
+                    onPostClick={() => {
+                      if (!isAuthVerified) {
+                        setIsSignInOpen(true);
+                      } else {
+                        router.push("/post/sell");
+                      }
+                    }}
+                    activeTab={getActiveTab()}
+                    onTabChange={handleTabChange}
+                  />
+                </React.Suspense>
+              </div>
             )}
 
             {/* Universal Directory Search Bar (Hidden on Home, Profile, Chat, & Onboarding pages) */}
@@ -237,7 +237,7 @@ function MainLayoutContent({
 
       {/* Main Content Panel */}
       {(() => {
-        const isFullWidthPage = isStandaloneView || isOnboardingView;
+        const isFullWidthPage = isStandaloneView || isOnboardingView || pathname === "/" || pathname === "/home";
 
         return (
           <main 

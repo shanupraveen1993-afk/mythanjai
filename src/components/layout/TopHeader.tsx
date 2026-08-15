@@ -206,6 +206,7 @@ export default function TopHeader({
                 type="button"
                 onClick={() => {
                   if (typeof window !== "undefined") {
+                    sessionStorage.removeItem("namma_thanjai_target_post_route");
                     localStorage.removeItem("namma_thanjai_target_post_route");
                     sessionStorage.setItem("namma_thanjai_header_login_active", "true");
                   }
@@ -223,6 +224,7 @@ export default function TopHeader({
                   type="button"
                   onClick={() => {
                     if (typeof window !== "undefined") {
+                      sessionStorage.removeItem("namma_thanjai_target_post_route");
                       localStorage.removeItem("namma_thanjai_target_post_route");
                       sessionStorage.setItem("namma_thanjai_header_login_active", "true");
                     }

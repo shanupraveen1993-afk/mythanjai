@@ -79,7 +79,7 @@ export default function SplashScreen({
 
         {/* Subtitle / Tagline */}
         <p className="text-xs sm:text-sm text-slate-400 font-medium tracking-wide mt-2">
-          நம்ம தஞ்சை நேரடி சேவை • Thanjavur's Direct Network
+          Thanjavur's Direct Network
         </p>
 
         {/* Subtle loading indicator line */}

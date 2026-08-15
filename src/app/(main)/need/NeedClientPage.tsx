@@ -26,7 +26,7 @@ export default function NeedClientPage() {
   const handlePostNeed = () => {
     if (!isAuthVerified) {
       if (typeof window !== "undefined") {
-        localStorage.setItem("namma_thanjai_target_post_route", "/post/need");
+        sessionStorage.setItem("namma_thanjai_target_post_route", "/post/need");
         window.dispatchEvent(new Event("namma_thanjai_open_signin"));
       }
       return;

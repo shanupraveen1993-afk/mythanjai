@@ -30,6 +30,9 @@ function RootPageContent() {
       onCtaClick={() => router.push("/home")}
       onSignInClick={() => {
         if (typeof window !== "undefined") {
+          sessionStorage.removeItem("namma_thanjai_target_post_route");
+          localStorage.removeItem("namma_thanjai_target_post_route");
+          sessionStorage.setItem("namma_thanjai_header_login_active", "true");
           window.dispatchEvent(new Event("namma_thanjai_open_signin"));
         }
       }}

@@ -22,24 +22,37 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
   const [step, setStep] = useState<"phone" | "otp">("phone");
   const [phoneUpdating, setPhoneUpdating] = useState(false);
 
-  // Reset modal step when opened/closed
+  const isHeaderLoginRef = React.useRef(false);
+  const pendingTargetRef = React.useRef<string | null>(null);
+
+  // Capture intent when modal opens and reset state when closed
   useEffect(() => {
-    if (!isOpen) {
+    if (isOpen) {
+      if (typeof window !== "undefined") {
+        // Clear any stale legacy localStorage target route
+        localStorage.removeItem("namma_thanjai_target_post_route");
+
+        isHeaderLoginRef.current = sessionStorage.getItem("namma_thanjai_header_login_active") === "true";
+        pendingTargetRef.current = sessionStorage.getItem("namma_thanjai_target_post_route");
+      }
+    } else {
       setStep("phone");
       setOtpCode("");
+      // Clear intent to avoid leaking to next open
+      if (typeof window !== "undefined") {
+        sessionStorage.removeItem("namma_thanjai_header_login_active");
+        sessionStorage.removeItem("namma_thanjai_target_post_route");
+        localStorage.removeItem("namma_thanjai_target_post_route");
+      }
     }
   }, [isOpen]);
 
-  // Listen to profile verification state to close modal and redirect
+  // Listen to profile verification state to auto-close modal if already verified
   useEffect(() => {
-    if (profile?.isVerified) {
+    if (isOpen && profile?.isVerified) {
       onClose();
-      const redirect = searchParams.get("redirect");
-      if (redirect) {
-        router.push(redirect);
-      }
     }
-  }, [profile?.isVerified, onClose, searchParams, router]);
+  }, [isOpen, profile?.isVerified, onClose]);
 
   if (!isOpen) return null;
 
@@ -67,11 +80,12 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
         toast.success("WhatsApp Number Verified Successfully!");
         onClose();
 
-        const isHeaderLogin = typeof window !== "undefined" && sessionStorage.getItem("namma_thanjai_header_login_active") === "true";
-        const pendingTarget = typeof window !== "undefined" ? localStorage.getItem("namma_thanjai_target_post_route") : null;
+        const isHeaderLogin = isHeaderLoginRef.current;
+        const pendingTarget = pendingTargetRef.current;
 
         if (typeof window !== "undefined") {
           sessionStorage.removeItem("namma_thanjai_header_login_active");
+          sessionStorage.removeItem("namma_thanjai_target_post_route");
           localStorage.removeItem("namma_thanjai_target_post_route");
           window.scrollTo({ top: 0, left: 0, behavior: "instant" });
         }
