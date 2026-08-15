@@ -174,14 +174,14 @@ export default function TopHeader({
                 <button
                   type="button"
                   onClick={() => router.push("/chat")}
-                  className={`relative flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3.5 rounded-full text-xs font-bold transition-all cursor-pointer group active:scale-95 ${
+                  className={`relative flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3.5 rounded-full text-xs font-bold transition-all duration-200 cursor-pointer group active:scale-95 ${
                     isChatActive
-                      ? "bg-slate-900 text-white border border-slate-900 font-black shadow-2xs"
-                      : "bg-slate-100/90 hover:bg-slate-200 border border-slate-200/80 text-slate-800"
+                      ? "bg-amber-400 text-slate-955 border border-amber-400 font-black shadow-2xs"
+                      : "bg-amber-500/10 hover:bg-amber-400 text-amber-950 hover:text-slate-955 border border-amber-400/50 hover:border-amber-400"
                   }`}
                   title="In-App Safety Chat"
                 >
-                  <MessageSquare className={`w-4 h-4 shrink-0 ${isChatActive ? "text-amber-400 fill-amber-400/20" : "text-slate-600 group-hover:text-emerald-600"}`} />
+                  <MessageSquare className={`w-4 h-4 shrink-0 ${isChatActive ? "text-slate-955 fill-slate-955/20" : "text-amber-700 group-hover:text-slate-955"}`} />
                   <span className="hidden sm:inline text-xs ml-1.5 font-black">Chat</span>
                   <span className="absolute top-0 right-0 sm:right-2 w-2.5 h-2.5 rounded-full bg-red-500 border-2 border-white animate-pulse" />
                 </button>
@@ -189,14 +189,14 @@ export default function TopHeader({
                 <button
                   type="button"
                   onClick={() => onTabChange?.("profile")}
-                  className={`relative flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3.5 rounded-full text-xs transition-all cursor-pointer group active:scale-95 ${
+                  className={`relative flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3.5 rounded-full text-xs transition-all duration-200 cursor-pointer group active:scale-95 ${
                     isProfileActive
-                      ? "bg-slate-900 text-white border border-slate-900 font-black shadow-2xs"
-                      : "bg-slate-100/90 hover:bg-slate-200 border border-slate-200/80 text-slate-800 font-bold"
+                      ? "bg-amber-400 text-slate-955 border border-amber-400 font-black shadow-2xs"
+                      : "bg-amber-500/10 hover:bg-amber-400 text-amber-950 hover:text-slate-955 border border-amber-400/50 hover:border-amber-400 font-bold"
                   }`}
                   title={`Verified Profile (${phoneDisplay})`}
                 >
-                  <User className={`w-4 h-4 shrink-0 ${isProfileActive ? "text-amber-400" : "text-slate-600 group-hover:text-slate-900"}`} />
+                  <User className={`w-4 h-4 shrink-0 ${isProfileActive ? "text-slate-955" : "text-amber-700 group-hover:text-slate-955"}`} />
                   <span className="hidden md:inline text-xs ml-1.5 font-black">Profile</span>
                 </button>
               </>
@@ -231,14 +231,14 @@ export default function TopHeader({
                 <button
                   type="button"
                   onClick={() => onTabChange?.("profile")}
-                  className={`flex items-center justify-center w-9 h-9 rounded-full transition-all cursor-pointer group active:scale-95 ${
+                  className={`flex items-center justify-center w-9 h-9 rounded-full transition-all duration-200 cursor-pointer group active:scale-95 ${
                     isProfileActive
-                      ? "bg-slate-900 text-white border border-slate-900 font-black shadow-2xs"
-                      : "bg-slate-100/90 hover:bg-slate-200 border border-slate-200/80 text-slate-800 font-bold"
+                      ? "bg-amber-400 text-slate-955 border border-amber-400 font-black shadow-2xs"
+                      : "bg-amber-500/10 hover:bg-amber-400 text-amber-950 hover:text-slate-955 border border-amber-400/50 hover:border-amber-400 font-bold"
                   }`}
                   title="Profile"
                 >
-                  <User className={`w-4 h-4 shrink-0 ${isProfileActive ? "text-amber-400" : "text-slate-600 group-hover:text-slate-900"}`} />
+                  <User className={`w-4 h-4 shrink-0 ${isProfileActive ? "text-slate-955" : "text-amber-700 group-hover:text-slate-955"}`} />
                 </button>
               </>
             );
