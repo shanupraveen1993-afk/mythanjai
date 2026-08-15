@@ -914,102 +914,160 @@ export function RobotHero({
   return (
     <section
       ref={containerRef}
-      className="relative w-full min-h-screen flex flex-col justify-between items-center bg-white text-slate-800 pt-8 md:pt-6 pb-0 px-3 sm:px-4 select-none overflow-x-hidden"
+      className="relative w-full min-h-screen flex flex-col items-center bg-white text-slate-800 overflow-x-hidden hero-grain"
     >
-      {/* Light radial glow centered behind hero */}
-      <div className="absolute inset-0 z-0 bg-[radial-gradient(circle_at_50%_45%,rgba(250,204,21,0.06)_0%,transparent_60%)] pointer-events-none" />
+      {/* ── Premium Warm Background Layer ── */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        {/* Radial warm gold glow — upper center */}
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[120vw] h-[70vh] bg-[radial-gradient(ellipse_at_50%_0%,rgba(251,191,36,0.12)_0%,transparent_65%)]" />
+        {/* Subtle cream tint at very top */}
+        <div className="absolute inset-0 bg-gradient-to-b from-amber-50/40 via-white to-white" />
+        {/* Fine mesh grid accent */}
+        <div
+          className="absolute inset-0 opacity-[0.025]"
+          style={{
+            backgroundImage: `linear-gradient(rgba(15,23,42,1) 1px, transparent 1px), linear-gradient(90deg, rgba(15,23,42,1) 1px, transparent 1px)`,
+            backgroundSize: "40px 40px",
+          }}
+        />
+      </div>
 
-      {/* Centered Foreground Hero Content */}
-      <div className="relative z-10 w-full max-w-3xl md:max-w-4xl lg:max-w-5xl mx-auto flex flex-col items-center justify-between text-center gap-0.5 my-auto min-h-[85vh] pointer-events-auto pb-12">
-        
-        {/* 1. Clean Spaced Header Group: Logo + Headline + Subline + Rotational Switcher Badge */}
-        <div className="flex flex-col items-center gap-1 sm:gap-2 w-full shrink-0 pt-1 md:pt-0">
-          <div className="w-14 h-14 sm:w-20 sm:h-20 md:w-24 md:h-24 rounded-2xl sm:rounded-3xl hover:scale-[1.05] transition-transform shrink-0 overflow-hidden flex items-center justify-center bg-transparent drop-shadow-md">
-            <img 
-              src="/namma_thanjai_logo.png" 
-              alt="namma thanjai logo" 
-              className="w-full h-full object-contain mix-blend-multiply scale-[1.05]" 
-            />
+      {/* ══════════════════════════════════════════════════════
+           FIRST FOLD — Full-screen hero (mobile = 100dvh)
+         ══════════════════════════════════════════════════════ */}
+      <div className="relative z-10 w-full max-md:min-h-[100dvh] min-h-screen flex flex-col items-center justify-between pt-14 pb-6 px-4 sm:px-6 select-none">
+
+        {/* ── Header: Logo + Headline + Subtitle ── */}
+        <div className="flex flex-col items-center gap-1.5 w-full max-w-3xl mx-auto text-center shrink-0">
+
+          {/* Logo with warm glow ring */}
+          <div className="relative w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 shrink-0 mb-0.5">
+            <div className="absolute inset-0 rounded-2xl bg-amber-400/20 blur-md scale-125 animate-float-dot" />
+            <div className="relative w-full h-full rounded-2xl overflow-hidden bg-white shadow-[0_4px_24px_rgba(245,158,11,0.18)] border border-amber-100/80 flex items-center justify-center">
+              <img
+                src="/namma_thanjai_logo.png"
+                alt="namma thanjai logo"
+                className="w-[90%] h-[90%] object-contain mix-blend-multiply"
+              />
+            </div>
           </div>
-          <h1 className="font-heading font-black text-4xl xs:text-5xl sm:text-6xl md:text-7xl lg:text-8xl tracking-tighter leading-none uppercase mt-0.5 w-full text-center drop-shadow-sm scale-x-[1.02] transform origin-center whitespace-nowrap bg-gradient-to-b from-slate-950 via-slate-800 to-slate-900 bg-clip-text text-transparent">
-            namma thanjai<span className="text-yellow-500">.</span>
+
+          {/* Headline */}
+          <h1 className="font-heading font-black text-[clamp(2.6rem,10vw,6.5rem)] tracking-[-0.04em] leading-[0.9] uppercase w-full text-center select-none">
+            <span
+              style={{
+                background: "linear-gradient(165deg, #0f172a 0%, #1e293b 40%, #334155 100%)",
+                WebkitBackgroundClip: "text",
+                WebkitTextFillColor: "transparent",
+              }}
+            >
+              namma thanjai
+            </span>
+            <span className="text-amber-500 animate-float-dot inline-block ml-0.5">.</span>
           </h1>
-          <p className="text-[10px] sm:text-xs md:text-sm font-black text-slate-500 max-w-xl mx-auto leading-normal tracking-widest uppercase mt-0.5 opacity-90">
-            SELL, NEED, SERVICES & OFFERS
+
+          {/* Subtitle with track-in animation */}
+          <p className="animate-track-in text-[9px] sm:text-[10px] md:text-xs font-black text-slate-400 uppercase mt-1 opacity-0 [animation-delay:200ms] [animation-fill-mode:forwards]">
+            SELL &nbsp;·&nbsp; NEED &nbsp;·&nbsp; SERVICES &nbsp;·&nbsp; OFFERS
           </p>
 
-          {/* 2. Rotational Category Switcher Badge */}
-          <div className="flex items-center justify-center overflow-visible shrink-0 mt-1 sm:mt-1.5 py-0.5">
+          {/* Rotating Category Badge — shown on ALL screens */}
+          <div className="mt-2 flex items-center justify-center">
             <AnimatePresence mode="wait">
               <motion.div
                 key={wordIndex}
-                initial={{ opacity: 0, y: -6, scale: 0.95 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 6, scale: 1.05 }}
-                transition={{ duration: 0.25 }}
-                className="bg-slate-955 border border-slate-800 text-yellow-400 font-black text-xs sm:text-sm px-4 py-1 rounded-full uppercase tracking-widest text-center shadow-lg flex items-center gap-2 select-none"
+                initial={{ opacity: 0, scale: 0.85, y: -8 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 1.08, y: 8 }}
+                transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+                className="animate-glow-pulse bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 font-heading font-black text-[10px] sm:text-xs px-4 py-1.5 rounded-full uppercase tracking-widest flex items-center gap-2 shadow-[0_2px_12px_rgba(245,158,11,0.4)] select-none"
               >
-                <span className="w-1.5 h-1.5 rounded-full bg-yellow-400 animate-ping" />
+                <span className="w-1.5 h-1.5 rounded-full bg-slate-950/70 animate-ping shrink-0" />
                 <span>{words[wordIndex]}</span>
               </motion.div>
             </AnimatePresence>
           </div>
         </div>
 
-        {/* 3. Responsive 3D Mascot Robot Canvas (Proportional Sizing & Scale 1.15 on Mobile for Zero Border Cropping) */}
-        <div 
-          onClick={handleRobotTap} 
-          className="w-full max-w-[240px] sm:max-w-[300px] md:max-w-[400px] flex-1 h-full min-h-[140px] max-h-[220px] sm:max-h-[260px] md:max-h-[300px] relative flex items-center justify-center cursor-pointer overflow-visible my-auto bg-transparent"
+        {/* ── 3D Mascot Robot Canvas ── */}
+        <div
+          onClick={handleRobotTap}
+          className="relative flex-1 w-full max-w-[260px] sm:max-w-[320px] md:max-w-[400px] min-h-[150px] max-h-[230px] sm:max-h-[270px] md:max-h-[320px] flex items-center justify-center cursor-pointer my-1 select-none"
+          style={{ touchAction: "none" }}
         >
-          <Canvas camera={{ position: [0, 0.1, 4.4], fov: 42 }} className="overflow-visible bg-transparent">
-            <ambientLight intensity={entorno.luzAmbiente} color="#ffffff" />
-            <directionalLight position={[0, 6, 3]} intensity={entorno.luzPrincipal} color={entorno.luzPrincipalColor} shadow-bias={-0.0005} />
-            <Environment preset="studio" blur={0.5} />
+          {/* Warm radial glow behind robot */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,rgba(251,191,36,0.14)_0%,transparent_70%)] pointer-events-none" />
+          <Canvas
+            camera={{ position: [0, 0.1, 4.4], fov: 42 }}
+            className="overflow-visible bg-transparent"
+          >
+            <ambientLight intensity={entorno.luzAmbiente} color="#fff8f0" />
+            <directionalLight
+              position={[0, 6, 3]}
+              intensity={entorno.luzPrincipal}
+              color={entorno.luzPrincipalColor}
+            />
+            <Environment preset="studio" blur={0.4} />
             <ResponsiveGroup scale={scale * (isDesktop ? 1.35 : 1.15)}>
-              <RobotPrototype neckParams={{ baseR: 0.215, baseH: -0.05, midR: 0.28, midH: 0.02, lipBottomR: 0.295, lipBottomH: 0.045, lipTopR: 0.27, lipTopH: 0.055, innerR: 0.1, innerDropH: 0.0 }} bodyParams={{ bodyBevelR: 0.235, bodyBevelY: 0.34, bodyBevelT: 0.025 }} color={color} pantallaColor={pantallaColor} pantallaBrillo={pantallaBrillo} blinkCycle={blinkCycle} metalness={metalness} />
+              <RobotPrototype
+                neckParams={{
+                  baseR: 0.215, baseH: -0.05, midR: 0.28, midH: 0.02,
+                  lipBottomR: 0.295, lipBottomH: 0.045,
+                  lipTopR: 0.27, lipTopH: 0.055,
+                  innerR: 0.1, innerDropH: 0.0,
+                }}
+                bodyParams={{ bodyBevelR: 0.235, bodyBevelY: 0.34, bodyBevelT: 0.025 }}
+                color={color}
+                pantallaColor={pantallaColor}
+                pantallaBrillo={pantallaBrillo}
+                blinkCycle={blinkCycle}
+                metalness={metalness}
+              />
             </ResponsiveGroup>
           </Canvas>
         </div>
 
-        {/* 4. Action Footer Group (Centralized Registration & Mobile Verification) */}
-        <div className="w-full max-w-xs sm:max-w-sm md:max-w-md shrink-0 flex flex-col gap-2 px-1 pb-1 sm:pb-2 mb-0">
-          
+        {/* ── Action Footer: Buttons + LIVE Ticker ── */}
+        <div className="w-full max-w-xs sm:max-w-sm shrink-0 flex flex-col gap-2.5 px-1">
+
           {profile?.isVerified ? (
-            <div className="bg-emerald-500/10 border border-emerald-500/30 text-emerald-700 p-3 rounded-2xl flex items-center justify-between gap-2 shadow-xs">
+            /* Verified state — show member badge + explore button */
+            <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 p-3 rounded-2xl flex items-center justify-between gap-2 shadow-sm">
               <div className="flex items-center gap-2">
                 <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0" />
                 <div className="text-left">
                   <span className="font-heading font-black text-xs block text-slate-900">Verified Member</span>
-                  <span className="text-[10px] font-bold text-slate-600">+{profile?.phone || mobileNumber}</span>
+                  <span className="text-[10px] font-bold text-slate-500">+{profile?.phone || mobileNumber}</span>
                 </div>
               </div>
               <button
                 type="button"
                 onClick={onCtaClick}
-                className="bg-amber-500 hover:bg-amber-400 text-slate-955 font-black text-xs px-3.5 py-1.5 rounded-xl border border-amber-400 cursor-pointer shadow-xs active:scale-95 shrink-0"
+                className="btn-shimmer bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs px-4 py-2 rounded-xl border border-amber-400 cursor-pointer shadow-md active:scale-95 shrink-0 transition-colors"
               >
-                Explore Marketplace →
+                Explore →
               </button>
             </div>
           ) : (
-            <div className="flex flex-col gap-2.5 w-full">
-              {/* 2 Primary Action Buttons: Register Primary + Explore Secondary */}
+            <div className="flex flex-col gap-2 w-full">
+              {/* CTA Buttons */}
               <div className="grid grid-cols-2 gap-2.5 w-full">
+                {/* REGISTER — Primary (amber) */}
                 <button
                   type="button"
                   onClick={() => {
                     if (typeof window !== "undefined") {
                       window.dispatchEvent(new Event("namma_thanjai_open_signin"));
                     }
-                    if (onSignInClick) {
-                      onSignInClick();
-                    }
+                    if (onSignInClick) onSignInClick();
                   }}
-                  className="bg-amber-500 hover:bg-amber-400 text-slate-955 font-heading font-black text-xs sm:text-sm px-4 py-3 rounded-2xl border border-amber-400 shadow-lg flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer uppercase tracking-wider"
+                  className="btn-shimmer group relative bg-gradient-to-br from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 font-heading font-black text-xs sm:text-sm px-4 py-3.5 rounded-2xl border border-amber-400/60 shadow-[0_4px_16px_rgba(245,158,11,0.35)] flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer uppercase tracking-wider"
                 >
-                  <Sparkles className="w-4 h-4 fill-slate-955 text-slate-955" />
+                  <Sparkles className="w-4 h-4 fill-slate-950/70 text-slate-950/70 shrink-0" />
                   <span>Register</span>
                 </button>
+
+                {/* EXPLORE — Secondary (dark slate) */}
                 <button
                   type="button"
                   onClick={() => {
@@ -1020,23 +1078,22 @@ export function RobotHero({
                       router.push("/home");
                     }
                   }}
-                  className="bg-slate-950 hover:bg-slate-900 text-white font-heading font-extrabold text-xs sm:text-sm px-4 py-3 rounded-2xl border border-slate-800 shadow-lg flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer uppercase tracking-wider"
+                  className="btn-shimmer group relative bg-slate-950 hover:bg-slate-900 text-white font-heading font-extrabold text-xs sm:text-sm px-4 py-3.5 rounded-2xl border border-slate-800 shadow-[0_4px_16px_rgba(15,23,42,0.22)] flex items-center justify-center gap-1.5 transition-all active:scale-95 cursor-pointer uppercase tracking-wider"
                 >
                   <span>Explore</span>
-                  <ArrowRight className="w-4 h-4 text-amber-400" />
+                  <ArrowRight className="w-4 h-4 text-amber-400 shrink-0" />
                 </button>
               </div>
 
-              {/* Expandable Registered / WhatsApp Verification Input Form */}
+              {/* Expandable WhatsApp OTP Form */}
               {showRegisterForm && (
                 <form onSubmit={handleMobileSubmit} className="flex flex-col gap-2 pt-2 border-t border-slate-200 animate-fade-in mt-1">
-                  <div className="flex items-center justify-between text-left">
+                  <div className="flex items-center justify-between">
                     <span className="text-[10px] font-black text-amber-600 uppercase tracking-widest flex items-center gap-1">
                       <Sparkles className="w-3 h-3" /> Enter WhatsApp Number
                     </span>
-                    <span className="text-[9px] text-slate-500 font-bold">10-Digit Mobile</span>
+                    <span className="text-[9px] text-slate-400 font-bold">10-Digit Mobile</span>
                   </div>
-
                   <div className="flex items-center gap-1.5">
                     <div className="relative flex-1">
                       <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs font-black text-amber-600">+91</span>
@@ -1048,16 +1105,16 @@ export function RobotHero({
                         onChange={(e) => setMobileNumber(e.target.value.replace(/\D/g, "").slice(0, 10))}
                         placeholder="Enter WhatsApp No"
                         disabled={isVerifying}
-                        className="w-full bg-white border border-slate-300 text-slate-900 rounded-xl pl-10 pr-2 py-2 text-xs font-extrabold focus:outline-none focus:border-amber-500 shadow-xs"
+                        className="w-full bg-white border border-slate-200 text-slate-900 rounded-xl pl-10 pr-2 py-2 text-xs font-extrabold focus:outline-none focus:border-amber-400 shadow-xs"
                       />
                     </div>
                     <button
                       type="submit"
                       disabled={isVerifying}
-                      className="bg-amber-500 hover:bg-amber-400 text-slate-955 font-heading font-black text-xs px-4 py-2 rounded-xl border border-amber-400 shadow-md flex items-center gap-1 transition-all active:scale-95 shrink-0 cursor-pointer"
+                      className="btn-shimmer bg-amber-500 hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-4 py-2 rounded-xl border border-amber-400 shadow-md flex items-center gap-1 transition-all active:scale-95 shrink-0 cursor-pointer"
                     >
                       {isVerifying ? (
-                        <Loader2 className="w-4 h-4 animate-spin text-slate-955" />
+                        <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
                       ) : (
                         <>
                           <span>Verify</span>
@@ -1071,25 +1128,20 @@ export function RobotHero({
             </div>
           )}
 
+          {/* ── LIVE Ticker — Premium dark pill with marquee ── */}
           {displayAlerts.length > 0 && (
-            <div className="flex w-full bg-slate-50 border border-slate-200/90 text-slate-800 rounded-2xl py-2 px-3.5 shadow-2xs items-center justify-between text-xs font-black select-none tracking-wide mt-1">
-              <div className="flex items-center gap-2 overflow-hidden w-full text-left">
-                <span className="bg-amber-500 text-slate-955 font-black text-[8px] px-1.5 py-0.5 rounded-md uppercase shrink-0 animate-pulse">
-                  LIVE
-                </span>
-                <div className="relative h-4 flex-1 overflow-hidden">
-                  <AnimatePresence mode="wait">
-                    <motion.span
-                      key={tickerIdx}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      transition={{ duration: 0.3 }}
-                      className="absolute left-0 text-slate-800 truncate w-full font-bold text-left text-xs"
-                    >
-                      {displayAlerts[tickerIdx]}
-                    </motion.span>
-                  </AnimatePresence>
+            <div className="flex items-center gap-2.5 w-full bg-slate-950 border border-slate-800/80 rounded-2xl py-2 px-3 shadow-[0_4px_18px_rgba(15,23,42,0.2)] overflow-hidden select-none">
+              <span className="shrink-0 bg-amber-500 text-slate-950 font-black text-[8px] px-2 py-0.5 rounded-md uppercase tracking-wider animate-pulse">
+                LIVE
+              </span>
+              {/* Marquee track */}
+              <div className="flex-1 overflow-hidden relative h-4">
+                <div className="animate-marquee flex gap-8 items-center">
+                  {[...displayAlerts, ...displayAlerts].map((alert, i) => (
+                    <span key={i} className="text-slate-300 text-[10px] font-semibold whitespace-nowrap">
+                      {alert}
+                    </span>
+                  ))}
                 </div>
               </div>
             </div>
@@ -1097,94 +1149,118 @@ export function RobotHero({
         </div>
 
       </div>
+      {/* ── END FIRST FOLD ── */}
 
-      {/* ── 2nd Fold: The 4 Core Platform Pillars & 3-Step Process ──────────────── */}
-      <div className="w-full bg-white border-t border-slate-200/80 py-14 md:py-24 px-4 sm:px-6 relative z-10">
-        <div className="max-w-6xl mx-auto flex flex-col gap-14">
-          
-          {/* 2nd Fold Header */}
-          <div className="text-center flex flex-col items-center gap-2.5 max-w-2xl mx-auto">
-            <span className="bg-amber-500/15 text-slate-955 border border-amber-500/30 text-[10px] sm:text-xs font-black uppercase tracking-widest px-4 py-1.5 rounded-full shadow-2xs">
+      {/* ══════════════════════════════════════════════════════
+           SECOND FOLD — Platform Pillars + How It Works
+         ══════════════════════════════════════════════════════ */}
+      <div className="relative z-10 w-full bg-white border-t border-slate-100 py-16 md:py-24 px-4 sm:px-6">
+        <div className="max-w-6xl mx-auto flex flex-col gap-16">
+
+          {/* Section Header */}
+          <div className="text-center flex flex-col items-center gap-3 max-w-2xl mx-auto">
+            <span className="inline-flex items-center gap-1.5 bg-amber-500/10 border border-amber-400/30 text-amber-700 text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full shadow-sm">
+              <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
               Why Namma Thanjai?
             </span>
-            <h2 className="font-heading font-black text-2xl sm:text-3xl md:text-5xl text-slate-955 tracking-tight uppercase leading-tight">
-              Everything You Need in Thanjavur — Under One Roof
+            <h2 className="font-heading font-black text-[clamp(1.6rem,5vw,3rem)] text-slate-950 tracking-tight uppercase leading-[1.1]">
+              Everything You Need in Thanjavur{" "}
+              <span className="relative inline-block">
+                <span>Under One Roof</span>
+                <span className="absolute bottom-0 left-0 right-0 h-[3px] bg-gradient-to-r from-amber-400 to-amber-500 rounded-full" />
+              </span>
             </h2>
-            <p className="text-xs sm:text-sm text-slate-600 font-bold leading-relaxed max-w-lg">
-              Zero Brokerage Fees • Direct WhatsApp & Phone Contacts • Verified Local Residents
+            <p className="text-xs sm:text-sm text-slate-500 font-semibold leading-relaxed">
+              Zero Brokerage Fees&nbsp;•&nbsp;Direct WhatsApp & Phone&nbsp;•&nbsp;Verified Local Residents
             </p>
           </div>
 
-          {/* 4 Pillar Grid */}
+          {/* 4 Pillar Cards — Glassmorphism */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            
+
             {/* Pillar 1: Sell */}
-            <div 
+            <div
               onClick={onCtaClick}
-              className="bg-white border border-slate-200/90 hover:border-amber-400 p-6 rounded-3xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_32px_rgba(250,204,21,0.18)] hover:-translate-y-1 transition-all duration-300 flex flex-col gap-3.5 group cursor-pointer"
+              className="group relative bg-white/70 backdrop-blur-sm border border-amber-100/80 hover:border-amber-300 p-6 rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_16px_40px_rgba(245,158,11,0.14)] hover:-translate-y-1.5 transition-all duration-300 flex flex-col gap-4 cursor-pointer overflow-hidden"
             >
-              <div className="w-13 h-13 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-600 group-hover:scale-110 transition-transform shadow-xs">
-                <PiShoppingBagBold size={26} />
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-50/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-3xl" />
+              <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center text-white shadow-[0_4px_12px_rgba(245,158,11,0.35)] group-hover:scale-110 transition-transform">
+                <PiShoppingBagBold size={22} />
               </div>
-              <h3 className="font-heading font-black text-base text-slate-955">1. Sell Marketplace</h3>
-              <p className="text-xs text-slate-500 font-medium leading-relaxed">
-                Buy & sell CMDA plots, houses, cars, bikes, & electronics directly from owners without broker fees.
-              </p>
-              <div className="mt-auto pt-3 flex items-center gap-1.5 text-xs font-black text-amber-600 group-hover:translate-x-1 transition-transform">
+              <div className="flex flex-col gap-1">
+                <span className="text-[10px] font-black text-amber-600 uppercase tracking-widest">Zero Broker Fees</span>
+                <h3 className="font-heading font-black text-base text-slate-950">Sell Marketplace</h3>
+                <p className="text-xs text-slate-500 font-medium leading-relaxed">
+                  Buy & sell CMDA plots, houses, cars, bikes & electronics directly from owners.
+                </p>
+              </div>
+              <div className="mt-auto flex items-center gap-1.5 text-xs font-black text-amber-600 group-hover:translate-x-1 transition-transform">
                 <span>Browse Listings</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </div>
             </div>
 
             {/* Pillar 2: Need */}
-            <div 
+            <div
               onClick={onCtaClick}
-              className="bg-white border border-slate-200/90 hover:border-amber-400 p-6 rounded-3xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_32px_rgba(250,204,21,0.18)] hover:-translate-y-1 transition-all duration-300 flex flex-col gap-3.5 group cursor-pointer"
+              className="group relative bg-white/70 backdrop-blur-sm border border-amber-100/80 hover:border-amber-300 p-6 rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_16px_40px_rgba(245,158,11,0.14)] hover:-translate-y-1.5 transition-all duration-300 flex flex-col gap-4 cursor-pointer overflow-hidden"
             >
-              <div className="w-13 h-13 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-600 group-hover:scale-110 transition-transform shadow-xs">
-                <Megaphone className="w-6 h-6" />
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-50/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-3xl" />
+              <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center text-white shadow-[0_4px_12px_rgba(245,158,11,0.35)] group-hover:scale-110 transition-transform">
+                <Megaphone className="w-5 h-5" />
               </div>
-              <h3 className="font-heading font-black text-base text-slate-955">2. Post Requirements</h3>
-              <p className="text-xs text-slate-500 font-medium leading-relaxed">
-                Need a house, land, or specific item? Post your budget requirements and get direct offers from sellers.
-              </p>
-              <div className="mt-auto pt-3 flex items-center gap-1.5 text-xs font-black text-amber-600 group-hover:translate-x-1 transition-transform">
+              <div className="flex flex-col gap-1">
+                <span className="text-[10px] font-black text-amber-600 uppercase tracking-widest">Post Requirements</span>
+                <h3 className="font-heading font-black text-base text-slate-950">Find What You Need</h3>
+                <p className="text-xs text-slate-500 font-medium leading-relaxed">
+                  Need a house or land? Post your budget and get direct offers from local sellers.
+                </p>
+              </div>
+              <div className="mt-auto flex items-center gap-1.5 text-xs font-black text-amber-600 group-hover:translate-x-1 transition-transform">
                 <span>Post Requirement</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </div>
             </div>
 
             {/* Pillar 3: Services */}
-            <div 
+            <div
               onClick={onCtaClick}
-              className="bg-white border border-slate-200/90 hover:border-amber-400 p-6 rounded-3xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_32px_rgba(250,204,21,0.18)] hover:-translate-y-1 transition-all duration-300 flex flex-col gap-3.5 group cursor-pointer"
+              className="group relative bg-white/70 backdrop-blur-sm border border-amber-100/80 hover:border-amber-300 p-6 rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_16px_40px_rgba(245,158,11,0.14)] hover:-translate-y-1.5 transition-all duration-300 flex flex-col gap-4 cursor-pointer overflow-hidden"
             >
-              <div className="w-13 h-13 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-600 group-hover:scale-110 transition-transform shadow-xs">
-                <Wrench className="w-6 h-6" />
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-50/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-3xl" />
+              <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center text-white shadow-[0_4px_12px_rgba(245,158,11,0.35)] group-hover:scale-110 transition-transform">
+                <Wrench className="w-5 h-5" />
               </div>
-              <h3 className="font-heading font-black text-base text-slate-955">3. Local Services</h3>
-              <p className="text-xs text-slate-500 font-medium leading-relaxed">
-                4.9★ rated electricians, plumbers, carpenters, & mechanics available with 30-min doorstep arrival.
-              </p>
-              <div className="mt-auto pt-3 flex items-center gap-1.5 text-xs font-black text-amber-600 group-hover:translate-x-1 transition-transform">
+              <div className="flex flex-col gap-1">
+                <span className="text-[10px] font-black text-amber-600 uppercase tracking-widest">4.9★ Rated Pros</span>
+                <h3 className="font-heading font-black text-base text-slate-950">Local Services</h3>
+                <p className="text-xs text-slate-500 font-medium leading-relaxed">
+                  Electricians, plumbers, carpenters & mechanics with 30-min doorstep arrival.
+                </p>
+              </div>
+              <div className="mt-auto flex items-center gap-1.5 text-xs font-black text-amber-600 group-hover:translate-x-1 transition-transform">
                 <span>Hire Tradesperson</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </div>
             </div>
 
             {/* Pillar 4: Offers */}
-            <div 
+            <div
               onClick={onCtaClick}
-              className="bg-white border border-slate-200/90 hover:border-amber-400 p-6 rounded-3xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] hover:shadow-[0_12px_32px_rgba(250,204,21,0.18)] hover:-translate-y-1 transition-all duration-300 flex flex-col gap-3.5 group cursor-pointer"
+              className="group relative bg-white/70 backdrop-blur-sm border border-amber-100/80 hover:border-amber-300 p-6 rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_16px_40px_rgba(245,158,11,0.14)] hover:-translate-y-1.5 transition-all duration-300 flex flex-col gap-4 cursor-pointer overflow-hidden"
             >
-              <div className="w-13 h-13 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-600 group-hover:scale-110 transition-transform shadow-xs">
-                <Store className="w-6 h-6" />
+              <div className="absolute inset-0 bg-gradient-to-br from-amber-50/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-3xl" />
+              <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center text-white shadow-[0_4px_12px_rgba(245,158,11,0.35)] group-hover:scale-110 transition-transform">
+                <Store className="w-5 h-5" />
               </div>
-              <h3 className="font-heading font-black text-base text-slate-955">4. Store Offers</h3>
-              <p className="text-xs text-slate-500 font-medium leading-relaxed">
-                Exclusive store discounts & deals from Thanjavur silk handlooms, electronics galleries, & cafes.
-              </p>
-              <div className="mt-auto pt-3 flex items-center gap-1.5 text-xs font-black text-amber-600 group-hover:translate-x-1 transition-transform">
+              <div className="flex flex-col gap-1">
+                <span className="text-[10px] font-black text-amber-600 uppercase tracking-widest">Exclusive Deals</span>
+                <h3 className="font-heading font-black text-base text-slate-950">Store Offers</h3>
+                <p className="text-xs text-slate-500 font-medium leading-relaxed">
+                  Top discounts from Thanjavur silk handlooms, electronics galleries & cafes.
+                </p>
+              </div>
+              <div className="mt-auto flex items-center gap-1.5 text-xs font-black text-amber-600 group-hover:translate-x-1 transition-transform">
                 <span>Explore Deals</span>
                 <ArrowRight className="w-3.5 h-3.5" />
               </div>
@@ -1192,109 +1268,102 @@ export function RobotHero({
 
           </div>
 
-          {/* 3-Step Process Card Component */}
-          <div className="flex flex-col gap-8 pt-6 border-t border-slate-200/80">
-            <div className="text-center flex flex-col items-center gap-2 max-w-xl mx-auto">
-              <span className="text-amber-600 bg-amber-500/10 border border-amber-500/30 font-black text-[10px] uppercase tracking-widest px-3.5 py-1 rounded-full shadow-2xs">
+          {/* ── How It Works (3-Step) ── */}
+          <div className="flex flex-col gap-8 border-t border-slate-100 pt-10">
+            <div className="text-center flex flex-col items-center gap-2 max-w-lg mx-auto">
+              <span className="inline-flex items-center gap-1.5 bg-slate-950/5 border border-slate-200 text-slate-600 text-[10px] font-black uppercase tracking-widest px-4 py-1.5 rounded-full">
                 30 Seconds to Connect
               </span>
-              <h3 className="font-heading font-black text-2xl sm:text-3xl text-slate-955 uppercase tracking-tight">
+              <h3 className="font-heading font-black text-[clamp(1.4rem,4vw,2.2rem)] text-slate-950 uppercase tracking-tight">
                 How Namma Thanjai Works
               </h3>
-              <p className="text-xs text-slate-500 font-bold">
-                Direct connection between local buyers, sellers, and service experts
+              <p className="text-xs text-slate-500 font-semibold">
+                Direct connection between local buyers, sellers & service experts
               </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              
-              {/* Step 1 */}
-              <div className="bg-white border border-slate-200/90 p-6 rounded-3xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col gap-4 relative overflow-hidden group hover:border-amber-400 transition-all duration-300">
-                <div className="flex items-center justify-between">
-                  <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-600 shadow-xs group-hover:scale-110 transition-transform">
-                    <Megaphone className="w-6 h-6" />
-                  </div>
-                  <span className="font-heading font-black text-3xl text-slate-200 group-hover:text-amber-500/40 transition-colors">
-                    01
-                  </span>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <h4 className="font-heading font-black text-base text-slate-955">1. Post Your Requirement</h4>
-                  <p className="text-xs text-slate-500 font-medium leading-relaxed">
-                    Post items for sale, buyer requirements, or local service details in under 30 seconds.
-                  </p>
-                </div>
-              </div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
 
-              {/* Step 2 */}
-              <div className="bg-white border border-slate-200/90 p-6 rounded-3xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col gap-4 relative overflow-hidden group hover:border-amber-400 transition-all duration-300">
-                <div className="flex items-center justify-between">
-                  <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-600 shadow-xs group-hover:scale-110 transition-transform">
-                    <Phone className="w-6 h-6" />
-                  </div>
-                  <span className="font-heading font-black text-3xl text-slate-200 group-hover:text-amber-500/40 transition-colors">
-                    02
+              {[
+                { icon: <Megaphone className="w-5 h-5" />, step: "01", title: "Post Your Requirement", desc: "Post items for sale, buyer requirements, or local service details in under 30 seconds." },
+                { icon: <Phone className="w-5 h-5" />, step: "02", title: "Direct Connect", desc: "Connect directly via WhatsApp or phone call with zero brokers or middleman delays." },
+                { icon: <CheckCircle className="w-5 h-5" />, step: "03", title: "Deal Completed", desc: "Finalize deals directly with local Thanjavur residents — 100% zero commission fees." },
+              ].map(({ icon, step, title, desc }) => (
+                <div
+                  key={step}
+                  className="group relative bg-white/70 backdrop-blur-sm border border-slate-100 hover:border-amber-300 p-7 rounded-3xl shadow-[0_2px_20px_rgba(0,0,0,0.04)] hover:shadow-[0_16px_40px_rgba(245,158,11,0.12)] hover:-translate-y-1.5 transition-all duration-300 flex flex-col gap-4 overflow-hidden"
+                >
+                  {/* Giant frosted step number watermark */}
+                  <span className="absolute top-4 right-5 font-heading font-black text-5xl text-slate-100 group-hover:text-amber-400/30 transition-colors duration-300 select-none leading-none pointer-events-none">
+                    {step}
                   </span>
-                </div>
-                <div className="flex flex-col gap-1">
-                  <h4 className="font-heading font-black text-base text-slate-955">2. Direct Connect</h4>
-                  <p className="text-xs text-slate-500 font-medium leading-relaxed">
-                    Connect directly via WhatsApp or phone call with zero brokers or middleman delays.
-                  </p>
-                </div>
-              </div>
-
-              {/* Step 3 */}
-              <div className="bg-white border border-slate-200/90 p-6 rounded-3xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex flex-col gap-4 relative overflow-hidden group hover:border-amber-400 transition-all duration-300">
-                <div className="flex items-center justify-between">
-                  <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/25 flex items-center justify-center text-amber-600 shadow-xs group-hover:scale-110 transition-transform">
-                    <CheckCircle className="w-6 h-6" />
+                  <div className="relative w-12 h-12 rounded-2xl bg-gradient-to-br from-amber-400 to-amber-500 flex items-center justify-center text-white shadow-[0_4px_12px_rgba(245,158,11,0.3)] group-hover:scale-110 transition-transform">
+                    {icon}
                   </div>
-                  <span className="font-heading font-black text-3xl text-slate-200 group-hover:text-amber-500/40 transition-colors">
-                    03
-                  </span>
+                  <div className="flex flex-col gap-1">
+                    <h4 className="font-heading font-black text-base text-slate-950">{title}</h4>
+                    <p className="text-xs text-slate-500 font-medium leading-relaxed">{desc}</p>
+                  </div>
                 </div>
-                <div className="flex flex-col gap-1">
-                  <h4 className="font-heading font-black text-base text-slate-955">3. Deal Completed</h4>
-                  <p className="text-xs text-slate-500 font-medium leading-relaxed">
-                    Finalize deals directly with local Thanjavur residents with 100% zero commission fees.
-                  </p>
-                </div>
-              </div>
+              ))}
 
             </div>
           </div>
 
         </div>
       </div>
+      {/* ── END SECOND FOLD ── */}
 
-      {/* ── 3rd Fold: Bottom Callout Banner ("Ready to Buy, Sell or Hire in Thanjavur?") ──────────────────────── */}
-      <div className="w-full bg-white py-14 md:py-20 px-4 sm:px-6 relative z-10 border-t border-slate-200/80">
+      {/* ══════════════════════════════════════════════════════
+           THIRD FOLD — Ready to Buy, Sell or Hire Banner
+         ══════════════════════════════════════════════════════ */}
+      <div className="relative z-10 w-full py-14 md:py-20 px-4 sm:px-6 bg-white border-t border-slate-100">
         <div className="max-w-5xl mx-auto">
-          <div className="bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-slate-955 p-8 md:p-12 rounded-3xl shadow-2xl flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left border border-amber-400">
-            <div className="flex flex-col gap-1">
-              <h3 className="font-heading font-black text-2xl md:text-3xl uppercase tracking-tight">Ready to Buy, Sell or Hire in Thanjavur?</h3>
-              <p className="text-xs sm:text-sm font-extrabold text-slate-955 opacity-90">Join thousands of verified Thanjavur residents today with zero broker fees.</p>
+          <div
+            className="relative overflow-hidden rounded-[2rem] p-8 md:p-12 flex flex-col sm:flex-row items-center justify-between gap-8 text-center sm:text-left shadow-[0_24px_64px_rgba(180,100,0,0.2)]"
+            style={{
+              background: "linear-gradient(135deg, #f59e0b 0%, #d97706 40%, #b45309 100%)",
+            }}
+          >
+            {/* Subtle pattern overlay */}
+            <div
+              className="absolute inset-0 opacity-[0.08] pointer-events-none"
+              style={{
+                backgroundImage: `radial-gradient(circle, rgba(0,0,0,0.6) 1px, transparent 1px)`,
+                backgroundSize: "18px 18px",
+              }}
+            />
+            {/* Decorative glow blobs */}
+            <div className="absolute -top-10 -right-10 w-48 h-48 bg-amber-300/30 rounded-full blur-3xl pointer-events-none" />
+            <div className="absolute -bottom-8 -left-8 w-36 h-36 bg-orange-400/20 rounded-full blur-2xl pointer-events-none" />
+
+            <div className="relative flex flex-col gap-2 max-w-xl">
+              <h3 className="font-heading font-black text-[clamp(1.4rem,4vw,2.2rem)] text-white uppercase tracking-tight leading-tight drop-shadow-md">
+                Ready to Buy, Sell or Hire in Thanjavur?
+              </h3>
+              <p className="text-xs sm:text-sm font-bold text-white/85">
+                Join thousands of verified Thanjavur residents today — zero broker fees.
+              </p>
             </div>
+
             <button
               type="button"
               onClick={() => {
                 if (typeof window !== "undefined") {
                   window.dispatchEvent(new Event("namma_thanjai_open_signin"));
                 }
-                if (onSignInClick) {
-                  onSignInClick();
-                }
+                if (onSignInClick) onSignInClick();
               }}
-              className="bg-slate-955 hover:bg-slate-900 text-white font-heading font-black text-xs sm:text-sm px-7 py-3.5 rounded-2xl shadow-xl transition-all shrink-0 cursor-pointer active:scale-95 flex items-center gap-2 border border-slate-800 uppercase tracking-wider"
+              className="btn-shimmer relative shrink-0 bg-slate-950 hover:bg-slate-900 text-white font-heading font-black text-sm px-8 py-4 rounded-2xl shadow-xl transition-all cursor-pointer active:scale-95 flex items-center gap-2.5 border border-slate-800 uppercase tracking-wider"
             >
-              <Sparkles className="w-4 h-4 text-amber-400 fill-amber-400" />
+              <Sparkles className="w-4 h-4 text-amber-400 fill-amber-400 shrink-0" />
               <span>Register to Post</span>
-              <ArrowRight className="w-4 h-4 text-amber-400" />
+              <ArrowRight className="w-4 h-4 text-amber-400 shrink-0" />
             </button>
           </div>
         </div>
       </div>
+      {/* ── END THIRD FOLD ── */}
 
     </section>
   );
