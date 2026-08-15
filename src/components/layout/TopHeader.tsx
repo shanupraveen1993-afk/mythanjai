@@ -176,12 +176,12 @@ export default function TopHeader({
                   onClick={() => router.push("/chat")}
                   className={`relative flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3.5 rounded-full text-xs font-bold transition-all duration-200 cursor-pointer group active:scale-95 ${
                     isChatActive
-                      ? "bg-amber-400 text-slate-955 border border-amber-400 font-black shadow-2xs"
-                      : "bg-amber-500/10 hover:bg-amber-400 text-amber-950 hover:text-slate-955 border border-amber-400/50 hover:border-amber-400"
+                      ? "bg-amber-500/10 text-amber-600 border border-amber-400/80 font-black shadow-2xs"
+                      : "bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200/80 text-slate-700 hover:text-amber-600"
                   }`}
                   title="In-App Safety Chat"
                 >
-                  <MessageSquare className={`w-4 h-4 shrink-0 ${isChatActive ? "text-slate-955 fill-slate-955/20" : "text-amber-700 group-hover:text-slate-955"}`} />
+                  <MessageSquare className={`w-4 h-4 shrink-0 ${isChatActive ? "text-amber-600 fill-amber-500/20" : "text-slate-500 group-hover:text-amber-600"}`} />
                   <span className="hidden sm:inline text-xs ml-1.5 font-black">Chat</span>
                   <span className="absolute top-0 right-0 sm:right-2 w-2.5 h-2.5 rounded-full bg-red-500 border-2 border-white animate-pulse" />
                 </button>
@@ -191,12 +191,12 @@ export default function TopHeader({
                   onClick={() => onTabChange?.("profile")}
                   className={`relative flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3.5 rounded-full text-xs transition-all duration-200 cursor-pointer group active:scale-95 ${
                     isProfileActive
-                      ? "bg-amber-400 text-slate-955 border border-amber-400 font-black shadow-2xs"
-                      : "bg-amber-500/10 hover:bg-amber-400 text-amber-950 hover:text-slate-955 border border-amber-400/50 hover:border-amber-400 font-bold"
+                      ? "bg-amber-500/10 text-amber-600 border border-amber-400/80 font-black shadow-2xs"
+                      : "bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200/80 text-slate-700 hover:text-amber-600 font-bold"
                   }`}
                   title={`Verified Profile (${phoneDisplay})`}
                 >
-                  <User className={`w-4 h-4 shrink-0 ${isProfileActive ? "text-slate-955" : "text-amber-700 group-hover:text-slate-955"}`} />
+                  <User className={`w-4 h-4 shrink-0 ${isProfileActive ? "text-amber-600" : "text-slate-500 group-hover:text-amber-600"}`} />
                   <span className="hidden md:inline text-xs ml-1.5 font-black">Profile</span>
                 </button>
               </>
@@ -233,12 +233,12 @@ export default function TopHeader({
                   onClick={() => onTabChange?.("profile")}
                   className={`flex items-center justify-center w-9 h-9 rounded-full transition-all duration-200 cursor-pointer group active:scale-95 ${
                     isProfileActive
-                      ? "bg-amber-400 text-slate-955 border border-amber-400 font-black shadow-2xs"
-                      : "bg-amber-500/10 hover:bg-amber-400 text-amber-950 hover:text-slate-955 border border-amber-400/50 hover:border-amber-400 font-bold"
+                      ? "bg-amber-500/10 text-amber-600 border border-amber-400/80 font-black shadow-2xs"
+                      : "bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200/80 text-slate-700 hover:text-amber-600 font-bold"
                   }`}
                   title="Profile"
                 >
-                  <User className={`w-4 h-4 shrink-0 ${isProfileActive ? "text-slate-955" : "text-amber-700 group-hover:text-slate-955"}`} />
+                  <User className={`w-4 h-4 shrink-0 ${isProfileActive ? "text-amber-600" : "text-slate-500 group-hover:text-amber-600"}`} />
                 </button>
               </>
             );
