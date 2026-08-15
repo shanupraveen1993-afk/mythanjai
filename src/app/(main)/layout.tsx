@@ -69,6 +69,7 @@ function MainLayoutContent({
   const router = useRouter();
   const pathname = usePathname();
   const { user, profile, loading: authLoading } = useAuth();
+  const isAuthVerified = Boolean(profile?.isVerified);
   
   // Attach native Android event listeners (Back button, Keyboard, Status Bar)
   useNativeApp();
@@ -207,7 +208,7 @@ function MainLayoutContent({
 
       {/* Top Header Section */}
       {(() => {
-        const isAuthVerified = Boolean(profile?.isVerified || user);
+        const isAuthVerified = Boolean(profile?.isVerified);
         const isOnboardingView = pathname === "/onboarding";
 
         return (

@@ -30,10 +30,10 @@ export default function TopHeader({
 }: TopHeaderProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const { user, profile } = useAuth();
+  const { profile } = useAuth();
   const { lang, toggleLanguage, t } = useLanguage();
 
-  const isAuthVerified = Boolean(profile?.isVerified || user);
+  const isAuthVerified = Boolean(profile?.isVerified);
   const showCenterNav = pathname !== "/onboarding" && pathname !== "/chat";
 
   const phoneDisplay = profile?.phone ? `+${profile.phone}` : "+919994837342";
