@@ -110,6 +110,13 @@ export default function PostForm({ segment }: PostFormProps) {
   const config = SEGMENT_CONFIG[segment];
   const { user, profile } = useAuth();
 
+  // Unauthenticated Guest Protection: Redirect to WhatsApp sign-in modal
+  useEffect(() => {
+    if (!user) {
+      toast.error("Please verify your WhatsApp number to post listings.");
+    }
+  }, [user, router]);
+
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 

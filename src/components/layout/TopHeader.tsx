@@ -36,7 +36,7 @@ export default function TopHeader({
   const isAuthVerified = Boolean(profile?.isVerified);
   const isGuestMode = typeof window !== "undefined" && localStorage.getItem("namma_thanjai_guest_mode") === "true";
   const isLandingMode = !isAuthVerified && !isGuestMode && pathname === "/";
-  const showCenterNav = true;
+  const showCenterNav = !isLandingMode;
 
   const phoneDisplay = profile?.phone ? `+${profile.phone}` : "+919994837342";
 
@@ -90,14 +90,6 @@ export default function TopHeader({
               <div className="w-2 h-2 rounded-full bg-yellow-500 ml-0.5 shrink-0" />
             </div>
           </div>
-
-          {/* Area Dropdown — Hidden on Landing Page */}
-          {!isLandingMode && (
-            <SearchableAreaDropdown
-              selectedArea={selectedArea}
-              onAreaChange={onAreaChange}
-            />
-          )}
         </div>
 
         {/* Center: 5 Category Navigation Tabs (Hidden on Landing Page) */}
@@ -163,7 +155,17 @@ export default function TopHeader({
 
         {/* Right: Landing Page Login Button vs Logged-In Chat & Profile Controls */}
         <div className="flex items-center gap-2 shrink-0">
-          {isAuthVerified ? (
+          {isLandingMode ? (
+            /* ONLY Primary Yellow Login Button on Landing Page */
+            <button
+              type="button"
+              onClick={onSignInClick}
+              className="flex items-center justify-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-black text-xs px-4 py-2 rounded-xl shadow-md border border-yellow-400 cursor-pointer active:scale-95 transition-all"
+            >
+              <User className="w-4 h-4 text-slate-955" />
+              <span>Login</span>
+            </button>
+          ) : isAuthVerified ? (
             <>
               {/* Chat Icon & Profile Button for Logged In Verified Users */}
               <button
@@ -187,7 +189,7 @@ export default function TopHeader({
             </>
           ) : (
             <>
-              {/* Primary Yellow Login Button & Profile Button for Guests */}
+              {/* Primary Yellow Login Button & Profile Button for Guests on Dashboard */}
               <button
                 type="button"
                 onClick={onSignInClick}
