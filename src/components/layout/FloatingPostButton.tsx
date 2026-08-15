@@ -74,7 +74,8 @@ export default function FloatingPostButton() {
 
   return (
     <div
-      className={`fixed bottom-20 left-4 right-4 z-40 md:hidden flex justify-center transition-all duration-300 transform ${
+      style={{ bottom: "calc(4.25rem + max(env(safe-area-inset-bottom, 0px), 10px) + 12px)" }}
+      className={`fixed left-4 right-4 z-40 md:hidden flex justify-center transition-all duration-300 transform ${
         isVisible
           ? "translate-y-0 opacity-100 scale-100 pointer-events-auto"
           : "translate-y-16 opacity-0 scale-90 pointer-events-none"
