@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useState, useEffect, Suspense } from "react";
+import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import RobotHero from "@/components/ui/robot-hero";
 import HomeClientPage from "./HomeClientPage";
 
 function RootPageContent() {
+  const router = useRouter();
   const { user, loading } = useAuth();
   const [isGuestMode, setIsGuestMode] = useState<boolean>(() => {
     if (typeof window === "undefined") return false;
@@ -13,16 +15,16 @@ function RootPageContent() {
   });
 
   useEffect(() => {
-    if (user) {
-      setIsGuestMode(true);
+    if (user || isGuestMode) {
+      router.replace("/home");
     }
-  }, [user]);
+  }, [user, isGuestMode, router]);
 
   const handleExploreGuest = () => {
     if (typeof window !== "undefined") {
       localStorage.setItem("namma_thanjai_guest_mode", "true");
     }
-    setIsGuestMode(true);
+    router.push("/home");
   };
 
   if (loading) {
@@ -33,25 +35,17 @@ function RootPageContent() {
     );
   }
 
-  // Root URL (/): If unauthenticated and not guest, render Landing Page with Robot Hero directly on /
-  if (!user && !isGuestMode) {
-    return (
-      <RobotHero
-        onCtaClick={handleExploreGuest}
-        onSignInClick={() => {
-          if (typeof window !== "undefined") {
-            const currentUrl = new URL(window.location.href);
-            currentUrl.searchParams.set("auth", "signin");
-            window.history.pushState({}, "", currentUrl.toString());
-            window.dispatchEvent(new Event("popstate"));
-          }
-        }}
-      />
-    );
-  }
-
-  // Root URL (/): If logged in or guest mode selected, render Home Dashboard
-  return <HomeClientPage />;
+  // Root URL (/): Render Landing Page with Robot Hero directly on /
+  return (
+    <RobotHero
+      onCtaClick={handleExploreGuest}
+      onSignInClick={() => {
+        if (typeof window !== "undefined") {
+          window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+        }
+      }}
+    />
+  );
 }
 
 export default function HomeLandingPage() {

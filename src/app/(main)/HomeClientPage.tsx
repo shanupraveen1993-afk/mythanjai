@@ -179,8 +179,7 @@ export default function HomeClientPage() {
           subtitle="Items for sale by local residents"
           seeAllPath="/sell"
           accentColor="bg-yellow-500"
-          isGuest={!user}
-          onAuthRequired={() => router.push("/onboarding?auth=signin")}
+          isGuest={false}
           onCardClick={() => router.push("/sell")}
           cards={[
             { title: "2400 Sqft CMDA Plot", sub: "Plots & Real Estate", price: "₹24,50,000", area: "Vallam", img: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&auto=format&fit=crop" },
@@ -195,8 +194,7 @@ export default function HomeClientPage() {
           subtitle="Requirements from local buyers"
           seeAllPath="/need"
           accentColor="bg-yellow-500"
-          isGuest={!user}
-          onAuthRequired={() => router.push("/onboarding?auth=signin")}
+          isGuest={false}
           onCardClick={() => router.push("/need")}
           cards={[
             { title: "Need 1-2 Acres Commercial Land", sub: "Plots & Real Estate", price: "Budget ₹50L+", area: "Vallam", img: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&auto=format&fit=crop" },
@@ -211,8 +209,7 @@ export default function HomeClientPage() {
           subtitle="Verified skilled tradespeople near you"
           seeAllPath="/services"
           accentColor="bg-yellow-500"
-          isGuest={!user}
-          onAuthRequired={() => router.push("/onboarding?auth=signin")}
+          isGuest={false}
           onCardClick={() => router.push("/services")}
           cards={[
             { title: "Senthil Kumar — Electrician", sub: "Electrician", price: "14 Contacted", area: "Tanjore Town", img: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&auto=format&fit=crop" },
@@ -228,7 +225,9 @@ export default function HomeClientPage() {
           seeAllPath="/shops"
           accentColor="bg-yellow-500"
           isGuest={!user}
-          onAuthRequired={() => router.push("/onboarding?auth=signin")}
+          onAuthRequired={() => {
+            if (typeof window !== "undefined") window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+          }}
           onCardClick={() => router.push("/shops")}
           cards={[
             { title: "GLEN Gallery — Up to 60% OFF", sub: "Electronics & Mobiles", price: "Grand Sale", area: "New Bus Stand", img: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=400&auto=format&fit=crop" },

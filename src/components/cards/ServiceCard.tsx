@@ -169,16 +169,17 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
           onClick={(e) => {
             e.stopPropagation();
             if (!user) {
-              toast.error("Please verify your WhatsApp number to contact service providers.");
-              if (typeof window !== "undefined") window.location.href = "/onboarding?auth=signin";
+              if (typeof window !== "undefined") {
+                window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+              }
               return;
             }
             toast.success("Request sent! The service provider will contact you soon.");
           }}
           title="Send a request to this service provider"
-          className="absolute top-3.5 right-3 z-10 flex items-center gap-1 bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-[9px] px-2 py-1 rounded-full border border-amber-400 shadow-xs transition-colors cursor-pointer"
+          className="absolute top-3.5 right-3 z-10 flex items-center gap-1 bg-amber-500 hover:bg-amber-400 text-slate-955 font-bold text-[9px] px-2.5 py-1 rounded-full border border-amber-400 shadow-xs transition-colors cursor-pointer"
         >
-          <Zap className="w-3 h-3" />
+          <Zap className="w-3 h-3 text-slate-955 fill-slate-955" />
           <span>Send Request</span>
         </button>
       )}

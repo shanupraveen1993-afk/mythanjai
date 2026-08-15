@@ -4,9 +4,12 @@ import React, { useState, useEffect } from "react";
 import { Plus, Tag } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 
+import { useAuth } from "@/hooks/use-auth";
+
 export default function FloatingPostButton() {
   const router = useRouter();
   const pathname = usePathname();
+  const { user } = useAuth();
   const [isVisible, setIsVisible] = useState(false);
   const [lastScrollY, setLastScrollY] = useState(0);
 
@@ -52,7 +55,15 @@ export default function FloatingPostButton() {
     >
       <button
         type="button"
-        onClick={() => router.push("/post/sell")}
+        onClick={() => {
+          if (!user) {
+            if (typeof window !== "undefined") {
+              window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+            }
+            return;
+          }
+          router.push("/post/sell");
+        }}
         className="flex items-center gap-2 bg-gradient-to-r from-yellow-500 to-amber-500 hover:from-yellow-400 hover:to-amber-400 text-slate-955 font-heading font-black text-xs px-4 py-3 rounded-full shadow-[0_4px_20px_rgba(234,179,8,0.4)] border border-yellow-300 active:scale-95 transition-transform cursor-pointer"
       >
         <Plus className="w-4 h-4 stroke-[3]" />
