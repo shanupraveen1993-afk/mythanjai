@@ -1278,10 +1278,18 @@ export function RobotHero({
             </div>
             <button
               type="button"
-              onClick={onCtaClick}
-              className="bg-slate-955 hover:bg-slate-900 text-white font-heading font-black text-xs sm:text-sm px-7 py-3.5 rounded-2xl shadow-xl transition-all shrink-0 cursor-pointer active:scale-95 flex items-center gap-2 border border-slate-800"
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+                }
+                if (onSignInClick) {
+                  onSignInClick();
+                }
+              }}
+              className="bg-slate-955 hover:bg-slate-900 text-white font-heading font-black text-xs sm:text-sm px-7 py-3.5 rounded-2xl shadow-xl transition-all shrink-0 cursor-pointer active:scale-95 flex items-center gap-2 border border-slate-800 uppercase tracking-wider"
             >
-              <span>Explore Marketplace Now</span>
+              <Sparkles className="w-4 h-4 text-amber-400 fill-amber-400" />
+              <span>Register to Post</span>
               <ArrowRight className="w-4 h-4 text-amber-400" />
             </button>
           </div>
