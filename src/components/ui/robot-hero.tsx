@@ -749,6 +749,7 @@ export interface RobotHeroProps {
   metalness?: number;
   alerts?: string[];
   activeAlertIdx?: number;
+  showExtraFolds?: boolean;
 }
 
 function AntennaNavbar({
@@ -808,22 +809,6 @@ export function RobotHero({
   activeAlertIdx = 0,
   showExtraFolds = false,
 }: RobotHeroProps = {}) {
-  const defaultAlerts = [
-    "New 2400 Sqft CMDA Plot listed in Vallam — 2400 Sqft CMDA approved",
-    "Senthil Electrician: 4.9★ rating, available in Tanjore Town",
-    "GLEN Gallery: Up to 60% OFF — Grand Opening Sale",
-    "2 BHK House for Rent near Medical College — ₹10,000/mo",
-    "Rajesh Expert Plumber: 30-min rapid arrival in Medical College Rd",
-  ];
-  const displayAlerts = alerts && alerts.length > 0 ? alerts : defaultAlerts;
-
-  const [tickerIdx, setTickerIdx] = useState(0);
-  useEffect(() => {
-    const timer = setInterval(() => {
-      setTickerIdx((prev) => (prev + 1) % displayAlerts.length);
-    }, 3000);
-    return () => clearInterval(timer);
-  }, [displayAlerts.length]);
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
