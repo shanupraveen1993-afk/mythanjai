@@ -191,6 +191,16 @@ export default function AdminClientPage() {
     }
   };
 
+  const getApiUrl = (endpoint: string) => {
+    if (typeof window !== "undefined") {
+      const isNative = (window as any).Capacitor?.isNativePlatform() || window.location.protocol === "file:" || window.location.origin.includes("localhost");
+      if (isNative) {
+        return `https://mythanjai.vercel.app${endpoint}`;
+      }
+    }
+    return endpoint;
+  };
+
   const handleFormatWithAi = async () => {
     if (!videoDescription.trim()) {
       toast.error("Please enter raw offer notes to analyze with AI.");
@@ -198,7 +208,7 @@ export default function AdminClientPage() {
     }
     setIsAiFormatting(true);
     try {
-      const res = await fetch("/api/gemini-format", {
+      const res = await fetch(getApiUrl("/api/gemini-format"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -293,30 +303,22 @@ export default function AdminClientPage() {
         return;
       }
 
-      // Case 2: File Upload via Firebase Storage with 15s Timeout Guard
+      // Case 2: File Upload via Firebase Storage (Resumable CDN Upload)
       if (selectedVideo) {
-        setUploadProgress(30);
+        setUploadProgress(10);
         const storageRef = ref(storage, `admin_videos/${Date.now()}_${selectedVideo.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`);
 
         const uploadTask = uploadBytesResumable(storageRef, selectedVideo);
-
-        // 15-second timeout guard to prevent infinite hanging
-        const timeoutGuard = new Promise<never>((_, reject) => {
-          setTimeout(() => {
-            uploadTask.cancel();
-            reject(new Error("Storage upload timed out (15s limit). Please use direct video link for instant publishing."));
-          }, 15000);
-        });
 
         uploadTask.on("state_changed", (snapshot) => {
           const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
           setUploadProgress(progress);
         });
 
-        const uploadSnapshot = await Promise.race([uploadTask, timeoutGuard]);
+        const uploadSnapshot = await uploadTask;
         setUploadProgress(90);
 
-        const downloadUrl = await getDownloadURL((uploadSnapshot as any).ref);
+        const downloadUrl = await getDownloadURL(uploadSnapshot.ref);
         setUploadedVideoUrl(downloadUrl);
         setUploadProgress(100);
 
@@ -627,7 +629,6 @@ export default function AdminClientPage() {
                 <div className="flex items-center justify-between">
                   <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
                     <span>Offer Details & Notes</span>
-                    <span className="text-[10px] text-slate-400 font-normal">(AI Formatted)</span>
                   </label>
                   <button
                     type="button"
@@ -638,12 +639,12 @@ export default function AdminClientPage() {
                     {isAiFormatting ? (
                       <>
                         <Loader2 className="w-3 h-3 animate-spin" />
-                        <span>Analyzing with AI...</span>
+                        <span>AI Formatting...</span>
                       </>
                     ) : (
                       <>
-                        <Sparkles className="w-3 h-3 fill-amber-500 text-amber-600" />
-                        <span>✨ AI Polish Summary</span>
+                        <Sparkles className="w-3 h-3 text-amber-600 fill-amber-500" />
+                        <span>✨ AI Auto-Fill & Polish</span>
                       </>
                     )}
                   </button>
@@ -754,7 +755,7 @@ export default function AdminClientPage() {
               </button>
             </form>
 
-            {/* Uploaded Video Success & Copy URL Result Card */}
+            {/* Uploaded Video Success & Copy URL Result Card with Natural Aspect Ratio Support */}
             {uploadedVideoUrl && (
               <div className="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 flex flex-col gap-3 animate-fade-in">
                 <div className="flex items-center justify-between">
@@ -775,8 +776,8 @@ export default function AdminClientPage() {
                   </button>
                 </div>
 
-                <div className="relative rounded-xl overflow-hidden border border-emerald-200 bg-black max-h-56">
-                  <video src={uploadedVideoUrl} controls className="w-full h-48 object-contain" />
+                <div className="relative rounded-2xl overflow-hidden border border-emerald-200 bg-slate-950 flex items-center justify-center p-2 min-h-[220px] max-h-[70vh]">
+                  <video src={uploadedVideoUrl} controls className="max-h-[65vh] w-auto max-w-full object-contain rounded-xl shadow-md" />
                 </div>
               </div>
             )}

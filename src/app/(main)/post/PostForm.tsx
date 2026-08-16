@@ -189,13 +189,49 @@ export default function PostForm({ segment }: PostFormProps) {
   const [isAiRewriting, setIsAiRewriting] = useState(false);
   const [isOcrScanning, setIsOcrScanning] = useState(false);
 
-  const handleBlurDescription = () => {
+  const getApiUrl = (endpoint: string) => {
+    if (typeof window !== "undefined") {
+      const isNative = (window as any).Capacitor?.isNativePlatform() || window.location.protocol === "file:" || window.location.origin.includes("localhost");
+      if (isNative) {
+        return `https://mythanjai.vercel.app${endpoint}`;
+      }
+    }
+    return endpoint;
+  };
+
+  const handleBlurDescription = async () => {
     if (!description.trim()) return;
     setIsAiRewriting(true);
-    setTimeout(() => {
+    try {
+      const res = await fetch(getApiUrl("/api/gemini-format"), {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          rawDescription: description,
+          type: segment,
+        }),
+      });
+      const data = await res.json();
+      if (data.success && data.formattedText) {
+        setPreviewDescription(data.formattedText);
+        if (data.extractedFields && segment === "offer") {
+          const { shop_name, valid_from: extFrom, valid_to: extTo, area_tag, category: extCategory } = data.extractedFields;
+          if (shop_name && !title) setTitle(shop_name);
+          if (extFrom) setValidFrom(extFrom);
+          if (extTo) setValidTo(extTo);
+          if (area_tag) setArea(area_tag);
+          if (extCategory && config.categories.includes(extCategory)) setCategory(extCategory);
+          toast.success("AI extracted details & formatted description!");
+        } else {
+          toast.success("AI polished description!");
+        }
+      }
+    } catch (err) {
+      console.warn("AI format failed:", err);
       setPreviewDescription(description.trim());
+    } finally {
       setIsAiRewriting(false);
-    }, 1200);
+    }
   };
 
   // Auto-fill user profile phone
@@ -220,9 +256,7 @@ export default function PostForm({ segment }: PostFormProps) {
       setIsOcrScanning(true);
       try {
         const compressed = await compressImage(file, 800, 800, 0.7);
-        const apiEndpoint = typeof window !== "undefined" && (window.location.origin.includes("localhost") || window.location.protocol === "file:")
-          ? "https://mythanjai.vercel.app/api/gemini-ocr"
-          : "/api/gemini-ocr";
+        const apiEndpoint = getApiUrl("/api/gemini-ocr");
 
         const res = await fetch(apiEndpoint, {
           method: "POST",
@@ -235,10 +269,12 @@ export default function PostForm({ segment }: PostFormProps) {
 
         const result = await res.json();
         if (result.success && result.data) {
-          const { shop_name, detected_area } = result.data;
+          const { shop_name, detected_area, category: ocrCat, phone: ocrPhone } = result.data;
           if (shop_name) setTitle(shop_name);
           if (detected_area) setArea(detected_area);
-          toast.success("AI extracted Company Name & Location to Live Preview!");
+          if (ocrCat && config.categories.includes(ocrCat)) setCategory(ocrCat);
+          if (ocrPhone) setPhone(ocrPhone);
+          toast.success("AI extracted Company Name, Location, Category & Phone!");
         }
       } catch (err) {
         console.warn("OCR auto-extraction skipped:", err);
@@ -562,7 +598,27 @@ export default function PostForm({ segment }: PostFormProps) {
                 {/* 2. OFFER DETAILS / DESCRIPTION */}
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-semibold text-slate-700">Offer Details / Description *</label>
+                    <div className="flex items-center gap-2">
+                      <label className="text-xs font-semibold text-slate-700">Offer Details / Description *</label>
+                      <button
+                        type="button"
+                        onClick={handleBlurDescription}
+                        disabled={isAiRewriting || !description.trim()}
+                        className="text-[10px] font-bold text-amber-700 hover:text-amber-800 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 px-2 py-0.5 rounded-md flex items-center gap-1 transition-all cursor-pointer disabled:opacity-50"
+                      >
+                        {isAiRewriting ? (
+                          <>
+                            <Loader2 className="w-3 h-3 animate-spin" />
+                            <span>AI Formatting...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Sparkles className="w-3 h-3 text-amber-600 fill-amber-500" />
+                            <span>✨ AI Auto-Fill & Format</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
                     <span className={`text-[10px] font-medium ${description.length >= config.maxDescChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>
                       {description.length}/{config.maxDescChars}
                     </span>
@@ -627,20 +683,13 @@ export default function PostForm({ segment }: PostFormProps) {
 
                   <div className="flex flex-col gap-1">
                     <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                      Location in Thanjavur *
+                      <MapPin className="w-3.5 h-3.5 text-amber-500" />
+                      Location (AI Auto-Filled)
                     </label>
-                    <select
-                      value={area}
-                      onChange={(e) => setArea(e.target.value)}
-                      className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 cursor-pointer"
-                    >
-                      {TANJORE_LOCALITIES.map((loc) => (
-                        <option key={loc} value={loc}>
-                          {loc}
-                        </option>
-                      ))}
-                    </select>
+                    <div className="w-full px-3.5 py-2 text-xs font-bold bg-amber-50 border border-amber-300 text-amber-900 rounded-lg flex items-center justify-between shadow-2xs">
+                      <span>{area || "Tanjore Town (General)"}</span>
+                      <span className="text-[9px] text-amber-800 bg-amber-200/80 px-2 py-0.5 rounded-full font-black uppercase">Auto AI</span>
+                    </div>
                   </div>
                 </div>
 
