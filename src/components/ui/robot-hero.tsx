@@ -933,11 +933,11 @@ export function RobotHero({
       </div>
 
       {/* ══════════════════════════════════════════════════════
-           FIRST FOLD — Full-screen hero (mobile = 100dvh)
+           FIRST FOLD — Full-screen hero (fits 100% inside mobile viewport)
          ══════════════════════════════════════════════════════ */}
       <div
-        className="relative z-10 w-full max-md:min-h-[100dvh] md:h-[calc(100vh-3.5rem)] md:max-h-[calc(100vh-3.5rem)] flex flex-col items-center justify-between pt-4 sm:pt-6 md:pt-4 px-4 sm:px-6 select-none"
-        style={{ paddingBottom: "max(1.25rem, calc(env(safe-area-inset-bottom, 0px) + 1rem))" }}
+        className="relative z-10 w-full h-[calc(100dvh-3.5rem)] max-h-[calc(100dvh-3.5rem)] flex flex-col items-center justify-between pt-1 sm:pt-4 md:pt-4 px-3 sm:px-6 select-none overflow-hidden"
+        style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom, 0px))" }}
       >
 
         {/* ── Header: Logo + Headline + Subtitle ── */}
@@ -995,7 +995,7 @@ export function RobotHero({
         {/* ── 3D Mascot Robot Canvas ── */}
         <div
           onClick={handleRobotTap}
-          className="relative flex-1 w-full max-w-[220px] sm:max-w-[300px] md:max-w-[380px] min-h-[100px] max-h-[140px] sm:max-h-[220px] md:max-h-[300px] flex items-center justify-center cursor-pointer my-0.5 select-none shrink"
+          className="relative flex-1 w-full max-w-[200px] sm:max-w-[280px] md:max-w-[360px] min-h-[80px] max-h-[120px] sm:max-h-[200px] md:max-h-[280px] flex items-center justify-center cursor-pointer my-0.5 select-none shrink"
           style={{ touchAction: "none" }}
         >
           {/* Warm radial glow behind robot */}
