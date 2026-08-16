@@ -68,9 +68,17 @@ export default function AdminClientPage() {
 
   // Video Upload & AI Offer Publisher States
   const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
+  const [directVideoUrl, setDirectVideoUrl] = useState("");
   const [videoTitle, setVideoTitle] = useState("");
   const [videoDescription, setVideoDescription] = useState("");
   const [videoArea, setVideoArea] = useState<string>(TANJORE_LOCALITIES[0]);
+  const [shopPhone, setShopPhone] = useState("9994837342");
+  const [validFrom, setValidFrom] = useState(() => new Date().toISOString().split("T")[0]);
+  const [validTo, setValidTo] = useState(() => {
+    const d = new Date();
+    d.setDate(d.getDate() + 30);
+    return d.toISOString().split("T")[0];
+  });
   const [publishToOffers, setPublishToOffers] = useState(true);
   const [isAiFormatting, setIsAiFormatting] = useState(false);
   const [uploadProgress, setUploadProgress] = useState(0);
@@ -228,79 +236,97 @@ export default function AdminClientPage() {
 
   const handleUploadVideo = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!selectedVideo) {
-      toast.error("Please select a video file to upload.");
+    if (!selectedVideo && !directVideoUrl.trim()) {
+      toast.error("Please select a video file or enter a direct video link.");
       return;
     }
 
     setVideoUploading(true);
     setUploadProgress(0);
 
-    try {
-      const storageRef = ref(storage, `admin_videos/${Date.now()}_${selectedVideo.name}`);
-      const uploadTask = uploadBytesResumable(storageRef, selectedVideo);
+    const publishOfferToFirestore = async (videoUrl: string) => {
+      if (publishToOffers) {
+        try {
+          const offerRecord = {
+            userId: user?.uid || "admin_9994837342",
+            shop_name: videoTitle.trim() || "Local Partner Store",
+            category: "Local Offers & Deals",
+            area_tag: videoArea,
+            address_text: `${videoArea}, Thanjavur`,
+            phone: shopPhone || profile?.phone || "9994837342",
+            image_url: "/thanjavur_temple_illustration.png",
+            offer_social_link: videoUrl,
+            offer_title: videoTitle.trim() || "Exclusive Discount Offer",
+            offer_description: videoDescription.trim() || "Special promotional offer with video reel.",
+            valid_from: validFrom || new Date().toISOString().split("T")[0],
+            valid_to: validTo || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+            is_featured: true,
+            is_verified: true,
+            is_claimed: true,
+            hours: "Limited Time Offer",
+            created_at: serverTimestamp(),
+            show_phone: true,
+          };
 
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-          setUploadProgress(progress);
-        },
-        (error) => {
-          console.error("Video upload error:", error);
-          toast.error("Video upload failed.");
-          setVideoUploading(false);
-        },
-        async () => {
-          const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
-          setUploadedVideoUrl(downloadUrl);
-
-          try {
-            await addDoc(collection(db, "admin_videos"), {
-              title: videoTitle || selectedVideo.name,
-              video_url: downloadUrl,
-              created_at: serverTimestamp(),
-              uploaded_by: profile?.phone || "admin_9994837342",
-            });
-          } catch (e) {}
-
-          if (publishToOffers) {
-            try {
-              const offerRecord = {
-                userId: user?.uid || "admin_9994837342",
-                shop_name: videoTitle.trim() || selectedVideo.name.replace(/\.[^/.]+$/, ""),
-                category: "Local Offers & Deals",
-                area_tag: videoArea,
-                address_text: `${videoArea}, Thanjavur`,
-                phone: profile?.phone || "9994837342",
-                image_url: "/thanjavur_temple_illustration.png",
-                offer_social_link: downloadUrl,
-                offer_title: videoTitle.trim() || "Exclusive Discount Offer",
-                offer_description: videoDescription.trim() || "Special promotional offer with video reel.",
-                is_featured: true,
-                is_verified: true,
-                is_claimed: true,
-                hours: "Limited Time Offer",
-                created_at: serverTimestamp(),
-                show_phone: true,
-              };
-
-              await addDoc(collection(db, "shops"), offerRecord);
-              await addDoc(collection(db, "offers"), offerRecord);
-              toast.success("Video Offer Published Live to Offers Page!");
-            } catch (pubErr) {
-              console.warn("Live offer publishing error:", pubErr);
-            }
-          } else {
-            toast.success("Video uploaded successfully to Storage CDN!");
-          }
-
-          setVideoUploading(false);
+          await addDoc(collection(db, "shops"), offerRecord);
+          await addDoc(collection(db, "offers"), offerRecord);
+          toast.success("Video Offer Published Live to Offers Page!");
+        } catch (pubErr) {
+          console.warn("Live offer publishing error:", pubErr);
+          toast.error("Error writing offer to database: " + pubErr);
         }
-      );
-    } catch (error: any) {
-      toast.error("Failed to start video upload.");
+      } else {
+        toast.success("Video linked successfully!");
+      }
+    };
+
+    // Case 1: Direct Video Link provided
+    if (!selectedVideo && directVideoUrl.trim()) {
+      const finalUrl = directVideoUrl.trim();
+      setUploadedVideoUrl(finalUrl);
+      await publishOfferToFirestore(finalUrl);
       setVideoUploading(false);
+      return;
+    }
+
+    // Case 2: File Upload via Firebase Storage
+    if (selectedVideo) {
+      try {
+        const storageRef = ref(storage, `admin_videos/${Date.now()}_${selectedVideo.name}`);
+        const uploadTask = uploadBytesResumable(storageRef, selectedVideo);
+
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+            setUploadProgress(progress);
+          },
+          async (error) => {
+            console.error("Video upload error:", error);
+            toast.error("Video file upload failed. If file is large or blocked, use direct video link option.");
+            setVideoUploading(false);
+          },
+          async () => {
+            const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
+            setUploadedVideoUrl(downloadUrl);
+
+            try {
+              await addDoc(collection(db, "admin_videos"), {
+                title: videoTitle || selectedVideo.name,
+                video_url: downloadUrl,
+                created_at: serverTimestamp(),
+                uploaded_by: profile?.phone || "admin_9994837342",
+              });
+            } catch (e) {}
+
+            await publishOfferToFirestore(downloadUrl);
+            setVideoUploading(false);
+          }
+        );
+      } catch (error: any) {
+        toast.error("Failed to start video upload: " + error.message);
+        setVideoUploading(false);
+      }
     }
   };
 
@@ -550,6 +576,43 @@ export default function AdminClientPage() {
                 </div>
               </div>
 
+              {/* Offer Validity Date Pickers & Contact Phone */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-bold text-slate-700">Contact Phone *</label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. 9994837342"
+                    value={shopPhone}
+                    onChange={(e) => setShopPhone(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3.5 py-2.5 text-xs font-bold focus:outline-none focus:border-amber-500"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-bold text-slate-700">Offer Valid From *</label>
+                  <input
+                    type="date"
+                    required
+                    value={validFrom}
+                    onChange={(e) => setValidFrom(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3.5 py-2.5 text-xs font-bold focus:outline-none focus:border-amber-500 cursor-pointer"
+                  />
+                </div>
+
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-bold text-slate-700">Offer Valid Until *</label>
+                  <input
+                    type="date"
+                    required
+                    value={validTo}
+                    onChange={(e) => setValidTo(e.target.value)}
+                    className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3.5 py-2.5 text-xs font-bold focus:outline-none focus:border-amber-500 cursor-pointer"
+                  />
+                </div>
+              </div>
+
               {/* Offer Description with Gemini AI Polish Engine */}
               <div className="flex flex-col gap-1.5">
                 <div className="flex items-center justify-between">
@@ -581,18 +644,18 @@ export default function AdminClientPage() {
                   placeholder="Enter raw offer notes (e.g. 50% discount on GLEN Chimney, free installation, valid till Sunday near Medical College Road)..."
                   value={videoDescription}
                   onChange={(e) => setVideoDescription(e.target.value)}
-                  className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3.5 py-2 text-xs font-medium focus:outline-none focus:border-yellow-500 leading-relaxed resize-none"
+                  className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3.5 py-2 text-xs font-medium focus:outline-none focus:border-amber-500 leading-relaxed resize-none"
                 />
               </div>
 
               {/* Video File Input Dropzone */}
-              <div className="w-full bg-slate-50 border-2 border-dashed border-slate-300 hover:border-yellow-500 p-6 rounded-2xl flex flex-col items-center justify-center text-center gap-2 transition-all cursor-pointer">
+              <div className="w-full bg-slate-50 border-2 border-dashed border-slate-300 hover:border-amber-500 p-6 rounded-2xl flex flex-col items-center justify-center text-center gap-2 transition-all cursor-pointer">
                 <label className="w-full flex flex-col items-center justify-center gap-2 cursor-pointer">
-                  <div className="w-12 h-12 rounded-2xl bg-yellow-500/15 text-yellow-600 flex items-center justify-center font-bold">
+                  <div className="w-12 h-12 rounded-2xl bg-amber-500/15 text-amber-600 flex items-center justify-center font-bold">
                     <Film className="w-6 h-6 stroke-[2]" />
                   </div>
                   <span className="font-heading font-extrabold text-xs text-slate-900">
-                    {selectedVideo ? selectedVideo.name : "Select or drag Video Reel (.mp4, .webm, .mov) *"}
+                    {selectedVideo ? selectedVideo.name : "Select or drag Video Reel (.mp4, .webm, .mov)"}
                   </span>
                   <span className="text-[10px] text-slate-400 font-medium">
                     {selectedVideo ? `${(selectedVideo.size / (1024 * 1024)).toFixed(2)} MB` : "Video stored on Firebase Storage CDN & linked to live offer"}
@@ -604,6 +667,21 @@ export default function AdminClientPage() {
                     className="hidden"
                   />
                 </label>
+              </div>
+
+              {/* Direct Video Link URL Input Option */}
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
+                  <span>OR Paste Direct Video Reel Link URL</span>
+                  <span className="text-[10px] text-slate-400 font-normal">(YouTube shorts, MP4, Reel CDN URL)</span>
+                </label>
+                <input
+                  type="url"
+                  placeholder="https://..."
+                  value={directVideoUrl}
+                  onChange={(e) => setDirectVideoUrl(e.target.value)}
+                  className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl px-3.5 py-2.5 text-xs font-medium focus:outline-none focus:border-amber-500"
+                />
               </div>
 
               {/* Toggle: Publish directly to Local Offers directory */}
@@ -648,9 +726,10 @@ export default function AdminClientPage() {
               )}
 
               <button
-                type="submit"
-                disabled={videoUploading || !selectedVideo}
-                className="w-full py-3.5 bg-yellow-500 hover:bg-yellow-400 disabled:opacity-50 text-slate-955 font-heading font-black text-xs uppercase tracking-wider rounded-xl border border-yellow-400 shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
+                type="button"
+                onClick={handleUploadVideo}
+                disabled={videoUploading || (!selectedVideo && !directVideoUrl.trim())}
+                className="w-full py-3.5 bg-amber-500 hover:bg-amber-600 disabled:opacity-50 text-slate-955 font-heading font-black text-xs uppercase tracking-wider rounded-xl border border-amber-400 shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
               >
                 {videoUploading ? (
                   <>
@@ -660,7 +739,7 @@ export default function AdminClientPage() {
                 ) : (
                   <>
                     <Upload className="w-4 h-4 stroke-[2.5]" />
-                    <span>Upload Video & Publish Live Offer</span>
+                    <span>Publish Video Offer Live</span>
                   </>
                 )}
               </button>
