@@ -110,7 +110,7 @@ function MainLayoutContent({
       localStorage.setItem("namma_thanjai_has_seen_walkthrough_v3", "true");
     }
     setShowWalkthrough(false);
-    router.push("/onboarding");
+    router.push("/");
   };
 
   const handleCloseSignIn = () => {

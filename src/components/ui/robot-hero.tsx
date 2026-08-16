@@ -1053,6 +1053,28 @@ export function RobotHero({
             </div>
           ) : (
             <div className="flex flex-col gap-2 w-full">
+
+              {/* ── LIVE Ticker — just above CTA buttons, visible on mobile ── */}
+              {displayAlerts.length > 0 && (
+                <div className="flex items-center gap-3 w-full bg-slate-950 border border-slate-800/80 rounded-2xl py-2.5 px-4 shadow-[0_4px_18px_rgba(15,23,42,0.22)] overflow-hidden select-none mb-1">
+                  <span className="shrink-0 bg-amber-500 text-slate-950 font-black text-[8px] px-2 py-0.5 rounded-md uppercase tracking-wider animate-pulse">
+                    LIVE
+                  </span>
+                  <div className="flex-1 overflow-hidden h-[18px] flex items-center">
+                    <div className="animate-marquee flex items-center">
+                      {[...displayAlerts, ...displayAlerts].map((alert, i) => (
+                        <span key={i} className="flex items-center gap-6 shrink-0">
+                          <span className="text-slate-200 text-[11px] font-medium whitespace-nowrap leading-none">
+                            {alert}
+                          </span>
+                          <span className="text-amber-500/60 text-xs font-black shrink-0">·</span>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              )}
+
               {/* CTA Buttons */}
               <div className="grid grid-cols-2 gap-2.5 w-full">
                 {/* REGISTER — Primary (amber) */}
@@ -1134,31 +1156,6 @@ export function RobotHero({
             </div>
           )}
         </div>
-
-        {/* ── LIVE Ticker — Full-width with distinct top gap from CTA buttons ── */}
-        {displayAlerts.length > 0 && (
-          <div className="w-full max-w-2xl shrink-0 px-4 sm:px-6 mt-3 sm:mt-4">
-            <div className="flex items-center gap-3 w-full bg-slate-950 border border-slate-800/80 rounded-2xl py-2.5 px-4 shadow-[0_4px_18px_rgba(15,23,42,0.22)] overflow-hidden select-none">
-              {/* LIVE badge */}
-              <span className="shrink-0 bg-amber-500 text-slate-950 font-black text-[8px] px-2 py-0.5 rounded-md uppercase tracking-wider animate-pulse">
-                LIVE
-              </span>
-              {/* Marquee track — smooth, readable speed (45s), dot-separated alerts */}
-              <div className="flex-1 overflow-hidden h-[18px] flex items-center">
-                <div className="animate-marquee flex items-center">
-                  {[...displayAlerts, ...displayAlerts].map((alert, i) => (
-                    <span key={i} className="flex items-center gap-6 shrink-0">
-                      <span className="text-slate-200 text-[11px] font-medium whitespace-nowrap leading-none">
-                        {alert}
-                      </span>
-                      <span className="text-amber-500/60 text-xs font-black shrink-0">·</span>
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
 
       </div>
       {/* ── END FIRST FOLD ── */}
