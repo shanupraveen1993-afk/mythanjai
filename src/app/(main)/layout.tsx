@@ -194,7 +194,7 @@ function MainLayoutContent({
   const isFullWidthPage = isStandaloneView || isOnboardingView || isLandingMode;
 
   return (
-    <div className="w-full min-h-screen max-md:h-dvh max-md:max-h-dvh max-md:overflow-hidden flex flex-col relative bg-[#f4f5f8] font-sans md:h-auto md:max-h-none md:overflow-visible">
+    <div className="w-full min-h-screen flex flex-col relative bg-[#f4f5f8] font-sans">
       {/* 1. Animated Splash Screen */}
       {showSplash && (
         <SplashScreen onComplete={handleSplashComplete} />
@@ -242,7 +242,7 @@ function MainLayoutContent({
 
       {/* Main Content Panel */}
       <main
-        className={`flex-1 w-full max-md:overflow-y-auto max-md:overscroll-contain md:overflow-visible md:h-auto flex flex-col ${
+        className={`flex-1 w-full flex flex-col ${
           isFullWidthPage
             ? "p-0 max-w-none m-0 bg-white"
             : "bg-[#f4f5f8] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
