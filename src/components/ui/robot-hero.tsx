@@ -936,8 +936,8 @@ export function RobotHero({
            FIRST FOLD — Full-screen hero (fits 100% inside mobile viewport)
          ══════════════════════════════════════════════════════ */}
       <div
-        className="relative z-10 w-full h-[calc(100dvh-3.5rem)] max-h-[calc(100dvh-3.5rem)] flex flex-col items-center justify-between pt-1 sm:pt-4 md:pt-4 px-3 sm:px-6 select-none overflow-hidden"
-        style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom, 0px))" }}
+        className="relative z-10 w-full h-[calc(100dvh-3.5rem)] max-h-[calc(100dvh-3.5rem)] flex flex-col items-center justify-center gap-2 sm:gap-4 pt-1 sm:pt-4 md:pt-4 px-3 sm:px-6 select-none overflow-hidden"
+        style={{ paddingBottom: "12px" }}
       >
 
         {/* ── Header: Logo + Headline + Subtitle ── */}
