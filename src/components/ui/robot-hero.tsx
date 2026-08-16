@@ -941,10 +941,10 @@ export function RobotHero({
       >
 
         {/* ── Header: Logo + Headline + Subtitle ── */}
-        <div className="flex flex-col items-center gap-1.5 w-full max-w-3xl mx-auto text-center shrink-0">
+        <div className="flex flex-col items-center gap-1 w-full max-w-3xl mx-auto text-center shrink-0">
 
           {/* Logo with warm glow ring */}
-          <div className="relative w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 shrink-0 mb-0.5">
+          <div className="relative w-11 h-11 sm:w-14 sm:h-14 md:w-18 md:h-18 shrink-0">
             <div className="absolute inset-0 rounded-2xl bg-amber-400/20 blur-md scale-125 animate-float-dot" />
             <div className="relative w-full h-full rounded-2xl overflow-hidden bg-white shadow-[0_4px_24px_rgba(245,158,11,0.18)] border border-amber-100/80 flex items-center justify-center">
               <img
@@ -995,7 +995,7 @@ export function RobotHero({
         {/* ── 3D Mascot Robot Canvas ── */}
         <div
           onClick={handleRobotTap}
-          className="relative flex-1 w-full max-w-[250px] sm:max-w-[320px] md:max-w-[400px] min-h-[130px] max-h-[200px] sm:max-h-[260px] md:max-h-[320px] flex items-center justify-center cursor-pointer my-0.5 select-none"
+          className="relative flex-1 w-full max-w-[220px] sm:max-w-[300px] md:max-w-[380px] min-h-[100px] max-h-[140px] sm:max-h-[220px] md:max-h-[300px] flex items-center justify-center cursor-pointer my-0.5 select-none shrink"
           style={{ touchAction: "none" }}
         >
           {/* Warm radial glow behind robot */}
@@ -1030,14 +1030,35 @@ export function RobotHero({
           </Canvas>
         </div>
 
-        {/* ── Action Footer: Buttons (narrow, centered) ── */}
-        <div className="w-full max-w-xs sm:max-w-sm shrink-0 flex flex-col gap-2.5 px-1">
+        {/* ── Action Footer: Buttons + LIVE Ticker (always visible on mobile) ── */}
+        <div className="w-full max-w-xs sm:max-w-sm shrink-0 flex flex-col gap-2 px-1 pb-1">
+
+          {/* ── LIVE Ticker — directly above CTA buttons, 100% visible on mobile ── */}
+          {displayAlerts.length > 0 && (
+            <div className="flex items-center gap-2.5 w-full bg-slate-950 border border-slate-800/90 rounded-xl py-2 px-3 shadow-[0_4px_16px_rgba(15,23,42,0.25)] overflow-hidden select-none">
+              <span className="shrink-0 bg-amber-500 text-slate-950 font-black text-[8px] px-1.5 py-0.5 rounded uppercase tracking-wider animate-pulse">
+                LIVE
+              </span>
+              <div className="flex-1 overflow-hidden h-[16px] flex items-center">
+                <div className="animate-marquee flex items-center">
+                  {[...displayAlerts, ...displayAlerts].map((alert, i) => (
+                    <span key={i} className="flex items-center gap-4 shrink-0">
+                      <span className="text-slate-200 text-[10.5px] font-semibold whitespace-nowrap leading-none">
+                        {alert}
+                      </span>
+                      <span className="text-amber-400 text-xs font-black shrink-0">·</span>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
 
           {profile?.isVerified ? (
             /* Verified state — show member badge + explore button */
-            <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 p-3 rounded-2xl flex items-center justify-between gap-2 shadow-sm">
+            <div className="bg-emerald-50 border border-emerald-200 text-emerald-700 p-2.5 rounded-2xl flex items-center justify-between gap-2 shadow-sm">
               <div className="flex items-center gap-2">
-                <CheckCircle className="w-5 h-5 text-emerald-600 shrink-0" />
+                <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
                 <div className="text-left">
                   <span className="font-heading font-black text-xs block text-slate-900">Verified Member</span>
                   <span className="text-[10px] font-bold text-slate-500">+{profile?.phone || mobileNumber}</span>
@@ -1053,30 +1074,8 @@ export function RobotHero({
             </div>
           ) : (
             <div className="flex flex-col gap-2 w-full">
-
-              {/* ── LIVE Ticker — just above CTA buttons, visible on mobile ── */}
-              {displayAlerts.length > 0 && (
-                <div className="flex items-center gap-3 w-full bg-slate-950 border border-slate-800/80 rounded-2xl py-2.5 px-4 shadow-[0_4px_18px_rgba(15,23,42,0.22)] overflow-hidden select-none mb-1">
-                  <span className="shrink-0 bg-amber-500 text-slate-950 font-black text-[8px] px-2 py-0.5 rounded-md uppercase tracking-wider animate-pulse">
-                    LIVE
-                  </span>
-                  <div className="flex-1 overflow-hidden h-[18px] flex items-center">
-                    <div className="animate-marquee flex items-center">
-                      {[...displayAlerts, ...displayAlerts].map((alert, i) => (
-                        <span key={i} className="flex items-center gap-6 shrink-0">
-                          <span className="text-slate-200 text-[11px] font-medium whitespace-nowrap leading-none">
-                            {alert}
-                          </span>
-                          <span className="text-amber-500/60 text-xs font-black shrink-0">·</span>
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-              )}
-
               {/* CTA Buttons */}
-              <div className="grid grid-cols-2 gap-2.5 w-full">
+              <div className="grid grid-cols-2 gap-2 w-full">
                 {/* REGISTER — Primary (amber) */}
                 <button
                   type="button"
