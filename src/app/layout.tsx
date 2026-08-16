@@ -45,6 +45,30 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={`${redHatText.variable} ${redHatDisplay.variable} h-full bg-[#f4f5f8]`}>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              if (typeof window !== 'undefined') {
+                if ('serviceWorker' in navigator) {
+                  navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for (let registration of registrations) {
+                      registration.unregister();
+                    }
+                  });
+                }
+                if ('caches' in window) {
+                  caches.keys().then(function(names) {
+                    for (let name of names) {
+                      caches.delete(name);
+                    }
+                  });
+                }
+              }
+            `,
+          }}
+        />
+      </head>
       <body className="h-full bg-[#f4f5f8] font-sans antialiased text-slate-900 flex flex-col min-h-screen overflow-x-hidden">
         <ToastProvider>
           <LanguageProvider>
