@@ -206,27 +206,9 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
           </h3>
         </div>
 
-        {/* Address and Landmark */}
-        <p className="text-xs text-slate-500 leading-relaxed font-sans bg-slate-50 p-2.5 rounded-xl border border-slate-200/60 line-clamp-2">
-          {post.address_text}
-          {post.landmark && (
-            <span className="block mt-0.5 font-medium text-slate-700 truncate">
-              Near: {post.landmark}
-            </span>
-          )}
-        </p>
-
-        {/* Offer Validity Badge */}
-        <div className={`flex items-center gap-1 px-2.5 py-1 rounded-lg border font-bold text-[11px] w-fit mt-0.5 ${
-          isExpired ? "text-rose-700 bg-rose-50 border-rose-200" : "text-slate-700 bg-slate-100 border-slate-200"
-        }`}>
-          <Calendar className="w-3.5 h-3.5 text-slate-500" />
-          <span>{isExpired ? "Offer Expired" : validityText}</span>
-        </div>
-
-        {/* Active Promotion Offer Details */}
+        {/* 1. Active Promotion Offer Details */}
         {post.offer_title && (
-          <div className={`border rounded-xl p-3 flex flex-col gap-1.5 mt-1 font-sans ${
+          <div className={`border rounded-xl p-3 flex flex-col gap-1.5 mt-0.5 font-sans ${
             isExpired ? "bg-slate-50 border-slate-200 text-slate-500 opacity-75" : "bg-amber-50/60 border-amber-200/80 text-slate-900"
           }`}>
             <div className="flex items-center gap-1.5 text-slate-900 font-black text-xs truncate">
@@ -240,6 +222,32 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
             )}
           </div>
         )}
+
+        {/* 2. Offer Validity Badge */}
+        <div className={`flex items-center gap-1 px-2.5 py-1 rounded-lg border font-bold text-[11px] w-fit ${
+          isExpired ? "text-rose-700 bg-rose-50 border-rose-200" : "text-slate-700 bg-slate-100 border-slate-200"
+        }`}>
+          <Calendar className="w-3.5 h-3.5 text-slate-500" />
+          <span>{isExpired ? "Offer Expired" : validityText}</span>
+        </div>
+
+        {/* 3. Location & Address Box (Placed Below Offer) */}
+        <div className="flex flex-col gap-1 text-xs text-slate-600 font-semibold bg-slate-50 p-2.5 rounded-xl border border-slate-200/60">
+          <div className="flex items-center gap-1 text-slate-800 font-bold">
+            <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+            <span>{post.area_tag || "Thanjavur"}</span>
+          </div>
+          {post.address_text && (
+            <p className="text-[11px] text-slate-500 font-medium leading-relaxed line-clamp-2 pl-4">
+              {post.address_text}
+              {post.landmark && (
+                <span className="block mt-0.5 text-slate-700 font-bold truncate">
+                  Near: {post.landmark}
+                </span>
+              )}
+            </p>
+          )}
+        </div>
 
         {/* Video Reel Promo (Data-Saver Optimized Preload) */}
         {post.offer_social_link && (
