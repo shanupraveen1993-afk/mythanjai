@@ -126,6 +126,7 @@ export function PreviewSection({
 export default function HomeClientPage() {
   const router = useRouter();
   const { user, profile } = useAuth();
+  const isAuthVerified = Boolean(profile?.isVerified);
 
   // Alert ticker for robot hero
   const [activeAlertIdx, setActiveAlertIdx] = React.useState(0);
