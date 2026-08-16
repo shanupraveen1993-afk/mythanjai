@@ -51,8 +51,11 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     <ToastContext.Provider value={{ toast }}>
       {children}
 
-      {/* Floating Toast Notification Container */}
-      <div className="fixed bottom-5 right-5 z-[9999] flex flex-col gap-2 max-w-sm w-full px-4 pointer-events-none font-sans">
+      {/* Floating Toast Notification Container — Safe-area bleed protected */}
+      <div 
+        className="fixed bottom-5 right-5 z-[99999] flex flex-col gap-2 max-w-sm w-full px-4 pointer-events-none font-sans"
+        style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.5rem)" }}
+      >
         {toasts.map((t) => (
           <div
             key={t.id}

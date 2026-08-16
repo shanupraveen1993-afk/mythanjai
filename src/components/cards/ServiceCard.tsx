@@ -48,12 +48,20 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
     return Math.floor(12 + (post.name?.length || 5) * 2);
   });
 
-  const [contactedCount, setContactedCount] = useState(() => {
-    if (typeof window === "undefined") return 45;
-    const stored = localStorage.getItem(`contacted_service_${post.id}`);
-    if (stored) return parseInt(stored, 10);
-    return Math.floor(45 + (post.name?.length || 5) * 3);
+  const [isRequestSent, setIsRequestSent] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return localStorage.getItem(`request_sent_service_${post.id}`) === "true";
   });
+
+  const handleSendRequest = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (isRequestSent) return;
+    setIsRequestSent(true);
+    if (typeof window !== "undefined") {
+      localStorage.setItem(`request_sent_service_${post.id}`, "true");
+    }
+    toast.success(`Request sent to ${post.name}! They will contact you shortly.`);
+  };
 
   // Public visible phone number
   const rawPhone = String(post.phone || "9876543210");
@@ -254,16 +262,27 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
             <span>Call</span>
           </button>
 
-          {/* SECONDARY BUTTON: Send Request */}
+          {/* SECONDARY BUTTON: Send Request (One-Time Sent State) */}
           <button
-            onClick={(e) => {
-              e.stopPropagation();
-              toast.success(`Request sent to ${post.name}! They will call you back shortly.`);
-            }}
-            className="flex items-center gap-1.5 h-8.5 bg-slate-100 hover:bg-amber-50 hover:border-amber-400/90 text-slate-800 hover:text-amber-950 font-bold px-3 rounded-xl text-xs transition-all duration-200 border border-slate-250/90 shadow-2xs cursor-pointer active:scale-95 whitespace-nowrap"
+            disabled={isRequestSent}
+            onClick={handleSendRequest}
+            className={`flex items-center gap-1.5 h-8.5 font-bold px-3 rounded-xl text-xs transition-all duration-200 border shadow-2xs whitespace-nowrap ${
+              isRequestSent
+                ? "bg-emerald-50 text-emerald-800 border-emerald-300 font-extrabold cursor-default opacity-90"
+                : "bg-slate-100 hover:bg-amber-50 hover:border-amber-400/90 text-slate-800 hover:text-amber-950 border-slate-250/90 cursor-pointer active:scale-95"
+            }`}
           >
-            <Zap className="w-3.5 h-3.5 text-slate-500" />
-            <span>Send Request</span>
+            {isRequestSent ? (
+              <>
+                <Check className="w-3.5 h-3.5 text-emerald-600 stroke-[3]" />
+                <span>✓ Request Sent</span>
+              </>
+            ) : (
+              <>
+                <Zap className="w-3.5 h-3.5 text-slate-500" />
+                <span>Send Request</span>
+              </>
+            )}
           </button>
         </div>
       </div>
