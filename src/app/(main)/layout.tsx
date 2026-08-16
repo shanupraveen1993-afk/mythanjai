@@ -188,12 +188,12 @@ function MainLayoutContent({
     }
   }, [pathname]);
 
-  const isLandingMode = pathname === "/";
+  const isLandingMode = pathname === "/" || pathname === "/onboarding";
   const isChatRoute = pathname === "/chat";
   const isPostRoute = pathname.startsWith("/post");
   const isStandaloneView = isChatRoute;
-  const isOnboardingView = pathname === "/onboarding";
-  const isFullWidthPage = isStandaloneView || isOnboardingView || isLandingMode;
+  const isOnboardingView = false;
+  const isFullWidthPage = isStandaloneView || isLandingMode;
 
   return (
     <div className="w-full min-h-screen flex flex-col relative bg-[#f4f5f8] font-sans">

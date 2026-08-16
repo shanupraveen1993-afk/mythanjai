@@ -12,6 +12,7 @@ function RootPageContent() {
   // Root URL (https://mythanjai.vercel.app/): ALWAYS renders the 3D Mascot Robot Landing Page!
   return (
     <RobotHero
+      showExtraFolds={true}
       onCtaClick={() => router.push("/home")}
       onSignInClick={() => {
         if (typeof window !== "undefined") {

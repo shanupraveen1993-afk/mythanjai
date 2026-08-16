@@ -3,14 +3,18 @@
 import React, { useState, useEffect } from "react";
 import { Download, Smartphone, X, Sparkles, CheckCircle2 } from "lucide-react";
 import { useToast } from "@/context/ToastContext";
+import { usePathname } from "next/navigation";
 
 export default function ApkInstallToast() {
   const { toast } = useToast();
   const [showToast, setShowToast] = useState(false);
   const [isDownloading, setIsDownloading] = useState(false);
 
+  const pathname = usePathname();
+
   useEffect(() => {
-    // 1. Don't show inside Capacitor Native Android App
+    // 1. Don't show on onboarding route or inside Capacitor Native Android App APK
+    if (pathname === "/onboarding") return;
     if (typeof window !== "undefined" && (window as any).Capacitor?.isNativePlatform?.()) {
       return;
     }
@@ -25,7 +29,7 @@ export default function ApkInstallToast() {
     }, 1500);
 
     return () => clearTimeout(timer);
-  }, []);
+  }, [pathname]);
 
   const handleDownloadApk = () => {
     setIsDownloading(true);
