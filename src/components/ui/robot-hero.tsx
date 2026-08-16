@@ -969,27 +969,10 @@ export function RobotHero({
             <span className="text-amber-500 animate-float-dot inline-block ml-0.5">.</span>
           </h1>
 
-          {/* Subtitle with track-in animation */}
-          <p className="animate-track-in text-[9px] sm:text-[10px] md:text-xs font-black text-amber-600 uppercase mt-1 opacity-0 [animation-delay:200ms] [animation-fill-mode:forwards] tracking-wider">
+          {/* Static Subtitle */}
+          <p className="text-[10px] sm:text-xs font-black text-amber-600 uppercase mt-1 tracking-wider text-center">
             LOCAL MATCHMAKER FOR THANJAVUR BUYERS, SELLERS & TRADES
           </p>
-
-          {/* Rotating Category Badge — shown on ALL screens */}
-          <div className="mt-1.5 flex items-center justify-center">
-            <AnimatePresence mode="wait">
-              <motion.div
-                key={wordIndex}
-                initial={{ opacity: 0, scale: 0.85, y: -8 }}
-                animate={{ opacity: 1, scale: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 1.08, y: 8 }}
-                transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
-                className="animate-glow-pulse bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 font-heading font-black text-[10px] sm:text-xs px-4 py-1.5 rounded-full uppercase tracking-widest flex items-center gap-2 shadow-[0_2px_12px_rgba(245,158,11,0.4)] select-none"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-slate-950/70 animate-ping shrink-0" />
-                <span>{words[wordIndex]}</span>
-              </motion.div>
-            </AnimatePresence>
-          </div>
         </div>
 
         {/* ── 3D Mascot Robot Canvas ── */}
