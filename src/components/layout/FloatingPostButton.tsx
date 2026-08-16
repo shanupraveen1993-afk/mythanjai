@@ -36,16 +36,14 @@ export default function FloatingPostButton() {
   useEffect(() => {
     if (!isCategoryPage) return;
 
-    const mainElement = document.querySelector("main");
-
     const handleScroll = () => {
-      const currentScrollY = mainElement ? mainElement.scrollTop : window.scrollY;
+      const currentScrollY = window.scrollY || document.documentElement.scrollTop || 0;
 
-      // Activate on second fold (scrolled past 120px)
-      if (currentScrollY > 120) {
-        if (currentScrollY < lastScrollY - 4) {
+      // Activate on second fold (scrolled past 80px)
+      if (currentScrollY > 80) {
+        if (currentScrollY < lastScrollY - 2) {
           setIsVisible(true); // Scrolling UP -> Arise from bottom
-        } else if (currentScrollY > lastScrollY + 8) {
+        } else if (currentScrollY > lastScrollY + 6) {
           setIsVisible(false); // Scrolling DOWN -> Hide into bottom
         } else {
           setIsVisible(true); // Settled on 2nd fold -> Visible
@@ -56,13 +54,10 @@ export default function FloatingPostButton() {
       setLastScrollY(currentScrollY);
     };
 
-    if (mainElement) {
-      mainElement.addEventListener("scroll", handleScroll, { passive: true });
-    }
     window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll(); // Initial check
 
     return () => {
-      if (mainElement) mainElement.removeEventListener("scroll", handleScroll);
       window.removeEventListener("scroll", handleScroll);
     };
   }, [lastScrollY, isCategoryPage]);
