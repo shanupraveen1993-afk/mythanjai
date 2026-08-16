@@ -142,27 +142,6 @@ export default function HomeClientPage() {
   return (
     <div className="w-full flex flex-col gap-8 text-slate-800 font-sans mt-3">
 
-        {/* ── LIVE Ticker — TOP of page, always visible ─────── */}
-        <div className="w-full bg-slate-950 border border-slate-800/60 rounded-2xl py-2.5 px-4 shadow-[0_4px_18px_rgba(15,23,42,0.18)] overflow-hidden select-none flex items-center gap-3">
-          {/* LIVE badge */}
-          <span className="shrink-0 bg-amber-500 text-slate-950 font-black text-[8px] px-2 py-0.5 rounded-md uppercase tracking-wider animate-pulse">
-            LIVE
-          </span>
-          {/* Marquee track */}
-          <div className="flex-1 overflow-hidden h-[18px] flex items-center">
-            <div className="animate-marquee flex items-center">
-              {[...alerts, ...alerts].map((alert, i) => (
-                <span key={i} className="flex items-center gap-6 shrink-0">
-                  <span className="text-slate-200 text-[11px] font-medium whitespace-nowrap leading-none">
-                    {alert}
-                  </span>
-                  <span className="text-amber-500/60 text-xs font-black shrink-0">·</span>
-                </span>
-              ))}
-            </div>
-          </div>
-        </div>
-
         {/* Hero Banner */}
         <div className="relative w-full min-h-[180px] sm:min-h-[220px] rounded-3xl overflow-hidden bg-slate-950 text-white flex items-center px-6 sm:px-10 py-8 shadow-xl hero-grain">
           <img

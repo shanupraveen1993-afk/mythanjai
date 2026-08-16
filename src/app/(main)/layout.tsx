@@ -249,7 +249,7 @@ function MainLayoutContent({
             : "bg-[#f4f5f8] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
         }`}
         style={{
-          paddingTop: !isStandaloneView && !isOnboardingView ? "calc(3.5rem + env(safe-area-inset-top, 0px))" : undefined,
+          paddingTop: !isStandaloneView && !isOnboardingView ? "calc(5.25rem + env(safe-area-inset-top, 0px))" : undefined,
           paddingBottom: !isFullWidthPage ? "calc(6.5rem + env(safe-area-inset-bottom, 0px))" : undefined,
         }}
       >
