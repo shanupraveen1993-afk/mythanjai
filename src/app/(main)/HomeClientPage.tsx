@@ -49,13 +49,7 @@ export function PreviewSection({
           <p className="text-[11px] text-slate-500 font-medium mt-0.5">{subtitle}</p>
         </div>
         <button
-          onClick={() => {
-            if (isGuest && onAuthRequired) {
-              onAuthRequired();
-            } else {
-              router.push(seeAllPath);
-            }
-          }}
+          onClick={() => router.push(seeAllPath)}
           className="flex items-center gap-1 text-xs font-black text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
         >
           See All <ArrowRight className="w-3.5 h-3.5" />
