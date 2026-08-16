@@ -293,14 +293,14 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
 
         {/* Footer CTAs: Default = Get Direction Full-Width. If show_phone is enabled, show Call/WhatsApp */}
         <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-100 mt-auto">
-          {/* PRIMARY BUTTON: Get Directions */}
+          {/* SECONDARY BUTTON: Get Directions */}
           <a
             href={directionUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 flex items-center justify-center gap-1.5 h-9 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-black px-4 rounded-xl text-xs transition-all border border-yellow-400 cursor-pointer shadow-2xs active:scale-95"
+            className="flex-1 flex items-center justify-center gap-1.5 h-9 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-4 rounded-xl text-xs transition-all border border-slate-250 cursor-pointer shadow-2xs active:scale-95"
           >
-            <Navigation className="w-3.5 h-3.5 fill-current" />
+            <Navigation className="w-3.5 h-3.5 text-slate-500 fill-slate-500/20" />
             <span>{t("getDirection")}</span>
           </a>
 

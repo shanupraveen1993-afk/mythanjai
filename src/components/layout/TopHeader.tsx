@@ -185,7 +185,7 @@ export default function TopHeader({
                 </button>
               </>
             ) : (
-              /* Login button for all non-authenticated visitors */
+              /* Login button for all non-authenticated visitors (Secondary Button Style) */
               <button
                 type="button"
                 onClick={() => {
@@ -196,9 +196,9 @@ export default function TopHeader({
                   }
                   onSignInClick?.();
                 }}
-                className="flex items-center justify-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-black text-xs px-4 py-2 rounded-xl shadow-md border border-yellow-400 cursor-pointer active:scale-95 transition-all"
+                className="flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-slate-200/90 text-slate-800 font-heading font-bold text-xs px-4 py-2 rounded-xl border border-slate-300 shadow-2xs cursor-pointer active:scale-95 transition-all"
               >
-                <User className="w-4 h-4 text-slate-955" />
+                <User className="w-4 h-4 text-slate-600" />
                 <span>Login</span>
               </button>
             );

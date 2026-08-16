@@ -247,15 +247,15 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
             <span>Call</span>
           </button>
 
-          {/* PRIMARY BUTTON */}
+          {/* SECONDARY BUTTON */}
           <button
             onClick={(e) => {
               e.stopPropagation();
               toast.success(`Request sent to ${post.name}! They will call you back shortly.`);
             }}
-            className="flex items-center gap-1.5 h-8.5 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-black px-3 rounded-xl text-xs transition-all shadow-2xs cursor-pointer border border-yellow-400 active:scale-95 whitespace-nowrap"
+            className="flex items-center gap-1.5 h-8.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-3 rounded-xl text-xs transition-all border border-slate-250 shadow-2xs cursor-pointer active:scale-95 whitespace-nowrap"
           >
-            <Zap className="w-3.5 h-3.5" />
+            <Zap className="w-3.5 h-3.5 text-slate-500" />
             <span>Send Request</span>
           </button>
         </div>
