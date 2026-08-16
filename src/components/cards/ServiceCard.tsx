@@ -162,17 +162,17 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
           </div>
 
           <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-            {/* Outlined Border Tag (Not Filled) */}
-            <span className="inline-flex items-center gap-1 bg-amber-500/5 border border-amber-400/80 text-amber-900 font-extrabold px-2.5 py-0.5 rounded-xl text-[10px] shadow-2xs">
+            {/* Sky Blue Craft Category Badge */}
+            <span className="inline-flex items-center gap-1 bg-sky-500/10 border border-sky-300 text-sky-950 font-black px-2.5 py-0.5 rounded-xl text-[10px] shadow-2xs">
               {getCategoryIllustration(post.skill_category)}
               <span>{post.skill_category}</span>
             </span>
 
-            {/* RATING BADGE: ONLY DISPLAYED IF RATING > 0. IF NO RATING, LEFT OUT COMPLETELY (NO 0 RATING) */}
+            {/* RATING BADGE: ONLY DISPLAYED IF RATING > 0 */}
             {hasRating && (
               <span className="inline-flex items-center gap-1 bg-amber-50 border border-amber-200/80 text-amber-900 font-extrabold px-2.5 py-0.5 rounded-xl text-[10px] shadow-2xs">
                 <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                <span>{ratingDisplay}★</span>
+                <span>{ratingDisplay}★ Rating</span>
               </span>
             )}
           </div>

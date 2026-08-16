@@ -163,12 +163,21 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
         </div>
       )}
 
-      {/* Top Header Tags */}
+      {/* Top Header Category & Type Badges */}
       <div className="flex items-center justify-between gap-2 pr-8">
         <div className="flex items-center gap-1.5 flex-wrap">
+          {/* Type Badge: FOR SALE vs WANTED NEED */}
+          <span className={`inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-lg border shadow-2xs ${
+            isNeedType 
+              ? "bg-amber-500/15 text-amber-900 border-amber-400/80" 
+              : "bg-emerald-500/10 text-emerald-700 border-emerald-300"
+          }`}>
+            <Tag className={`w-3 h-3 ${isNeedType ? "text-amber-600 fill-amber-500/20" : "text-emerald-600"}`} />
+            <span>{isNeedType ? "WANTED BUYER NEED" : "FOR SALE"}</span>
+          </span>
+
           {post.category && (
-            <span className="inline-flex items-center gap-1 text-[10px] font-semibold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md">
-              <Tag className="w-3 h-3 text-slate-400" />
+            <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md border border-slate-200/60">
               <span>{post.category}</span>
             </span>
           )}
@@ -176,14 +185,19 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
       </div>
 
       {/* Main Title & Price */}
-      <div className="flex flex-col gap-0.5">
-        <h3 className="font-heading font-bold text-sm sm:text-base text-slate-900 leading-snug group-hover:text-slate-700 transition-colors line-clamp-2">
+      <div className="flex flex-col gap-1">
+        <h3 className="font-heading font-bold text-sm sm:text-base text-slate-900 leading-snug group-hover:text-slate-800 transition-colors line-clamp-2">
           {post.title}
         </h3>
 
         {displayPriceText && (
-          <div className="text-xs sm:text-sm font-bold text-emerald-600 tracking-tight">
-            {displayPriceText}
+          <div className={`text-xs sm:text-sm font-black tracking-tight w-fit px-2.5 py-0.5 rounded-lg border mt-0.5 ${
+            isNeedType
+              ? "text-amber-900 bg-amber-50 border-amber-200"
+              : "text-emerald-700 bg-emerald-50 border-emerald-200"
+          }`}>
+            <span className="text-[10px] text-slate-400 font-semibold uppercase mr-1">{isNeedType ? "Budget:" : "Price:"}</span>
+            <span>{displayPriceText}</span>
           </div>
         )}
       </div>
@@ -226,7 +240,9 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
 
       {/* Description Box */}
       {post.description && (
-        <div className="bg-slate-50 border border-slate-200/80 p-3 rounded-xl">
+        <div className={`p-3 rounded-xl border ${
+          isNeedType ? "bg-amber-50/60 border-amber-200/70" : "bg-slate-50 border-slate-200/80"
+        }`}>
           <p className="text-xs text-slate-700 font-medium leading-relaxed">
             {post.description}
           </p>
