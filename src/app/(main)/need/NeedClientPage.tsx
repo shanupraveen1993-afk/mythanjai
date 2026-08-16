@@ -87,7 +87,7 @@ export default function NeedClientPage() {
       </div>
 
       {/* 2. STICKY TITLE & POST BAR (Locks directly under TopHeader on Mobile Web App & Desktop) */}
-      <div className="sticky top-[calc(3.5rem+env(safe-area-inset-top,0px))] z-40 bg-[#f4f5f8]/95 backdrop-blur-md py-3 flex items-center justify-between gap-3 w-full border-b border-slate-200/80 shadow-2xs">
+      <div className="sticky top-0 z-40 bg-[#f4f5f8]/95 backdrop-blur-md py-3 flex items-center justify-between gap-3 w-full border-b border-slate-200/80 shadow-2xs">
         <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight">
           Buyer Requirements
         </h2>
