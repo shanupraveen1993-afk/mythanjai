@@ -135,7 +135,9 @@ export default function ShopsClientPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredPosts.map((post) => <ShopCard key={post.id} post={post} />)}
+          {filteredPosts.map((post, idx) => (
+            <ShopCard key={post.id} post={post} index={idx} isGuest={!isAuthVerified} />
+          ))}
         </div>
       )}
       </div>

@@ -222,7 +222,7 @@ export default function HomeClientPage() {
           subtitle="Store discounts & deals from Thanjavur shops"
           seeAllPath="/shops"
           accentColor="bg-yellow-500"
-          isGuest={!user}
+          isGuest={!isAuthVerified}
           onAuthRequired={() => {
             if (typeof window !== "undefined") {
               localStorage.setItem("namma_thanjai_target_post_route", "/shops");
