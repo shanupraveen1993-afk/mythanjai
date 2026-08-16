@@ -152,7 +152,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
   if (isDeleted) return null;
 
   return (
-    <div className={`bg-white rounded-2xl p-4 flex flex-col gap-3 shadow-[0_3px_8px_rgba(0,0,0,0.03)] transition-all duration-200 relative group overflow-hidden font-sans border ${
+    <div className={`bg-white rounded-2xl p-4 flex flex-col gap-3 shadow-[0_3px_8px_rgba(0,0,0,0.04)] transition-all duration-200 relative group overflow-hidden font-sans border card-lift ${
       isSold ? "border-slate-300 opacity-80" : "border-slate-200/80"
     }`}>
 
@@ -285,7 +285,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
       {/* Footer Info & Action CTAs */}
       <div className="flex items-center justify-between pt-1">
         <div className="flex items-center gap-1 text-[11px] text-slate-500 font-semibold">
-          <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+          <MapPin className="w-3.5 h-3.5 text-amber-500 shrink-0" />
           <span className="truncate max-w-[140px]">{post.area_tag}</span>
         </div>
 

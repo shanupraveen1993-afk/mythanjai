@@ -170,7 +170,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
   };
 
   return (
-    <div className="bg-white rounded-2xl p-4 flex flex-col gap-3 shadow-[0_3px_8px_rgba(0,0,0,0.03)] transition-all duration-200 font-sans border border-slate-200/80 relative group">
+    <div className="bg-white rounded-2xl p-4 flex flex-col gap-3 shadow-[0_3px_8px_rgba(0,0,0,0.04)] transition-all duration-200 font-sans border border-slate-200/80 relative group card-lift">
 
       {/* Top Section: Name & Category Badges */}
       <div className="flex items-start justify-between gap-2 pr-8">
@@ -203,7 +203,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
 
       {/* Locality Tag */}
       <div className="flex items-center gap-1.5 text-xs text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-200/60 font-semibold">
-        <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+        <MapPin className="w-3.5 h-3.5 text-amber-500 shrink-0" />
         <span>{t("location")}: <strong className="text-slate-800">{post.area_tag}</strong></span>
       </div>
 

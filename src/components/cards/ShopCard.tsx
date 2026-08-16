@@ -163,7 +163,7 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
   const validityText = formatOfferValidity(post.valid_from, post.valid_to, post.created_at);
 
   return (
-    <div className="bg-white rounded-2xl overflow-hidden shadow-[0_3px_8px_rgba(0,0,0,0.03)] transition-all duration-200 flex flex-col relative font-sans border border-slate-200/80 group">
+    <div className="bg-white rounded-2xl overflow-hidden shadow-[0_3px_8px_rgba(0,0,0,0.04)] transition-all duration-200 flex flex-col relative font-sans border border-slate-200/80 group card-lift">
       
       {/* Featured / Expired Overlay */}
       {isExpired ? (
@@ -234,7 +234,7 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
         {/* 3. Location & Address Box (Placed Below Offer) */}
         <div className="flex flex-col gap-1 text-xs text-slate-600 font-semibold bg-slate-50 p-2.5 rounded-xl border border-slate-200/60">
           <div className="flex items-center gap-1 text-slate-800 font-bold">
-            <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+            <MapPin className="w-3.5 h-3.5 text-amber-500 shrink-0" />
             <span>{post.area_tag || "Thanjavur"}</span>
           </div>
           {post.address_text && (

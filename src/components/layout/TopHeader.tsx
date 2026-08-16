@@ -68,7 +68,7 @@ export default function TopHeader({
 
   return (
     <header
-      className="fixed top-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm flex flex-col justify-end"
+      className="fixed top-0 left-0 right-0 z-50 bg-white/96 backdrop-blur-xl border-b border-slate-200/80 shadow-[0_1px_12px_rgba(0,0,0,0.06)] flex flex-col justify-end"
       style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
     >
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-3">
@@ -79,14 +79,14 @@ export default function TopHeader({
             onClick={() => router.push("/home")}
             className="flex items-center gap-2 cursor-pointer select-none shrink-0 group"
           >
-            <div className="w-8 h-8 sm:w-9 sm:h-9 shrink-0 group-hover:scale-[1.05] transition-transform flex items-center justify-center">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 shrink-0 group-hover:scale-[1.08] transition-transform duration-300 flex items-center justify-center">
               <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-full h-full object-contain mix-blend-multiply" />
             </div>
             <div className="flex items-center gap-0.5">
               <span className="font-heading font-black tracking-tight text-slate-900 text-sm sm:text-base md:text-lg leading-none">
                 namma thanjai
               </span>
-              <div className="w-2 h-2 rounded-full bg-amber-500 ml-0.5 shrink-0" />
+              <div className="w-2 h-2 rounded-full bg-amber-500 ml-0.5 shrink-0 animate-glow-pulse" />
             </div>
           </div>
         </div>
@@ -99,11 +99,11 @@ export default function TopHeader({
           const isServiceActive = pathname.includes("/services") || pathname.includes("/post/service") || activeTab === "services";
           const isOfferActive = pathname.includes("/shops") || pathname.includes("/offers") || activeTab === "shops";
 
-          const activeStyle = "bg-white text-amber-700 border border-amber-300/80 shadow-2xs font-black";
-          const inactiveStyle = "text-slate-600 hover:text-amber-700 hover:bg-slate-200/60 font-bold";
+          const activeStyle = "bg-white text-amber-600 border border-amber-400/70 shadow-sm font-black tab-active-dot";
+          const inactiveStyle = "text-slate-500 hover:text-amber-700 hover:bg-amber-50/60 font-bold transition-all duration-200";
 
           return (
-            <div className="hidden sm:flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200/90 font-heading">
+            <div className="hidden sm:flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl border border-slate-200/80 font-heading backdrop-blur-sm">
               <button
                 type="button"
                 onClick={() => router.push("/home")}
@@ -196,7 +196,7 @@ export default function TopHeader({
                   }
                   onSignInClick?.();
                 }}
-                className="flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-amber-50 hover:border-amber-400/90 text-slate-800 hover:text-amber-950 font-heading font-bold text-xs px-4 py-2 rounded-xl border border-slate-250/90 shadow-2xs cursor-pointer active:scale-95 transition-all duration-200"
+                className="flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-amber-50 hover:border-amber-400/80 text-slate-700 hover:text-amber-900 font-heading font-bold text-xs px-4 py-2 rounded-xl border border-slate-200/90 shadow-sm cursor-pointer active:scale-95 transition-all duration-200 btn-shimmer"
               >
                 <User className="w-4 h-4 text-slate-600" />
                 <span>Login</span>

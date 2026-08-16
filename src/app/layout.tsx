@@ -1,17 +1,21 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Red_Hat_Display } from "next/font/google";
+import { Red_Hat_Display, Red_Hat_Text } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/context/ToastContext";
 import { LanguageProvider } from "@/context/LanguageContext";
 
-const inter = Inter({
+const redHatText = Red_Hat_Text({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
   variable: "--font-sans",
+  display: "swap",
 });
 
 const redHatDisplay = Red_Hat_Display({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
   variable: "--font-heading",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -40,7 +44,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable} ${redHatDisplay.variable} h-full bg-[#f4f5f8]`}>
+    <html lang="en" className={`${redHatText.variable} ${redHatDisplay.variable} h-full bg-[#f4f5f8]`}>
       <body className="h-full bg-[#f4f5f8] font-sans antialiased text-slate-900 flex flex-col min-h-screen overflow-x-hidden">
         <ToastProvider>
           <LanguageProvider>

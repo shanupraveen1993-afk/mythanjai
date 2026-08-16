@@ -50,7 +50,7 @@ export function PreviewSection({
         </div>
         <button
           onClick={() => router.push(seeAllPath)}
-          className="flex items-center gap-1 text-xs font-black text-slate-600 hover:text-slate-900 transition-colors cursor-pointer"
+          className="flex items-center gap-1 text-xs font-black text-amber-600 hover:text-amber-700 transition-colors cursor-pointer"
         >
           See All <ArrowRight className="w-3.5 h-3.5" />
         </button>
@@ -142,16 +142,39 @@ export default function HomeClientPage() {
   return (
     <div className="w-full flex flex-col gap-8 text-slate-800 font-sans mt-3">
 
+        {/* ── LIVE Ticker — TOP of page, always visible ─────── */}
+        <div className="w-full bg-slate-950 border border-slate-800/60 rounded-2xl py-2.5 px-4 shadow-[0_4px_18px_rgba(15,23,42,0.18)] overflow-hidden select-none flex items-center gap-3">
+          {/* LIVE badge */}
+          <span className="shrink-0 bg-amber-500 text-slate-950 font-black text-[8px] px-2 py-0.5 rounded-md uppercase tracking-wider animate-pulse">
+            LIVE
+          </span>
+          {/* Marquee track */}
+          <div className="flex-1 overflow-hidden h-[18px] flex items-center">
+            <div className="animate-marquee flex items-center">
+              {[...alerts, ...alerts].map((alert, i) => (
+                <span key={i} className="flex items-center gap-6 shrink-0">
+                  <span className="text-slate-200 text-[11px] font-medium whitespace-nowrap leading-none">
+                    {alert}
+                  </span>
+                  <span className="text-amber-500/60 text-xs font-black shrink-0">·</span>
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+
         {/* Hero Banner */}
-        <div className="relative w-full min-h-[180px] sm:min-h-[220px] rounded-3xl overflow-hidden bg-slate-950 text-white flex items-center px-6 sm:px-10 py-8 shadow-lg">
+        <div className="relative w-full min-h-[180px] sm:min-h-[220px] rounded-3xl overflow-hidden bg-slate-950 text-white flex items-center px-6 sm:px-10 py-8 shadow-xl hero-grain">
           <img
             src="/thanjavur_temple_illustration.png"
             alt="Namma Thanjavur"
-            className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-25 pointer-events-none"
+            className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/85 to-slate-950/20" />
+          {/* Brand Yellow ambient glow */}
+          <div className="absolute bottom-0 left-1/4 w-64 h-32 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
           <div className="relative z-10 flex flex-col gap-3 max-w-xl">
-            <span className="text-[10px] font-black uppercase tracking-widest text-yellow-400 bg-yellow-400/10 border border-yellow-400/30 px-3 py-1 rounded-full w-fit">
+            <span className="text-[10px] font-black uppercase tracking-widest text-amber-400 bg-amber-400/10 border border-amber-400/30 px-3 py-1 rounded-full w-fit animate-glow-pulse">
               THANJAVUR DIRECT DIRECTORY &amp; MARKETPLACE
             </span>
             <h1 className="font-heading font-black text-2xl sm:text-3xl md:text-4xl text-white leading-tight">

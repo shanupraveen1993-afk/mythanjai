@@ -120,7 +120,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
     <>
       <div 
         onClick={handleCardView}
-        className="bg-white -mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full sm:rounded-2xl overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.06)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.09)] transition-all duration-200 flex flex-col justify-between cursor-pointer font-sans group border-b border-slate-200/80 sm:border sm:border-slate-200/90"
+        className="bg-white -mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full sm:rounded-2xl overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.06)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.09)] transition-all duration-200 flex flex-col justify-between cursor-pointer font-sans group border-b border-slate-200/80 sm:border sm:border-slate-200/90 card-lift"
       >
         {/* Card Header Media Container */}
         <div className="w-full h-32 sm:h-36 bg-slate-100 relative overflow-hidden">
@@ -183,7 +183,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
           <div className="pt-3 border-t border-slate-100 flex flex-col gap-3">
             <div className="flex items-center justify-between text-[11px] font-bold text-slate-400">
               <div className="flex items-center gap-1">
-                <MapPin className="w-3.5 h-3.5 text-slate-400" />
+                <MapPin className="w-3.5 h-3.5 text-amber-500" />
                 <span className="truncate max-w-[120px]">{listing.location || "Thanjavur District"}</span>
               </div>
 
