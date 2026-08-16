@@ -321,7 +321,7 @@ export default function ChatClientPage() {
   };
 
   return (
-    <div className="w-full h-dvh max-h-dvh flex flex-col bg-[#075e54] font-sans overflow-hidden">
+    <div className="fixed inset-0 z-[99999] w-full h-full max-h-full flex flex-col bg-[#075e54] font-sans overflow-hidden">
       
       {/* Contextual Scam Alert Modal Overlay */}
       {scamAlertTriggered && (

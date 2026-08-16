@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { ChevronUp, ArrowRight, ShoppingBag, Wrench, Store, ShieldCheck } from "lucide-react";
 
 export interface WalkthroughSlide {
@@ -56,58 +56,36 @@ export default function SwipeUpOnboarding({
 }: {
   onComplete: () => void;
 }) {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [startY, setStartY] = useState<number | null>(null);
-  const [dragOffset, setDragOffset] = useState(0);
+  const [activeSlideIndex, setActiveSlideIndex] = useState(0);
+  const containerRef = useRef<HTMLDivElement | null>(null);
 
-  const slide = WALKTHROUGH_SLIDES[currentSlide];
+  const handleScroll = () => {
+    if (!containerRef.current) return;
+    const { scrollTop, clientHeight } = containerRef.current;
+    const newIndex = Math.round(scrollTop / clientHeight);
+    if (newIndex !== activeSlideIndex && newIndex >= 0 && newIndex < WALKTHROUGH_SLIDES.length) {
+      setActiveSlideIndex(newIndex);
+    }
+  };
 
-  const handleNext = () => {
-    if (currentSlide < WALKTHROUGH_SLIDES.length - 1) {
-      setCurrentSlide((prev) => prev + 1);
-    } else {
+  const scrollToSlide = (index: number) => {
+    if (index >= WALKTHROUGH_SLIDES.length) {
       onComplete();
+      return;
+    }
+    if (containerRef.current) {
+      containerRef.current.scrollTo({
+        top: index * containerRef.current.clientHeight,
+        behavior: "smooth",
+      });
     }
   };
-
-  // Swipe Up Gesture Handlers
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setStartY(e.touches[0].clientY);
-  };
-
-  const handleTouchMove = (e: React.TouchEvent) => {
-    if (startY === null) return;
-    const diff = startY - e.touches[0].clientY;
-    if (diff > 0) setDragOffset(diff);
-  };
-
-  const handleTouchEnd = () => {
-    if (dragOffset > 70) {
-      handleNext();
-    }
-    setDragOffset(0);
-    setStartY(null);
-  };
-
-  const IconComp = slide.icon;
 
   return (
-    <div
-      onTouchStart={handleTouchStart}
-      onTouchMove={handleTouchMove}
-      onTouchEnd={handleTouchEnd}
-      style={{
-        transform: dragOffset > 0 ? `translateY(-${dragOffset}px)` : "none",
-        transition: dragOffset === 0 ? "transform 0.3s ease-out" : "none",
-      }}
-      className="fixed inset-0 z-[9990] bg-slate-950 text-white flex flex-col justify-between overflow-hidden select-none font-sans"
-    >
-      {/* Background Ambient Lighting */}
-      <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/10 blur-[120px] rounded-full pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-96 h-96 bg-yellow-500/10 blur-[120px] rounded-full pointer-events-none" />
-
-      {/* Header Bar */}
-      <div className="w-full max-w-md mx-auto pt-8 px-6 flex items-center justify-between z-20">
+    <div className="fixed inset-0 z-[99990] bg-slate-950 text-white select-none font-sans overflow-hidden">
+      
+      {/* Fixed Top Header */}
+      <div className="absolute top-0 left-0 right-0 z-30 pt-6 px-6 max-w-md mx-auto flex items-center justify-between pointer-events-auto">
         <div className="flex items-center gap-2">
           <div className="w-9 h-9 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center shadow-inner">
             <span className="font-heading font-black text-amber-400 text-base">NT</span>
@@ -125,94 +103,115 @@ export default function SwipeUpOnboarding({
         <button
           type="button"
           onClick={onComplete}
-          className="text-xs font-black text-slate-300 hover:text-white bg-slate-900 border border-slate-700 px-4 py-1.5 rounded-full transition-all cursor-pointer active:scale-95 shadow-md"
+          className="text-xs font-black text-slate-300 hover:text-white bg-slate-900/90 border border-slate-700/80 px-4 py-1.5 rounded-full transition-all cursor-pointer active:scale-95 shadow-md backdrop-blur-md"
         >
           Skip
         </button>
       </div>
 
-      {/* Main Slide Card Section */}
-      <div className="w-full max-w-md mx-auto px-6 flex-1 flex flex-col items-center justify-center my-4 z-10">
-        {/* Step Badge */}
-        <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border shadow-sm ${slide.badgeColor}`}>
-          {slide.badgeEn}
-        </span>
+      {/* Instagram Reel Style Vertical Snap Scroll Feed */}
+      <div
+        ref={containerRef}
+        onScroll={handleScroll}
+        className="w-full h-full snap-y snap-mandatory overflow-y-scroll scrollbar-none"
+        style={{ scrollSnapType: "y mandatory" }}
+      >
+        {WALKTHROUGH_SLIDES.map((slide, idx) => {
+          const IconComp = slide.icon;
+          return (
+            <div
+              key={slide.id}
+              className="w-full h-full snap-start snap-always shrink-0 flex flex-col justify-between pt-20 pb-8 px-6 max-w-md mx-auto relative"
+            >
+              {/* Background Ambient Lighting per slide */}
+              <div className="absolute top-1/4 right-0 w-80 h-80 bg-amber-500/10 blur-[100px] rounded-full pointer-events-none" />
+              <div className="absolute bottom-1/4 left-0 w-80 h-80 bg-yellow-500/10 blur-[100px] rounded-full pointer-events-none" />
 
-        {/* Visual Showcase Card */}
-        <div className="w-full max-w-[340px] bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-[0_15px_40px_rgba(0,0,0,0.7)] mt-4 transition-all duration-500">
-          <div className="relative w-full h-44 overflow-hidden">
-            <img
-              src={slide.img}
-              alt={slide.titleEn}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
-            
-            <div className="absolute top-3 left-3 w-10 h-10 rounded-xl bg-slate-950/80 border border-white/20 backdrop-blur-md flex items-center justify-center shadow-md">
-              <IconComp className="w-5 h-5 text-amber-400" />
-            </div>
+              {/* Main Visual Reel Card */}
+              <div className="flex-1 flex flex-col items-center justify-center z-10">
+                {/* Step Badge */}
+                <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border shadow-sm ${slide.badgeColor}`}>
+                  {slide.badgeEn}
+                </span>
 
-            <span className="absolute bottom-3 left-4 right-4 font-heading font-black text-lg text-white leading-snug drop-shadow-md">
-              {slide.titleEn}
-            </span>
-          </div>
+                {/* Visual Card */}
+                <div className="w-full max-w-[340px] bg-slate-900/90 border border-slate-800 rounded-3xl overflow-hidden shadow-[0_15px_40px_rgba(0,0,0,0.8)] mt-4 backdrop-blur-md">
+                  <div className="relative w-full h-44 overflow-hidden">
+                    <img
+                      src={slide.img}
+                      alt={slide.titleEn}
+                      className="w-full h-full object-cover"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
+                    
+                    <div className="absolute top-3 left-3 w-10 h-10 rounded-xl bg-slate-950/80 border border-white/20 backdrop-blur-md flex items-center justify-center shadow-md">
+                      <IconComp className="w-5 h-5 text-amber-400" />
+                    </div>
 
-          <div className="p-4 flex flex-col gap-3">
-            <p className="text-xs text-slate-300 font-medium leading-relaxed">
-              {slide.subtitleEn}
-            </p>
+                    <span className="absolute bottom-3 left-4 right-4 font-heading font-black text-lg text-white leading-snug drop-shadow-md">
+                      {slide.titleEn}
+                    </span>
+                  </div>
 
-            <div className="flex flex-col gap-1.5 border-t border-slate-800/80 pt-3">
-              {slide.highlightsEn.map((item, idx) => (
-                <div key={idx} className="flex items-center gap-2 text-xs font-bold text-slate-200">
-                  <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
-                  <span>{item}</span>
+                  <div className="p-4 flex flex-col gap-3">
+                    <p className="text-xs text-slate-300 font-medium leading-relaxed">
+                      {slide.subtitleEn}
+                    </p>
+
+                    <div className="flex flex-col gap-1.5 border-t border-slate-800/80 pt-3">
+                      {slide.highlightsEn.map((item, hIdx) => (
+                        <div key={hIdx} className="flex items-center gap-2 text-xs font-bold text-slate-200">
+                          <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                          <span>{item}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-              ))}
+
+                {/* Step Indicator Dots */}
+                <div className="flex items-center justify-center gap-2 mt-4">
+                  {WALKTHROUGH_SLIDES.map((s, i) => (
+                    <button
+                      key={s.id}
+                      type="button"
+                      onClick={() => scrollToSlide(i)}
+                      className={`h-2 rounded-full transition-all duration-300 ${
+                        i === idx
+                          ? "w-8 bg-amber-400"
+                          : "w-2 bg-slate-800 hover:bg-slate-700"
+                      }`}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              {/* Bottom Reel CTA & Swipe Up Helper */}
+              <div className="w-full flex flex-col items-center gap-2 z-20">
+                <button
+                  type="button"
+                  onClick={() => scrollToSlide(idx + 1)}
+                  className={`w-full bg-gradient-to-r ${slide.accentColor} text-slate-950 font-heading font-black text-sm py-3.5 px-6 rounded-2xl shadow-[0_0_25px_rgba(245,158,11,0.4)] active:scale-95 transition-all flex items-center justify-center gap-2 group cursor-pointer`}
+                >
+                  <span>
+                    {idx < WALKTHROUGH_SLIDES.length - 1
+                      ? "Next Step →"
+                      : "Proceed to App →"}
+                  </span>
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </button>
+
+                <div
+                  onClick={() => scrollToSlide(idx + 1)}
+                  className="flex flex-col items-center gap-0.5 text-slate-400 text-[11px] font-bold cursor-pointer animate-bounce mt-1"
+                >
+                  <ChevronUp className="w-4 h-4 text-amber-400" />
+                  <span>Swipe Up to Proceed (Instagram Feed Style)</span>
+                </div>
+              </div>
             </div>
-          </div>
-        </div>
-
-        {/* Step Indicator Dots */}
-        <div className="flex items-center justify-center gap-2 mt-5">
-          {WALKTHROUGH_SLIDES.map((s, i) => (
-            <button
-              key={s.id}
-              type="button"
-              onClick={() => setCurrentSlide(i)}
-              className={`h-2 rounded-full transition-all duration-300 ${
-                i === currentSlide
-                  ? "w-8 bg-amber-400"
-                  : "w-2 bg-slate-800 hover:bg-slate-700"
-              }`}
-            />
-          ))}
-        </div>
-      </div>
-
-      {/* Action CTA & Swipe Helper */}
-      <div className="w-full max-w-md mx-auto pb-8 px-6 flex flex-col items-center gap-3 z-20">
-        <button
-          type="button"
-          onClick={handleNext}
-          className={`w-full bg-gradient-to-r ${slide.accentColor} text-slate-950 font-heading font-black text-sm py-3.5 px-6 rounded-2xl shadow-[0_0_25px_rgba(245,158,11,0.4)] active:scale-95 transition-all flex items-center justify-center gap-2 group cursor-pointer`}
-        >
-          <span>
-            {currentSlide < WALKTHROUGH_SLIDES.length - 1
-              ? "Next Step →"
-              : "Register / Login →"}
-          </span>
-          <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-        </button>
-
-        {/* Animated Swipe Up Helper */}
-        <div
-          onClick={handleNext}
-          className="flex flex-col items-center gap-1 text-slate-400 text-[11px] font-bold cursor-pointer animate-bounce mt-1"
-        >
-          <ChevronUp className="w-4 h-4 text-amber-400" />
-          <span>Swipe Up to Proceed</span>
-        </div>
+          );
+        })}
       </div>
     </div>
   );
