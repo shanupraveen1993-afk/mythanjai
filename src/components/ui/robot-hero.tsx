@@ -12,7 +12,6 @@ import { ArrowRight, Loader2, Phone, CheckCircle, Megaphone, Wrench, Store, Sear
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/context/ToastContext";
 import { TANJORE_LOCALITIES, TanjoreLocality } from "@/lib/constants";
-import { LiveMovingTicker } from "@/components/ui/live-moving-ticker";
 
 class HeartCurve extends THREE.Curve<THREE.Vector3> {
   constructor() {
