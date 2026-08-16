@@ -227,6 +227,9 @@ export default function AdminClientPage() {
         toast.error("Please select a valid video file (.mp4, .webm, .mov).");
         return;
       }
+      if (file.size > 25 * 1024 * 1024) {
+        toast.error("Video file exceeds 25MB. Please use the direct video link option for instant publishing.");
+      }
       setSelectedVideo(file);
       if (!videoTitle) {
         setVideoTitle(file.name.replace(/\.[^/.]+$/, ""));
@@ -242,7 +245,7 @@ export default function AdminClientPage() {
     }
 
     setVideoUploading(true);
-    setUploadProgress(0);
+    setUploadProgress(10);
 
     const publishOfferToFirestore = async (videoUrl: string) => {
       if (publishToOffers) {
@@ -271,62 +274,68 @@ export default function AdminClientPage() {
           await addDoc(collection(db, "shops"), offerRecord);
           await addDoc(collection(db, "offers"), offerRecord);
           toast.success("Video Offer Published Live to Offers Page!");
-        } catch (pubErr) {
+        } catch (pubErr: any) {
           console.warn("Live offer publishing error:", pubErr);
-          toast.error("Error writing offer to database: " + pubErr);
+          toast.error("Error writing offer to database: " + pubErr.message);
         }
       } else {
         toast.success("Video linked successfully!");
       }
     };
 
-    // Case 1: Direct Video Link provided
-    if (!selectedVideo && directVideoUrl.trim()) {
-      const finalUrl = directVideoUrl.trim();
-      setUploadedVideoUrl(finalUrl);
-      await publishOfferToFirestore(finalUrl);
-      setVideoUploading(false);
-      return;
-    }
+    try {
+      // Case 1: Direct Video Link provided
+      if (directVideoUrl.trim()) {
+        const finalUrl = directVideoUrl.trim();
+        setUploadedVideoUrl(finalUrl);
+        setUploadProgress(100);
+        await publishOfferToFirestore(finalUrl);
+        return;
+      }
 
-    // Case 2: File Upload via Firebase Storage
-    if (selectedVideo) {
-      try {
-        const storageRef = ref(storage, `admin_videos/${Date.now()}_${selectedVideo.name}`);
+      // Case 2: File Upload via Firebase Storage with 15s Timeout Guard
+      if (selectedVideo) {
+        setUploadProgress(30);
+        const storageRef = ref(storage, `admin_videos/${Date.now()}_${selectedVideo.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`);
+
         const uploadTask = uploadBytesResumable(storageRef, selectedVideo);
 
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-            setUploadProgress(progress);
-          },
-          async (error) => {
-            console.error("Video upload error:", error);
-            toast.error("Video file upload failed. If file is large or blocked, use direct video link option.");
-            setVideoUploading(false);
-          },
-          async () => {
-            const downloadUrl = await getDownloadURL(uploadTask.snapshot.ref);
-            setUploadedVideoUrl(downloadUrl);
+        // 15-second timeout guard to prevent infinite hanging
+        const timeoutGuard = new Promise<never>((_, reject) => {
+          setTimeout(() => {
+            uploadTask.cancel();
+            reject(new Error("Storage upload timed out (15s limit). Please use direct video link for instant publishing."));
+          }, 15000);
+        });
 
-            try {
-              await addDoc(collection(db, "admin_videos"), {
-                title: videoTitle || selectedVideo.name,
-                video_url: downloadUrl,
-                created_at: serverTimestamp(),
-                uploaded_by: profile?.phone || "admin_9994837342",
-              });
-            } catch (e) {}
+        uploadTask.on("state_changed", (snapshot) => {
+          const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+          setUploadProgress(progress);
+        });
 
-            await publishOfferToFirestore(downloadUrl);
-            setVideoUploading(false);
-          }
-        );
-      } catch (error: any) {
-        toast.error("Failed to start video upload: " + error.message);
-        setVideoUploading(false);
+        const uploadSnapshot = await Promise.race([uploadTask, timeoutGuard]);
+        setUploadProgress(90);
+
+        const downloadUrl = await getDownloadURL((uploadSnapshot as any).ref);
+        setUploadedVideoUrl(downloadUrl);
+        setUploadProgress(100);
+
+        try {
+          await addDoc(collection(db, "admin_videos"), {
+            title: videoTitle || selectedVideo.name,
+            video_url: downloadUrl,
+            created_at: serverTimestamp(),
+            uploaded_by: profile?.phone || "admin_9994837342",
+          });
+        } catch (e) {}
+
+        await publishOfferToFirestore(downloadUrl);
       }
+    } catch (error: any) {
+      console.error("Upload error:", error);
+      toast.error(error.message || "Failed to complete upload.");
+    } finally {
+      setVideoUploading(false);
     }
   };
 
