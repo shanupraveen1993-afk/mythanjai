@@ -49,22 +49,32 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              if (typeof window !== 'undefined') {
-                if ('serviceWorker' in navigator) {
-                  navigator.serviceWorker.getRegistrations().then(function(registrations) {
-                    for (let registration of registrations) {
-                      registration.unregister();
+              (function() {
+                if (typeof window !== 'undefined') {
+                  var TARGET_VERSION = 'v7.4_cache_purge';
+                  var currentVer = localStorage.getItem('namma_thanjai_cache_version');
+                  if (currentVer !== TARGET_VERSION) {
+                    localStorage.setItem('namma_thanjai_cache_version', TARGET_VERSION);
+                    if ('serviceWorker' in navigator) {
+                      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                        for (var i = 0; i < registrations.length; i++) {
+                          registrations[i].unregister();
+                        }
+                      });
                     }
-                  });
-                }
-                if ('caches' in window) {
-                  caches.keys().then(function(names) {
-                    for (let name of names) {
-                      caches.delete(name);
+                    if ('caches' in window) {
+                      caches.keys().then(function(names) {
+                        for (var j = 0; j < names.length; j++) {
+                          caches.delete(names[j]);
+                        }
+                      });
                     }
-                  });
+                    setTimeout(function() {
+                      window.location.reload(true);
+                    }, 200);
+                  }
                 }
-              }
+              })();
             `,
           }}
         />
