@@ -974,29 +974,8 @@ export function RobotHero({
             SELL &nbsp;·&nbsp; NEED &nbsp;·&nbsp; SERVICES &nbsp;·&nbsp; OFFERS
           </p>
 
-          {/* ── LIVE Marquee Ticker — High visibility top placement ── */}
-          {displayAlerts.length > 0 && (
-            <div className="w-full max-w-xs sm:max-w-sm mt-2 flex items-center gap-2 bg-slate-950 border border-slate-800/90 rounded-xl py-1.5 px-3 shadow-md overflow-hidden select-none">
-              <span className="shrink-0 bg-amber-500 text-slate-950 font-black text-[8px] px-1.5 py-0.5 rounded uppercase tracking-wider animate-pulse">
-                LIVE
-              </span>
-              <div className="flex-1 overflow-hidden h-[15px] flex items-center">
-                <div className="animate-marquee flex items-center">
-                  {[...displayAlerts, ...displayAlerts].map((alert, i) => (
-                    <span key={i} className="flex items-center gap-4 shrink-0">
-                      <span className="text-slate-200 text-[10.5px] font-semibold whitespace-nowrap leading-none">
-                        {alert}
-                      </span>
-                      <span className="text-amber-400 text-xs font-black shrink-0">·</span>
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          )}
-
           {/* Rotating Category Badge — shown on ALL screens */}
-          <div className="mt-2 flex items-center justify-center">
+          <div className="mt-1.5 flex items-center justify-center">
             <AnimatePresence mode="wait">
               <motion.div
                 key={wordIndex}
@@ -1051,8 +1030,31 @@ export function RobotHero({
           </Canvas>
         </div>
 
-        {/* ── Action Footer: Buttons (always visible on mobile) ── */}
-        <div className="w-full max-w-xs sm:max-w-sm shrink-0 flex flex-col gap-2 px-1 pb-1">
+        {/* ── Action Footer: Buttons + LIVE Ticker (close to 2 buttons, 60% top margin reduction) ── */}
+        <div className="w-full max-w-xs sm:max-w-sm shrink-0 flex flex-col gap-1.5 px-1 pb-1">
+
+          {/* ── LIVE Ticker — directly above 2 buttons with tight top margin ── */}
+          {displayAlerts.length > 0 && (
+            <div className="w-full bg-slate-950 border border-slate-800/90 rounded-xl py-1.5 px-3 shadow-md overflow-hidden select-none mb-0.5">
+              <div className="flex items-center gap-2">
+                <span className="shrink-0 bg-amber-500 text-slate-950 font-black text-[8px] px-1.5 py-0.5 rounded uppercase tracking-wider animate-pulse">
+                  LIVE
+                </span>
+                <div className="flex-1 overflow-hidden h-[15px] flex items-center">
+                  <div className="animate-marquee flex items-center">
+                    {[...displayAlerts, ...displayAlerts].map((alert, i) => (
+                      <span key={i} className="flex items-center gap-4 shrink-0">
+                        <span className="text-slate-200 text-[10.5px] font-semibold whitespace-nowrap leading-none">
+                          {alert}
+                        </span>
+                        <span className="text-amber-400 text-xs font-black shrink-0">·</span>
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {profile?.isVerified ? (
             /* Verified state — show member badge + explore button */
