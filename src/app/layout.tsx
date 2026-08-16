@@ -44,14 +44,14 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${redHatText.variable} ${redHatDisplay.variable} h-full bg-[#f4f5f8]`}>
+    <html lang="en" className={`${redHatText.variable} ${redHatDisplay.variable} h-full bg-[#fff8eb]`}>
       <head>
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
                 if (typeof window !== 'undefined') {
-                  var TARGET_VERSION = 'v7.4_cache_purge';
+                  var TARGET_VERSION = 'v8.0_tanjore_palette_redesign_purge';
                   var currentVer = localStorage.getItem('namma_thanjai_cache_version');
                   if (currentVer !== TARGET_VERSION) {
                     localStorage.setItem('namma_thanjai_cache_version', TARGET_VERSION);
@@ -79,7 +79,7 @@ export default function RootLayout({
           }}
         />
       </head>
-      <body className="h-full bg-[#f4f5f8] font-sans antialiased text-slate-900 flex flex-col min-h-screen overflow-x-hidden">
+      <body className="h-full bg-[#fff8eb] font-sans antialiased text-slate-900 flex flex-col min-h-screen overflow-x-hidden">
         <ToastProvider>
           <LanguageProvider>
             {children}
