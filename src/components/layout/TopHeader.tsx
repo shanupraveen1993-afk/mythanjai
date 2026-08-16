@@ -185,7 +185,7 @@ export default function TopHeader({
                 </button>
               </>
             ) : (
-              /* Login button for all non-authenticated visitors (Secondary Button Style: Light Primary Amber) */
+              /* Login button for all non-authenticated visitors (Secondary Slate-to-Amber Hover Style) */
               <button
                 type="button"
                 onClick={() => {
@@ -196,9 +196,9 @@ export default function TopHeader({
                   }
                   onSignInClick?.();
                 }}
-                className="flex items-center justify-center gap-1.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-950 font-heading font-extrabold text-xs px-4 py-2 rounded-xl border border-amber-400/60 hover:border-amber-400 shadow-2xs cursor-pointer active:scale-95 transition-all duration-200"
+                className="flex items-center justify-center gap-1.5 bg-slate-100 hover:bg-amber-50 hover:border-amber-400/90 text-slate-800 hover:text-amber-950 font-heading font-bold text-xs px-4 py-2 rounded-xl border border-slate-250/90 shadow-2xs cursor-pointer active:scale-95 transition-all duration-200"
               >
-                <User className="w-4 h-4 text-amber-700" />
+                <User className="w-4 h-4 text-slate-600" />
                 <span>Login</span>
               </button>
             );
