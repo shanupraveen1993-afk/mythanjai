@@ -48,6 +48,13 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
     return Math.floor(12 + (post.name?.length || 5) * 2);
   });
 
+  const [contactedCount, setContactedCount] = useState(() => {
+    if (typeof window === "undefined") return 45;
+    const stored = localStorage.getItem(`contacted_service_${post.id}`);
+    if (stored) return parseInt(stored, 10);
+    return Math.floor(45 + (post.name?.length || 5) * 3);
+  });
+
   const [isRequestSent, setIsRequestSent] = useState(() => {
     if (typeof window === "undefined") return false;
     return localStorage.getItem(`request_sent_service_${post.id}`) === "true";
