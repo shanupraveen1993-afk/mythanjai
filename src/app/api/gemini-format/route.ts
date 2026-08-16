@@ -56,20 +56,44 @@ export async function POST(request: NextRequest) {
       2. ZERO MARKDOWN SYMBOLS. NO ASTERISKS. NO BOLD SYMBOLS. Plain readable text only.
     `;
 
-    const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash",
-      contents: [
-        {
-          role: "user",
-          parts: [
-            { text: systemPrompt },
-            { text: `Post Type: "${type || "sell"}"\nRaw Description: "${rawDescription}"` },
-          ],
-        },
-      ],
-    });
+    let formattedText = "";
 
-    let formattedText = response.text?.trim() || rawDescription;
+    try {
+      const response = await ai.models.generateContent({
+        model: "gemini-1.5-flash",
+        contents: [
+          {
+            role: "user",
+            parts: [
+              { text: systemPrompt },
+              { text: `Post Type: "${type || "sell"}"\nRaw Description: "${rawDescription}"` },
+            ],
+          },
+        ],
+      });
+
+      formattedText = response.text?.trim() || "";
+    } catch (modelErr: any) {
+      console.warn("gemini-1.5-flash attempt failed, trying fallback:", modelErr.message);
+      // Fallback model call
+      const fallbackResponse = await ai.models.generateContent({
+        model: "gemini-1.5-pro",
+        contents: [
+          {
+            role: "user",
+            parts: [
+              { text: systemPrompt },
+              { text: `Post Type: "${type || "sell"}"\nRaw Description: "${rawDescription}"` },
+            ],
+          },
+        ],
+      });
+      formattedText = fallbackResponse.text?.trim() || "";
+    }
+
+    if (!formattedText) {
+      formattedText = rawDescription;
+    }
 
     // Post-processing sanitizer: strip all raw markdown asterisks, hashes, and double underlines
     formattedText = formattedText

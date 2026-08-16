@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
 
     // Call Gemini Model
     const response = await ai.models.generateContent({
-      model: "gemini-2.5-flash", // Fast, multimodal vision model
+      model: "gemini-1.5-flash", // Fast, multimodal vision model
       contents: [
         {
           role: "user",
