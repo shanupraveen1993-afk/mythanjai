@@ -1106,21 +1106,19 @@ export function RobotHero({
                     <span>Install APK</span>
                   </button>
 
-                  <button
-                    type="button"
+                  <Link
+                    href="/home"
                     onClick={() => {
-                      if (onCtaClick) {
-                        onCtaClick();
-                      } else {
+                      if (typeof window !== "undefined") {
                         localStorage.setItem("namma_thanjai_guest_mode", "true");
-                        router.push("/home");
                       }
+                      if (onCtaClick) onCtaClick();
                     }}
                     className="bg-white text-slate-955 font-heading font-black text-xs sm:text-sm px-4 py-3.5 rounded-2xl border-2 border-slate-955 shadow-xs flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer uppercase tracking-wider"
                   >
                     <span>Explore App</span>
                     <ArrowRight className="w-4 h-4 text-amber-600 shrink-0 stroke-[3]" />
-                  </button>
+                  </Link>
                 </div>
               ) : (
                 /* MAIN WEBSITE LANDING MODE — Register & Explore Buttons */
@@ -1142,21 +1140,19 @@ export function RobotHero({
                     <span>Register</span>
                   </button>
 
-                  <button
-                    type="button"
+                  <Link
+                    href="/home"
                     onClick={() => {
-                      if (onCtaClick) {
-                        onCtaClick();
-                      } else {
+                      if (typeof window !== "undefined") {
                         localStorage.setItem("namma_thanjai_guest_mode", "true");
-                        router.push("/home");
                       }
+                      if (onCtaClick) onCtaClick();
                     }}
                     className="bg-white text-slate-955 font-heading font-black text-xs sm:text-sm px-4 py-3.5 rounded-2xl border-2 border-slate-955 shadow-xs flex items-center justify-center gap-1.5 active:scale-95 cursor-pointer uppercase tracking-wider"
                   >
                     <span>Explore</span>
                     <ArrowRight className="w-4 h-4 text-amber-600 shrink-0 stroke-[3]" />
-                  </button>
+                  </Link>
                 </div>
               )}
 
@@ -1227,10 +1223,10 @@ export function RobotHero({
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-5 text-left">
-              {/* Segment 1 */}
-              <div
-                onClick={onCtaClick}
-                className="group bg-white border-2 border-slate-200/90 hover:border-amber-500 p-6 rounded-3xl space-y-3.5 shadow-xs hover:shadow-xl transition-all duration-200 cursor-pointer"
+              {/* Segment 1: Buy & Sell Marketplace */}
+              <Link
+                href="/classifieds"
+                className="group bg-white border-2 border-slate-200/90 hover:border-amber-500 p-6 rounded-3xl space-y-3.5 shadow-xs hover:shadow-xl transition-all duration-200 cursor-pointer block"
               >
                 <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-400/40 flex items-center justify-center text-amber-600 font-black text-xl group-hover:scale-110 group-hover:bg-amber-500 group-hover:text-slate-955 transition-all">
                   <Building2 className="w-6 h-6 text-amber-600 group-hover:text-slate-955 transition-colors" />
@@ -1241,12 +1237,12 @@ export function RobotHero({
                 <p className="text-xs text-slate-700 leading-relaxed font-bold">
                   CMDA plots, houses for sale, used mobiles, bikes, cars &amp; local household items.
                 </p>
-              </div>
+              </Link>
 
-              {/* Segment 2 */}
-              <div
-                onClick={onCtaClick}
-                className="group bg-white border-2 border-slate-200/90 hover:border-amber-500 p-6 rounded-3xl space-y-3.5 shadow-xs hover:shadow-xl transition-all duration-200 cursor-pointer"
+              {/* Segment 2: Buyer Need Requests */}
+              <Link
+                href="/need"
+                className="group bg-white border-2 border-slate-200/90 hover:border-amber-500 p-6 rounded-3xl space-y-3.5 shadow-xs hover:shadow-xl transition-all duration-200 cursor-pointer block"
               >
                 <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-400/40 flex items-center justify-center text-amber-600 font-black text-xl group-hover:scale-110 group-hover:bg-amber-500 group-hover:text-slate-955 transition-all">
                   <Megaphone className="w-6 h-6 text-amber-600 group-hover:text-slate-955 transition-colors" />
@@ -1257,12 +1253,12 @@ export function RobotHero({
                 <p className="text-xs text-slate-700 leading-relaxed font-bold">
                   Post what you are looking for (rentals, used items, specific services) and get direct offers.
                 </p>
-              </div>
+              </Link>
 
-              {/* Segment 3 */}
-              <div
-                onClick={onCtaClick}
-                className="group bg-white border-2 border-slate-200/90 hover:border-amber-500 p-6 rounded-3xl space-y-3.5 shadow-xs hover:shadow-lg transition-all duration-200 cursor-pointer"
+              {/* Segment 3: Local Trade Services */}
+              <Link
+                href="/services"
+                className="group bg-white border-2 border-slate-200/90 hover:border-amber-500 p-6 rounded-3xl space-y-3.5 shadow-xs hover:shadow-lg transition-all duration-200 cursor-pointer block"
               >
                 <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-400/40 flex items-center justify-center text-amber-600 font-black text-xl group-hover:scale-110 group-hover:bg-amber-500 group-hover:text-slate-955 transition-all">
                   <Wrench className="w-6 h-6 text-amber-600 group-hover:text-slate-955 transition-colors" />
@@ -1273,12 +1269,12 @@ export function RobotHero({
                 <p className="text-xs text-slate-700 leading-relaxed font-bold">
                   Plumbers, electricians, carpenters, AC repair, painters, taxi &amp; auto drivers.
                 </p>
-              </div>
+              </Link>
 
-              {/* Segment 4 */}
-              <div
-                onClick={onCtaClick}
-                className="group bg-white border-2 border-slate-200/90 hover:border-amber-500 p-6 rounded-3xl space-y-3.5 shadow-xs hover:shadow-xl transition-all duration-200 cursor-pointer"
+              {/* Segment 4: Store Offers & Deals */}
+              <Link
+                href="/shops"
+                className="group bg-white border-2 border-slate-200/90 hover:border-amber-500 p-6 rounded-3xl space-y-3.5 shadow-xs hover:shadow-xl transition-all duration-200 cursor-pointer block"
               >
                 <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-400/40 flex items-center justify-center text-amber-600 font-black text-xl group-hover:scale-110 group-hover:bg-amber-500 group-hover:text-slate-955 transition-all">
                   <Store className="w-6 h-6 text-amber-600 group-hover:text-slate-955 transition-colors" />
@@ -1289,7 +1285,7 @@ export function RobotHero({
                 <p className="text-xs text-slate-700 leading-relaxed font-bold">
                   Exclusive discount deals, grand opening sales &amp; special offers from local Tanjore shops.
                 </p>
-              </div>
+              </Link>
             </div>
           </div>
 
@@ -1341,14 +1337,19 @@ export function RobotHero({
               </p>
               <div className="flex items-center justify-center gap-3 pt-2">
                 {/* EXPLORE PLATFORM — Black Outline, Black Text, White Base */}
-                <button
-                  type="button"
-                  onClick={onCtaClick}
+                <Link
+                  href="/home"
+                  onClick={() => {
+                    if (typeof window !== "undefined") {
+                      localStorage.setItem("namma_thanjai_guest_mode", "true");
+                    }
+                    if (onCtaClick) onCtaClick();
+                  }}
                   className="bg-white text-slate-955 font-heading font-black text-xs sm:text-sm px-7 py-4 sm:px-8 sm:py-4.5 rounded-2xl shadow-xs border-2 border-slate-955 active:scale-95 cursor-pointer uppercase tracking-wider flex items-center gap-2 shrink-0"
                 >
                   <span>Explore Platform</span>
                   <ArrowRight className="w-4 h-4 text-amber-600 shrink-0 stroke-[3]" />
-                </button>
+                </Link>
               </div>
             </div>
 
