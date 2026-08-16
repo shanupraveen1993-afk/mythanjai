@@ -167,17 +167,17 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
       <div className="flex items-center justify-between gap-2 pr-8">
         <div className="flex items-center gap-1.5 flex-wrap">
           {/* Type Badge: FOR SALE vs WANTED NEED */}
-          <span className={`inline-flex items-center gap-1 text-[10px] font-black uppercase tracking-wider px-2.5 py-0.5 rounded-lg border shadow-2xs ${
+          <span className={`inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border ${
             isNeedType 
-              ? "bg-amber-500/15 text-amber-900 border-amber-400/80" 
-              : "bg-emerald-500/10 text-emerald-700 border-emerald-300"
+              ? "bg-amber-500/10 text-amber-900 border-amber-300" 
+              : "bg-slate-100 text-slate-700 border-slate-200"
           }`}>
-            <Tag className={`w-3 h-3 ${isNeedType ? "text-amber-600 fill-amber-500/20" : "text-emerald-600"}`} />
-            <span>{isNeedType ? "WANTED BUYER NEED" : "FOR SALE"}</span>
+            <Tag className="w-3 h-3 text-slate-400" />
+            <span>{isNeedType ? "BUYER REQUIREMENT" : "FOR SALE"}</span>
           </span>
 
           {post.category && (
-            <span className="inline-flex items-center gap-1 text-[10px] font-bold bg-slate-100 text-slate-700 px-2 py-0.5 rounded-md border border-slate-200/60">
+            <span className="inline-flex items-center gap-1 text-[10px] font-medium bg-slate-50 text-slate-600 px-2 py-0.5 rounded-md border border-slate-200/60">
               <span>{post.category}</span>
             </span>
           )}
@@ -186,18 +186,14 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
 
       {/* Main Title & Price */}
       <div className="flex flex-col gap-1">
-        <h3 className="font-heading font-bold text-sm sm:text-base text-slate-900 leading-snug group-hover:text-slate-800 transition-colors line-clamp-2">
+        <h3 className="font-heading font-bold text-sm sm:text-base text-slate-900 leading-snug line-clamp-2">
           {post.title}
         </h3>
 
         {displayPriceText && (
-          <div className={`text-xs sm:text-sm font-black tracking-tight w-fit px-2.5 py-0.5 rounded-lg border mt-0.5 ${
-            isNeedType
-              ? "text-amber-900 bg-amber-50 border-amber-200"
-              : "text-emerald-700 bg-emerald-50 border-emerald-200"
-          }`}>
-            <span className="text-[10px] text-slate-400 font-semibold uppercase mr-1">{isNeedType ? "Budget:" : "Price:"}</span>
-            <span>{displayPriceText}</span>
+          <div className="text-xs sm:text-sm font-black text-slate-900 tracking-tight flex items-center gap-1.5 mt-0.5">
+            <span className="text-[10px] text-slate-400 font-semibold uppercase">{isNeedType ? "Budget:" : "Price:"}</span>
+            <span className={isNeedType ? "text-amber-700" : "text-emerald-600"}>{displayPriceText}</span>
           </div>
         )}
       </div>

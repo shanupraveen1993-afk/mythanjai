@@ -218,23 +218,23 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
 
         {/* Offer Validity Badge */}
         <div className={`flex items-center gap-1 px-2.5 py-1 rounded-lg border font-bold text-[11px] w-fit mt-0.5 ${
-          isExpired ? "text-rose-700 bg-rose-50 border-rose-200" : "text-purple-900 bg-purple-50 border-purple-200/80"
+          isExpired ? "text-rose-700 bg-rose-50 border-rose-200" : "text-slate-700 bg-slate-100 border-slate-200"
         }`}>
-          <Calendar className="w-3.5 h-3.5 text-purple-600" />
+          <Calendar className="w-3.5 h-3.5 text-slate-500" />
           <span>{isExpired ? "Offer Expired" : validityText}</span>
         </div>
 
         {/* Active Promotion Offer Details */}
         {post.offer_title && (
-          <div className={`border rounded-xl p-3 flex flex-col gap-1.5 mt-1 font-sans shadow-2xs ${
-            isExpired ? "bg-slate-50 border-slate-200 text-slate-500 opacity-75" : "bg-purple-50/80 border-purple-200/90 text-purple-950"
+          <div className={`border rounded-xl p-3 flex flex-col gap-1.5 mt-1 font-sans ${
+            isExpired ? "bg-slate-50 border-slate-200 text-slate-500 opacity-75" : "bg-amber-50/60 border-amber-200/80 text-slate-900"
           }`}>
-            <div className="flex items-center gap-1.5 text-purple-950 font-black text-xs truncate">
-              <Sparkles className="w-3.5 h-3.5 fill-purple-500 text-purple-600 shrink-0" />
+            <div className="flex items-center gap-1.5 text-slate-900 font-black text-xs truncate">
+              <Sparkles className="w-3.5 h-3.5 fill-amber-500 text-amber-600 shrink-0" />
               <span className="truncate">{post.offer_title}</span>
             </div>
             {post.offer_description && (
-              <p className="text-xs text-slate-700 font-medium leading-relaxed bg-white/95 p-2.5 rounded-lg border border-purple-100/80">
+              <p className="text-xs text-slate-600 font-medium leading-relaxed bg-white/95 p-2 rounded-lg border border-amber-100/60">
                 {post.offer_description}
               </p>
             )}

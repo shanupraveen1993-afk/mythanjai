@@ -162,8 +162,8 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
           </div>
 
           <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-            {/* Sky Blue Craft Category Badge */}
-            <span className="inline-flex items-center gap-1 bg-sky-500/10 border border-sky-300 text-sky-950 font-black px-2.5 py-0.5 rounded-xl text-[10px] shadow-2xs">
+            {/* Neutral Slate Craft Category Badge */}
+            <span className="inline-flex items-center gap-1 bg-slate-100 border border-slate-200/80 text-slate-700 font-bold px-2.5 py-0.5 rounded-lg text-[10px]">
               {getCategoryIllustration(post.skill_category)}
               <span>{post.skill_category}</span>
             </span>

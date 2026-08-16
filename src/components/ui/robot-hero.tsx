@@ -1361,18 +1361,16 @@ export function RobotHero({
             <button
               type="button"
               onClick={() => {
-                if (typeof window !== "undefined") {
-                  sessionStorage.removeItem("namma_thanjai_target_post_route");
-                  localStorage.removeItem("namma_thanjai_target_post_route");
-                  sessionStorage.setItem("namma_thanjai_header_login_active", "true");
-                  window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+                if (onCtaClick) {
+                  onCtaClick();
+                } else {
+                  router.push("/home");
                 }
-                if (onSignInClick) onSignInClick();
               }}
               className="btn-shimmer relative shrink-0 bg-slate-950 hover:bg-slate-900 text-white font-heading font-black text-sm px-8 py-4 rounded-2xl shadow-xl transition-all cursor-pointer active:scale-95 flex items-center gap-2.5 border border-slate-800 uppercase tracking-wider"
             >
               <Sparkles className="w-4 h-4 text-amber-400 fill-amber-400 shrink-0" />
-              <span>Register to Post</span>
+              <span>Explore Marketplace</span>
               <ArrowRight className="w-4 h-4 text-amber-400 shrink-0" />
             </button>
           </div>
