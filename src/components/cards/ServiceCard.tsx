@@ -128,6 +128,13 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
     setContactedCount(updatedContacted);
     if (typeof window !== "undefined") {
       localStorage.setItem(`contacted_service_${post.id}`, String(updatedContacted));
+      localStorage.setItem("namma_thanjai_pending_feedback", JSON.stringify({
+        id: post.id,
+        name: post.name,
+        phone: cleanPhone,
+        status: "pending",
+        timestamp: Date.now()
+      }));
     }
 
     // Register return listener (SET 2)

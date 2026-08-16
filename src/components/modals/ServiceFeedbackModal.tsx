@@ -49,6 +49,11 @@ export default function ServiceFeedbackModal({
           });
         }
       }
+
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("namma_thanjai_pending_feedback");
+      }
+
       setSubmitted(true);
       setTimeout(() => {
         onClose();
@@ -57,6 +62,9 @@ export default function ServiceFeedbackModal({
       }, 1200);
     } catch (err) {
       console.warn("Feedback submission notice:", err);
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("namma_thanjai_pending_feedback");
+      }
       setSubmitted(true);
       setTimeout(() => {
         onClose();
@@ -66,6 +74,22 @@ export default function ServiceFeedbackModal({
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleRemindLater = () => {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = localStorage.getItem("namma_thanjai_pending_feedback");
+        if (stored) {
+          const parsed = JSON.parse(stored);
+          parsed.status = "remind_later";
+          parsed.remind_at = Date.now() + 5 * 60 * 1000; // Remind in 5 mins or next session
+          localStorage.setItem("namma_thanjai_pending_feedback", JSON.stringify(parsed));
+        }
+      } catch (e) {}
+    }
+    toast.info("We will remind you to submit feedback in your next session!");
+    onClose();
   };
 
   return (
@@ -205,10 +229,10 @@ export default function ServiceFeedbackModal({
 
               <button
                 type="button"
-                onClick={onClose}
+                onClick={handleRemindLater}
                 className="w-full py-2 text-slate-500 hover:text-slate-800 font-extrabold text-xs text-center cursor-pointer transition-colors"
               >
-                {t("askLater")}
+                Submit Later (Remind Me Next Session)
               </button>
             </div>
 

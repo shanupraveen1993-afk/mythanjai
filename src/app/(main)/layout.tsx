@@ -16,6 +16,7 @@ import SwipeUpOnboarding from "@/components/ui/SwipeUpOnboarding";
 
 import { useNativeApp } from "@/hooks/use-native-app";
 import FloatingPostButton from "@/components/layout/FloatingPostButton";
+import PendingFeedbackPrompt from "@/components/modals/PendingFeedbackPrompt";
 
 export default function MainLayout({
   children,
@@ -277,6 +278,9 @@ function MainLayoutContent({
           onTabChange={handleTabChange}
         />
       )}
+
+      {/* Persistent Opinion Feedback Manager */}
+      <PendingFeedbackPrompt />
 
       {/* Sign-In Modal */}
       <React.Suspense fallback={null}>
