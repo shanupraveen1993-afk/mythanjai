@@ -1030,40 +1030,8 @@ export function RobotHero({
           </Canvas>
         </div>
 
-        {/* ── Action Footer: Buttons + LIVE Ticker (close to 2 buttons, 60% top margin reduction) ── */}
-        <div className="w-full max-w-xs sm:max-w-sm shrink-0 flex flex-col gap-1.5 px-1 pb-1">
-
-          {/* ── LIVE TICKER — ALWAYS RENDERED DIRECTLY ABOVE 2 BUTTONS ── */}
-          <div className="w-full bg-slate-950 border border-slate-800/90 rounded-xl py-1.5 px-3 shadow-md overflow-hidden select-none mb-0.5">
-            <div className="flex items-center gap-2">
-              <span className="shrink-0 bg-amber-500 text-slate-950 font-black text-[8px] px-1.5 py-0.5 rounded uppercase tracking-wider animate-pulse">
-                LIVE
-              </span>
-              <div className="flex-1 overflow-hidden h-[15px] flex items-center">
-                <div className="animate-marquee flex items-center">
-                  {[
-                    "New 2400 Sqft CMDA Plot listed in Vallam",
-                    "Senthil Electrician: 4.9★ rating in Tanjore",
-                    "GLEN Gallery: Up to 60% OFF Grand Opening",
-                    "2 BHK House for Rent near Medical College — ₹10,000/mo",
-                    "Rajesh Expert Plumber: 30-min rapid arrival",
-                    "New 2400 Sqft CMDA Plot listed in Vallam",
-                    "Senthil Electrician: 4.9★ rating in Tanjore",
-                    "GLEN Gallery: Up to 60% OFF Grand Opening",
-                    "2 BHK House for Rent near Medical College — ₹10,000/mo",
-                    "Rajesh Expert Plumber: 30-min rapid arrival",
-                  ].map((alert, i) => (
-                    <span key={i} className="flex items-center gap-4 shrink-0">
-                      <span className="text-slate-200 text-[10.5px] font-semibold whitespace-nowrap leading-none">
-                        {alert}
-                      </span>
-                      <span className="text-amber-400 text-xs font-black shrink-0">·</span>
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
+        {/* ── Action Footer: Buttons + LIVE Ticker below (mt-12px) ── */}
+        <div className="w-full max-w-xs sm:max-w-sm shrink-0 flex flex-col gap-0 px-1 pb-1">
 
           {profile?.isVerified ? (
             /* Verified state — show member badge + explore button */
@@ -1165,6 +1133,38 @@ export function RobotHero({
               )}
             </div>
           )}
+
+          {/* ── LIVE TICKER — PLACED BELOW THE 2 BUTTONS WITH 12px TOP MARGIN ── */}
+          <div className="w-full bg-slate-950 border border-slate-800/90 rounded-xl py-1.5 px-3 shadow-md overflow-hidden select-none mt-[12px]">
+            <div className="flex items-center gap-2">
+              <span className="shrink-0 bg-amber-500 text-slate-950 font-black text-[8px] px-1.5 py-0.5 rounded uppercase tracking-wider animate-pulse">
+                LIVE
+              </span>
+              <div className="flex-1 overflow-hidden h-[15px] flex items-center">
+                <div className="animate-marquee flex items-center">
+                  {[
+                    "New 2400 Sqft CMDA Plot listed in Vallam",
+                    "Senthil Electrician: 4.9★ rating in Tanjore",
+                    "GLEN Gallery: Up to 60% OFF Grand Opening",
+                    "2 BHK House for Rent near Medical College — ₹10,000/mo",
+                    "Rajesh Expert Plumber: 30-min rapid arrival",
+                    "New 2400 Sqft CMDA Plot listed in Vallam",
+                    "Senthil Electrician: 4.9★ rating in Tanjore",
+                    "GLEN Gallery: Up to 60% OFF Grand Opening",
+                    "2 BHK House for Rent near Medical College — ₹10,000/mo",
+                    "Rajesh Expert Plumber: 30-min rapid arrival",
+                  ].map((alert, i) => (
+                    <span key={i} className="flex items-center gap-4 shrink-0">
+                      <span className="text-slate-200 text-[10.5px] font-semibold whitespace-nowrap leading-none">
+                        {alert}
+                      </span>
+                      <span className="text-amber-400 text-xs font-black shrink-0">·</span>
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
 
       </div>
