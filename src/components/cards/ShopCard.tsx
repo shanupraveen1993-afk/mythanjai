@@ -298,9 +298,9 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
             href={directionUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 flex items-center justify-center gap-1.5 h-9 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-4 rounded-xl text-xs transition-all border border-slate-250 cursor-pointer shadow-2xs active:scale-95"
+            className="flex-1 flex items-center justify-center gap-1.5 h-9 bg-amber-500/10 hover:bg-amber-500/20 text-amber-950 font-extrabold px-4 rounded-xl text-xs transition-all duration-200 border border-amber-400/60 hover:border-amber-400 cursor-pointer shadow-2xs active:scale-95"
           >
-            <Navigation className="w-3.5 h-3.5 text-slate-500 fill-slate-500/20" />
+            <Navigation className="w-3.5 h-3.5 text-amber-700 fill-amber-700/20" />
             <span>{t("getDirection")}</span>
           </a>
 
@@ -309,9 +309,9 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
               {/* SECONDARY BUTTON: Call */}
               <a
                 href={callUrl}
-                className="flex items-center gap-1.5 h-9 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-3.5 rounded-xl text-xs transition-all border border-slate-250 cursor-pointer active:scale-95 shadow-2xs"
+                className="flex items-center gap-1.5 h-9 bg-amber-500/10 hover:bg-amber-500/20 text-amber-950 font-extrabold px-3.5 rounded-xl text-xs transition-all duration-200 border border-amber-400/60 hover:border-amber-400 cursor-pointer active:scale-95 shadow-2xs"
               >
-                <Phone className="w-3.5 h-3.5 fill-current" />
+                <Phone className="w-3.5 h-3.5 text-amber-700 fill-current" />
                 <span>{t("call")}</span>
               </a>
 

@@ -294,9 +294,9 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
           {isOwnPost ? (
             <Link
               href="/profile?tab=my_posts"
-              className="flex items-center gap-1.5 h-8 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-3 rounded-lg text-[11px] transition-colors cursor-pointer border border-slate-300 shadow-2xs"
+              className="flex items-center gap-1.5 h-8 bg-amber-500/10 hover:bg-amber-500/20 text-amber-950 font-extrabold px-3 rounded-lg text-[11px] transition-all duration-200 cursor-pointer border border-amber-400/60 hover:border-amber-400 shadow-2xs active:scale-95"
             >
-              <Pencil className="w-3 h-3 text-slate-500" />
+              <Pencil className="w-3 h-3 text-amber-700" />
               <span>Manage</span>
             </Link>
           ) : isValidSellerId ? (

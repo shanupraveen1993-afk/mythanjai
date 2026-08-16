@@ -238,24 +238,24 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
         </span>
 
         <div className="flex items-center gap-1.5 shrink-0 whitespace-nowrap">
-          {/* SECONDARY BUTTON */}
+          {/* SECONDARY BUTTON: Call */}
           <button
             onClick={(e) => handleOpenPreContactModal(e, "call")}
-            className="flex items-center gap-1.5 h-8.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-3 rounded-xl text-xs transition-all border border-slate-250 shadow-2xs cursor-pointer active:scale-95 whitespace-nowrap"
+            className="flex items-center gap-1.5 h-8.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-950 font-extrabold px-3 rounded-xl text-xs transition-all duration-200 border border-amber-400/60 hover:border-amber-400 shadow-2xs cursor-pointer active:scale-95 whitespace-nowrap"
           >
-            <Phone className="w-3.5 h-3.5 fill-current" />
+            <Phone className="w-3.5 h-3.5 text-amber-700 fill-current" />
             <span>Call</span>
           </button>
 
-          {/* SECONDARY BUTTON */}
+          {/* SECONDARY BUTTON: Send Request */}
           <button
             onClick={(e) => {
               e.stopPropagation();
               toast.success(`Request sent to ${post.name}! They will call you back shortly.`);
             }}
-            className="flex items-center gap-1.5 h-8.5 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-3 rounded-xl text-xs transition-all border border-slate-250 shadow-2xs cursor-pointer active:scale-95 whitespace-nowrap"
+            className="flex items-center gap-1.5 h-8.5 bg-amber-500/10 hover:bg-amber-500/20 text-amber-950 font-extrabold px-3 rounded-xl text-xs transition-all duration-200 border border-amber-400/60 hover:border-amber-400 shadow-2xs cursor-pointer active:scale-95 whitespace-nowrap"
           >
-            <Zap className="w-3.5 h-3.5 text-slate-500" />
+            <Zap className="w-3.5 h-3.5 text-amber-700" />
             <span>Send Request</span>
           </button>
         </div>
