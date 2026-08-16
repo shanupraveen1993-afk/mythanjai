@@ -107,7 +107,7 @@ export default function ProfileClientPage() {
       window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
   }, []);
 
-  // Fetch user posts from all collections
+  // Fetch user posts from all collections + local storage
   const fetchMyPosts = async () => {
     if (!user) return;
     setPostsLoading(true);
@@ -128,6 +128,22 @@ export default function ProfileClientPage() {
           });
         });
       }
+
+      // Merge local storage posts created on mobile/web
+      if (typeof window !== "undefined") {
+        try {
+          const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+          stored.forEach((localP: any) => {
+            if (!allFetchedPosts.some((p) => p.id === localP.id)) {
+              allFetchedPosts.unshift({
+                ...localP,
+                colName: localP.type === "SELL" || localP.type === "NEED" ? "needs_and_sales" : "shops",
+              });
+            }
+          });
+        } catch (e) {}
+      }
+
       setMyPosts(allFetchedPosts);
     } catch (error) {
       console.error("Error fetching my posts:", error);
@@ -646,13 +662,24 @@ export default function ProfileClientPage() {
                           <span className="text-[10px] text-slate-500 block mt-0.5">
                             {post.area_tag}
                           </span>
+
+                          {/* Offer / Listing Validity Display */}
+                          {post.valid_from && post.valid_to ? (
+                            <span className="text-[9.5px] font-black text-slate-900 bg-[#FFDD9C] px-2 py-0.5 rounded border border-amber-300 inline-block mt-1">
+                              Valid: {post.valid_from} - {post.valid_to}
+                            </span>
+                          ) : (
+                            <span className="text-[9.5px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded inline-block mt-1">
+                              Active Listing
+                            </span>
+                          )}
                         </div>
      
                         {/* Edit & Delete Triggers */}
                         <div className="flex items-center gap-1.5 shrink-0">
                           <button
                             onClick={() => router.push(`/post/sell?edit=${post.id}&col=${post.colName}`)}
-                            className="px-2.5 py-1.5 rounded-xl bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-750 transition-colors cursor-pointer flex items-center gap-1 text-xs font-bold border border-yellow-500/30"
+                            className="px-2.5 py-1.5 rounded-xl bg-[#F9B637] text-slate-950 hover:bg-amber-400 transition-colors cursor-pointer flex items-center gap-1 text-xs font-black border border-amber-400 shadow-2xs"
                             title="Edit Listing"
                           >
                             <Pencil className="w-3.5 h-3.5" />

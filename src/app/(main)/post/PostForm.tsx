@@ -150,6 +150,8 @@ export default function PostForm({ segment }: PostFormProps) {
   const [description, setDescription] = useState("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
+  const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
+  const [videoPreview, setVideoPreview] = useState<string>("");
 
   // Edit Mode Data Loader
   useEffect(() => {
@@ -386,10 +388,22 @@ export default function PostForm({ segment }: PostFormProps) {
           console.warn("Firestore write skipped, relying on local storage persistence:", fErr);
         }
       } else if (segment === "offer") {
+        let uploadedVideoUrl = "";
+        if (selectedVideo) {
+          try {
+            const videoRef = ref(storage, `offer_reels/${Date.now()}_${selectedVideo.name}`);
+            const snap = await uploadBytes(videoRef, selectedVideo);
+            uploadedVideoUrl = await getDownloadURL(snap.ref);
+          } catch (vErr) {
+            console.warn("Offer video reel upload fallback:", vErr);
+          }
+        }
+
         localPostRecord.shop_name = title.trim();
         localPostRecord.offer_title = title.trim();
         localPostRecord.offer_description = cleanDesc;
         localPostRecord.image_url = imagePreview || safeFirestoreImageUrl;
+        localPostRecord.video_url = uploadedVideoUrl || "";
         localPostRecord.address_text = `${area}, Thanjavur`;
 
         try {
@@ -404,7 +418,7 @@ export default function PostForm({ segment }: PostFormProps) {
             longitude: 79.1378,
             google_maps_url: googleMapsUrl.trim() || "",
             address_text: `${area}, Thanjavur`,
-            hours: "Limited Offer",
+            hours: "Special Local Offer",
             is_claimed: true,
             created_at: timestamp,
             offer_title: title.trim(),
@@ -412,6 +426,7 @@ export default function PostForm({ segment }: PostFormProps) {
             valid_from: validFrom || null,
             valid_to: validTo || null,
             show_phone: showPhone,
+            video_url: uploadedVideoUrl || "",
           });
         } catch (fErr) {
           console.warn("Firestore write skipped, relying on local storage persistence:", fErr);
@@ -952,6 +967,36 @@ export default function PostForm({ segment }: PostFormProps) {
                   onChange={handleImageChange}
                   className="text-xs text-slate-600 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-800 hover:file:bg-slate-200 cursor-pointer"
                 />
+              </div>
+            )}
+
+            {/* Offer Video Reel Upload Dropzone */}
+            {segment === "offer" && (
+              <div className="flex flex-col gap-1.5 mt-2 bg-amber-500/10 border border-amber-400/50 rounded-xl p-3">
+                <label className="text-xs font-black text-slate-900 flex items-center gap-1.5 uppercase tracking-wider">
+                  <Video className="w-4 h-4 text-amber-600 shrink-0" />
+                  <span>Upload Offer Video Reel (Vertical 9:16 Format)</span>
+                </label>
+                <p className="text-[10px] text-slate-500 font-bold">
+                  Upload a promotional reel video of your shop/offer (.mp4, .webm).
+                </p>
+                <input
+                  type="file"
+                  accept="video/mp4,video/webm,video/quicktime"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      setSelectedVideo(file);
+                      setVideoPreview(URL.createObjectURL(file));
+                    }
+                  }}
+                  className="text-xs text-slate-700 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-amber-500 file:text-slate-950 hover:file:bg-amber-400 cursor-pointer border border-slate-200 rounded-lg p-1.5 bg-white"
+                />
+                {videoPreview && (
+                  <div className="mt-2 max-w-[160px] rounded-xl overflow-hidden border-2 border-amber-400 shadow-md">
+                    <video src={videoPreview} controls className="w-full aspect-[9/16] object-cover" />
+                  </div>
+                )}
               </div>
             )}
 

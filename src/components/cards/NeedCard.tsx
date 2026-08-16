@@ -191,9 +191,10 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
         </h3>
 
         {displayPriceText && (
-          <div className="text-xs sm:text-sm font-black text-slate-900 tracking-tight flex items-center gap-1.5 mt-0.5">
-            <span className="text-[10px] text-slate-400 font-semibold uppercase">{isNeedType ? "Budget:" : "Price:"}</span>
-            <span className={isNeedType ? "text-amber-700" : "text-emerald-600"}>{displayPriceText}</span>
+          <div className="mt-1 flex items-center">
+            <span className="font-heading font-black text-lg sm:text-xl text-slate-950 bg-[#F9B637] px-2.5 py-0.5 rounded-lg border border-amber-500/60 shadow-xs">
+              {displayPriceText}
+            </span>
           </div>
         )}
       </div>
@@ -294,18 +295,18 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
           {isOwnPost ? (
             <Link
               href="/profile?tab=my_posts"
-              className="flex items-center gap-1.5 h-8 bg-slate-100 hover:bg-amber-50 hover:border-amber-400/90 text-slate-800 hover:text-amber-950 font-bold px-3 rounded-lg text-[11px] transition-all duration-200 cursor-pointer border border-slate-250/90 shadow-2xs active:scale-95"
+              className="flex items-center gap-1.5 h-8 bg-[#F9B637] text-slate-950 font-black px-3 rounded-lg text-[11px] transition-all duration-200 cursor-pointer border border-amber-400 shadow-2xs active:scale-95"
             >
-              <Pencil className="w-3 h-3 text-slate-500" />
-              <span>Manage</span>
+              <Pencil className="w-3 h-3 text-slate-950" />
+              <span>Edit</span>
             </Link>
           ) : isValidSellerId ? (
             <Link
               href={`/chat?listingId=${post.id}&sellerId=${post.userId}&title=${encodeURIComponent(post.title || "Item")}`}
-              className="flex items-center gap-1.5 h-9 bg-[#00a884] hover:bg-[#008f6f] text-white font-bold px-3.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer"
+              className="flex items-center gap-1.5 h-9 bg-slate-950 hover:bg-slate-900 text-[#F9B637] font-black px-3.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer border border-slate-800"
             >
-              <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
-              <span>{t("chat")}</span>
+              <MessageSquare className="w-3.5 h-3.5 fill-[#F9B637] stroke-none" />
+              <span>Chat Now</span>
             </Link>
           ) : (
             /* Safe fallback for demo/seed posts without real userId */
@@ -313,10 +314,10 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 h-9 bg-[#00a884] hover:bg-[#008f6f] text-white font-bold px-3.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer"
+              className="flex items-center gap-1.5 h-9 bg-[#F9B637] hover:bg-amber-400 text-slate-950 font-black px-3.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer border border-amber-400"
             >
-              <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
-              <span>{t("whatsApp")}</span>
+              <MessageSquare className="w-3.5 h-3.5 fill-slate-950 stroke-none" />
+              <span>Chat Now</span>
             </a>
           )}
         </div>

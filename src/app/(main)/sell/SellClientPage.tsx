@@ -76,14 +76,20 @@ export default function SellClientPage() {
   return (
     <div className="flex flex-col gap-3 pb-24 w-full font-sans">
 
-      {/* 1. Hero Banner */}
-      <div className="relative w-full min-h-[120px] rounded-2xl overflow-hidden bg-slate-950 text-white flex items-center px-5 sm:px-8 py-5 shadow-2xs mt-2">
+      {/* 1. Hero Banner — Reduced top margin & Local Matchmaker tagline */}
+      <div className="relative w-full min-h-[90px] rounded-2xl overflow-hidden bg-slate-950 text-white flex items-center px-4 sm:px-6 py-3.5 shadow-2xs mt-1">
         <img src="/thanjavur_temple_illustration.png" alt="Sell" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-955/90 to-transparent" />
-        <div className="relative z-10 flex flex-col gap-1 max-w-lg">
-          <span className="bg-yellow-500 text-slate-955 font-bold text-[10px] px-2 py-0.5 rounded-md tracking-wider w-fit">Direct marketplace</span>
-          <h1 className="font-heading font-bold text-lg sm:text-xl text-white">Buy & Sell in Thanjavur</h1>
-          <p className="text-xs text-slate-300">Plots, rentals, vehicles & electronics directly from Tanjore locals.</p>
+        <div className="relative z-10 flex flex-col gap-0.5 max-w-lg">
+          <span className="text-[10px] font-black text-[#F9B637] uppercase tracking-widest">
+            Local Matchmaker • Thanjavur Marketplace
+          </span>
+          <h1 className="font-heading font-black text-lg sm:text-xl uppercase">
+            Items for Sale in Thanjavur
+          </h1>
+          <p className="text-xs text-slate-300 font-semibold">
+            CMDA plots, vehicles, electronics & household goods. Direct deals with zero brokerage.
+          </p>
         </div>
       </div>
 

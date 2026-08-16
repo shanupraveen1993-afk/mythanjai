@@ -167,7 +167,7 @@ export default function TopHeader({
                   title="In-App Safety Chat"
                 >
                   <MessageSquare className={`w-4 h-4 shrink-0 ${isChatActive ? "text-amber-600 fill-amber-500/20" : "text-slate-500 group-hover:text-amber-600"}`} />
-                  <span className="hidden sm:inline text-xs ml-1.5 font-black">Chat</span>
+                  <span className="hidden sm:inline text-xs ml-1.5 font-black">Chat Now</span>
                   <span className="absolute top-0 right-0 sm:right-2 w-2.5 h-2.5 rounded-full bg-red-500 border-2 border-white animate-pulse" />
                 </button>
 
@@ -203,36 +203,6 @@ export default function TopHeader({
               </button>
             );
           })()}
-        </div>
-      </div>
-
-      {/* ── Permanent LIVE Ticker Bar — Extreme Top on ALL pages ── */}
-      <div className="w-full bg-slate-950 border-t border-slate-800/80 px-4 py-1.5 flex items-center gap-2.5 shadow-inner select-none">
-        <span className="shrink-0 bg-amber-500 text-slate-950 font-black text-[8px] px-1.5 py-0.5 rounded uppercase tracking-wider animate-pulse">
-          LIVE
-        </span>
-        <div className="flex-1 overflow-hidden h-[15px] flex items-center">
-          <div className="animate-marquee flex items-center">
-            {[
-              "New plot listed in Vallam — 2400 Sqft CMDA approved",
-              "Senthil Electrician: 4.9★ rating, available in Tanjore Town",
-              "GLEN Gallery: Up to 60% OFF — Grand Opening Sale",
-              "New 2 BHK rental listed near Medical College Road",
-              "12 new members joined Namma Thanjavur today!",
-              "New plot listed in Vallam — 2400 Sqft CMDA approved",
-              "Senthil Electrician: 4.9★ rating, available in Tanjore Town",
-              "GLEN Gallery: Up to 60% OFF — Grand Opening Sale",
-              "New 2 BHK rental listed near Medical College Road",
-              "12 new members joined Namma Thanjavur today!",
-            ].map((alert, i) => (
-              <span key={i} className="flex items-center gap-5 shrink-0">
-                <span className="text-slate-200 text-[10.5px] font-semibold whitespace-nowrap leading-none">
-                  {alert}
-                </span>
-                <span className="text-amber-400 text-xs font-black shrink-0">·</span>
-              </span>
-            ))}
-          </div>
         </div>
       </div>
     </header>
