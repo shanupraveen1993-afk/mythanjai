@@ -17,6 +17,7 @@ import SwipeUpOnboarding from "@/components/ui/SwipeUpOnboarding";
 import { useNativeApp } from "@/hooks/use-native-app";
 import FloatingPostButton from "@/components/layout/FloatingPostButton";
 import PendingFeedbackPrompt from "@/components/modals/PendingFeedbackPrompt";
+import ApkInstallToast from "@/components/ui/ApkInstallToast";
 
 export default function MainLayout({
   children,
@@ -289,6 +290,9 @@ function MainLayoutContent({
           onClose={handleCloseSignIn}
         />
       </React.Suspense>
+
+      {/* Direct APK Install Toast Banner for Web Visitors */}
+      <ApkInstallToast />
     </div>
   );
 }
