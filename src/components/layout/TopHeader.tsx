@@ -86,7 +86,7 @@ export default function TopHeader({
               <span className="font-heading font-black tracking-tight text-slate-900 text-sm sm:text-base md:text-lg leading-none">
                 namma thanjai
               </span>
-              <div className="w-2 h-2 rounded-full bg-yellow-500 ml-0.5 shrink-0" />
+              <div className="w-2 h-2 rounded-full bg-amber-500 ml-0.5 shrink-0" />
             </div>
           </div>
         </div>

@@ -147,7 +147,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
             onClick={handleSaveToggle}
             className={`absolute top-3 right-3 w-8 h-8 rounded-full border shadow-xs flex items-center justify-center transition-all cursor-pointer ${
               isSaved
-                ? "bg-yellow-500 text-slate-955 border-yellow-400"
+                ? "bg-amber-500 text-slate-955 border-amber-400"
                 : "bg-white/90 text-slate-700 border-slate-200 hover:bg-white"
             }`}
             title={isSaved ? "Saved" : "Save Listing"}
@@ -169,7 +169,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
             </div>
 
             {/* Title */}
-            <h3 className="font-heading font-extrabold text-sm text-slate-800 line-clamp-1 group-hover:text-yellow-600 transition-colors">
+            <h3 className="font-heading font-extrabold text-sm text-slate-800 line-clamp-1 group-hover:text-amber-600 transition-colors">
               {listing.title}
             </h3>
 
@@ -219,9 +219,9 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
                         e.stopPropagation();
                         setIsChatOpen(true);
                       }}
-                      className="flex-1 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold text-xs flex items-center justify-center gap-1.5 transition-colors border border-slate-200"
+                      className="flex-1 py-2 rounded-xl bg-slate-100 hover:bg-amber-50 hover:border-amber-400/90 text-slate-800 hover:text-amber-950 font-bold text-xs flex items-center justify-center gap-1.5 transition-all border border-slate-250/90 shadow-2xs"
                     >
-                      <MessageSquare className="w-3.5 h-3.5 text-yellow-600" />
+                      <MessageSquare className="w-3.5 h-3.5 text-slate-500" />
                       <span>Chat</span>
                     </button>
                   )}
@@ -229,9 +229,9 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
                   <a
                     href={`tel:${listing.phone || "919994837342"}`}
                     onClick={(e) => e.stopPropagation()}
-                    className="flex-1 py-2 rounded-xl bg-yellow-500 hover:bg-yellow-600 text-slate-955 font-black text-xs flex items-center justify-center gap-1.5 transition-colors border border-yellow-400"
+                    className="flex-1 py-2 rounded-xl bg-slate-950 hover:bg-slate-900 text-yellow-400 font-heading font-black text-xs flex items-center justify-center gap-1.5 transition-all border border-slate-800 shadow-md"
                   >
-                    <Phone className="w-3.5 h-3.5 fill-current" />
+                    <Phone className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" />
                     <span>Call</span>
                   </a>
                 </>

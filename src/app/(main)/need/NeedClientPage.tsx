@@ -94,7 +94,7 @@ export default function NeedClientPage() {
         {/* PRIMARY GOLD POST BUTTON */}
         <button
           onClick={handlePostNeed}
-          className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-black px-4 py-2 rounded-xl text-xs transition-all border border-yellow-400 cursor-pointer shadow-xs hover:shadow-md active:scale-95 shrink-0"
+          className="flex items-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-slate-955 font-heading font-black px-4 py-2 rounded-xl text-xs transition-all border border-amber-400 cursor-pointer shadow-xs hover:shadow-md active:scale-95 shrink-0"
         >
           <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
           <span>Post Requirement</span>

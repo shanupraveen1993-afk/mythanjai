@@ -75,14 +75,14 @@ export default function BottomTabBar({
               onClick={() => handleTabClick(tab)}
               className={`flex flex-col items-center justify-center flex-1 h-full py-1 text-[10px] font-bold transition-all duration-200 ${
                 isActive
-                  ? "text-yellow-600 scale-105"
+                  ? "text-amber-600 scale-105"
                   : "text-slate-500 hover:text-slate-800"
               }`}
             >
               <div
                 className={`p-1.5 rounded-xl transition-all duration-300 ${
                   isActive
-                    ? "bg-yellow-500/10 text-yellow-600 scale-110"
+                    ? "bg-amber-500/10 text-amber-600 scale-110"
                     : "bg-transparent text-slate-400"
                 }`}
               >
