@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Phone, MessageSquare, Award, MapPin, Zap, Droplet, Hammer, Wind, Wrench, Eye, Share2, Bookmark, AlertTriangle, Calendar, Paintbrush, Car, Sparkles, Star } from "lucide-react";
+import { Phone, MessageSquare, Award, MapPin, Zap, Droplet, Hammer, Wind, Wrench, Eye, Share2, Bookmark, AlertTriangle, Calendar, Paintbrush, Car, Sparkles, Star, Check } from "lucide-react";
 import { ServiceProviderPost } from "@/types";
 import { formatRelativeTime } from "@/lib/constants";
 import ServiceFeedbackModal from "@/components/modals/ServiceFeedbackModal";
