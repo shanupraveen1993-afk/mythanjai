@@ -99,8 +99,8 @@ export default function TopHeader({
           const isServiceActive = pathname.includes("/services") || pathname.includes("/post/service") || activeTab === "services";
           const isOfferActive = pathname.includes("/shops") || pathname.includes("/offers") || activeTab === "shops";
 
-          const activeStyle = "bg-white text-slate-950 border border-slate-300 shadow-xs font-black";
-          const inactiveStyle = "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-bold";
+          const activeStyle = "bg-white text-amber-700 border border-amber-300/80 shadow-2xs font-black";
+          const inactiveStyle = "text-slate-600 hover:text-amber-700 hover:bg-slate-200/60 font-bold";
 
           return (
             <div className="hidden sm:flex items-center gap-1 bg-slate-100 p-1 rounded-xl border border-slate-200/90 font-heading">
