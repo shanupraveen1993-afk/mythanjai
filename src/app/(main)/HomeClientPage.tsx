@@ -127,58 +127,50 @@ export default function HomeClientPage() {
   return (
     <div className="w-full flex flex-col gap-8 text-slate-800 font-sans mt-3">
 
-        {/* ── 2x2 Primary Category Entry Hub (PRD Wireframe Specification) ── */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 my-1">
+        {/* ── 2x2 Primary Category Entry Hub (Master Gradient Specification) ── */}
+        <div className="grid grid-cols-2 gap-3 my-1">
           <button
             onClick={() => router.push("/sell")}
-            className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-md hover:-translate-y-0.5 active:scale-[0.99] transition-all text-left flex flex-col gap-1.5 cursor-pointer group border-l-4 border-l-amber-500"
+            className="p-4 bg-gradient-to-br from-amber-500 to-amber-600 text-white rounded-2xl flex flex-col justify-between shadow-sm active:scale-[0.98] transition-transform text-left min-h-[100px] cursor-pointer group"
           >
-            <div className="flex items-center gap-2 font-heading font-black text-sm sm:text-base text-slate-900 group-hover:text-amber-700 transition-colors">
-              <ShoppingBag className="w-4 h-4 text-amber-600" />
-              <span>🛒 SELL</span>
+            <ShoppingBag className="w-6 h-6 mb-2 opacity-90 group-hover:scale-110 transition-transform" />
+            <div>
+              <div className="font-bold text-sm sm:text-base tracking-tight">Sell</div>
+              <div className="text-[11px] text-amber-100 font-semibold">விற்க வேண்டுமா?</div>
             </div>
-            <p className="text-xs font-bold text-slate-700">
-              விற்க வேண்டுமா? <span className="text-slate-400 font-normal">(List items for sale)</span>
-            </p>
           </button>
 
           <button
             onClick={() => router.push("/need")}
-            className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-md hover:-translate-y-0.5 active:scale-[0.99] transition-all text-left flex flex-col gap-1.5 cursor-pointer group border-l-4 border-l-amber-500"
+            className="p-4 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-2xl flex flex-col justify-between shadow-sm active:scale-[0.98] transition-transform text-left min-h-[100px] cursor-pointer group"
           >
-            <div className="flex items-center gap-2 font-heading font-black text-sm sm:text-base text-slate-900 group-hover:text-amber-700 transition-colors">
-              <Search className="w-4 h-4 text-amber-600" />
-              <span>📢 NEED</span>
+            <Search className="w-6 h-6 mb-2 opacity-90 group-hover:scale-110 transition-transform" />
+            <div>
+              <div className="font-bold text-sm sm:text-base tracking-tight">Need</div>
+              <div className="text-[11px] text-blue-100 font-semibold">தேவைப்படுகிறதா?</div>
             </div>
-            <p className="text-xs font-bold text-slate-700">
-              தேவைப்படுகிறதா? <span className="text-slate-400 font-normal">(Post requests)</span>
-            </p>
           </button>
 
           <button
             onClick={() => router.push("/services")}
-            className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-md hover:-translate-y-0.5 active:scale-[0.99] transition-all text-left flex flex-col gap-1.5 cursor-pointer group border-l-4 border-l-amber-500"
+            className="p-4 bg-gradient-to-br from-emerald-500 to-emerald-600 text-white rounded-2xl flex flex-col justify-between shadow-sm active:scale-[0.98] transition-transform text-left min-h-[100px] cursor-pointer group"
           >
-            <div className="flex items-center gap-2 font-heading font-black text-sm sm:text-base text-slate-900 group-hover:text-amber-700 transition-colors">
-              <Wrench className="w-4 h-4 text-amber-600" />
-              <span>🔧 LOCAL SERVICES</span>
+            <Wrench className="w-6 h-6 mb-2 opacity-90 group-hover:scale-110 transition-transform" />
+            <div>
+              <div className="font-bold text-sm sm:text-base tracking-tight">Local Services</div>
+              <div className="text-[11px] text-emerald-100 font-semibold">தொழில் வல்லுநர்கள்</div>
             </div>
-            <p className="text-xs font-bold text-slate-700">
-              தொழில் வல்லுநர்கள் <span className="text-slate-400 font-normal">(Hire verified trades)</span>
-            </p>
           </button>
 
           <button
             onClick={() => router.push("/shops")}
-            className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-md hover:-translate-y-0.5 active:scale-[0.99] transition-all text-left flex flex-col gap-1.5 cursor-pointer group border-l-4 border-l-amber-500"
+            className="p-4 bg-gradient-to-br from-rose-500 to-rose-600 text-white rounded-2xl flex flex-col justify-between shadow-sm active:scale-[0.98] transition-transform text-left min-h-[100px] cursor-pointer group"
           >
-            <div className="flex items-center gap-2 font-heading font-black text-sm sm:text-base text-slate-900 group-hover:text-amber-700 transition-colors">
-              <Store className="w-4 h-4 text-amber-600" />
-              <span>🏷️ LOCAL OFFER</span>
+            <Store className="w-6 h-6 mb-2 opacity-90 group-hover:scale-110 transition-transform" />
+            <div>
+              <div className="font-bold text-sm sm:text-base tracking-tight">Local Offer</div>
+              <div className="text-[11px] text-rose-100 font-semibold">சிறப்பு சலுகைகள்</div>
             </div>
-            <p className="text-xs font-bold text-slate-700">
-              சிறப்பு சலுகைகள் <span className="text-slate-400 font-normal">(Store deals &amp; discounts)</span>
-            </p>
           </button>
         </div>
 
