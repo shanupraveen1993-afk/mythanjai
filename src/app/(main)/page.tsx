@@ -1,21 +1,10 @@
 "use client";
 
-import React, { useEffect } from "react";
-import dynamic from "next/dynamic";
+import React, { Suspense, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import { Loader2 } from "lucide-react";
-
-// Dynamically import 3D Robot Hero to prevent WebGL SSR hydration stalls
-const RobotHero = dynamic(() => import("@/components/ui/robot-hero"), {
-  ssr: false,
-  loading: () => (
-    <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center font-heading font-black text-xs text-yellow-400 gap-3">
-      <Loader2 className="w-8 h-8 animate-spin text-yellow-400" />
-      <span>Loading Namma Thanjavur 3D Experience...</span>
-    </div>
-  ),
-});
+import LandingClientPage from "./LandingClientPage";
 
 export default function RootPage() {
   const router = useRouter();
@@ -31,9 +20,9 @@ export default function RootPage() {
 
   if (authLoading) {
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center font-heading font-black text-xs text-yellow-400 gap-3">
-        <Loader2 className="w-8 h-8 animate-spin text-yellow-400" />
-        <span>Loading...</span>
+      <div className="min-h-screen bg-[#fff8eb] flex flex-col items-center justify-center font-heading font-black text-xs text-amber-600 gap-3">
+        <Loader2 className="w-8 h-8 animate-spin text-amber-500" />
+        <span>Loading Namma Thanjai...</span>
       </div>
     );
   }
@@ -41,23 +30,23 @@ export default function RootPage() {
   // Logged-in users get redirected to /sell
   if (isLoggedIn) {
     return (
-      <div className="min-h-screen bg-slate-950 flex flex-col items-center justify-center font-heading font-black text-xs text-yellow-400 gap-3">
-        <Loader2 className="w-8 h-8 animate-spin text-yellow-400" />
+      <div className="min-h-screen bg-[#fff8eb] flex flex-col items-center justify-center font-heading font-black text-xs text-amber-600 gap-3">
+        <Loader2 className="w-8 h-8 animate-spin text-amber-500" />
         <span>Redirecting to Marketplace...</span>
       </div>
     );
   }
 
-  // Unauthenticated guests get the 3D Robot Landing Page!
   return (
-    <RobotHero
-      showExtraFolds={true}
-      onCtaClick={() => router.push("/sell")}
-      onSignInClick={() => {
-        if (typeof window !== "undefined") {
-          window.dispatchEvent(new Event("namma_thanjai_open_signin"));
-        }
-      }}
-    />
+    <Suspense
+      fallback={
+        <div className="min-h-screen bg-[#fff8eb] flex flex-col items-center justify-center font-heading font-black text-xs text-amber-600 gap-3">
+          <Loader2 className="w-8 h-8 animate-spin text-amber-500" />
+          <span>Loading Landing Page...</span>
+        </div>
+      }
+    >
+      <LandingClientPage />
+    </Suspense>
   );
 }
