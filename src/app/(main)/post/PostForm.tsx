@@ -56,7 +56,7 @@ const SEGMENT_CONFIG: Record<
   }
 > = {
   sell: {
-    title: "Post Item for Sale",
+    title: "Post in Sell (விற்பனைக்கு பதிவு செய்க)",
     badge: "Sell Marketplace",
     buttonLabel: "Publish Post →",
     redirectPath: "/sell",
@@ -67,7 +67,7 @@ const SEGMENT_CONFIG: Record<
     maxDescChars: 1000,
   },
   need: {
-    title: "Post Buyer Requirement",
+    title: "Post a Need (உங்கள் தேவையை பதிவிட)",
     badge: "Need Request",
     buttonLabel: "Publish Requirement →",
     redirectPath: "/need",
@@ -78,7 +78,7 @@ const SEGMENT_CONFIG: Record<
     maxDescChars: 500,
   },
   service: {
-    title: "Register Skilled Service",
+    title: "Register Service Profile (தொழில் பதிவு)",
     badge: "Verified Local Trade",
     buttonLabel: "Publish Listing →",
     redirectPath: "/services",
@@ -89,7 +89,7 @@ const SEGMENT_CONFIG: Record<
     maxDescChars: 800,
   },
   offer: {
-    title: "Post Store Offer & Deal",
+    title: "Step 1: Upload Visiting Card / Flyer OR Promo Video",
     badge: "Local Store Deal",
     buttonLabel: "Publish Store Offer →",
     redirectPath: "/shops",

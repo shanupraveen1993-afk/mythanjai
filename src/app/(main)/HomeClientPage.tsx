@@ -150,6 +150,61 @@ export default function HomeClientPage() {
           </div>
         </div>
 
+        {/* ── 2x2 Primary Category Entry Hub (PRD Wireframe Specification) ── */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 my-1">
+          <button
+            onClick={() => router.push("/sell")}
+            className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-md hover:-translate-y-0.5 active:scale-[0.99] transition-all text-left flex flex-col gap-1.5 cursor-pointer group border-l-4 border-l-amber-500"
+          >
+            <div className="flex items-center gap-2 font-heading font-black text-sm sm:text-base text-slate-900 group-hover:text-amber-700 transition-colors">
+              <ShoppingBag className="w-4 h-4 text-amber-600" />
+              <span>🛒 SELL</span>
+            </div>
+            <p className="text-xs font-bold text-slate-700">
+              விற்க வேண்டுமா? <span className="text-slate-400 font-normal">(List items for sale)</span>
+            </p>
+          </button>
+
+          <button
+            onClick={() => router.push("/need")}
+            className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-md hover:-translate-y-0.5 active:scale-[0.99] transition-all text-left flex flex-col gap-1.5 cursor-pointer group border-l-4 border-l-amber-500"
+          >
+            <div className="flex items-center gap-2 font-heading font-black text-sm sm:text-base text-slate-900 group-hover:text-amber-700 transition-colors">
+              <Search className="w-4 h-4 text-amber-600" />
+              <span>📢 NEED</span>
+            </div>
+            <p className="text-xs font-bold text-slate-700">
+              தேவைப்படுகிறதா? <span className="text-slate-400 font-normal">(Post requests)</span>
+            </p>
+          </button>
+
+          <button
+            onClick={() => router.push("/services")}
+            className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-md hover:-translate-y-0.5 active:scale-[0.99] transition-all text-left flex flex-col gap-1.5 cursor-pointer group border-l-4 border-l-amber-500"
+          >
+            <div className="flex items-center gap-2 font-heading font-black text-sm sm:text-base text-slate-900 group-hover:text-amber-700 transition-colors">
+              <Wrench className="w-4 h-4 text-amber-600" />
+              <span>🔧 LOCAL SERVICES</span>
+            </div>
+            <p className="text-xs font-bold text-slate-700">
+              தொழில் வல்லுநர்கள் <span className="text-slate-400 font-normal">(Hire verified trades)</span>
+            </p>
+          </button>
+
+          <button
+            onClick={() => router.push("/shops")}
+            className="p-4 rounded-2xl bg-white border border-slate-200/80 shadow-xs hover:shadow-md hover:-translate-y-0.5 active:scale-[0.99] transition-all text-left flex flex-col gap-1.5 cursor-pointer group border-l-4 border-l-amber-500"
+          >
+            <div className="flex items-center gap-2 font-heading font-black text-sm sm:text-base text-slate-900 group-hover:text-amber-700 transition-colors">
+              <Store className="w-4 h-4 text-amber-600" />
+              <span>🏷️ LOCAL OFFER</span>
+            </div>
+            <p className="text-xs font-bold text-slate-700">
+              சிறப்பு சலுகைகள் <span className="text-slate-400 font-normal">(Store deals &amp; discounts)</span>
+            </p>
+          </button>
+        </div>
+
         {/* ── Static APK Download Banner Card for Web App Visitors ── */}
         <StaticApkCard variant="dark" />
 
@@ -158,7 +213,7 @@ export default function HomeClientPage() {
 
         {/* ── SELL Preview ───────────────────────── */}
         <PreviewSection
-          title="Sell"
+          title="Sell (சமீபத்திய விற்பனை)"
           subtitle="Items for sale by local residents"
           seeAllPath="/sell"
           accentColor="bg-yellow-500"
@@ -173,7 +228,7 @@ export default function HomeClientPage() {
 
         {/* ── NEED Preview ───────────────────────── */}
         <PreviewSection
-          title="Need"
+          title="Need (தேவைகள்)"
           subtitle="Requirements from local buyers"
           seeAllPath="/need"
           accentColor="bg-yellow-500"
@@ -188,7 +243,7 @@ export default function HomeClientPage() {
 
         {/* ── SERVICES Preview ───────────────────── */}
         <PreviewSection
-          title="Services"
+          title="Local Services (உள்ளூர் சேவைகள்)"
           subtitle="Verified skilled tradespeople near you"
           seeAllPath="/services"
           accentColor="bg-yellow-500"
@@ -203,7 +258,7 @@ export default function HomeClientPage() {
 
         {/* ── OFFERS Preview ─────────────────────── */}
         <PreviewSection
-          title="Local Offers"
+          title="Local Offer (சிறப்பு சலுகைகள்)"
           subtitle="Store discounts & deals from Thanjavur shops"
           seeAllPath="/shops"
           accentColor="bg-yellow-500"
