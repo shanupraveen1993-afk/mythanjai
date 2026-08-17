@@ -104,13 +104,13 @@ export default function LandingClientPage() {
                 <button
                   key={card.id}
                   onClick={() => router.push(card.path)}
-                  className="p-3.5 rounded-xl bg-white border border-slate-200/90 text-slate-800 flex flex-col justify-between shadow-2xs hover:border-slate-400 hover:shadow-xs transition-all text-left min-h-[92px] cursor-pointer group"
+                  className="p-3.5 rounded-xl bg-white border border-slate-200/90 text-slate-800 flex flex-col justify-between shadow-2xs hover:border-amber-400 hover:shadow-xs transition-all text-left min-h-[92px] cursor-pointer group"
                 >
-                  <div className="w-8 h-8 rounded-lg bg-slate-50 border border-slate-100 flex items-center justify-center text-slate-700 group-hover:bg-slate-900 group-hover:text-white transition-colors mb-2">
+                  <div className="w-8 h-8 rounded-lg bg-amber-50 border border-amber-100/80 flex items-center justify-center text-amber-600 group-hover:bg-amber-500 group-hover:text-slate-950 transition-colors mb-2">
                     <IconComponent className="w-4 h-4 stroke-[2.2]" />
                   </div>
                   <div>
-                    <span className="text-[9px] font-black uppercase tracking-wider text-slate-400 block leading-tight">
+                    <span className="text-[9px] font-black uppercase tracking-wider text-amber-700/80 block leading-tight">
                       {card.segment}
                     </span>
                     <span className="font-bold text-xs text-slate-900 leading-snug line-clamp-1 block">

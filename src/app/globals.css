@@ -57,14 +57,14 @@ body {
   font-family: var(--font-heading), 'Red Hat Display', system-ui, sans-serif;
 }
 
-/* ── Master Button Architecture (Strict Visual Hierarchy & Anti-Noise) ── */
+/* ── Master Button Architecture (Primary Yellow/Amber Brand Color System) ── */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-heading), 'Red Hat Display', sans-serif;
   font-weight: 700;
-  border-radius: 12px;
+  border-radius: 9999px;
   gap: 8px;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
@@ -72,85 +72,107 @@ body {
   line-height: 1;
 }
 
-/* 2.1 Primary Hero Button (For Main "+ Post" and Form Submits ONLY) */
+/* 2.1 Primary Yellow/Amber Button (Main Brand Action) */
 .btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-heading), 'Red Hat Display', sans-serif;
   font-weight: 800;
-  border-radius: 12px;
+  border-radius: 9999px;
   gap: 8px;
-  background-color: #FBBF24;
-  color: #0F172A;
-  border: 1px solid #F59E0B;
-  box-shadow: 0 2px 6px rgba(245, 158, 11, 0.25);
+  background-color: #f59e0b;
+  color: #0f172a;
+  border: 1px solid #d97706;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.3);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
 }
 .btn-primary:hover {
   transform: translateY(-1px);
-  background-color: #F59E0B;
-  color: #FFFFFF;
-  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
+  background-color: #d97706;
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.4);
 }
 .btn-primary:active {
   transform: scale(0.97);
   box-shadow: none;
 }
 .btn-primary:disabled {
-  background-color: #CBD5E1;
-  color: #64748B;
-  border-color: #CBD5E1;
+  background-color: #cbd5e1;
+  color: #64748b;
+  border-color: #cbd5e1;
   box-shadow: none;
   cursor: not-allowed;
   transform: none;
 }
 
-/* 2.2 Secondary Supporting Button */
+/* 2.2 Secondary Supporting Dark Button */
 .btn-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-heading), 'Red Hat Display', sans-serif;
-  font-weight: 700;
-  border-radius: 12px;
-  gap: 6px;
-  background-color: #F8FAFC;
-  color: #0F172A;
-  border: 1px solid #CBD5E1;
+  font-weight: 800;
+  border-radius: 9999px;
+  gap: 8px;
+  background-color: #0f172a;
+  color: #ffffff;
+  border: 1px solid #1e293b;
+  box-shadow: 0 2px 6px rgba(15, 23, 42, 0.15);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
 }
 .btn-secondary:hover {
-  background-color: #F1F5F9;
-  border-color: #94A3B8;
+  background-color: #1e293b;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.25);
 }
 .btn-secondary:active {
   transform: scale(0.97);
 }
 
-/* 2.3 Header Login Button (Distinct, Slate dark pill - NOT yellow!) */
-.btn-header-login {
+/* 2.3 Tertiary / Outline Button */
+.btn-tertiary, .btn-outline {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-heading), 'Red Hat Display', sans-serif;
-  font-weight: 800;
-  border-radius: 10px;
+  font-weight: 700;
+  border-radius: 9999px;
   gap: 6px;
-  background-color: #0F172A;
-  color: #FFFFFF;
-  border: 1px solid #1E293B;
+  background-color: #ffffff;
+  color: #1e293b;
+  border: 1px solid #e2e8f0;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+}
+.btn-tertiary:hover, .btn-outline:hover {
+  background-color: #fff8eb;
+  border-color: #f59e0b;
+  color: #d97706;
+}
+.btn-tertiary:active, .btn-outline:active {
+  transform: scale(0.97);
+}
+
+/* 2.4 Ghost / Text Button */
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading), 'Red Hat Display', sans-serif;
+  font-weight: 700;
+  border-radius: 8px;
+  gap: 6px;
+  background-color: transparent;
+  color: #475569;
   transition: all 0.2s ease;
   cursor: pointer;
 }
-.btn-header-login:hover {
-  background-color: #1E293B;
-  transform: translateY(-1px);
-}
-.btn-header-login:active {
-  transform: scale(0.96);
+.btn-ghost:hover {
+  color: #d97706;
+  background-color: #fff8eb;
 }
 
 /* 2.4 Intent-Based Card Actions (Strict Visual Hierarchy) */

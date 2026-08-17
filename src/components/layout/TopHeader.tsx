@@ -73,7 +73,7 @@ export default function TopHeader({
     >
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-3">
 
-        {/* Left: Website Branding Logo & Locality Dropdown across all pages */}
+        {/* Left: Website Branding Logo across all pages */}
         <div className="flex items-center gap-2 sm:gap-3">
           <div
             onClick={() => router.push("/")}
@@ -88,11 +88,6 @@ export default function TopHeader({
               </span>
               <div className="w-2 h-2 rounded-full bg-amber-500 ml-0.5 shrink-0 animate-glow-pulse" />
             </div>
-          </div>
-
-          {/* Searchable Area Locality Dropdown */}
-          <div className="hidden lg:block">
-            <SearchableAreaDropdown selectedArea={selectedArea} onAreaChange={onAreaChange} />
           </div>
         </div>
 
@@ -190,7 +185,7 @@ export default function TopHeader({
                 </button>
               </>
             ) : (
-              /* Login button for all non-authenticated visitors (Clean Dark Slate Pill) */
+              /* Login button for all non-authenticated visitors (Primary Yellow Pill) */
               <button
                 type="button"
                 onClick={() => {
@@ -201,9 +196,9 @@ export default function TopHeader({
                   }
                   onSignInClick?.();
                 }}
-                className="btn btn-header-login btn-sm text-xs"
+                className="btn-primary text-xs px-4 py-2"
               >
-                <User className="w-3.5 h-3.5 text-white shrink-0" />
+                <User className="w-4 h-4 shrink-0" />
                 <span>Login</span>
               </button>
             );
