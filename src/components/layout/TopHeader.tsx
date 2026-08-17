@@ -76,7 +76,7 @@ export default function TopHeader({
         {/* Left: Website Branding Logo & Locality Dropdown across all pages */}
         <div className="flex items-center gap-2 sm:gap-3">
           <div
-            onClick={() => router.push("/home")}
+            onClick={() => router.push("/")}
             className="flex items-center gap-2 cursor-pointer select-none shrink-0 group"
           >
             <div className="w-8 h-8 sm:w-9 sm:h-9 shrink-0 group-hover:scale-[1.08] transition-transform duration-300 flex items-center justify-center">
@@ -111,7 +111,7 @@ export default function TopHeader({
             <div className="hidden sm:flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl border border-slate-200/80 font-heading backdrop-blur-sm">
               <button
                 type="button"
-                onClick={() => router.push("/home")}
+                onClick={() => router.push("/")}
                 className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${isHomeActive ? activeStyle : inactiveStyle
                   }`}
               >

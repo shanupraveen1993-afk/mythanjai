@@ -93,7 +93,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
         if (!isHeaderLogin && pendingTarget && pendingTarget.startsWith("/post/")) {
           router.push(pendingTarget);
         } else {
-          router.push("/home");
+          router.push("/sell");
         }
       } else {
         toast.error("Verification failed.");
