@@ -3,7 +3,24 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
-import { ChevronRight, MapPin } from "lucide-react";
+import {
+  ChevronRight,
+  MapPin,
+  Building2,
+  Bike,
+  Smartphone,
+  Car,
+  Home,
+  Laptop,
+  Zap,
+  Droplets,
+  Hammer,
+  Paintbrush,
+  Tag,
+  Coffee,
+  ShoppingBag,
+  Sparkles,
+} from "lucide-react";
 
 export default function LandingClientPage() {
   const router = useRouter();
@@ -24,6 +41,26 @@ export default function LandingClientPage() {
     }
   };
 
+  // 16 Highlights Quick Cards (Single title, no category/segment badge)
+  const highlightCards = [
+    { id: "h1", label: "Plots & Real Estate", icon: Building2, path: "/sell?category=Plots+%26+Real+Estate" },
+    { id: "h2", label: "Bikes & Scooters", icon: Bike, path: "/sell?category=Used+Vehicles" },
+    { id: "h3", label: "Smartphones", icon: Smartphone, path: "/sell?category=Electronics+%26+Mobiles" },
+    { id: "h4", label: "Cars & Autos", icon: Car, path: "/sell?category=Used+Vehicles" },
+    { id: "h5", label: "Car Wanted", icon: Car, path: "/need?category=Used+Vehicles" },
+    { id: "h6", label: "House Rental Wanted", icon: Home, path: "/need?category=Property+Rental" },
+    { id: "h7", label: "Land Wanted", icon: Building2, path: "/need?category=Plots+%26+Real+Estate" },
+    { id: "h8", label: "Laptop Wanted", icon: Laptop, path: "/need?category=Electronics+%26+Mobiles" },
+    { id: "h9", label: "Electrician", icon: Zap, path: "/services?category=Electrician" },
+    { id: "h10", label: "Plumber", icon: Droplets, path: "/services?category=Plumber" },
+    { id: "h11", label: "Carpenter", icon: Hammer, path: "/services?category=Carpenter" },
+    { id: "h12", label: "Painter", icon: Paintbrush, path: "/services?category=Painter" },
+    { id: "h13", label: "Store Discounts", icon: Tag, path: "/shops" },
+    { id: "h14", label: "Cafes & Dining", icon: Coffee, path: "/shops?category=Cafe+%26+Restaurant" },
+    { id: "h15", label: "Textiles & Sarees", icon: ShoppingBag, path: "/shops?category=Textiles+%26+Readymades" },
+    { id: "h16", label: "Jewelry & Gold", icon: Sparkles, path: "/shops?category=Gold+%26+Jewelry" },
+  ];
+
   return (
     <div className="w-full flex flex-col gap-8 text-slate-800 font-sans pb-24 bg-[#faf9f6] min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full flex flex-col gap-9 pt-4">
@@ -35,6 +72,35 @@ export default function LandingClientPage() {
           <p className="text-xs sm:text-sm text-slate-500 font-medium max-w-2xl">
             Direct 1:1 connections between local residents in Tanjore. Buy, sell, hire skilled workers, or explore store offers with 0 brokerage.
           </p>
+        </section>
+
+        {/* ── 16 Highlights Cards (Clean Icon + Single Title, No Badges) ── */}
+        <section className="flex flex-col gap-3">
+          <div className="flex items-center justify-between">
+            <h2 className="font-heading font-extrabold text-base text-slate-900 tracking-tight">
+              Highlights
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5">
+            {highlightCards.map((card) => {
+              const IconComponent = card.icon;
+              return (
+                <button
+                  key={card.id}
+                  onClick={() => router.push(card.path)}
+                  className="p-3 sm:p-3.5 rounded-xl bg-white border border-slate-200/90 text-slate-800 flex flex-col justify-between shadow-2xs hover:border-amber-400 hover:shadow-xs transition-all text-left min-h-[88px] cursor-pointer group"
+                >
+                  <div className="w-8 h-8 rounded-lg bg-amber-50 border border-amber-100/80 flex items-center justify-center text-amber-600 group-hover:bg-amber-500 group-hover:text-slate-950 transition-colors mb-2">
+                    <IconComponent className="w-4 h-4 stroke-[2.2]" />
+                  </div>
+                  <span className="font-bold text-xs text-slate-900 leading-snug line-clamp-2 block">
+                    {card.label}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
         </section>
 
         {/* ── 1. SELL Segment Carousel (6 Sample Items) ── */}
