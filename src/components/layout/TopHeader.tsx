@@ -155,14 +155,6 @@ export default function TopHeader({
 
         {/* Right: Landing Page Login Button vs Logged-In Chat & Profile Controls */}
         <div className="flex items-center gap-2 shrink-0">
-          <a
-            href="/namma_thanjai_release.apk"
-            download="namma_thanjai_release.apk"
-            className="flex items-center gap-1 bg-emerald-600 hover:bg-emerald-500 text-white px-2.5 sm:px-3 py-1.5 rounded-full text-xs font-black transition-all shadow-2xs active:scale-95 cursor-pointer border border-emerald-500"
-          >
-            <Download className="w-3.5 h-3.5" />
-            <span>Get App</span>
-          </a>
           {(() => {
             const isChatActive = pathname.includes("/chat");
             const isProfileActive = pathname.includes("/profile") || activeTab === "profile";
