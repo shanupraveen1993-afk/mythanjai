@@ -53,7 +53,7 @@ export default function LandingClientPage() {
     },
     {
       id: "p3",
-      title: "LOCAL SERVICES (சேவைகள்)",
+      title: "SERVICES (சேவைகள்)",
       desc: "Hire verified doorstep technicians & skilled workers",
       icon: Zap,
       path: "/services",
@@ -62,7 +62,7 @@ export default function LandingClientPage() {
     },
     {
       id: "p4",
-      title: "LOCAL OFFERS (சலுகைகள்)",
+      title: "OFFERS (சலுகைகள்)",
       desc: "Discover exclusive store discounts & deals from Tanjore shops",
       icon: Sparkles,
       path: "/shops",
@@ -249,7 +249,7 @@ export default function LandingClientPage() {
           <div className="flex items-center justify-between border-b border-slate-200/60 pb-2">
             <div>
               <h2 className="font-heading font-extrabold text-base text-slate-900">
-                Local Services (உள்ளூர் சேவைகள்)
+                Services (சேவைகள்)
               </h2>
               <p className="text-xs text-slate-500">Skilled trade professionals in Thanjavur</p>
             </div>
@@ -296,12 +296,12 @@ export default function LandingClientPage() {
           </div>
         </section>
 
-        {/* ── 4. LOCAL OFFER Segment Carousel (6 Sample Items) ── */}
+        {/* ── 4. OFFERS Segment Carousel (6 Sample Items) ── */}
         <section className="flex flex-col gap-3">
           <div className="flex items-center justify-between border-b border-slate-200/60 pb-2">
             <div>
               <h2 className="font-heading font-extrabold text-base text-slate-900">
-                Local Offer (சிறப்பு சலுகைகள்)
+                Offers (சிறப்பு சலுகைகள்)
               </h2>
               <p className="text-xs text-slate-500">Promotions &amp; deals from local stores</p>
             </div>
