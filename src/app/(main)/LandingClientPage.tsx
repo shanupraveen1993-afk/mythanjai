@@ -25,8 +25,8 @@ import {
   Compass,
   ArrowRight,
   ShieldCheck,
+  Download,
 } from "lucide-react";
-import StaticApkCard from "@/components/ui/StaticApkCard";
 
 export default function LandingClientPage() {
   const router = useRouter();
@@ -95,8 +95,17 @@ export default function LandingClientPage() {
             </div>
           </div>
 
-          {/* Right: Login Button & Profile Button */}
-          <div className="flex items-center gap-2.5">
+          {/* Right: Get App, Login Button & Profile Button */}
+          <div className="flex items-center gap-2">
+            <a
+              href="/namma_thanjai_release.apk"
+              download="namma_thanjai_release.apk"
+              className="flex items-center gap-1 bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-full text-xs font-black transition-all shadow-2xs active:scale-95 cursor-pointer border border-emerald-500"
+            >
+              <Download className="w-3.5 h-3.5" />
+              <span>Get App</span>
+            </a>
+
             {isAuthVerified ? (
               <button
                 onClick={handleProfileClick}
@@ -162,9 +171,6 @@ export default function LandingClientPage() {
             ))}
           </div>
         </section>
-
-        {/* ── APK Download Banner Card ── */}
-        <StaticApkCard variant="dark" />
 
         {/* ── 1. SELL Segment Carousel ── */}
         <section className="flex flex-col gap-3">
