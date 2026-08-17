@@ -165,20 +165,25 @@ export default function TopHeader({
         })()}
 
         {/* Right: Landing Page Login Button vs Logged-In Chat & Profile Controls */}
-        <div className="flex items-center gap-2 shrink-0">
-          {/* Get App button: Stays for both guest & logged in users UNTIL clicked at least once */}
-          {!hasClickedGetApp && (
-            <a
-              href="/namma_thanjai_release.apk"
-              download="namma_thanjai_release.apk"
-              onClick={handleGetAppClick}
-              className="btn-secondary text-xs px-3.5 py-1.5 shrink-0"
-              title="Download Namma Thanjai Android App"
-            >
-              <Download className="w-3.5 h-3.5 shrink-0" />
-              <span>Get App</span>
-            </a>
-          )}
+        {(() => {
+          const isChatActive = pathname.includes("/chat");
+          const isProfileActive = pathname.includes("/profile") || activeTab === "profile";
+
+          return (
+            <div className="flex items-center gap-2 shrink-0">
+              {/* Get App button: Stays for both guest & logged in users UNTIL clicked at least once */}
+              {!hasClickedGetApp && (
+                <a
+                  href="/namma_thanjai_release.apk"
+                  download="namma_thanjai_release.apk"
+                  onClick={handleGetAppClick}
+                  className="btn-secondary text-xs px-3.5 py-1.5 shrink-0"
+                  title="Download Namma Thanjai Android App"
+                >
+                  <Download className="w-3.5 h-3.5 shrink-0" />
+                  <span>Get App</span>
+                </a>
+              )}
 
           {isAuthVerified ? (
             <>
@@ -229,6 +234,8 @@ export default function TopHeader({
             </button>
           )}
         </div>
+          );
+        })()}
       </div>
     </header>
   );
