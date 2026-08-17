@@ -7,6 +7,7 @@ import ShopCard from "@/components/cards/ShopCard";
 import { ShopPost } from "@/types";
 import { Plus, Loader2, Store, ArrowUpDown } from "lucide-react";
 import { SHOP_CATEGORIES } from "@/lib/constants";
+import { isListingQuarantined } from "@/lib/moderation";
 
 const SAMPLE_POSTS: ShopPost[] = [
   { id: "sh_glen", userId: "sample", shop_name: "GLEN Exclusive Gallery", category: "Electronics & Mobiles", address_text: "New Busstand Road, Thanjavur", landmark: "Near New Bus Stand", hours: "9:30 AM – 9 PM", valid_from: "2026-08-10", valid_to: "2026-08-25", phone: "9876543225", area_tag: "New Bus Stand", offer_title: "Up to 60% OFF — Grand Opening Sale", offer_description: "Massive discounts on kitchen chimneys, hobs, cooktops & gas stoves.", image_url: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&auto=format&fit=crop", latitude: 10.7852, longitude: 79.1162, is_claimed: true, created_at: new Date() as any },
@@ -52,7 +53,10 @@ export default function ShopsClientPage() {
 
     const ids = new Set([...(firestorePosts || []).map((p) => p.id), ...localPosts.map((p) => p.id)]);
     const seeds = SAMPLE_POSTS.filter((p) => !ids.has(p.id));
-    let list = [...localPosts, ...seeds, ...(firestorePosts || [])];
+    let list = [...localPosts, ...seeds, ...(firestorePosts || [])].filter((p) => {
+      if ((p as any).status === "moderation_review") return false;
+      return !isListingQuarantined(p.id);
+    });
 
     if (selectedCategory !== "All") {
       list = list.filter(
@@ -72,9 +76,9 @@ export default function ShopsClientPage() {
       {/* 1. Hero Banner */}
       <div className="relative w-full min-h-[120px] rounded-2xl overflow-hidden bg-slate-950 text-white flex items-center px-5 sm:px-8 py-5 shadow-2xs mt-2">
         <img src="/thanjavur_temple_illustration.png" alt="Shops" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-955/90 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent" />
         <div className="relative z-10 flex flex-col gap-1 max-w-lg">
-          <span className="bg-yellow-500 text-slate-955 font-bold text-[10px] px-2 py-0.5 rounded-md tracking-wider w-fit">Store discounts</span>
+          <span className="bg-[#FBBF24] text-[#0F172A] font-bold text-xs px-2 py-0.5 rounded-md tracking-wider w-fit border-b border-[#D97706]">Store discounts</span>
           <h1 className="font-heading font-bold text-lg sm:text-xl text-white">Local Store Offers</h1>
           <p className="text-xs text-slate-300">Grand opening deals, festival sales & discounts from Tanjore stores.</p>
         </div>
@@ -88,9 +92,9 @@ export default function ShopsClientPage() {
         {/* PRIMARY GOLD POST BUTTON */}
         <button
           onClick={handlePostOffer}
-          className="flex items-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-slate-955 font-heading font-black px-4 py-2 rounded-xl text-xs transition-all border border-amber-400 cursor-pointer shadow-xs hover:shadow-md active:scale-95 shrink-0"
+          className="flex items-center gap-1.5 btn-primary text-xs px-4 py-2 uppercase tracking-wider cursor-pointer shrink-0"
         >
-          <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+          <Plus className="w-3.5 h-3.5 stroke-[2.5] text-[#0F172A]" />
           <span>Post Offer</span>
         </button>
       </div>
@@ -131,7 +135,7 @@ export default function ShopsClientPage() {
         <div className="flex flex-col items-center justify-center py-16 gap-2 text-center">
           <Store className="w-8 h-8 text-slate-300" />
           <p className="text-sm font-bold text-slate-500">No store offers listed yet.</p>
-          <button onClick={handlePostOffer} className="bg-yellow-500 text-slate-950 font-bold text-xs px-4 py-2 rounded-lg border border-yellow-400 hover:bg-yellow-400 transition-all cursor-pointer">+ Post Offer</button>
+          <button onClick={handlePostOffer} className="btn-primary text-xs px-4 py-2 uppercase tracking-wider cursor-pointer">+ Post Offer</button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

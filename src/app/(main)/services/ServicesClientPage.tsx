@@ -7,6 +7,7 @@ import ServiceCard from "@/components/cards/ServiceCard";
 import { ServiceProviderPost } from "@/types";
 import { Plus, Loader2, Wrench, ArrowUpDown } from "lucide-react";
 import { SERVICE_CATEGORIES } from "@/lib/constants";
+import { isListingQuarantined } from "@/lib/moderation";
 
 const SAMPLE_POSTS: ServiceProviderPost[] = [
   { id: "sv_elec", userId: "sample", name: "Senthil Kumar — Home Electrician", skill_category: "Electrician", experience: "8+ Years", area_tag: "Tanjore Town (General)", phone: "9876543220", rating: 4.9, description: "Expert house wiring, DB box installation, inverter assembly, three-phase connections.", is_verified: true, created_at: new Date() as any },
@@ -54,7 +55,10 @@ export default function ServicesClientPage() {
 
     const ids = new Set([...(firestorePosts || []).map((p) => p.id), ...localPosts.map((p) => p.id)]);
     const seeds = SAMPLE_POSTS.filter((p) => !ids.has(p.id));
-    let list = [...localPosts, ...seeds, ...(firestorePosts || [])];
+    let list = [...localPosts, ...seeds, ...(firestorePosts || [])].filter((p) => {
+      if ((p as any).status === "moderation_review") return false;
+      return !isListingQuarantined(p.id);
+    });
 
     if (selectedCategory !== "All") {
       list = list.filter(
@@ -76,9 +80,9 @@ export default function ServicesClientPage() {
       {/* 1. Hero Banner */}
       <div className="relative w-full min-h-[120px] rounded-2xl overflow-hidden bg-slate-950 text-white flex items-center px-5 sm:px-8 py-5 shadow-2xs mt-2">
         <img src="/thanjavur_temple_illustration.png" alt="Services" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-955/90 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent" />
         <div className="relative z-10 flex flex-col gap-1 max-w-lg">
-          <span className="bg-yellow-500 text-slate-955 font-bold text-[10px] px-2 py-0.5 rounded-md tracking-wider w-fit">Verified tradespeople</span>
+          <span className="bg-[#FBBF24] text-[#0F172A] font-bold text-xs px-2 py-0.5 rounded-md tracking-wider w-fit border-b border-[#D97706]">Verified tradespeople</span>
           <h1 className="font-heading font-bold text-lg sm:text-xl text-white">Local Skilled Services</h1>
           <p className="text-xs text-slate-300">Electricians, plumbers, carpenters & technicians in Thanjavur.</p>
         </div>
@@ -92,9 +96,9 @@ export default function ServicesClientPage() {
         {/* PRIMARY GOLD POST BUTTON */}
         <button
           onClick={handlePostService}
-          className="flex items-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-slate-955 font-heading font-black px-4 py-2 rounded-xl text-xs transition-all border border-amber-400 cursor-pointer shadow-xs hover:shadow-md active:scale-95 shrink-0"
+          className="flex items-center gap-1.5 btn-primary text-xs px-4 py-2 uppercase tracking-wider cursor-pointer shrink-0"
         >
-          <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+          <Plus className="w-3.5 h-3.5 stroke-[2.5] text-[#0F172A]" />
           <span>Add Service</span>
         </button>
       </div>
@@ -136,7 +140,7 @@ export default function ServicesClientPage() {
         <div className="flex flex-col items-center justify-center py-16 gap-2 text-center">
           <Wrench className="w-8 h-8 text-slate-300" />
           <p className="text-sm font-bold text-slate-500">No service providers listed yet.</p>
-          <button onClick={handlePostService} className="bg-yellow-500 text-slate-950 font-bold text-xs px-4 py-2 rounded-lg border border-yellow-400 hover:bg-yellow-400 transition-all cursor-pointer">+ Add Service</button>
+          <button onClick={handlePostService} className="btn-primary text-xs px-4 py-2 uppercase tracking-wider cursor-pointer">+ Add Service</button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">

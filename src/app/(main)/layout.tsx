@@ -17,7 +17,7 @@ import SwipeUpOnboarding from "@/components/ui/SwipeUpOnboarding";
 import { useNativeApp } from "@/hooks/use-native-app";
 import FloatingPostButton from "@/components/layout/FloatingPostButton";
 import PendingFeedbackPrompt from "@/components/modals/PendingFeedbackPrompt";
-import ApkInstallToast from "@/components/ui/ApkInstallToast";
+
 
 export default function MainLayout({
   children,
@@ -255,7 +255,7 @@ function MainLayoutContent({
         }}
       >
         {/* Stable height wrapper — prevents page collapse and footer jump on route transitions */}
-        <div className={`w-full flex-1 flex flex-col ${!isFullWidthPage ? "min-h-[85vh]" : ""}`}>
+        <div className="w-full flex-1 flex flex-col min-h-0">
           {children}
         </div>
 
@@ -291,8 +291,7 @@ function MainLayoutContent({
         />
       </React.Suspense>
 
-      {/* Direct APK Install Toast Banner for Web Visitors */}
-      <ApkInstallToast />
+
     </div>
   );
 }

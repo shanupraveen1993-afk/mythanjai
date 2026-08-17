@@ -292,8 +292,8 @@ export default function CreatePostModal({
       }
 
       let imageUrl = "";
-      // Upload compressed image if selected and is allowed type (Shops, Offers, or Selling classifieds)
-      const isUploadAllowed = type === "shops" || type === "offers" || (type === "needs" && classifiedType === "SELL");
+      // Upload compressed image if selected and is allowed type (Shops, Offers, Services, or Selling classifieds)
+      const isUploadAllowed = type === "shops" || type === "offers" || type === "services" || (type === "needs" && classifiedType === "SELL");
       if (selectedImage && isUploadAllowed) {
         try {
           const compressed = await compressImage(selectedImage, 800, 800, 0.75);
@@ -324,7 +324,7 @@ export default function CreatePostModal({
             image_url: imageUrl || "",
             is_verified: true,
             created_at: timestamp,
-            expires_at: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 7-day auto-expiry
+            expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30-day auto-expiry per PRD
           });
         } else if (type === "services") {
           await addDoc(collection(db, "services"), {
@@ -336,7 +336,7 @@ export default function CreatePostModal({
             phone,
             rating: 4.8,
             description: finalDescription,
-            image_url: "",
+            image_url: imageUrl || "",
             is_verified: false, // Moderated verification
             created_at: timestamp,
           });
@@ -721,15 +721,15 @@ export default function CreatePostModal({
                               </p>
                             </div>
                           </div>
-                          <label className="flex items-center justify-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-950 font-bold py-2 rounded-xl text-xs cursor-pointer transition-colors shadow-sm">
+                          <label className="flex items-center justify-center gap-1.5 btn-primary py-2 text-xs cursor-pointer uppercase tracking-wider">
                             {ocrLoading ? (
                               <>
-                                <Loader2 className="w-4 h-4 animate-spin" />
+                                <Loader2 className="w-4 h-4 animate-spin text-[#0F172A]" />
                                 <span>AI Parsing Details...</span>
                               </>
                             ) : (
                               <>
-                                <Camera className="w-4 h-4" />
+                                <Camera className="w-4 h-4 text-[#0F172A]" />
                                 <span>Scan Visiting Card</span>
                               </>
                             )}
@@ -1251,10 +1251,10 @@ export default function CreatePostModal({
                   <button
                     type="button"
                     onClick={() => setStep(3)}
-                    className="flex items-center justify-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-950 font-black px-8 py-2.5 rounded-xl text-xs transition-colors shadow-sm cursor-pointer"
+                    className="px-8 py-2.5 btn-primary text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     <span>Continue to Step 3</span>
-                    <ArrowRight className="w-4 h-4" />
+                    <ArrowRight className="w-4 h-4 text-[#0F172A]" />
                   </button>
                 </div>
               )}
@@ -1264,9 +1264,9 @@ export default function CreatePostModal({
                   <button
                     type="button"
                     onClick={() => setStep(2)}
-                    className="flex items-center justify-center gap-1 border border-slate-200 bg-white hover:bg-slate-50 text-slate-700 font-bold px-5 py-2.5 rounded-xl text-xs transition-colors cursor-pointer"
+                    className="px-5 py-2.5 btn-secondary text-xs uppercase tracking-wider flex items-center justify-center gap-1 cursor-pointer"
                   >
-                    <ArrowLeft className="w-4 h-4" />
+                    <ArrowLeft className="w-4 h-4 text-[#0F172A]" />
                     <span>Back</span>
                   </button>
 
@@ -1274,16 +1274,16 @@ export default function CreatePostModal({
                     type="button"
                     onClick={handlePublish}
                     disabled={loading}
-                    className="flex items-center justify-center gap-1.5 bg-yellow-500 hover:bg-yellow-600 text-slate-950 font-black px-8 py-2.5 rounded-xl text-xs transition-colors shadow-md shadow-yellow-500/10 cursor-pointer"
+                    className="px-8 py-2.5 btn-primary text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     {loading ? (
                       <>
-                        <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
+                        <Loader2 className="w-4 h-4 animate-spin text-[#0F172A]" />
                         <span>Publishing...</span>
                       </>
                     ) : (
                       <>
-                        <Check className="w-4 h-4 stroke-[3]" />
+                        <Check className="w-4 h-4 text-[#0F172A]" />
                         <span>Publish Live Post</span>
                       </>
                     )}

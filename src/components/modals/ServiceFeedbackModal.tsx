@@ -109,7 +109,7 @@ export default function ServiceFeedbackModal({
             
             {/* Header Title */}
             <div className="flex flex-col items-center text-center gap-1">
-              <span className="text-[10px] font-black uppercase tracking-widest text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
+              <span className="text-xs font-black uppercase tracking-widest text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200">
                 {t("experienceBadge")}
               </span>
               <h3 className="font-heading font-black text-base text-slate-900 leading-snug">
@@ -138,7 +138,7 @@ export default function ServiceFeedbackModal({
                 </div>
                 <div>
                   <h4 className="font-black text-xs">{t("optAnswered")}</h4>
-                  <p className="text-[10px] text-slate-500 font-bold">{t("optAnsweredSub")}</p>
+                  <p className="text-xs text-slate-500 font-bold">{t("optAnsweredSub")}</p>
                 </div>
               </button>
 
@@ -157,7 +157,7 @@ export default function ServiceFeedbackModal({
                 </div>
                 <div>
                   <h4 className="font-black text-xs">{t("optUnanswered")}</h4>
-                  <p className="text-[10px] text-slate-500 font-bold">{t("optUnansweredSub")}</p>
+                  <p className="text-xs text-slate-500 font-bold">{t("optUnansweredSub")}</p>
                 </div>
               </button>
 
@@ -176,7 +176,7 @@ export default function ServiceFeedbackModal({
                 </div>
                 <div>
                   <h4 className="font-black text-xs">{t("optReport")}</h4>
-                  <p className="text-[10px] text-slate-500 font-bold">{t("optReportSub")}</p>
+                  <p className="text-xs text-slate-500 font-bold">{t("optReportSub")}</p>
                 </div>
               </button>
 
@@ -203,7 +203,7 @@ export default function ServiceFeedbackModal({
 
             {selectedOption === "unsatisfied" && (
               <div className="flex flex-col gap-1.5">
-                <label className="text-[11px] font-black text-red-900">
+                <label className="text-xs font-black text-red-900">
                   {t("describeIssue")}
                 </label>
                 <textarea
@@ -222,9 +222,9 @@ export default function ServiceFeedbackModal({
                 type="button"
                 disabled={loading || !selectedOption}
                 onClick={handleSubmitFeedback}
-                className="w-full py-3 bg-slate-900 hover:bg-slate-800 disabled:opacity-50 text-white font-black text-xs uppercase tracking-wider rounded-2xl shadow-sm cursor-pointer flex items-center justify-center gap-2"
+                className="w-full py-3 btn-primary text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
               >
-                {loading ? <Loader2 className="w-4 h-4 animate-spin" /> : <span>{t("submitFeedback")}</span>}
+                {loading ? <Loader2 className="w-4 h-4 animate-spin text-[#0F172A]" /> : <span>{t("submitFeedback")}</span>}
               </button>
 
               <button

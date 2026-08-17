@@ -161,7 +161,7 @@ export default function UniversalSearchBar() {
               {/* Category 1: Selling / Looking For */}
               {results.classifieds.length > 0 && (
                 <div className="flex flex-col gap-1.5">
-                  <div className="flex items-center justify-between px-1 text-[10px] font-black uppercase text-yellow-750 tracking-wider">
+                  <div className="flex items-center justify-between px-1 text-xs font-black uppercase text-yellow-750 tracking-wider">
                     <span className="flex items-center gap-1">
                       <Building className="w-3 h-3 text-yellow-600" />
                       Selling / Looking For ({results.classifieds.length})
@@ -196,7 +196,7 @@ export default function UniversalSearchBar() {
                             </span>
                           )}
                         </div>
-                        <div className="flex items-center justify-between text-[10px] text-slate-500 font-bold mt-1">
+                        <div className="flex items-center justify-between text-xs text-slate-500 font-bold mt-1">
                           <span className="flex items-center gap-1">
                             <MapPin className="w-3 h-3 text-slate-400" />
                             {item.area_tag}
@@ -212,7 +212,7 @@ export default function UniversalSearchBar() {
               {/* Category 2: Local Service */}
               {results.services.length > 0 && (
                 <div className="flex flex-col gap-1.5">
-                  <div className="flex items-center justify-between px-1 text-[10px] font-black uppercase text-yellow-750 tracking-wider">
+                  <div className="flex items-center justify-between px-1 text-xs font-black uppercase text-yellow-750 tracking-wider">
                     <span className="flex items-center gap-1">
                       <Wrench className="w-3 h-3 text-yellow-600" />
                       Local Service ({results.services.length})
@@ -241,11 +241,11 @@ export default function UniversalSearchBar() {
                           <h4 className="font-heading font-extrabold text-xs text-slate-800 line-clamp-1">
                             {item.name}
                           </h4>
-                          <span className="bg-yellow-50 border border-yellow-200 text-yellow-750 font-bold px-1.5 py-0.5 rounded text-[9px] uppercase shrink-0">
+                          <span className="bg-yellow-50 border border-yellow-200 text-yellow-750 font-bold px-1.5 py-0.5 rounded text-xs uppercase shrink-0">
                             {item.skill_category}
                           </span>
                         </div>
-                        <div className="flex items-center justify-between text-[10px] text-slate-500 font-bold mt-1">
+                        <div className="flex items-center justify-between text-xs text-slate-500 font-bold mt-1">
                           <span className="flex items-center gap-1">
                             <MapPin className="w-3 h-3 text-slate-400" />
                             {item.area_tag}
@@ -270,7 +270,7 @@ export default function UniversalSearchBar() {
               {/* Category 3: Local Offer */}
               {results.shops.length > 0 && (
                 <div className="flex flex-col gap-1.5">
-                  <div className="flex items-center justify-between px-1 text-[10px] font-black uppercase text-yellow-750 tracking-wider">
+                  <div className="flex items-center justify-between px-1 text-xs font-black uppercase text-yellow-750 tracking-wider">
                     <span className="flex items-center gap-1">
                       <Store className="w-3 h-3 text-yellow-600" />
                       Local Offer ({results.shops.length})
@@ -299,11 +299,11 @@ export default function UniversalSearchBar() {
                           <h4 className="font-heading font-extrabold text-xs text-slate-800 line-clamp-1">
                             {item.shop_name}
                           </h4>
-                          <span className="text-amber-600 font-extrabold text-[10px] line-clamp-1">
+                          <span className="text-amber-600 font-extrabold text-xs line-clamp-1">
                             {item.offer_title}
                           </span>
                         </div>
-                        <div className="flex items-center justify-between text-[10px] text-slate-500 font-bold mt-1">
+                        <div className="flex items-center justify-between text-xs text-slate-500 font-bold mt-1">
                           <span className="flex items-center gap-1">
                             <MapPin className="w-3 h-3 text-slate-400" />
                             {item.area_tag}

@@ -37,16 +37,16 @@ export default function GlobalError({
         <div className="flex items-center gap-3 w-full mt-2">
           <button
             onClick={() => reset()}
-            className="flex-1 h-10 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-bold px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition-all cursor-pointer shadow-xs border border-yellow-400"
+            className="flex-1 py-3 btn-primary text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer"
           >
-            <RefreshCw className="w-4 h-4" />
+            <RefreshCw className="w-4 h-4 text-[#0F172A]" />
             <span>Try Again</span>
           </button>
           <Link
             href="/"
-            className="flex-1 h-10 bg-slate-100 hover:bg-slate-200 text-slate-800 font-bold px-4 rounded-xl text-xs flex items-center justify-center gap-2 transition-all cursor-pointer border border-slate-200"
+            className="flex-1 py-3 btn-secondary text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer"
           >
-            <Home className="w-4 h-4 text-slate-600" />
+            <Home className="w-4 h-4 text-[#0F172A]" />
             <span>Home</span>
           </Link>
         </div>

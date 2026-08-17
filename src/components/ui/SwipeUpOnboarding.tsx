@@ -94,7 +94,7 @@ export default function SwipeUpOnboarding({
             <h1 className="font-heading font-black text-base text-white leading-tight">
               Namma Thanjai
             </h1>
-            <p className="text-[10px] text-amber-400 font-bold tracking-wider">
+            <p className="text-xs text-amber-400 font-bold tracking-wider">
               Thanjavur Direct Network
             </p>
           </div>
@@ -130,7 +130,7 @@ export default function SwipeUpOnboarding({
               {/* Main Visual Reel Card */}
               <div className="flex-1 flex flex-col items-center justify-center z-10">
                 {/* Step Badge */}
-                <span className={`text-[10px] font-black uppercase tracking-widest px-3 py-1 rounded-full border shadow-sm ${slide.badgeColor}`}>
+                <span className={`text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full border shadow-sm ${slide.badgeColor}`}>
                   {slide.badgeEn}
                 </span>
 
@@ -203,7 +203,7 @@ export default function SwipeUpOnboarding({
 
                 <div
                   onClick={() => scrollToSlide(idx + 1)}
-                  className="flex flex-col items-center gap-0.5 text-slate-400 text-[11px] font-bold cursor-pointer animate-bounce mt-1"
+                  className="flex flex-col items-center gap-0.5 text-slate-400 text-xs font-bold cursor-pointer animate-bounce mt-1"
                 >
                   <ChevronUp className="w-4 h-4 text-amber-400" />
                   <span>Swipe Up to Proceed (Instagram Feed Style)</span>

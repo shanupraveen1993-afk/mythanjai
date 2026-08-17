@@ -336,7 +336,7 @@ export default function ChatClientPage() {
             <p className="text-xs text-slate-700 font-semibold leading-relaxed">
               Caution: Detected transaction term <span className="font-bold text-red-600 uppercase">"{detectedKeyword}"</span>.
             </p>
-            <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-[11px] text-red-800 font-bold text-left leading-normal">
+            <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-xs text-red-800 font-bold text-left leading-normal">
               ⚠️ Never send advance payments, GPay token money, or UPI links before physically inspecting the item in person.
             </div>
             <button
@@ -366,7 +366,7 @@ export default function ChatClientPage() {
             </div>
             <div className="min-w-0">
               <h3 className="font-bold text-sm leading-tight text-white truncate">{activePeerName}</h3>
-              <p className="text-[10px] text-emerald-100 truncate max-w-[200px]">{activeListingTitle}</p>
+              <p className="text-xs text-emerald-100 truncate max-w-[200px]">{activeListingTitle}</p>
             </div>
           </div>
         ) : (
@@ -381,11 +381,11 @@ export default function ChatClientPage() {
                 <span className="font-heading font-bold tracking-tight text-white text-xs sm:text-sm uppercase">
                   namma thanjai
                 </span>
-                <span className="bg-emerald-400 text-slate-950 font-black text-[9px] px-1.5 py-0.2 rounded-md uppercase">
+                <span className="bg-emerald-400 text-slate-950 font-black text-xs px-1.5 py-0.2 rounded-md uppercase">
                   CHAT
                 </span>
               </div>
-              <span className="text-[10px] text-emerald-100 font-medium">All Conversations</span>
+              <span className="text-xs text-emerald-100 font-medium">All Conversations</span>
             </div>
           </div>
         )}
@@ -414,7 +414,7 @@ export default function ChatClientPage() {
               </div>
               <h2 className="font-heading font-bold text-sm text-slate-800">In-App Chats</h2>
             </div>
-            <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+            <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
               Scam Protected
             </span>
           </div>
@@ -453,17 +453,17 @@ export default function ChatClientPage() {
                 <div className="min-w-0 flex-1">
                   <div className="flex items-center justify-between">
                     <h3 className="font-bold text-xs text-slate-800 truncate">{t.peerName}</h3>
-                    <span className="text-[9px] text-slate-400 font-medium">{formatTime(t.lastTimestamp)}</span>
+                    <span className="text-xs text-slate-400 font-medium">{formatTime(t.lastTimestamp)}</span>
                   </div>
-                  <p className="text-[11px] font-semibold text-emerald-800 truncate mt-0.5">{t.listingTitle}</p>
-                  <p className="text-[11px] text-slate-500 truncate">{t.lastMessage}</p>
+                  <p className="text-xs font-semibold text-emerald-800 truncate mt-0.5">{t.listingTitle}</p>
+                  <p className="text-xs text-slate-500 truncate">{t.lastMessage}</p>
                 </div>
               </div>
             ))}
           </div>
 
           {/* Safety Footer Note */}
-          <div className="p-3 bg-slate-50 border-t border-slate-200 text-[10px] text-slate-500 font-medium flex items-center gap-1.5">
+          <div className="p-3 bg-slate-50 border-t border-slate-200 text-xs text-slate-500 font-medium flex items-center gap-1.5">
             <Lock className="w-3 h-3 text-emerald-600 shrink-0" />
             <span>Phone numbers are masked to prevent scam scraping.</span>
           </div>
@@ -476,7 +476,7 @@ export default function ChatClientPage() {
           {/* Mobile Active Contact Bar — hidden since header now handles this */}
 
           {/* PERMANENT TOP SCAM SAFETY BANNER */}
-          <div className="bg-amber-500 text-slate-950 px-4 py-2 flex items-center gap-2 text-[10px] font-bold border-b border-amber-400">
+          <div className="bg-amber-500 text-slate-950 px-4 py-2 flex items-center gap-2 text-xs font-bold border-b border-amber-400">
             <AlertTriangle className="w-4 h-4 shrink-0 stroke-[2.5]" />
             <span>
               Safety Alert: Never send advance payments or UPI transfers before physically inspecting the item in person.
@@ -489,7 +489,7 @@ export default function ChatClientPage() {
               <div className="my-auto text-center flex flex-col items-center gap-2 text-slate-500 bg-white/80 p-4 rounded-xl border border-slate-200/80 max-w-xs mx-auto">
                 <ShieldCheck className="w-8 h-8 text-[#00a884]" />
                 <h4 className="font-bold text-xs text-slate-800">Scam-Protected Chat</h4>
-                <p className="text-[11px] font-medium text-slate-600">
+                <p className="text-xs font-medium text-slate-600">
                   Type below to message the seller safely without revealing your personal phone number.
                 </p>
               </div>
@@ -506,7 +506,7 @@ export default function ChatClientPage() {
                       }`}
                     >
                       {highlightFlaggedText(msg.text)}
-                      <div className="flex items-center justify-end gap-1 mt-1 text-[9px] text-slate-500">
+                      <div className="flex items-center justify-end gap-1 mt-1 text-xs text-slate-500">
                         <span>{formatTime(msg.timestamp)}</span>
                         {isMe && <CheckCheck className="w-3 h-3 text-emerald-600" />}
                       </div>

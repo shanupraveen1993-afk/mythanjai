@@ -219,7 +219,7 @@ export default function CategoryFeedClient({ segmentType }: CategoryFeedClientPr
         />
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/80 to-transparent" />
         <div className="relative z-10 flex flex-col gap-2 max-w-lg">
-          <span className="inline-block bg-yellow-500 text-slate-950 font-black text-[10px] px-2.5 py-0.5 rounded-full uppercase tracking-widest w-fit">
+          <span className="inline-block bg-[#FBBF24] text-[#0F172A] font-black text-xs px-2.5 py-0.5 rounded-full uppercase tracking-widest w-fit border-b border-[#D97706]">
             {config.heroBadge} · Thanjavur
           </span>
           <h1 className="font-heading font-black text-2xl sm:text-3xl text-white leading-tight">
@@ -270,9 +270,9 @@ export default function CategoryFeedClient({ segmentType }: CategoryFeedClientPr
               }
               setIsModalOpen(true);
             }}
-            className="flex items-center gap-1.5 bg-yellow-500 hover:bg-yellow-400 active:scale-95 text-slate-950 font-black px-3 py-1.5 rounded-xl text-xs uppercase tracking-wider transition-all border border-yellow-400 shrink-0 shadow-sm cursor-pointer"
+            className="flex items-center gap-1.5 btn-primary text-xs uppercase tracking-wider cursor-pointer shrink-0"
           >
-            <Plus className="w-3.5 h-3.5 stroke-[3]" />
+            <Plus className="w-3.5 h-3.5 stroke-[3] text-[#0F172A]" />
             <span className="hidden sm:inline">{config.postLabel}</span>
             <span className="sm:hidden">Post</span>
           </button>
@@ -282,7 +282,7 @@ export default function CategoryFeedClient({ segmentType }: CategoryFeedClientPr
         <div className="flex overflow-x-auto scrollbar-none gap-1.5 pb-0.5">
           <button
             onClick={() => setSelectedSub(null)}
-            className={`shrink-0 text-[11px] font-black px-3 py-1 rounded-full border transition-all ${
+            className={`shrink-0 text-xs font-black px-3 py-1 rounded-full border transition-all ${
               !selectedSub
                 ? "bg-slate-900 text-white border-slate-900"
                 : "bg-white text-slate-600 border-slate-200 hover:border-slate-400"
@@ -294,9 +294,9 @@ export default function CategoryFeedClient({ segmentType }: CategoryFeedClientPr
             <button
               key={cat}
               onClick={() => setSelectedSub(selectedSub === cat ? null : cat)}
-              className={`shrink-0 text-[11px] font-black px-3 py-1 rounded-full border transition-all whitespace-nowrap ${
+              className={`shrink-0 text-xs font-black px-3 py-1 rounded-full border transition-all whitespace-nowrap ${
                 selectedSub === cat
-                  ? "bg-yellow-500 text-slate-900 border-yellow-500"
+                  ? "bg-[#FBBF24] text-[#0F172A] border-b-2 border-[#D97706]"
                   : "bg-white text-slate-600 border-slate-200 hover:border-slate-400"
               }`}
             >
@@ -308,14 +308,14 @@ export default function CategoryFeedClient({ segmentType }: CategoryFeedClientPr
 
       {/* ── Results count ─────────────────────────────── */}
       <div className="px-4 sm:px-6 pt-3 pb-1 flex items-center justify-between">
-        <span className="text-[11px] font-black text-slate-500 uppercase tracking-wider">
+        <span className="text-xs font-black text-slate-500 uppercase tracking-wider">
           {sortedPosts.length} {sortedPosts.length === 1 ? "result" : "results"}
           {selectedSub ? ` in "${selectedSub}"` : ""}
         </span>
         {selectedSub && (
           <button
             onClick={() => setSelectedSub(null)}
-            className="text-[11px] font-black text-slate-500 hover:text-slate-900 transition-colors underline"
+            className="text-xs font-black text-slate-500 hover:text-slate-900 transition-colors underline"
           >
             Clear filter
           </button>
@@ -337,7 +337,7 @@ export default function CategoryFeedClient({ segmentType }: CategoryFeedClientPr
             </div>
             <button
               onClick={() => setIsModalOpen(true)}
-              className="bg-yellow-500 hover:bg-yellow-400 text-slate-900 font-black text-xs px-5 py-2.5 rounded-xl border border-yellow-400 transition-all"
+              className="btn-primary text-xs px-5 py-2.5 uppercase tracking-wider cursor-pointer"
             >
               + {config.postLabel}
             </button>

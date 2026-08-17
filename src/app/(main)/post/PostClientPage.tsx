@@ -15,6 +15,7 @@ import {
   OFFER_CATEGORIES,
   TanjoreLocality,
 } from "@/lib/constants";
+import { validatePostContent } from "@/lib/moderation";
 import {
   ArrowLeft,
   Upload,
@@ -48,6 +49,7 @@ export default function PostClientPage() {
 
   // Form Fields
   const [phone, setPhone] = useState("");
+  const [showPhone, setShowPhone] = useState(false);
   const [area, setArea] = useState<string>(TANJORE_LOCALITIES[0]);
   const [category, setCategory] = useState<string>("");
   const [title, setTitle] = useState("");
@@ -57,6 +59,7 @@ export default function PostClientPage() {
   const [address, setAddress] = useState("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
+  const [validationError, setValidationError] = useState<string | null>(null);
 
   // Sync profile phone
   useEffect(() => {
@@ -74,11 +77,16 @@ export default function PostClientPage() {
     } else if (segment === "offer") {
       setCategory(SHOP_CATEGORIES[0]);
     }
+    setValidationError(null);
   }, [segment]);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
+      if (file.size > 5 * 1024 * 1024) {
+        alert("File size exceeds 5 MB. Please select a smaller image under 5 MB.");
+        return;
+      }
       setSelectedImage(file);
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -90,8 +98,34 @@ export default function PostClientPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setValidationError(null);
+
+    // 1. Title & Description Length Checks
     if (!title.trim()) {
-      alert("Please enter a title for your posting.");
+      setValidationError("Please enter a title for your posting.");
+      return;
+    }
+    if (title.length > 70) {
+      setValidationError("Title must not exceed 70 characters.");
+      return;
+    }
+    if (description.length > 500) {
+      setValidationError("Description must not exceed 500 characters.");
+      return;
+    }
+
+    // 2. Prohibited Keyword Moderation Check
+    const moderationResult = validatePostContent(title, description);
+    if (!moderationResult.isClean) {
+      setValidationError(`Your post contains prohibited or unsafe term: "${moderationResult.matchedWord}". Please revise before posting.`);
+      return;
+    }
+
+    // 3. Indian Phone Number Regex Validation (10 digits starting with 6-9)
+    const sanitizedPhone = phone.replace(/\D/g, "").slice(-10);
+    const phoneRegex = /^[6-9]\d{9}$/;
+    if (showPhone && !phoneRegex.test(sanitizedPhone)) {
+      setValidationError("Please enter a valid 10-digit Indian mobile number (e.g. 9876543210).");
       return;
     }
 
@@ -100,8 +134,8 @@ export default function PostClientPage() {
     try {
       let imageUrl = "";
 
-      // 1. Upload image if selected
-      if (selectedImage) {
+      // Upload image if selected (Only if not Need segment)
+      if (selectedImage && segment !== "need") {
         try {
           const compressed = await compressImage(selectedImage);
           const storageRef = ref(storage, `postings/${Date.now()}_${selectedImage.name}`);
@@ -123,18 +157,19 @@ export default function PostClientPage() {
         userId: uid,
         category,
         area_tag: area,
-        phone: phone || "9876543210",
+        phone: sanitizedPhone || "9876543210",
+        show_phone: showPhone,
         created_at: new Date().toISOString(),
         is_verified: true,
       };
 
-      // 2. Submit to correct Firestore collection with LocalStorage fallback
+      // Submit to correct Firestore collection with LocalStorage fallback
       if (segment === "sell" || segment === "need") {
         localPostRecord.type = segment === "sell" ? "SELL" : "NEED";
         localPostRecord.title = title.trim();
         localPostRecord.description = description.trim();
         localPostRecord.price = price ? parseFloat(price) : null;
-        localPostRecord.image_url = imagePreview || imageUrl || "/thanjavur_temple_illustration.png";
+        localPostRecord.image_url = segment === "need" ? "" : (imagePreview || imageUrl || "/thanjavur_temple_illustration.png");
 
         try {
           await addDoc(collection(db, "needs_and_sales"), {
@@ -146,8 +181,9 @@ export default function PostClientPage() {
             category,
             area_tag: area,
             price: price ? parseFloat(price) : null,
-            phone: phone || "9876543210",
-            image_url: imageUrl || "/thanjavur_temple_illustration.png",
+            phone: sanitizedPhone || "9876543210",
+            show_phone: showPhone,
+            image_url: segment === "need" ? "" : (imageUrl || "/thanjavur_temple_illustration.png"),
             is_verified: true,
             created_at: timestamp,
             expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
@@ -161,6 +197,7 @@ export default function PostClientPage() {
         localPostRecord.experience = experience || "5+ Years";
         localPostRecord.working_hours = "9 AM – 8 PM";
         localPostRecord.description = description.trim();
+        localPostRecord.image_url = imagePreview || imageUrl || "";
 
         try {
           await addDoc(collection(db, "services"), {
@@ -169,7 +206,8 @@ export default function PostClientPage() {
             skill_category: category,
             experience: experience || "5+ Years",
             area_tag: area,
-            phone: phone || "9876543210",
+            phone: sanitizedPhone || "9876543210",
+            show_phone: showPhone,
             rating: 5.0,
             description: description.trim(),
             image_url: imageUrl,
@@ -192,7 +230,8 @@ export default function PostClientPage() {
             shop_name: title.trim(),
             category,
             area_tag: area,
-            phone: phone || "9876543210",
+            phone: sanitizedPhone || "9876543210",
+            show_phone: showPhone,
             image_url: imageUrl || "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&auto=format&fit=crop",
             latitude: 10.7870,
             longitude: 79.1378,
@@ -276,6 +315,13 @@ export default function PostClientPage() {
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="flex flex-col gap-6 bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+          {/* Validation Alert */}
+          {validationError && (
+            <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-2xl text-xs font-bold text-rose-800 flex items-center gap-2 animate-shake">
+              <span>⚠️ {validationError}</span>
+            </div>
+          )}
+
           {/* Segment Selector Tabs */}
           <div className="flex flex-col gap-2">
             <label className="text-xs font-black text-slate-700 uppercase tracking-wider">
@@ -309,14 +355,20 @@ export default function PostClientPage() {
             </div>
           </div>
 
-          {/* Title */}
+          {/* Title (Max 70 Characters) */}
           <div className="flex flex-col gap-2">
-            <label className="text-xs font-black text-slate-700 uppercase tracking-wider">
-              Title / Item Name *
-            </label>
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-black text-slate-700 uppercase tracking-wider">
+                Title / Item Name *
+              </label>
+              <span className={`text-xs font-bold ${title.length > 70 ? "text-rose-600" : "text-slate-400"}`}>
+                {title.length}/70
+              </span>
+            </div>
             <input
               type="text"
               required
+              maxLength={70}
               placeholder={
                 segment === "sell"
                   ? "e.g. 2 BHK House for Rent / Hero Splendor 2022"
@@ -402,29 +454,62 @@ export default function PostClientPage() {
             </div>
           )}
 
-          {/* Contact Phone */}
-          <div className="flex flex-col gap-2">
-            <label className="text-xs font-black text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-              <Phone className="w-3.5 h-3.5 text-slate-400" />
-              Contact Phone Number *
-            </label>
-            <input
-              type="tel"
-              required
-              placeholder="e.g. 9876543210"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-2xl bg-slate-50 focus:bg-white focus:outline-none focus:border-slate-900"
-            />
+          {/* Phone Privacy Toggle & Number Entry */}
+          <div className="flex flex-col gap-3 p-4 bg-slate-50 border border-slate-200 rounded-2xl">
+            <div className="flex items-center justify-between">
+              <div className="flex flex-col gap-0.5">
+                <span className="text-xs font-black text-slate-800 uppercase tracking-wider">
+                  Make Phone Number Publicly Visible?
+                </span>
+                <span className="text-xs text-slate-500 font-medium">
+                  {showPhone ? "⚠️ Enabling this makes your phone number publicly visible." : "🔒 Default OFF: Direct contact via In-App Chat only."}
+                </span>
+              </div>
+              <button
+                type="button"
+                onClick={() => setShowPhone(!showPhone)}
+                className={`w-12 h-6 rounded-full transition-colors relative cursor-pointer ${
+                  showPhone ? "bg-amber-500" : "bg-slate-300"
+                }`}
+              >
+                <div
+                  className={`w-5 h-5 rounded-full bg-white shadow-md transform transition-transform absolute top-0.5 left-0.5 ${
+                    showPhone ? "translate-x-6" : "translate-x-0"
+                  }`}
+                />
+              </button>
+            </div>
+
+            <div className="flex flex-col gap-1.5 mt-1">
+              <label className="text-xs font-black text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                <Phone className="w-3.5 h-3.5 text-slate-400" />
+                Contact Mobile Number (10 Digits) *
+              </label>
+              <input
+                type="tel"
+                required
+                maxLength={10}
+                placeholder="e.g. 9876543210"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-2xl bg-white focus:outline-none focus:border-slate-900"
+              />
+            </div>
           </div>
 
-          {/* Description */}
+          {/* Description (Max 500 Characters) */}
           <div className="flex flex-col gap-2">
-            <label className="text-xs font-black text-slate-700 uppercase tracking-wider">
-              Description / Details
-            </label>
+            <div className="flex items-center justify-between">
+              <label className="text-xs font-black text-slate-700 uppercase tracking-wider">
+                Description / Details
+              </label>
+              <span className={`text-xs font-bold ${description.length > 500 ? "text-rose-600" : "text-slate-400"}`}>
+                {description.length}/500
+              </span>
+            </div>
             <textarea
               rows={3}
+              maxLength={500}
               placeholder="Describe your item, house rental features, or offer details..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -432,34 +517,40 @@ export default function PostClientPage() {
             />
           </div>
 
-          {/* Image Upload */}
-          <div className="flex flex-col gap-2">
-            <label className="text-xs font-black text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
-              <Camera className="w-3.5 h-3.5 text-slate-400" />
-              Attach Photo (Optional)
-            </label>
-            <input
-              type="file"
-              accept="image/*"
-              onChange={handleImageChange}
-              className="text-xs text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-slate-100 file:text-slate-800 hover:file:bg-slate-200 cursor-pointer"
-            />
-            {imagePreview && (
-              <div className="w-32 h-24 rounded-2xl overflow-hidden border border-slate-200 mt-2 relative">
-                <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
-              </div>
-            )}
-          </div>
+          {/* Media Upload Matrix (Disabled for Need) */}
+          {segment === "need" ? (
+            <div className="p-4 bg-amber-50/70 border border-amber-200/80 rounded-2xl text-xs font-bold text-amber-900 flex items-center gap-2">
+              <span>📢 Need posts are strictly text-only (0 media files allowed).</span>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-2">
+              <label className="text-xs font-black text-slate-700 uppercase tracking-wider flex items-center gap-1.5">
+                <Camera className="w-3.5 h-3.5 text-slate-400" />
+                Attach Photo (&lt; 800 KB Compressed)
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageChange}
+                className="text-xs text-slate-600 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-slate-100 file:text-slate-800 hover:file:bg-slate-200 cursor-pointer"
+              />
+              {imagePreview && (
+                <div className="w-32 h-24 rounded-2xl overflow-hidden border border-slate-200 mt-2 relative">
+                  <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Submit Button */}
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-4 bg-yellow-500 hover:bg-yellow-400 active:scale-[0.99] text-slate-950 font-black text-sm uppercase tracking-wider rounded-2xl border border-yellow-400 shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer mt-2"
+            className="w-full py-4 btn-primary text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer mt-2"
           >
             {loading ? (
               <>
-                <Loader2 className="w-5 h-5 animate-spin" />
+                <Loader2 className="w-5 h-5 animate-spin text-[#0F172A]" />
                 <span>Publishing Post...</span>
               </>
             ) : (

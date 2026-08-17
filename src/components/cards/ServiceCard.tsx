@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { Phone, MessageSquare, Award, MapPin, Zap, Droplet, Hammer, Wind, Wrench, Eye, Share2, Bookmark, AlertTriangle, Calendar, Paintbrush, Car, Sparkles, Star, Check } from "lucide-react";
+import { Phone, MessageSquare, Award, MapPin, Zap, Droplet, Hammer, Wind, Wrench, Eye, Share2, Bookmark, AlertTriangle, Calendar, Paintbrush, Car, Sparkles, Star, Check, Flag } from "lucide-react";
 import { ServiceProviderPost } from "@/types";
 import { formatRelativeTime } from "@/lib/constants";
 import ServiceFeedbackModal from "@/components/modals/ServiceFeedbackModal";
@@ -11,6 +11,7 @@ import PreContactVerificationModal from "@/components/modals/PreContactVerificat
 
 import { useAuth } from "@/hooks/use-auth";
 import { useLanguage } from "@/context/LanguageContext";
+import { reportListing } from "@/lib/moderation";
 
 interface ServiceCardProps {
   post: ServiceProviderPost;
@@ -119,7 +120,12 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
 
   const handleReport = (e: React.MouseEvent) => {
     e.stopPropagation();
-    toast.success("Thank you! Listing reported to admin for verification.");
+    const result = reportListing(post.id, "Inappropriate content");
+    if (result.isQuarantined) {
+      toast.error("This service provider listing has been sent for moderation review.");
+    } else {
+      toast.success("Thank you! Listing reported to admin for verification.");
+    }
   };
 
   const handleToggleSave = (e: React.MouseEvent) => {
@@ -170,84 +176,95 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
   };
 
   return (
-    <div className="bg-white rounded-2xl p-4 flex flex-col gap-3 shadow-[0_3px_8px_rgba(0,0,0,0.04)] transition-all duration-200 font-sans border border-slate-200/80 relative group card-lift">
+    <div className="bg-white rounded-2xl p-4 sm:p-5 flex flex-col gap-3 shadow-[0_3px_12px_rgba(0,0,0,0.05)] hover:shadow-[0_6px_20px_rgba(15,23,42,0.08)] transition-all duration-200 font-sans border border-slate-200/90 relative group card-lift">
 
-      {/* Top Section: Name & Category Badges */}
-      <div className="flex items-start justify-between gap-2 pr-8">
-        <div className="min-w-0 flex-1">
-          <div className="flex items-center gap-1.5 flex-wrap">
-            <h3 className="font-heading font-bold text-sm sm:text-base text-slate-900 line-clamp-1 truncate">
-              {post.name}
-            </h3>
+      {/* Top Header Row: Name & Badges */}
+      <div className="flex flex-col gap-2">
+        <div className="flex items-start justify-between gap-3">
+          <h3 className="font-heading font-black text-base sm:text-lg text-slate-900 line-clamp-1 leading-snug">
+            {post.name}
+          </h3>
 
-
-          </div>
-
-          <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-            {/* Neutral Slate Craft Category Badge */}
-            <span className="inline-flex items-center gap-1 bg-slate-100 border border-slate-200/80 text-slate-700 font-bold px-2.5 py-0.5 rounded-lg text-[10px]">
-              {getCategoryIllustration(post.skill_category)}
-              <span>{post.skill_category}</span>
+          {/* RATING BADGE: ONLY DISPLAYED IF RATING > 0 */}
+          {hasRating && (
+            <span className="inline-flex items-center gap-1 bg-amber-50 border border-amber-300 text-amber-950 font-black px-2.5 py-0.5 rounded-xl text-xs shadow-2xs shrink-0">
+              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+              <span>{ratingDisplay} ★</span>
             </span>
+          )}
+        </div>
 
-            {/* RATING BADGE: ONLY DISPLAYED IF RATING > 0 */}
-            {hasRating && (
-              <span className="inline-flex items-center gap-1 bg-amber-50 border border-amber-200/80 text-amber-900 font-extrabold px-2.5 py-0.5 rounded-xl text-[10px] shadow-2xs">
-                <Star className="w-3 h-3 fill-amber-400 text-amber-400" />
-                <span>{ratingDisplay}★ Rating</span>
-              </span>
-            )}
-          </div>
+        {/* Category & Locality Meta Row */}
+        <div className="flex items-center gap-2 flex-wrap text-xs">
+          {/* Service Craft Category Badge */}
+          <span className="inline-flex items-center gap-1.5 bg-[#0F172A] text-white font-bold px-2.5 py-1 rounded-lg text-xs border-b border-[#D97706]">
+            {getCategoryIllustration(post.skill_category)}
+            <span>{post.skill_category}</span>
+          </span>
+
+          {/* Locality Tag */}
+          <span className="inline-flex items-center gap-1 text-slate-600 bg-slate-100 px-2.5 py-1 rounded-lg font-bold">
+            <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+            <span>{post.area_tag}</span>
+          </span>
+
+          {/* AVAILABILITY BADGE — PRD §4.3 */}
+          {(post as any).is_available_now !== false ? (
+            <span className="inline-flex items-center gap-1 bg-emerald-50 border border-emerald-300 text-emerald-800 font-black px-2 py-0.5 rounded-lg text-xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse inline-block" />
+              AVAILABLE NOW
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1 bg-slate-100 border border-slate-300 text-slate-500 font-bold px-2 py-0.5 rounded-lg text-xs">
+              <span className="w-1.5 h-1.5 rounded-full bg-slate-400 inline-block" />
+              OFFLINE
+            </span>
+          )}
         </div>
       </div>
 
-      {/* Locality Tag */}
-      <div className="flex items-center gap-1.5 text-xs text-slate-600 bg-slate-50 p-2.5 rounded-xl border border-slate-200/60 font-semibold">
-        <MapPin className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-        <span>{t("location")}: <strong className="text-slate-800">{post.area_tag}</strong></span>
-      </div>
-
-      {/* Description */}
+      {/* Description Box */}
       {post.description && (
-        <div className="bg-slate-50 border border-slate-200/80 p-3 rounded-xl">
-          <p className="text-xs text-slate-700 font-medium leading-relaxed">
-            {post.description}
-          </p>
-        </div>
+        <p className="text-xs text-slate-600 font-medium leading-relaxed line-clamp-3 bg-slate-50/80 border border-slate-200/60 p-3 rounded-xl">
+          {post.description}
+        </p>
       )}
 
-      {/* Social Engagement Bar: Left = Date & Views, Right = Share & Save */}
+      {/* Social Engagement Bar: Left = Date & Views, Right = Share & Save & Report */}
       {!isPreview && (
-        <div className="flex items-center justify-between text-[11px] text-slate-500 font-semibold border-t border-b border-slate-100 py-2 my-0.5">
-          {/* Left: Meta Info (Date & Views) */}
+        <div className="flex items-center justify-between text-xs text-slate-500 font-semibold border-t border-b border-slate-100 py-2 my-0.5">
+          {/* Left: Meta Info (Date Only) */}
           <div className="flex items-center gap-2.5">
-            <span className="flex items-center gap-1 text-slate-400 font-medium">
-              <Calendar className="w-3 h-3 text-slate-400" />
-              <span>{formatRelativeTime(post.created_at)}</span>
-            </span>
-            <span className="text-slate-300">•</span>
             <span className="flex items-center gap-1 text-slate-500 font-medium">
-              <Eye className="w-3.5 h-3.5 text-slate-400" />
-              <span>{viewsCount} {t("views")}</span>
+              <Calendar className="w-3.5 h-3.5 text-slate-400" />
+              <span>{formatRelativeTime(post.created_at)}</span>
             </span>
           </div>
 
-          {/* Right: Actions (Share & Save) */}
-          <div className="flex items-center gap-2.5">
-
+          {/* Right: Actions (Share, Save & Report) */}
+          <div className="flex items-center gap-3">
             <button 
               onClick={handleShare}
               className="flex items-center gap-1 hover:text-slate-800 cursor-pointer transition-colors"
+              title="Share Service"
             >
               <Share2 className="w-3.5 h-3.5 text-slate-400" />
               <span>{sharesCount}</span>
             </button>
             <button 
               onClick={handleToggleSave}
-              className={`flex items-center gap-1 cursor-pointer transition-colors ${saved ? "text-yellow-600 font-bold" : "hover:text-slate-800"}`}
+              className={`flex items-center gap-1 cursor-pointer transition-colors ${saved ? "text-amber-600 font-bold" : "hover:text-slate-800"}`}
+              title={saved ? "Saved" : "Save Service"}
             >
-              <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-yellow-500 text-yellow-600" : "text-slate-400"}`} />
+              <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-amber-500 text-amber-600" : "text-slate-400"}`} />
               <span>{saved ? t("saved") : t("save")}</span>
+            </button>
+            <button
+              onClick={handleReport}
+              className="flex items-center gap-1 text-slate-400 hover:text-rose-600 cursor-pointer transition-colors"
+              title="Report Service"
+            >
+              <Flag className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
@@ -256,38 +273,38 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
       {/* Footer Info & Action CTAs — Single-Line Action Button System */}
       <div className="flex items-center justify-between pt-1 gap-2">
         <span className="text-xs text-slate-500 font-medium shrink-0">
-          <strong className="text-slate-800 font-bold">{contactedCount}</strong> {t("contacted")}
+          <strong className="text-slate-900 font-extrabold">{contactedCount}</strong> {t("contacted")}
         </span>
 
-        <div className="flex items-center gap-1.5 shrink-0 whitespace-nowrap">
-          {/* BLACK WITH YELLOW TEXT BUTTON: Call */}
+        <div className="flex items-center gap-2 shrink-0">
+          {/* PRIMARY CTA: Call */}
           <button
             onClick={(e) => handleOpenPreContactModal(e, "call")}
-            className="flex items-center gap-1.5 h-8.5 bg-slate-950 hover:bg-slate-900 text-yellow-400 font-heading font-black px-3.5 rounded-xl text-xs transition-all duration-200 border border-slate-800 shadow-md cursor-pointer active:scale-95 whitespace-nowrap tracking-wide"
+            className="btn btn-call btn-sm text-xs"
           >
-            <Phone className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" />
+            <Phone className="w-3.5 h-3.5 text-white fill-white" />
             <span>Call</span>
           </button>
 
-          {/* SECONDARY BUTTON: Send Request (One-Time Sent State) */}
+          {/* SECONDARY CTA: Send Request */}
           <button
             disabled={isRequestSent}
             onClick={handleSendRequest}
-            className={`flex items-center gap-1.5 h-8.5 font-bold px-3 rounded-xl text-xs transition-all duration-200 border shadow-2xs whitespace-nowrap ${
+            className={
               isRequestSent
-                ? "bg-emerald-50 text-emerald-800 border-emerald-300 font-extrabold cursor-default opacity-90"
-                : "bg-slate-100 hover:bg-amber-50 hover:border-amber-400/90 text-slate-800 hover:text-amber-950 border-slate-250/90 cursor-pointer active:scale-95"
-            }`}
+                ? "btn btn-sm bg-emerald-50 text-emerald-800 border border-emerald-300 font-bold opacity-90 text-xs"
+                : "btn btn-secondary btn-sm text-xs"
+            }
           >
             {isRequestSent ? (
               <>
                 <Check className="w-3.5 h-3.5 text-emerald-600 stroke-[3]" />
-                <span>✓ Request Sent</span>
+                <span>✓ Sent</span>
               </>
             ) : (
               <>
-                <Zap className="w-3.5 h-3.5 text-slate-500" />
-                <span>Send Request</span>
+                <Zap className="w-3.5 h-3.5 text-slate-700" />
+                <span>Request</span>
               </>
             )}
           </button>

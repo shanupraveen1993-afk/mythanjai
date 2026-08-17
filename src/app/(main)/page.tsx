@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 function RootPageContent() {
   const router = useRouter();
 
-  // Root URL (https://mythanjai.vercel.app/): ALWAYS renders the 3D Mascot Robot Landing Page!
+  // Root URL (https://mythanjai.vercel.app/): Website Landing Page with Folds 2, 3, 4 + Footer!
   return (
     <RobotHero
       showExtraFolds={true}

@@ -133,7 +133,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
               <h3 className="font-heading font-extrabold text-sm text-slate-900">
                 Verification Successful
               </h3>
-              <p className="text-[10px] text-slate-500 mt-1">
+              <p className="text-xs text-slate-500 mt-1">
                 Your WhatsApp number is verified. Directing to target page...
               </p>
             </div>
@@ -144,14 +144,14 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
               <h3 className="font-heading font-extrabold text-sm text-slate-900">
                 WhatsApp Verification
               </h3>
-              <p className="text-[10px] text-slate-500 mt-1">
+              <p className="text-xs text-slate-500 mt-1">
                 Enter your 10-digit mobile number to receive WhatsApp OTP code.
               </p>
             </div>
 
             <form onSubmit={handleSendOtp} className="flex flex-col gap-3">
               <div className="flex flex-col gap-1">
-                <label className="text-[9px] font-black text-slate-400 uppercase tracking-wider">
+                <label className="text-xs font-black text-slate-400 uppercase tracking-wider">
                   WhatsApp Number
                 </label>
                 <div className="relative">
@@ -169,9 +169,9 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
 
               <button
                 type="submit"
-                className="bg-yellow-500 hover:bg-yellow-600 active:scale-95 text-slate-950 font-black w-full py-2.5 rounded-xl text-xs transition-colors shadow-sm flex items-center justify-center gap-1.5 cursor-pointer"
+                className="w-full py-2.5 btn-primary text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
               >
-                <MessageSquare className="w-3.5 h-3.5 text-slate-950" />
+                <MessageSquare className="w-3.5 h-3.5 text-[#0F172A]" />
                 <span>Send WhatsApp OTP →</span>
               </button>
             </form>
@@ -182,7 +182,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
               <h3 className="font-heading font-extrabold text-sm text-slate-900">
                 Enter 6-Digit WhatsApp OTP
               </h3>
-              <p className="text-[10px] text-slate-500 mt-1">
+              <p className="text-xs text-slate-500 mt-1">
                 OTP sent to <strong className="text-slate-900">+91 {phoneNumber}</strong>.
                 <span className="block text-amber-600 font-bold mt-0.5">Testing Code: 123456</span>
               </p>
@@ -190,7 +190,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
 
             <form onSubmit={handleVerifyOtp} className="flex flex-col gap-3">
               <div className="flex flex-col gap-1">
-                <label className="text-[9px] font-black text-slate-400 uppercase tracking-wider">
+                <label className="text-xs font-black text-slate-400 uppercase tracking-wider">
                   6-Digit OTP Code
                 </label>
                 <input
@@ -208,16 +208,16 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
               <button
                 type="submit"
                 disabled={phoneUpdating}
-                className="bg-yellow-500 hover:bg-yellow-600 active:scale-95 text-slate-950 font-black w-full py-2.5 rounded-xl text-xs transition-colors shadow-sm flex items-center justify-center gap-1.5 cursor-pointer"
+                className="w-full py-2.5 btn-primary text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
               >
                 {phoneUpdating ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
+                    <Loader2 className="w-4 h-4 animate-spin text-[#0F172A]" />
                     <span>Verifying OTP...</span>
                   </>
                 ) : (
                   <>
-                    <CheckCircle className="w-3.5 h-3.5 text-slate-950" />
+                    <CheckCircle className="w-3.5 h-3.5 text-[#0F172A]" />
                     <span>Verify OTP & Login</span>
                   </>
                 )}
@@ -227,7 +227,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
                 type="button"
                 onClick={() => setStep("phone")}
                 disabled={phoneUpdating}
-                className="text-[11px] font-bold text-slate-500 hover:text-slate-800 text-center cursor-pointer hover:underline"
+                className="text-xs font-bold text-slate-500 hover:text-slate-800 text-center cursor-pointer hover:underline"
               >
                 ← Change Mobile Number
               </button>

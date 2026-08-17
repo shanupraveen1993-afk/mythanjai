@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { Phone, MessageSquare, MapPin, Store, Sparkles, ShoppingBag, Utensils, Shirt, Calendar, Tag, Camera, Navigation, Eye, Share2, Bookmark, Lock } from "lucide-react";
+import { Phone, MessageSquare, MapPin, Store, Sparkles, ShoppingBag, Utensils, Shirt, Calendar, Tag, Camera, Navigation, Eye, Share2, Bookmark, Lock, Flag } from "lucide-react";
 import { ShopPost } from "@/types";
 import { formatRelativeTime } from "@/lib/constants";
 import { useToast } from "@/context/ToastContext";
@@ -21,6 +21,7 @@ function formatOfferValidity(validFrom?: any, validTo?: any, createdAt?: any) {
 }
 
 import { useLanguage } from "@/context/LanguageContext";
+import { reportListing } from "@/lib/moderation";
 
 interface ShopCardProps {
   post: ShopPost;
@@ -34,14 +35,17 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
   const { t } = useLanguage();
   const [saved, setSaved] = useState(false);
 
-  // Expired offer check logic
-  const isExpired = React.useMemo(() => {
-    if (!post.valid_to) return false;
+  // Expired offer & Ends Today check logic
+  const { isExpired, isEndsToday } = React.useMemo(() => {
+    if (!post.valid_to) return { isExpired: false, isEndsToday: false };
     try {
       const toDate = new Date((post.valid_to as any).seconds ? (post.valid_to as any).seconds * 1000 : post.valid_to);
-      return toDate < new Date();
+      const now = new Date();
+      const expired = toDate < now;
+      const sameDay = toDate.toDateString() === now.toDateString();
+      return { isExpired: expired, isEndsToday: sameDay && !expired };
     } catch (e) {
-      return false;
+      return { isExpired: false, isEndsToday: false };
     }
   }, [post.valid_to]);
 
@@ -99,11 +103,11 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
           <p className="text-xs text-slate-500 font-bold mt-1 line-clamp-2">{post.offer_title}</p>
           <div className="mt-4 h-24 bg-slate-200 rounded-2xl w-full" />
         </div>
-        <div className="absolute inset-0 bg-slate-955/75 backdrop-blur-[2px] flex flex-col items-center justify-center p-6 text-center text-white z-20">
-          <div className="w-12 h-12 rounded-2xl bg-yellow-500 text-slate-955 flex items-center justify-center mb-2.5 shadow-xl animate-bounce">
+        <div className="absolute inset-0 bg-[#0F172A]/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center text-white z-20">
+          <div className="icon-box-dark mb-2.5 animate-bounce">
             <Lock className="w-6 h-6 stroke-[2.5]" />
           </div>
-          <span className="font-heading font-black text-sm text-yellow-400 uppercase tracking-wider">
+          <span className="font-heading font-black text-sm text-[#FBBF24] uppercase tracking-wider">
             Unlock 2nd Offer & Beyond
           </span>
           <p className="text-xs text-slate-200 font-bold mt-1 max-w-[240px] leading-relaxed">
@@ -111,7 +115,7 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
           </p>
           <button
             type="button"
-            className="mt-3.5 bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-500 hover:brightness-105 active:scale-95 text-slate-955 font-heading font-black text-xs px-5 py-2.5 rounded-xl shadow-lg border border-yellow-400 cursor-pointer transition-all"
+            className="mt-3.5 btn btn-primary btn-sm uppercase tracking-wider cursor-pointer"
           >
             Verify WhatsApp to Unlock →
           </button>
@@ -141,7 +145,12 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
 
   const handleReport = (e: React.MouseEvent) => {
     e.stopPropagation();
-    toast.success("Thank you! Listing reported to admin for verification.");
+    const result = reportListing(post.id, "Inappropriate content");
+    if (result.isQuarantined) {
+      toast.error("This store offer has been sent for moderation review.");
+    } else {
+      toast.success("Thank you! Listing reported to admin for verification.");
+    }
   };
 
   const handleToggleSave = (e: React.MouseEvent) => {
@@ -164,21 +173,22 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
 
   return (
     <div className="bg-white rounded-2xl overflow-hidden shadow-[0_3px_8px_rgba(0,0,0,0.04)] transition-all duration-200 flex flex-col relative font-sans border border-slate-200/80 group card-lift">
-      
-      {/* Featured / Expired Overlay */}
+      {/* Featured / Expired / Ends Today Overlay */}
       {isExpired ? (
-        <div className="absolute top-2.5 left-2.5 z-20 bg-rose-600 text-white text-[9px] font-bold px-2.5 py-0.5 rounded-lg flex items-center gap-1 shadow-md">
+        <div className="absolute top-2.5 left-2.5 z-20 bg-rose-600 text-white text-xs font-bold px-2.5 py-0.5 rounded-lg flex items-center gap-1 shadow-md">
           <span>⚠️ Offer Expired</span>
         </div>
+      ) : isEndsToday ? (
+        <div className="absolute top-2.5 left-2.5 z-20 bg-amber-500 text-slate-950 font-black text-xs px-2.5 py-0.5 rounded-lg flex items-center gap-1 shadow-md animate-pulse">
+          <Sparkles className="w-3 h-3 fill-slate-950" />
+          <span>🔥 Ends Today!</span>
+        </div>
       ) : post.is_featured ? (
-        <div className="absolute top-2.5 left-2.5 z-20 bg-yellow-500 text-slate-955 text-[9px] font-semibold px-2 py-0.5 rounded-xl flex items-center gap-1 shadow-md animate-pulse">
+        <div className="absolute top-2.5 left-2.5 z-20 bg-[#FBBF24] text-[#0F172A] text-xs font-semibold px-2 py-0.5 rounded-xl flex items-center gap-1 shadow-md border-b border-[#D97706]">
           <Sparkles className="w-2.5 h-2.5 fill-current" />
           <span>Featured Store</span>
         </div>
       ) : null}
-
-
-
 
       {/* Main Image Box (Compulsory Image / Placeholder Box for 100% Uniform Height) */}
       {images.length > 0 ? (
@@ -224,7 +234,7 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
         )}
 
         {/* 2. Offer Validity Badge */}
-        <div className={`flex items-center gap-1 px-2.5 py-1 rounded-lg border font-bold text-[11px] w-fit ${
+        <div className={`flex items-center gap-1 px-2.5 py-1 rounded-lg border font-bold text-xs w-fit ${
           isExpired ? "text-rose-700 bg-rose-50 border-rose-200" : "text-slate-700 bg-slate-100 border-slate-200"
         }`}>
           <Calendar className="w-3.5 h-3.5 text-slate-500" />
@@ -238,7 +248,7 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
             <span>{post.area_tag || "Thanjavur"}</span>
           </div>
           {post.address_text && (
-            <p className="text-[11px] text-slate-500 font-medium leading-relaxed line-clamp-2 pl-4">
+            <p className="text-xs text-slate-500 font-medium leading-relaxed line-clamp-2 pl-4">
               {post.address_text}
               {post.landmark && (
                 <span className="block mt-0.5 text-slate-700 font-bold truncate">
@@ -264,17 +274,12 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
 
         {/* Social Engagement Bar: Left = Date & Views, Right = Share & Save */}
         {!isPreview && (
-          <div className="flex items-center justify-between text-[11px] text-slate-500 font-semibold border-t border-b border-slate-100 py-2 my-0.5">
-            {/* Left: Meta Info (Date & Views) */}
+          <div className="flex items-center justify-between text-xs text-slate-500 font-semibold border-t border-b border-slate-100 py-2 my-0.5">
+            {/* Left: Meta Info (Date Only) */}
             <div className="flex items-center gap-2.5">
               <span className="flex items-center gap-1 text-slate-400 font-medium">
                 <Calendar className="w-3 h-3 text-slate-400" />
                 <span>{formatRelativeTime(post.created_at)}</span>
-              </span>
-              <span className="text-slate-300">•</span>
-              <span className="flex items-center gap-1 text-slate-500 font-medium">
-                <Eye className="w-3.5 h-3.5 text-slate-400" />
-                <span>{viewsCount} views</span>
               </span>
             </div>
 
@@ -291,35 +296,43 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
               <button 
                 onClick={handleToggleSave}
                 className={`flex items-center gap-1 cursor-pointer transition-colors ${saved ? "text-yellow-600 font-bold" : "hover:text-slate-800"}`}
+                title={saved ? "Saved" : "Save Offer"}
               >
                 <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-yellow-500 text-yellow-600" : "text-slate-400"}`} />
                 <span>{saved ? t("saved") : t("save")}</span>
+              </button>
+              <button
+                onClick={handleReport}
+                className="flex items-center gap-1 text-slate-400 hover:text-rose-600 cursor-pointer transition-colors ml-0.5"
+                title="Report Offer"
+              >
+                <Flag className="w-3.5 h-3.5" />
               </button>
             </div>
           </div>
         )}
 
-        {/* Footer CTAs: Default = Get Direction Full-Width. If show_phone is enabled, show Call/WhatsApp */}
+        {/* Footer CTAs: Master Button Architecture */}
         <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-100 mt-auto">
-          {/* SECONDARY BUTTON: Get Directions */}
+          {/* DIRECTION BUTTON: Get Directions */}
           <a
             href={directionUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex-1 flex items-center justify-center gap-1.5 h-9 bg-slate-100 hover:bg-amber-50 hover:border-amber-400/90 text-slate-800 hover:text-amber-950 font-bold px-4 rounded-xl text-xs transition-all duration-200 border border-slate-250/90 cursor-pointer shadow-2xs active:scale-95"
+            className="btn btn-maps btn-sm flex-1 text-xs"
           >
-            <Navigation className="w-3.5 h-3.5 text-slate-500 fill-slate-500/20" />
+            <Navigation className="w-3.5 h-3.5 text-white" />
             <span>{t("getDirection")}</span>
           </a>
 
           {post.show_phone && (
             <div className="flex items-center gap-2 shrink-0">
-              {/* BLACK WITH YELLOW TEXT BUTTON: Call */}
+              {/* PRIMARY CTA: Call */}
               <a
                 href={callUrl}
-                className="flex items-center gap-1.5 h-9 bg-slate-950 hover:bg-slate-900 text-yellow-400 font-heading font-black px-3.5 rounded-xl text-xs transition-all duration-200 border border-slate-800 cursor-pointer active:scale-95 shadow-md tracking-wide"
+                className="btn btn-call btn-sm text-xs"
               >
-                <Phone className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" />
+                <Phone className="w-3.5 h-3.5 text-white fill-white" />
                 <span>{t("call")}</span>
               </a>
 
@@ -328,7 +341,7 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
                 href={whatsappUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="flex items-center gap-1.5 h-9 bg-[#00a884] hover:bg-[#008f6f] text-white font-bold px-3.5 rounded-xl text-xs transition-all cursor-pointer active:scale-95 shadow-2xs"
+                className="btn btn-whatsapp btn-sm text-xs"
               >
                 <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
                 <span>{t("whatsApp")}</span>

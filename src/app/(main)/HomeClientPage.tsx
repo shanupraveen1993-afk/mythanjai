@@ -7,6 +7,8 @@ import { MapPin, ChevronRight, ShoppingBag, Search, Wrench, Store, ArrowRight, L
 import RobotHero from "@/components/ui/robot-hero";
 import CategoryBridgeFeed from "@/components/home/CategoryBridgeFeed";
 
+import StaticApkCard from "@/components/ui/StaticApkCard";
+
 // ── Shared Preview Card ───────────────────────────────────────────────────────
 
 export interface PreviewCard {
@@ -46,7 +48,7 @@ export function PreviewSection({
             <span className={`inline-block w-2.5 h-2.5 rounded-full ${accentColor}`} />
             {title}
           </h2>
-          <p className="text-[11px] text-slate-500 font-medium mt-0.5">{subtitle}</p>
+          <p className="text-xs text-slate-500 font-bold mt-0.5">{subtitle}</p>
         </div>
         <button
           onClick={() => router.push(seeAllPath)}
@@ -70,18 +72,18 @@ export function PreviewSection({
                   onCardClick();
                 }
               }}
-              className={`shrink-0 w-[260px] sm:w-[290px] md:w-auto snap-start bg-white rounded-2xl overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.04)] hover:shadow-[0_4px_16px_rgba(0,0,0,0.08)] transition-all cursor-pointer border-0 relative group ${
+              className={`shrink-0 w-[260px] sm:w-[290px] md:w-auto snap-start v2-card overflow-hidden transition-all cursor-pointer relative group ${
                 isLocked ? "select-none" : "hover:-translate-y-0.5 active:scale-[0.98]"
               }`}
             >
               {/* Blur overlay for 2nd card onwards in Guest Mode */}
               {isLocked && (
                 <div className="absolute inset-0 bg-slate-950/70 backdrop-blur-md flex flex-col items-center justify-center p-3 text-center text-white z-20 transition-all group-hover:bg-slate-950/80">
-                  <div className="w-8 h-8 rounded-full bg-yellow-500 text-slate-955 flex items-center justify-center mb-1.5 shadow-md animate-pulse">
+                  <div className="w-8 h-8 rounded-full bg-yellow-500 text-slate-950 flex items-center justify-center mb-1.5 shadow-md animate-pulse">
                     <Lock className="w-4 h-4 stroke-[2.5]" />
                   </div>
                   <span className="font-heading font-black text-xs text-yellow-400">Unlock All Offers</span>
-                  <span className="text-[9px] text-slate-300 mt-0.5 font-bold">Verify WhatsApp to view listing</span>
+                  <span className="text-xs text-slate-300 mt-0.5 font-bold">Verify WhatsApp to view listing</span>
                 </div>
               )}
 
@@ -91,7 +93,7 @@ export function PreviewSection({
                   alt={card.title}
                   className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
                 />
-                <span className="absolute top-2 left-2 text-[9px] font-black bg-white/95 text-slate-700 border border-slate-200 px-2 py-0.5 rounded-md shadow-sm">
+                <span className="absolute top-2 left-2 text-xs font-black bg-white/95 text-slate-700 border border-slate-200 px-2 py-0.5 rounded-md shadow-sm">
                   {card.sub}
                 </span>
               </div>
@@ -102,8 +104,8 @@ export function PreviewSection({
                   </h3>
                   <span className="text-xs font-black text-slate-800 shrink-0">{card.price}</span>
                 </div>
-                <div className="flex items-center gap-1 text-[10px] text-slate-400 font-medium">
-                  <MapPin className="w-3 h-3 shrink-0" />
+                <div className="flex items-center gap-1 text-xs text-slate-500 font-medium">
+                  <MapPin className="w-3.5 h-3.5 shrink-0" />
                   <span>{card.area}</span>
                 </div>
               </div>
@@ -122,23 +124,6 @@ export default function HomeClientPage() {
   const { user, profile } = useAuth();
   const isAuthVerified = Boolean(profile?.isVerified);
 
-  // Alert ticker for robot hero
-  const [activeAlertIdx, setActiveAlertIdx] = React.useState(0);
-  const alerts = [
-    "New plot listed in Vallam — 2400 Sqft CMDA approved",
-    "Senthil Electrician: 4.9★ rating, available in Tanjore Town",
-    "GLEN Gallery: Up to 60% OFF — Grand Opening Sale",
-    "New 2 BHK rental listed near Medical College Road",
-    "12 new members joined Namma Thanjavur today!",
-  ];
-
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      setActiveAlertIdx((prev) => (prev + 1) % alerts.length);
-    }, 3200);
-    return () => clearInterval(interval);
-  }, []);
-
   return (
     <div className="w-full flex flex-col gap-8 text-slate-800 font-sans mt-3">
 
@@ -153,7 +138,7 @@ export default function HomeClientPage() {
           {/* Brand Yellow ambient glow */}
           <div className="absolute bottom-0 left-1/4 w-64 h-32 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
           <div className="relative z-10 flex flex-col gap-3 max-w-xl">
-            <span className="text-[10px] font-black uppercase tracking-widest text-amber-400 bg-amber-400/10 border border-amber-400/30 px-3 py-1 rounded-full w-fit animate-glow-pulse">
+            <span className="text-xs font-black uppercase tracking-widest text-amber-400 bg-amber-400/10 border border-amber-400/30 px-3 py-1 rounded-full w-fit">
               THANJAVUR DIRECT DIRECTORY &amp; MARKETPLACE
             </span>
             <h1 className="font-heading font-black text-2xl sm:text-3xl md:text-4xl text-white leading-tight">
@@ -164,6 +149,9 @@ export default function HomeClientPage() {
             </p>
           </div>
         </div>
+
+        {/* ── Static APK Download Banner Card for Web App Visitors ── */}
+        <StaticApkCard variant="dark" />
 
         {/* ── Category Matchmaker Bridge ────────────────── */}
         <CategoryBridgeFeed />

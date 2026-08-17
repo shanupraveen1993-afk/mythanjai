@@ -52,6 +52,12 @@ export default function BottomTabBar({
       icon: Store,
       route: "/shops",
     },
+    {
+      id: "profile" as AppTab,
+      label: "Me",
+      icon: User,
+      route: "/profile",
+    },
   ];
 
   const handleTabClick = (tab: typeof tabs[0]) => {
@@ -73,22 +79,24 @@ export default function BottomTabBar({
             <button
               key={tab.id}
               onClick={() => handleTabClick(tab)}
-              className={`flex flex-col items-center justify-center flex-1 h-full py-1 text-[10px] font-bold transition-all duration-200 ${
+              className={`flex flex-col items-center justify-center flex-1 h-full py-1 text-xs transition-all duration-200 cursor-pointer ${
                 isActive
-                  ? "text-amber-600 scale-105"
-                  : "text-slate-400 hover:text-slate-700"
+                  ? "text-[#0F172A]"
+                  : "text-[#64748B] hover:text-[#0F172A]"
               }`}
             >
               <div
-                className={`p-1.5 rounded-xl transition-all duration-300 ${
+                className={`p-1.5 rounded-xl transition-all duration-200 relative ${
                   isActive
-                    ? "bg-amber-500/15 text-amber-600 scale-110 shadow-sm"
-                    : "bg-transparent text-slate-400"
+                    ? "bg-[#0F172A] text-[#FBBF24] shadow-sm"
+                    : "bg-transparent text-[#64748B]"
                 }`}
               >
-                <Icon className="w-5 h-5 stroke-[2.5]" />
+                <Icon className="w-5 h-5 stroke-[2]" />
               </div>
-              <span className={`mt-0.5 tracking-wide font-heading ${ isActive ? "font-black text-amber-600" : "font-bold"}`}>{tab.label}</span>
+              <span className={`mt-1 text-[12px] tracking-wide font-heading ${isActive ? "font-black text-[#0F172A]" : "font-semibold text-[#64748B]"}`}>
+                {tab.label}
+              </span>
             </button>
           );
         })}

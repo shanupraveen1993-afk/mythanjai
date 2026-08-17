@@ -61,6 +61,41 @@ export default function ProfileClientPage() {
   const [savedPosts, setSavedPosts] = useState<any[]>([]);
   const [postsLoading, setPostsLoading] = useState(true);
 
+  // Provider Availability State
+  const [isAvailableNow, setIsAvailableNow] = useState(() => {
+    if (typeof window === "undefined") return true;
+    return localStorage.getItem("namma_thanjai_provider_availability") !== "offline";
+  });
+
+  const handleToggleAvailability = (newStatus: boolean) => {
+    setIsAvailableNow(newStatus);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("namma_thanjai_provider_availability", newStatus ? "available" : "offline");
+    }
+    toast.success(newStatus ? "Status updated: AVAILABLE NOW (Public)" : "Status updated: OFFLINE");
+  };
+
+  const handleToggleSoldState = (postId: string, currentSold: boolean) => {
+    setMyPosts((prev) =>
+      prev.map((p) => (p.id === postId ? { ...p, is_sold: !currentSold } : p))
+    );
+    if (typeof window !== "undefined") {
+      try {
+        const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+        const updated = stored.map((p: any) => (p.id === postId ? { ...p, is_sold: !currentSold } : p));
+        localStorage.setItem("namma_thanjai_local_posts", JSON.stringify(updated));
+      } catch (e) {}
+    }
+    toast.success(!currentSold ? "Listing marked as SOLD / FULFILLED!" : "Listing reactivated as Active!");
+  };
+
+  const handleRenewListing = (postId: string) => {
+    setMyPosts((prev) =>
+      prev.map((p) => (p.id === postId ? { ...p, created_at: new Date().toISOString() } : p))
+    );
+    toast.success("Listing renewed for another 30 Days!");
+  };
+
   // PWA Install prompt states
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isInstallable, setIsInstallable] = useState(false);
@@ -348,13 +383,13 @@ export default function ProfileClientPage() {
                       type="button"
                       onClick={handleSaveDisplayName}
                       disabled={displayNameUpdating}
-                      className="w-7 h-7 rounded-lg bg-yellow-500 hover:bg-yellow-400 text-slate-955 flex items-center justify-center transition-all cursor-pointer border border-yellow-400 shrink-0 shadow-2xs"
+                      className="w-7 h-7 rounded-lg btn-primary flex items-center justify-center cursor-pointer shrink-0"
                       title="Save Name (Press Enter)"
                     >
                       {displayNameUpdating ? (
-                        <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                        <Loader2 className="w-3.5 h-3.5 animate-spin text-[#0F172A]" />
                       ) : (
-                        <CheckCircle className="w-4 h-4 stroke-[2.5]" />
+                        <CheckCircle className="w-4 h-4 stroke-[2.5] text-[#0F172A]" />
                       )}
                     </button>
                   </div>
@@ -364,7 +399,7 @@ export default function ProfileClientPage() {
                       <h3 className="font-heading font-bold text-sm sm:text-base text-slate-900 line-clamp-1">
                         {profile?.displayName || displayName || "Resident Guest"}
                       </h3>
-                      <p className="text-[10px] text-slate-500 truncate max-w-[140px]">UID: {user?.uid}</p>
+                      <p className="text-xs text-slate-500 truncate max-w-[140px]">UID: {user?.uid}</p>
                     </div>
                     <button
                       onClick={() => setIsEditingName(true)}
@@ -385,7 +420,7 @@ export default function ProfileClientPage() {
                   <Sparkles className="w-3.5 h-3.5 text-yellow-600 fill-yellow-500 shrink-0" />
                   <span>Account Plan</span>
                 </span>
-                <span className="font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-md text-[11px] flex items-center gap-1">
+                <span className="font-bold text-emerald-700 bg-emerald-50 border border-emerald-200/80 px-2 py-0.5 rounded-md text-xs flex items-center gap-1">
                   <span className="line-through text-slate-400 font-medium">₹100</span>
                   <span>₹0 Free</span>
                 </span>
@@ -395,10 +430,51 @@ export default function ProfileClientPage() {
               </p>
             </div>
 
+            {/* Service Provider Availability Hub (Section 3 Page 6 PRD) */}
+            <div className="bg-slate-900 text-white rounded-2xl p-4 flex flex-col gap-2.5 shadow-sm font-sans border border-slate-800">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-black uppercase tracking-wider text-amber-400">
+                  Service Provider Status
+                </span>
+                <span className={`text-xs font-extrabold px-2 py-0.5 rounded-md ${
+                  isAvailableNow ? "bg-emerald-500 text-white animate-pulse" : "bg-slate-700 text-slate-300"
+                }`}>
+                  {isAvailableNow ? "• AVAILABLE NOW" : "OFFLINE"}
+                </span>
+              </div>
+              <p className="text-xs text-slate-300 leading-relaxed font-medium">
+                Control your on-duty availability badge across Local Service feeds in real-time.
+              </p>
+              <div className="grid grid-cols-2 gap-2 mt-1">
+                <button
+                  type="button"
+                  onClick={() => handleToggleAvailability(true)}
+                  className={`py-2 px-2 text-xs font-extrabold rounded-xl border transition-all cursor-pointer ${
+                    isAvailableNow
+                      ? "bg-emerald-600 text-white border-emerald-500 shadow-sm"
+                      : "bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-750"
+                  }`}
+                >
+                  AVAILABLE NOW
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleToggleAvailability(false)}
+                  className={`py-2 px-2 text-xs font-extrabold rounded-xl border transition-all cursor-pointer ${
+                    !isAvailableNow
+                      ? "bg-slate-700 text-white border-slate-600 shadow-sm"
+                      : "bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-750"
+                  }`}
+                >
+                  OFFLINE / BUSY
+                </button>
+              </div>
+            </div>
+
             {/* Verification Status */}
             {isDbVerified ? (
               <div className="flex flex-col gap-2 border-t border-slate-100 pt-2.5">
-                <label className="text-[10px] font-bold text-slate-500 uppercase tracking-wider">
+                <label className="text-xs font-bold text-slate-500 uppercase tracking-wider">
                   Registered Mobile Number (Locked)
                 </label>
                 <div className="flex items-center justify-between bg-emerald-500/10 text-emerald-700 border border-emerald-500/20 px-3 py-2.5 rounded-xl text-xs font-semibold">
@@ -407,7 +483,7 @@ export default function ProfileClientPage() {
                     <span className="truncate max-w-[150px] font-bold">+{profile?.phone || phoneNumber}</span>
                   </div>
                   {isSuperAdmin && (
-                    <span className="text-[9px] bg-amber-500/20 text-amber-700 border border-amber-500/30 px-2 py-0.5 rounded-md flex items-center gap-1 font-bold uppercase shrink-0">
+                    <span className="text-xs bg-amber-500/20 text-amber-700 border border-amber-500/30 px-2 py-0.5 rounded-md flex items-center gap-1 font-bold uppercase shrink-0">
                       <ShieldCheck className="w-3 h-3" />
                       Admin
                     </span>
@@ -417,7 +493,7 @@ export default function ProfileClientPage() {
                   href={`https://wa.me/919994837342?text=${encodeURIComponent(`Hi Admin, I want to change my registered mobile number. My UID is: ${user?.uid}`)}`}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-[10px] font-bold text-amber-700 hover:text-amber-800 text-left cursor-pointer hover:underline pt-0.5 flex items-center gap-1"
+                  className="text-xs font-bold text-amber-700 hover:text-amber-800 text-left cursor-pointer hover:underline pt-0.5 flex items-center gap-1"
                 >
                   <MessageSquare className="w-3 h-3" />
                   Request Mobile Number Change via WhatsApp →
@@ -426,13 +502,13 @@ export default function ProfileClientPage() {
             ) : (
               <div className="flex flex-col gap-3 bg-gradient-to-br from-amber-500/10 via-yellow-500/5 to-amber-500/10 p-4 rounded-2xl border border-amber-500/30 shadow-md font-sans">
                 <div className="flex items-center justify-between">
-                  <label className="text-xs font-heading font-black text-slate-955 flex items-center gap-1.5 uppercase tracking-wide">
+                  <label className="text-xs font-heading font-black text-slate-950 flex items-center gap-1.5 uppercase tracking-wide">
                     <Sparkles className="w-4 h-4 text-amber-500 fill-yellow-400 shrink-0" />
                     <span>Register WhatsApp Mobile</span>
                   </label>
-                  <span className="text-[9px] font-extrabold bg-amber-500/20 text-amber-800 border border-amber-500/30 px-2 py-0.5 rounded-md">Free Member</span>
+                  <span className="text-xs font-extrabold bg-amber-500/20 text-amber-800 border border-amber-500/30 px-2 py-0.5 rounded-md">Free Member</span>
                 </div>
-                <p className="text-[11px] text-slate-600 font-medium">Verify your WhatsApp number to unlock full marketplace contact details, post listings, & chat.</p>
+                <p className="text-xs text-slate-600 font-medium">Verify your WhatsApp number to unlock full marketplace contact details, post listings, & chat.</p>
 
                 {step === "phone" ? (
                   <form onSubmit={handleSendOtp} className="flex flex-col gap-2">
@@ -450,16 +526,16 @@ export default function ProfileClientPage() {
                     <button
                       type="submit"
                       disabled={phoneUpdating}
-                      className="bg-gradient-to-r from-yellow-400 via-amber-500 to-yellow-500 hover:brightness-105 active:scale-95 text-slate-955 font-heading font-black w-full py-2.5 rounded-xl text-xs transition-all border border-yellow-400 shadow-md cursor-pointer flex items-center justify-center gap-1.5"
+                      className="w-full py-2.5 btn-primary text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
                     >
-                      <Zap className="w-4 h-4 text-slate-955 fill-slate-955" />
+                      <Zap className="w-4 h-4 text-[#0F172A] fill-[#0F172A]" />
                       <span>Send WhatsApp OTP →</span>
                     </button>
                   </form>
                 ) : (
                   <form onSubmit={handleVerifyOtp} className="flex flex-col gap-2 animate-fade-in">
                     <div className="flex flex-col gap-1">
-                      <label className="text-[9px] font-black text-slate-500 uppercase tracking-wider">
+                      <label className="text-xs font-black text-slate-500 uppercase tracking-wider">
                         6-Digit OTP (Testing Code: 123456)
                       </label>
                       <input
@@ -476,13 +552,13 @@ export default function ProfileClientPage() {
                     <button
                       type="submit"
                       disabled={phoneUpdating}
-                      className="bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-black w-full py-2.5 rounded-xl text-xs transition-all border border-yellow-400 shadow-md cursor-pointer flex items-center justify-center gap-1.5 active:scale-95"
+                      className="w-full py-2.5 btn-primary text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
                     >
                       {phoneUpdating ? (
-                        <Loader2 className="w-4 h-4 animate-spin text-slate-955" />
+                        <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
                       ) : (
                         <>
-                          <CheckCircle className="w-4 h-4 text-slate-955" />
+                          <CheckCircle className="w-4 h-4 text-slate-950" />
                           <span>Verify OTP & Unlock Profile</span>
                         </>
                       )}
@@ -491,7 +567,7 @@ export default function ProfileClientPage() {
                       type="button"
                       onClick={() => setStep("phone")}
                       disabled={phoneUpdating}
-                      className="text-[11px] font-bold text-slate-500 hover:text-slate-800 text-center cursor-pointer hover:underline mt-1"
+                      className="text-xs font-bold text-slate-500 hover:text-slate-800 text-center cursor-pointer hover:underline mt-1"
                     >
                       ← Change Mobile Number
                     </button>
@@ -504,15 +580,15 @@ export default function ProfileClientPage() {
             {isSuperAdmin && (
               <div className="bg-gradient-to-br from-amber-500/10 via-yellow-500/15 to-amber-600/10 border border-amber-500/30 rounded-2xl p-4 flex flex-col gap-3 shadow-xs font-sans">
                 <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-xl bg-amber-500 text-slate-955 flex items-center justify-center font-bold shadow-xs shrink-0">
+                  <div className="w-9 h-9 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-bold shadow-xs shrink-0">
                     <Shield className="w-5 h-5 stroke-[2.5]" />
                   </div>
                   <div>
                     <h4 className="font-heading font-extrabold text-xs text-slate-900 flex items-center gap-1.5">
                       <span>Admin Moderation & Video Console</span>
-                      <span className="bg-amber-500 text-slate-955 text-[8px] font-black px-1.5 py-0.5 rounded uppercase">9994837342</span>
+                      <span className="bg-amber-500 text-slate-950 text-xs font-black px-1.5 py-0.5 rounded uppercase">9994837342</span>
                     </h4>
-                    <p className="text-[10px] text-slate-600 font-medium leading-tight mt-0.5">
+                    <p className="text-xs text-slate-600 font-medium leading-tight mt-0.5">
                       Approve listings, pin featured deals & upload promo videos to Firebase.
                     </p>
                   </div>
@@ -520,7 +596,7 @@ export default function ProfileClientPage() {
 
                 <Link
                   href="/admin"
-                  className="w-full py-2.5 bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-extrabold text-xs uppercase tracking-wider rounded-xl border border-yellow-400 shadow-sm flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-98"
+                  className="w-full py-2.5 btn-primary text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
                 >
                   <Shield className="w-3.5 h-3.5" />
                   <span>Open Admin Console →</span>
@@ -557,11 +633,11 @@ export default function ProfileClientPage() {
                 <Download className="w-32 h-32 text-slate-950" />
               </div>
               <div className="relative z-10">
-                <h4 className="font-heading font-black text-sm flex items-center gap-1.5 text-slate-955 font-bold">
+                <h4 className="font-heading font-black text-sm flex items-center gap-1.5 text-slate-950 font-bold">
                   <Sparkles className="w-4 h-4 text-amber-100 animate-pulse fill-current" />
                   No Download Needed!
                 </h4>
-                <p className="text-[11px] text-slate-900 mt-1 leading-relaxed">
+                <p className="text-xs text-slate-900 mt-1 leading-relaxed">
                   Click here to add Namma Thanjai directly to your home screen — instant access, zero storage!
                 </p>
               </div>
@@ -580,7 +656,7 @@ export default function ProfileClientPage() {
               <AlertCircle className="w-5 h-5 shrink-0 mt-0.5" />
               <div>
                 <h4 className="text-xs font-bold">Install on iPhone / Safari</h4>
-                <p className="text-[10px] text-muted-foreground mt-1 leading-normal">
+                <p className="text-xs text-muted-foreground mt-1 leading-normal">
                   Tap the **Share** button in Safari, then select **Add to Home Screen**.
                 </p>
               </div>
@@ -627,7 +703,7 @@ export default function ProfileClientPage() {
                 <button
                   onClick={() => setProfileTab("saved_posts")}
                   className={`flex-1 py-1.5 text-xs font-black rounded-lg transition-all cursor-pointer ${
-                    profileTab === "saved_posts" ? "bg-yellow-500 text-slate-955 shadow-2xs" : "text-slate-500 hover:text-slate-800"
+                    profileTab === "saved_posts" ? "bg-[#FBBF24] text-[#0F172A] shadow-2xs border-b-2 border-[#D97706]" : "text-slate-500 hover:text-slate-800"
                   }`}
                 >
                   Saved Bookmarks ({savedPosts.length})
@@ -647,84 +723,117 @@ export default function ProfileClientPage() {
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {myPosts.map((post) => (
-                      <div
-                        key={post.id}
-                        className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5 shadow-xs flex items-center justify-between gap-3 hover:shadow-md transition-shadow animate-fade-in"
-                      >
-                        <div className="flex-1 min-w-0">
-                          <span className="text-[9px] uppercase font-bold text-amber-600 tracking-wider">
-                            {post.colName?.replace(/_/g, " ")}
-                          </span>
-                          <h5 className="font-bold text-xs text-slate-800 truncate mt-0.5">
-                            {post.title || post.name || post.shop_name || "Untitled Listing"}
-                          </h5>
-                          <span className="text-[10px] text-slate-500 block mt-0.5">
-                            {post.area_tag}
-                          </span>
+                    {myPosts.map((post) => {
+                      const createdTime = new Date(post.created_at || Date.now()).getTime();
+                      const daysOld = Math.floor((Date.now() - createdTime) / (1000 * 60 * 60 * 24));
+                      const daysLeft = Math.max(0, 30 - daysOld);
+                      const isRenewable = daysLeft <= 4; // PRD: Renewal unlocks days 26–30 (last 4 days)
+                      const isSold = Boolean(post.is_sold);
 
-                          {/* Offer / Listing Validity Display */}
-                          {post.valid_from && post.valid_to ? (
-                            <span className="text-[9.5px] font-black text-slate-900 bg-[#FFDD9C] px-2 py-0.5 rounded border border-amber-300 inline-block mt-1">
-                              Valid: {post.valid_from} - {post.valid_to}
-                            </span>
-                          ) : (
-                            <span className="text-[9.5px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded inline-block mt-1">
-                              Active Listing
-                            </span>
-                          )}
+                      return (
+                        <div
+                          key={post.id}
+                          className={`bg-slate-50 border rounded-2xl p-4 shadow-xs flex flex-col gap-3 transition-shadow ${
+                            isSold ? "border-slate-300 opacity-75" : "border-slate-200/80 hover:shadow-md"
+                          }`}
+                        >
+                          <div className="flex items-start justify-between gap-2">
+                            <div className="flex-1 min-w-0">
+                              <span className="text-xs uppercase font-extrabold text-amber-600 tracking-wider">
+                                {post.type || post.category || "Listing"}
+                              </span>
+                              <h5 className="font-heading font-black text-sm text-slate-900 truncate mt-0.5">
+                                {post.title || post.name || post.shop_name || "Untitled Listing"}
+                              </h5>
+                              <span className="text-xs text-slate-500 font-semibold block mt-0.5">
+                                📍 {post.area_tag || "Thanjavur"}
+                              </span>
+                            </div>
+                            {isSold && (
+                              <span className="bg-slate-900 text-amber-400 text-xs font-black px-2 py-0.5 rounded uppercase">
+                                SOLD
+                              </span>
+                            )}
+                          </div>
+
+                          {/* 30-Day Lifecycle Timer Banner */}
+                          <div className="flex items-center justify-between text-xs font-bold text-slate-600 bg-white p-2.5 rounded-xl border border-slate-200/80">
+                            <span>⏳ {daysLeft} Days Remaining</span>
+                            {isRenewable ? (
+                              <button
+                                onClick={() => handleRenewListing(post.id)}
+                                className="text-xs font-black text-amber-700 bg-amber-100 hover:bg-amber-200 border border-amber-300 px-2 py-1 rounded-lg transition-colors cursor-pointer"
+                              >
+                                🔄 Renew for 30 Days
+                              </button>
+                            ) : (
+                              <span className="text-xs text-slate-400 font-medium" title="Unlocks when <= 5 days remain">
+                                Renew locked
+                              </span>
+                            )}
+                          </div>
+
+                          {/* Action Controls: Mark as Sold, Edit, Delete */}
+                          <div className="flex items-center justify-between pt-1 border-t border-slate-200/60 mt-auto gap-2">
+                            <button
+                              onClick={() => handleToggleSoldState(post.id, isSold)}
+                              className={`text-xs font-bold px-2.5 py-1.5 rounded-xl border transition-colors cursor-pointer ${
+                                isSold
+                                  ? "bg-emerald-50 text-emerald-800 border-emerald-300"
+                                  : "bg-slate-100 text-slate-700 border-slate-300 hover:bg-slate-200"
+                              }`}
+                            >
+                              {isSold ? "Reactivate Listing" : "Mark as Sold"}
+                            </button>
+
+                            <div className="flex items-center gap-1.5">
+                              <button
+                                onClick={() => router.push(`/post?type=${(post.type || "sell").toLowerCase()}&edit=${post.id}`)}
+                                className="btn btn-secondary btn-sm text-xs"
+                                title="Edit Listing"
+                              >
+                                <Pencil className="w-3.5 h-3.5 text-[#0F172A]" />
+                                <span>Edit</span>
+                              </button>
+                              <button
+                                onClick={() => handleDeletePost(post.id, post.colName || "needs_and_sales")}
+                                className="p-2 rounded-xl bg-red-50 hover:bg-red-100 text-red-600 transition-colors cursor-pointer border border-red-200"
+                                title="Delete Listing"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </div>
                         </div>
-     
-                        {/* Edit & Delete Triggers */}
-                        <div className="flex items-center gap-1.5 shrink-0">
-                          <button
-                            onClick={() => router.push(`/post/sell?edit=${post.id}&col=${post.colName}`)}
-                            className="px-2.5 py-1.5 rounded-xl bg-[#F9B637] text-slate-950 hover:bg-amber-400 transition-colors cursor-pointer flex items-center gap-1 text-xs font-black border border-amber-400 shadow-2xs"
-                            title="Edit Listing"
-                          >
-                            <Pencil className="w-3.5 h-3.5" />
-                            <span>Edit</span>
-                          </button>
-                          <button
-                            onClick={() => handleDeletePost(post.id, post.colName)}
-                            className="p-2 rounded-xl bg-red-500/10 hover:bg-red-500/20 text-red-500 transition-colors shrink-0 cursor-pointer border border-red-200"
-                            title="Delete Listing"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 )
+              ) : savedPosts.length === 0 ? (
+                <div className="text-center py-10 border border-dashed border-slate-200 rounded-2xl text-xs text-slate-500 bg-slate-50">
+                  No saved posts yet. Click the bookmark icon on any listing card to save it here!
+                </div>
               ) : (
-                /* Saved Bookmarks List */
-                savedPosts.length === 0 ? (
-                  <div className="text-center py-10 border border-dashed border-slate-200 rounded-2xl text-xs text-slate-500 bg-slate-50">
-                    No saved posts yet. Click the bookmark icon on any listing card to save it here!
-                  </div>
-                ) : (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                    {savedPosts.map((post) => (
-                      <div
-                        key={post.id}
-                        className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5 shadow-xs flex items-center justify-between gap-3 hover:shadow-md transition-shadow animate-fade-in"
-                      >
-                        <div className="flex-1 min-w-0">
-                          <span className="text-[9px] uppercase font-bold text-yellow-750 tracking-wider">
-                            Saved Item
-                          </span>
-                          <h5 className="font-bold text-xs text-slate-800 truncate mt-0.5">
-                            {post.title || post.name || "Saved Listing"}
-                          </h5>
-                          <span className="text-[10px] text-slate-500 block mt-0.5">
-                            {post.area_tag || post.location || "Thanjavur"}
-                          </span>
-                        </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {savedPosts.map((post) => (
+                    <div
+                      key={post.id}
+                      className="bg-slate-50 border border-slate-200/80 rounded-2xl p-3.5 shadow-xs flex items-center justify-between gap-3 hover:shadow-md transition-shadow animate-fade-in"
+                    >
+                      <div className="flex-1 min-w-0">
+                        <span className="text-xs uppercase font-bold text-[#D97706] tracking-wider">
+                          Saved Item
+                        </span>
+                        <h5 className="font-bold text-xs text-slate-800 truncate mt-0.5">
+                          {post.title || post.name || "Saved Listing"}
+                        </h5>
+                        <span className="text-xs text-slate-500 block mt-0.5">
+                          {post.area_tag || post.location || "Thanjavur"}
+                        </span>
                       </div>
-                    ))}
-                  </div>
-                )
+                    </div>
+                  ))}
+                </div>
               )}
 
             </div>

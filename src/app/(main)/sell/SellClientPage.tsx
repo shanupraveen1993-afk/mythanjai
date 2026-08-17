@@ -3,10 +3,11 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useFirestore } from "@/hooks/use-firestore";
-import NeedCard from "@/components/cards/NeedCard";
+import ListingCard, { ListingItem } from "@/components/cards/ListingCard";
 import { NeedOrSalePost } from "@/types";
 import { Plus, Loader2, ArrowUpDown, ShoppingBag } from "lucide-react";
 import { CLASSIFIED_CATEGORIES } from "@/lib/constants";
+import { isListingQuarantined } from "@/lib/moderation";
 
 const SAMPLE_POSTS: NeedOrSalePost[] = [
   { id: "sl_cmda", userId: "sample", type: "SELL", raw_text: "2400 Sqft CMDA Approved Plot for sale near New Busstand, Thanjavur.", title: "2400 Sqft Plot near New Busstand", description: "CMDA approved residential land, 40ft tar road, clear title deeds, immediate registration.", category: "Plots & Real Estate", area_tag: "New Bus Stand", price: 3600000, phone: "9876543210", is_verified: true, created_at: new Date() as any, expires_at: new Date() as any },
@@ -57,7 +58,11 @@ export default function SellClientPage() {
     const seeds = SAMPLE_POSTS.filter((p) => !ids.has(p.id));
     let list = [...localPosts, ...seeds, ...(firestorePosts || [])];
 
-    list = list.filter((p) => p.type?.toUpperCase() === "SELL");
+    list = list.filter((p) => {
+      if ((p as any).status === "moderation_review") return false;
+      if (isListingQuarantined(p.id)) return false;
+      return p.type?.toUpperCase() === "SELL";
+    });
 
     if (selectedCategory !== "All") {
       list = list.filter(
@@ -79,9 +84,9 @@ export default function SellClientPage() {
       {/* 1. Hero Banner — Reduced top margin & Local Matchmaker tagline */}
       <div className="relative w-full min-h-[90px] rounded-2xl overflow-hidden bg-slate-950 text-white flex items-center px-4 sm:px-6 py-3.5 shadow-2xs mt-1">
         <img src="/thanjavur_temple_illustration.png" alt="Sell" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-955/90 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent" />
         <div className="relative z-10 flex flex-col gap-0.5 max-w-lg">
-          <span className="text-[10px] font-black text-[#F9B637] uppercase tracking-widest">
+          <span className="text-xs font-black text-[#F9B637] uppercase tracking-widest">
             Local Matchmaker • Thanjavur Marketplace
           </span>
           <h1 className="font-heading font-black text-lg sm:text-xl uppercase">
@@ -101,9 +106,9 @@ export default function SellClientPage() {
         {/* PRIMARY GOLD POST BUTTON */}
         <button
           onClick={handlePostItem}
-          className="flex items-center gap-1.5 bg-amber-500 hover:bg-amber-600 text-slate-955 font-heading font-black px-4 py-2 rounded-xl text-xs transition-all border border-amber-400 cursor-pointer shadow-xs hover:shadow-md active:scale-95 shrink-0"
+          className="flex items-center gap-1.5 btn-primary text-xs px-4 py-2 uppercase tracking-wider cursor-pointer shrink-0"
         >
-          <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+          <Plus className="w-3.5 h-3.5 stroke-[2.5] text-[#0F172A]" />
           <span>Post Item</span>
         </button>
       </div>
@@ -145,11 +150,13 @@ export default function SellClientPage() {
         <div className="flex flex-col items-center justify-center py-16 gap-2 text-center">
           <ShoppingBag className="w-8 h-8 text-slate-300" />
           <p className="text-sm font-bold text-slate-500">No items listed yet.</p>
-          <button onClick={handlePostItem} className="bg-yellow-500 text-slate-950 font-bold text-xs px-4 py-2 rounded-lg border border-yellow-400 hover:bg-yellow-400 transition-all cursor-pointer">+ Post Item</button>
+          <button onClick={handlePostItem} className="btn-primary text-xs px-4 py-2 uppercase tracking-wider cursor-pointer">+ Post Item</button>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredPosts.map((post) => <NeedCard key={post.id} post={post} />)}
+          {filteredPosts.map((post) => (
+            <ListingCard key={post.id} listing={post as unknown as ListingItem} />
+          ))}
         </div>
       )}
       </div>

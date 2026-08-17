@@ -380,13 +380,13 @@ export default function AdminClientPage() {
   const getColBadge = (colName: string) => {
     switch (colName) {
       case "needs_and_sales":
-        return <span className="bg-blue-50 text-blue-700 border border-blue-200/80 px-2 py-0.5 rounded-md text-[9px] font-black uppercase">Marketplace</span>;
+        return <span className="bg-blue-50 text-blue-700 border border-blue-200/80 px-2 py-0.5 rounded-md text-xs font-black uppercase">Marketplace</span>;
       case "services":
-        return <span className="bg-purple-50 text-purple-700 border border-purple-200/80 px-2 py-0.5 rounded-md text-[9px] font-black uppercase">Local Service</span>;
+        return <span className="bg-purple-50 text-purple-700 border border-purple-200/80 px-2 py-0.5 rounded-md text-xs font-black uppercase">Local Service</span>;
       case "shops":
-        return <span className="bg-amber-50 text-amber-800 border border-amber-200/80 px-2 py-0.5 rounded-md text-[9px] font-black uppercase">Shop Directory</span>;
+        return <span className="bg-amber-50 text-amber-800 border border-amber-200/80 px-2 py-0.5 rounded-md text-xs font-black uppercase">Shop Directory</span>;
       case "offers":
-        return <span className="bg-pink-50 text-pink-700 border border-pink-200/80 px-2 py-0.5 rounded-md text-[9px] font-black uppercase">Video Offer</span>;
+        return <span className="bg-pink-50 text-pink-700 border border-pink-200/80 px-2 py-0.5 rounded-md text-xs font-black uppercase">Video Offer</span>;
       default:
         return null;
     }
@@ -397,7 +397,7 @@ export default function AdminClientPage() {
       <div className="flex-1 flex flex-col items-center justify-center p-6 bg-slate-900 text-white min-h-screen font-sans">
         <div className="w-full max-w-sm flex flex-col gap-5 bg-slate-800/90 border border-slate-700/80 p-6 rounded-3xl shadow-2xl backdrop-blur-md">
           <div className="flex flex-col items-center text-center gap-2">
-            <div className="w-14 h-14 rounded-2xl bg-yellow-500 text-slate-955 flex items-center justify-center shadow-lg shadow-yellow-500/20">
+            <div className="w-14 h-14 rounded-2xl bg-yellow-500 text-slate-950 flex items-center justify-center shadow-lg shadow-yellow-500/20">
               <Shield className="w-7 h-7 stroke-[2.5]" />
             </div>
             <h2 className="font-heading font-black text-xl text-white">Admin Command Center</h2>
@@ -406,7 +406,7 @@ export default function AdminClientPage() {
 
           <form onSubmit={handleVerifyPasscode} className="flex flex-col gap-3">
             <div>
-              <label className="block text-[10px] font-black text-slate-400 uppercase tracking-wider mb-1.5">
+              <label className="block text-xs font-black text-slate-400 uppercase tracking-wider mb-1.5">
                 Admin Passcode
               </label>
               <input
@@ -420,7 +420,7 @@ export default function AdminClientPage() {
             </div>
             <button
               type="submit"
-              className="bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-heading font-black py-2.5 rounded-xl text-xs transition-all shadow-md active:scale-95 cursor-pointer"
+              className="w-full py-2.5 btn-primary text-xs uppercase tracking-wider cursor-pointer"
             >
               Verify Passcode & Launch Console →
             </button>
@@ -443,15 +443,15 @@ export default function AdminClientPage() {
       {/* Top Header Glass Bar */}
       <header className="sticky top-0 z-40 bg-slate-900 border-b border-slate-800 text-white px-4 py-3.5 flex items-center justify-between shadow-lg">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-yellow-500 text-slate-955 flex items-center justify-center font-bold shadow-xs">
+          <div className="w-8 h-8 rounded-xl bg-yellow-500 text-slate-950 flex items-center justify-center font-bold shadow-xs">
             <Shield className="w-4 h-4 stroke-[2.5]" />
           </div>
           <div>
             <h2 className="font-heading font-extrabold text-sm text-white flex items-center gap-2">
               <span>Admin Moderation Console</span>
-              <span className="bg-yellow-500 text-slate-955 text-[8px] font-black px-1.5 py-0.5 rounded uppercase">Master Admin</span>
+              <span className="bg-yellow-500 text-slate-950 text-xs font-black px-1.5 py-0.5 rounded uppercase">Master Admin</span>
             </h2>
-            <p className="text-[10px] text-slate-400">Moderate listings, verify providers & publish promo video reels</p>
+            <p className="text-xs text-slate-400">Moderate listings, verify providers & publish promo video reels</p>
           </div>
         </div>
 
@@ -468,7 +468,7 @@ export default function AdminClientPage() {
 
           <Link
             href="/"
-            className="flex items-center gap-1 text-xs bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-black px-3.5 py-1.5 rounded-xl shadow-xs transition-all cursor-pointer active:scale-95"
+            className="flex items-center gap-1 text-xs bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-black px-3.5 py-1.5 rounded-xl shadow-xs transition-all cursor-pointer active:scale-95"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Exit Console</span>
@@ -481,7 +481,7 @@ export default function AdminClientPage() {
         {/* Metric Summary Cards Bar */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 shadow-2xs flex flex-col gap-1">
-            <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Total Queue Listings</span>
+            <span className="text-xs font-black text-slate-400 uppercase tracking-wider">Total Queue Listings</span>
             <div className="flex items-baseline justify-between mt-1">
               <span className="text-2xl font-heading font-black text-slate-900">{statsSummary.total}</span>
               <BarChart2 className="w-4 h-4 text-slate-400" />
@@ -489,7 +489,7 @@ export default function AdminClientPage() {
           </div>
 
           <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 shadow-2xs flex flex-col gap-1">
-            <span className="text-[10px] font-black text-emerald-600 uppercase tracking-wider">Verified Listings</span>
+            <span className="text-xs font-black text-emerald-600 uppercase tracking-wider">Verified Listings</span>
             <div className="flex items-baseline justify-between mt-1">
               <span className="text-2xl font-heading font-black text-emerald-600">{statsSummary.verified}</span>
               <CheckCircle className="w-4 h-4 text-emerald-500" />
@@ -497,7 +497,7 @@ export default function AdminClientPage() {
           </div>
 
           <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 shadow-2xs flex flex-col gap-1">
-            <span className="text-[10px] font-black text-amber-700 uppercase tracking-wider">Featured Sponsors</span>
+            <span className="text-xs font-black text-amber-700 uppercase tracking-wider">Featured Sponsors</span>
             <div className="flex items-baseline justify-between mt-1">
               <span className="text-2xl font-heading font-black text-amber-700">{statsSummary.featured}</span>
               <Star className="w-4 h-4 text-amber-500 fill-amber-400" />
@@ -505,7 +505,7 @@ export default function AdminClientPage() {
           </div>
 
           <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 shadow-2xs flex flex-col gap-1">
-            <span className="text-[10px] font-black text-purple-600 uppercase tracking-wider">Trade Services</span>
+            <span className="text-xs font-black text-purple-600 uppercase tracking-wider">Trade Services</span>
             <div className="flex items-baseline justify-between mt-1">
               <span className="text-2xl font-heading font-black text-purple-700">{statsSummary.services}</span>
               <Wrench className="w-4 h-4 text-purple-500" />
@@ -565,7 +565,7 @@ export default function AdminClientPage() {
               <div>
                 <h3 className="font-heading font-extrabold text-base text-slate-900 flex items-center gap-2">
                   <span>Firebase Storage Video Reel Uploader</span>
-                  <span className="text-[9px] bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md font-black uppercase">Firebase CDN</span>
+                  <span className="text-xs bg-emerald-100 text-emerald-800 px-2 py-0.5 rounded-md font-black uppercase">Firebase CDN</span>
                 </h3>
                 <p className="text-xs text-slate-500 mt-0.5 font-medium">
                   Upload promo video reels directly to Firebase Storage & publish live offer cards on `/offers`.
@@ -650,7 +650,7 @@ export default function AdminClientPage() {
                     type="button"
                     onClick={handleFormatWithAi}
                     disabled={isAiFormatting || !videoDescription.trim()}
-                    className="text-[10px] font-bold text-amber-700 hover:text-amber-800 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all cursor-pointer disabled:opacity-50"
+                    className="text-xs font-bold text-amber-700 hover:text-amber-800 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all cursor-pointer disabled:opacity-50"
                   >
                     {isAiFormatting ? (
                       <>
@@ -683,7 +683,7 @@ export default function AdminClientPage() {
                   <span className="font-heading font-extrabold text-xs text-slate-900">
                     {selectedVideo ? selectedVideo.name : "Select or drag Video Reel (.mp4, .webm, .mov)"}
                   </span>
-                  <span className="text-[10px] text-slate-400 font-medium">
+                  <span className="text-xs text-slate-400 font-medium">
                     {selectedVideo ? `${(selectedVideo.size / (1024 * 1024)).toFixed(2)} MB` : "Video stored on Firebase Storage CDN & linked to live offer"}
                   </span>
                   <input
@@ -699,7 +699,7 @@ export default function AdminClientPage() {
               <div className="flex flex-col gap-1">
                 <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
                   <span>OR Paste Direct Video Reel Link URL</span>
-                  <span className="text-[10px] text-slate-400 font-normal">(YouTube shorts, MP4, Reel CDN URL)</span>
+                  <span className="text-xs text-slate-400 font-normal">(YouTube shorts, MP4, Reel CDN URL)</span>
                 </label>
                 <input
                   type="url"
@@ -717,7 +717,7 @@ export default function AdminClientPage() {
                     <Tag className="w-3.5 h-3.5 text-pink-600" />
                     <span>Publish live to Offers directory (/offers)</span>
                   </span>
-                  <span className="text-[10px] text-slate-500 font-medium">
+                  <span className="text-xs text-slate-500 font-medium">
                     Creates an active video offer card visible to all Tanjore users immediately!
                   </span>
                 </div>
@@ -755,16 +755,16 @@ export default function AdminClientPage() {
                 type="button"
                 onClick={handleUploadVideo}
                 disabled={videoUploading || (!selectedVideo && !directVideoUrl.trim())}
-                className="w-full py-3.5 bg-amber-500 hover:bg-amber-600 disabled:opacity-50 text-slate-955 font-heading font-black text-xs uppercase tracking-wider rounded-xl border border-amber-400 shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-[0.99]"
+                className="w-full py-3.5 btn-primary text-xs uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer disabled:opacity-50"
               >
                 {videoUploading ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin text-slate-955" />
+                    <Loader2 className="w-4 h-4 animate-spin text-[#0F172A]" />
                     <span>Uploading & Publishing ({uploadProgress}%)...</span>
                   </>
                 ) : (
                   <>
-                    <Upload className="w-4 h-4 stroke-[2.5]" />
+                    <Upload className="w-4 h-4 stroke-[2.5] text-[#0F172A]" />
                     <span>Publish Video Offer Live</span>
                   </>
                 )}
@@ -785,7 +785,7 @@ export default function AdminClientPage() {
                       navigator.clipboard.writeText(uploadedVideoUrl);
                       toast.success("Video CDN URL copied to clipboard!");
                     }}
-                    className="bg-emerald-600 hover:bg-emerald-700 text-white text-[11px] font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors cursor-pointer"
+                    className="bg-emerald-600 hover:bg-emerald-700 text-white text-xs font-bold px-3 py-1.5 rounded-lg flex items-center gap-1 transition-colors cursor-pointer"
                   >
                     <Copy className="w-3.5 h-3.5" />
                     <span>Copy CDN Link</span>
@@ -838,7 +838,7 @@ export default function AdminClientPage() {
                           Price: ₹{item.price.toLocaleString("en-IN")}
                         </span>
                       )}
-                      <div className="flex items-center gap-3 text-[11px] text-slate-500 font-medium mt-1.5">
+                      <div className="flex items-center gap-3 text-xs text-slate-500 font-medium mt-1.5">
                         <span>Area: <strong className="text-slate-800 font-semibold">{item.area_tag}</strong></span>
                         <span>•</span>
                         <span>Contact: <strong className="text-slate-800 font-semibold">+{item.phone || "N/A"}</strong></span>
@@ -851,7 +851,7 @@ export default function AdminClientPage() {
                     <button
                       type="button"
                       onClick={() => handleToggleVerify(item)}
-                      className={`flex items-center justify-center gap-1 flex-1 py-2 rounded-xl text-[10px] font-black uppercase transition-all cursor-pointer ${
+                      className={`flex items-center justify-center gap-1 flex-1 py-2 rounded-xl text-xs font-black uppercase transition-all cursor-pointer ${
                         item.is_verified
                           ? "bg-emerald-50 text-emerald-700 border border-emerald-300"
                           : "bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200"
@@ -864,7 +864,7 @@ export default function AdminClientPage() {
                     <button
                       type="button"
                       onClick={() => handleToggleFeatured(item)}
-                      className={`flex items-center justify-center gap-1 flex-1 py-2 rounded-xl text-[10px] font-black uppercase transition-all cursor-pointer ${
+                      className={`flex items-center justify-center gap-1 flex-1 py-2 rounded-xl text-xs font-black uppercase transition-all cursor-pointer ${
                         item.is_featured
                           ? "bg-amber-50 text-amber-900 border border-amber-300"
                           : "bg-slate-100 text-slate-600 hover:bg-slate-200 border border-slate-200"

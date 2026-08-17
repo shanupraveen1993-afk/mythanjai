@@ -40,7 +40,7 @@ export default function PreContactVerificationModal({
           
           {/* Header */}
           <div className="flex flex-col items-center text-center gap-2 pt-1">
-            <div className="w-12 h-12 rounded-2xl bg-yellow-500 text-slate-955 flex items-center justify-center shadow-md">
+            <div className="icon-box-dark">
               <ShieldCheck className="w-6 h-6 stroke-[2.5]" />
             </div>
             <h3 className="font-heading font-black text-base text-slate-900 leading-snug">
@@ -63,7 +63,7 @@ export default function PreContactVerificationModal({
             </div>
             <div className="flex items-start gap-2 text-rose-700 font-semibold bg-rose-50 p-2 rounded-xl border border-rose-200/60">
               <AlertTriangle className="w-4 h-4 shrink-0 text-rose-600 mt-0.5" />
-              <p className="text-[11px] leading-tight">
+              <p className="text-xs leading-tight">
                 {t("safetyWarning")}
               </p>
             </div>
@@ -73,10 +73,10 @@ export default function PreContactVerificationModal({
           <div className="flex flex-col gap-2 pt-1">
             <button
               onClick={onConfirm}
-              className={`w-full py-3 text-white font-heading font-black text-xs uppercase tracking-wider rounded-2xl shadow-md transition-all cursor-pointer flex items-center justify-center gap-2 ${
+              className={`w-full py-3 text-xs uppercase tracking-wider ${
                 contactType === "whatsapp"
-                  ? "bg-[#00a884] hover:bg-[#008f6f]"
-                  : "bg-slate-900 hover:bg-slate-800"
+                  ? "bg-[#00a884] hover:bg-[#008f6f] text-white font-bold rounded-[12px] shadow-sm flex items-center justify-center gap-2"
+                  : "btn-primary flex items-center justify-center gap-2"
               }`}
             >
               {contactType === "whatsapp" ? (
@@ -86,7 +86,7 @@ export default function PreContactVerificationModal({
                 </>
               ) : (
                 <>
-                  <Phone className="w-4 h-4 fill-current" />
+                  <Phone className="w-4 h-4 fill-[#0F172A] text-[#0F172A]" />
                   <span>{t("proceedCall")}</span>
                 </>
               )}
@@ -94,7 +94,7 @@ export default function PreContactVerificationModal({
 
             <button
               onClick={onClose}
-              className="w-full py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs rounded-xl transition-colors cursor-pointer text-center"
+              className="w-full py-2.5 btn-secondary text-xs uppercase tracking-wider text-center"
             >
               {t("cancel")}
             </button>

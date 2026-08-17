@@ -3,13 +3,14 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { MessageSquare, Calendar, Tag, MapPin, Share2, Eye, Bookmark, UserCheck, Camera, MoreVertical, Trash2, Pencil, Flag } from "lucide-react";
+import { MessageSquare, Calendar, Tag, MapPin, Share2, Eye, Bookmark, UserCheck, Camera, MoreVertical, Trash2, Pencil, Flag, Sparkles } from "lucide-react";
 import { NeedOrSalePost } from "@/types";
 import { formatIndianCurrencyText, formatRelativeTime } from "@/lib/constants";
 import InAppChatModal from "@/components/chat/InAppChatModal";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/context/ToastContext";
 import { useLanguage } from "@/context/LanguageContext";
+import { reportListing } from "@/lib/moderation";
 
 interface NeedCardProps {
   post: NeedOrSalePost;
@@ -138,7 +139,12 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
 
   const handleReport = (e: React.MouseEvent) => {
     e.stopPropagation();
-    toast.success("Thank you! Post reported to admin for verification.");
+    const result = reportListing(post.id, "Inappropriate content");
+    if (result.isQuarantined) {
+      toast.error("This post has been quarantined for moderation review.");
+    } else {
+      toast.success("Thank you! Post reported to admin for verification.");
+    }
   };
 
   const handleToggleSave = (e: React.MouseEvent) => {
@@ -155,10 +161,9 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
     <div className={`bg-white rounded-2xl p-4 flex flex-col gap-3 shadow-[0_3px_8px_rgba(0,0,0,0.04)] transition-all duration-200 relative group overflow-hidden font-sans border card-lift ${
       isSold ? "border-slate-300 opacity-80" : "border-slate-200/80"
     }`}>
-
       {/* SOLD Overlay Banner */}
       {isSold && (
-        <div className="bg-slate-900 text-yellow-400 text-[10px] font-black uppercase px-3 py-1 rounded-md w-fit flex items-center gap-1">
+        <div className="bg-[#0F172A] text-[#FBBF24] text-xs font-black uppercase px-3 py-1 rounded-md w-fit flex items-center gap-1">
           {t("markedSold")}
         </div>
       )}
@@ -167,7 +172,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
       <div className="flex items-center justify-between gap-2 pr-8">
         <div className="flex items-center gap-1.5 flex-wrap">
           {/* Type Badge: FOR SALE vs WANTED NEED */}
-          <span className={`inline-flex items-center gap-1 text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border ${
+          <span className={`inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border ${
             isNeedType 
               ? "bg-amber-500/10 text-amber-900 border-amber-300" 
               : "bg-slate-100 text-slate-700 border-slate-200"
@@ -177,7 +182,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
           </span>
 
           {post.category && (
-            <span className="inline-flex items-center gap-1 text-[10px] font-medium bg-slate-50 text-slate-600 px-2 py-0.5 rounded-md border border-slate-200/60">
+            <span className="inline-flex items-center gap-1 text-xs font-medium bg-slate-50 text-slate-600 px-2 py-0.5 rounded-md border border-slate-200/60">
               <span>{post.category}</span>
             </span>
           )}
@@ -192,7 +197,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
 
         {displayPriceText && (
           <div className="mt-1 flex items-center">
-            <span className="font-heading font-black text-lg sm:text-xl text-slate-950 bg-[#F9B637] px-2.5 py-0.5 rounded-lg border border-amber-500/60 shadow-xs">
+            <span className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight">
               {displayPriceText}
             </span>
           </div>
@@ -221,7 +226,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
               unoptimized
             />
             {images.length > 1 && (
-              <div className="absolute bottom-2 right-2 bg-black/60 text-white text-[10px] font-bold px-2 py-0.5 rounded-md backdrop-blur-xs">
+              <div className="absolute bottom-2 right-2 bg-black/60 text-white text-xs font-bold px-2 py-0.5 rounded-md backdrop-blur-xs">
                 {activeImgIndex + 1}/{images.length}
               </div>
             )}
@@ -248,7 +253,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
 
       {/* Social Engagement Bar: Left = Date & Views, Right = Share & Save */}
       {!isPreview && (
-        <div className="flex items-center justify-between text-[11px] text-slate-500 font-semibold border-t border-b border-slate-100 py-2 my-0.5">
+        <div className="flex items-center justify-between text-xs text-slate-500 font-semibold border-t border-b border-slate-100 py-2 my-0.5">
           {/* Left: Meta Info (Date & Views) */}
           <div className="flex items-center gap-2.5">
             <span className="flex items-center gap-1 text-slate-400 font-medium">
@@ -256,10 +261,17 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
               <span>{formatDate(post.created_at)}</span>
             </span>
             <span className="text-slate-300">•</span>
-            <span className="flex items-center gap-1 text-slate-500 font-medium">
-              <Eye className="w-3.5 h-3.5 text-slate-400" />
-              <span>{viewsCount} {t("views")}</span>
-            </span>
+            {viewsCount < 15 ? (
+              <span className="inline-flex items-center gap-1 text-xs font-black text-amber-800 bg-amber-100 border border-amber-300 px-2 py-0.5 rounded-md">
+                <Sparkles className="w-3 h-3 fill-amber-500 text-amber-600" />
+                <span>New</span>
+              </span>
+            ) : (
+              <span className="flex items-center gap-1 text-slate-500 font-medium">
+                <Eye className="w-3.5 h-3.5 text-slate-400" />
+                <span>{viewsCount} {t("views")}</span>
+              </span>
+            )}
           </div>
 
           {/* Right: Actions (Share & Save) */}
@@ -275,9 +287,17 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
             <button 
               onClick={handleToggleSave}
               className={`flex items-center gap-1 cursor-pointer transition-colors ${saved ? "text-yellow-600 font-bold" : "hover:text-slate-800"}`}
+              title={saved ? "Saved" : "Save"}
             >
               <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-yellow-500 text-yellow-600" : "text-slate-400"}`} />
               <span>{saved ? t("saved") : t("save")}</span>
+            </button>
+            <button
+              onClick={handleReport}
+              className="flex items-center gap-1 text-slate-400 hover:text-rose-600 cursor-pointer transition-colors ml-1"
+              title="Report Post"
+            >
+              <Flag className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
@@ -285,27 +305,25 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
 
       {/* Footer Info & Action CTAs */}
       <div className="flex items-center justify-between pt-1">
-        <div className="flex items-center gap-1 text-[11px] text-slate-500 font-semibold">
+        <div className="flex items-center gap-1 text-xs text-slate-500 font-semibold">
           <MapPin className="w-3.5 h-3.5 text-amber-500 shrink-0" />
           <span className="truncate max-w-[140px]">{post.area_tag}</span>
         </div>
-
-        {/* Contact CTA or Post Management Options */}
         <div className="flex items-center gap-1.5">
           {isOwnPost ? (
             <Link
               href="/profile?tab=my_posts"
-              className="flex items-center gap-1.5 h-8 bg-[#F9B637] text-slate-950 font-black px-3 rounded-lg text-[11px] transition-all duration-200 cursor-pointer border border-amber-400 shadow-2xs active:scale-95"
+              className="btn btn-secondary btn-sm text-xs uppercase tracking-wider"
             >
-              <Pencil className="w-3 h-3 text-slate-950" />
+              <Pencil className="w-3.5 h-3.5 text-[#0F172A]" />
               <span>Edit</span>
             </Link>
           ) : isValidSellerId ? (
             <Link
               href={`/chat?listingId=${post.id}&sellerId=${post.userId}&title=${encodeURIComponent(post.title || "Item")}`}
-              className="flex items-center gap-1.5 h-9 bg-slate-950 hover:bg-slate-900 text-[#F9B637] font-black px-3.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer border border-slate-800"
+              className="btn btn-chat btn-sm text-xs"
             >
-              <MessageSquare className="w-3.5 h-3.5 fill-[#F9B637] stroke-none" />
+              <MessageSquare className="w-3.5 h-3.5 text-[#78350F]" />
               <span>Chat Now</span>
             </Link>
           ) : (
@@ -314,9 +332,9 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
               href={whatsappUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center gap-1.5 h-9 bg-[#F9B637] hover:bg-amber-400 text-slate-950 font-black px-3.5 rounded-xl text-xs transition-all shadow-2xs cursor-pointer border border-amber-400"
+              className="btn btn-whatsapp btn-sm text-xs"
             >
-              <MessageSquare className="w-3.5 h-3.5 fill-slate-950 stroke-none" />
+              <MessageSquare className="w-3.5 h-3.5 text-white" />
               <span>Chat Now</span>
             </a>
           )}

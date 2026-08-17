@@ -11,6 +11,7 @@ import { MessageSquare, Plus, ChevronUp, ChevronDown, Loader2, ArrowRight, Arrow
 import { db } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { useAuth } from "@/hooks/use-auth";
+import { isListingQuarantined } from "@/lib/moderation";
 
 export default function ClassifiedsClientPage() {
   const router = useRouter();
@@ -150,9 +151,10 @@ export default function ClassifiedsClientPage() {
     router.replace(queryString ? `/classifieds?${queryString}` : "/classifieds", { scroll: false });
   };
 
-  // Filter posts by search query
+  // Filter posts by search query & moderation quarantine status
   const filteredPosts = React.useMemo(() => {
     return combinedPosts.filter((p) => {
+      if ((p as any).status === "moderation_review" || isListingQuarantined(p.id)) return false;
       if (!searchQuery.trim()) return true;
       const q = searchQuery.toLowerCase();
       return (
@@ -170,7 +172,7 @@ export default function ClassifiedsClientPage() {
       {selectedCategory && (
         <div className="flex items-center justify-between bg-[#f0f2f5]/90 backdrop-blur-md py-2 -mx-4 px-4 sm:mx-0 sm:px-0 border-0">
           <div className="flex items-center gap-2">
-            <span className="bg-yellow-500 text-slate-955 font-black text-xs px-2.5 py-1 rounded-xl shadow-2xs">
+            <span className="bg-[#FBBF24] text-[#0F172A] font-black text-xs px-2.5 py-1 rounded-xl shadow-2xs border-b border-[#D97706]">
               {selectedCategory}
             </span>
             <span className="text-xs text-slate-600 font-bold">
@@ -203,7 +205,7 @@ export default function ClassifiedsClientPage() {
           </div>
           <div>
             <h4 className="font-heading font-extrabold text-sm text-slate-800">No Posts Found</h4>
-            <p className="text-[11px] text-slate-500 mt-1 max-w-[220px] mx-auto leading-relaxed">
+            <p className="text-xs text-slate-500 mt-1 max-w-[220px] mx-auto leading-relaxed">
               No classifieds listed in <span className="font-bold text-slate-800">{selectedCategory || "All"}</span> for {area} yet.
             </p>
           </div>

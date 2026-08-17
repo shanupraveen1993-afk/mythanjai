@@ -159,7 +159,7 @@ export default function InAppChatModal({
               <p className="text-xs text-slate-700 font-semibold leading-relaxed">
                 Caution: Detected transaction term <span className="font-black text-red-600 uppercase">"{detectedKeyword}"</span>.
               </p>
-              <div className="bg-red-50 border border-red-200 rounded-2xl p-3 text-[11px] text-red-800 font-bold text-left leading-normal">
+              <div className="bg-red-50 border border-red-200 rounded-2xl p-3 text-xs text-red-800 font-bold text-left leading-normal">
                 ⚠️ Never send advance payments, GPay token money, or UPI links before physically inspecting the item in person.
               </div>
               <button
@@ -175,12 +175,12 @@ export default function InAppChatModal({
         {/* Chat Header */}
         <div className="bg-slate-950 text-white p-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-yellow-500 text-slate-950 flex items-center justify-center font-black shadow-sm">
+            <div className="icon-box-dark w-10 h-10 rounded-2xl">
               <User className="w-5 h-5" />
             </div>
             <div>
               <h3 className="font-heading font-black text-sm text-slate-100">{sellerName}</h3>
-              <p className="text-[11px] text-slate-400 font-semibold truncate max-w-[200px]">
+              <p className="text-xs text-slate-400 font-semibold truncate max-w-[200px]">
                 {listingTitle}
               </p>
             </div>
@@ -194,7 +194,7 @@ export default function InAppChatModal({
         </div>
 
         {/* PERMANENT TOP SCAM SAFETY BANNER */}
-        <div className="bg-amber-500 text-slate-950 px-4 py-2 flex items-center gap-2 text-[10px] font-black border-b border-amber-400">
+        <div className="bg-amber-500 text-slate-950 px-4 py-2 flex items-center gap-2 text-xs font-black border-b border-amber-400">
           <AlertTriangle className="w-4 h-4 shrink-0 stroke-[2.5]" />
           <span className="leading-tight">
             Safety Alert: Never send advance payments or UPI transfers before inspecting the item in person.
@@ -224,7 +224,7 @@ export default function InAppChatModal({
                   >
                     {highlightFlaggedText(msg.text)}
                   </div>
-                  <span className="text-[9px] text-slate-400 mt-1 px-1 font-bold">
+                  <span className="text-xs text-slate-400 mt-1 px-1 font-bold">
                     {msg.senderName}
                   </span>
                 </div>
@@ -245,9 +245,9 @@ export default function InAppChatModal({
           <button
             type="submit"
             disabled={loading || !inputText.trim()}
-            className="bg-yellow-500 hover:bg-yellow-400 active:scale-95 disabled:opacity-50 text-slate-955 font-black px-4 py-2.5 rounded-2xl text-xs transition-all border border-yellow-400 shadow-sm cursor-pointer flex items-center justify-center shrink-0"
+            className="px-4 py-2.5 btn-primary text-xs uppercase tracking-wider flex items-center justify-center shrink-0 cursor-pointer disabled:opacity-50"
           >
-            <Send className="w-4 h-4" />
+            <Send className="w-4 h-4 text-[#0F172A]" />
           </button>
         </form>
 

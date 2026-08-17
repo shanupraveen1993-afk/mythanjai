@@ -523,7 +523,7 @@ export default function PostForm({ segment }: PostFormProps) {
     <div className="w-full max-w-6xl mx-auto px-4 py-6 pb-24 flex flex-col gap-6 font-sans">
       {/* Page Header */}
       <div className="flex flex-col items-center border-b border-slate-200 pb-3">
-        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">
+        <span className="text-xs font-bold uppercase tracking-widest text-slate-400">
           {config.badge}
         </span>
         <h1 className="font-heading font-bold text-lg sm:text-xl text-slate-900 tracking-tight mt-0.5">
@@ -559,7 +559,7 @@ export default function PostForm({ segment }: PostFormProps) {
                   {imagePreview ? (
                     <div className="relative w-full max-h-48 rounded-xl overflow-hidden border border-slate-200 shadow-sm">
                       <img src={imagePreview} alt="Visiting card preview" className="w-full h-48 object-cover" />
-                      <label className="absolute bottom-2 right-2 bg-slate-950/85 hover:bg-slate-950 text-white text-[10px] font-bold px-3 py-1.5 rounded-lg cursor-pointer flex items-center gap-1 backdrop-blur-xs">
+                      <label className="absolute bottom-2 right-2 bg-slate-950/85 hover:bg-slate-950 text-white text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer flex items-center gap-1 backdrop-blur-xs">
                         <Camera className="w-3.5 h-3.5" />
                         <span>Change Photo</span>
                         <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
@@ -574,11 +574,11 @@ export default function PostForm({ segment }: PostFormProps) {
                         <span className="font-heading font-bold text-xs text-slate-900">
                           Upload Visiting Card / Flyer Photo *
                         </span>
-                        <span className="text-[10px] text-slate-500 mt-0.5 max-w-sm font-medium">
+                        <span className="text-xs text-slate-500 mt-0.5 max-w-sm font-medium">
                           Fills Store Name & Location directly into Live Preview!
                         </span>
                       </div>
-                      <span className="bg-yellow-500 hover:bg-yellow-400 text-slate-955 font-bold text-xs px-3.5 py-1.5 rounded-xl transition-all border border-yellow-400 shadow-2xs mt-0.5">
+                      <span className="bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold text-xs px-3.5 py-1.5 rounded-xl transition-all border border-yellow-400 shadow-2xs mt-0.5">
                         Upload Card Photo →
                       </span>
                       <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
@@ -592,7 +592,7 @@ export default function PostForm({ segment }: PostFormProps) {
                     <label className="text-xs font-semibold text-slate-700">
                       Store Name / Offer Title *
                     </label>
-                    <span className={`text-[10px] font-medium ${title.length >= config.maxTitleChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>
+                    <span className={`text-xs font-medium ${title.length >= config.maxTitleChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>
                       {title.length}/{config.maxTitleChars}
                     </span>
                   </div>
@@ -605,7 +605,7 @@ export default function PostForm({ segment }: PostFormProps) {
                     onChange={(e) => setTitle(e.target.value)}
                     className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-colors"
                   />
-                  <span className="text-[10px] text-slate-400 font-medium">
+                  <span className="text-xs text-slate-400 font-medium">
                     Fills from visiting card photo or type manually above.
                   </span>
                 </div>
@@ -619,7 +619,7 @@ export default function PostForm({ segment }: PostFormProps) {
                         type="button"
                         onClick={handleBlurDescription}
                         disabled={isAiRewriting || !description.trim()}
-                        className="text-[10px] font-bold text-amber-700 hover:text-amber-800 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 px-2 py-0.5 rounded-md flex items-center gap-1 transition-all cursor-pointer disabled:opacity-50"
+                        className="text-xs font-bold text-amber-700 hover:text-amber-800 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 px-2 py-0.5 rounded-md flex items-center gap-1 transition-all cursor-pointer disabled:opacity-50"
                       >
                         {isAiRewriting ? (
                           <>
@@ -634,7 +634,7 @@ export default function PostForm({ segment }: PostFormProps) {
                         )}
                       </button>
                     </div>
-                    <span className={`text-[10px] font-medium ${description.length >= config.maxDescChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>
+                    <span className={`text-xs font-medium ${description.length >= config.maxDescChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>
                       {description.length}/{config.maxDescChars}
                     </span>
                   </div>
@@ -646,7 +646,7 @@ export default function PostForm({ segment }: PostFormProps) {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     onBlur={handleBlurDescription}
-                    className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-colors leading-relaxed"
+                    className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 ring-1 ring-slate-400 transition-colors leading-relaxed"
                   />
                 </div>
 
@@ -703,7 +703,7 @@ export default function PostForm({ segment }: PostFormProps) {
                     </label>
                     <div className="w-full px-3.5 py-2 text-xs font-bold bg-amber-50 border border-amber-300 text-amber-900 rounded-lg flex items-center justify-between shadow-2xs">
                       <span>{area || "Tanjore Town (General)"}</span>
-                      <span className="text-[9px] text-amber-800 bg-amber-200/80 px-2 py-0.5 rounded-full font-black uppercase">Auto AI</span>
+                      <span className="text-xs text-amber-800 bg-amber-200/80 px-2 py-0.5 rounded-full font-black uppercase">Auto AI</span>
                     </div>
                   </div>
                 </div>
@@ -748,7 +748,7 @@ export default function PostForm({ segment }: PostFormProps) {
                         <Phone className="w-3.5 h-3.5 text-slate-500" />
                         <span>Show Call & WhatsApp buttons on Card</span>
                       </span>
-                      <span className="text-[10px] text-slate-500 font-medium">
+                      <span className="text-xs text-slate-500 font-medium">
                         Default is OFF (Only Get Direction is shown). Turn ON to show phone for calls/WhatsApp.
                       </span>
                     </div>
@@ -812,7 +812,7 @@ export default function PostForm({ segment }: PostFormProps) {
                     <label className="text-xs font-semibold text-slate-700">
                       {segment === "service" ? "Your Full Name *" : "Posting title or item name *"}
                     </label>
-                    <span className={`text-[10px] font-medium ${title.length >= config.maxTitleChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>
+                    <span className={`text-xs font-medium ${title.length >= config.maxTitleChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>
                       {title.length}/{config.maxTitleChars}
                     </span>
                   </div>
@@ -843,7 +843,7 @@ export default function PostForm({ segment }: PostFormProps) {
                           {segment === "sell" ? "Price (₹)" : "Budget (₹)"}
                         </label>
                         {formattedPriceBadge && (
-                          <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
+                          <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
                             {formattedPriceBadge}
                           </span>
                         )}
@@ -902,7 +902,7 @@ export default function PostForm({ segment }: PostFormProps) {
                     <label className="text-xs font-semibold text-slate-700">
                       {segment === "service" ? "Work Experience & Skill Details *" : "Description or details *"}
                     </label>
-                    <span className={`text-[10px] font-medium ${description.length >= config.maxDescChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>
+                    <span className={`text-xs font-medium ${description.length >= config.maxDescChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>
                       {description.length}/{config.maxDescChars}
                     </span>
                   </div>
@@ -977,7 +977,7 @@ export default function PostForm({ segment }: PostFormProps) {
                   <Video className="w-4 h-4 text-amber-600 shrink-0" />
                   <span>Upload Offer Video Reel (Vertical 9:16 Format)</span>
                 </label>
-                <p className="text-[10px] text-slate-500 font-bold">
+                <p className="text-xs text-slate-500 font-bold">
                   Upload a promotional reel video of your shop/offer (.mp4, .webm).
                 </p>
                 <input
@@ -1000,15 +1000,15 @@ export default function PostForm({ segment }: PostFormProps) {
               </div>
             )}
 
-            {/* Submit Button (Primary Yellow Brand Color) */}
+            {/* Submit Button (v2.0 Tactile 3D btn-primary) */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-heading font-extrabold text-xs uppercase tracking-wider rounded-xl border border-yellow-400 shadow-md transition-all flex items-center justify-center gap-2 cursor-pointer mt-2 hover:shadow-lg active:scale-[0.99]"
+              className="w-full py-3.5 sm:py-4 btn-primary text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer mt-2"
             >
               {loading ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
+                  <Loader2 className="w-4 h-4 animate-spin text-[#0F172A]" />
                   <span>Publishing Post...</span>
                 </>
               ) : (
@@ -1023,7 +1023,7 @@ export default function PostForm({ segment }: PostFormProps) {
               <span className="text-xs font-bold text-slate-700">
                 Live Card Preview
               </span>
-              <span className="text-[10px] text-slate-400">Instant preview</span>
+              <span className="text-xs text-slate-400">Instant preview</span>
             </div>
 
             <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-2xs flex flex-col gap-3 relative">

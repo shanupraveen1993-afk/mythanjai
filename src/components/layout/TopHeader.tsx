@@ -73,8 +73,8 @@ export default function TopHeader({
     >
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-3">
 
-        {/* Left: Website Branding Logo across all pages */}
-        <div className="flex items-center gap-2">
+        {/* Left: Website Branding Logo & Locality Dropdown across all pages */}
+        <div className="flex items-center gap-2 sm:gap-3">
           <div
             onClick={() => router.push("/home")}
             className="flex items-center gap-2 cursor-pointer select-none shrink-0 group"
@@ -88,6 +88,11 @@ export default function TopHeader({
               </span>
               <div className="w-2 h-2 rounded-full bg-amber-500 ml-0.5 shrink-0 animate-glow-pulse" />
             </div>
+          </div>
+
+          {/* Searchable Area Locality Dropdown */}
+          <div className="hidden lg:block">
+            <SearchableAreaDropdown selectedArea={selectedArea} onAreaChange={onAreaChange} />
           </div>
         </div>
 
@@ -185,7 +190,7 @@ export default function TopHeader({
                 </button>
               </>
             ) : (
-              /* Login button for all non-authenticated visitors (Primary Brand Amber Style) */
+              /* Login button for all non-authenticated visitors (Clean Dark Slate Pill) */
               <button
                 type="button"
                 onClick={() => {
@@ -196,9 +201,9 @@ export default function TopHeader({
                   }
                   onSignInClick?.();
                 }}
-                className="flex items-center justify-center gap-1.5 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-955 font-heading font-black text-xs px-4.5 py-2 rounded-xl border border-amber-300 shadow-md shadow-amber-500/20 cursor-pointer active:scale-95 transition-all duration-200 btn-shimmer"
+                className="btn btn-header-login btn-sm text-xs"
               >
-                <User className="w-4 h-4 text-slate-955 shrink-0" />
+                <User className="w-3.5 h-3.5 text-white shrink-0" />
                 <span>Login</span>
               </button>
             );

@@ -2,8 +2,9 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { MapPin, ExternalLink, Sparkles, Video, Calendar, Clock } from "lucide-react";
+import { MapPin, ExternalLink, Sparkles, Video, Calendar, Clock, Flag } from "lucide-react";
 import { OfferPost } from "@/types";
+import { reportListing } from "@/lib/moderation";
 
 interface OfferCardProps {
   post: OfferPost & {
@@ -16,6 +17,17 @@ interface OfferCardProps {
 
 export default function OfferCard({ post }: OfferCardProps) {
   const [isPlayingVideo, setIsPlayingVideo] = useState(false);
+
+  const handleReport = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const result = reportListing(post.id, "Inappropriate offer content");
+    if (result.isQuarantined) {
+      alert("This offer has been sent for moderation review.");
+    } else {
+      alert("Thank you! Offer reported to admin for verification.");
+    }
+  };
 
   // Format Offer Validity display
   const validityText = React.useMemo(() => {
@@ -35,7 +47,7 @@ export default function OfferCard({ post }: OfferCardProps) {
     <div className="group block bg-white border border-slate-200/90 rounded-2xl overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col relative w-full font-sans">
       {/* Featured Badge Overlay */}
       {post.is_featured && (
-        <div className="absolute top-2.5 left-2.5 z-20 bg-[#F9B637] text-slate-950 text-[9px] font-black uppercase tracking-wider px-2 py-0.5 rounded-xl flex items-center gap-1 shadow-md border border-amber-400">
+        <div className="absolute top-2.5 left-2.5 z-20 bg-[#FBBF24] text-[#0F172A] text-xs font-black uppercase tracking-wider px-2 py-0.5 rounded-xl flex items-center gap-1 shadow-md border-b border-[#D97706]">
           <Sparkles className="w-2.5 h-2.5 fill-current" />
           <span>Featured Offer</span>
         </div>
@@ -51,7 +63,7 @@ export default function OfferCard({ post }: OfferCardProps) {
             className="w-full h-full object-cover"
             poster={post.thumbnail_url || "/placeholder.webp"}
           />
-          <div className="absolute top-2.5 right-2.5 bg-slate-950/80 backdrop-blur-xs text-[#F9B637] text-[9px] font-black uppercase tracking-widest px-2 py-0.5 rounded-lg flex items-center gap-1 border border-amber-400/40">
+          <div className="absolute top-2.5 right-2.5 bg-slate-950/80 backdrop-blur-xs text-[#F9B637] text-xs font-black uppercase tracking-widest px-2 py-0.5 rounded-lg flex items-center gap-1 border border-amber-400/40">
             <Video className="w-3 h-3 text-[#F9B637]" />
             <span>Reel</span>
           </div>
@@ -67,7 +79,7 @@ export default function OfferCard({ post }: OfferCardProps) {
             className="object-cover transition-transform duration-300 group-hover:scale-105"
             unoptimized
           />
-          <span className="absolute bottom-2.5 right-2.5 bg-slate-950/80 backdrop-blur-xs text-white text-[9px] font-extrabold px-2 py-0.5 rounded-full">
+          <span className="absolute bottom-2.5 right-2.5 bg-slate-950/80 backdrop-blur-xs text-white text-xs font-extrabold px-2 py-0.5 rounded-full">
             {post.category || "Offer"}
           </span>
         </div>
@@ -82,34 +94,43 @@ export default function OfferCard({ post }: OfferCardProps) {
         </div>
 
         {post.description && (
-          <p className="text-[11px] text-slate-600 font-medium line-clamp-2 leading-relaxed">
+          <p className="text-xs text-slate-600 font-medium line-clamp-2 leading-relaxed">
             {post.description}
           </p>
         )}
 
         {/* Offer Validity Date Badge */}
-        <div className="flex items-center gap-1.5 bg-[#FFDD9C]/60 border border-amber-300/80 px-2.5 py-1 rounded-xl w-fit mt-0.5">
-          <Clock className="w-3 h-3 text-slate-900 shrink-0" />
-          <span className="text-[10.5px] font-black text-slate-900 uppercase tracking-wide">
+        <div className="flex items-center gap-1.5 bg-slate-100 border border-slate-200/80 px-2.5 py-1 rounded-lg w-fit mt-0.5">
+          <Clock className="w-3.5 h-3.5 text-slate-600 shrink-0" />
+          <span className="text-xs font-bold text-slate-700 uppercase tracking-wide">
             {validityText}
           </span>
         </div>
 
         {/* Footer actions */}
         <div className="flex items-center justify-between mt-auto pt-2 border-t border-slate-100">
-          <div className="flex items-center gap-1 text-[10px] text-slate-500 font-bold">
-            <MapPin className="w-3 h-3 text-amber-500 shrink-0" />
-            <span className="truncate max-w-[120px]">{post.area_tag}</span>
+          <div className="flex items-center gap-2 text-xs text-slate-500 font-bold">
+            <span className="flex items-center gap-1">
+              <MapPin className="w-3 h-3 text-amber-500 shrink-0" />
+              <span className="truncate max-w-[100px]">{post.area_tag}</span>
+            </span>
+            <button
+              onClick={handleReport}
+              className="text-slate-400 hover:text-rose-600 cursor-pointer transition-colors p-1"
+              title="Report Offer"
+            >
+              <Flag className="w-3.5 h-3.5" />
+            </button>
           </div>
 
           <a
             href={post.social_link || "#"}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 bg-[#F9B637] hover:bg-amber-400 text-slate-950 font-black px-3 py-1.5 rounded-xl text-xs shadow-2xs border border-amber-400 transition-all active:scale-95 cursor-pointer"
+            className="btn btn-primary btn-sm text-xs"
           >
             <span>View Deal</span>
-            <ExternalLink className="w-3 h-3 ml-0.5" />
+            <ExternalLink className="w-3.5 h-3.5 text-[#0F172A]" />
           </a>
         </div>
       </div>

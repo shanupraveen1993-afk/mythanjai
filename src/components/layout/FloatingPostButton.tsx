@@ -85,9 +85,9 @@ export default function FloatingPostButton() {
           }
           router.push(route);
         }}
-        className="w-full max-w-sm flex items-center justify-center gap-2 bg-gradient-to-r from-amber-400 via-amber-500 to-yellow-500 hover:from-amber-300 hover:to-yellow-400 text-slate-955 font-heading font-black text-sm px-6 py-3.5 rounded-2xl shadow-[0_8px_28px_rgba(245,158,11,0.45)] border border-amber-300/80 active:scale-95 transition-all cursor-pointer uppercase tracking-wider"
+        className="btn btn-primary btn-pill btn-lg w-full max-w-sm text-sm uppercase tracking-wider"
       >
-        <Plus className="w-5 h-5 stroke-[3]" />
+        <Plus className="w-5 h-5 stroke-[3] text-[#0F172A]" />
         <span>{label}</span>
       </button>
     </div>
