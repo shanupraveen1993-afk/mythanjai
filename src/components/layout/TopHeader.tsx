@@ -185,22 +185,33 @@ export default function TopHeader({
                 </button>
               </>
             ) : (
-              /* Login button for all non-authenticated visitors (Primary Yellow Pill) */
-              <button
-                type="button"
-                onClick={() => {
-                  if (typeof window !== "undefined") {
-                    sessionStorage.removeItem("namma_thanjai_target_post_route");
-                    localStorage.removeItem("namma_thanjai_target_post_route");
-                    sessionStorage.setItem("namma_thanjai_header_login_active", "true");
-                  }
-                  onSignInClick?.();
-                }}
-                className="btn-primary text-xs px-4 py-2"
-              >
-                <User className="w-4 h-4 shrink-0" />
-                <span>Login</span>
-              </button>
+              /* For Guest Users: Get App (Secondary Dark) + Login (Primary Yellow) */
+              <div className="flex items-center gap-2">
+                <a
+                  href="/namma_thanjai_release.apk"
+                  download="namma_thanjai_release.apk"
+                  className="btn-secondary text-xs px-3.5 py-1.5"
+                  title="Download Namma Thanjai Android App"
+                >
+                  <Download className="w-3.5 h-3.5 shrink-0" />
+                  <span>Get App</span>
+                </a>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (typeof window !== "undefined") {
+                      sessionStorage.removeItem("namma_thanjai_target_post_route");
+                      localStorage.removeItem("namma_thanjai_target_post_route");
+                      sessionStorage.setItem("namma_thanjai_header_login_active", "true");
+                    }
+                    onSignInClick?.();
+                  }}
+                  className="btn-primary text-xs px-4 py-2"
+                >
+                  <User className="w-4 h-4 shrink-0" />
+                  <span>Login</span>
+                </button>
+              </div>
             );
           })()}
         </div>
