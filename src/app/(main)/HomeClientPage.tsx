@@ -127,29 +127,6 @@ export default function HomeClientPage() {
   return (
     <div className="w-full flex flex-col gap-8 text-slate-800 font-sans mt-3">
 
-        {/* Hero Banner */}
-        <div className="relative w-full min-h-[180px] sm:min-h-[220px] rounded-3xl overflow-hidden bg-slate-950 text-white flex items-center px-6 sm:px-10 py-8 shadow-xl hero-grain">
-          <img
-            src="/thanjavur_temple_illustration.png"
-            alt="Namma Thanjavur"
-            className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none"
-          />
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/85 to-slate-950/20" />
-          {/* Brand Yellow ambient glow */}
-          <div className="absolute bottom-0 left-1/4 w-64 h-32 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
-          <div className="relative z-10 flex flex-col gap-3 max-w-xl">
-            <span className="text-xs font-black uppercase tracking-widest text-amber-400 bg-amber-400/10 border border-amber-400/30 px-3 py-1 rounded-full w-fit">
-              THANJAVUR DIRECT DIRECTORY &amp; MARKETPLACE
-            </span>
-            <h1 className="font-heading font-black text-2xl sm:text-3xl md:text-4xl text-white leading-tight">
-              Thanjavur's Direct Local Community Directory
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
-              Connect directly with Tanjore residents to buy, sell, hire verified tradesmen, and claim exclusive local store offers.
-            </p>
-          </div>
-        </div>
-
         {/* ── 2x2 Primary Category Entry Hub (PRD Wireframe Specification) ── */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 my-1">
           <button
@@ -207,9 +184,6 @@ export default function HomeClientPage() {
 
         {/* ── Static APK Download Banner Card for Web App Visitors ── */}
         <StaticApkCard variant="dark" />
-
-        {/* ── Category Matchmaker Bridge ────────────────── */}
-        <CategoryBridgeFeed />
 
         {/* ── SELL Preview ───────────────────────── */}
         <PreviewSection
