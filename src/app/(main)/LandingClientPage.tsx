@@ -48,31 +48,52 @@ export default function LandingClientPage() {
     }
   };
 
-  // 16 Category Quick Cards (8 columns x 2 rows) - Direct Category Names
-  const categoryCards = [
-    // SELL SEGMENT (1-4)
-    { id: "sell_plot", segment: "SELL", label: "Plots & Real Estate", icon: Building2, path: "/sell?category=Plots+%26+Real+Estate" },
-    { id: "sell_bike", segment: "SELL", label: "Bikes & Scooters", icon: Bike, path: "/sell?category=Used+Vehicles" },
-    { id: "sell_phone", segment: "SELL", label: "Smartphones", icon: Smartphone, path: "/sell?category=Electronics+%26+Mobiles" },
-    { id: "sell_car", segment: "SELL", label: "Cars & Autos", icon: Car, path: "/sell?category=Used+Vehicles" },
-
-    // NEED SEGMENT (5-8)
-    { id: "need_car", segment: "NEED", label: "Car Wanted", icon: Car, path: "/need?category=Used+Vehicles" },
-    { id: "need_rental", segment: "NEED", label: "House Rental Wanted", icon: Home, path: "/need?category=Property+Rental" },
-    { id: "need_land", segment: "NEED", label: "Land Wanted", icon: Building2, path: "/need?category=Plots+%26+Real+Estate" },
-    { id: "need_laptop", segment: "NEED", label: "Laptop Wanted", icon: Laptop, path: "/need?category=Electronics+%26+Mobiles" },
-
-    // SERVICES SEGMENT (9-12)
-    { id: "srv_elec", segment: "SERVICES", label: "Electrician", icon: Zap, path: "/services?category=Electrician" },
-    { id: "srv_plumb", segment: "SERVICES", label: "Plumber", icon: Droplets, path: "/services?category=Plumber" },
-    { id: "srv_carp", segment: "SERVICES", label: "Carpenter", icon: Hammer, path: "/services?category=Carpenter" },
-    { id: "srv_paint", segment: "SERVICES", label: "Painter", icon: Paintbrush, path: "/services?category=Painter" },
-
-    // OFFERS SEGMENT (13-16)
-    { id: "off_store", segment: "OFFER", label: "Store Discounts", icon: Tag, path: "/shops" },
-    { id: "off_cafe", segment: "OFFER", label: "Cafes & Dining", icon: Coffee, path: "/shops?category=Cafe+%26+Restaurant" },
-    { id: "off_saree", segment: "OFFER", label: "Textiles & Sarees", icon: ShoppingBag, path: "/shops?category=Textiles+%26+Readymades" },
-    { id: "off_gold", segment: "OFFER", label: "Jewelry & Gold", icon: Sparkles, path: "/shops?category=Gold+%26+Jewelry" },
+  // 4 Segment Category Blocks (2x2 Grid with 3 Cards each)
+  const segmentBlocks = [
+    {
+      id: "sell",
+      title: "SELL (விற்பனை)",
+      desc: "Direct items & real estate for sale by Tanjore owners",
+      viewAllPath: "/sell",
+      cards: [
+        { label: "Plots & Real Estate", icon: Building2, path: "/sell?category=Plots+%26+Real+Estate" },
+        { label: "Bikes & Scooters", icon: Bike, path: "/sell?category=Used+Vehicles" },
+        { label: "Smartphones & Mobiles", icon: Smartphone, path: "/sell?category=Electronics+%26+Mobiles" },
+      ],
+    },
+    {
+      id: "need",
+      title: "NEED (தேவைகள்)",
+      desc: "Local buyer requirements & rental requests in Tanjore",
+      viewAllPath: "/need",
+      cards: [
+        { label: "Car Wanted", icon: Car, path: "/need?category=Used+Vehicles" },
+        { label: "House Rental Wanted", icon: Home, path: "/need?category=Property+Rental" },
+        { label: "Land Wanted", icon: Building2, path: "/need?category=Plots+%26+Real+Estate" },
+      ],
+    },
+    {
+      id: "services",
+      title: "LOCAL SERVICES (சேவைகள்)",
+      desc: "Verified local doorstep technicians & skilled workers",
+      viewAllPath: "/services",
+      cards: [
+        { label: "Electrician", icon: Zap, path: "/services?category=Electrician" },
+        { label: "Plumber", icon: Droplets, path: "/services?category=Plumber" },
+        { label: "Carpenter", icon: Hammer, path: "/services?category=Carpenter" },
+      ],
+    },
+    {
+      id: "offers",
+      title: "LOCAL OFFERS (சலுகைகள்)",
+      desc: "Exclusive discounts & store deals from local Tanjore shops",
+      viewAllPath: "/shops",
+      cards: [
+        { label: "Store Discounts", icon: Tag, path: "/shops" },
+        { label: "Cafes & Dining", icon: Coffee, path: "/shops?category=Cafe+%26+Restaurant" },
+        { label: "Textiles & Fashion", icon: ShoppingBag, path: "/shops?category=Textiles+%26+Readymades" },
+      ],
+    },
   ];
 
   return (
@@ -88,38 +109,64 @@ export default function LandingClientPage() {
           </p>
         </section>
 
-        {/* ── 8x2 Category Quick Cards (16 Cards - Minimalist Gentle Cards) ── */}
+        {/* ── 2x2 Segment Category Blocks (4 Segments x 3 Cards each) ── */}
         <section className="flex flex-col gap-3">
           <div className="flex items-center justify-between">
             <h2 className="font-heading font-bold text-sm text-slate-800 uppercase tracking-wider">
-              Category Shortcuts
+              Explore By Segment
             </h2>
-            <span className="text-[11px] font-medium text-slate-400">16 Categories</span>
+            <span className="text-[11px] font-medium text-slate-400">4 Segments</span>
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5">
-            {categoryCards.map((card) => {
-              const IconComponent = card.icon;
-              return (
-                <button
-                  key={card.id}
-                  onClick={() => router.push(card.path)}
-                  className="p-3.5 rounded-xl bg-white border border-slate-200/90 text-slate-800 flex flex-col justify-between shadow-2xs hover:border-amber-400 hover:shadow-xs transition-all text-left min-h-[92px] cursor-pointer group"
-                >
-                  <div className="w-8 h-8 rounded-lg bg-amber-50 border border-amber-100/80 flex items-center justify-center text-amber-600 group-hover:bg-amber-500 group-hover:text-slate-950 transition-colors mb-2">
-                    <IconComponent className="w-4 h-4 stroke-[2.2]" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-5">
+            {segmentBlocks.map((block) => (
+              <div
+                key={block.id}
+                className="bg-white rounded-2xl border border-slate-200/90 p-4 sm:p-5 shadow-2xs hover:shadow-xs transition-shadow flex flex-col justify-between"
+              >
+                {/* Block Header */}
+                <div>
+                  <div className="flex items-center justify-between gap-2 pb-2.5 border-b border-slate-100">
+                    <div>
+                      <h3 className="font-heading font-black text-slate-900 text-sm sm:text-base tracking-tight">
+                        {block.title}
+                      </h3>
+                      <p className="text-[11px] text-slate-500 font-medium leading-tight">
+                        {block.desc}
+                      </p>
+                    </div>
+                    <button
+                      onClick={() => router.push(block.viewAllPath)}
+                      className="text-xs font-bold text-amber-700 hover:text-amber-800 flex items-center gap-1 hover:underline shrink-0 cursor-pointer"
+                    >
+                      <span>View All</span>
+                      <ChevronRight className="w-3.5 h-3.5 text-amber-600" />
+                    </button>
                   </div>
-                  <div>
-                    <span className="text-[9px] font-black uppercase tracking-wider text-amber-700/80 block leading-tight">
-                      {card.segment}
-                    </span>
-                    <span className="font-bold text-xs text-slate-900 leading-snug line-clamp-1 block">
-                      {card.label}
-                    </span>
+
+                  {/* 3 Direct Category Cards Grid */}
+                  <div className="grid grid-cols-3 gap-2 sm:gap-2.5 pt-3.5">
+                    {block.cards.map((item, idx) => {
+                      const IconComponent = item.icon;
+                      return (
+                        <button
+                          key={idx}
+                          onClick={() => router.push(item.path)}
+                          className="p-2.5 sm:p-3 rounded-xl bg-slate-50/80 hover:bg-amber-50/70 border border-slate-100 hover:border-amber-400/80 transition-all text-center flex flex-col items-center justify-center gap-2 cursor-pointer group min-h-[84px]"
+                        >
+                          <div className="w-8 h-8 rounded-lg bg-white border border-slate-200/80 flex items-center justify-center text-slate-700 group-hover:bg-amber-500 group-hover:text-slate-950 group-hover:border-amber-400 transition-colors shadow-2xs">
+                            <IconComponent className="w-4 h-4 stroke-[2.2]" />
+                          </div>
+                          <span className="font-bold text-[11px] text-slate-800 group-hover:text-amber-900 leading-snug line-clamp-2">
+                            {item.label}
+                          </span>
+                        </button>
+                      );
+                    })}
                   </div>
-                </button>
-              );
-            })}
+                </div>
+              </div>
+            ))}
           </div>
         </section>
 
