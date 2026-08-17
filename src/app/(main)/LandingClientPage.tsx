@@ -31,112 +31,107 @@ export default function LandingClientPage() {
     }
   };
 
-  // 4 Simple Segment Feature Cards (Illustration + Title + Listed Categories + Explore CTA)
-  const pillarCards = [
-    {
-      id: "p1",
-      title: "SELL (விற்பனை)",
-      desc: "Buy & Sell items directly with Tanjore owners with 0 brokerage",
-      icon: ShoppingBag,
-      path: "/sell",
-      categories: ["Plots & Real Estate", "Bikes & Scooters", "Smartphones", "Cars & Autos"],
-      btnText: "Explore Sell",
-    },
-    {
-      id: "p2",
-      title: "NEED (தேவைகள்)",
-      desc: "Post your requirements or find buyers in Thanjavur",
-      icon: Search,
-      path: "/need",
-      categories: ["Car Wanted", "House Rental Wanted", "Land Wanted", "Laptop Wanted"],
-      btnText: "Explore Need",
-    },
-    {
-      id: "p3",
-      title: "SERVICES (சேவைகள்)",
-      desc: "Hire verified doorstep technicians & skilled workers",
-      icon: Zap,
-      path: "/services",
-      categories: ["Electrician", "Plumber", "Carpenter", "Painter & AC Repair"],
-      btnText: "Explore Services",
-    },
-    {
-      id: "p4",
-      title: "OFFERS (சலுகைகள்)",
-      desc: "Discover exclusive store discounts & deals from Tanjore shops",
-      icon: Sparkles,
-      path: "/shops",
-      categories: ["Store Discounts", "Cafes & Dining", "Textiles & Sarees", "Jewelry & Gold"],
-      btnText: "Explore Offers",
-    },
-  ];
-
   return (
     <div className="w-full flex flex-col gap-8 text-slate-800 font-sans pb-24 bg-[#faf9f6] min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full flex flex-col gap-9 pt-4">
-        {/* ── Subtle Gentle Banner Intro ── */}
-        <section className="pt-2 flex flex-col gap-1">
-          <h1 className="font-heading font-black text-xl sm:text-2xl text-slate-900 tracking-tight">
-            Thanjavur&apos;s Local Directory &amp; Marketplace
-          </h1>
-          <p className="text-xs sm:text-sm text-slate-500 font-medium max-w-2xl">
-            Direct 1:1 connections between local residents in Tanjore. Buy, sell, hire skilled workers, or explore store offers with 0 brokerage.
-          </p>
-        </section>
+        {/* ── Genuine Premium Hero Section: What We Do in Thanjavur ── */}
+        <section className="bg-gradient-to-br from-slate-900 via-slate-800 to-amber-950 text-white rounded-3xl p-6 sm:p-10 shadow-lg border border-slate-700/80 relative overflow-hidden my-2">
+          {/* Subtle Background Glow Accent */}
+          <div className="absolute -top-24 -right-24 w-96 h-96 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
+          <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-amber-600/10 rounded-full blur-3xl pointer-events-none" />
 
-        {/* ── 4 Segment Feature Cards (Illustration + Title + Categories + Explore CTA) ── */}
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
-          {pillarCards.map((card) => {
-            const IconComponent = card.icon;
-            return (
+          <div className="relative z-10 flex flex-col gap-6 max-w-4xl">
+            {/* Top Pill Badge */}
+            <div className="flex items-center gap-2">
+              <span className="text-[10px] font-extrabold uppercase tracking-wider bg-amber-500/20 text-amber-300 px-3 py-1 rounded-full border border-amber-500/30">
+                WHAT WE DO • நம்ம தஞ்சாவூர்
+              </span>
+              <span className="text-xs text-slate-300 font-semibold hidden sm:inline-block">
+                0% Brokerage • Direct 1:1 Contact
+              </span>
+            </div>
+
+            {/* Main Headline & Intro */}
+            <div className="flex flex-col gap-2.5">
+              <h1 className="font-heading font-black text-2xl sm:text-4xl text-white tracking-tight leading-tight">
+                Thanjavur&apos;s Direct Local Directory &amp; Community Marketplace
+              </h1>
+              <p className="text-xs sm:text-sm text-slate-300 font-medium leading-relaxed max-w-2xl">
+                Namma Thanjai connects residents, buyers, local owners, verified skilled workers, and neighborhood shops directly across Tanjore — with zero brokerage, zero commission, and zero middleman fees.
+              </p>
+            </div>
+
+            {/* What We Do - 4 Pillars Quick Overview Cards */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 mt-2">
+              {/* Pillar 1: Sell */}
               <div
-                key={card.id}
-                className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-2xs hover:shadow-xs hover:border-amber-400/80 transition-all flex flex-col justify-between gap-4 group"
+                onClick={() => router.push("/sell")}
+                className="bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700 p-3.5 rounded-xl transition-all cursor-pointer flex flex-col gap-1.5 group"
               >
-                <div className="flex flex-col gap-3">
-                  {/* Top Illustration / Icon Accent & Title */}
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-amber-50 border border-amber-200/80 flex items-center justify-center text-amber-600 group-hover:bg-amber-500 group-hover:text-slate-950 group-hover:border-amber-400 transition-colors shrink-0 shadow-2xs">
-                      <IconComponent className="w-6 h-6 stroke-[2.2]" />
-                    </div>
-                    <div>
-                      <h2 className="font-heading font-black text-slate-900 text-sm sm:text-base leading-tight">
-                        {card.title}
-                      </h2>
-                      <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200/70 inline-block mt-0.5">
-                        Thanjavur Local
-                      </span>
-                    </div>
-                  </div>
-
-                  <p className="text-xs text-slate-500 font-medium leading-snug">
-                    {card.desc}
-                  </p>
-
-                  {/* Listed Categories inside the card */}
-                  <div className="pt-2 border-t border-slate-100 flex flex-wrap gap-1.5">
-                    {card.categories.map((cat, i) => (
-                      <span
-                        key={i}
-                        className="text-[11px] font-bold text-slate-700 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200/70 group-hover:border-amber-300 transition-colors"
-                      >
-                        {cat}
-                      </span>
-                    ))}
-                  </div>
+                <div className="flex items-center gap-2 text-amber-400 font-heading font-bold text-xs">
+                  <ShoppingBag className="w-4 h-4 shrink-0" />
+                  <span>1. Direct Selling</span>
                 </div>
-
-                {/* Secondary Explore CTA Button */}
-                <button
-                  onClick={() => router.push(card.path)}
-                  className="w-full btn-secondary text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs active:scale-98"
-                >
-                  <span>{card.btnText}</span>
-                  <ChevronRight className="w-4 h-4 shrink-0 text-slate-300" />
-                </button>
+                <p className="text-[11px] text-slate-300 leading-snug">
+                  Buy &amp; sell plots, bikes, mobiles &amp; cars directly with local owners.
+                </p>
+                <span className="text-[10px] font-bold text-amber-400 group-hover:translate-x-0.5 transition-transform inline-flex items-center gap-0.5 mt-1">
+                  Browse Sell &rarr;
+                </span>
               </div>
-            );
-          })}
+
+              {/* Pillar 2: Need */}
+              <div
+                onClick={() => router.push("/need")}
+                className="bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700 p-3.5 rounded-xl transition-all cursor-pointer flex flex-col gap-1.5 group"
+              >
+                <div className="flex items-center gap-2 text-amber-400 font-heading font-bold text-xs">
+                  <Search className="w-4 h-4 shrink-0" />
+                  <span>2. Buyer Requests</span>
+                </div>
+                <p className="text-[11px] text-slate-300 leading-snug">
+                  Post rental house, land, or car requirements to get direct calls.
+                </p>
+                <span className="text-[10px] font-bold text-amber-400 group-hover:translate-x-0.5 transition-transform inline-flex items-center gap-0.5 mt-1">
+                  Post Requirement &rarr;
+                </span>
+              </div>
+
+              {/* Pillar 3: Services */}
+              <div
+                onClick={() => router.push("/services")}
+                className="bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700 p-3.5 rounded-xl transition-all cursor-pointer flex flex-col gap-1.5 group"
+              >
+                <div className="flex items-center gap-2 text-amber-400 font-heading font-bold text-xs">
+                  <Zap className="w-4 h-4 shrink-0" />
+                  <span>3. Doorstep Services</span>
+                </div>
+                <p className="text-[11px] text-slate-300 leading-snug">
+                  Hire verified electricians, plumbers, carpenters &amp; technicians.
+                </p>
+                <span className="text-[10px] font-bold text-amber-400 group-hover:translate-x-0.5 transition-transform inline-flex items-center gap-0.5 mt-1">
+                  Find Technicians &rarr;
+                </span>
+              </div>
+
+              {/* Pillar 4: Offers */}
+              <div
+                onClick={() => router.push("/shops")}
+                className="bg-slate-800/90 hover:bg-slate-700/90 border border-slate-700 p-3.5 rounded-xl transition-all cursor-pointer flex flex-col gap-1.5 group"
+              >
+                <div className="flex items-center gap-2 text-amber-400 font-heading font-bold text-xs">
+                  <Sparkles className="w-4 h-4 shrink-0" />
+                  <span>4. Store Offers</span>
+                </div>
+                <p className="text-[11px] text-slate-300 leading-snug">
+                  Explore verified sales, cafe discounts &amp; retail deals in Tanjore.
+                </p>
+                <span className="text-[10px] font-bold text-amber-400 group-hover:translate-x-0.5 transition-transform inline-flex items-center gap-0.5 mt-1">
+                  Explore Offers &rarr;
+                </span>
+              </div>
+            </div>
+          </div>
         </section>
 
         {/* ── 1. SELL Segment Carousel (6 Sample Items) ── */}

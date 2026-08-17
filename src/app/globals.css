@@ -373,15 +373,9 @@ body {
   animation: bounce-slow 2.4s ease-in-out infinite;
 }
 
-/* ── Tab Active Dot Indicator ─────────────────────── */
-.tab-active-dot::after {
-  content: '';
-  display: block;
-  width: 4px;
-  height: 4px;
-  background: #FBBF24;
-  border-radius: 9999px;
-  margin: 2px auto 0;
+/* ── Tab Active Indicator ── */
+.tab-active-dot {
+  position: relative;
 }
 
 /* ── Hero Grain Texture Overlay ──────────────────── */

@@ -86,7 +86,6 @@ export default function TopHeader({
               <span className="font-heading font-black tracking-tight text-amber-600 text-sm sm:text-base md:text-lg leading-none">
                 நம்ம Thanjai
               </span>
-              <div className="w-2 h-2 rounded-full bg-amber-500 ml-0.5 shrink-0 animate-glow-pulse" />
             </div>
           </div>
         </div>
@@ -99,8 +98,8 @@ export default function TopHeader({
           const isServiceActive = pathname.includes("/services") || pathname.includes("/post/service") || activeTab === "services";
           const isOfferActive = pathname.includes("/shops") || pathname.includes("/offers") || activeTab === "shops";
 
-          const activeStyle = "bg-white text-amber-600 border border-amber-400/70 shadow-sm font-black tab-active-dot";
-          const inactiveStyle = "text-slate-500 hover:text-amber-700 hover:bg-amber-50/60 font-bold transition-all duration-200";
+          const activeStyle = "bg-amber-500 text-slate-950 font-black shadow-xs rounded-lg border border-amber-600/30";
+          const inactiveStyle = "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-bold transition-all duration-200";
 
           return (
             <div className="hidden sm:flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl border border-slate-200/80 font-heading backdrop-blur-sm">
@@ -134,7 +133,7 @@ export default function TopHeader({
                 className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${isServiceActive ? activeStyle : inactiveStyle
                   }`}
               >
-                Local Service
+                Services
               </button>
               <button
                 type="button"
@@ -142,7 +141,7 @@ export default function TopHeader({
                 className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${isOfferActive ? activeStyle : inactiveStyle
                   }`}
               >
-                Local Offer
+                Offers
               </button>
             </div>
           );
