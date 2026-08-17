@@ -48,19 +48,19 @@ export default function LandingClientPage() {
     }
   };
 
-  // 16 Category Quick Cards (8 columns x 2 rows) - Pure Gentle Vector Icons
+  // 16 Category Quick Cards (8 columns x 2 rows) - Direct Category Names
   const categoryCards = [
     // SELL SEGMENT (1-4)
-    { id: "sell_plot", segment: "SELL", label: "Sell Plot", icon: Building2, path: "/sell?category=Plots+%26+Real+Estate" },
-    { id: "sell_bike", segment: "SELL", label: "Sell Bike", icon: Bike, path: "/sell?category=Used+Vehicles" },
-    { id: "sell_phone", segment: "SELL", label: "Sell Phone", icon: Smartphone, path: "/sell?category=Electronics+%26+Mobiles" },
-    { id: "sell_car", segment: "SELL", label: "Sell Car", icon: Car, path: "/sell?category=Used+Vehicles" },
+    { id: "sell_plot", segment: "SELL", label: "Plots & Real Estate", icon: Building2, path: "/sell?category=Plots+%26+Real+Estate" },
+    { id: "sell_bike", segment: "SELL", label: "Bikes & Scooters", icon: Bike, path: "/sell?category=Used+Vehicles" },
+    { id: "sell_phone", segment: "SELL", label: "Smartphones", icon: Smartphone, path: "/sell?category=Electronics+%26+Mobiles" },
+    { id: "sell_car", segment: "SELL", label: "Cars & Autos", icon: Car, path: "/sell?category=Used+Vehicles" },
 
     // NEED SEGMENT (5-8)
-    { id: "need_car", segment: "NEED", label: "Need Car", icon: Car, path: "/need?category=Used+Vehicles" },
-    { id: "need_rental", segment: "NEED", label: "Need Rental House", icon: Home, path: "/need?category=Property+Rental" },
-    { id: "need_land", segment: "NEED", label: "Need Land", icon: Building2, path: "/need?category=Plots+%26+Real+Estate" },
-    { id: "need_laptop", segment: "NEED", label: "Need Laptop", icon: Laptop, path: "/need?category=Electronics+%26+Mobiles" },
+    { id: "need_car", segment: "NEED", label: "Car Wanted", icon: Car, path: "/need?category=Used+Vehicles" },
+    { id: "need_rental", segment: "NEED", label: "House Rental Wanted", icon: Home, path: "/need?category=Property+Rental" },
+    { id: "need_land", segment: "NEED", label: "Land Wanted", icon: Building2, path: "/need?category=Plots+%26+Real+Estate" },
+    { id: "need_laptop", segment: "NEED", label: "Laptop Wanted", icon: Laptop, path: "/need?category=Electronics+%26+Mobiles" },
 
     // SERVICES SEGMENT (9-12)
     { id: "srv_elec", segment: "SERVICES", label: "Electrician", icon: Zap, path: "/services?category=Electrician" },
@@ -70,9 +70,9 @@ export default function LandingClientPage() {
 
     // OFFERS SEGMENT (13-16)
     { id: "off_store", segment: "OFFER", label: "Store Discounts", icon: Tag, path: "/shops" },
-    { id: "off_cafe", segment: "OFFER", label: "Cafe Offers", icon: Coffee, path: "/shops?category=Cafe+%26+Restaurant" },
-    { id: "off_saree", segment: "OFFER", label: "Textile Sales", icon: ShoppingBag, path: "/shops?category=Textiles+%26+Readymades" },
-    { id: "off_gold", segment: "OFFER", label: "Jewelry Offers", icon: Sparkles, path: "/shops?category=Gold+%26+Jewelry" },
+    { id: "off_cafe", segment: "OFFER", label: "Cafes & Dining", icon: Coffee, path: "/shops?category=Cafe+%26+Restaurant" },
+    { id: "off_saree", segment: "OFFER", label: "Textiles & Sarees", icon: ShoppingBag, path: "/shops?category=Textiles+%26+Readymades" },
+    { id: "off_gold", segment: "OFFER", label: "Jewelry & Gold", icon: Sparkles, path: "/shops?category=Gold+%26+Jewelry" },
   ];
 
   return (
