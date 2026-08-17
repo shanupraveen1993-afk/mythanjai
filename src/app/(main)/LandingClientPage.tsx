@@ -6,19 +6,9 @@ import { useAuth } from "@/hooks/use-auth";
 import {
   ChevronRight,
   MapPin,
-  Building2,
-  Bike,
-  Smartphone,
-  Car,
-  Home,
-  Laptop,
-  Zap,
-  Droplets,
-  Hammer,
-  Paintbrush,
-  Tag,
-  Coffee,
   ShoppingBag,
+  Search,
+  Zap,
   Sparkles,
 } from "lucide-react";
 
@@ -41,24 +31,44 @@ export default function LandingClientPage() {
     }
   };
 
-  // 16 Highlights Quick Cards (Single title, no category/segment badge)
-  const highlightCards = [
-    { id: "h1", label: "Plots & Real Estate", icon: Building2, path: "/sell?category=Plots+%26+Real+Estate" },
-    { id: "h2", label: "Bikes & Scooters", icon: Bike, path: "/sell?category=Used+Vehicles" },
-    { id: "h3", label: "Smartphones", icon: Smartphone, path: "/sell?category=Electronics+%26+Mobiles" },
-    { id: "h4", label: "Cars & Autos", icon: Car, path: "/sell?category=Used+Vehicles" },
-    { id: "h5", label: "Car Wanted", icon: Car, path: "/need?category=Used+Vehicles" },
-    { id: "h6", label: "House Rental Wanted", icon: Home, path: "/need?category=Property+Rental" },
-    { id: "h7", label: "Land Wanted", icon: Building2, path: "/need?category=Plots+%26+Real+Estate" },
-    { id: "h8", label: "Laptop Wanted", icon: Laptop, path: "/need?category=Electronics+%26+Mobiles" },
-    { id: "h9", label: "Electrician", icon: Zap, path: "/services?category=Electrician" },
-    { id: "h10", label: "Plumber", icon: Droplets, path: "/services?category=Plumber" },
-    { id: "h11", label: "Carpenter", icon: Hammer, path: "/services?category=Carpenter" },
-    { id: "h12", label: "Painter", icon: Paintbrush, path: "/services?category=Painter" },
-    { id: "h13", label: "Store Discounts", icon: Tag, path: "/shops" },
-    { id: "h14", label: "Cafes & Dining", icon: Coffee, path: "/shops?category=Cafe+%26+Restaurant" },
-    { id: "h15", label: "Textiles & Sarees", icon: ShoppingBag, path: "/shops?category=Textiles+%26+Readymades" },
-    { id: "h16", label: "Jewelry & Gold", icon: Sparkles, path: "/shops?category=Gold+%26+Jewelry" },
+  // 4 Simple Segment Feature Cards (Illustration + Title + Listed Categories + Explore CTA)
+  const pillarCards = [
+    {
+      id: "p1",
+      title: "SELL (விற்பனை)",
+      desc: "Buy & Sell items directly with Tanjore owners with 0 brokerage",
+      icon: ShoppingBag,
+      path: "/sell",
+      categories: ["Plots & Real Estate", "Bikes & Scooters", "Smartphones", "Cars & Autos"],
+      btnText: "Explore Sell",
+    },
+    {
+      id: "p2",
+      title: "NEED (தேவைகள்)",
+      desc: "Post your requirements or find buyers in Thanjavur",
+      icon: Search,
+      path: "/need",
+      categories: ["Car Wanted", "House Rental Wanted", "Land Wanted", "Laptop Wanted"],
+      btnText: "Explore Need",
+    },
+    {
+      id: "p3",
+      title: "LOCAL SERVICES (சேவைகள்)",
+      desc: "Hire verified doorstep technicians & skilled workers",
+      icon: Zap,
+      path: "/services",
+      categories: ["Electrician", "Plumber", "Carpenter", "Painter & AC Repair"],
+      btnText: "Explore Services",
+    },
+    {
+      id: "p4",
+      title: "LOCAL OFFERS (சலுகைகள்)",
+      desc: "Discover exclusive store discounts & deals from Tanjore shops",
+      icon: Sparkles,
+      path: "/shops",
+      categories: ["Store Discounts", "Cafes & Dining", "Textiles & Sarees", "Jewelry & Gold"],
+      btnText: "Explore Offers",
+    },
   ];
 
   return (
@@ -74,33 +84,59 @@ export default function LandingClientPage() {
           </p>
         </section>
 
-        {/* ── 16 Highlights Cards (Clean Icon + Single Title, No Badges) ── */}
-        <section className="flex flex-col gap-3">
-          <div className="flex items-center justify-between">
-            <h2 className="font-heading font-extrabold text-base text-slate-900 tracking-tight">
-              Highlights
-            </h2>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2.5">
-            {highlightCards.map((card) => {
-              const IconComponent = card.icon;
-              return (
-                <button
-                  key={card.id}
-                  onClick={() => router.push(card.path)}
-                  className="p-3 sm:p-3.5 rounded-xl bg-white border border-slate-200/90 text-slate-800 flex flex-col justify-between shadow-2xs hover:border-amber-400 hover:shadow-xs transition-all text-left min-h-[88px] cursor-pointer group"
-                >
-                  <div className="w-8 h-8 rounded-lg bg-amber-50 border border-amber-100/80 flex items-center justify-center text-amber-600 group-hover:bg-amber-500 group-hover:text-slate-950 transition-colors mb-2">
-                    <IconComponent className="w-4 h-4 stroke-[2.2]" />
+        {/* ── 4 Segment Feature Cards (Illustration + Title + Categories + Explore CTA) ── */}
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+          {pillarCards.map((card) => {
+            const IconComponent = card.icon;
+            return (
+              <div
+                key={card.id}
+                className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-2xs hover:shadow-xs hover:border-amber-400/80 transition-all flex flex-col justify-between gap-4 group"
+              >
+                <div className="flex flex-col gap-3">
+                  {/* Top Illustration / Icon Accent & Title */}
+                  <div className="flex items-center gap-3">
+                    <div className="w-12 h-12 rounded-xl bg-amber-50 border border-amber-200/80 flex items-center justify-center text-amber-600 group-hover:bg-amber-500 group-hover:text-slate-950 group-hover:border-amber-400 transition-colors shrink-0 shadow-2xs">
+                      <IconComponent className="w-6 h-6 stroke-[2.2]" />
+                    </div>
+                    <div>
+                      <h2 className="font-heading font-black text-slate-900 text-sm sm:text-base leading-tight">
+                        {card.title}
+                      </h2>
+                      <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200/70 inline-block mt-0.5">
+                        Thanjavur Local
+                      </span>
+                    </div>
                   </div>
-                  <span className="font-bold text-xs text-slate-900 leading-snug line-clamp-2 block">
-                    {card.label}
-                  </span>
+
+                  <p className="text-xs text-slate-500 font-medium leading-snug">
+                    {card.desc}
+                  </p>
+
+                  {/* Listed Categories inside the card */}
+                  <div className="pt-2 border-t border-slate-100 flex flex-wrap gap-1.5">
+                    {card.categories.map((cat, i) => (
+                      <span
+                        key={i}
+                        className="text-[11px] font-bold text-slate-700 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200/70 group-hover:border-amber-300 transition-colors"
+                      >
+                        {cat}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Primary Explore CTA Button */}
+                <button
+                  onClick={() => router.push(card.path)}
+                  className="w-full btn-primary text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs active:scale-98"
+                >
+                  <span>{card.btnText}</span>
+                  <ChevronRight className="w-4 h-4 shrink-0" />
                 </button>
-              );
-            })}
-          </div>
+              </div>
+            );
+          })}
         </section>
 
         {/* ── 1. SELL Segment Carousel (6 Sample Items) ── */}
