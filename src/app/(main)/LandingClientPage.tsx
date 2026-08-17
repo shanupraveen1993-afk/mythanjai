@@ -77,60 +77,7 @@ export default function LandingClientPage() {
 
   return (
     <div className="w-full flex flex-col gap-8 text-slate-800 font-sans pb-24 bg-[#faf9f6] min-h-screen">
-      {/* ── Top Header Bar (Gentle & Minimal) ── */}
-      <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-slate-200/80 px-4 sm:px-8 py-3.5 shadow-2xs">
-        <div className="max-w-7xl mx-auto flex items-center justify-between gap-4">
-          {/* Left: Branding Logo */}
-          <div
-            onClick={() => router.push("/")}
-            className="flex items-center gap-2.5 cursor-pointer select-none group shrink-0"
-          >
-            <div className="w-9 h-9 shrink-0 group-hover:scale-102 transition-transform duration-200 flex items-center justify-center">
-              <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-full h-full object-contain mix-blend-multiply" />
-            </div>
-            <div className="flex items-center gap-1.5">
-              <span className="font-heading font-black tracking-tight text-slate-900 text-base sm:text-xl leading-none">
-                நம்ம Thanjai
-              </span>
-              <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200/70 hidden sm:inline">
-                Thanjavur Local
-              </span>
-            </div>
-          </div>
-
-          {/* Right: Login & Profile Buttons */}
-          <div className="flex items-center gap-2.5">
-            {isAuthVerified ? (
-              <button
-                onClick={handleProfileClick}
-                className="flex items-center gap-2 bg-slate-100 hover:bg-slate-200 text-slate-800 px-4 py-2 rounded-full text-xs font-bold transition-all border border-slate-200 cursor-pointer"
-              >
-                <User className="w-4 h-4 text-slate-600" />
-                <span>My Profile</span>
-              </button>
-            ) : (
-              <>
-                <button
-                  onClick={handleSignInClick}
-                  className="flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-slate-900 px-3.5 py-2 rounded-full hover:bg-slate-100 transition-colors cursor-pointer"
-                >
-                  <LogIn className="w-4 h-4 text-slate-500" />
-                  <span>Login</span>
-                </button>
-                <button
-                  onClick={handleProfileClick}
-                  className="flex items-center gap-1.5 bg-slate-900 hover:bg-slate-800 text-white px-4 py-2 rounded-full text-xs font-bold transition-all active:scale-98 shadow-2xs cursor-pointer"
-                >
-                  <User className="w-4 h-4 text-slate-300" />
-                  <span>Profile</span>
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-      </header>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full flex flex-col gap-9">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full flex flex-col gap-9 pt-4">
         {/* ── Subtle Gentle Banner Intro ── */}
         <section className="pt-2 flex flex-col gap-1">
           <h1 className="font-heading font-black text-xl sm:text-2xl text-slate-900 tracking-tight">
