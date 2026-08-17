@@ -126,13 +126,13 @@ export default function LandingClientPage() {
                   </div>
                 </div>
 
-                {/* Primary Explore CTA Button */}
+                {/* Secondary Explore CTA Button */}
                 <button
                   onClick={() => router.push(card.path)}
-                  className="w-full btn-primary text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs active:scale-98"
+                  className="w-full btn-secondary text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs active:scale-98"
                 >
                   <span>{card.btnText}</span>
-                  <ChevronRight className="w-4 h-4 shrink-0" />
+                  <ChevronRight className="w-4 h-4 shrink-0 text-slate-300" />
                 </button>
               </div>
             );
