@@ -24,54 +24,6 @@ export default function LandingClientPage() {
     }
   };
 
-  // 4 Segment Category Blocks (2x2 Grid with 3 Cards each)
-  const segmentBlocks = [
-    {
-      id: "sell",
-      title: "SELL (விற்பனை)",
-      desc: "Direct items & real estate for sale by Tanjore owners",
-      viewAllPath: "/sell",
-      cards: [
-        { label: "Plots & Real Estate", icon: Building2, path: "/sell?category=Plots+%26+Real+Estate" },
-        { label: "Bikes & Scooters", icon: Bike, path: "/sell?category=Used+Vehicles" },
-        { label: "Smartphones & Mobiles", icon: Smartphone, path: "/sell?category=Electronics+%26+Mobiles" },
-      ],
-    },
-    {
-      id: "need",
-      title: "NEED (தேவைகள்)",
-      desc: "Local buyer requirements & rental requests in Tanjore",
-      viewAllPath: "/need",
-      cards: [
-        { label: "Car Wanted", icon: Car, path: "/need?category=Used+Vehicles" },
-        { label: "House Rental Wanted", icon: Home, path: "/need?category=Property+Rental" },
-        { label: "Land Wanted", icon: Building2, path: "/need?category=Plots+%26+Real+Estate" },
-      ],
-    },
-    {
-      id: "services",
-      title: "LOCAL SERVICES (சேவைகள்)",
-      desc: "Verified local doorstep technicians & skilled workers",
-      viewAllPath: "/services",
-      cards: [
-        { label: "Electrician", icon: Zap, path: "/services?category=Electrician" },
-        { label: "Plumber", icon: Droplets, path: "/services?category=Plumber" },
-        { label: "Carpenter", icon: Hammer, path: "/services?category=Carpenter" },
-      ],
-    },
-    {
-      id: "offers",
-      title: "LOCAL OFFERS (சலுகைகள்)",
-      desc: "Exclusive discounts & store deals from local Tanjore shops",
-      viewAllPath: "/shops",
-      cards: [
-        { label: "Store Discounts", icon: Tag, path: "/shops" },
-        { label: "Cafes & Dining", icon: Coffee, path: "/shops?category=Cafe+%26+Restaurant" },
-        { label: "Textiles & Fashion", icon: ShoppingBag, path: "/shops?category=Textiles+%26+Readymades" },
-      ],
-    },
-  ];
-
   return (
     <div className="w-full flex flex-col gap-8 text-slate-800 font-sans pb-24 bg-[#faf9f6] min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full flex flex-col gap-9 pt-4">
