@@ -42,6 +42,23 @@ export default function TopHeader({
   const searchParams = useSearchParams();
   const currentCategory = searchParams.get("category");
 
+  // "Get App" header persistence & 1-time click dismissal rule
+  const [hasClickedGetApp, setHasClickedGetApp] = useState<boolean>(true); // default true for SSR safety
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const clicked = localStorage.getItem("namma_thanjai_get_app_clicked");
+      setHasClickedGetApp(Boolean(clicked));
+    }
+  }, []);
+
+  const handleGetAppClick = () => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("namma_thanjai_get_app_clicked", "true");
+      setHasClickedGetApp(true);
+    }
+  };
+
   const getSectionTitle = () => {
     if (currentCategory) return currentCategory;
     if (pathname === "/sell") return "Sell";
@@ -149,70 +166,68 @@ export default function TopHeader({
 
         {/* Right: Landing Page Login Button vs Logged-In Chat & Profile Controls */}
         <div className="flex items-center gap-2 shrink-0">
-          {(() => {
-            const isChatActive = pathname.includes("/chat");
-            const isProfileActive = pathname.includes("/profile") || activeTab === "profile";
+          {/* Get App button: Stays for both guest & logged in users UNTIL clicked at least once */}
+          {!hasClickedGetApp && (
+            <a
+              href="/namma_thanjai_release.apk"
+              download="namma_thanjai_release.apk"
+              onClick={handleGetAppClick}
+              className="btn-secondary text-xs px-3.5 py-1.5 shrink-0"
+              title="Download Namma Thanjai Android App"
+            >
+              <Download className="w-3.5 h-3.5 shrink-0" />
+              <span>Get App</span>
+            </a>
+          )}
 
-            return isAuthVerified ? (
-              <>
-                {/* Chat Icon & Profile Button for Logged In Verified Users */}
-                <button
-                  type="button"
-                  onClick={() => router.push("/chat")}
-                  className={`relative flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3.5 rounded-full text-xs font-bold transition-all duration-200 cursor-pointer group active:scale-95 ${isChatActive
-                      ? "bg-amber-500/10 text-amber-600 border border-amber-400/80 font-black shadow-2xs"
-                      : "bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200/80 text-slate-700 hover:text-amber-600"
-                    }`}
-                  title="In-App Safety Chat"
-                >
-                  <MessageSquare className={`w-4 h-4 shrink-0 ${isChatActive ? "text-amber-600 fill-amber-500/20" : "text-slate-500 group-hover:text-amber-600"}`} />
-                  <span className="hidden sm:inline text-xs ml-1.5 font-black">Chat Now</span>
-                  <span className="absolute top-0 right-0 sm:right-2 w-2.5 h-2.5 rounded-full bg-red-500 border-2 border-white animate-pulse" />
-                </button>
+          {isAuthVerified ? (
+            <>
+              {/* Chat Icon & Profile Button for Logged In Verified Users */}
+              <button
+                type="button"
+                onClick={() => router.push("/chat")}
+                className={`relative flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3.5 rounded-full text-xs font-bold transition-all duration-200 cursor-pointer group active:scale-95 ${isChatActive
+                    ? "bg-amber-500/10 text-amber-600 border border-amber-400/80 font-black shadow-2xs"
+                    : "bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200/80 text-slate-700 hover:text-amber-600"
+                  }`}
+                title="In-App Safety Chat"
+              >
+                <MessageSquare className={`w-4 h-4 shrink-0 ${isChatActive ? "text-amber-600 fill-amber-500/20" : "text-slate-500 group-hover:text-amber-600"}`} />
+                <span className="hidden sm:inline text-xs ml-1.5 font-black">Chat Now</span>
+                <span className="absolute top-0 right-0 sm:right-2 w-2.5 h-2.5 rounded-full bg-red-500 border-2 border-white animate-pulse" />
+              </button>
 
-                <button
-                  type="button"
-                  onClick={() => onTabChange?.("profile")}
-                  className={`relative flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3.5 rounded-full text-xs transition-all duration-200 cursor-pointer group active:scale-95 ${isProfileActive
-                      ? "bg-amber-500/10 text-amber-600 border border-amber-400/80 font-black shadow-2xs"
-                      : "bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200/80 text-slate-700 hover:text-amber-600 font-bold"
-                    }`}
-                  title={`Verified Profile (${phoneDisplay})`}
-                >
-                  <User className={`w-4 h-4 shrink-0 ${isProfileActive ? "text-amber-600" : "text-slate-500 group-hover:text-amber-600"}`} />
-                  <span className="hidden md:inline text-xs ml-1.5 font-black">Profile</span>
-                </button>
-              </>
-            ) : (
-              /* For Guest Users: Get App (Secondary Dark) + Login (Primary Yellow) */
-              <div className="flex items-center gap-2">
-                <a
-                  href="/namma_thanjai_release.apk"
-                  download="namma_thanjai_release.apk"
-                  className="btn-secondary text-xs px-3.5 py-1.5"
-                  title="Download Namma Thanjai Android App"
-                >
-                  <Download className="w-3.5 h-3.5 shrink-0" />
-                  <span>Get App</span>
-                </a>
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (typeof window !== "undefined") {
-                      sessionStorage.removeItem("namma_thanjai_target_post_route");
-                      localStorage.removeItem("namma_thanjai_target_post_route");
-                      sessionStorage.setItem("namma_thanjai_header_login_active", "true");
-                    }
-                    onSignInClick?.();
-                  }}
-                  className="btn-primary text-xs px-4 py-2"
-                >
-                  <User className="w-4 h-4 shrink-0" />
-                  <span>Login</span>
-                </button>
-              </div>
-            );
-          })()}
+              <button
+                type="button"
+                onClick={() => onTabChange?.("profile")}
+                className={`relative flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3.5 rounded-full text-xs transition-all duration-200 cursor-pointer group active:scale-95 ${isProfileActive
+                    ? "bg-amber-500/10 text-amber-600 border border-amber-400/80 font-black shadow-2xs"
+                    : "bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200/80 text-slate-700 hover:text-amber-600 font-bold"
+                  }`}
+                title={`Verified Profile (${phoneDisplay})`}
+              >
+                <User className={`w-4 h-4 shrink-0 ${isProfileActive ? "text-amber-600" : "text-slate-500 group-hover:text-amber-600"}`} />
+                <span className="hidden md:inline text-xs ml-1.5 font-black">Profile</span>
+              </button>
+            </>
+          ) : (
+            /* For Guest Users: Login (Primary Yellow) */
+            <button
+              type="button"
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  sessionStorage.removeItem("namma_thanjai_target_post_route");
+                  localStorage.removeItem("namma_thanjai_target_post_route");
+                  sessionStorage.setItem("namma_thanjai_header_login_active", "true");
+                }
+                onSignInClick?.();
+              }}
+              className="btn-primary text-xs px-4 py-2 shrink-0"
+            >
+              <User className="w-4 h-4 shrink-0" />
+              <span>Login</span>
+            </button>
+          )}
         </div>
       </div>
     </header>
