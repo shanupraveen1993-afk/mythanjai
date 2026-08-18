@@ -238,6 +238,19 @@ export default function PostForm({ segment }: PostFormProps) {
     }
   };
 
+  // Zero-Click Live AI Auto-Refining Effect (Debounced)
+  useEffect(() => {
+    if (!description.trim()) {
+      setPreviewDescription("");
+      return;
+    }
+    setPreviewDescription(description.trim());
+    const timer = setTimeout(() => {
+      handleBlurDescription();
+    }, 650);
+    return () => clearTimeout(timer);
+  }, [description, segment]);
+
   // Auto-fill user profile phone
   useEffect(() => {
     if (profile?.phone && !phone) {

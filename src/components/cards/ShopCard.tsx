@@ -187,8 +187,8 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
   const validityText = formatOfferValidity(post.valid_from, post.valid_to, post.created_at);
 
   return (
-    <div className="bg-white rounded-2xl overflow-hidden shadow-[0_3px_8px_rgba(0,0,0,0.04)] transition-all duration-200 flex flex-col relative font-sans border border-slate-200/80 group card-lift">
-      {/* Featured / Expired / Ends Today Overlay */}
+    <div className="bg-white rounded-2xl overflow-hidden shadow-2xs border border-slate-200/80 flex flex-col relative font-sans group">
+      {/* Featured / Expired / Ends Today Overlay Banner */}
       {isExpired ? (
         <div className="absolute top-2.5 left-2.5 z-20 bg-rose-600 text-white text-xs font-bold px-2.5 py-0.5 rounded-lg flex items-center gap-1 shadow-md">
           <span>⚠️ Offer Expired</span>
@@ -203,10 +203,53 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
           <Sparkles className="w-2.5 h-2.5 fill-current" />
           <span>Featured Store</span>
         </div>
-      ) : null}
+      ) : (
+        <div className="absolute top-2.5 left-2.5 z-20">
+          <span className="bg-rose-50 text-rose-700 border border-rose-200 font-semibold text-[11px] px-2.5 py-1 rounded-md shadow-2xs">
+            {post.category || "Store Offer"}
+          </span>
+        </div>
+      )}
 
-      {/* Main Image Box (Compulsory Image / Placeholder Box for 100% Uniform Height) */}
-      {images.length > 0 ? (
+      {/* Top Right: Vertical Stack of 2 Action Buttons (1st: Save, 2nd: Share) */}
+      <div className="absolute top-2.5 right-2.5 flex flex-col gap-1.5 z-20">
+        <button
+          type="button"
+          onClick={handleToggleSave}
+          className={`w-7 h-7 rounded-md border backdrop-blur-md shadow-2xs flex items-center justify-center transition-all cursor-pointer ${
+            saved
+              ? "bg-amber-500 text-slate-950 border-amber-400 font-bold"
+              : "bg-slate-950/40 text-white border-white/20 hover:bg-slate-950/70"
+          }`}
+          title={saved ? "Saved" : "Save Offer"}
+          aria-label={saved ? "Remove saved offer" : "Save this offer"}
+        >
+          <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-current" : ""}`} />
+        </button>
+
+        <button
+          type="button"
+          onClick={handleShare}
+          className="w-7 h-7 rounded-md border border-white/20 bg-slate-950/40 text-white hover:bg-slate-950/70 flex items-center justify-center transition-all cursor-pointer shadow-2xs backdrop-blur-md"
+          title="Share Offer"
+          aria-label="Share this offer"
+        >
+          <Share2 className="w-3.5 h-3.5" />
+        </button>
+      </div>
+
+      {/* Media priority: Video Reel ➔ Photo ➔ "No Image Provided" Banner */}
+      {post.offer_social_link ? (
+        <div className="relative w-full h-48 sm:h-56 bg-black overflow-hidden">
+          <video
+            src={post.offer_social_link}
+            controls
+            preload="metadata"
+            playsInline
+            className="w-full h-full object-contain"
+          />
+        </div>
+      ) : images.length > 0 ? (
         <div className="relative w-full h-44 sm:h-52 bg-slate-900 overflow-hidden">
           <Image
             src={images[0]}
@@ -219,7 +262,7 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
       ) : (
         <div className="relative w-full h-44 sm:h-52 bg-slate-50 border-b border-slate-200/60 flex flex-col items-center justify-center gap-1.5 text-slate-400">
           <Camera className="w-6 h-6 stroke-[1.5] text-slate-300" />
-          <span className="text-xs font-semibold text-slate-400">No Offer Image Provided</span>
+          <span className="text-xs font-semibold text-slate-400">No Image Provided</span>
         </div>
       )}
 
@@ -231,17 +274,17 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
           </h3>
         </div>
 
-        {/* 1. Active Promotion Offer Details */}
+        {/* 1. Active Promotion Offer Details (Highlighted in Royal Blue Pattern Box) */}
         {post.offer_title && (
           <div className={`border rounded-xl p-3 flex flex-col gap-1.5 mt-0.5 font-sans ${
-            isExpired ? "bg-slate-50 border-slate-200 text-slate-500 opacity-75" : "bg-amber-50/60 border-amber-200/80 text-slate-900"
+            isExpired ? "bg-slate-50 border-slate-200 text-slate-500 opacity-75" : "bg-blue-50 border-blue-200 text-blue-950"
           }`}>
-            <div className="flex items-center gap-1.5 text-slate-900 font-bold text-xs truncate">
-              <Sparkles className="w-3.5 h-3.5 fill-amber-500 text-amber-600 shrink-0" />
+            <div className="flex items-center gap-1.5 text-blue-950 font-bold text-xs truncate">
+              <Sparkles className="w-3.5 h-3.5 fill-blue-600 text-blue-700 shrink-0" />
               <span className="truncate">{post.offer_title}</span>
             </div>
             {post.offer_description && (
-              <p className="text-xs text-slate-600 font-normal leading-relaxed bg-white/95 p-2 rounded-lg border border-amber-100/60">
+              <p className="text-xs text-slate-700 font-normal leading-relaxed bg-white/90 p-2 rounded-lg border border-blue-100">
                 {post.offer_description}
               </p>
             )}
@@ -262,94 +305,29 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
           <span className="truncate">{post.address_text || post.area_tag || "Thanjavur"}</span>
         </div>
 
-        {/* Video Reel Promo (Data-Saver Optimized Preload) */}
-        {post.offer_social_link && (
-          <div className="relative w-full rounded-xl overflow-hidden bg-black border border-slate-200 shadow-xs my-1 font-sans">
-            <video
-              src={post.offer_social_link}
-              controls
-              preload="metadata"
-              playsInline
-              className="w-full max-h-56 object-contain"
-            />
-          </div>
-        )}
-
-        {/* Social Engagement Bar: Left = Date & Views, Right = Share & Save */}
-        {!isPreview && (
-          <div className="flex items-center justify-between text-xs text-slate-500 font-semibold border-t border-b border-slate-100 py-2 my-0.5">
-            {/* Left: Meta Info (Date Only) */}
-            <div className="flex items-center gap-2.5">
-              <span className="flex items-center gap-1 text-slate-400 font-medium">
-                <Calendar className="w-3 h-3 text-slate-400" />
-                <span>{formatRelativeTime(post.created_at)}</span>
-              </span>
-            </div>
-
-            {/* Right: Actions (Share & Save) */}
-            <div className="flex items-center gap-2.5">
-
-              <button 
-                onClick={handleShare}
-                className="flex items-center gap-1 hover:text-slate-800 cursor-pointer transition-colors"
-              >
-                <Share2 className="w-3.5 h-3.5 text-slate-400" />
-                <span>{sharesCount}</span>
-              </button>
-              <button 
-                onClick={handleToggleSave}
-                className={`flex items-center gap-1 cursor-pointer transition-colors ${saved ? "text-yellow-600 font-bold" : "hover:text-slate-800"}`}
-                title={saved ? "Saved" : "Save Offer"}
-              >
-                <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-yellow-500 text-yellow-600" : "text-slate-400"}`} />
-                <span>{saved ? t("saved") : t("save")}</span>
-              </button>
-              <button
-                onClick={handleReport}
-                className="flex items-center gap-1 text-slate-400 hover:text-rose-600 cursor-pointer transition-colors ml-0.5"
-                title="Report Offer"
-              >
-                <Flag className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </div>
-        )}
-
-        {/* Footer CTAs: Master Button Architecture */}
-        <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-100 mt-auto">
+        {/* Footer CTAs: Conditional Call & Get Directions (NO WhatsApp) */}
+        <div className="flex items-center justify-between gap-2 pt-2.5 border-t border-slate-100 mt-auto">
           {/* DIRECTION BUTTON: Get Directions */}
           <a
             href={directionUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn btn-maps btn-sm flex-1 text-xs"
+            className="bg-[#2563EB] hover:bg-blue-700 text-white font-bold text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer flex-1"
           >
             <Navigation className="w-3.5 h-3.5 text-white" />
             <span>{t("getDirection")}</span>
           </a>
 
-          {post.show_phone && (
-            <div className="flex items-center gap-2 shrink-0">
-              {/* PRIMARY CTA: Call */}
-              <a
-                href={callUrl}
-                className="btn btn-call btn-sm text-xs"
-              >
-                <Phone className="w-3.5 h-3.5 text-white fill-white" />
-                <span>{t("call")}</span>
-              </a>
-
-              {/* WHATSAPP BUTTON */}
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="btn btn-whatsapp btn-sm text-xs"
-              >
-                <MessageSquare className="w-3.5 h-3.5 fill-white stroke-none" />
-                <span>{t("whatsApp")}</span>
-              </a>
-            </div>
+          {/* CALL BUTTON: Rendered ONLY if Availability Toggle is ON (show_phone !== false) */}
+          {(post as any).is_available_now !== false && post.show_phone !== false && (
+            <a
+              href={callUrl}
+              onClick={(e) => e.stopPropagation()}
+              className="bg-[#f59e0b] text-slate-950 font-bold text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer shrink-0"
+            >
+              <Phone className="w-4 h-4 text-slate-950" />
+              <span>Call</span>
+            </a>
           )}
         </div>
       </div>
