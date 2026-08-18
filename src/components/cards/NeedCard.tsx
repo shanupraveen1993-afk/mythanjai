@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { MessageSquare, Calendar, Tag, MapPin, Share2, Eye, Bookmark, UserCheck, Camera, MoreVertical, Trash2, Pencil, Flag, Sparkles } from "lucide-react";
+import { MessageSquare, Calendar, Tag, MapPin, Share2, Eye, Bookmark, UserCheck, Camera, MoreVertical, Trash2, Pencil, Flag, Sparkles, Phone } from "lucide-react";
 import { NeedOrSalePost } from "@/types";
 import { formatIndianCurrencyText, formatRelativeTime } from "@/lib/constants";
 import InAppChatModal from "@/components/chat/InAppChatModal";
