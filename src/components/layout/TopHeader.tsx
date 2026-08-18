@@ -89,7 +89,7 @@ export default function TopHeader({
     >
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-3">
 
-        {/* Left: Website Branding Logo + Login / Post Ad button on Left End */}
+        {/* Left: Website Branding Logo */}
         <div className="flex items-center gap-2 sm:gap-3">
           <div
             onClick={() => router.push("/")}
@@ -104,34 +104,6 @@ export default function TopHeader({
               </span>
             </div>
           </div>
-
-          {/* Action Button on Left End: Login on Home Page (`/`) vs Post Ad on Segment Pages */}
-          {pathname === "/" ? (
-            <button
-              type="button"
-              onClick={() => {
-                if (typeof window !== "undefined") {
-                  sessionStorage.removeItem("namma_thanjai_target_post_route");
-                  localStorage.removeItem("namma_thanjai_target_post_route");
-                  sessionStorage.setItem("namma_thanjai_header_login_active", "true");
-                }
-                onSignInClick?.();
-              }}
-              className="btn-primary text-xs px-3 py-1.5 shrink-0 flex items-center gap-1 ml-1"
-            >
-              <User className="w-3.5 h-3.5 shrink-0" />
-              <span>Login</span>
-            </button>
-          ) : (
-            <button
-              type="button"
-              onClick={onPostClick}
-              className="btn-primary text-xs px-3 py-1.5 shrink-0 flex items-center gap-1 ml-1"
-            >
-              <Plus className="w-3.5 h-3.5 stroke-[2.5] shrink-0" />
-              <span>Post Ad</span>
-            </button>
-          )}
         </div>
 
         {/* Center: 5 Category Navigation Tabs */}
@@ -191,10 +163,11 @@ export default function TopHeader({
           );
         })()}
 
-        {/* Right Controls: Get App + Chat (Logged-in only) + Profile (All Pages) */}
+        {/* Right Controls: Get App + Chat (Logged-in only) + Action Button (Login on Home / Post Ad on Segment Pages) + Profile (All Pages) */}
         {(() => {
           const isChatActive = pathname.includes("/chat");
           const isProfileActive = pathname.includes("/profile") || activeTab === "profile";
+          const isHomePage = pathname === "/";
 
           return (
             <div className="flex items-center gap-2 shrink-0">
@@ -230,7 +203,35 @@ export default function TopHeader({
                 </button>
               )}
 
-              {/* 3. Profile Button (Stays on ALL pages for both guest & logged in users) */}
+              {/* 3. Action Button: Login on Home Page (`/`) vs Post Ad on Segment Pages */}
+              {isHomePage ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (typeof window !== "undefined") {
+                      sessionStorage.removeItem("namma_thanjai_target_post_route");
+                      localStorage.removeItem("namma_thanjai_target_post_route");
+                      sessionStorage.setItem("namma_thanjai_header_login_active", "true");
+                    }
+                    onSignInClick?.();
+                  }}
+                  className="btn-primary text-xs px-3.5 py-1.5 shrink-0 flex items-center gap-1"
+                >
+                  <User className="w-3.5 h-3.5 shrink-0" />
+                  <span>Login</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={onPostClick}
+                  className="btn-primary text-xs px-3.5 py-1.5 shrink-0 flex items-center gap-1"
+                >
+                  <Plus className="w-3.5 h-3.5 stroke-[2.5] shrink-0" />
+                  <span>Post Ad</span>
+                </button>
+              )}
+
+              {/* 4. Profile Button (Stays on ALL pages for both guest & logged in users) */}
               <button
                 type="button"
                 onClick={() => {
