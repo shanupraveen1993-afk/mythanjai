@@ -175,30 +175,6 @@ export default function ThanjavurLocationInput({
         </div>
       )}
 
-      {/* Out-of-bound Location Warning Notification */}
-      {isOutsideThanjavur && (
-        <div className="bg-amber-50 border border-amber-300 rounded-xl p-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 shadow-2xs mt-1 animate-fade-in">
-          <div className="flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
-            <div className="flex flex-col">
-              <span className="text-xs font-black text-amber-900">
-                {value} is outside Thanjavur District!
-              </span>
-              <span className="text-[11px] font-bold text-amber-700">
-                Expansion to other districts is <span className="bg-amber-200 text-amber-900 px-1.5 py-0.5 rounded-md font-black">Coming Soon</span>
-              </span>
-            </div>
-          </div>
-          <button
-            type="button"
-            onClick={() => router.push("/")}
-            className="btn-tertiary text-[11px] font-bold px-3 py-1.5 rounded-lg shrink-0 flex items-center gap-1 cursor-pointer"
-          >
-            <Compass className="w-3.5 h-3.5" />
-            <span>Explore Thanjavur Marketplace</span>
-          </button>
-        </div>
-      )}
     </div>
   );
 }

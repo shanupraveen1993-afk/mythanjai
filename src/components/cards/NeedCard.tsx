@@ -171,15 +171,15 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
           </div>
         )}
 
-        {/* Card Header Row: Category Badge Top-Left + 3 Action Icons Top-Right */}
-        <div className="flex items-center justify-between gap-2 w-full">
-          {/* Top Left: Category Badge */}
-          <span className="bg-amber-50 text-amber-900 border border-amber-200/80 font-extrabold text-[11px] px-2.5 py-1 rounded-md shadow-2xs">
+        {/* Card Header Row: Royal Blue Category Badge Top-Left + 3 Vertical Action Icons Top-Right */}
+        <div className="flex items-start justify-between gap-2 w-full">
+          {/* Top Left: Royal Blue Category Badge */}
+          <span className="bg-[#1d4ed8] text-white border border-blue-600 font-extrabold text-[11px] px-2.5 py-1 rounded-md shadow-2xs">
             {post.category || "Requirement"}
           </span>
 
-          {/* Top Right: 3 Action Buttons (Save, Report & Share) */}
-          <div className="flex items-center gap-1.5 shrink-0">
+          {/* Top Right: Vertical Stack of 3 Action Buttons (Save, Report & Share) */}
+          <div className="flex flex-col gap-1.5 shrink-0">
             <button
               type="button"
               onClick={handleToggleSave}

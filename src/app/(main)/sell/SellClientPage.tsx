@@ -99,18 +99,11 @@ export default function SellClientPage() {
         </div>
       </div>
 
-      {/* 2. TITLE & POST BAR */}
-      <div className="py-3 flex items-center justify-between gap-3 w-full border-b border-slate-200/80">
+      {/* 2. TITLE BAR */}
+      <div className="py-2.5 flex items-center justify-between gap-3 w-full border-b border-slate-200/80">
         <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight">
           Items for Sale
         </h2>
-        <button
-          onClick={handlePostItem}
-          className="btn-secondary text-xs px-4 py-2 uppercase tracking-wider shrink-0 rounded-lg gap-1.5 hover:scale-[1.02] hover:brightness-105 active:scale-95 transition-all cursor-pointer"
-        >
-          <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-          <span>Post Item</span>
-        </button>
       </div>
 
       {/* LISTING CONTAINER */}

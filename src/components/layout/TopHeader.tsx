@@ -155,15 +155,15 @@ export default function TopHeader({
             </a>
           )}
 
-          {/* 2. + Post Ad Button — Other Pages ONLY */}
+          {/* 2. + Post Ad Button — Other Pages ONLY (Primary Yellow Design) */}
           {!isHomePage && (
             <button
               type="button"
               onClick={onPostClick}
-              className="btn-secondary text-xs px-3 py-1.5 rounded-lg flex items-center gap-1 cursor-pointer shrink-0 font-extrabold"
-              title="Post Free Ad"
+              className="bg-[#f59e0b] text-slate-950 border border-[#d97706] hover:bg-[#d97706] hover:text-white text-xs px-3.5 py-1.5 rounded-lg font-extrabold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer transition-colors"
+              title="Post Ad"
             >
-              <Plus className="w-3.5 h-3.5 text-[#1d4ed8] stroke-[2.5]" />
+              <Plus className="w-3.5 h-3.5 stroke-[3] text-slate-950" />
               <span>Post Ad</span>
             </button>
           )}
