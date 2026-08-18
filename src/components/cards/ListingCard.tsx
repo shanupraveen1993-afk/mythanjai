@@ -169,7 +169,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
             </span>
           </div>
 
-          {/* Top Right: Vertical Action Buttons Stack (Save & Report Semi-Transparent Glass) */}
+          {/* Top Right: Vertical 3 Action Buttons Stack (Save, Report & Share Semi-Transparent Glass) */}
           <div className="absolute top-2.5 right-2.5 flex flex-col gap-1.5 z-10">
             <button
               type="button"
@@ -193,6 +193,15 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
             >
               <Flag className="w-3.5 h-3.5" />
             </button>
+            <button
+              type="button"
+              onClick={handleShare}
+              className="w-7 h-7 rounded-md border border-white/20 bg-slate-950/40 text-white hover:bg-slate-950/70 flex items-center justify-center transition-all cursor-pointer shadow-2xs backdrop-blur-md"
+              title="Share Listing"
+              aria-label="Share this listing"
+            >
+              <Share2 className="w-3.5 h-3.5" />
+            </button>
           </div>
         </div>
 
@@ -211,10 +220,6 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
                       if (isNaN(num) || num === 0) return String(listing.price).startsWith("₹") ? listing.price : `₹${listing.price}`;
                       return `₹${num.toLocaleString("en-IN")}`;
                     })()}
-              </span>
-              <span className="text-[11px] font-bold text-slate-400 flex items-center gap-1">
-                <Calendar className="w-3 h-3 text-slate-400" />
-                <span>{formatRelativeTime(listing.created_at)}</span>
               </span>
             </div>
 
@@ -263,32 +268,19 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
             </div>
           )}
 
-          {/* Footer Views / Share Row (Seller text removed) */}
-          <div className="pt-2.5 border-t border-slate-100 flex flex-col gap-2.5">
-            <div className="flex items-center justify-end text-xs font-bold text-slate-600">
-              {/* Views counter & Share button */}
-              <div className="flex items-center gap-3 shrink-0">
-                <span className="flex items-center gap-1 text-xs font-semibold text-slate-500" title="Views">
-                  <Eye className="w-4 h-4 text-slate-400" />
-                  <span>{views}</span>
-                </span>
-                <button
-                  type="button"
-                  onClick={handleShare}
-                  className="flex items-center gap-1 text-xs font-semibold text-slate-500 hover:text-slate-900 transition-colors cursor-pointer"
-                  title="Share"
-                >
-                  <Share2 className="w-4 h-4 text-slate-400" />
-                  <span>{shares}</span>
-                </button>
-              </div>
-            </div>
+          {/* Card Footer Bar: Left = Relative Posted Date (ago), Right = 2 Action Buttons (Chat & Call) */}
+          <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2">
+            {/* Left Side: Relative Posted Date */}
+            <span className="text-[11px] font-bold text-slate-400 flex items-center gap-1 shrink-0">
+              <Calendar className="w-3.5 h-3.5 text-slate-400" />
+              <span>{formatRelativeTime(listing.created_at)}</span>
+            </span>
 
-            {/* Action Buttons Row: Full Width 2-Button Layout (Chat #128C7E + Yellow Call) */}
-            <div className="flex items-center gap-2 pt-0.5 w-full">
+            {/* Right Side: 2 Action Buttons (Chat #128C7E + Yellow Call) */}
+            <div className="flex items-center gap-2 shrink-0">
               {isOwnPost ? (
-                <div className="w-full py-2 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1.5">
-                  <UserCheck className="w-4 h-4 text-slate-500" />
+                <div className="px-3 py-1.5 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1.5">
+                  <UserCheck className="w-3.5 h-3.5 text-slate-500" />
                   <span>Your Listing</span>
                 </div>
               ) : (
@@ -303,9 +295,9 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
                         }
                         setIsChatOpen(true);
                       }}
-                      className="bg-[#128C7E] text-white font-extrabold text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 flex-1 shadow-2xs cursor-pointer"
+                      className="bg-[#128C7E] text-white font-extrabold text-xs py-1.5 px-3.5 rounded-lg flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
                     >
-                      <MessageSquare className="w-4 h-4 text-white fill-current" />
+                      <MessageSquare className="w-3.5 h-3.5 text-white fill-current" />
                       <span>Chat</span>
                     </button>
                   )}
@@ -319,9 +311,9 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
                           toast.info("This provider is currently busy/unavailable.");
                         }
                       }}
-                      className="bg-[#f59e0b] text-slate-950 font-extrabold border border-[#d97706] text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 flex-1 shadow-2xs cursor-pointer"
+                      className="bg-[#f59e0b] text-slate-950 font-extrabold border border-[#d97706] text-xs py-1.5 px-3.5 rounded-lg flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
                     >
-                      <Phone className="w-4 h-4 text-slate-950" />
+                      <Phone className="w-3.5 h-3.5 text-slate-950" />
                       <span>Call</span>
                     </a>
                   )}
