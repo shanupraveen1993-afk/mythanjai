@@ -81,6 +81,25 @@ export default function ThanjavurLocationInput({
         </div>
       )}
 
+      {/* Autocomplete Failure Fallback (Pincode / Area Name Optional Field) */}
+      {value.trim().length > 2 && suggestions.length === 0 && (
+        <div className="bg-slate-50 border border-slate-200/90 rounded-xl p-3 flex flex-col gap-1.5 mt-1">
+          <span className="text-xs font-bold text-slate-700">
+            No exact autocomplete match found?
+          </span>
+          <span className="text-[11px] text-slate-500 font-medium">
+            Type Pincode (e.g. 613001) or custom Tanjore area name below (Optional):
+          </span>
+          <input
+            type="text"
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
+            placeholder="e.g. 613007 / Vallam Main Road"
+            className="w-full px-3 py-1.5 text-xs font-semibold border border-slate-300 rounded-lg bg-white focus:outline-none focus:border-amber-500"
+          />
+        </div>
+      )}
+
       {/* Out-of-bound Location Warning Notification */}
       {isOutsideThanjavur && (
         <div className="bg-amber-50 border border-amber-300 rounded-xl p-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 shadow-2xs mt-1 animate-fade-in">

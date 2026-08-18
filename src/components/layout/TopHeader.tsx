@@ -138,65 +138,19 @@ export default function TopHeader({
           );
         })()}
 
-        {/* Right Controls: Get App + Chat (Logged-in only) + Profile + Hamburger Menu Drawer Trigger */}
+        {/* Right Controls: Post Ad Button + Hamburger Menu Button ONLY */}
         <div className="flex items-center gap-2 shrink-0">
-          {/* 1. Get App Button (Royal Blue secondary button without hover effect) */}
-          {!hasClickedGetApp && (
-            <a
-              href="/namma_thanjai_release.apk"
-              download="namma_thanjai_release.apk"
-              onClick={handleGetAppClick}
-              className="bg-[#1d4ed8] text-white border border-[#1d4ed8] text-xs px-3.5 py-1.5 rounded-full font-extrabold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none"
-              title="Download Namma Thanjai Android App"
-            >
-              <Download className="w-3.5 h-3.5 shrink-0 text-white" />
-              <span>Get App</span>
-            </a>
-          )}
-
-          {/* 2. Chat Icon (Only available AFTER logged in) */}
-          {isAuthVerified && (
-            <button
-              type="button"
-              onClick={() => router.push("/chat")}
-              className="relative flex items-center justify-center w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold transition-all cursor-pointer active:scale-95"
-              title="In-App Safety Chat"
-            >
-              <MessageSquare className="w-4 h-4 text-slate-600" />
-              <span className="absolute top-0 right-0 w-2 h-2 rounded-full bg-red-500 border border-white animate-pulse" />
-            </button>
-          )}
-
-          {/* 3. Action Post Button (On non-home segment pages) */}
-          {!isHomePage && (
-            <button
-              type="button"
-              onClick={onPostClick}
-              className="btn-primary text-xs px-3.5 py-1.5 shrink-0 flex items-center gap-1"
-            >
-              <Plus className="w-3.5 h-3.5 stroke-[2.5] shrink-0" />
-              <span>Post Ad</span>
-            </button>
-          )}
-
-          {/* 4. Profile Button */}
+          {/* Primary Action Button: Post Ad */}
           <button
             type="button"
-            onClick={() => {
-              if (isAuthVerified) {
-                onTabChange?.("profile");
-                router.push("/profile");
-              } else {
-                onSignInClick?.();
-              }
-            }}
-            className="flex items-center justify-center w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold transition-all cursor-pointer active:scale-95"
-            title={isAuthVerified ? `Profile (${phoneDisplay})` : "Login / Profile"}
+            onClick={onPostClick}
+            className="btn-primary text-xs px-3.5 py-1.5 shrink-0 flex items-center gap-1 font-black shadow-2xs"
           >
-            <User className="w-4 h-4 text-slate-600" />
+            <Plus className="w-3.5 h-3.5 stroke-[2.5] shrink-0 text-slate-950" />
+            <span>Post Ad</span>
           </button>
 
-          {/* 5. Top-Right Hamburger Menu Button for Web App */}
+          {/* Top-Right Hamburger Menu Button */}
           <button
             type="button"
             onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -208,7 +162,7 @@ export default function TopHeader({
         </div>
       </div>
 
-      {/* Hamburger Menu Drawer Overlay (Lists all Navigation Links, Get App, and Settings) */}
+      {/* Hamburger Menu Drawer Overlay */}
       {isMenuOpen && (
         <div className="w-full bg-white border-b border-slate-200/90 p-4 flex flex-col gap-3 shadow-md animate-in slide-in-from-top-2 duration-200">
           <div className="flex flex-col gap-1">
@@ -252,32 +206,47 @@ export default function TopHeader({
             </div>
           </div>
 
-          <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-3">
-            <a
-              href="/namma_thanjai_release.apk"
-              download="namma_thanjai_release.apk"
-              onClick={() => { handleGetAppClick(); setIsMenuOpen(false); }}
-              className="bg-[#1d4ed8] text-white text-xs font-extrabold px-4 py-2 rounded-xl flex items-center gap-2 shadow-2xs"
-            >
-              <Download className="w-4 h-4 text-white" />
-              <span>Get Android App (APK)</span>
-            </a>
+          <div className="pt-2 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <a
+                href="/namma_thanjai_release.apk"
+                download="namma_thanjai_release.apk"
+                onClick={() => { handleGetAppClick(); setIsMenuOpen(false); }}
+                className="bg-[#1d4ed8] text-white text-xs font-extrabold px-3.5 py-2 rounded-xl flex items-center gap-1.5 shadow-2xs"
+              >
+                <Download className="w-3.5 h-3.5 text-white" />
+                <span>Get App (APK)</span>
+              </a>
+
+              {isAuthVerified && (
+                <button
+                  type="button"
+                  onClick={() => { router.push("/chat"); setIsMenuOpen(false); }}
+                  className="bg-amber-50 hover:bg-amber-100 text-amber-900 text-xs font-extrabold px-3.5 py-2 rounded-xl border border-amber-300 flex items-center gap-1.5"
+                >
+                  <MessageSquare className="w-3.5 h-3.5 text-amber-700" />
+                  <span>Chat</span>
+                </button>
+              )}
+            </div>
 
             {!isAuthVerified ? (
               <button
                 type="button"
                 onClick={() => { onSignInClick(); setIsMenuOpen(false); }}
-                className="btn-primary text-xs px-4 py-2 rounded-xl font-black"
+                className="btn-primary text-xs px-4 py-2 rounded-xl font-black flex items-center gap-1.5"
               >
-                Sign In / Login
+                <User className="w-3.5 h-3.5 text-slate-950" />
+                <span>Sign In / Login</span>
               </button>
             ) : (
               <button
                 type="button"
                 onClick={() => { router.push("/profile"); setIsMenuOpen(false); }}
-                className="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-extrabold px-4 py-2 rounded-xl border border-slate-200"
+                className="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-extrabold px-4 py-2 rounded-xl border border-slate-200 flex items-center gap-1.5"
               >
-                My Profile
+                <User className="w-3.5 h-3.5 text-slate-600" />
+                <span>My Profile</span>
               </button>
             )}
           </div>
