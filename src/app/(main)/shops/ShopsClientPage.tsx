@@ -79,26 +79,20 @@ export default function ShopsClientPage() {
         <img src="/thanjavur_temple_illustration.png" alt="Shops" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent" />
         <div className="relative z-10 flex flex-col gap-1 max-w-xl">
-          <span className="bg-[#FBBF24] text-[#0F172A] font-bold text-xs px-2.5 py-0.5 rounded-md tracking-wider w-fit">LOCAL OFFERS • தஞ்சாவூர் கடை சலுகைகள் &amp; தள்ளுபடிகள்</span>
+          <span className="bg-rose-600 text-white font-bold text-xs px-2.5 py-0.5 rounded-md tracking-wider w-fit">LOCAL OFFERS • தஞ்சாவூர் கடை சலுகைகள் &amp; தள்ளுபடிகள்</span>
           <h1 className="font-heading font-black text-lg sm:text-xl text-white tracking-tight">
-            Local Store Offers &amp; Discounts <span className="text-amber-400 block text-xs sm:text-sm font-extrabold mt-0.5">தஞ்சை வியாபாரிகள் வழங்கும் பிரத்யேக சலுகைகள்</span>
+            Local Store Offers &amp; Discounts <span className="text-rose-400 block text-xs sm:text-sm font-extrabold mt-0.5">தஞ்சை வியாபாரிகள் வழங்கும் பிரத்யேக சலுகைகள்</span>
           </h1>
           <p className="text-xs text-slate-300 font-semibold leading-relaxed">Grand opening deals, festival discounts &amp; exclusive store offers from Thanjavur shop owners.</p>
         </div>
       </div>
 
-      {/* 2. TITLE & POST BAR */}
-      <div className="py-3 flex items-center justify-between gap-3 w-full border-b border-slate-200/80">
-        <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight">
-          Local Offers
+      {/* 2. TITLE BAR */}
+      <div className="py-2.5 flex items-center justify-between gap-3 w-full border-b border-slate-200/80">
+        <h2 className="font-heading font-black text-lg sm:text-xl text-rose-600 tracking-tight flex items-center gap-2">
+          <span className="w-2.5 h-2.5 rounded-full bg-rose-500 shrink-0" />
+          <span>Local Offers</span>
         </h2>
-        <button
-          onClick={handlePostOffer}
-          className="btn-secondary text-xs px-4 py-2 uppercase tracking-wider shrink-0 rounded-xl gap-1.5"
-        >
-          <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-          <span>Post Offer</span>
-        </button>
       </div>
 
       {/* LISTING CONTAINER */}

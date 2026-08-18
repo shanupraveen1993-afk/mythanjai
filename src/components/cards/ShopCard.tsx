@@ -111,7 +111,7 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
       >
         <div className="filter blur-[7px] pointer-events-none opacity-40 select-none">
           <div className="flex items-center justify-between mb-3">
-            <span className="bg-purple-100 text-purple-700 px-3 py-1 rounded-full text-xs font-bold">{post.category || "Store Offer"}</span>
+            <span className="bg-rose-50 text-rose-700 border border-rose-200 px-3 py-1 rounded-full text-xs font-bold">{post.category || "Store Offer"}</span>
             <span className="text-xs font-bold text-slate-400">{post.area_tag || "Thanjavur"}</span>
           </div>
           <h3 className="font-heading font-black text-base text-slate-900 line-clamp-1">{post.shop_name}</h3>

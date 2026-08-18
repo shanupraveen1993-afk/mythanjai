@@ -87,9 +87,9 @@ export default function NeedClientPage() {
         <img src="/hero_building_visual.png" alt="Need" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent" />
         <div className="relative z-10 flex flex-col gap-1 max-w-xl">
-          <span className="text-xs font-black text-[#F9B637] uppercase tracking-wide">BUYER DIRECTORY • கொள்முதல் &amp; தேவைகள்</span>
+          <span className="text-xs font-black text-blue-400 uppercase tracking-wide">BUYER DIRECTORY • கொள்முதல் &amp; தேவைகள்</span>
           <h1 className="font-heading font-black text-lg sm:text-xl text-white tracking-tight">
-            Find What You Need in Thanjavur <span className="text-amber-400 block text-xs sm:text-sm font-extrabold mt-0.5">உங்கள் தேவையை தஞ்சை மக்களிடம் பதிவிடுங்கள்</span>
+            Find What You Need in Thanjavur <span className="text-blue-400 block text-xs sm:text-sm font-extrabold mt-0.5">உங்கள் தேவையை தஞ்சை மக்களிடம் பதிவிடுங்கள்</span>
           </h1>
           <p className="text-xs text-slate-300 font-semibold leading-relaxed">Post your requirement for land, cars, rentals, or items — local owners will contact you directly.</p>
         </div>
@@ -97,8 +97,9 @@ export default function NeedClientPage() {
 
       {/* 2. TITLE BAR */}
       <div className="py-2.5 flex items-center justify-between gap-3 w-full border-b border-slate-200/80">
-        <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight">
-          Buyer Requirements
+        <h2 className="font-heading font-black text-lg sm:text-xl text-[#1d4ed8] tracking-tight flex items-center gap-2">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#1d4ed8] shrink-0" />
+          <span>Buyer Requirements</span>
         </h2>
       </div>
 
