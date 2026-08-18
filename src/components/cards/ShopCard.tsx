@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { Phone, MessageSquare, MapPin, Store, Sparkles, ShoppingBag, Utensils, Shirt, Calendar, Tag, Camera, Navigation, Eye, Share2, Bookmark, Lock, Flag } from "lucide-react";
 import { ShopPost } from "@/types";
-import { formatRelativeTime } from "@/lib/constants";
+import { formatRelativeTime, getCategoryBadgeStyle } from "@/lib/constants";
 import { useToast } from "@/context/ToastContext";
 
 function formatOfferValidity(validFrom?: any, validTo?: any, createdAt?: any) {
@@ -205,7 +205,7 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
         </div>
       ) : (
         <div className="absolute top-2.5 left-2.5 z-20">
-          <span className="bg-slate-950/40 backdrop-blur-md text-white font-semibold text-[11px] px-2.5 py-1 rounded-md border border-white/20 shadow-2xs">
+          <span className={`text-[11px] px-2.5 py-1 rounded-md shadow-2xs backdrop-blur-xs ${getCategoryBadgeStyle(post.category)}`}>
             {post.category || "Store Offer"}
           </span>
         </div>

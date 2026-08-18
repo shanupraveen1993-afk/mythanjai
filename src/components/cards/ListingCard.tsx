@@ -6,7 +6,7 @@ import { Eye, Share2, Bookmark, Phone, MessageSquare, MapPin, UserCheck, Calenda
 import { doc, updateDoc, increment, arrayUnion, arrayRemove } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/hooks/use-auth";
-import { formatRelativeTime } from "@/lib/constants";
+import { formatRelativeTime, getCategoryBadgeStyle } from "@/lib/constants";
 import InAppChatModal from "@/components/chat/InAppChatModal";
 import { reportListing } from "@/lib/moderation";
 import { useToast } from "@/context/ToastContext";
@@ -183,9 +183,9 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
             className="object-cover"
           />
           
-          {/* Top Left: Category Badge Overlay (Semi-Transparent Glass) */}
+          {/* Top Left: Category Badge Overlay (Vibrant Multicolor Per Category) */}
           <div className="absolute top-2.5 left-2.5 z-10">
-            <span className="bg-slate-950/40 backdrop-blur-md text-white font-semibold text-[11px] px-2.5 py-1 rounded-md border border-white/20 shadow-2xs">
+            <span className={`text-[11px] px-2.5 py-1 rounded-md shadow-2xs backdrop-blur-xs ${getCategoryBadgeStyle(listing.category || listing.type)}`}>
               {listing.category || listing.type || "Classified"}
             </span>
           </div>

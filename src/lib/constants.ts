@@ -198,3 +198,45 @@ export function formatRelativeTime(timestamp: any): string {
   const dayStr = remainingDays === 1 ? "1 day" : `${remainingDays} days`;
   return `${monthStr} ${dayStr} ago`;
 }
+
+/**
+ * Vibrant Multicolor Per-Category Badge Styling Mapping (Design System Essential)
+ */
+export function getCategoryBadgeStyle(category?: string): string {
+  const cat = (category || "").toLowerCase();
+
+  if (cat.includes("plots") || cat.includes("real estate") || cat.includes("land")) {
+    return "bg-blue-50 text-blue-700 border border-blue-200/80 font-semibold";
+  }
+  if (cat.includes("rental") || cat.includes("house") || cat.includes("flat") || cat.includes("2 bhk") || cat.includes("apartment")) {
+    return "bg-indigo-50 text-indigo-700 border border-indigo-200/80 font-semibold";
+  }
+  if (cat.includes("vehicle") || cat.includes("bike") || cat.includes("car") || cat.includes("scooter") || cat.includes("automobile")) {
+    return "bg-amber-50 text-amber-800 border border-amber-300/80 font-semibold";
+  }
+  if (cat.includes("electronic") || cat.includes("mobile") || cat.includes("phone") || cat.includes("laptop")) {
+    return "bg-cyan-50 text-cyan-800 border border-cyan-200/80 font-semibold";
+  }
+  if (cat.includes("household") || cat.includes("furniture") || cat.includes("sofa") || cat.includes("appliances")) {
+    return "bg-orange-50 text-orange-700 border border-orange-200/80 font-semibold";
+  }
+  if (cat.includes("job") || cat.includes("work") || cat.includes("opportunity") || cat.includes("coaching") || cat.includes("education")) {
+    return "bg-purple-50 text-purple-700 border border-purple-200/80 font-semibold";
+  }
+  if (cat.includes("cafe") || cat.includes("restaurant") || cat.includes("food") || cat.includes("bakery")) {
+    return "bg-rose-50 text-rose-700 border border-rose-200/80 font-semibold";
+  }
+  if (cat.includes("textile") || cat.includes("readymade") || cat.includes("fashion") || cat.includes("cloth") || cat.includes("saree")) {
+    return "bg-pink-50 text-pink-700 border border-pink-200/80 font-semibold";
+  }
+  if (cat.includes("gold") || cat.includes("jewel")) {
+    return "bg-amber-100 text-amber-900 border border-amber-400 font-bold";
+  }
+  if (cat.includes("medical") || cat.includes("pharmacy")) {
+    return "bg-teal-50 text-teal-700 border border-teal-200/80 font-semibold";
+  }
+  if (cat.includes("electrician") || cat.includes("plumber") || cat.includes("carpenter") || cat.includes("technician") || cat.includes("hardware")) {
+    return "bg-emerald-50 text-emerald-700 border border-emerald-200/80 font-semibold";
+  }
+  return "bg-slate-100 text-slate-700 border border-slate-200 font-semibold";
+}

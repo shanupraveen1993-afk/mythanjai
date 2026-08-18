@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { MessageSquare, Calendar, Tag, MapPin, Share2, Eye, Bookmark, UserCheck, Camera, MoreVertical, Trash2, Pencil, Flag, Sparkles, Phone } from "lucide-react";
 import { NeedOrSalePost } from "@/types";
-import { formatIndianCurrencyText, formatRelativeTime } from "@/lib/constants";
+import { formatIndianCurrencyText, formatRelativeTime, getCategoryBadgeStyle } from "@/lib/constants";
 import InAppChatModal from "@/components/chat/InAppChatModal";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/context/ToastContext";
@@ -202,9 +202,9 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
             </div>
           )}
 
-          {/* Top Left: Glassmorphism Category Badge Overlay (Same as Sell Card) */}
+          {/* Top Left: Category Badge Overlay (Vibrant Multicolor Per Category) */}
           <div className="absolute top-2.5 left-2.5 z-10">
-            <span className="bg-slate-950/40 backdrop-blur-md text-white font-semibold text-[11px] px-2.5 py-1 rounded-md border border-white/20 shadow-2xs">
+            <span className={`text-[11px] px-2.5 py-1 rounded-md shadow-2xs backdrop-blur-xs ${getCategoryBadgeStyle(post.category)}`}>
               {post.category || "Requirement"}
             </span>
           </div>
