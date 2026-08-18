@@ -101,9 +101,8 @@ export default function SellClientPage() {
 
       {/* 2. TITLE BAR */}
       <div className="py-2.5 flex items-center justify-between gap-3 w-full border-b border-slate-200/80">
-        <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight flex items-center gap-2">
-          <span className="w-2.5 h-2.5 rounded-full bg-amber-500 shrink-0" />
-          <span>Items for Sale</span>
+        <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight">
+          Items for Sale
         </h2>
       </div>
 
