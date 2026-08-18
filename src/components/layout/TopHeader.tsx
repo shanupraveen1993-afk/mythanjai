@@ -34,8 +34,7 @@ export default function TopHeader({
   const { lang, toggleLanguage, t } = useLanguage();
 
   const isAuthVerified = Boolean(profile?.isVerified);
-  const isLandingMode = pathname === "/";
-  const showCenterNav = pathname !== "/onboarding" && pathname !== "/chat" && !isLandingMode;
+  const showCenterNav = pathname !== "/onboarding" && pathname !== "/chat";
 
   const phoneDisplay = profile?.phone ? `+${profile.phone}` : "+919994837342";
 
@@ -164,14 +163,15 @@ export default function TopHeader({
           );
         })()}
 
-        {/* Right: Landing Page Login Button vs Logged-In Chat & Profile Controls */}
+        {/* Right Controls: Get App + Dynamic Action (Login on Home / Post Ad on Segment Pages) + Chat (Logged-in only) + Profile (All Pages) */}
         {(() => {
           const isChatActive = pathname.includes("/chat");
           const isProfileActive = pathname.includes("/profile") || activeTab === "profile";
+          const isHomePage = pathname === "/";
 
           return (
             <div className="flex items-center gap-2 shrink-0">
-              {/* Get App button: Stays for both guest & logged in users UNTIL clicked at least once */}
+              {/* 1. Get App Button (Stays for both guest & logged in until clicked once) */}
               {!hasClickedGetApp && (
                 <a
                   href="/namma_thanjai_release.apk"
@@ -185,55 +185,74 @@ export default function TopHeader({
                 </a>
               )}
 
-          {isAuthVerified ? (
-            <>
-              {/* Chat Icon & Profile Button for Logged In Verified Users */}
-              <button
-                type="button"
-                onClick={() => router.push("/chat")}
-                className={`relative flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3.5 rounded-full text-xs font-bold transition-all duration-200 cursor-pointer group active:scale-95 ${isChatActive
-                    ? "bg-amber-500/10 text-amber-600 border border-amber-400/80 font-black shadow-2xs"
-                    : "bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200/80 text-slate-700 hover:text-amber-600"
+              {/* 2. Chat Icon (Only available AFTER logged in) */}
+              {isAuthVerified && (
+                <button
+                  type="button"
+                  onClick={() => router.push("/chat")}
+                  className={`relative flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3 rounded-full text-xs font-bold transition-all duration-200 cursor-pointer group active:scale-95 ${
+                    isChatActive
+                      ? "bg-amber-500/10 text-amber-600 border border-amber-400/80 font-black shadow-2xs"
+                      : "bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200/80 text-slate-700 hover:text-amber-600"
                   }`}
-                title="In-App Safety Chat"
-              >
-                <MessageSquare className={`w-4 h-4 shrink-0 ${isChatActive ? "text-amber-600 fill-amber-500/20" : "text-slate-500 group-hover:text-amber-600"}`} />
-                <span className="hidden sm:inline text-xs ml-1.5 font-black">Chat Now</span>
-                <span className="absolute top-0 right-0 sm:right-2 w-2.5 h-2.5 rounded-full bg-red-500 border-2 border-white animate-pulse" />
-              </button>
+                  title="In-App Safety Chat"
+                >
+                  <MessageSquare className={`w-4 h-4 shrink-0 ${isChatActive ? "text-amber-600 fill-amber-500/20" : "text-slate-500 group-hover:text-amber-600"}`} />
+                  <span className="hidden sm:inline text-xs ml-1 font-black">Chat</span>
+                  <span className="absolute top-0 right-0 sm:right-1.5 w-2 h-2 rounded-full bg-red-500 border border-white animate-pulse" />
+                </button>
+              )}
 
+              {/* 3. Action Button: Login on Home Page (`/`) vs Post Ad on Segment Pages */}
+              {isHomePage ? (
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (typeof window !== "undefined") {
+                      sessionStorage.removeItem("namma_thanjai_target_post_route");
+                      localStorage.removeItem("namma_thanjai_target_post_route");
+                      sessionStorage.setItem("namma_thanjai_header_login_active", "true");
+                    }
+                    onSignInClick?.();
+                  }}
+                  className="btn-primary text-xs px-3.5 py-1.5 shrink-0"
+                >
+                  <User className="w-3.5 h-3.5 shrink-0" />
+                  <span>Login</span>
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  onClick={onPostClick}
+                  className="btn-primary text-xs px-3.5 py-1.5 shrink-0 flex items-center gap-1"
+                >
+                  <Plus className="w-3.5 h-3.5 stroke-[2.5] shrink-0" />
+                  <span>Post Ad</span>
+                </button>
+              )}
+
+              {/* 4. Profile Button (Stays on ALL pages for both guest & logged in users) */}
               <button
                 type="button"
-                onClick={() => onTabChange?.("profile")}
-                className={`relative flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3.5 rounded-full text-xs transition-all duration-200 cursor-pointer group active:scale-95 ${isProfileActive
+                onClick={() => {
+                  if (isAuthVerified) {
+                    onTabChange?.("profile");
+                    router.push("/profile");
+                  } else {
+                    onSignInClick?.();
+                  }
+                }}
+                className={`relative flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3 rounded-full text-xs transition-all duration-200 cursor-pointer group active:scale-95 ${
+                  isProfileActive
                     ? "bg-amber-500/10 text-amber-600 border border-amber-400/80 font-black shadow-2xs"
                     : "bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200/80 text-slate-700 hover:text-amber-600 font-bold"
-                  }`}
-                title={`Verified Profile (${phoneDisplay})`}
+                }`}
+                title={isAuthVerified ? `Profile (${phoneDisplay})` : "Login / Profile"}
               >
                 <User className={`w-4 h-4 shrink-0 ${isProfileActive ? "text-amber-600" : "text-slate-500 group-hover:text-amber-600"}`} />
-                <span className="hidden md:inline text-xs ml-1.5 font-black">Profile</span>
+                <span className="hidden md:inline text-xs ml-1 font-black">Profile</span>
               </button>
-            </>
-          ) : (
-            /* For Guest Users: Login (Primary Yellow) */
-            <button
-              type="button"
-              onClick={() => {
-                if (typeof window !== "undefined") {
-                  sessionStorage.removeItem("namma_thanjai_target_post_route");
-                  localStorage.removeItem("namma_thanjai_target_post_route");
-                  sessionStorage.setItem("namma_thanjai_header_login_active", "true");
-                }
-                onSignInClick?.();
-              }}
-              className="btn-primary text-xs px-4 py-2 shrink-0"
-            >
-              <User className="w-4 h-4 shrink-0" />
-              <span>Login</span>
-            </button>
-          )}
-        </div>
+            </div>
           );
         })()}
       </div>

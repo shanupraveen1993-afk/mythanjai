@@ -51,7 +51,7 @@ export default function RootLayout({
             __html: `
               (function() {
                 if (typeof window !== 'undefined') {
-                  var TARGET_VERSION = 'v12.0_what_we_do_hero_banner_retained_4x1_cards_header_get_app_rule';
+                  var TARGET_VERSION = 'v13.0_single_home_page_dynamic_header_actions';
                   var currentVer = localStorage.getItem('namma_thanjai_cache_version');
                   if (currentVer !== TARGET_VERSION) {
                     localStorage.setItem('namma_thanjai_cache_version', TARGET_VERSION);
