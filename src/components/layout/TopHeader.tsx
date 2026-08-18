@@ -163,7 +163,7 @@ export default function TopHeader({
           );
         })()}
 
-        {/* Right Controls: Get App + Chat (Logged-in only) + Action Button (Login on Home / Post Ad on Segment Pages) + Profile (All Pages) */}
+        {/* Right Controls: Get App (Logo Amber) -> Chat (Logged-in only) -> Profile (All Pages) -> Action Button (Login/Post Ad in Primary Yellow) */}
         {(() => {
           const isChatActive = pathname.includes("/chat");
           const isProfileActive = pathname.includes("/profile") || activeTab === "profile";
@@ -171,16 +171,16 @@ export default function TopHeader({
 
           return (
             <div className="flex items-center gap-2 shrink-0">
-              {/* 1. Get App Button (Stays for both guest & logged in until clicked once) */}
+              {/* 1. Get App Button (Logo Color: Amber tone matching logo, stays until clicked once) */}
               {!hasClickedGetApp && (
                 <a
                   href="/namma_thanjai_release.apk"
                   download="namma_thanjai_release.apk"
                   onClick={handleGetAppClick}
-                  className="btn-secondary text-xs px-3.5 py-1.5 shrink-0"
+                  className="bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 hover:text-amber-800 border border-amber-400/80 text-xs px-3.5 py-1.5 rounded-full font-extrabold transition-all shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer active:scale-95"
                   title="Download Namma Thanjai Android App"
                 >
-                  <Download className="w-3.5 h-3.5 shrink-0" />
+                  <Download className="w-3.5 h-3.5 shrink-0 text-amber-600" />
                   <span>Get App</span>
                 </a>
               )}
@@ -203,7 +203,29 @@ export default function TopHeader({
                 </button>
               )}
 
-              {/* 3. Action Button: Login on Home Page (`/`) vs Post Ad on Segment Pages */}
+              {/* 3. Profile Button (Stays on ALL pages for both guest & logged in users) */}
+              <button
+                type="button"
+                onClick={() => {
+                  if (isAuthVerified) {
+                    onTabChange?.("profile");
+                    router.push("/profile");
+                  } else {
+                    onSignInClick?.();
+                  }
+                }}
+                className={`relative flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3 rounded-full text-xs transition-all duration-200 cursor-pointer group active:scale-95 ${
+                  isProfileActive
+                    ? "bg-amber-500/10 text-amber-600 border border-amber-400/80 font-black shadow-2xs"
+                    : "bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200/80 text-slate-700 hover:text-amber-600 font-bold"
+                }`}
+                title={isAuthVerified ? `Profile (${phoneDisplay})` : "Login / Profile"}
+              >
+                <User className={`w-4 h-4 shrink-0 ${isProfileActive ? "text-amber-600" : "text-slate-500 group-hover:text-amber-600"}`} />
+                <span className="hidden md:inline text-xs ml-1 font-black">Profile</span>
+              </button>
+
+              {/* 4. Action Button at Rightmost End: Login on Home Page (`/`) vs Post Ad on Segment Pages (Primary Yellow) */}
               {isHomePage ? (
                 <button
                   type="button"
@@ -230,28 +252,6 @@ export default function TopHeader({
                   <span>Post Ad</span>
                 </button>
               )}
-
-              {/* 4. Profile Button (Stays on ALL pages for both guest & logged in users) */}
-              <button
-                type="button"
-                onClick={() => {
-                  if (isAuthVerified) {
-                    onTabChange?.("profile");
-                    router.push("/profile");
-                  } else {
-                    onSignInClick?.();
-                  }
-                }}
-                className={`relative flex items-center justify-center w-9 h-9 sm:w-auto sm:px-3 rounded-full text-xs transition-all duration-200 cursor-pointer group active:scale-95 ${
-                  isProfileActive
-                    ? "bg-amber-500/10 text-amber-600 border border-amber-400/80 font-black shadow-2xs"
-                    : "bg-slate-100/90 hover:bg-slate-200/80 border border-slate-200/80 text-slate-700 hover:text-amber-600 font-bold"
-                }`}
-                title={isAuthVerified ? `Profile (${phoneDisplay})` : "Login / Profile"}
-              >
-                <User className={`w-4 h-4 shrink-0 ${isProfileActive ? "text-amber-600" : "text-slate-500 group-hover:text-amber-600"}`} />
-                <span className="hidden md:inline text-xs ml-1 font-black">Profile</span>
-              </button>
             </div>
           );
         })()}
