@@ -73,7 +73,7 @@ export default function LandingClientPage() {
 
   return (
     <div className="w-full flex flex-col gap-8 text-slate-800 font-sans pb-24 bg-[#f8fafc] min-h-screen">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full flex flex-col gap-9 pt-4">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col gap-8 pt-4">
         {/* ── Genuine Premium Hero Banner: What We Do in Thanjavur ── */}
         <section className="relative rounded-3xl overflow-hidden bg-slate-900 border border-slate-800 shadow-md my-2">
           {/* Visual Hero Image Overlay */}
@@ -86,7 +86,7 @@ export default function LandingClientPage() {
             <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-amber-950/40" />
           </div>
 
-          <div className="relative z-10 p-6 sm:p-10 flex flex-col gap-4 max-w-3xl">
+          <div className="relative z-10 p-6 sm:p-10 flex flex-col gap-3.5 max-w-3xl">
             <div className="flex items-center gap-2">
               <span className="text-[10px] font-extrabold uppercase tracking-wide bg-slate-900 text-amber-400 border border-slate-800 px-3 py-1 rounded-full shadow-2xs">
                 WHAT WE DO • நம்ம தஞ்சாவூர்
@@ -98,14 +98,14 @@ export default function LandingClientPage() {
 
             <div className="flex flex-col gap-1">
               <h1 className="font-heading font-black text-2xl sm:text-4xl text-white tracking-tight leading-tight">
-                Thanjavur&apos;s Direct Local Directory &amp; Community Marketplace
+                Thanjavur&apos;s Direct Local Directory &amp; Marketplace
               </h1>
-              <p className="font-heading font-extrabold text-sm sm:text-lg text-amber-400 mt-0.5">
-                நம்ம தஞ்சாவூரின் நேரடி 4-இன்-1 வணிக மற்றும் சேவை தளம்
+              <p className="font-heading font-extrabold text-sm sm:text-base text-amber-400 mt-0.5">
+                தஞ்சாவூர் மக்களுக்கான நேரடி 4-இன்-1 தகவல் தளம்
               </p>
             </div>
             <p className="text-xs sm:text-sm text-slate-300 font-medium leading-relaxed">
-              Connect directly with verified local owners, buyers, technicians, and neighborhood stores across Tanjore with zero brokerage and zero commission.
+              Connect directly with local owners, buyers, service experts, and shop offers across Tanjore with zero brokerage.
             </p>
           </div>
         </section>
@@ -122,7 +122,7 @@ export default function LandingClientPage() {
               >
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-amber-50 border border-amber-200/80 flex items-center justify-center text-amber-600 group-hover:bg-amber-500 group-hover:text-slate-950 group-hover:border-amber-400 transition-colors shrink-0 shadow-2xs">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-blue-50 border border-blue-200/80 flex items-center justify-center text-[#1d4ed8] group-hover:bg-[#1d4ed8] group-hover:text-white group-hover:border-[#1d4ed8] transition-colors shrink-0 shadow-2xs">
                       <IconComponent className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.2]" />
                     </div>
                     <h2 className="font-heading font-black text-slate-900 text-xs sm:text-sm leading-tight line-clamp-1">
@@ -379,73 +379,73 @@ export default function LandingClientPage() {
           </div>
         </section>
 
-        {/* ── High-Engagement Visual "Steps to Use Namma Thanjai" Section ── */}
-        <section className="bg-slate-900 text-white rounded-2xl p-5 sm:p-8 flex flex-col gap-5 shadow-xs border border-slate-800 my-4">
+        {/* ── High-Engagement Visual "Steps to Use Namma Thanjai" Section (Redesigned Light Surface) ── */}
+        <section className="bg-white border border-slate-200/90 text-slate-900 rounded-2xl p-5 sm:p-8 flex flex-col gap-5 shadow-xs my-4 font-sans">
           <div className="flex flex-col gap-1 max-w-xl">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-amber-400 bg-amber-500/10 px-2.5 py-0.5 rounded-md w-fit border border-amber-500/20">
+            <span className="text-[10px] font-black uppercase tracking-wider text-[#1d4ed8] bg-blue-50 px-2.5 py-0.5 rounded-md w-fit border border-blue-200">
               3 EASY STEPS • 3 எளிய படிகள்
             </span>
-            <h2 className="font-heading font-black text-lg sm:text-2xl text-white tracking-tight mt-1">
+            <h2 className="font-heading font-black text-lg sm:text-2xl text-slate-900 tracking-tight mt-1">
               How Namma Thanjai Works
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
             {/* Step 1 */}
-            <div className="bg-slate-800/90 border border-slate-700/80 p-4 sm:p-5 rounded-xl flex flex-col justify-between gap-3 group hover:border-amber-500/50 transition-all">
+            <div className="bg-slate-50 border border-slate-200/80 p-4 sm:p-5 rounded-xl flex flex-col justify-between gap-3 group hover:border-[#1d4ed8]/50 transition-all">
               <div className="flex items-center justify-between">
-                <span className="w-8 h-8 rounded-lg bg-slate-900 text-white border border-slate-700 font-heading font-black text-sm flex items-center justify-center shadow-2xs">
+                <span className="w-8 h-8 rounded-lg bg-[#1d4ed8] text-white font-heading font-black text-sm flex items-center justify-center shadow-2xs">
                   01
                 </span>
-                <span className="text-[10px] font-bold text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">
+                <span className="text-[10px] font-bold text-slate-500 bg-white px-2 py-0.5 rounded-full border border-slate-200">
                   STEP 1
                 </span>
               </div>
               <div className="flex flex-col gap-1">
-                <h3 className="font-heading font-black text-sm text-white">
-                  Pick Segment <span className="text-amber-400 font-extrabold text-xs block mt-0.5">பிரிவைத் தேர்ந்தெடு</span>
+                <h3 className="font-heading font-black text-sm text-slate-900">
+                  Pick Segment <span className="text-[#1d4ed8] font-extrabold text-xs block mt-0.5">பிரிவைத் தேர்ந்தெடு</span>
                 </h3>
-                <p className="text-[11px] text-slate-400 font-medium">
+                <p className="text-[11px] text-slate-600 font-medium">
                   Choose Sell, Need, Services, or Store Offers.
                 </p>
               </div>
             </div>
 
             {/* Step 2 */}
-            <div className="bg-slate-800/90 border border-slate-700/80 p-4 sm:p-5 rounded-xl flex flex-col justify-between gap-3 group hover:border-amber-500/50 transition-all">
+            <div className="bg-slate-50 border border-slate-200/80 p-4 sm:p-5 rounded-xl flex flex-col justify-between gap-3 group hover:border-[#1d4ed8]/50 transition-all">
               <div className="flex items-center justify-between">
-                <span className="w-8 h-8 rounded-lg bg-slate-900 text-white border border-slate-700 font-heading font-black text-sm flex items-center justify-center shadow-2xs">
+                <span className="w-8 h-8 rounded-lg bg-[#1d4ed8] text-white font-heading font-black text-sm flex items-center justify-center shadow-2xs">
                   02
                 </span>
-                <span className="text-[10px] font-bold text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">
+                <span className="text-[10px] font-bold text-slate-500 bg-white px-2 py-0.5 rounded-full border border-slate-200">
                   STEP 2
                 </span>
               </div>
               <div className="flex flex-col gap-1">
-                <h3 className="font-heading font-black text-sm text-white">
-                  Post or Browse <span className="text-amber-400 font-extrabold text-xs block mt-0.5">பதிவிடு / தேடு</span>
+                <h3 className="font-heading font-black text-sm text-slate-900">
+                  Post or Browse <span className="text-[#1d4ed8] font-extrabold text-xs block mt-0.5">பதிவிடு / தேடு</span>
                 </h3>
-                <p className="text-[11px] text-slate-400 font-medium">
+                <p className="text-[11px] text-slate-600 font-medium">
                   Post in 30s or browse verified local Tanjore listings.
                 </p>
               </div>
             </div>
 
             {/* Step 3 */}
-            <div className="bg-slate-800/90 border border-slate-700/80 p-4 sm:p-5 rounded-xl flex flex-col justify-between gap-3 group hover:border-amber-500/50 transition-all">
+            <div className="bg-slate-50 border border-slate-200/80 p-4 sm:p-5 rounded-xl flex flex-col justify-between gap-3 group hover:border-[#1d4ed8]/50 transition-all">
               <div className="flex items-center justify-between">
-                <span className="w-8 h-8 rounded-lg bg-slate-900 text-white border border-slate-700 font-heading font-black text-sm flex items-center justify-center shadow-2xs">
+                <span className="w-8 h-8 rounded-lg bg-[#1d4ed8] text-white font-heading font-black text-sm flex items-center justify-center shadow-2xs">
                   03
                 </span>
-                <span className="text-[10px] font-bold text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">
+                <span className="text-[10px] font-bold text-slate-500 bg-white px-2 py-0.5 rounded-full border border-slate-200">
                   STEP 3
                 </span>
               </div>
               <div className="flex flex-col gap-1">
-                <h3 className="font-heading font-black text-sm text-white">
-                  Direct Connect <span className="text-amber-400 font-extrabold text-xs block mt-0.5">நேரடி தொடர்பு</span>
+                <h3 className="font-heading font-black text-sm text-slate-900">
+                  Direct Connect <span className="text-[#1d4ed8] font-extrabold text-xs block mt-0.5">நேரடி தொடர்பு</span>
                 </h3>
-                <p className="text-[11px] text-slate-400 font-medium">
+                <p className="text-[11px] text-slate-600 font-medium">
                   Call or chat directly with Tanjore locals (0% brokerage).
                 </p>
               </div>

@@ -80,7 +80,7 @@ export default function TopHeader({
             </div>
             <div className="flex items-center gap-1">
               <span className="font-heading font-black tracking-tight text-sm sm:text-base md:text-lg leading-none">
-                <span className="text-[#1d4ed8]">நம்ம</span> <span className="text-amber-500 font-black">Thanjai</span>
+                <span className="text-[#1d4ed8] font-black">நம்ம</span> <span className="text-[#f59e0b] font-black">Thanjai</span>
               </span>
             </div>
           </div>
@@ -94,7 +94,7 @@ export default function TopHeader({
           const isServiceActive = pathname.includes("/services") || pathname.includes("/post/service") || activeTab === "services";
           const isOfferActive = pathname.includes("/shops") || pathname.includes("/offers") || activeTab === "shops";
 
-          const activeStyle = "bg-slate-900 text-white font-extrabold shadow-xs rounded-lg border border-slate-900";
+          const activeStyle = "bg-[#1d4ed8] text-white font-extrabold shadow-xs rounded-lg border border-[#1d4ed8]";
           const inactiveStyle = "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-bold transition-all duration-200";
 
           return (
