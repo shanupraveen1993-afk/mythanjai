@@ -67,7 +67,9 @@ export default function BottomTabBar({
       <div className="flex justify-around items-center h-16 px-2">
         {tabs.map((tab) => {
           const Icon = tab.icon;
-          const isActive = pathname === tab.route || activeTab === tab.id;
+          const isActive =
+            (tab.id === "home" && (pathname === "/" || pathname === "/home" || activeTab === "home")) ||
+            (tab.id !== "home" && (pathname.startsWith(tab.route) || activeTab === tab.id));
 
           return (
             <button
