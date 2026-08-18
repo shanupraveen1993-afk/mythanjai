@@ -52,12 +52,6 @@ export default function BottomTabBar({
       icon: Store,
       route: "/shops",
     },
-    {
-      id: "profile" as AppTab,
-      label: "Me",
-      icon: User,
-      route: "/profile",
-    },
   ];
 
   const handleTabClick = (tab: typeof tabs[0]) => {
