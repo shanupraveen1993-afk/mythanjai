@@ -232,7 +232,7 @@ export default function CategoryFeedClient({ segmentType }: CategoryFeedClientPr
       </div>
 
       <div 
-        className="sticky top-0 z-30 bg-white/95 backdrop-blur-md border-b border-slate-200/90 shadow-2xs px-4 sm:px-6 py-2.5 flex flex-col gap-2 transition-all"
+        className="bg-white/95 border-b border-slate-200/90 shadow-2xs px-4 sm:px-6 py-2.5 flex flex-col gap-2 transition-all"
       >
         {/* Row 1: Search + Sort + Post button */}
         <div className="flex items-center gap-2">
