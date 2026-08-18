@@ -78,9 +78,9 @@ export default function TopHeader({
             <div className="w-8 h-8 sm:w-9 sm:h-9 shrink-0 group-hover:scale-[1.08] transition-transform duration-300 flex items-center justify-center">
               <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="w-full h-full object-contain" />
             </div>
-            <div className="flex items-center gap-0.5">
-              <span className="font-heading font-black tracking-tight text-slate-900 text-sm sm:text-base md:text-lg leading-none">
-                நம்ம <span className="text-amber-500 font-black">Thanjai</span>
+            <div className="flex items-center gap-1">
+              <span className="font-heading font-black tracking-tight text-sm sm:text-base md:text-lg leading-none">
+                <span className="text-slate-900">நம்ம</span> <span className="text-amber-500 font-black">Thanjai</span>
               </span>
             </div>
           </div>
