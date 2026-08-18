@@ -38,7 +38,7 @@ export interface ServiceProviderPost {
   userId: string;
   name: string;
   skill_category: string;
-  experience: string;
+  experience?: string;
   area_tag: TanjoreLocality | string;
   phone: string;
   rating: number;
