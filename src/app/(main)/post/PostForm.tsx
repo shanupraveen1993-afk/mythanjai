@@ -31,6 +31,8 @@ import {
   Sparkles,
 } from "lucide-react";
 import ListingCard from "@/components/cards/ListingCard";
+import ServiceCard from "@/components/cards/ServiceCard";
+import ShopCard from "@/components/cards/ShopCard";
 import ThanjavurLocationInput from "@/components/location/ThanjavurLocationInput";
 import { NeedOrSalePost, ServiceProviderPost, ShopPost, OfferPost } from "@/types";
 
