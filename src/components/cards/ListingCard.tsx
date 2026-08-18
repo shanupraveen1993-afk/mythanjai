@@ -284,11 +284,11 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
               </div>
             </div>
 
-            {/* Action Buttons Row: Opposite Side Alignment (Chat Left, Call Right) */}
-            <div className="flex items-center justify-between gap-2 pt-0.5 w-full">
+            {/* Action Buttons Row: Full Width 2-Button Layout (Chat #128C7E + Yellow Call) */}
+            <div className="flex items-center gap-2 pt-0.5 w-full">
               {isOwnPost ? (
-                <div className="w-full py-1.5 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1.5">
-                  <UserCheck className="w-3.5 h-3.5 text-slate-500" />
+                <div className="w-full py-2 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1.5">
+                  <UserCheck className="w-4 h-4 text-slate-500" />
                   <span>Your Listing</span>
                 </div>
               ) : (
@@ -303,9 +303,9 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
                         }
                         setIsChatOpen(true);
                       }}
-                      className="bg-[#25D366] text-white hover:bg-[#128C7E] active:bg-[#075E54] font-black text-xs py-1.5 px-4 rounded-lg flex items-center justify-center gap-1.5 shadow-2xs transition-colors cursor-pointer shrink-0"
+                      className="bg-[#128C7E] text-white font-extrabold text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 flex-1 shadow-2xs cursor-pointer"
                     >
-                      <MessageSquare className="w-3.5 h-3.5 text-white fill-current" />
+                      <MessageSquare className="w-4 h-4 text-white fill-current" />
                       <span>Chat</span>
                     </button>
                   )}
@@ -319,9 +319,9 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
                           toast.info("This provider is currently busy/unavailable.");
                         }
                       }}
-                      className="bg-[#f59e0b] text-slate-950 font-extrabold border border-[#d97706] hover:bg-[#d97706] hover:text-white text-xs py-1.5 px-4 rounded-lg flex items-center justify-center gap-1.5 shadow-2xs transition-colors cursor-pointer shrink-0 ml-auto"
+                      className="bg-[#f59e0b] text-slate-950 font-extrabold border border-[#d97706] text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 flex-1 shadow-2xs cursor-pointer"
                     >
-                      <Phone className="w-3.5 h-3.5 text-slate-950 group-hover:text-white" />
+                      <Phone className="w-4 h-4 text-slate-950" />
                       <span>Call</span>
                     </a>
                   )}
