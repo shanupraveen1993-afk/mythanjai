@@ -185,7 +185,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
           
           {/* Top Left: Category Badge Overlay (Semi-Transparent Glass) */}
           <div className="absolute top-2.5 left-2.5 z-10">
-            <span className="bg-slate-950/40 backdrop-blur-md text-white font-extrabold text-[11px] px-2.5 py-1 rounded-md border border-white/20 shadow-2xs">
+            <span className="bg-slate-950/40 backdrop-blur-md text-white font-semibold text-[11px] px-2.5 py-1 rounded-md border border-white/20 shadow-2xs">
               {listing.category || listing.type || "Classified"}
             </span>
           </div>
