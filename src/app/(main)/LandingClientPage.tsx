@@ -305,9 +305,6 @@ export default function LandingClientPage() {
               >
                 <div className="relative h-36 bg-slate-100 overflow-hidden">
                   <img src={item.img} alt={item.name} className="w-full h-full object-cover" />
-                  <span className="absolute top-2 left-2 bg-emerald-600 text-white font-black text-xs px-2.5 py-0.5 rounded-md">
-                    Verified Pro
-                  </span>
                 </div>
                 <div className="p-3.5 flex flex-col gap-1.5">
                   <div className="flex items-center justify-between">
