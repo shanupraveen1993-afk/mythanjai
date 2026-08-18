@@ -124,10 +124,31 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
     }
   };
 
+  const getCategoryIllustration = (category?: string) => {
+    const cat = (category || "").toLowerCase();
+    if (cat.includes("real estate") || cat.includes("plot") || cat.includes("house") || cat.includes("land") || cat.includes("property")) {
+      return "/hero_building_visual.png";
+    }
+    if (cat.includes("vehicle") || cat.includes("car") || cat.includes("bike") || cat.includes("scooter") || cat.includes("auto")) {
+      return "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=600&auto=format&fit=crop";
+    }
+    if (cat.includes("electronic") || cat.includes("mobile") || cat.includes("laptop") || cat.includes("tv") || cat.includes("phone")) {
+      return "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&auto=format&fit=crop";
+    }
+    if (cat.includes("household") || cat.includes("furniture") || cat.includes("appliance") || cat.includes("home")) {
+      return "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&auto=format&fit=crop";
+    }
+    if (cat.includes("fashion") || cat.includes("cloth") || cat.includes("dress") || cat.includes("wear")) {
+      return "https://images.unsplash.com/photo-1445205170230-053b83016050?w=600&auto=format&fit=crop";
+    }
+    return "/thanjavur_temple_illustration.png";
+  };
+
+  const categoryFallback = getCategoryIllustration(listing.category || listing.type);
   const imageSrc =
     (listing.images && listing.images[0]) ||
-    listing.image_url ||
-    "/thanjavur_temple_illustration.png";
+    (listing.image_url && listing.image_url !== "/thanjavur_temple_illustration.png" ? listing.image_url : null) ||
+    categoryFallback;
 
   const isLookingFor = listing.type === "looking_for" || listing.expected_price_from;
 

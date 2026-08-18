@@ -42,6 +42,34 @@ export default function TopHeader({
   const phoneDisplay = profile?.phone ? `+${profile.phone}` : "+919994837342";
   const isHomePage = pathname === "/";
 
+  // Dynamic Post CTA info based on active page route or tab
+  const postInfo = React.useMemo(() => {
+    if (pathname.includes("/sell") || activeTab === "sell") {
+      return { label: "Post Item", route: "/post/sell" };
+    }
+    if (pathname.includes("/need") || activeTab === "need") {
+      return { label: "Post Requirement", route: "/post/need" };
+    }
+    if (pathname.includes("/services") || activeTab === "services") {
+      return { label: "Post Service", route: "/post/service" };
+    }
+    if (pathname.includes("/shops") || pathname.includes("/offers") || activeTab === "shops") {
+      return { label: "Post Offer", route: "/post/offer" };
+    }
+    return { label: "Post Ad", route: "/post/sell" };
+  }, [pathname, activeTab]);
+
+  const handleDynamicPostClick = () => {
+    if (!isAuthVerified) {
+      if (typeof window !== "undefined") {
+        sessionStorage.setItem("namma_thanjai_target_post_route", postInfo.route);
+        window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+      }
+      return;
+    }
+    router.push(postInfo.route);
+  };
+
   // Hamburger Menu Drawer state for Web App
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
@@ -138,7 +166,7 @@ export default function TopHeader({
           );
         })()}
 
-        {/* Right Side: Get App + Post Ad + Chat Icon (Logged in) + Profile Icon */}
+        {/* Right Side: Get App + Dynamic Post CTA + Chat Icon (Logged in) + Profile Icon */}
         <div className="flex items-center gap-2 shrink-0">
           {/* 1. Get App Button — Homepage ONLY */}
           {isHomePage && (
@@ -146,7 +174,7 @@ export default function TopHeader({
               href="/namma_thanjai_release.apk"
               download="namma_thanjai_release.apk"
               onClick={handleGetAppClick}
-              className="bg-[#f59e0b] text-slate-950 border border-[#d97706] hover:bg-[#d97706] hover:text-white text-xs px-3 py-1.5 rounded-lg font-extrabold shrink-0 flex items-center gap-1 shadow-2xs cursor-pointer select-none transition-colors"
+              className="bg-[#f59e0b] text-slate-950 border border-[#d97706] hover:bg-[#d97706] hover:text-white text-xs px-3.5 py-1.5 rounded-lg font-extrabold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none transition-colors"
               title="Download Namma Thanjai Android App"
               aria-label="Download Namma Thanjai Android App"
             >
@@ -155,16 +183,16 @@ export default function TopHeader({
             </a>
           )}
 
-          {/* 2. + Post Ad Button — Other Pages ONLY (Primary Yellow Design) */}
+          {/* 2. Dynamic + Post CTA Button — Other Pages ONLY (Primary Yellow Design) */}
           {!isHomePage && (
             <button
               type="button"
-              onClick={onPostClick}
+              onClick={handleDynamicPostClick}
               className="bg-[#f59e0b] text-slate-950 border border-[#d97706] hover:bg-[#d97706] hover:text-white text-xs px-3.5 py-1.5 rounded-lg font-extrabold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer transition-colors"
-              title="Post Ad"
+              title={postInfo.label}
             >
               <Plus className="w-3.5 h-3.5 stroke-[3] text-slate-950" />
-              <span>Post Ad</span>
+              <span>{postInfo.label}</span>
             </button>
           )}
 
