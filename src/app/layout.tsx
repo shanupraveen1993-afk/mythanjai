@@ -51,7 +51,7 @@ export default function RootLayout({
             __html: `
               (function() {
                 if (typeof window !== 'undefined') {
-                  var TARGET_VERSION = 'v17.0_exact_header_order_get_app_amber_profile_login_post_yellow';
+                  var TARGET_VERSION = 'v18.0_royal_blue_infinity_logo_dim_yellow_outlined_secondary_black_outlined_tertiary';
                   var currentVer = localStorage.getItem('namma_thanjai_cache_version');
                   if (currentVer !== TARGET_VERSION) {
                     localStorage.setItem('namma_thanjai_cache_version', TARGET_VERSION);

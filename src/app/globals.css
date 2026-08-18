@@ -107,7 +107,7 @@ body {
   transform: none;
 }
 
-/* 2.2 Secondary Light Button */
+/* 2.2 Secondary Button: Logo Royal Blue Fill with Dim Yellow Outline & Hover Effect */
 .btn-secondary {
   display: inline-flex;
   align-items: center;
@@ -116,43 +116,44 @@ body {
   font-weight: 800;
   border-radius: 9999px;
   gap: 8px;
-  background-color: #f8fafc;
-  color: #0f172a;
-  border: 1.5px solid #cbd5e1;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  background-color: #1d4ed8;
+  color: #ffffff;
+  border: 2px solid #fde047;
+  box-shadow: 0 2px 6px rgba(29, 78, 216, 0.2);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
 }
 .btn-secondary:hover {
-  background-color: #fff8eb;
+  background-color: #1e40af;
   border-color: #f59e0b;
-  color: #b45309;
+  color: #ffffff;
   transform: translateY(-1px);
-  box-shadow: 0 3px 8px rgba(245, 158, 11, 0.15);
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
 }
 .btn-secondary:active {
   transform: scale(0.97);
 }
 
-/* 2.3 Tertiary / Outline Button */
+/* 2.3 Tertiary / Outline Button: Black Outlined with Black Text */
 .btn-tertiary, .btn-outline {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   font-family: var(--font-heading), 'Red Hat Display', sans-serif;
-  font-weight: 700;
+  font-weight: 800;
   border-radius: 9999px;
   gap: 6px;
-  background-color: #ffffff;
-  color: #1e293b;
-  border: 1px solid #e2e8f0;
+  background-color: transparent;
+  color: #0f172a;
+  border: 2px solid #0f172a;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
 }
 .btn-tertiary:hover, .btn-outline:hover {
-  background-color: #fff8eb;
-  border-color: #f59e0b;
-  color: #d97706;
+  background-color: #0f172a;
+  color: #ffffff;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(15, 23, 42, 0.2);
 }
 .btn-tertiary:active, .btn-outline:active {
   transform: scale(0.97);

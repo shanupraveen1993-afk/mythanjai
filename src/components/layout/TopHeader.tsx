@@ -96,11 +96,11 @@ export default function TopHeader({
             className="flex items-center gap-2 cursor-pointer select-none shrink-0 group"
           >
             <div className="w-8 h-8 sm:w-9 sm:h-9 shrink-0 group-hover:scale-[1.08] transition-transform duration-300 flex items-center justify-center">
-              <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-full h-full object-contain mix-blend-multiply" />
+              <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="w-full h-full object-contain" />
             </div>
             <div className="flex items-center gap-0.5">
-              <span className="font-heading font-black tracking-tight text-amber-600 text-sm sm:text-base md:text-lg leading-none">
-                நம்ம Thanjai
+              <span className="font-heading font-black tracking-tight text-[#1d4ed8] text-sm sm:text-base md:text-lg leading-none">
+                நம்ம <span className="text-amber-500">Thanjai</span>
               </span>
             </div>
           </div>
