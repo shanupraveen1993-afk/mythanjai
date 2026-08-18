@@ -66,11 +66,11 @@ export default function FloatingPostButton() {
 
   return (
     <div
-      style={{ bottom: "calc(4.25rem + max(env(safe-area-inset-bottom, 0px), 10px) + 12px)" }}
-      className={`fixed left-4 right-4 z-40 md:hidden flex justify-center transition-all duration-300 transform ${
+      style={{ bottom: "calc(5rem + env(safe-area-inset-bottom, 0px))" }}
+      className={`fixed left-1/2 -translate-x-1/2 z-[200] md:hidden transition-all duration-300 transform ${
         isVisible
-          ? "translate-y-0 opacity-100 scale-100 pointer-events-auto"
-          : "translate-y-16 opacity-0 scale-90 pointer-events-none"
+          ? "translate-y-0 opacity-100 pointer-events-auto"
+          : "translate-y-20 opacity-0 pointer-events-none"
       }`}
     >
       <button
@@ -85,13 +85,12 @@ export default function FloatingPostButton() {
           }
           router.push(route);
         }}
-        className="btn btn-primary btn-pill btn-lg w-full max-w-sm text-sm uppercase tracking-wider"
+        className="flex items-center gap-2 px-6 py-3 bg-[#f59e0b] text-slate-950 font-black text-sm rounded-full border border-[#d97706] shadow-lg cursor-pointer select-none active:scale-95 transition-transform uppercase tracking-wide"
       >
-        <Plus className="w-5 h-5 stroke-[3] text-[#0F172A]" />
+        <Plus className="w-4 h-4 stroke-[3] shrink-0" />
         <span>{label}</span>
       </button>
     </div>
   );
 }
-
 
