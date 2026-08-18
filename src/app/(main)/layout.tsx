@@ -247,11 +247,10 @@ function MainLayoutContent({
         className={`flex-1 w-full flex flex-col ${
           isFullWidthPage
             ? "p-0 max-w-none m-0 bg-white"
-            : "bg-[#f4f5f8] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8"
+            : "bg-[#f4f5f8] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 md:pb-8"
         }`}
         style={{
           paddingTop: !isStandaloneView && !isOnboardingView ? "calc(3.5rem + env(safe-area-inset-top, 0px))" : undefined,
-          paddingBottom: !isFullWidthPage ? "calc(6.5rem + env(safe-area-inset-bottom, 0px))" : undefined,
         }}
       >
         {/* Stable height wrapper — prevents page collapse and footer jump on route transitions */}

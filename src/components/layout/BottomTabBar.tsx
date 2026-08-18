@@ -61,7 +61,7 @@ export default function BottomTabBar({
 
   return (
     <nav 
-      className="fixed bottom-0 left-0 right-0 z-[9999] w-full bg-white/97 backdrop-blur-2xl border-t border-slate-200/70 shadow-[0_-6px_30px_rgba(0,0,0,0.10)] pointer-events-auto select-none"
+      className="md:hidden fixed bottom-0 left-0 right-0 z-[9999] w-full bg-white/97 backdrop-blur-2xl border-t border-slate-200/70 shadow-[0_-6px_30px_rgba(0,0,0,0.10)] pointer-events-auto select-none"
       style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 10px)" }}
     >
       <div className="flex justify-around items-center h-16 px-2">
