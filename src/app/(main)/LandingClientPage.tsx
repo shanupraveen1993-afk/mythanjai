@@ -169,15 +169,12 @@ export default function LandingClientPage() {
               <h2 className="font-heading font-black text-base sm:text-lg text-[#1d4ed8]">
                 Sell (விற்பனை)
               </h2>
-              <span className="text-[10px] font-black uppercase tracking-wider bg-slate-900 text-white border border-slate-800 px-2.5 py-0.5 rounded-full shadow-2xs">
-                New Listing
-              </span>
             </div>
             <button
               onClick={() => router.push("/sell")}
-              className="text-xs font-extrabold text-amber-600 hover:text-amber-700 flex items-center gap-1 hover:underline cursor-pointer"
+              className="text-[11px] font-extrabold bg-[#f59e0b] text-slate-950 border border-[#d97706] hover:bg-[#d97706] hover:text-white px-2.5 py-1 rounded-full flex items-center gap-1 shadow-2xs transition-colors cursor-pointer"
             >
-              View all <ChevronRight className="w-3.5 h-3.5 text-amber-600" />
+              <span>View all</span> <ChevronRight className="w-3.5 h-3.5 stroke-[2.5]" />
             </button>
           </div>
 
@@ -223,15 +220,12 @@ export default function LandingClientPage() {
               <h2 className="font-heading font-black text-base sm:text-lg text-[#1d4ed8]">
                 Need (தேவைகள்)
               </h2>
-              <span className="text-[10px] font-black uppercase tracking-wider bg-slate-900 text-white border border-slate-800 px-2.5 py-0.5 rounded-full shadow-2xs">
-                New Listing
-              </span>
             </div>
             <button
               onClick={() => router.push("/need")}
-              className="text-xs font-bold text-slate-700 hover:text-slate-900 flex items-center gap-1 hover:underline cursor-pointer"
+              className="text-[11px] font-extrabold bg-[#f59e0b] text-slate-950 border border-[#d97706] hover:bg-[#d97706] hover:text-white px-2.5 py-1 rounded-full flex items-center gap-1 shadow-2xs transition-colors cursor-pointer"
             >
-              View all <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
+              <span>View all</span> <ChevronRight className="w-3.5 h-3.5 stroke-[2.5]" />
             </button>
           </div>
 
@@ -277,15 +271,12 @@ export default function LandingClientPage() {
               <h2 className="font-heading font-black text-base sm:text-lg text-[#1d4ed8]">
                 Services (சேவைகள்)
               </h2>
-              <span className="text-[10px] font-black uppercase tracking-wider bg-slate-900 text-white border border-slate-800 px-2.5 py-0.5 rounded-full shadow-2xs">
-                New Listing
-              </span>
             </div>
             <button
               onClick={() => router.push("/services")}
-              className="text-xs font-bold text-slate-700 hover:text-slate-900 flex items-center gap-1 hover:underline cursor-pointer"
+              className="text-[11px] font-extrabold bg-[#f59e0b] text-slate-950 border border-[#d97706] hover:bg-[#d97706] hover:text-white px-2.5 py-1 rounded-full flex items-center gap-1 shadow-2xs transition-colors cursor-pointer"
             >
-              View all <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
+              <span>View all</span> <ChevronRight className="w-3.5 h-3.5 stroke-[2.5]" />
             </button>
           </div>
 
@@ -331,15 +322,12 @@ export default function LandingClientPage() {
               <h2 className="font-heading font-black text-base sm:text-lg text-[#1d4ed8]">
                 Offers (சலுகைகள்)
               </h2>
-              <span className="text-[10px] font-black uppercase tracking-wider bg-slate-900 text-white border border-slate-800 px-2.5 py-0.5 rounded-full shadow-2xs">
-                New Listing
-              </span>
             </div>
             <button
               onClick={() => router.push("/shops")}
-              className="text-xs font-bold text-slate-700 hover:text-slate-900 flex items-center gap-1 hover:underline cursor-pointer"
+              className="text-[11px] font-extrabold bg-[#f59e0b] text-slate-950 border border-[#d97706] hover:bg-[#d97706] hover:text-white px-2.5 py-1 rounded-full flex items-center gap-1 shadow-2xs transition-colors cursor-pointer"
             >
-              View all <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
+              <span>View all</span> <ChevronRight className="w-3.5 h-3.5 stroke-[2.5]" />
             </button>
           </div>
 
