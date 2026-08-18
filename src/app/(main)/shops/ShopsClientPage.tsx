@@ -8,6 +8,7 @@ import { ShopPost } from "@/types";
 import { Plus, Loader2, Store, ArrowUpDown } from "lucide-react";
 import { SHOP_CATEGORIES } from "@/lib/constants";
 import WebAppScrollFAB from "@/components/common/WebAppScrollFAB";
+import { isListingQuarantined } from "@/lib/moderation";
 
 const SAMPLE_POSTS: ShopPost[] = [
   { id: "sh_glen", userId: "sample", shop_name: "GLEN Exclusive Gallery", category: "Electronics & Mobiles", address_text: "New Busstand Road, Thanjavur", landmark: "Near New Bus Stand", hours: "9:30 AM – 9 PM", valid_from: "2026-08-10", valid_to: "2026-08-25", phone: "9876543225", area_tag: "New Bus Stand", offer_title: "Up to 60% OFF — Grand Opening Sale", offer_description: "Massive discounts on kitchen chimneys, hobs, cooktops & gas stoves.", image_url: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&auto=format&fit=crop", latitude: 10.7852, longitude: 79.1162, is_claimed: true, created_at: new Date() as any },
