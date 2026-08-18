@@ -87,7 +87,7 @@ export default function NeedClientPage() {
         <img src="/hero_building_visual.png" alt="Need" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent" />
         <div className="relative z-10 flex flex-col gap-1 max-w-xl">
-          <span className="text-xs font-black text-[#F9B637] uppercase tracking-wide">BUYER DIRECTORY • கொள்முதல் &amp; தேவைகள்</span>
+          <span className="bg-[#FBBF24] text-[#0F172A] font-bold text-xs px-2.5 py-0.5 rounded-md tracking-wider w-fit">BUYER DIRECTORY • கொள்முதல் &amp; தேவைகள்</span>
           <h1 className="font-heading font-black text-lg sm:text-xl text-white tracking-tight">
             Find What You Need in Thanjavur <span className="text-amber-400 block text-xs sm:text-sm font-extrabold mt-0.5">உங்கள் தேவையை தஞ்சை மக்களிடம் பதிவிடுங்கள்</span>
           </h1>
