@@ -155,16 +155,18 @@ export default function TopHeader({
             </a>
           )}
 
-          {/* 2. Universal + Post Ad Button */}
-          <button
-            type="button"
-            onClick={onPostClick}
-            className="btn-secondary text-xs px-3 py-1.5 rounded-lg flex items-center gap-1 cursor-pointer shrink-0 font-extrabold"
-            title="Post Free Ad"
-          >
-            <Plus className="w-3.5 h-3.5 text-[#1d4ed8] stroke-[2.5]" />
-            <span className="hidden sm:inline">Post Ad</span>
-          </button>
+          {/* 2. + Post Ad Button — Other Pages ONLY */}
+          {!isHomePage && (
+            <button
+              type="button"
+              onClick={onPostClick}
+              className="btn-secondary text-xs px-3 py-1.5 rounded-lg flex items-center gap-1 cursor-pointer shrink-0 font-extrabold"
+              title="Post Free Ad"
+            >
+              <Plus className="w-3.5 h-3.5 text-[#1d4ed8] stroke-[2.5]" />
+              <span>Post Ad</span>
+            </button>
+          )}
 
           {/* 3. Universal Chat Button (For Logged-in Users) */}
           {isAuthVerified && (
