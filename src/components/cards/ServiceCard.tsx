@@ -237,7 +237,18 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
           <div className="flex items-center gap-2.5">
             <span className="flex items-center gap-1 text-slate-500 font-medium">
               <Calendar className="w-3.5 h-3.5 text-slate-400" />
-              <span>{formatRelativeTime(post.created_at)}</span>
+              <span>{(() => {
+                if (!post.created_at) return "Added on Mar 2026";
+                try {
+                  const d = (post.created_at as any).seconds ? new Date((post.created_at as any).seconds * 1000) : new Date(post.created_at as any);
+                  if (isNaN(d.getTime())) return "Added on Mar 2026";
+                  const month = d.toLocaleString("en-US", { month: "short" });
+                  const year = d.getFullYear();
+                  return `Added on ${month} ${year}`;
+                } catch (e) {
+                  return "Added on Mar 2026";
+                }
+              })()}</span>
             </span>
           </div>
 

@@ -268,19 +268,19 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
             </div>
           )}
 
-          {/* Card Footer Bar: Left = Relative Posted Date (ago), Right = 2 Action Buttons (Chat & Call) */}
-          <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2">
-            {/* Left Side: Relative Posted Date */}
-            <span className="text-[11px] font-bold text-slate-400 flex items-center gap-1 shrink-0">
+          {/* Card Footer Bar: Left = Relative Posted Date (Bottom-aligned), Right = 2 Larger Action Buttons (Chat & Call) */}
+          <div className="pt-2.5 border-t border-slate-100 flex items-end justify-between gap-2 mt-auto">
+            {/* Left Side: Relative Posted Date (Bottom Aligned) */}
+            <span className="text-[11px] font-bold text-slate-400 flex items-center gap-1 shrink-0 pb-1">
               <Calendar className="w-3.5 h-3.5 text-slate-400" />
               <span>{formatRelativeTime(listing.created_at)}</span>
             </span>
 
-            {/* Right Side: 2 Action Buttons (Chat #128C7E + Yellow Call) */}
+            {/* Right Side: 2 Larger Action Buttons (Chat #128C7E + Yellow Call) */}
             <div className="flex items-center gap-2 shrink-0">
               {isOwnPost ? (
-                <div className="px-3 py-1.5 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1.5">
-                  <UserCheck className="w-3.5 h-3.5 text-slate-500" />
+                <div className="px-4 py-2 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1.5 min-h-[38px]">
+                  <UserCheck className="w-4 h-4 text-slate-500" />
                   <span>Your Listing</span>
                 </div>
               ) : (
@@ -295,9 +295,9 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
                         }
                         setIsChatOpen(true);
                       }}
-                      className="bg-[#128C7E] text-white font-extrabold text-xs py-1.5 px-3.5 rounded-lg flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
+                      className="bg-[#128C7E] text-white font-black text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer"
                     >
-                      <MessageSquare className="w-3.5 h-3.5 text-white fill-current" />
+                      <MessageSquare className="w-4 h-4 text-white fill-current" />
                       <span>Chat</span>
                     </button>
                   )}
@@ -311,9 +311,9 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
                           toast.info("This provider is currently busy/unavailable.");
                         }
                       }}
-                      className="bg-[#f59e0b] text-slate-950 font-extrabold border border-[#d97706] text-xs py-1.5 px-3.5 rounded-lg flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
+                      className="bg-[#f59e0b] text-slate-950 font-black border border-[#d97706] text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer"
                     >
-                      <Phone className="w-3.5 h-3.5 text-slate-950" />
+                      <Phone className="w-4 h-4 text-slate-950" />
                       <span>Call</span>
                     </a>
                   )}
