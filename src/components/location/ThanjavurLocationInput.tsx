@@ -5,6 +5,12 @@ import { MapPin, AlertCircle, Compass, Check, Search } from "lucide-react";
 import { TANJORE_LOCALITIES } from "@/lib/constants";
 import { useRouter } from "next/navigation";
 
+declare global {
+  interface Window {
+    google: any;
+  }
+}
+
 interface ThanjavurLocationInputProps {
   value: string;
   onChange: (val: string) => void;
