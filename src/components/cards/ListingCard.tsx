@@ -162,22 +162,22 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
             className="object-cover group-hover:scale-105 transition-transform duration-300"
           />
           
-          {/* Top Left: Category Badge Overlay */}
+          {/* Top Left: Category Badge Overlay (Semi-Transparent Glass) */}
           <div className="absolute top-2.5 left-2.5 z-10">
-            <span className="bg-slate-950/85 backdrop-blur-xs text-white font-extrabold text-[11px] px-2.5 py-1 rounded-md border border-slate-800">
+            <span className="bg-slate-950/40 backdrop-blur-md text-white font-extrabold text-[11px] px-2.5 py-1 rounded-md border border-white/20 shadow-2xs">
               {listing.category || listing.type || "Classified"}
             </span>
           </div>
 
-          {/* Top Right: Vertical Action Buttons Stack (Save & Report) */}
+          {/* Top Right: Vertical Action Buttons Stack (Save & Report Semi-Transparent Glass) */}
           <div className="absolute top-2.5 right-2.5 flex flex-col gap-1.5 z-10">
             <button
               type="button"
               onClick={handleSaveToggle}
-              className={`w-7 h-7 rounded-md border backdrop-blur-xs shadow-2xs flex items-center justify-center transition-all cursor-pointer ${
+              className={`w-7 h-7 rounded-md border backdrop-blur-md shadow-2xs flex items-center justify-center transition-all cursor-pointer ${
                 isSaved
-                  ? "bg-amber-500 text-slate-950 border-amber-400"
-                  : "bg-slate-950/80 text-white border-slate-800 hover:bg-slate-900"
+                  ? "bg-amber-500 text-slate-950 border-amber-400 font-bold"
+                  : "bg-slate-950/40 text-white border-white/20 hover:bg-slate-950/70"
               }`}
               title={isSaved ? "Saved" : "Save Listing"}
               aria-label={isSaved ? "Remove saved listing" : "Save this listing"}
@@ -187,7 +187,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
             <button
               type="button"
               onClick={handleReportListing}
-              className="w-7 h-7 rounded-md border border-slate-800 bg-slate-950/80 text-slate-300 hover:text-rose-400 hover:bg-slate-900 flex items-center justify-center transition-all cursor-pointer shadow-2xs backdrop-blur-xs"
+              className="w-7 h-7 rounded-md border border-white/20 bg-slate-950/40 text-white hover:text-rose-400 hover:bg-slate-950/70 flex items-center justify-center transition-all cursor-pointer shadow-2xs backdrop-blur-md"
               title="Report Listing"
               aria-label="Report this listing"
             >
