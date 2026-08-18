@@ -158,186 +158,135 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
   if (isDeleted) return null;
 
   return (
-    <div className={`bg-white rounded-2xl p-4 flex flex-col gap-3 shadow-[0_3px_8px_rgba(0,0,0,0.04)] transition-all duration-200 relative group overflow-hidden font-sans border card-lift ${
-      isSold ? "border-slate-300 opacity-80" : "border-slate-200/80"
-    }`}>
-      {/* SOLD Overlay Banner */}
-      {isSold && (
-        <div className="bg-[#0F172A] text-[#FBBF24] text-xs font-black uppercase px-3 py-1 rounded-md w-fit flex items-center gap-1">
-          {t("markedSold")}
-        </div>
-      )}
-
-      {/* Top Header Category & Type Badges */}
-      <div className="flex items-center justify-between gap-2 pr-8">
-        <div className="flex items-center gap-1.5 flex-wrap">
-          {/* Type Badge: FOR SALE vs WANTED NEED */}
-          <span className={`inline-flex items-center gap-1 text-xs font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border ${
-            isNeedType 
-              ? "bg-amber-500/10 text-amber-900 border-amber-300" 
-              : "bg-slate-100 text-slate-700 border-slate-200"
-          }`}>
-            <Tag className="w-3 h-3 text-slate-400" />
-            <span>{isNeedType ? "BUYER REQUIREMENT" : "FOR SALE"}</span>
-          </span>
-
-          {post.category && (
-            <span className="inline-flex items-center gap-1 text-xs font-medium bg-slate-50 text-slate-600 px-2 py-0.5 rounded-md border border-slate-200/60">
-              <span>{post.category}</span>
-            </span>
-          )}
-        </div>
-      </div>
-
-      {/* Main Title & Price */}
-      <div className="flex flex-col gap-1">
-        <h3 className="font-heading font-bold text-sm sm:text-base text-slate-900 leading-snug line-clamp-2">
-          {post.title}
-        </h3>
-
-        {displayPriceText && (
-          <div className="mt-1 flex items-center">
-            <span className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight">
-              {displayPriceText}
-            </span>
+    <>
+      <div
+        className={`bg-white rounded-xl p-4 flex flex-col gap-3 shadow-2xs border border-slate-200/90 transition-all duration-200 relative group overflow-hidden font-sans ${
+          isSold ? "opacity-80" : ""
+        }`}
+      >
+        {/* SOLD / FULFILLED Overlay Banner */}
+        {isSold && (
+          <div className="bg-slate-950 text-amber-400 text-xs font-black uppercase px-3 py-1 rounded-md w-fit flex items-center gap-1">
+            {t("markedSold")}
           </div>
         )}
-      </div>
 
-      {/* Media Box — ONLY RENDERED FOR SELL POSTS */}
-      {!isNeedType && (
-        youtubeId && isPlayingVideo ? (
-          <div className="relative w-full h-44 sm:h-52 rounded-xl overflow-hidden bg-black shadow-inner">
-            <iframe
-              src={`https://www.youtube.com/embed/${youtubeId}?autoplay=1`}
-              title={post.title}
-              className="w-full h-full border-0"
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-              allowFullScreen
-            />
-          </div>
-        ) : images.length > 0 ? (
-          <div className="relative w-full h-44 sm:h-52 rounded-xl overflow-hidden bg-slate-100 border border-slate-100">
-            <Image
-              src={images[activeImgIndex] || "/thanjavur_temple_illustration.png"}
-              alt={post.title}
-              fill
-              className="object-cover group-hover:scale-105 transition-transform duration-300"
-              unoptimized
-            />
-            {images.length > 1 && (
-              <div className="absolute bottom-2 right-2 bg-black/60 text-white text-xs font-bold px-2 py-0.5 rounded-md backdrop-blur-xs">
-                {activeImgIndex + 1}/{images.length}
-              </div>
-            )}
-          </div>
-        ) : (
-          /* Placeholder Box for Sell Posts without Images for 100% Uniform Height */
-          <div className="relative w-full h-44 sm:h-52 rounded-xl overflow-hidden bg-slate-50 border border-slate-200/60 flex flex-col items-center justify-center gap-1.5 text-slate-400">
-            <Camera className="w-6 h-6 stroke-[1.5] text-slate-300" />
-            <span className="text-xs font-semibold text-slate-400">No Image Provided</span>
-          </div>
-        )
-      )}
+        {/* Card Header Row: Category Badge Top-Left + 3 Action Icons Top-Right */}
+        <div className="flex items-center justify-between gap-2 w-full">
+          {/* Top Left: Category Badge */}
+          <span className="bg-amber-50 text-amber-900 border border-amber-200/80 font-extrabold text-[11px] px-2.5 py-1 rounded-md shadow-2xs">
+            {post.category || "Requirement"}
+          </span>
 
-      {/* Description Box */}
-      {post.description && (
-        <div className={`p-3 rounded-xl border ${
-          isNeedType ? "bg-amber-50/60 border-amber-200/70" : "bg-slate-50 border-slate-200/80"
-        }`}>
-          <p className="text-xs text-slate-700 font-medium leading-relaxed">
-            {post.description}
-          </p>
-        </div>
-      )}
-
-      {/* Social Engagement Bar: Left = Date & Views, Right = Share & Save */}
-      {!isPreview && (
-        <div className="flex items-center justify-between text-xs text-slate-500 font-semibold border-t border-b border-slate-100 py-2 my-0.5">
-          {/* Left: Meta Info (Date & Views) */}
-          <div className="flex items-center gap-2.5">
-            <span className="flex items-center gap-1 text-slate-400 font-medium">
-              <Calendar className="w-3 h-3 text-slate-400" />
-              <span>{formatDate(post.created_at)}</span>
-            </span>
-            <span className="text-slate-300">•</span>
-            {viewsCount < 15 ? (
-              <span className="inline-flex items-center gap-1 text-xs font-black text-amber-800 bg-amber-100 border border-amber-300 px-2 py-0.5 rounded-md">
-                <Sparkles className="w-3 h-3 fill-amber-500 text-amber-600" />
-                <span>New</span>
-              </span>
-            ) : (
-              <span className="flex items-center gap-1 text-slate-500 font-medium">
-                <Eye className="w-3.5 h-3.5 text-slate-400" />
-                <span>{viewsCount} {t("views")}</span>
-              </span>
-            )}
-          </div>
-
-          {/* Right: Actions (Share & Save) */}
-          <div className="flex items-center gap-2.5">
-
-            <button 
-              onClick={handleSharePost}
-              className="flex items-center gap-1 hover:text-slate-800 cursor-pointer transition-colors"
-            >
-              <Share2 className="w-3.5 h-3.5 text-slate-400" />
-              <span>{sharesCount}</span>
-            </button>
-            <button 
+          {/* Top Right: 3 Action Buttons (Save, Report & Share) */}
+          <div className="flex items-center gap-1.5 shrink-0">
+            <button
+              type="button"
               onClick={handleToggleSave}
-              className={`flex items-center gap-1 cursor-pointer transition-colors ${saved ? "text-yellow-600 font-bold" : "hover:text-slate-800"}`}
-              title={saved ? "Saved" : "Save"}
+              className={`w-7 h-7 rounded-md border shadow-2xs flex items-center justify-center transition-all cursor-pointer ${
+                saved
+                  ? "bg-amber-500 text-slate-950 border-amber-400 font-bold"
+                  : "bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200"
+              }`}
+              title={saved ? "Saved" : "Save Requirement"}
+              aria-label={saved ? "Remove saved requirement" : "Save this requirement"}
             >
-              <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-yellow-500 text-yellow-600" : "text-slate-400"}`} />
-              <span>{saved ? t("saved") : t("save")}</span>
+              <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-current" : ""}`} />
             </button>
             <button
+              type="button"
               onClick={handleReport}
-              className="flex items-center gap-1 text-slate-400 hover:text-rose-600 cursor-pointer transition-colors ml-1"
-              title="Report Post"
+              className="w-7 h-7 rounded-md border border-slate-200 bg-slate-100 text-slate-600 hover:text-rose-600 hover:bg-slate-200 flex items-center justify-center transition-all cursor-pointer shadow-2xs"
+              title="Report Requirement"
+              aria-label="Report this requirement"
             >
               <Flag className="w-3.5 h-3.5" />
             </button>
+            <button
+              type="button"
+              onClick={handleSharePost}
+              className="w-7 h-7 rounded-md border border-slate-200 bg-slate-100 text-slate-600 hover:bg-slate-200 flex items-center justify-center transition-all cursor-pointer shadow-2xs"
+              title="Share Requirement"
+              aria-label="Share this requirement"
+            >
+              <Share2 className="w-3.5 h-3.5" />
+            </button>
           </div>
         </div>
-      )}
 
-      {/* Footer Info & Action CTAs */}
-      <div className="flex items-center justify-between pt-1">
-        <div className="flex items-center gap-1 text-xs text-slate-500 font-semibold">
-          <MapPin className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-          <span className="truncate max-w-[140px]">{post.area_tag}</span>
-        </div>
-        <div className="flex items-center gap-1.5">
-          {isOwnPost ? (
-            <Link
-              href="/profile?tab=my_posts"
-              className="btn btn-secondary btn-sm text-xs uppercase tracking-wider"
-            >
-              <Pencil className="w-3.5 h-3.5 text-[#0F172A]" />
-              <span>Edit</span>
-            </Link>
-          ) : isValidSellerId ? (
-            <Link
-              href={`/chat?listingId=${post.id}&sellerId=${post.userId}&title=${encodeURIComponent(post.title || "Item")}`}
-              className="btn btn-chat btn-sm text-xs"
-            >
-              <MessageSquare className="w-3.5 h-3.5 text-[#78350F]" />
-              <span>Chat Now</span>
-            </Link>
-          ) : (
-            /* Safe fallback for demo/seed posts without real userId */
-            <a
-              href={whatsappUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-whatsapp btn-sm text-xs"
-            >
-              <MessageSquare className="w-3.5 h-3.5 text-white" />
-              <span>Chat Now</span>
-            </a>
-          )}
+        {/* Card Content Body (Human-Centric Hierarchy) */}
+        <div className="flex flex-col gap-2 flex-1 justify-between">
+          <div className="flex flex-col gap-1.5">
+            {/* 1st Line: Budget / Price in Amber Yellow */}
+            <div className="flex items-center justify-between">
+              <span className="font-heading font-black text-base sm:text-lg text-amber-600">
+                {displayPriceText || "Budget: Negotiable"}
+              </span>
+            </div>
+
+            {/* 2nd Line: Requirement Title */}
+            <h3 className="font-heading font-black text-sm text-slate-900 line-clamp-2 leading-snug group-hover:text-amber-600 transition-colors">
+              {post.title}
+            </h3>
+
+            {/* Requirement Description */}
+            {post.description && (
+              <p className="text-xs text-slate-600 font-medium line-clamp-3 leading-relaxed">
+                {post.description}
+              </p>
+            )}
+
+            {/* Address Row */}
+            <div className="flex items-center text-slate-600 text-[11px] font-medium gap-1 pt-1">
+              <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+              <span className="truncate">{post.area_tag || "Medical College Rd, Thanjavur"}</span>
+            </div>
+          </div>
+
+          {/* Card Footer Bar: Left = Relative Posted Date (ago), Right = 2 Action Buttons (Chat & Call) */}
+          <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2 mt-1">
+            {/* Left Side: Relative Posted Date */}
+            <span className="text-[11px] font-bold text-slate-400 flex items-center gap-1 shrink-0">
+              <Calendar className="w-3.5 h-3.5 text-slate-400" />
+              <span>{formatDate(post.created_at)}</span>
+            </span>
+
+            {/* Right Side: 2 Action Buttons (Chat #128C7E + Yellow Call) */}
+            <div className="flex items-center gap-2 shrink-0">
+              {isOwnPost ? (
+                <Link
+                  href="/profile?tab=my_posts"
+                  className="px-3 py-1.5 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1.5"
+                >
+                  <Pencil className="w-3.5 h-3.5 text-slate-500" />
+                  <span>Edit</span>
+                </Link>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setIsChatOpen(true);
+                    }}
+                    className="bg-[#128C7E] text-white font-extrabold text-xs py-1.5 px-3.5 rounded-lg flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
+                  >
+                    <MessageSquare className="w-3.5 h-3.5 text-white fill-current" />
+                    <span>Chat</span>
+                  </button>
+
+                  <a
+                    href={callUrl}
+                    onClick={(e) => e.stopPropagation()}
+                    className="bg-[#f59e0b] text-slate-950 font-extrabold border border-[#d97706] text-xs py-1.5 px-3.5 rounded-lg flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer"
+                  >
+                    <Phone className="w-3.5 h-3.5 text-slate-950" />
+                    <span>Call</span>
+                  </a>
+                </>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
@@ -349,9 +298,9 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
           listingId={post.id}
           listingTitle={post.title}
           sellerId={post.userId || "seller_id"}
-          sellerName={isNeedType ? "Buyer" : "Seller"}
+          sellerName="Buyer"
         />
       )}
-    </div>
+    </>
   );
 }
