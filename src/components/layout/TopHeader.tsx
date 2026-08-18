@@ -138,17 +138,19 @@ export default function TopHeader({
           );
         })()}
 
-        {/* Right Controls: Post Ad Button + Hamburger Menu Button ONLY */}
+        {/* Right Controls: Hamburger Menu Button (and Post Ad button on segment pages ONLY) */}
         <div className="flex items-center gap-2 shrink-0">
-          {/* Primary Action Button: Post Ad */}
-          <button
-            type="button"
-            onClick={onPostClick}
-            className="btn-primary text-xs px-3.5 py-1.5 shrink-0 flex items-center gap-1 font-black shadow-2xs"
-          >
-            <Plus className="w-3.5 h-3.5 stroke-[2.5] shrink-0 text-slate-950" />
-            <span>Post Ad</span>
-          </button>
+          {/* Action Post Button: Shown ONLY on segment pages (/sell, /need, /services, /shops), NEVER on Homepage (/) */}
+          {!isHomePage && (
+            <button
+              type="button"
+              onClick={onPostClick}
+              className="btn-primary text-xs px-3.5 py-1.5 shrink-0 flex items-center gap-1 font-black shadow-2xs"
+            >
+              <Plus className="w-3.5 h-3.5 stroke-[2.5] shrink-0 text-slate-950" />
+              <span>Post Ad</span>
+            </button>
+          )}
 
           {/* Top-Right Hamburger Menu Button */}
           <button
