@@ -204,7 +204,13 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
               <span className="font-heading font-black text-base sm:text-lg text-amber-600">
                 {isLookingFor
                   ? `₹${listing.expected_price_from || "5k"} - ₹${listing.expected_price_to || "15k"}`
-                  : listing.price || "₹2,50,000"}
+                  : (() => {
+                      if (!listing.price) return "₹2,50,000";
+                      const str = String(listing.price).replace(/[^0-9.]/g, "");
+                      const num = Number(str);
+                      if (isNaN(num) || num === 0) return String(listing.price).startsWith("₹") ? listing.price : `₹${listing.price}`;
+                      return `₹${num.toLocaleString("en-IN")}`;
+                    })()}
               </span>
               <span className="text-[11px] font-bold text-slate-400 flex items-center gap-1">
                 <Calendar className="w-3 h-3 text-slate-400" />
