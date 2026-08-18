@@ -105,39 +105,35 @@ export default function LandingClientPage() {
           </div>
         </section>
 
-        {/* ── 4 Segment Feature Cards (4*1 Layout) ── */}
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+        {/* ── 4 Segment Feature Cards (Compact 2x2 Grid on Mobile Web App & APK / 4x1 Single Row on Desktop) ── */}
+        <section className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
           {pillarCards.map((card) => {
             const IconComponent = card.icon;
             return (
               <div
                 key={card.id}
-                className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-2xs hover:shadow-xs hover:border-amber-400/80 transition-all flex flex-col justify-between gap-4 group"
+                onClick={() => router.push(card.path)}
+                className="bg-white rounded-xl sm:rounded-2xl border border-slate-200/90 p-3 sm:p-4 shadow-2xs hover:shadow-xs hover:border-amber-400/80 transition-all flex flex-col justify-between gap-2.5 group cursor-pointer"
               >
-                <div className="flex flex-col gap-3">
-                  <div className="flex items-center gap-3">
-                    <div className="w-12 h-12 rounded-xl bg-amber-50 border border-amber-200/80 flex items-center justify-center text-amber-600 group-hover:bg-amber-500 group-hover:text-slate-950 group-hover:border-amber-400 transition-colors shrink-0 shadow-2xs">
-                      <IconComponent className="w-6 h-6 stroke-[2.2]" />
+                <div className="flex flex-col gap-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-amber-50 border border-amber-200/80 flex items-center justify-center text-amber-600 group-hover:bg-amber-500 group-hover:text-slate-950 group-hover:border-amber-400 transition-colors shrink-0 shadow-2xs">
+                      <IconComponent className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.2]" />
                     </div>
-                    <div>
-                      <h2 className="font-heading font-black text-slate-900 text-sm sm:text-base leading-tight">
-                        {card.title}
-                      </h2>
-                      <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200/70 inline-block mt-0.5">
-                        Thanjavur Local
-                      </span>
-                    </div>
+                    <h2 className="font-heading font-black text-slate-900 text-xs sm:text-sm leading-tight line-clamp-1">
+                      {card.title}
+                    </h2>
                   </div>
 
-                  <p className="text-xs text-slate-500 font-medium leading-snug">
+                  <p className="text-[11px] sm:text-xs text-slate-500 font-medium leading-snug line-clamp-2">
                     {card.desc}
                   </p>
 
-                  <div className="pt-2 border-t border-slate-100 flex flex-wrap gap-1.5">
-                    {card.categories.map((cat, i) => (
+                  <div className="flex flex-wrap gap-1">
+                    {card.categories.slice(0, 2).map((cat, i) => (
                       <span
                         key={i}
-                        className="text-[11px] font-bold text-slate-700 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200/70 group-hover:border-amber-300 transition-colors"
+                        className="text-[10px] sm:text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200/60 line-clamp-1"
                       >
                         {cat}
                       </span>
@@ -146,11 +142,15 @@ export default function LandingClientPage() {
                 </div>
 
                 <button
-                  onClick={() => router.push(card.path)}
-                  className="w-full btn-secondary text-xs font-bold py-2.5 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs active:scale-98"
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    router.push(card.path);
+                  }}
+                  className="w-full btn-secondary text-[11px] sm:text-xs font-bold py-1.5 sm:py-2 rounded-lg flex items-center justify-center gap-1 cursor-pointer shadow-2xs active:scale-98"
                 >
                   <span>{card.btnText}</span>
-                  <ChevronRight className="w-4 h-4 shrink-0 text-slate-300" />
+                  <ChevronRight className="w-3.5 h-3.5 shrink-0 text-slate-400" />
                 </button>
               </div>
             );

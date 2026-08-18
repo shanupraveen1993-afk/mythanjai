@@ -51,7 +51,7 @@ export default function RootLayout({
             __html: `
               (function() {
                 if (typeof window !== 'undefined') {
-                  var TARGET_VERSION = 'v14.0_light_btn_secondary_left_header_login_post_no_sticky_bar';
+                  var TARGET_VERSION = 'v15.0_compact_2x2_grid_mobile_apk_zero_scroll';
                   var currentVer = localStorage.getItem('namma_thanjai_cache_version');
                   if (currentVer !== TARGET_VERSION) {
                     localStorage.setItem('namma_thanjai_cache_version', TARGET_VERSION);
