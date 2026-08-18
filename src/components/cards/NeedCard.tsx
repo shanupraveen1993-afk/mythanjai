@@ -261,7 +261,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
             </div>
 
             {/* 2nd Line: Requirement Title */}
-            <h3 className="font-heading font-bold text-sm text-slate-900 line-clamp-2 leading-snug group-hover:text-amber-600 transition-colors">
+            <h3 className="font-heading font-bold text-sm text-slate-800 line-clamp-2 leading-snug group-hover:text-amber-600 transition-colors">
               {post.title}
             </h3>
 

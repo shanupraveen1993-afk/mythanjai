@@ -250,7 +250,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
             </div>
 
             {/* 2nd Line: Item Title */}
-            <h3 className="font-heading font-bold text-sm text-slate-900 line-clamp-1 group-hover:text-amber-600 transition-colors">
+            <h3 className="font-heading font-bold text-sm text-slate-800 line-clamp-1 group-hover:text-amber-600 transition-colors">
               {listing.title}
             </h3>
 

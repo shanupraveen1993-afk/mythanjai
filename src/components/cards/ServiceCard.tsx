@@ -180,7 +180,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
 
       {/* Line 1: Name (only) on LEFT + Rating Badge (if > 0) on RIGHT */}
       <div className="flex items-center justify-between gap-3 w-full">
-        <h3 className="font-heading font-bold text-base sm:text-lg text-slate-900 line-clamp-1 leading-snug">
+        <h3 className="font-heading font-bold text-base sm:text-lg text-slate-800 line-clamp-1 leading-snug">
           {post.name}
         </h3>
 
