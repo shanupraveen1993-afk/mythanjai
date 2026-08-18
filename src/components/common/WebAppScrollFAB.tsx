@@ -31,7 +31,7 @@ export default function WebAppScrollFAB({ postRoute, label = "Post Ad" }: WebApp
   if (!showFAB) return null;
 
   return (
-    <div className="fixed bottom-20 md:bottom-8 right-5 z-[10000] animate-in slide-in-from-bottom-5 fade-in-50 duration-200 pointer-events-auto">
+    <div className="md:hidden fixed bottom-20 right-5 z-[10000] animate-in slide-in-from-bottom-5 fade-in-50 duration-200 pointer-events-auto">
       <button
         type="button"
         onClick={() => router.push(postRoute)}
