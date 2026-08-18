@@ -202,9 +202,9 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
             </div>
           )}
 
-          {/* Top Left: Category Badge Overlay (Vibrant Multicolor Per Category) */}
+          {/* Top Left: Category Badge Overlay (OLX Standard Clean Dark Glassmorphism) */}
           <div className="absolute top-2.5 left-2.5 z-10">
-            <span className={`text-[11px] px-2.5 py-1 rounded-md shadow-2xs backdrop-blur-xs ${getCategoryBadgeStyle(post.category)}`}>
+            <span className="bg-slate-950/40 backdrop-blur-md text-white font-semibold text-[11px] px-2.5 py-1 rounded-md border border-white/20 shadow-2xs">
               {post.category || "Requirement"}
             </span>
           </div>

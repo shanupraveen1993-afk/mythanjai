@@ -205,7 +205,7 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
         </div>
       ) : (
         <div className="absolute top-2.5 left-2.5 z-20">
-          <span className={`text-[11px] px-2.5 py-1 rounded-md shadow-2xs backdrop-blur-xs ${getCategoryBadgeStyle(post.category)}`}>
+          <span className="bg-slate-950/40 backdrop-blur-md text-white font-semibold text-[11px] px-2.5 py-1 rounded-md border border-white/20 shadow-2xs">
             {post.category || "Store Offer"}
           </span>
         </div>

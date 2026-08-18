@@ -183,9 +183,9 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
             className="object-cover"
           />
           
-          {/* Top Left: Category Badge Overlay (Vibrant Multicolor Per Category) */}
+          {/* Top Left: Category Badge Overlay (OLX Standard Clean Dark Glassmorphism) */}
           <div className="absolute top-2.5 left-2.5 z-10">
-            <span className={`text-[11px] px-2.5 py-1 rounded-md shadow-2xs backdrop-blur-xs ${getCategoryBadgeStyle(listing.category || listing.type)}`}>
+            <span className="bg-slate-950/40 backdrop-blur-md text-white font-semibold text-[11px] px-2.5 py-1 rounded-md border border-white/20 shadow-2xs">
               {listing.category || listing.type || "Classified"}
             </span>
           </div>
