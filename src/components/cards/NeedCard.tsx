@@ -186,7 +186,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
           isSold ? "opacity-80" : ""
         }`}
       >
-        {/* Top Category Illustration Image Container */}
+        {/* Top Category Vector Illustration Image Container */}
         <div className="w-full h-36 sm:h-40 bg-slate-100 relative overflow-hidden rounded-t-xl -mt-4 -mx-4 mb-1 border-b border-slate-200/70" style={{ width: "calc(100% + 2rem)" }}>
           <Image
             src={illustrationSrc}
@@ -202,9 +202,9 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
             </div>
           )}
 
-          {/* Top Left: Royal Blue Category Badge Overlay */}
+          {/* Top Left: Glassmorphism Category Badge Overlay (Same as Sell Card) */}
           <div className="absolute top-2.5 left-2.5 z-10">
-            <span className="bg-[#1d4ed8] text-white border border-blue-600 font-extrabold text-[11px] px-2.5 py-1 rounded-md shadow-2xs">
+            <span className="bg-slate-950/40 backdrop-blur-md text-white font-extrabold text-[11px] px-2.5 py-1 rounded-md border border-white/20 shadow-2xs">
               {post.category || "Requirement"}
             </span>
           </div>
