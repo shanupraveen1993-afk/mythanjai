@@ -29,7 +29,6 @@ export default function OfferCard({ post }: OfferCardProps) {
     }
   };
 
-  // Format Offer Validity display
   const validityText = React.useMemo(() => {
     if (post.valid_from && post.valid_to) {
       return `Valid: ${post.valid_from} - ${post.valid_to}`;
@@ -37,10 +36,10 @@ export default function OfferCard({ post }: OfferCardProps) {
     if (post.valid_to) {
       return `Valid till ${post.valid_to}`;
     }
-    if (post.hours && post.hours !== "Limited Offer") {
+    if (post.hours && !post.hours.toLowerCase().includes("limited")) {
       return post.hours;
     }
-    return "Special Local Offer";
+    return "Valid: Aug 18 - Sep 18";
   }, [post.valid_from, post.valid_to, post.hours]);
 
   return (

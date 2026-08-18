@@ -14,10 +14,25 @@ function formatOfferValidity(validFrom?: any, validTo?: any, createdAt?: any) {
       const toDate = new Date(validTo.seconds ? validTo.seconds * 1000 : validTo);
       const fromMonth = fromDate.toLocaleString('default', { month: 'short' });
       const toMonth = toDate.toLocaleString('default', { month: 'short' });
-      return `${fromMonth} ${fromDate.getDate()} - ${toMonth} ${toDate.getDate()}`;
+      return `Valid: ${fromMonth} ${fromDate.getDate()} - ${toMonth} ${toDate.getDate()}`;
     } catch (e) {}
   }
-  return "Limited Time Offer";
+  if (validTo) {
+    try {
+      const toDate = new Date(validTo.seconds ? validTo.seconds * 1000 : validTo);
+      const toMonth = toDate.toLocaleString('default', { month: 'short' });
+      return `Valid till ${toMonth} ${toDate.getDate()}`;
+    } catch (e) {}
+  }
+  try {
+    const baseDate = createdAt ? new Date(createdAt.seconds ? createdAt.seconds * 1000 : createdAt) : new Date();
+    const endDate = new Date(baseDate.getTime() + 30 * 24 * 60 * 60 * 1000);
+    const m1 = baseDate.toLocaleString('default', { month: 'short' });
+    const m2 = endDate.toLocaleString('default', { month: 'short' });
+    return `Valid: ${m1} ${baseDate.getDate()} - ${m2} ${endDate.getDate()}`;
+  } catch (e) {
+    return "Valid 30 Days";
+  }
 }
 
 import { useLanguage } from "@/context/LanguageContext";

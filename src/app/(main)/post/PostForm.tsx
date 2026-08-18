@@ -502,7 +502,7 @@ export default function PostForm({ segment }: PostFormProps) {
       category: category || config.categories[0],
       address_text: `${area}, Thanjavur`,
       landmark: "Near Main Road",
-      hours: "Limited Offer",
+      hours: "Valid 30 Days",
       valid_from: validFrom || undefined,
       valid_to: validTo || undefined,
       phone: phone || "9876543210",
