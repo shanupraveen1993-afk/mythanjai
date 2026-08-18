@@ -178,147 +178,126 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
   return (
     <div className="bg-white rounded-2xl p-4 sm:p-5 flex flex-col gap-3 shadow-[0_3px_12px_rgba(0,0,0,0.05)] hover:shadow-[0_6px_20px_rgba(15,23,42,0.08)] transition-all duration-200 font-sans border border-slate-200/90 relative group card-lift">
 
-      {/* Top Header Row: Name & Badges */}
-      <div className="flex flex-col gap-2">
-        <div className="flex items-start justify-between gap-3">
-          <h3 className="font-heading font-black text-base sm:text-lg text-slate-900 line-clamp-1 leading-snug">
-            {post.name}
-          </h3>
+      {/* Line 1: Name (only) on LEFT + Rating Badge (if > 0) on RIGHT */}
+      <div className="flex items-center justify-between gap-3 w-full">
+        <h3 className="font-heading font-black text-base sm:text-lg text-slate-900 line-clamp-1 leading-snug">
+          {post.name}
+        </h3>
 
-          {/* RATING BADGE: ONLY DISPLAYED IF RATING > 0 */}
-          {hasRating && (
-            <span className="inline-flex items-center gap-1 bg-amber-50 border border-amber-300 text-amber-950 font-black px-2.5 py-0.5 rounded-xl text-xs shadow-2xs shrink-0">
-              <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
-              <span>{ratingDisplay} ★</span>
-            </span>
-          )}
-        </div>
-
-        {/* Category & Locality Meta Row */}
-        <div className="flex items-center gap-2 flex-wrap text-xs">
-          {/* Service Craft Category Badge */}
-          <span className="inline-flex items-center gap-1.5 bg-[#0F172A] text-white font-bold px-2.5 py-1 rounded-lg text-xs border-b border-[#D97706]">
-            {getCategoryIllustration(post.skill_category)}
-            <span>{post.skill_category}</span>
+        {/* Rating Badge: ONLY displayed if rating > 0 */}
+        {hasRating && (
+          <span className="inline-flex items-center gap-1 bg-amber-50 border border-amber-300 text-amber-950 font-extrabold px-2.5 py-0.5 rounded-md text-xs shadow-2xs shrink-0">
+            <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
+            <span>{ratingDisplay} ★</span>
           </span>
-
-          {/* Locality Tag */}
-          <span className="inline-flex items-center gap-1 text-slate-600 bg-slate-100 px-2.5 py-1 rounded-lg font-bold">
-            <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-            <span>{post.area_tag}</span>
-          </span>
-
-          {/* AVAILABILITY BADGE — PRD §4.3 */}
-          {(post as any).is_available_now !== false ? (
-            <span className="inline-flex items-center gap-1 bg-emerald-50 border border-emerald-300 text-emerald-800 font-black px-2 py-0.5 rounded-lg text-xs">
-              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse inline-block" />
-              AVAILABLE NOW
-            </span>
-          ) : (
-            <span className="inline-flex items-center gap-1 bg-slate-100 border border-slate-300 text-slate-500 font-bold px-2 py-0.5 rounded-lg text-xs">
-              <span className="w-1.5 h-1.5 rounded-full bg-slate-400 inline-block" />
-              OFFLINE
-            </span>
-          )}
-        </div>
+        )}
       </div>
 
-      {/* Description Box */}
+      {/* Line 2: Category Tag + Online / Offline Availability Tag */}
+      <div className="flex items-center gap-2 flex-wrap text-xs">
+        {/* Category Tag (Royal Blue) */}
+        <span className="inline-flex items-center gap-1.5 bg-[#1d4ed8] text-white font-extrabold px-2.5 py-1 rounded-md text-xs border border-blue-600 shadow-2xs">
+          {getCategoryIllustration(post.skill_category)}
+          <span>{post.skill_category}</span>
+        </span>
+
+        {/* Online / Offline Tag */}
+        {(post as any).is_available_now !== false ? (
+          <span className="inline-flex items-center gap-1 bg-emerald-50 border border-emerald-300 text-emerald-800 font-extrabold px-2.5 py-1 rounded-md text-xs">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse inline-block" />
+            <span>Online</span>
+          </span>
+        ) : (
+          <span className="inline-flex items-center gap-1 bg-slate-100 border border-slate-300 text-slate-500 font-bold px-2.5 py-1 rounded-md text-xs">
+            <span className="w-2 h-2 rounded-full bg-slate-400 inline-block" />
+            <span>Offline</span>
+          </span>
+        )}
+      </div>
+
+      {/* Line 3: Description */}
       {post.description && (
-        <p className="text-xs text-slate-600 font-medium leading-relaxed line-clamp-3 bg-slate-50/80 border border-slate-200/60 p-3 rounded-xl">
+        <p className="text-xs text-slate-600 font-medium leading-relaxed line-clamp-3 bg-slate-50/80 border border-slate-200/60 p-3 rounded-lg">
           {post.description}
         </p>
       )}
 
-      {/* Social Engagement Bar: Left = Date & Views, Right = Share & Save & Report */}
-      {!isPreview && (
-        <div className="flex items-center justify-between text-xs text-slate-500 font-semibold border-t border-b border-slate-100 py-2 my-0.5">
-          {/* Left: Meta Info (Date Only) */}
-          <div className="flex items-center gap-2.5">
-            <span className="flex items-center gap-1 text-slate-500 font-medium">
-              <Calendar className="w-3.5 h-3.5 text-slate-400" />
-              <span>{(() => {
-                if (!post.created_at) return "Added on Mar 2026";
-                try {
-                  const d = (post.created_at as any).seconds ? new Date((post.created_at as any).seconds * 1000) : new Date(post.created_at as any);
-                  if (isNaN(d.getTime())) return "Added on Mar 2026";
-                  const month = d.toLocaleString("en-US", { month: "short" });
-                  const year = d.getFullYear();
-                  return `Added on ${month} ${year}`;
-                } catch (e) {
-                  return "Added on Mar 2026";
-                }
-              })()}</span>
-            </span>
-          </div>
-
-          {/* Right: Actions (Share, Save & Report) */}
-          <div className="flex items-center gap-3">
-            <button 
-              onClick={handleShare}
-              className="flex items-center gap-1 hover:text-slate-800 cursor-pointer transition-colors"
-              title="Share Service"
-            >
-              <Share2 className="w-3.5 h-3.5 text-slate-400" />
-              <span>{sharesCount}</span>
-            </button>
-            <button 
-              onClick={handleToggleSave}
-              className={`flex items-center gap-1 cursor-pointer transition-colors ${saved ? "text-amber-600 font-bold" : "hover:text-slate-800"}`}
-              title={saved ? "Saved" : "Save Service"}
-            >
-              <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-amber-500 text-amber-600" : "text-slate-400"}`} />
-              <span>{saved ? t("saved") : t("save")}</span>
-            </button>
-            <button
-              onClick={handleReport}
-              className="flex items-center gap-1 text-slate-400 hover:text-rose-600 cursor-pointer transition-colors"
-              title="Report Service"
-            >
-              <Flag className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Footer Info & Action CTAs — Single-Line Action Button System */}
-      <div className="flex items-center justify-between pt-1 gap-2">
-        <span className="text-xs text-slate-500 font-medium shrink-0">
-          <strong className="text-slate-900 font-extrabold">{contactedCount}</strong> {t("contacted")}
+      {/* Line 4: Location/Address on LEFT + Save & Share Icons on RIGHT */}
+      <div className="flex items-center justify-between text-xs text-slate-600 font-bold border-t border-b border-slate-100 py-2.5 my-0.5">
+        {/* Left: Location Tag */}
+        <span className="inline-flex items-center gap-1 text-slate-700 bg-slate-100 px-2.5 py-1 rounded-md font-extrabold">
+          <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+          <span>{post.area_tag}</span>
         </span>
 
-        <div className="flex items-center gap-2 shrink-0">
-          {/* PRIMARY CTA: Call */}
-          <button
-            onClick={(e) => handleOpenPreContactModal(e, "call")}
-            className="btn btn-call btn-sm text-xs"
+        {/* Right: Save & Share Icons (No views count) */}
+        <div className="flex items-center gap-2">
+          <button 
+            type="button"
+            onClick={handleToggleSave}
+            className={`w-7 h-7 rounded-md border shadow-2xs flex items-center justify-center transition-all cursor-pointer ${
+              saved
+                ? "bg-amber-500 text-slate-950 border-amber-400 font-bold"
+                : "bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200"
+            }`}
+            title={saved ? "Saved" : "Save Service"}
+            aria-label={saved ? "Remove saved service" : "Save this service"}
           >
-            <Phone className="w-3.5 h-3.5 text-white fill-white" />
-            <span>Call</span>
+            <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-current" : ""}`} />
           </button>
 
-          {/* SECONDARY CTA: Send Request */}
-          <button
-            disabled={isRequestSent}
-            onClick={handleSendRequest}
-            className={
-              isRequestSent
-                ? "btn btn-sm bg-emerald-50 text-emerald-800 border border-emerald-300 font-bold opacity-90 text-xs"
-                : "btn btn-secondary btn-sm text-xs"
-            }
+          <button 
+            type="button"
+            onClick={handleShare}
+            className="w-7 h-7 rounded-md border border-slate-200 bg-slate-100 text-slate-600 hover:bg-slate-200 flex items-center justify-center transition-all cursor-pointer shadow-2xs"
+            title="Share Service"
+            aria-label="Share this service"
           >
-            {isRequestSent ? (
-              <>
-                <Check className="w-3.5 h-3.5 text-emerald-600 stroke-[3]" />
-                <span>✓ Sent</span>
-              </>
-            ) : (
-              <>
-                <Zap className="w-3.5 h-3.5 text-slate-700" />
-                <span>Request</span>
-              </>
-            )}
+            <Share2 className="w-3.5 h-3.5" />
           </button>
+        </div>
+      </div>
+
+      {/* Line 5 (Footer Row): Posted Date (Month Year) on LEFT + Call & WhatsApp Buttons on RIGHT */}
+      <div className="pt-2 flex items-end justify-between gap-2 mt-auto">
+        {/* Left: Posted Date (Month & Year) */}
+        <span className="text-[11px] font-bold text-slate-400 flex items-center gap-1 shrink-0 pb-1">
+          <Calendar className="w-3.5 h-3.5 text-slate-400" />
+          <span>{(() => {
+            if (!post.created_at) return "Added on Mar 2026";
+            try {
+              const d = (post.created_at as any).seconds ? new Date((post.created_at as any).seconds * 1000) : new Date(post.created_at as any);
+              if (isNaN(d.getTime())) return "Added on Mar 2026";
+              const month = d.toLocaleString("en-US", { month: "short" });
+              const year = d.getFullYear();
+              return `Added on ${month} ${year}`;
+            } catch (e) {
+              return "Added on Mar 2026";
+            }
+          })()}</span>
+        </span>
+
+        {/* Right: 2 Larger Action Buttons (WhatsApp #128C7E + Yellow Call) */}
+        <div className="flex items-center gap-2 shrink-0">
+          <a
+            href={whatsappUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            className="bg-[#128C7E] text-white font-black text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer"
+          >
+            <MessageSquare className="w-4 h-4 text-white fill-current" />
+            <span>Chat</span>
+          </a>
+
+          <a
+            href={callUrl}
+            onClick={(e) => e.stopPropagation()}
+            className="bg-[#f59e0b] text-slate-950 font-black border border-[#d97706] text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer"
+          >
+            <Phone className="w-4 h-4 text-slate-950" />
+            <span>Call</span>
+          </a>
         </div>
       </div>
 

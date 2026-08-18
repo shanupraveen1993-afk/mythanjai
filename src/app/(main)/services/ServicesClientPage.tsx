@@ -91,18 +91,11 @@ export default function ServicesClientPage() {
         </div>
       </div>
 
-      {/* 2. TITLE & POST BAR */}
-      <div className="py-3 flex items-center justify-between gap-3 w-full border-b border-slate-200/80">
+      {/* 2. TITLE BAR */}
+      <div className="py-2.5 flex items-center justify-between gap-3 w-full border-b border-slate-200/80">
         <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight">
           Skilled Services
         </h2>
-        <button
-          onClick={handlePostService}
-          className="btn-secondary text-xs px-4 py-2 uppercase tracking-wider shrink-0 rounded-xl gap-1.5"
-        >
-          <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
-          <span>Post Service</span>
-        </button>
       </div>
 
       {/* LISTING CONTAINER */}

@@ -149,6 +149,7 @@ export default function PostForm({ segment }: PostFormProps) {
   const [category, setCategory] = useState<string>(config.categories[0]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [isAvailable, setIsAvailable] = useState<boolean>(true);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
   const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
@@ -364,6 +365,7 @@ export default function PostForm({ segment }: PostFormProps) {
       } else if (segment === "service") {
         localPostRecord.name = title.trim();
         localPostRecord.skill_category = category;
+        localPostRecord.is_available_now = isAvailable;
         localPostRecord.experience = allWorkingDays === "Yes" ? "All Working Days" : "Flexible Days";
         localPostRecord.working_hours = sundayLeave === "Yes" ? "Sunday Off" : "Open 7 Days";
         localPostRecord.description = cleanDesc;
@@ -373,6 +375,7 @@ export default function PostForm({ segment }: PostFormProps) {
             userId: uid,
             name: title.trim(),
             skill_category: category,
+            is_available_now: isAvailable,
             experience: allWorkingDays === "Yes" ? "All Working Days" : "Flexible Days",
             working_hours: sundayLeave === "Yes" ? "Sunday Off" : "Open 7 Days",
             area_tag: area,
@@ -907,18 +910,27 @@ export default function PostForm({ segment }: PostFormProps) {
               </div>
             )}
 
-            {/* Service Provider Availability Status Banner */}
+            {/* Service Provider Availability Status Toggle Switch (Online / Offline) */}
             {segment === "service" && (
-              <div className="flex items-center justify-between gap-3 bg-emerald-50 border border-emerald-200 rounded-xl p-3.5 mt-1">
+              <div className="flex items-center justify-between gap-3 bg-slate-50 border border-slate-200 rounded-xl p-3.5 mt-1">
                 <div className="flex flex-col gap-0.5">
-                  <span className="text-xs font-bold text-emerald-900 flex items-center gap-1.5">
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-                    <span>Default Live Service Availability: Available (கிடைக்கிறார்)</span>
+                  <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                    <span className={`w-2.5 h-2.5 rounded-full ${isAvailable ? "bg-emerald-500 animate-pulse" : "bg-slate-400"}`} />
+                    <span>Service Availability Status ({isAvailable ? "Online" : "Offline"})</span>
                   </span>
-                  <span className="text-xs text-emerald-700 font-medium">
-                    Your profile will default to Available when published. You can toggle to Busy anytime in profile.
+                  <span className="text-xs text-slate-500 font-medium">
+                    Turn ON to show as Online (Available Now). Turn OFF to show as Offline.
                   </span>
                 </div>
+                <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                  <input
+                    type="checkbox"
+                    checked={isAvailable}
+                    onChange={(e) => setIsAvailable(e.target.checked)}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500" />
+                </label>
               </div>
             )}
             {/* Redesigned Image Upload Dropzone with Cancel (X) Preview Button */}
