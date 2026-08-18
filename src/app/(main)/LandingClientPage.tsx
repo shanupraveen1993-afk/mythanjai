@@ -166,18 +166,18 @@ export default function LandingClientPage() {
         <section className="flex flex-col gap-3">
           <div className="flex items-center justify-between border-b border-slate-200/60 pb-2">
             <div className="flex items-center gap-2">
-              <h2 className="font-heading font-black text-base sm:text-lg text-amber-600">
+              <h2 className="font-heading font-black text-base sm:text-lg text-[#1d4ed8]">
                 Sell (விற்பனை)
               </h2>
-              <span className="text-[10px] font-black uppercase tracking-wider bg-[#f59e0b] text-slate-950 border border-[#d97706] px-2.5 py-0.5 rounded-full shadow-2xs">
+              <span className="text-[10px] font-black uppercase tracking-wider bg-slate-900 text-white border border-slate-800 px-2.5 py-0.5 rounded-full shadow-2xs">
                 New Listing
               </span>
             </div>
             <button
               onClick={() => router.push("/sell")}
-              className="text-xs font-bold text-slate-700 hover:text-slate-900 flex items-center gap-1 hover:underline cursor-pointer"
+              className="text-xs font-extrabold text-amber-600 hover:text-amber-700 flex items-center gap-1 hover:underline cursor-pointer"
             >
-              View all <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
+              View all <ChevronRight className="w-3.5 h-3.5 text-amber-600" />
             </button>
           </div>
 
@@ -197,7 +197,7 @@ export default function LandingClientPage() {
               >
                 <div className="relative h-36 bg-slate-100 overflow-hidden">
                   <img src={item.img} alt={item.title} className="w-full h-full object-cover" />
-                  <span className="absolute top-2 left-2 bg-[#f59e0b] text-slate-950 font-black text-xs px-2.5 py-0.5 rounded-md shadow-2xs border border-[#d97706]">
+                  <span className="absolute top-2 left-2 bg-slate-900/90 text-white font-black text-xs px-2.5 py-0.5 rounded-md">
                     {item.price}
                   </span>
                 </div>
