@@ -178,8 +178,20 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
             {post.category || "Requirement"}
           </span>
 
-          {/* Top Right: Vertical Stack of 3 Action Buttons (Save, Report & Share) */}
+          {/* Top Right: Vertical Stack of 3 Action Buttons (1st: Flag, 2nd: Save, 3rd: Share) */}
           <div className="flex flex-col gap-1.5 shrink-0">
+            {/* 1st: Flag / Report */}
+            <button
+              type="button"
+              onClick={handleReport}
+              className="w-7 h-7 rounded-md border border-slate-200 bg-slate-100 text-slate-600 hover:text-rose-600 hover:bg-slate-200 flex items-center justify-center transition-all cursor-pointer shadow-2xs"
+              title="Report Requirement"
+              aria-label="Report this requirement"
+            >
+              <Flag className="w-3.5 h-3.5" />
+            </button>
+
+            {/* 2nd: Save / Bookmark */}
             <button
               type="button"
               onClick={handleToggleSave}
@@ -193,15 +205,8 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
             >
               <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-current" : ""}`} />
             </button>
-            <button
-              type="button"
-              onClick={handleReport}
-              className="w-7 h-7 rounded-md border border-slate-200 bg-slate-100 text-slate-600 hover:text-rose-600 hover:bg-slate-200 flex items-center justify-center transition-all cursor-pointer shadow-2xs"
-              title="Report Requirement"
-              aria-label="Report this requirement"
-            >
-              <Flag className="w-3.5 h-3.5" />
-            </button>
+
+            {/* 3rd: Share */}
             <button
               type="button"
               onClick={handleSharePost}

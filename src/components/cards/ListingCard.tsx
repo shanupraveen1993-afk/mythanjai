@@ -169,8 +169,20 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
             </span>
           </div>
 
-          {/* Top Right: Vertical 3 Action Buttons Stack (Save, Report & Share Semi-Transparent Glass) */}
+          {/* Top Right: Vertical 3 Action Buttons Stack (1st: Flag, 2nd: Save, 3rd: Share) */}
           <div className="absolute top-2.5 right-2.5 flex flex-col gap-1.5 z-10">
+            {/* 1st: Flag / Report */}
+            <button
+              type="button"
+              onClick={handleReportListing}
+              className="w-7 h-7 rounded-md border border-white/20 bg-slate-950/40 text-white hover:text-rose-400 hover:bg-slate-950/70 flex items-center justify-center transition-all cursor-pointer shadow-2xs backdrop-blur-md"
+              title="Report Listing"
+              aria-label="Report this listing"
+            >
+              <Flag className="w-3.5 h-3.5" />
+            </button>
+
+            {/* 2nd: Save / Bookmark */}
             <button
               type="button"
               onClick={handleSaveToggle}
@@ -184,15 +196,8 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
             >
               <Bookmark className={`w-3.5 h-3.5 ${isSaved ? "fill-current" : ""}`} />
             </button>
-            <button
-              type="button"
-              onClick={handleReportListing}
-              className="w-7 h-7 rounded-md border border-white/20 bg-slate-950/40 text-white hover:text-rose-400 hover:bg-slate-950/70 flex items-center justify-center transition-all cursor-pointer shadow-2xs backdrop-blur-md"
-              title="Report Listing"
-              aria-label="Report this listing"
-            >
-              <Flag className="w-3.5 h-3.5" />
-            </button>
+
+            {/* 3rd: Share */}
             <button
               type="button"
               onClick={handleShare}
