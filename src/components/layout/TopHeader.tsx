@@ -80,7 +80,7 @@ export default function TopHeader({
             </div>
             <div className="flex items-center gap-1">
               <span className="font-heading font-black tracking-tight text-sm sm:text-base md:text-lg leading-none">
-                <span className="text-slate-900">நம்ம</span> <span className="text-amber-500 font-black">Thanjai</span>
+                <span className="text-[#1d4ed8]">நம்ம</span> <span className="text-amber-500 font-black">Thanjai</span>
               </span>
             </div>
           </div>
