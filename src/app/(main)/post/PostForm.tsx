@@ -145,7 +145,7 @@ export default function PostForm({ segment }: PostFormProps) {
 
   // Form Fields
   const [phone, setPhone] = useState("");
-  const [area, setArea] = useState<string>(TANJORE_LOCALITIES[0]);
+  const [area, setArea] = useState<string>("");
   const [category, setCategory] = useState<string>(config.categories[0]);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");

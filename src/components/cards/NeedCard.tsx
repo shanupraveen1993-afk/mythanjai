@@ -155,6 +155,28 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
   const formatDate = (timestamp: any) => formatRelativeTime(timestamp);
   const isNeedType = post.type?.toUpperCase() === "NEED";
 
+  const getCategoryIllustration = (category?: string) => {
+    const cat = (category || "").toLowerCase();
+    if (cat.includes("real estate") || cat.includes("plot") || cat.includes("house") || cat.includes("rental") || cat.includes("land") || cat.includes("property")) {
+      return "/hero_building_visual.png";
+    }
+    if (cat.includes("vehicle") || cat.includes("car") || cat.includes("bike") || cat.includes("scooter") || cat.includes("auto")) {
+      return "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=600&auto=format&fit=crop";
+    }
+    if (cat.includes("electronic") || cat.includes("mobile") || cat.includes("laptop") || cat.includes("tv") || cat.includes("phone")) {
+      return "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&auto=format&fit=crop";
+    }
+    if (cat.includes("household") || cat.includes("furniture") || cat.includes("appliance") || cat.includes("home")) {
+      return "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&auto=format&fit=crop";
+    }
+    if (cat.includes("fashion") || cat.includes("cloth") || cat.includes("dress") || cat.includes("wear")) {
+      return "https://images.unsplash.com/photo-1445205170230-053b83016050?w=600&auto=format&fit=crop";
+    }
+    return "/thanjavur_temple_illustration.png";
+  };
+
+  const illustrationSrc = post.image_url || getCategoryIllustration(post.category);
+
   if (isDeleted) return null;
 
   return (
@@ -164,27 +186,36 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
           isSold ? "opacity-80" : ""
         }`}
       >
-        {/* SOLD / FULFILLED Overlay Banner */}
-        {isSold && (
-          <div className="bg-slate-950 text-amber-400 text-xs font-black uppercase px-3 py-1 rounded-md w-fit flex items-center gap-1">
-            {t("markedSold")}
-          </div>
-        )}
+        {/* Top Category Illustration Image Container */}
+        <div className="w-full h-36 sm:h-40 bg-slate-100 relative overflow-hidden rounded-t-xl -mt-4 -mx-4 mb-1 border-b border-slate-200/70" style={{ width: "calc(100% + 2rem)" }}>
+          <Image
+            src={illustrationSrc}
+            alt={post.title}
+            fill
+            className="object-cover group-hover:scale-105 transition-transform duration-300"
+          />
 
-        {/* Card Header Row: Royal Blue Category Badge Top-Left + 3 Vertical Action Icons Top-Right */}
-        <div className="flex items-start justify-between gap-2 w-full">
-          {/* Top Left: Royal Blue Category Badge */}
-          <span className="bg-[#1d4ed8] text-white border border-blue-600 font-extrabold text-[11px] px-2.5 py-1 rounded-md shadow-2xs">
-            {post.category || "Requirement"}
-          </span>
+          {/* SOLD / FULFILLED Overlay Banner */}
+          {isSold && (
+            <div className="absolute top-2.5 left-2.5 z-10 bg-slate-950 text-amber-400 text-xs font-black uppercase px-3 py-1 rounded-md flex items-center gap-1 shadow-md">
+              {t("markedSold")}
+            </div>
+          )}
+
+          {/* Top Left: Royal Blue Category Badge Overlay */}
+          <div className="absolute top-2.5 left-2.5 z-10">
+            <span className="bg-[#1d4ed8] text-white border border-blue-600 font-extrabold text-[11px] px-2.5 py-1 rounded-md shadow-2xs">
+              {post.category || "Requirement"}
+            </span>
+          </div>
 
           {/* Top Right: Vertical Stack of 3 Action Buttons (1st: Flag, 2nd: Save, 3rd: Share) */}
-          <div className="flex flex-col gap-1.5 shrink-0">
+          <div className="absolute top-2.5 right-2.5 flex flex-col gap-1.5 z-10">
             {/* 1st: Flag / Report */}
             <button
               type="button"
               onClick={handleReport}
-              className="w-7 h-7 rounded-md border border-slate-200 bg-slate-100 text-slate-600 hover:text-rose-600 hover:bg-slate-200 flex items-center justify-center transition-all cursor-pointer shadow-2xs"
+              className="w-7 h-7 rounded-md border border-white/20 bg-slate-950/40 text-white hover:text-rose-400 hover:bg-slate-950/70 flex items-center justify-center transition-all cursor-pointer shadow-2xs backdrop-blur-md"
               title="Report Requirement"
               aria-label="Report this requirement"
             >
@@ -195,10 +226,10 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
             <button
               type="button"
               onClick={handleToggleSave}
-              className={`w-7 h-7 rounded-md border shadow-2xs flex items-center justify-center transition-all cursor-pointer ${
+              className={`w-7 h-7 rounded-md border backdrop-blur-md shadow-2xs flex items-center justify-center transition-all cursor-pointer ${
                 saved
                   ? "bg-amber-500 text-slate-950 border-amber-400 font-bold"
-                  : "bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200"
+                  : "bg-slate-950/40 text-white border-white/20 hover:bg-slate-950/70"
               }`}
               title={saved ? "Saved" : "Save Requirement"}
               aria-label={saved ? "Remove saved requirement" : "Save this requirement"}
@@ -210,7 +241,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
             <button
               type="button"
               onClick={handleSharePost}
-              className="w-7 h-7 rounded-md border border-slate-200 bg-slate-100 text-slate-600 hover:bg-slate-200 flex items-center justify-center transition-all cursor-pointer shadow-2xs"
+              className="w-7 h-7 rounded-md border border-white/20 bg-slate-950/40 text-white hover:bg-slate-950/70 flex items-center justify-center transition-all cursor-pointer shadow-2xs backdrop-blur-md"
               title="Share Requirement"
               aria-label="Share this requirement"
             >
