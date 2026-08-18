@@ -172,7 +172,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
     <>
       <div 
         onClick={handleCardView}
-        className="bg-white -mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full sm:rounded-2xl overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.06)] flex flex-col justify-between cursor-pointer font-sans border-b border-slate-200/80 sm:border sm:border-slate-200/90"
+        className="bg-white -mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full sm:rounded-2xl overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.06)] flex flex-col justify-between cursor-pointer font-sans border-b border-slate-200/80 sm:border sm:border-slate-200/90 h-full min-h-[380px] sm:min-h-[400px]"
       >
         {/* Card Header Media Container (OLX Competitor Standard) */}
         <div className="w-full h-36 sm:h-40 bg-slate-100 relative overflow-hidden">

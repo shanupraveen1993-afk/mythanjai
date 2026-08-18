@@ -91,6 +91,19 @@ export default function NeedClientPage() {
     return list;
   }, [firestorePosts, localPosts, selectedCategory, sortBy]);
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const ITEMS_PER_PAGE = 15; // 5 rows for 1 page (3 cols x 5 rows)
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedCategory, sortBy]);
+
+  const totalPages = Math.ceil(filteredPosts.length / ITEMS_PER_PAGE) || 1;
+  const paginatedPosts = React.useMemo(() => {
+    const start = (currentPage - 1) * ITEMS_PER_PAGE;
+    return filteredPosts.slice(start, start + ITEMS_PER_PAGE);
+  }, [filteredPosts, currentPage]);
+
   return (
     <div className="flex flex-col gap-3 pb-24 w-full font-sans">
 
@@ -147,8 +160,33 @@ export default function NeedClientPage() {
           <button onClick={handlePostNeed} className="btn-tertiary text-xs px-4 py-2 uppercase tracking-wider cursor-pointer">+ Post Requirement</button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {filteredPosts.map((post) => <NeedCard key={post.id} post={post} />)}
+        <div className="flex flex-col gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {paginatedPosts.map((post) => <NeedCard key={post.id} post={post} />)}
+          </div>
+
+          {/* Pagination Controls */}
+          {totalPages > 1 && (
+            <div className="flex items-center justify-between gap-2 pt-6 pb-2 border-t border-slate-200/80">
+              <button
+                disabled={currentPage === 1}
+                onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+                className="px-3.5 py-2 text-xs font-bold rounded-xl border border-slate-300 text-slate-700 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors shadow-2xs"
+              >
+                Previous
+              </button>
+              <span className="text-xs font-bold text-slate-700">
+                Page {currentPage} of {totalPages}
+              </span>
+              <button
+                disabled={currentPage === totalPages}
+                onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+                className="px-3.5 py-2 text-xs font-bold rounded-xl border border-slate-300 text-slate-700 bg-white hover:bg-slate-50 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer transition-colors shadow-2xs"
+              >
+                Next
+              </button>
+            </div>
+          )}
         </div>
       )}
       </div>

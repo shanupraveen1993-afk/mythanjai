@@ -180,12 +180,11 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
   if (isDeleted) return null;
 
   return (
-    <>
-      <div
-        className={`bg-white rounded-xl p-4 flex flex-col gap-3 shadow-2xs border border-slate-200/90 transition-all duration-200 relative group overflow-hidden font-sans ${
-          isSold ? "opacity-80" : ""
-        }`}
-      >
+    <div
+      className={`bg-white rounded-xl p-4 flex flex-col justify-between shadow-2xs border border-slate-200/90 transition-all duration-200 relative group overflow-hidden font-sans h-full min-h-[380px] sm:min-h-[400px] ${
+        isSold ? "opacity-80" : ""
+      }`}
+    >
         {/* Top Category Vector Illustration Image Container */}
         <div className="w-full h-36 sm:h-40 bg-slate-100 relative overflow-hidden rounded-t-xl -mt-4 -mx-4 mb-1 border-b border-slate-200/70" style={{ width: "calc(100% + 2rem)" }}>
           <Image
@@ -324,19 +323,18 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
             </div>
           </div>
         </div>
-      </div>
 
-      {/* In-App Chat Modal */}
-      {isChatOpen && (
-        <InAppChatModal
-          isOpen={isChatOpen}
-          onClose={() => setIsChatOpen(false)}
-          listingId={post.id}
-          listingTitle={post.title}
-          sellerId={post.userId || "seller_id"}
-          sellerName="Buyer"
-        />
-      )}
-    </>
-  );
-}
+        {/* In-App Chat Modal */}
+        {isChatOpen && (
+          <InAppChatModal
+            isOpen={isChatOpen}
+            onClose={() => setIsChatOpen(false)}
+            listingId={post.id}
+            listingTitle={post.title}
+            sellerId={post.userId || "seller_id"}
+            sellerName="Buyer"
+          />
+        )}
+      </div>
+    );
+  }
