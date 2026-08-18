@@ -69,8 +69,19 @@ export default function TopHeader({
     >
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-3">
 
-        {/* Left: Website Branding Logo with Thanjai in Primary Yellow Color */}
+        {/* Left Side: Hamburger Menu + Website Branding Logo & App Name */}
         <div className="flex items-center gap-2 sm:gap-3">
+          {/* 1. Hamburger Menu Button on Left Side */}
+          <button
+            type="button"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="flex items-center justify-center w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold transition-all cursor-pointer active:scale-95 border border-slate-200 shrink-0"
+            title="Menu Drawer"
+          >
+            {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+
+          {/* 2. Logo & App Name */}
           <div
             onClick={() => router.push("/")}
             className="flex items-center gap-2 cursor-pointer select-none shrink-0 group"
@@ -138,9 +149,23 @@ export default function TopHeader({
           );
         })()}
 
-        {/* Right Controls: Hamburger Menu Button (and Post Ad button on segment pages ONLY) */}
+        {/* Right Side: Get App (Only on Homepage in Web App) + Profile Icon */}
         <div className="flex items-center gap-2 shrink-0">
-          {/* Action Post Button: Shown ONLY on segment pages (/sell, /need, /services, /shops), NEVER on Homepage (/) */}
+          {/* 1. Get App Button (Shown ONLY on Homepage '/' in Web App) */}
+          {isHomePage && (
+            <a
+              href="/namma_thanjai_release.apk"
+              download="namma_thanjai_release.apk"
+              onClick={handleGetAppClick}
+              className="bg-[#1d4ed8] text-white border border-[#1d4ed8] text-xs px-3.5 py-1.5 rounded-full font-extrabold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none"
+              title="Download Namma Thanjai Android App"
+            >
+              <Download className="w-3.5 h-3.5 shrink-0 text-white" />
+              <span>Get App</span>
+            </a>
+          )}
+
+          {/* 2. Action Post Button (Shown ONLY on segment pages /sell, /need, /services, /shops) */}
           {!isHomePage && (
             <button
               type="button"
@@ -152,14 +177,21 @@ export default function TopHeader({
             </button>
           )}
 
-          {/* Top-Right Hamburger Menu Button */}
+          {/* 3. Profile Icon */}
           <button
             type="button"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="flex items-center justify-center w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold transition-all cursor-pointer active:scale-95 border border-slate-200"
-            title="Menu Drawer"
+            onClick={() => {
+              if (isAuthVerified) {
+                onTabChange?.("profile");
+                router.push("/profile");
+              } else {
+                onSignInClick?.();
+              }
+            }}
+            className="flex items-center justify-center w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold transition-all cursor-pointer active:scale-95 border border-slate-200"
+            title={isAuthVerified ? `Profile (${phoneDisplay})` : "Login / Profile"}
           >
-            {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            <User className="w-4 h-4 text-slate-600" />
           </button>
         </div>
       </div>
