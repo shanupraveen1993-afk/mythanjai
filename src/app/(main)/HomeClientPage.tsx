@@ -144,80 +144,180 @@ export default function HomeClientPage() {
           </div>
         </div>
 
-        {/* ── 4 Primary Category Entry Hub Cards (With Royal Blue Secondary Explore Buttons) ── */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 my-1">
-          <button
-            onClick={() => router.push("/sell")}
-            className="p-4 bg-white border border-slate-200/90 rounded-2xl flex flex-col justify-between shadow-2xs hover:border-[#1d4ed8]/50 active:scale-[0.98] transition-all text-left min-h-[120px] cursor-pointer group"
-          >
-            <div>
-              <div className="flex items-center justify-between gap-1 mb-1.5">
-                <ShoppingBag className="w-5 h-5 text-[#1d4ed8] shrink-0" />
-                <span className="text-[11px] text-slate-500 font-semibold">விற்க</span>
+        {/* ── 4 Segment Feature Pillar Cards (4*1 Layout with Description, Categories & Explore CTA) ── */}
+        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 my-1">
+          {/* Card 1: SELL */}
+          <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-2xs hover:shadow-xs hover:border-[#1d4ed8]/50 transition-all flex flex-col justify-between gap-4 group text-left">
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-xl bg-amber-50 border border-amber-200/80 flex items-center justify-center text-amber-600 group-hover:bg-[#1d4ed8] group-hover:text-white group-hover:border-[#1d4ed8] transition-colors shrink-0 shadow-2xs">
+                  <ShoppingBag className="w-5 h-5 stroke-[2.2]" />
+                </div>
+                <div>
+                  <h2 className="font-heading font-black text-slate-900 text-sm sm:text-base leading-tight">
+                    SELL (விற்பனை)
+                  </h2>
+                  <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200/70 inline-block mt-0.5">
+                    Thanjavur Local
+                  </span>
+                </div>
               </div>
-              <div className="font-bold text-sm sm:text-base tracking-tight text-slate-900">Sell</div>
-              <div className="text-[11px] text-slate-600 font-medium">விற்க வேண்டுமா?</div>
-            </div>
-            <div className="mt-2.5 text-xs font-bold text-[#1d4ed8] border border-[#1d4ed8] px-3 py-1 rounded-lg w-fit flex items-center gap-1 bg-white group-hover:bg-blue-50/60 transition-colors shadow-2xs">
-              <span>Explore</span>
-              <ArrowRight className="w-3 h-3 text-[#1d4ed8]" />
-            </div>
-          </button>
 
-          <button
-            onClick={() => router.push("/need")}
-            className="p-4 bg-white border border-slate-200/90 rounded-2xl flex flex-col justify-between shadow-2xs hover:border-[#1d4ed8]/50 active:scale-[0.98] transition-all text-left min-h-[120px] cursor-pointer group"
-          >
-            <div>
-              <div className="flex items-center justify-between gap-1 mb-1.5">
-                <Search className="w-5 h-5 text-[#1d4ed8] shrink-0" />
-                <span className="text-[11px] text-slate-500 font-semibold">தேவை</span>
-              </div>
-              <div className="font-bold text-sm sm:text-base tracking-tight text-slate-900">Need</div>
-              <div className="text-[11px] text-slate-600 font-medium">தேவைப்படுகிறதா?</div>
-            </div>
-            <div className="mt-2.5 text-xs font-bold text-[#1d4ed8] border border-[#1d4ed8] px-3 py-1 rounded-lg w-fit flex items-center gap-1 bg-white group-hover:bg-blue-50/60 transition-colors shadow-2xs">
-              <span>Explore</span>
-              <ArrowRight className="w-3 h-3 text-[#1d4ed8]" />
-            </div>
-          </button>
+              <p className="text-xs text-slate-500 font-medium leading-snug">
+                Buy &amp; Sell items directly with Tanjore owners with 0 brokerage
+              </p>
 
-          <button
-            onClick={() => router.push("/services")}
-            className="p-4 bg-white border border-slate-200/90 rounded-2xl flex flex-col justify-between shadow-2xs hover:border-[#1d4ed8]/50 active:scale-[0.98] transition-all text-left min-h-[120px] cursor-pointer group"
-          >
-            <div>
-              <div className="flex items-center justify-between gap-1 mb-1.5">
-                <Wrench className="w-5 h-5 text-[#1d4ed8] shrink-0" />
-                <span className="text-[11px] text-slate-500 font-semibold">சேவைகள்</span>
+              <div className="pt-2 border-t border-slate-100 flex flex-wrap gap-1.5">
+                {["Plots & Real Estate", "Bikes & Scooters", "Smartphones", "Cars & Autos"].map((cat, i) => (
+                  <span
+                    key={i}
+                    onClick={() => router.push(`/sell?category=${encodeURIComponent(cat)}`)}
+                    className="text-[11px] font-bold text-slate-700 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200/70 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors"
+                  >
+                    {cat}
+                  </span>
+                ))}
               </div>
-              <div className="font-bold text-sm sm:text-base tracking-tight text-slate-900">Local Services</div>
-              <div className="text-[11px] text-slate-600 font-medium">தொழில் வல்லுநர்கள்</div>
             </div>
-            <div className="mt-2.5 text-xs font-bold text-[#1d4ed8] border border-[#1d4ed8] px-3 py-1 rounded-lg w-fit flex items-center gap-1 bg-white group-hover:bg-blue-50/60 transition-colors shadow-2xs">
-              <span>Explore</span>
-              <ArrowRight className="w-3 h-3 text-[#1d4ed8]" />
-            </div>
-          </button>
 
-          <button
-            onClick={() => router.push("/shops")}
-            className="p-4 bg-white border border-slate-200/90 rounded-2xl flex flex-col justify-between shadow-2xs hover:border-[#1d4ed8]/50 active:scale-[0.98] transition-all text-left min-h-[120px] cursor-pointer group"
-          >
-            <div>
-              <div className="flex items-center justify-between gap-1 mb-1.5">
-                <Store className="w-5 h-5 text-[#1d4ed8] shrink-0" />
-                <span className="text-[11px] text-slate-500 font-semibold">சலுகைகள்</span>
+            <button
+              onClick={() => router.push("/sell")}
+              className="w-full bg-[#1d4ed8] hover:bg-[#1e40af] text-white text-xs font-bold py-2.5 px-4 rounded-xl flex items-center justify-between gap-1.5 cursor-pointer shadow-2xs active:scale-98 transition-all"
+            >
+              <span>Explore Sell</span>
+              <ChevronRight className="w-4 h-4 shrink-0 text-white" />
+            </button>
+          </div>
+
+          {/* Card 2: NEED */}
+          <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-2xs hover:shadow-xs hover:border-[#1d4ed8]/50 transition-all flex flex-col justify-between gap-4 group text-left">
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-xl bg-blue-50 border border-blue-200/80 flex items-center justify-center text-[#1d4ed8] group-hover:bg-[#1d4ed8] group-hover:text-white group-hover:border-[#1d4ed8] transition-colors shrink-0 shadow-2xs">
+                  <Search className="w-5 h-5 stroke-[2.2]" />
+                </div>
+                <div>
+                  <h2 className="font-heading font-black text-slate-900 text-sm sm:text-base leading-tight">
+                    NEED (தேவைகள்)
+                  </h2>
+                  <span className="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200/70 inline-block mt-0.5">
+                    Thanjavur Local
+                  </span>
+                </div>
               </div>
-              <div className="font-bold text-sm sm:text-base tracking-tight text-slate-900">Local Offer</div>
-              <div className="text-[11px] text-slate-600 font-medium">சிறப்பு சலுகைகள்</div>
+
+              <p className="text-xs text-slate-500 font-medium leading-snug">
+                Post your requirements or find buyers in Thanjavur
+              </p>
+
+              <div className="pt-2 border-t border-slate-100 flex flex-wrap gap-1.5">
+                {["Car Wanted", "House Rental Wanted", "Land Wanted", "Laptop Wanted"].map((cat, i) => (
+                  <span
+                    key={i}
+                    onClick={() => router.push(`/need?category=${encodeURIComponent(cat)}`)}
+                    className="text-[11px] font-bold text-slate-700 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200/70 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors"
+                  >
+                    {cat}
+                  </span>
+                ))}
+              </div>
             </div>
-            <div className="mt-2.5 text-xs font-bold text-[#1d4ed8] border border-[#1d4ed8] px-3 py-1 rounded-lg w-fit flex items-center gap-1 bg-white group-hover:bg-blue-50/60 transition-colors shadow-2xs">
-              <span>Explore</span>
-              <ArrowRight className="w-3 h-3 text-[#1d4ed8]" />
+
+            <button
+              onClick={() => router.push("/need")}
+              className="w-full bg-[#1d4ed8] hover:bg-[#1e40af] text-white text-xs font-bold py-2.5 px-4 rounded-xl flex items-center justify-between gap-1.5 cursor-pointer shadow-2xs active:scale-98 transition-all"
+            >
+              <span>Explore Need</span>
+              <ChevronRight className="w-4 h-4 shrink-0 text-white" />
+            </button>
+          </div>
+
+          {/* Card 3: SERVICES */}
+          <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-2xs hover:shadow-xs hover:border-[#1d4ed8]/50 transition-all flex flex-col justify-between gap-4 group text-left">
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-xl bg-emerald-50 border border-emerald-200/80 flex items-center justify-center text-emerald-600 group-hover:bg-[#1d4ed8] group-hover:text-white group-hover:border-[#1d4ed8] transition-colors shrink-0 shadow-2xs">
+                  <Wrench className="w-5 h-5 stroke-[2.2]" />
+                </div>
+                <div>
+                  <h2 className="font-heading font-black text-slate-900 text-sm sm:text-base leading-tight">
+                    SERVICES (சேவைகள்)
+                  </h2>
+                  <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/70 inline-block mt-0.5">
+                    Thanjavur Local
+                  </span>
+                </div>
+              </div>
+
+              <p className="text-xs text-slate-500 font-medium leading-snug">
+                Hire verified doorstep technicians &amp; skilled workers
+              </p>
+
+              <div className="pt-2 border-t border-slate-100 flex flex-wrap gap-1.5">
+                {["Electrician", "Plumber", "Carpenter", "Painter & AC Repair"].map((cat, i) => (
+                  <span
+                    key={i}
+                    onClick={() => router.push(`/services?category=${encodeURIComponent(cat)}`)}
+                    className="text-[11px] font-bold text-slate-700 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200/70 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors"
+                  >
+                    {cat}
+                  </span>
+                ))}
+              </div>
             </div>
-          </button>
-        </div>
+
+            <button
+              onClick={() => router.push("/services")}
+              className="w-full bg-[#1d4ed8] hover:bg-[#1e40af] text-white text-xs font-bold py-2.5 px-4 rounded-xl flex items-center justify-between gap-1.5 cursor-pointer shadow-2xs active:scale-98 transition-all"
+            >
+              <span>Explore Services</span>
+              <ChevronRight className="w-4 h-4 shrink-0 text-white" />
+            </button>
+          </div>
+
+          {/* Card 4: OFFERS */}
+          <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-2xs hover:shadow-xs hover:border-[#1d4ed8]/50 transition-all flex flex-col justify-between gap-4 group text-left">
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-3">
+                <div className="w-11 h-11 rounded-xl bg-rose-50 border border-rose-200/80 flex items-center justify-center text-rose-600 group-hover:bg-[#1d4ed8] group-hover:text-white group-hover:border-[#1d4ed8] transition-colors shrink-0 shadow-2xs">
+                  <Store className="w-5 h-5 stroke-[2.2]" />
+                </div>
+                <div>
+                  <h2 className="font-heading font-black text-slate-900 text-sm sm:text-base leading-tight">
+                    OFFERS (சலுகைகள்)
+                  </h2>
+                  <span className="text-[10px] font-bold text-rose-700 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200/70 inline-block mt-0.5">
+                    Thanjavur Local
+                  </span>
+                </div>
+              </div>
+
+              <p className="text-xs text-slate-500 font-medium leading-snug">
+                Discover exclusive store discounts &amp; deals from Tanjore shops
+              </p>
+
+              <div className="pt-2 border-t border-slate-100 flex flex-wrap gap-1.5">
+                {["Store Discounts", "Cafes & Dining", "Textiles & Sarees", "Jewelry & Gold"].map((cat, i) => (
+                  <span
+                    key={i}
+                    onClick={() => router.push(`/shops?category=${encodeURIComponent(cat)}`)}
+                    className="text-[11px] font-bold text-slate-700 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200/70 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors"
+                  >
+                    {cat}
+                  </span>
+                ))}
+              </div>
+            </div>
+
+            <button
+              onClick={() => router.push("/shops")}
+              className="w-full bg-[#1d4ed8] hover:bg-[#1e40af] text-white text-xs font-bold py-2.5 px-4 rounded-xl flex items-center justify-between gap-1.5 cursor-pointer shadow-2xs active:scale-98 transition-all"
+            >
+              <span>Explore Offers</span>
+              <ChevronRight className="w-4 h-4 shrink-0 text-white" />
+            </button>
+          </div>
+        </section>
 
         {/* ── Static APK Download Banner Card for Web App Visitors ── */}
         <StaticApkCard variant="dark" />
