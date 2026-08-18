@@ -152,10 +152,10 @@ export default function LandingClientPage() {
                     e.stopPropagation();
                     router.push(card.path);
                   }}
-                  className="w-full bg-[#1d4ed8] text-white text-[11px] sm:text-xs font-bold py-1.5 sm:py-2 rounded-lg flex items-center justify-center gap-1 cursor-pointer shadow-2xs"
+                  className="w-full border border-[#1d4ed8] text-[#1d4ed8] hover:bg-blue-50 text-[11px] sm:text-xs font-black py-1.5 sm:py-2 rounded-lg flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs"
                 >
                   <span>{card.btnText}</span>
-                  <ChevronRight className="w-3.5 h-3.5 shrink-0 text-white/80" />
+                  <ChevronRight className="w-3.5 h-3.5 shrink-0 text-[#1d4ed8]" />
                 </button>
               </div>
             );
@@ -175,9 +175,9 @@ export default function LandingClientPage() {
             </div>
             <button
               onClick={() => router.push("/sell")}
-              className="border border-[#1d4ed8] text-[#1d4ed8] hover:bg-blue-50 font-black text-xs px-3 py-1 rounded-lg flex items-center gap-1 cursor-pointer transition-colors shadow-2xs"
+              className="text-xs font-bold text-slate-700 hover:text-slate-900 flex items-center gap-1 hover:underline cursor-pointer"
             >
-              View all <ChevronRight className="w-3.5 h-3.5 text-[#1d4ed8]" />
+              View all <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
             </button>
           </div>
 
@@ -229,9 +229,9 @@ export default function LandingClientPage() {
             </div>
             <button
               onClick={() => router.push("/need")}
-              className="border border-[#1d4ed8] text-[#1d4ed8] hover:bg-blue-50 font-black text-xs px-3 py-1 rounded-lg flex items-center gap-1 cursor-pointer transition-colors shadow-2xs"
+              className="text-xs font-bold text-slate-700 hover:text-slate-900 flex items-center gap-1 hover:underline cursor-pointer"
             >
-              View all <ChevronRight className="w-3.5 h-3.5 text-[#1d4ed8]" />
+              View all <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
             </button>
           </div>
 
@@ -283,9 +283,9 @@ export default function LandingClientPage() {
             </div>
             <button
               onClick={() => router.push("/services")}
-              className="border border-[#1d4ed8] text-[#1d4ed8] hover:bg-blue-50 font-black text-xs px-3 py-1 rounded-lg flex items-center gap-1 cursor-pointer transition-colors shadow-2xs"
+              className="text-xs font-bold text-slate-700 hover:text-slate-900 flex items-center gap-1 hover:underline cursor-pointer"
             >
-              View all <ChevronRight className="w-3.5 h-3.5 text-[#1d4ed8]" />
+              View all <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
             </button>
           </div>
 
@@ -340,9 +340,9 @@ export default function LandingClientPage() {
             </div>
             <button
               onClick={() => router.push("/shops")}
-              className="border border-[#1d4ed8] text-[#1d4ed8] hover:bg-blue-50 font-black text-xs px-3 py-1 rounded-lg flex items-center gap-1 cursor-pointer transition-colors shadow-2xs"
+              className="text-xs font-bold text-slate-700 hover:text-slate-900 flex items-center gap-1 hover:underline cursor-pointer"
             >
-              View all <ChevronRight className="w-3.5 h-3.5 text-[#1d4ed8]" />
+              View all <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
             </button>
           </div>
 
