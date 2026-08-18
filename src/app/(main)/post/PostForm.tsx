@@ -676,19 +676,20 @@ export default function PostForm({ segment }: PostFormProps) {
                   </div>
                 </div>
 
-                {/* 5. ADDRESS (GOOGLE PLACES AUTO-COMPLETE CONSTRAINED TO THANJAVUR) */}
+                {/* 5. ADDRESS */}
                 <div className="flex flex-col gap-1">
                   <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                     <MapPin className="w-3.5 h-3.5 text-amber-500" />
-                    Shop Address & Locality (Thanjavur Auto-Complete) *
+                    <span>Shop Address & Locality *</span>
                   </label>
-                  <ThanjavurLocationInput
+                  <input
+                    type="text"
                     value={area}
-                    onChange={(val) => setArea(val)}
-                    placeholder="Type your Thanjavur shop area or address..."
+                    onChange={(e) => setArea(e.target.value)}
+                    placeholder="Type your shop address or location..."
+                    className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
                   />
                 </div>
-
 
                 {/* 7. PHONE NUMBER VISIBILITY TOGGLE (YES / NO) */}
                 <div className="flex flex-col gap-3 bg-slate-50 border border-slate-200/80 rounded-xl p-3.5">
@@ -717,7 +718,7 @@ export default function PostForm({ segment }: PostFormProps) {
             ) : (
               /* NON-OFFER FORMS (SELL, NEED, SERVICE) */
               <>
-                {/* ROW 1: Category & Location Dropdowns in 1 Row Side-by-Side */}
+                {/* ROW 1: Category & Location Inputs in 1 Row Side-by-Side */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <div className="flex flex-col gap-1">
                     <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
@@ -740,12 +741,14 @@ export default function PostForm({ segment }: PostFormProps) {
                   <div className="flex flex-col gap-1">
                     <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                       <MapPin className="w-3.5 h-3.5 text-amber-500" />
-                      Location in Thanjavur (Auto-Complete) *
+                      <span>Address / Location *</span>
                     </label>
-                    <ThanjavurLocationInput
+                    <input
+                      type="text"
                       value={area}
-                      onChange={(val) => setArea(val)}
-                      placeholder="Type your Thanjavur area or address..."
+                      onChange={(e) => setArea(e.target.value)}
+                      placeholder="Type your address or location..."
+                      className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
                     />
                   </div>
                 </div>
