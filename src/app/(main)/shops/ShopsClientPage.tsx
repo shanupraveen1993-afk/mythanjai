@@ -86,9 +86,9 @@ export default function ShopsClientPage() {
         <img src="/thanjavur_temple_illustration.png" alt="Shops" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent" />
         <div className="relative z-10 flex flex-col gap-1 max-w-xl">
-          <span className="bg-[#FBBF24] text-[#0F172A] font-bold text-xs px-2.5 py-0.5 rounded-md tracking-wider w-fit">LOCAL OFFERS • தஞ்சாவூர் கடை சலுகைகள் &amp; தள்ளுபடிகள்</span>
+          <span className="bg-[#FBBF24] text-[#0F172A] font-bold text-xs px-2.5 py-0.5 rounded-md tracking-wider w-fit">Shop &amp; Save • சலுகைகள்</span>
           <h1 className="font-heading font-black text-lg sm:text-xl text-white tracking-tight">
-            Local Store Offers &amp; Discounts <span className="text-amber-400 block text-xs sm:text-sm font-extrabold mt-0.5">தஞ்சை வியாபாரிகள் வழங்கும் பிரத்யேக சலுகைகள்</span>
+            Discover the best discounts from your favorite local stores. <span className="text-amber-400 block text-xs sm:text-sm font-extrabold mt-0.5">நம்ம ஊர் கடைகளின் சிறப்பு தள்ளுபடிகளை காணுங்கள்.</span>
           </h1>
           <p className="text-xs text-slate-300 font-semibold leading-relaxed">Grand opening deals, festival discounts &amp; exclusive store offers from Thanjavur shop owners.</p>
         </div>

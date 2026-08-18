@@ -127,6 +127,23 @@ export default function HomeClientPage() {
   return (
     <div className="w-full flex flex-col gap-8 text-slate-800 font-sans mt-3">
 
+        {/* ── 1. Hero Banner (Universal Home Banner) ── */}
+        <div className="relative w-full min-h-[90px] rounded-2xl overflow-hidden bg-slate-950 text-white flex items-center px-4 sm:px-6 py-4 shadow-2xs mt-1">
+          <img src="/thanjavur_temple_illustration.png" alt="Namma Thanjai" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent" />
+          <div className="relative z-10 flex flex-col gap-1 max-w-xl">
+            <span className="bg-[#FBBF24] text-[#0F172A] font-bold text-xs px-2.5 py-0.5 rounded-md tracking-wider w-fit">
+              Namma Thanjai • நம்ம தஞ்சை
+            </span>
+            <h1 className="font-heading font-black text-lg sm:text-xl text-white tracking-tight">
+              Everything you need in our city, all in one place. <span className="text-amber-400 block text-xs sm:text-sm font-extrabold mt-0.5">நம்ம ஊரின் அனைத்து தேவைகளுக்கும் ஒரே இடம்.</span>
+            </h1>
+            <p className="text-xs text-slate-300 font-semibold leading-relaxed">
+              Buy and sell with neighbors, hire reliable services, and explore local shopping offers—built exclusively for our community.
+            </p>
+          </div>
+        </div>
+
         {/* ── 2x2 Primary Category Entry Hub (Blue Outline Secondary Cards) ── */}
         <div className="grid grid-cols-2 gap-3 my-1">
           <button

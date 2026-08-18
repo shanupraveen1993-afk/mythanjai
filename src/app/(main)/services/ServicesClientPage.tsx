@@ -96,9 +96,9 @@ export default function ServicesClientPage() {
         <img src="/thanjavur_temple_illustration.png" alt="Services" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent" />
         <div className="relative z-10 flex flex-col gap-1 max-w-xl">
-          <span className="bg-[#FBBF24] text-[#0F172A] font-bold text-xs px-2.5 py-0.5 rounded-md tracking-wider w-fit">VERIFIED EXPERTS • தஞ்சை உள்ளூர் சேவை வல்லுனர்கள்</span>
+          <span className="bg-[#FBBF24] text-[#0F172A] font-bold text-xs px-2.5 py-0.5 rounded-md tracking-wider w-fit">Verified Services • சிறந்த சேவைகள்</span>
           <h1 className="font-heading font-black text-lg sm:text-xl text-white tracking-tight">
-            Local Skilled Services in Thanjavur <span className="text-amber-400 block text-xs sm:text-sm font-extrabold mt-0.5">எலெக்ட்ரீஷியன், பிளம்பர், கார்பெண்டர் &amp; டெக்னீஷியன்கள்</span>
+            Book trusted professionals for your home and business. <span className="text-amber-400 block text-xs sm:text-sm font-extrabold mt-0.5">உங்கள் வேலைகளுக்கு நம்பகமான ஆட்களை நாடுங்கள்.</span>
           </h1>
           <p className="text-xs text-slate-300 font-semibold leading-relaxed">Direct contact with verified local service providers &amp; skilled technicians across Thanjavur.</p>
         </div>

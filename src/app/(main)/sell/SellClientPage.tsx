@@ -99,10 +99,10 @@ export default function SellClientPage() {
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent" />
         <div className="relative z-10 flex flex-col gap-1 max-w-xl">
           <span className="bg-[#FBBF24] text-[#0F172A] font-bold text-xs px-2.5 py-0.5 rounded-md tracking-wider w-fit">
-            LOCAL MARKETPLACE • தஞ்சாவூர் நேரடி விற்பனை
+            Local Marketplace • உள்ளூர் சந்தை
           </span>
           <h1 className="font-heading font-black text-lg sm:text-xl text-white tracking-tight">
-            Items for Sale in Thanjavur <span className="text-amber-400 block text-xs sm:text-sm font-extrabold mt-0.5">தஞ்சாவூர் நேரடி விற்பனை பொருட்கள்</span>
+            Find great items straight from people in our city. <span className="text-amber-400 block text-xs sm:text-sm font-extrabold mt-0.5">நம்ம ஊர் மக்களிடமிருந்து நேரடியாக வாங்குங்கள்.</span>
           </h1>
           <p className="text-xs text-slate-300 font-semibold leading-relaxed">
             CMDA plots, vehicles, electronics &amp; household goods directly from local Tanjore owners (0% brokerage).
