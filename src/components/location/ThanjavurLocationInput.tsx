@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useMemo } from "react";
-import { MapPin, AlertCircle, Compass } from "lucide-react";
+import { MapPin, AlertCircle, Compass, Check } from "lucide-react";
 import { TANJORE_LOCALITIES } from "@/lib/constants";
 import { useRouter } from "next/navigation";
 
