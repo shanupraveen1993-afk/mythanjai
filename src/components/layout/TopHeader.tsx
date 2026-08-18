@@ -140,17 +140,20 @@ export default function TopHeader({
 
         {/* Right Side: Get App + Profile Icon (+ Post Ad button on 4 Segment pages) */}
         <div className="flex items-center gap-2 shrink-0">
-          {/* 1. Get App Button (Shown on Homepage '/' & segment pages) */}
-          <a
-            href="/namma_thanjai_release.apk"
-            download="namma_thanjai_release.apk"
-            onClick={handleGetAppClick}
-            className="bg-[#1d4ed8] text-white border border-[#1d4ed8] text-xs px-3.5 py-1.5 rounded-full font-extrabold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none"
-            title="Download Namma Thanjai Android App"
-          >
-            <Download className="w-3.5 h-3.5 shrink-0 text-white" />
-            <span>Get App</span>
-          </a>
+          {/* 1. Get App Button — Homepage ONLY */}
+          {isHomePage && (
+            <a
+              href="/namma_thanjai_release.apk"
+              download="namma_thanjai_release.apk"
+              onClick={handleGetAppClick}
+              className="bg-[#1d4ed8] text-white border border-[#1d4ed8] text-xs px-3.5 py-1.5 rounded-full font-extrabold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none"
+              title="Download Namma Thanjai Android App"
+              aria-label="Download Namma Thanjai Android App"
+            >
+              <Download className="w-3.5 h-3.5 shrink-0 text-white" />
+              <span>Get App</span>
+            </a>
+          )}
 
           {/* 2. Action Post Button (Shown ONLY on 4 segment pages /sell, /need, /services, /shops) */}
           {!isHomePage && (
@@ -177,6 +180,7 @@ export default function TopHeader({
             }}
             className="flex items-center justify-center w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold transition-all cursor-pointer active:scale-95 border border-slate-200"
             title={isAuthVerified ? `Profile (${phoneDisplay})` : "Login / Profile"}
+            aria-label={isAuthVerified ? "View profile" : "Sign in or register"}
           >
             <User className="w-4 h-4 text-slate-600" />
           </button>

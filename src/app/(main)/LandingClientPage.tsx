@@ -72,7 +72,7 @@ export default function LandingClientPage() {
   ];
 
   return (
-    <div className="w-full flex flex-col gap-8 text-slate-800 font-sans pb-24 bg-[#faf9f6] min-h-screen">
+    <div className="w-full flex flex-col gap-8 text-slate-800 font-sans pb-24 bg-[#f8fafc] min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 w-full flex flex-col gap-9 pt-4">
         {/* ── Genuine Premium Hero Banner: What We Do in Thanjavur ── */}
         <section className="relative rounded-3xl overflow-hidden bg-slate-900 border border-slate-800 shadow-md my-2">
@@ -130,7 +130,7 @@ export default function LandingClientPage() {
                     </h2>
                   </div>
 
-                  <p className="text-[11px] sm:text-xs text-slate-500 font-medium leading-snug line-clamp-2">
+                  <p className="text-[11px] sm:text-xs text-slate-600 font-medium leading-snug line-clamp-2">
                     {card.desc}
                   </p>
 
@@ -177,7 +177,7 @@ export default function LandingClientPage() {
               onClick={() => router.push("/sell")}
               className="text-xs font-bold text-slate-700 hover:text-slate-900 flex items-center gap-1 hover:underline cursor-pointer"
             >
-              View all <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
+              View all <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
             </button>
           </div>
 
@@ -206,7 +206,7 @@ export default function LandingClientPage() {
                     {item.sub}
                   </span>
                   <h3 className="font-heading font-bold text-xs text-slate-900 line-clamp-1">{item.title}</h3>
-                  <div className="flex items-center text-slate-500 text-[11px] gap-1 pt-1">
+                  <div className="flex items-center text-slate-600 text-[11px] gap-1 pt-1">
                     <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
                     <span>{item.area}</span>
                   </div>
@@ -231,7 +231,7 @@ export default function LandingClientPage() {
               onClick={() => router.push("/need")}
               className="text-xs font-bold text-slate-700 hover:text-slate-900 flex items-center gap-1 hover:underline cursor-pointer"
             >
-              View all <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
+              View all <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
             </button>
           </div>
 
@@ -251,7 +251,7 @@ export default function LandingClientPage() {
               >
                 <div className="relative h-36 bg-slate-100 overflow-hidden">
                   <img src={item.img} alt={item.title} className="w-full h-full object-cover" />
-                  <span className="absolute top-2 left-2 bg-amber-500 text-slate-950 font-black text-xs px-2.5 py-0.5 rounded-md">
+                  <span className="absolute top-2 left-2 bg-slate-900/90 text-white font-black text-xs px-2.5 py-0.5 rounded-md">
                     {item.budget}
                   </span>
                 </div>
@@ -260,7 +260,7 @@ export default function LandingClientPage() {
                     {item.sub}
                   </span>
                   <h3 className="font-heading font-bold text-xs text-slate-900 line-clamp-1">{item.title}</h3>
-                  <div className="flex items-center text-slate-500 text-[11px] gap-1 pt-1">
+                  <div className="flex items-center text-slate-600 text-[11px] gap-1 pt-1">
                     <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
                     <span>{item.area}</span>
                   </div>
@@ -285,7 +285,7 @@ export default function LandingClientPage() {
               onClick={() => router.push("/services")}
               className="text-xs font-bold text-slate-700 hover:text-slate-900 flex items-center gap-1 hover:underline cursor-pointer"
             >
-              View all <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
+              View all <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
             </button>
           </div>
 
@@ -314,10 +314,10 @@ export default function LandingClientPage() {
                     <span className="text-[10px] font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/70">
                       {item.sub}
                     </span>
-                    <span className="text-[10px] font-bold text-slate-500">{item.exp}</span>
+                    <span className="text-[10px] font-bold text-slate-600">{item.exp}</span>
                   </div>
                   <h3 className="font-heading font-bold text-xs text-slate-900 line-clamp-1">{item.name}</h3>
-                  <div className="flex items-center text-slate-500 text-[11px] gap-1 pt-1">
+                  <div className="flex items-center text-slate-600 text-[11px] gap-1 pt-1">
                     <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
                     <span>{item.area}</span>
                   </div>
@@ -342,7 +342,7 @@ export default function LandingClientPage() {
               onClick={() => router.push("/shops")}
               className="text-xs font-bold text-slate-700 hover:text-slate-900 flex items-center gap-1 hover:underline cursor-pointer"
             >
-              View all <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
+              View all <ChevronRight className="w-3.5 h-3.5 text-slate-600" />
             </button>
           </div>
 
@@ -369,7 +369,7 @@ export default function LandingClientPage() {
                 <div className="p-3.5 flex flex-col gap-1">
                   <h3 className="font-heading font-extrabold text-xs text-slate-900 line-clamp-1">{item.store}</h3>
                   <p className="text-[11px] text-slate-600 font-bold line-clamp-1">{item.title}</p>
-                  <div className="flex items-center text-slate-500 text-[10px] gap-1 mt-1">
+                  <div className="flex items-center text-slate-600 text-[10px] gap-1 mt-1">
                     <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
                     <span>{item.area}</span>
                   </div>

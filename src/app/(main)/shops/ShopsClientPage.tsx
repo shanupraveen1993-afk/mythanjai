@@ -106,11 +106,11 @@ export default function ShopsClientPage() {
       <div className="flex flex-col gap-3">
         {/* Sort By Filter Bar (Category dropdown removed for random/validity stream) */}
         <div className="py-1 flex items-center justify-between bg-transparent w-full">
-          <span className="text-xs font-bold text-slate-500">Live Offers Stream (சலுகைகள்)</span>
+          <span className="text-xs font-bold text-slate-600">Live Offers Stream (சலுகைகள்)</span>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as any)}
-            className="custom-select-arrow pr-8 pl-3.5 py-2 text-xs sm:text-sm font-bold bg-white border border-slate-300 rounded-xl shadow-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 cursor-pointer shrink-0"
+            className="custom-select-arrow pr-8 pl-3.5 py-2.5 min-h-[44px] text-xs sm:text-sm font-bold bg-white border border-slate-300 rounded-xl shadow-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 cursor-pointer shrink-0"
           >
             <option value="recent">Recently Added</option>
             <option value="name">Store Name (A-Z)</option>

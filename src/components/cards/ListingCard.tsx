@@ -9,6 +9,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { formatRelativeTime } from "@/lib/constants";
 import InAppChatModal from "@/components/chat/InAppChatModal";
 import { reportListing } from "@/lib/moderation";
+import { useToast } from "@/context/ToastContext";
 
 export interface ListingItem {
   id: string;
@@ -36,6 +37,7 @@ export interface ListingItem {
 
 export default function ListingCard({ listing }: { listing: ListingItem }) {
   const { user, profile } = useAuth();
+  const { toast } = useToast();
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isSaved, setIsSaved] = useState(
     user?.uid && listing.saved_by ? listing.saved_by.includes(user.uid) : false
@@ -81,7 +83,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
         await navigator.share(shareData);
       } else {
         await navigator.clipboard.writeText(window.location.href);
-        alert("Listing link copied to clipboard!");
+        toast.success("Link copied to clipboard!");
       }
       const listingRef = doc(db, "classifieds", listing.id);
       await updateDoc(listingRef, { shares_count: increment(1) });
@@ -94,7 +96,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
   const handleSaveToggle = async (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!user) {
-      alert("Please sign in to save listings.");
+      toast.error("Sign in to save listings.");
       return;
     }
 
@@ -116,9 +118,9 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
     e.stopPropagation();
     const result = reportListing(listing.id, "Inappropriate content");
     if (result.isQuarantined) {
-      alert("This post has received multiple flags and has been sent for moderation review.");
+      toast.info("Post flagged and sent to moderation review.");
     } else {
-      alert("Thank you! Listing reported to admin for verification.");
+      toast.info("Thank you for reporting. Admin has been notified.");
     }
   };
 
@@ -188,6 +190,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
                   : "bg-slate-900/80 text-white border-slate-700 hover:bg-slate-900"
               }`}
               title={isSaved ? "Saved" : "Save Listing"}
+              aria-label={isSaved ? "Remove saved listing" : "Save this listing"}
             >
               <Bookmark className={`w-3.5 h-3.5 ${isSaved ? "fill-current" : ""}`} />
             </button>
@@ -196,6 +199,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
               onClick={handleReportListing}
               className="w-7 h-7 rounded-full border border-slate-700 bg-slate-900/80 text-slate-300 hover:text-rose-400 hover:bg-slate-900 flex items-center justify-center transition-all cursor-pointer shadow-2xs"
               title="Report Listing"
+              aria-label="Report this listing"
             >
               <Flag className="w-3 h-3" />
             </button>
@@ -232,7 +236,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
             </div>
 
             {/* Description */}
-            <p className="text-xs text-slate-500 font-medium line-clamp-2 leading-relaxed">
+            <p className="text-xs text-slate-600 font-medium line-clamp-2 leading-relaxed">
               {listing.description}
             </p>
           </div>
@@ -309,7 +313,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
                       onClick={(e) => {
                         e.stopPropagation();
                         if (isServiceListing && !isAvailable) {
-                          alert("Note: This service provider is currently busy/unavailable. You may leave a message in chat.");
+                          toast.info("This provider is currently busy. Leave a message in chat.");
                         }
                         setIsChatOpen(true);
                       }}
@@ -326,7 +330,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
                       onClick={(e) => {
                         e.stopPropagation();
                         if (isServiceListing && !isAvailable) {
-                          alert("Note: This service provider is currently marked as busy/unavailable.");
+                          toast.info("This provider is currently busy/unavailable.");
                         }
                       }}
                       className="btn btn-call btn-sm flex-1 text-xs"

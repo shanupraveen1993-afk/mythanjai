@@ -61,7 +61,7 @@
 
 /* ── Base Body Setup ─────────────────────────────────────── */
 body {
-  background-color: var(--bg-soft);
+  background-color: #f8fafc;
   color: var(--text-main);
   font-family: var(--font-sans), 'Red Hat Text', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -172,25 +172,6 @@ body {
 }
 .btn-tertiary:active, .btn-outline:active {
   transform: scale(0.97);
-}
-
-/* 2.4 Ghost / Text Button */
-.btn-ghost {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  font-family: var(--font-heading), 'Red Hat Display', sans-serif;
-  font-weight: 700;
-  border-radius: 8px;
-  gap: 6px;
-  background-color: transparent;
-  color: #475569;
-  transition: all 0.2s ease;
-  cursor: pointer;
-}
-.btn-ghost:hover {
-  color: #d97706;
-  background-color: #fff8eb;
 }
 
 /* 2.4 Intent-Based Card Actions (Strict Visual Hierarchy) */

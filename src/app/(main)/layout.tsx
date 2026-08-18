@@ -196,7 +196,7 @@ function MainLayoutContent({
   const isFullWidthPage = isStandaloneView || isLandingMode;
 
   return (
-    <div className="w-full min-h-screen flex flex-col relative bg-[#f4f5f8] font-sans">
+    <div className="w-full min-h-screen flex flex-col relative bg-[#f8fafc] font-sans">
       {/* 1. Animated Splash Screen */}
       {showSplash && (
         <SplashScreen onComplete={handleSplashComplete} />
@@ -247,7 +247,7 @@ function MainLayoutContent({
         className={`flex-1 w-full flex flex-col ${
           isFullWidthPage
             ? "p-0 max-w-none m-0 bg-white"
-            : "bg-[#f4f5f8] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 md:pb-8"
+            : "bg-[#f8fafc] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16 md:pb-8"
         }`}
         style={{
           paddingTop: !isStandaloneView && !isOnboardingView ? "calc(3.5rem + env(safe-area-inset-top, 0px))" : undefined,

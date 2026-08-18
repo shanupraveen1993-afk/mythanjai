@@ -16,6 +16,7 @@ import {
   TanjoreLocality,
 } from "@/lib/constants";
 import { validatePostContent } from "@/lib/moderation";
+import { useToast } from "@/context/ToastContext";
 import {
   ArrowLeft,
   Upload,
@@ -38,6 +39,7 @@ export default function PostClientPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, profile } = useAuth();
+  const { toast } = useToast();
 
   const initialType = (searchParams.get("type") || "sell").toLowerCase() as SegmentType;
   const [segment, setSegment] = useState<SegmentType>(
@@ -84,7 +86,7 @@ export default function PostClientPage() {
     const file = e.target.files?.[0];
     if (file) {
       if (file.size > 5 * 1024 * 1024) {
-        alert("File size exceeds 5 MB. Please select a smaller image under 5 MB.");
+        toast.error("Photo too large. Please select an image under 5 MB.");
         return;
       }
       setSelectedImage(file);
@@ -306,15 +308,52 @@ export default function PostClientPage() {
       </div>
 
       {success ? (
-        <div className="bg-green-50 border border-green-200 rounded-3xl p-8 flex flex-col items-center text-center gap-3 animate-fade-in my-8">
-          <div className="w-14 h-14 rounded-full bg-green-500 text-white flex items-center justify-center shadow-md">
+        <div className="bg-white border border-slate-200 rounded-3xl p-8 flex flex-col items-center text-center gap-4 my-8">
+          <div className="w-14 h-14 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-sm">
             <Check className="w-8 h-8 stroke-[3]" />
           </div>
-          <h2 className="font-heading font-black text-xl text-green-900">Post Published Successfully!</h2>
-          <p className="text-xs text-green-700 font-semibold">Redirecting you to the feed...</p>
+          <div className="flex flex-col gap-1">
+            <h2 className="font-heading font-black text-xl text-slate-900">Post Published!</h2>
+            <p className="text-xs text-slate-500 font-semibold">Your listing is live and visible to all Thanjavur locals.</p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-2 w-full mt-2">
+            <button
+              onClick={() => {
+                const redirectMap: Record<SegmentType, string> = {
+                  sell: "/sell", need: "/need", service: "/services", offer: "/shops",
+                };
+                router.push(redirectMap[segment]);
+              }}
+              className="flex-1 py-3 border-2 border-[#1d4ed8] text-[#1d4ed8] text-xs font-black rounded-xl hover:bg-blue-50 transition-colors cursor-pointer"
+            >
+              View Feed
+            </button>
+            <button
+              onClick={() => {
+                setSuccess(false);
+                setTitle("");
+                setDescription("");
+                setPrice("");
+                setPhone(profile?.phone || "");
+                setImagePreview("");
+                setSelectedImage(null);
+              }}
+              className="flex-1 py-3 bg-[#f59e0b] border border-[#d97706] text-slate-950 text-xs font-black rounded-xl hover:bg-[#d97706] hover:text-white transition-colors cursor-pointer"
+            >
+              Post Another
+            </button>
+          </div>
         </div>
       ) : (
         <form onSubmit={handleSubmit} className="flex flex-col gap-6 bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+          {/* Form Progress Bar */}
+          <div className="flex items-center gap-2 pb-1">
+            <div className={`h-1 flex-1 rounded-full transition-all ${title ? "bg-[#1d4ed8]" : "bg-slate-200"}`} />
+            <div className={`h-1 flex-1 rounded-full transition-all ${area ? "bg-[#1d4ed8]" : "bg-slate-200"}`} />
+            <div className={`h-1 flex-1 rounded-full transition-all ${phone ? "bg-[#1d4ed8]" : "bg-slate-200"}`} />
+            <div className={`h-1 flex-1 rounded-full transition-all ${imagePreview || segment === "need" ? "bg-[#1d4ed8]" : "bg-slate-200"}`} />
+            <span className="text-[10px] font-bold text-slate-400 shrink-0">Details · Location · Contact · Photo</span>
+          </div>
           {/* Validation Alert */}
           {validationError && (
             <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-2xl text-xs font-bold text-rose-800 flex items-center gap-2 animate-shake">

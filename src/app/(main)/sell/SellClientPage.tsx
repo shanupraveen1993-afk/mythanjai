@@ -87,7 +87,7 @@ export default function SellClientPage() {
         <img src="/thanjavur_temple_illustration.png" alt="Sell" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent" />
         <div className="relative z-10 flex flex-col gap-1 max-w-xl">
-          <span className="text-xs font-black text-[#F9B637] uppercase tracking-widest">
+          <span className="text-xs font-black text-[#F9B637] uppercase tracking-wide">
             LOCAL MARKETPLACE • தஞ்சாவூர் நேரடி விற்பனை
           </span>
           <h1 className="font-heading font-black text-lg sm:text-xl text-white tracking-tight">
@@ -122,7 +122,7 @@ export default function SellClientPage() {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="custom-select-arrow pr-8 pl-3.5 py-2 text-xs sm:text-sm font-bold bg-white border border-slate-300 rounded-xl shadow-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 cursor-pointer max-w-[170px] sm:max-w-[220px] truncate"
+            className="custom-select-arrow pr-8 pl-3.5 py-2.5 min-h-[44px] text-xs sm:text-sm font-bold bg-white border border-slate-300 rounded-xl shadow-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 cursor-pointer max-w-[170px] sm:max-w-[220px] truncate"
           >
             <option value="All">All Categories</option>
             {CLASSIFIED_CATEGORIES.map((cat) => (
@@ -136,7 +136,7 @@ export default function SellClientPage() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as any)}
-            className="custom-select-arrow pr-8 pl-3.5 py-2 text-xs sm:text-sm font-bold bg-white border border-slate-300 rounded-xl shadow-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 cursor-pointer shrink-0"
+            className="custom-select-arrow pr-8 pl-3.5 py-2.5 min-h-[44px] text-xs sm:text-sm font-bold bg-white border border-slate-300 rounded-xl shadow-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 cursor-pointer shrink-0"
           >
             <option value="recent">Recently Added</option>
             <option value="price_low">Price: Low to High</option>
