@@ -1,38 +1,52 @@
 @import "tailwindcss";
 
-/* ── UNIVERSAL CITY-PLATFORM DESIGN SYSTEM v2.0 TOKENS (design.md) ── */
-:root {
-  /* Brand Core */
-  --primary-yellow: #FBBF24;
-  --primary-deep:   #D97706;
-  --slate-dark:     #0F172A;
-  
-  /* Backgrounds */
-  --bg-white:       #FFFFFF;
-  --bg-soft:        #F8FAFC;
-  
-  /* Text */
-  --text-main:      #0F172A;
-  --text-muted:     #64748B;
+/* ==========================================================================
+   UNIVERSAL DESIGN SYSTEM - NAMMA THANJAI (STRICT NO-AI-ESSENCE DIRECTIVE)
+   ==========================================================================
+   MANDATORY UI RULES:
+   1. NO AI / CHILDISH EMOJIS: Use crisp Lucide SVG vector icons exclusively.
+   2. NO ONE-SIDE BORDER FILL: No asymmetrical/one-sided bottom or side border fills. Borders must be 360-degree uniform and balanced.
+   3. NO OVERLY ROUNDED CORNERS: Professional radii (12px for cards, 8px for inputs/small containers, 9999px for pill buttons). No bloated card corners.
+   4. NO OVER-SPACING: Compact, tight, structured layout padding (p-3 sm:p-4, gap-2.5 sm:gap-4). No bloated 64px+ empty spacing.
+   5. STRICT COLOR HIERARCHY:
+      - Primary CTA (.btn-primary): Warm Yellow/Gold (#f59e0b) with dark text.
+      - Secondary CTA (.btn-secondary): Royal Blue (#1d4ed8) fill with Dim Yellow Outline (#fde047) and Amber Hover Glow.
+      - Tertiary CTA (.btn-tertiary / .btn-outline): Black Outlined (border: 2px solid #0f172a) with Black Text (#0f172a).
+   ========================================================================== */
 
-  /* Spacing & Radius */
-  --space-unit:     8px;
-  --radius-lg:      12px;
-  --radius-xl:      16px;
-  --radius-full:    9999px;
+:root {
+  /* Brand Core Tokens */
+  --color-brand-royal-blue: #1D4ED8;
+  --color-brand-blue-hover: #1E40AF;
+  --primary-yellow:         #FBBF24;
+  --primary-deep:           #D97706;
+  --slate-dark:             #0F172A;
+  
+  /* Backgrounds & Text */
+  --bg-white:               #FFFFFF;
+  --bg-soft:                #F8FAFC;
+  --text-main:              #0F172A;
+  --text-muted:             #64748B;
+
+  /* Spacing & Radius Standards */
+  --space-unit:             8px;
+  --radius-sm:              8px;
+  --radius-lg:              12px;
+  --radius-xl:              16px;
+  --radius-full:            9999px;
 
   /* Shadows */
-  --shadow-sm:      0 1px 3px rgba(0,0,0,0.06);
-  --shadow-md:      0 4px 12px rgba(15, 23, 42, 0.08);
-  --shadow-xl:      0 16px 40px rgba(15, 23, 42, 0.16);
+  --shadow-sm:              0 1px 3px rgba(0,0,0,0.06);
+  --shadow-md:              0 4px 12px rgba(15, 23, 42, 0.08);
+  --shadow-xl:              0 16px 40px rgba(15, 23, 42, 0.16);
 
   /* Z-Index Elevation Stack */
-  --z-base:         0;
-  --z-card-hover:   10;
-  --z-sticky-nav:   100;
-  --z-overlay:      200;
-  --z-modal:        500;
-  --z-toast:        600;
+  --z-base:                 0;
+  --z-card-hover:           10;
+  --z-sticky-nav:           100;
+  --z-overlay:              200;
+  --z-modal:                500;
+  --z-toast:                600;
 }
 
 @theme {
@@ -42,6 +56,7 @@
   --color-border: #e2e8f0;
   --color-muted: #64748b;
   --color-primary: #fbbf24;
+  --color-royal-blue: #1d4ed8;
 }
 
 /* ── Base Body Setup ─────────────────────────────────────── */
