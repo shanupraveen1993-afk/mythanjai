@@ -127,49 +127,49 @@ export default function HomeClientPage() {
   return (
     <div className="w-full flex flex-col gap-8 text-slate-800 font-sans mt-3">
 
-        {/* ── 2x2 Primary Category Entry Hub (Master Gradient Specification) ── */}
+        {/* ── 2x2 Primary Category Entry Hub (Blue Outline Secondary Cards) ── */}
         <div className="grid grid-cols-2 gap-3 my-1">
           <button
             onClick={() => router.push("/sell")}
-            className="p-4 bg-gradient-to-br from-amber-500 to-amber-600 text-white rounded-2xl flex flex-col justify-between shadow-sm active:scale-[0.98] transition-transform text-left min-h-[100px] cursor-pointer group"
+            className="p-4 bg-white border border-[#1d4ed8] text-[#1d4ed8] rounded-2xl flex flex-col justify-between shadow-2xs hover:bg-blue-50/40 active:scale-[0.98] transition-all text-left min-h-[100px] cursor-pointer group"
           >
-            <ShoppingBag className="w-6 h-6 mb-2 opacity-90 group-hover:scale-110 transition-transform" />
+            <ShoppingBag className="w-6 h-6 mb-2 text-[#1d4ed8] shrink-0" />
             <div>
-              <div className="font-bold text-sm sm:text-base tracking-tight">Sell</div>
-              <div className="text-[11px] text-amber-100 font-semibold">விற்க வேண்டுமா?</div>
+              <div className="font-bold text-sm sm:text-base tracking-tight text-[#1d4ed8]">Sell</div>
+              <div className="text-[11px] text-slate-600 font-semibold">விற்க வேண்டுமா?</div>
             </div>
           </button>
 
           <button
             onClick={() => router.push("/need")}
-            className="p-4 bg-gradient-to-br from-blue-500 to-blue-600 text-white rounded-2xl flex flex-col justify-between shadow-sm active:scale-[0.98] transition-transform text-left min-h-[100px] cursor-pointer group"
+            className="p-4 bg-white border border-[#1d4ed8] text-[#1d4ed8] rounded-2xl flex flex-col justify-between shadow-2xs hover:bg-blue-50/40 active:scale-[0.98] transition-all text-left min-h-[100px] cursor-pointer group"
           >
-            <Search className="w-6 h-6 mb-2 opacity-90 group-hover:scale-110 transition-transform" />
+            <Search className="w-6 h-6 mb-2 text-[#1d4ed8] shrink-0" />
             <div>
-              <div className="font-bold text-sm sm:text-base tracking-tight">Need</div>
-              <div className="text-[11px] text-blue-100 font-semibold">தேவைப்படுகிறதா?</div>
+              <div className="font-bold text-sm sm:text-base tracking-tight text-[#1d4ed8]">Need</div>
+              <div className="text-[11px] text-slate-600 font-semibold">தேவைப்படுகிறதா?</div>
             </div>
           </button>
 
           <button
             onClick={() => router.push("/services")}
-            className="p-4 bg-gradient-to-br from-emerald-500 to-emerald-600 text-white rounded-2xl flex flex-col justify-between shadow-sm active:scale-[0.98] transition-transform text-left min-h-[100px] cursor-pointer group"
+            className="p-4 bg-white border border-[#1d4ed8] text-[#1d4ed8] rounded-2xl flex flex-col justify-between shadow-2xs hover:bg-blue-50/40 active:scale-[0.98] transition-all text-left min-h-[100px] cursor-pointer group"
           >
-            <Wrench className="w-6 h-6 mb-2 opacity-90 group-hover:scale-110 transition-transform" />
+            <Wrench className="w-6 h-6 mb-2 text-[#1d4ed8] shrink-0" />
             <div>
-              <div className="font-bold text-sm sm:text-base tracking-tight">Local Services</div>
-              <div className="text-[11px] text-emerald-100 font-semibold">தொழில் வல்லுநர்கள்</div>
+              <div className="font-bold text-sm sm:text-base tracking-tight text-[#1d4ed8]">Local Services</div>
+              <div className="text-[11px] text-slate-600 font-semibold">தொழில் வல்லுநர்கள்</div>
             </div>
           </button>
 
           <button
             onClick={() => router.push("/shops")}
-            className="p-4 bg-gradient-to-br from-rose-500 to-rose-600 text-white rounded-2xl flex flex-col justify-between shadow-sm active:scale-[0.98] transition-transform text-left min-h-[100px] cursor-pointer group"
+            className="p-4 bg-white border border-[#1d4ed8] text-[#1d4ed8] rounded-2xl flex flex-col justify-between shadow-2xs hover:bg-blue-50/40 active:scale-[0.98] transition-all text-left min-h-[100px] cursor-pointer group"
           >
-            <Store className="w-6 h-6 mb-2 opacity-90 group-hover:scale-110 transition-transform" />
+            <Store className="w-6 h-6 mb-2 text-[#1d4ed8] shrink-0" />
             <div>
-              <div className="font-bold text-sm sm:text-base tracking-tight">Local Offer</div>
-              <div className="text-[11px] text-rose-100 font-semibold">சிறப்பு சலுகைகள்</div>
+              <div className="font-bold text-sm sm:text-base tracking-tight text-[#1d4ed8]">Local Offer</div>
+              <div className="text-[11px] text-slate-600 font-semibold">சிறப்பு சலுகைகள்</div>
             </div>
           </button>
         </div>
