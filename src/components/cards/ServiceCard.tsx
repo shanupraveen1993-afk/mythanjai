@@ -191,7 +191,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
   };
 
   return (
-    <div className="bg-white rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-[0_3px_12px_rgba(0,0,0,0.05)] hover:shadow-[0_6px_20px_rgba(15,23,42,0.08)] transition-all duration-200 font-sans border border-slate-200/90 relative group h-full min-h-[300px] sm:min-h-[320px]">
+    <div className="bg-white rounded-2xl p-4 sm:p-5 flex flex-col justify-between shadow-[0_3px_12px_rgba(0,0,0,0.05)] hover:shadow-[0_6px_20px_rgba(15,23,42,0.08)] transition-all duration-200 font-sans border border-slate-200/90 relative group h-full">
 
       {/* Line 1: Name (only) on LEFT + Rating Badge (if > 0) on RIGHT */}
       <div className="flex items-center justify-between gap-3 w-full">

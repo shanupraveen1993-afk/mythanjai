@@ -181,7 +181,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
 
   return (
     <div
-      className={`bg-white rounded-xl p-4 flex flex-col justify-between shadow-2xs border border-slate-200/90 transition-all duration-200 relative group overflow-hidden font-sans h-full min-h-[380px] sm:min-h-[400px] ${
+      className={`bg-white rounded-xl p-4 flex flex-col justify-between shadow-2xs border border-slate-200/90 transition-all duration-200 relative group overflow-hidden font-sans h-full ${
         isSold ? "opacity-80" : ""
       }`}
     >

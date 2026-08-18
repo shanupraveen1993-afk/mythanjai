@@ -93,7 +93,7 @@ export default function OfferCard({ post }: OfferCardProps) {
         </div>
 
         {post.description && (
-          <p className="text-xs text-slate-600 font-medium line-clamp-2 leading-relaxed">
+          <p className="text-xs text-slate-600 font-medium line-clamp-3 leading-relaxed">
             {post.description}
           </p>
         )}
