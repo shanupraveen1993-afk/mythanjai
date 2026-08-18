@@ -280,10 +280,10 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
               </div>
             </div>
 
-            {/* Action Buttons Row: Left-Aligned Standard Auto Width (Do NOT Fill Container) */}
-            <div className="flex items-center justify-start gap-2.5 pt-0.5">
+            {/* Action Buttons Row: Opposite Side Alignment (Chat Left, Call Right) */}
+            <div className="flex items-center justify-between gap-2 pt-0.5 w-full">
               {isOwnPost ? (
-                <div className="px-3.5 py-1.5 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1.5">
+                <div className="w-full py-1.5 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1.5">
                   <UserCheck className="w-3.5 h-3.5 text-slate-500" />
                   <span>Your Listing</span>
                 </div>
@@ -315,7 +315,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
                           toast.info("This provider is currently busy/unavailable.");
                         }
                       }}
-                      className="bg-[#f59e0b] text-slate-950 font-extrabold border border-[#d97706] hover:bg-[#d97706] hover:text-white text-xs py-1.5 px-4 rounded-lg flex items-center justify-center gap-1.5 shadow-2xs transition-colors cursor-pointer shrink-0"
+                      className="bg-[#f59e0b] text-slate-950 font-extrabold border border-[#d97706] hover:bg-[#d97706] hover:text-white text-xs py-1.5 px-4 rounded-lg flex items-center justify-center gap-1.5 shadow-2xs transition-colors cursor-pointer shrink-0 ml-auto"
                     >
                       <Phone className="w-3.5 h-3.5 text-slate-950 group-hover:text-white" />
                       <span>Call</span>
