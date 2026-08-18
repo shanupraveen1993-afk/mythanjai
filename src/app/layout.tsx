@@ -51,7 +51,7 @@ export default function RootLayout({
             __html: `
               (function() {
                 if (typeof window !== 'undefined') {
-                  var TARGET_VERSION = 'v32.0_explore_cards_outlined_royal_blue';
+                  var TARGET_VERSION = 'v33.0_google_places_autocomplete_api_connected';
                   var currentVer = localStorage.getItem('namma_thanjai_cache_version');
                   if (currentVer !== TARGET_VERSION) {
                     localStorage.setItem('namma_thanjai_cache_version', TARGET_VERSION);
