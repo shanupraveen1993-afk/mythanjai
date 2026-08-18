@@ -170,9 +170,9 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
             </span>
           </div>
 
-          {/* Top Right: BOLD Price / Budget Overlay Badge (OLX Standard) */}
+          {/* Top Right: Price / Budget Overlay Badge */}
           <div className="absolute top-2.5 right-2.5 z-10">
-            <span className="bg-amber-500 text-slate-950 font-heading font-black text-xs sm:text-sm px-3 py-1 rounded-full shadow-xs border border-amber-400/90 inline-block">
+            <span className="bg-slate-950/85 backdrop-blur-xs text-white font-heading font-extrabold text-xs sm:text-sm px-3 py-1 rounded-full shadow-xs border border-slate-800 inline-block">
               {isLookingFor
                 ? `₹${listing.expected_price_from || "5k"} - ₹${listing.expected_price_to || "15k"}`
                 : listing.price || "₹2 Lakhs"}

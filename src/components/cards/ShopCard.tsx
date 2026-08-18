@@ -115,7 +115,7 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
           </p>
           <button
             type="button"
-            className="mt-3.5 btn btn-primary btn-sm uppercase tracking-wider cursor-pointer"
+            className="mt-3.5 btn btn-tertiary btn-sm uppercase tracking-wider cursor-pointer"
           >
             Verify WhatsApp to Unlock →
           </button>
@@ -179,7 +179,7 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
           <span>⚠️ Offer Expired</span>
         </div>
       ) : isEndsToday ? (
-        <div className="absolute top-2.5 left-2.5 z-20 bg-amber-500 text-slate-950 font-black text-xs px-2.5 py-0.5 rounded-lg flex items-center gap-1 shadow-md animate-pulse">
+        <div className="absolute top-2.5 left-2.5 z-20 bg-slate-950/90 text-white font-extrabold text-xs px-2.5 py-0.5 rounded-lg flex items-center gap-1 shadow-md border border-slate-800">
           <Sparkles className="w-3 h-3 fill-slate-950" />
           <span>🔥 Ends Today!</span>
         </div>

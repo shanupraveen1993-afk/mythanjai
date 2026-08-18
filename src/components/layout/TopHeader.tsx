@@ -94,7 +94,7 @@ export default function TopHeader({
           const isServiceActive = pathname.includes("/services") || pathname.includes("/post/service") || activeTab === "services";
           const isOfferActive = pathname.includes("/shops") || pathname.includes("/offers") || activeTab === "shops";
 
-          const activeStyle = "bg-amber-500 text-slate-950 font-black shadow-xs rounded-lg border border-amber-600/30";
+          const activeStyle = "bg-slate-900 text-white font-extrabold shadow-xs rounded-lg border border-slate-900";
           const inactiveStyle = "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-bold transition-all duration-200";
 
           return (

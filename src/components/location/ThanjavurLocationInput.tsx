@@ -192,7 +192,7 @@ export default function ThanjavurLocationInput({
           <button
             type="button"
             onClick={() => router.push("/")}
-            className="btn-primary text-[11px] font-bold px-3 py-1.5 rounded-lg shrink-0 flex items-center gap-1 shadow-2xs cursor-pointer"
+            className="btn-tertiary text-[11px] font-bold px-3 py-1.5 rounded-lg shrink-0 flex items-center gap-1 cursor-pointer"
           >
             <Compass className="w-3.5 h-3.5" />
             <span>Explore Thanjavur Marketplace</span>

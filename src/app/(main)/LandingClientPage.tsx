@@ -88,7 +88,7 @@ export default function LandingClientPage() {
 
           <div className="relative z-10 p-6 sm:p-10 flex flex-col gap-4 max-w-3xl">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-extrabold uppercase tracking-widest bg-amber-500 text-slate-950 px-3 py-1 rounded-full shadow-2xs">
+              <span className="text-[10px] font-extrabold uppercase tracking-wide bg-slate-900 text-amber-400 border border-slate-800 px-3 py-1 rounded-full shadow-2xs">
                 WHAT WE DO • நம்ம தஞ்சாவூர்
               </span>
               <span className="text-xs text-amber-300 font-bold hidden sm:inline-block">
@@ -169,7 +169,7 @@ export default function LandingClientPage() {
               <h2 className="font-heading font-extrabold text-base text-slate-900">
                 Sell (விற்பனை)
               </h2>
-              <span className="text-[10px] font-black uppercase tracking-wider bg-amber-500 text-slate-950 px-2.5 py-0.5 rounded-full shadow-2xs">
+              <span className="text-[10px] font-black uppercase tracking-wider bg-slate-900 text-white border border-slate-800 px-2.5 py-0.5 rounded-full shadow-2xs">
                 New Listing
               </span>
             </div>
@@ -223,7 +223,7 @@ export default function LandingClientPage() {
               <h2 className="font-heading font-extrabold text-base text-slate-900">
                 Need (தேவைகள்)
               </h2>
-              <span className="text-[10px] font-black uppercase tracking-wider bg-amber-500 text-slate-950 px-2.5 py-0.5 rounded-full shadow-2xs">
+              <span className="text-[10px] font-black uppercase tracking-wider bg-slate-900 text-white border border-slate-800 px-2.5 py-0.5 rounded-full shadow-2xs">
                 New Listing
               </span>
             </div>
@@ -277,7 +277,7 @@ export default function LandingClientPage() {
               <h2 className="font-heading font-extrabold text-base text-slate-900">
                 Services (சேவைகள்)
               </h2>
-              <span className="text-[10px] font-black uppercase tracking-wider bg-amber-500 text-slate-950 px-2.5 py-0.5 rounded-full shadow-2xs">
+              <span className="text-[10px] font-black uppercase tracking-wider bg-slate-900 text-white border border-slate-800 px-2.5 py-0.5 rounded-full shadow-2xs">
                 New Listing
               </span>
             </div>
@@ -334,7 +334,7 @@ export default function LandingClientPage() {
               <h2 className="font-heading font-extrabold text-base text-slate-900">
                 Offers (சலுகைகள்)
               </h2>
-              <span className="text-[10px] font-black uppercase tracking-wider bg-amber-500 text-slate-950 px-2.5 py-0.5 rounded-full shadow-2xs">
+              <span className="text-[10px] font-black uppercase tracking-wider bg-slate-900 text-white border border-slate-800 px-2.5 py-0.5 rounded-full shadow-2xs">
                 New Listing
               </span>
             </div>
@@ -394,7 +394,7 @@ export default function LandingClientPage() {
             {/* Step 1 */}
             <div className="bg-slate-800/90 border border-slate-700/80 p-4 sm:p-5 rounded-xl flex flex-col justify-between gap-3 group hover:border-amber-500/50 transition-all">
               <div className="flex items-center justify-between">
-                <span className="w-8 h-8 rounded-lg bg-amber-500 text-slate-950 font-heading font-black text-sm flex items-center justify-center shadow-2xs">
+                <span className="w-8 h-8 rounded-lg bg-slate-900 text-white border border-slate-700 font-heading font-black text-sm flex items-center justify-center shadow-2xs">
                   01
                 </span>
                 <span className="text-[10px] font-bold text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">
@@ -414,7 +414,7 @@ export default function LandingClientPage() {
             {/* Step 2 */}
             <div className="bg-slate-800/90 border border-slate-700/80 p-4 sm:p-5 rounded-xl flex flex-col justify-between gap-3 group hover:border-amber-500/50 transition-all">
               <div className="flex items-center justify-between">
-                <span className="w-8 h-8 rounded-lg bg-amber-500 text-slate-950 font-heading font-black text-sm flex items-center justify-center shadow-2xs">
+                <span className="w-8 h-8 rounded-lg bg-slate-900 text-white border border-slate-700 font-heading font-black text-sm flex items-center justify-center shadow-2xs">
                   02
                 </span>
                 <span className="text-[10px] font-bold text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">
@@ -434,7 +434,7 @@ export default function LandingClientPage() {
             {/* Step 3 */}
             <div className="bg-slate-800/90 border border-slate-700/80 p-4 sm:p-5 rounded-xl flex flex-col justify-between gap-3 group hover:border-amber-500/50 transition-all">
               <div className="flex items-center justify-between">
-                <span className="w-8 h-8 rounded-lg bg-amber-500 text-slate-950 font-heading font-black text-sm flex items-center justify-center shadow-2xs">
+                <span className="w-8 h-8 rounded-lg bg-slate-900 text-white border border-slate-700 font-heading font-black text-sm flex items-center justify-center shadow-2xs">
                   03
                 </span>
                 <span className="text-[10px] font-bold text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">

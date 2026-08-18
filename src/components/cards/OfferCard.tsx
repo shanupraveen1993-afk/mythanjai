@@ -127,7 +127,7 @@ export default function OfferCard({ post }: OfferCardProps) {
             href={post.social_link || "#"}
             target="_blank"
             rel="noopener noreferrer"
-            className="btn btn-primary btn-sm text-xs"
+            className="btn btn-tertiary btn-sm text-xs"
           >
             <span>View Deal</span>
             <ExternalLink className="w-3.5 h-3.5 text-[#0F172A]" />
