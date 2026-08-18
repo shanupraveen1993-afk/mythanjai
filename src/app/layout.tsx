@@ -51,7 +51,7 @@ export default function RootLayout({
             __html: `
               (function() {
                 if (typeof window !== 'undefined') {
-                  var TARGET_VERSION = 'v24.0_webapp_left_hamburger_logo_name_get_app_profile';
+                  var TARGET_VERSION = 'v25.0_web_app_bottom_bar_no_hamburger_fab_places';
                   var currentVer = localStorage.getItem('namma_thanjai_cache_version');
                   if (currentVer !== TARGET_VERSION) {
                     localStorage.setItem('namma_thanjai_cache_version', TARGET_VERSION);

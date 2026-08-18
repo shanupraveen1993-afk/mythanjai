@@ -53,9 +53,14 @@ export default function ThanjavurLocationInput({
           }}
           onFocus={() => setIsOpen(true)}
           placeholder={placeholder}
-          className="w-full pl-9 pr-4 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors"
+          className="w-full pl-9 pr-9 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-amber-500 focus:ring-1 focus:ring-amber-500 transition-colors"
         />
         <MapPin className="w-4 h-4 text-amber-500 absolute left-3 top-2.5 pointer-events-none" />
+        {value.trim().length >= 2 && (
+          <span className="absolute right-3 top-2.5 w-4 h-4 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-2xs">
+            <Check className="w-2.5 h-2.5 stroke-[3]" />
+          </span>
+        )}
       </div>
 
       {/* Autocomplete Dropdown List */}

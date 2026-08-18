@@ -15,14 +15,15 @@ export default function WebAppScrollFAB({ postRoute, label = "Post Ad" }: WebApp
 
   useEffect(() => {
     const handleScroll = () => {
-      // Show FAB after scrolling past 350px (2nd screen viewport)
-      if (window.scrollY > 350) {
+      // Show FAB after scrolling past 120px
+      if (window.scrollY > 120) {
         setShowFAB(true);
       } else {
         setShowFAB(false);
       }
     };
 
+    handleScroll(); // Initial check
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
@@ -30,11 +31,11 @@ export default function WebAppScrollFAB({ postRoute, label = "Post Ad" }: WebApp
   if (!showFAB) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-40 animate-in slide-in-from-bottom-5 fade-in-50 duration-200">
+    <div className="fixed bottom-20 md:bottom-8 right-5 z-[10000] animate-in slide-in-from-bottom-5 fade-in-50 duration-200 pointer-events-auto">
       <button
         type="button"
         onClick={() => router.push(postRoute)}
-        className="btn-primary px-5 py-3 rounded-full text-xs sm:text-sm font-black shadow-xl border-2 border-amber-600 flex items-center gap-2 cursor-pointer active:scale-95 group"
+        className="btn-primary px-4 py-2.5 sm:px-5 sm:py-3 rounded-full text-xs sm:text-sm font-black shadow-2xl border-2 border-amber-600 flex items-center gap-2 cursor-pointer active:scale-95 group backdrop-blur-md"
         title={`Click to ${label}`}
       >
         <Plus className="w-4 h-4 stroke-[3] text-slate-950 group-hover:rotate-90 transition-transform duration-200" />

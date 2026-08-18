@@ -69,19 +69,8 @@ export default function TopHeader({
     >
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-3">
 
-        {/* Left Side: Hamburger Menu + Website Branding Logo & App Name */}
+        {/* Left Side: Permanent Website Branding Logo & App Name */}
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* 1. Hamburger Menu Button on Left Side */}
-          <button
-            type="button"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="flex items-center justify-center w-9 h-9 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-extrabold transition-all cursor-pointer active:scale-95 border border-slate-200 shrink-0"
-            title="Menu Drawer"
-          >
-            {isMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-          </button>
-
-          {/* 2. Logo & App Name */}
           <div
             onClick={() => router.push("/")}
             className="flex items-center gap-2 cursor-pointer select-none shrink-0 group"
@@ -149,23 +138,21 @@ export default function TopHeader({
           );
         })()}
 
-        {/* Right Side: Get App (Only on Homepage in Web App) + Profile Icon */}
+        {/* Right Side: Get App + Profile Icon (+ Post Ad button on 4 Segment pages) */}
         <div className="flex items-center gap-2 shrink-0">
-          {/* 1. Get App Button (Shown ONLY on Homepage '/' in Web App) */}
-          {isHomePage && (
-            <a
-              href="/namma_thanjai_release.apk"
-              download="namma_thanjai_release.apk"
-              onClick={handleGetAppClick}
-              className="bg-[#1d4ed8] text-white border border-[#1d4ed8] text-xs px-3.5 py-1.5 rounded-full font-extrabold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none"
-              title="Download Namma Thanjai Android App"
-            >
-              <Download className="w-3.5 h-3.5 shrink-0 text-white" />
-              <span>Get App</span>
-            </a>
-          )}
+          {/* 1. Get App Button (Shown on Homepage '/' & segment pages) */}
+          <a
+            href="/namma_thanjai_release.apk"
+            download="namma_thanjai_release.apk"
+            onClick={handleGetAppClick}
+            className="bg-[#1d4ed8] text-white border border-[#1d4ed8] text-xs px-3.5 py-1.5 rounded-full font-extrabold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none"
+            title="Download Namma Thanjai Android App"
+          >
+            <Download className="w-3.5 h-3.5 shrink-0 text-white" />
+            <span>Get App</span>
+          </a>
 
-          {/* 2. Action Post Button (Shown ONLY on segment pages /sell, /need, /services, /shops) */}
+          {/* 2. Action Post Button (Shown ONLY on 4 segment pages /sell, /need, /services, /shops) */}
           {!isHomePage && (
             <button
               type="button"
@@ -195,97 +182,6 @@ export default function TopHeader({
           </button>
         </div>
       </div>
-
-      {/* Hamburger Menu Drawer Overlay */}
-      {isMenuOpen && (
-        <div className="w-full bg-white border-b border-slate-200/90 p-4 flex flex-col gap-3 shadow-md animate-in slide-in-from-top-2 duration-200">
-          <div className="flex flex-col gap-1">
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-400">NAVIGATION MENU</span>
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2 mt-1">
-              <button
-                type="button"
-                onClick={() => { router.push("/"); setIsMenuOpen(false); }}
-                className="p-2.5 rounded-xl bg-slate-50 hover:bg-amber-50 text-slate-800 hover:text-amber-800 font-extrabold text-xs text-left border border-slate-200/80"
-              >
-                Home (முகப்பு)
-              </button>
-              <button
-                type="button"
-                onClick={() => { router.push("/sell"); setIsMenuOpen(false); }}
-                className="p-2.5 rounded-xl bg-slate-50 hover:bg-amber-50 text-slate-800 hover:text-amber-800 font-extrabold text-xs text-left border border-slate-200/80"
-              >
-                Sell (விற்பனை)
-              </button>
-              <button
-                type="button"
-                onClick={() => { router.push("/need"); setIsMenuOpen(false); }}
-                className="p-2.5 rounded-xl bg-slate-50 hover:bg-amber-50 text-slate-800 hover:text-amber-800 font-extrabold text-xs text-left border border-slate-200/80"
-              >
-                Need (தேவைகள்)
-              </button>
-              <button
-                type="button"
-                onClick={() => { router.push("/services"); setIsMenuOpen(false); }}
-                className="p-2.5 rounded-xl bg-slate-50 hover:bg-amber-50 text-slate-800 hover:text-amber-800 font-extrabold text-xs text-left border border-slate-200/80"
-              >
-                Services (சேவைகள்)
-              </button>
-              <button
-                type="button"
-                onClick={() => { router.push("/shops"); setIsMenuOpen(false); }}
-                className="p-2.5 rounded-xl bg-slate-50 hover:bg-amber-50 text-slate-800 hover:text-amber-800 font-extrabold text-xs text-left border border-slate-200/80"
-              >
-                Offers (சலுகைகள்)
-              </button>
-            </div>
-          </div>
-
-          <div className="pt-2 border-t border-slate-100 flex flex-wrap items-center justify-between gap-3">
-            <div className="flex items-center gap-2">
-              <a
-                href="/namma_thanjai_release.apk"
-                download="namma_thanjai_release.apk"
-                onClick={() => { handleGetAppClick(); setIsMenuOpen(false); }}
-                className="bg-[#1d4ed8] text-white text-xs font-extrabold px-3.5 py-2 rounded-xl flex items-center gap-1.5 shadow-2xs"
-              >
-                <Download className="w-3.5 h-3.5 text-white" />
-                <span>Get App (APK)</span>
-              </a>
-
-              {isAuthVerified && (
-                <button
-                  type="button"
-                  onClick={() => { router.push("/chat"); setIsMenuOpen(false); }}
-                  className="bg-amber-50 hover:bg-amber-100 text-amber-900 text-xs font-extrabold px-3.5 py-2 rounded-xl border border-amber-300 flex items-center gap-1.5"
-                >
-                  <MessageSquare className="w-3.5 h-3.5 text-amber-700" />
-                  <span>Chat</span>
-                </button>
-              )}
-            </div>
-
-            {!isAuthVerified ? (
-              <button
-                type="button"
-                onClick={() => { onSignInClick(); setIsMenuOpen(false); }}
-                className="btn-primary text-xs px-4 py-2 rounded-xl font-black flex items-center gap-1.5"
-              >
-                <User className="w-3.5 h-3.5 text-slate-950" />
-                <span>Sign In / Login</span>
-              </button>
-            ) : (
-              <button
-                type="button"
-                onClick={() => { router.push("/profile"); setIsMenuOpen(false); }}
-                className="bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-extrabold px-4 py-2 rounded-xl border border-slate-200 flex items-center gap-1.5"
-              >
-                <User className="w-3.5 h-3.5 text-slate-600" />
-                <span>My Profile</span>
-              </button>
-            )}
-          </div>
-        </div>
-      )}
     </header>
   );
 }
