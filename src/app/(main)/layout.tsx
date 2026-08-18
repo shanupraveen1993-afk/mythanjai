@@ -272,8 +272,8 @@ function MainLayoutContent({
       {/* Floating Post Button — mobile */}
       {!isOnboardingView && !isPostRoute && <FloatingPostButton />}
 
-      {/* Bottom Navigation Bar — Shown strictly inside main app/dashboard */}
-      {!isStandaloneView && !isOnboardingView && !isLandingMode && !isSignInOpen && (
+      {/* Bottom Navigation Bar — Shown on Homepage & across Web App */}
+      {!isStandaloneView && !isOnboardingView && !isSignInOpen && (
         <BottomTabBar
           activeTab={getActiveTab()}
           onTabChange={handleTabChange}
