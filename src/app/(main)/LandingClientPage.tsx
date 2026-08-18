@@ -172,9 +172,9 @@ export default function LandingClientPage() {
             </div>
             <button
               onClick={() => router.push("/sell")}
-              className="text-[11px] font-extrabold bg-[#1d4ed8] text-white hover:bg-blue-800 px-2.5 py-1 rounded-full flex items-center gap-1 shadow-2xs transition-colors cursor-pointer"
+              className="text-xs font-bold text-[#1d4ed8] hover:underline flex items-center gap-1 cursor-pointer"
             >
-              <span>View all</span> <ChevronRight className="w-3.5 h-3.5 stroke-[2.5]" />
+              <span>View all</span> <ChevronRight className="w-3.5 h-3.5 text-[#1d4ed8]" />
             </button>
           </div>
 
@@ -223,9 +223,9 @@ export default function LandingClientPage() {
             </div>
             <button
               onClick={() => router.push("/need")}
-              className="text-[11px] font-extrabold bg-[#1d4ed8] text-white hover:bg-blue-800 px-2.5 py-1 rounded-full flex items-center gap-1 shadow-2xs transition-colors cursor-pointer"
+              className="text-xs font-bold text-[#1d4ed8] hover:underline flex items-center gap-1 cursor-pointer"
             >
-              <span>View all</span> <ChevronRight className="w-3.5 h-3.5 stroke-[2.5]" />
+              <span>View all</span> <ChevronRight className="w-3.5 h-3.5 text-[#1d4ed8]" />
             </button>
           </div>
 
@@ -274,9 +274,9 @@ export default function LandingClientPage() {
             </div>
             <button
               onClick={() => router.push("/services")}
-              className="text-[11px] font-extrabold bg-[#1d4ed8] text-white hover:bg-blue-800 px-2.5 py-1 rounded-full flex items-center gap-1 shadow-2xs transition-colors cursor-pointer"
+              className="text-xs font-bold text-[#1d4ed8] hover:underline flex items-center gap-1 cursor-pointer"
             >
-              <span>View all</span> <ChevronRight className="w-3.5 h-3.5 stroke-[2.5]" />
+              <span>View all</span> <ChevronRight className="w-3.5 h-3.5 text-[#1d4ed8]" />
             </button>
           </div>
 
@@ -325,9 +325,9 @@ export default function LandingClientPage() {
             </div>
             <button
               onClick={() => router.push("/shops")}
-              className="text-[11px] font-extrabold bg-[#1d4ed8] text-white hover:bg-blue-800 px-2.5 py-1 rounded-full flex items-center gap-1 shadow-2xs transition-colors cursor-pointer"
+              className="text-xs font-bold text-[#1d4ed8] hover:underline flex items-center gap-1 cursor-pointer"
             >
-              <span>View all</span> <ChevronRight className="w-3.5 h-3.5 stroke-[2.5]" />
+              <span>View all</span> <ChevronRight className="w-3.5 h-3.5 text-[#1d4ed8]" />
             </button>
           </div>
 
