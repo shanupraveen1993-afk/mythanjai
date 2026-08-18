@@ -144,77 +144,69 @@ export default function HomeClientPage() {
           </div>
         </div>
 
-        {/* ── 2x2 Primary Category Entry Hub (With Royal Blue Outline Explore Secondary Buttons) ── */}
+        {/* ── 2x2 Primary Category Entry Hub (Pro UX Interactive Cards) ── */}
         <div className="grid grid-cols-2 gap-3 my-1">
           <button
             onClick={() => router.push("/sell")}
-            className="p-4 bg-white border border-slate-200/90 rounded-2xl flex flex-col justify-between shadow-2xs hover:border-[#1d4ed8]/50 active:scale-[0.98] transition-all text-left min-h-[120px] cursor-pointer group"
+            className="p-4 bg-white border border-slate-200/90 rounded-2xl flex flex-col justify-between shadow-2xs hover:border-[#1d4ed8]/50 hover:shadow-md transition-all active:scale-[0.98] text-left min-h-[110px] cursor-pointer group"
           >
-            <div>
-              <div className="flex items-center justify-between gap-1 mb-1.5">
-                <ShoppingBag className="w-5 h-5 text-[#1d4ed8] shrink-0" />
-                <span className="text-[11px] text-slate-500 font-semibold">விற்க</span>
+            <div className="flex items-center justify-between gap-1 w-full">
+              <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:bg-[#1d4ed8] group-hover:text-white transition-colors">
+                <ShoppingBag className="w-5 h-5 shrink-0" />
               </div>
-              <div className="font-bold text-sm sm:text-base tracking-tight text-slate-900">Sell</div>
-              <div className="text-[11px] text-slate-600 font-medium">விற்க வேண்டுமா?</div>
+              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-[#1d4ed8] group-hover:translate-x-0.5 transition-all" />
             </div>
-            <div className="mt-2.5 text-xs font-bold text-[#1d4ed8] border border-[#1d4ed8] px-3 py-1 rounded-lg w-fit flex items-center gap-1 bg-white group-hover:bg-blue-50/60 transition-colors shadow-2xs">
-              <span>Explore</span>
-              <ArrowRight className="w-3 h-3 text-[#1d4ed8]" />
+            <div className="mt-3">
+              <div className="font-bold text-sm sm:text-base tracking-tight text-slate-900 group-hover:text-[#1d4ed8] transition-colors">Sell</div>
+              <div className="text-[11px] text-slate-500 font-medium">விற்க வேண்டுமா?</div>
             </div>
           </button>
 
           <button
             onClick={() => router.push("/need")}
-            className="p-4 bg-white border border-slate-200/90 rounded-2xl flex flex-col justify-between shadow-2xs hover:border-[#1d4ed8]/50 active:scale-[0.98] transition-all text-left min-h-[120px] cursor-pointer group"
+            className="p-4 bg-white border border-slate-200/90 rounded-2xl flex flex-col justify-between shadow-2xs hover:border-[#1d4ed8]/50 hover:shadow-md transition-all active:scale-[0.98] text-left min-h-[110px] cursor-pointer group"
           >
-            <div>
-              <div className="flex items-center justify-between gap-1 mb-1.5">
-                <Search className="w-5 h-5 text-[#1d4ed8] shrink-0" />
-                <span className="text-[11px] text-slate-500 font-semibold">தேவை</span>
+            <div className="flex items-center justify-between gap-1 w-full">
+              <div className="w-9 h-9 rounded-xl bg-blue-50 text-[#1d4ed8] flex items-center justify-center group-hover:bg-[#1d4ed8] group-hover:text-white transition-colors">
+                <Search className="w-5 h-5 shrink-0" />
               </div>
-              <div className="font-bold text-sm sm:text-base tracking-tight text-slate-900">Need</div>
-              <div className="text-[11px] text-slate-600 font-medium">தேவைப்படுகிறதா?</div>
+              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-[#1d4ed8] group-hover:translate-x-0.5 transition-all" />
             </div>
-            <div className="mt-2.5 text-xs font-bold text-[#1d4ed8] border border-[#1d4ed8] px-3 py-1 rounded-lg w-fit flex items-center gap-1 bg-white group-hover:bg-blue-50/60 transition-colors shadow-2xs">
-              <span>Explore</span>
-              <ArrowRight className="w-3 h-3 text-[#1d4ed8]" />
+            <div className="mt-3">
+              <div className="font-bold text-sm sm:text-base tracking-tight text-slate-900 group-hover:text-[#1d4ed8] transition-colors">Need</div>
+              <div className="text-[11px] text-slate-500 font-medium">தேவைப்படுகிறதா?</div>
             </div>
           </button>
 
           <button
             onClick={() => router.push("/services")}
-            className="p-4 bg-white border border-slate-200/90 rounded-2xl flex flex-col justify-between shadow-2xs hover:border-[#1d4ed8]/50 active:scale-[0.98] transition-all text-left min-h-[120px] cursor-pointer group"
+            className="p-4 bg-white border border-slate-200/90 rounded-2xl flex flex-col justify-between shadow-2xs hover:border-[#1d4ed8]/50 hover:shadow-md transition-all active:scale-[0.98] text-left min-h-[110px] cursor-pointer group"
           >
-            <div>
-              <div className="flex items-center justify-between gap-1 mb-1.5">
-                <Wrench className="w-5 h-5 text-[#1d4ed8] shrink-0" />
-                <span className="text-[11px] text-slate-500 font-semibold">சேவைகள்</span>
+            <div className="flex items-center justify-between gap-1 w-full">
+              <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:bg-[#1d4ed8] group-hover:text-white transition-colors">
+                <Wrench className="w-5 h-5 shrink-0" />
               </div>
-              <div className="font-bold text-sm sm:text-base tracking-tight text-slate-900">Local Services</div>
-              <div className="text-[11px] text-slate-600 font-medium">தொழில் வல்லுநர்கள்</div>
+              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-[#1d4ed8] group-hover:translate-x-0.5 transition-all" />
             </div>
-            <div className="mt-2.5 text-xs font-bold text-[#1d4ed8] border border-[#1d4ed8] px-3 py-1 rounded-lg w-fit flex items-center gap-1 bg-white group-hover:bg-blue-50/60 transition-colors shadow-2xs">
-              <span>Explore</span>
-              <ArrowRight className="w-3 h-3 text-[#1d4ed8]" />
+            <div className="mt-3">
+              <div className="font-bold text-sm sm:text-base tracking-tight text-slate-900 group-hover:text-[#1d4ed8] transition-colors">Local Services</div>
+              <div className="text-[11px] text-slate-500 font-medium">தொழில் வல்லுநர்கள்</div>
             </div>
           </button>
 
           <button
             onClick={() => router.push("/shops")}
-            className="p-4 bg-white border border-slate-200/90 rounded-2xl flex flex-col justify-between shadow-2xs hover:border-[#1d4ed8]/50 active:scale-[0.98] transition-all text-left min-h-[120px] cursor-pointer group"
+            className="p-4 bg-white border border-slate-200/90 rounded-2xl flex flex-col justify-between shadow-2xs hover:border-[#1d4ed8]/50 hover:shadow-md transition-all active:scale-[0.98] text-left min-h-[110px] cursor-pointer group"
           >
-            <div>
-              <div className="flex items-center justify-between gap-1 mb-1.5">
-                <Store className="w-5 h-5 text-[#1d4ed8] shrink-0" />
-                <span className="text-[11px] text-slate-500 font-semibold">சலுகைகள்</span>
+            <div className="flex items-center justify-between gap-1 w-full">
+              <div className="w-9 h-9 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center group-hover:bg-[#1d4ed8] group-hover:text-white transition-colors">
+                <Store className="w-5 h-5 shrink-0" />
               </div>
-              <div className="font-bold text-sm sm:text-base tracking-tight text-slate-900">Local Offer</div>
-              <div className="text-[11px] text-slate-600 font-medium">சிறப்பு சலுகைகள்</div>
+              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-[#1d4ed8] group-hover:translate-x-0.5 transition-all" />
             </div>
-            <div className="mt-2.5 text-xs font-bold text-[#1d4ed8] border border-[#1d4ed8] px-3 py-1 rounded-lg w-fit flex items-center gap-1 bg-white group-hover:bg-blue-50/60 transition-colors shadow-2xs">
-              <span>Explore</span>
-              <ArrowRight className="w-3 h-3 text-[#1d4ed8]" />
+            <div className="mt-3">
+              <div className="font-bold text-sm sm:text-base tracking-tight text-slate-900 group-hover:text-[#1d4ed8] transition-colors">Local Offer</div>
+              <div className="text-[11px] text-slate-500 font-medium">சிறப்பு சலுகைகள்</div>
             </div>
           </button>
         </div>

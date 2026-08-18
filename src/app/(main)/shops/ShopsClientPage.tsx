@@ -26,7 +26,7 @@ export default function ShopsClientPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
 
   const categoryOptions = React.useMemo(() => [
-    { label: "All Store Offers (அனைத்தும்)", value: "All" },
+    { label: "All Offers", value: "All" },
     ...SHOP_CATEGORIES.map((cat) => ({ label: cat, value: cat })),
   ], []);
 

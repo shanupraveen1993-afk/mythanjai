@@ -28,7 +28,7 @@ export default function SellClientPage() {
   const [localPosts, setLocalPosts] = useState<NeedOrSalePost[]>([]);
 
   const categoryOptions = React.useMemo(() => [
-    { label: "All Categories (அனைத்தும்)", value: "All" },
+    { label: "All Categories", value: "All" },
     ...CLASSIFIED_CATEGORIES.map((cat) => ({ label: cat, value: cat })),
   ], []);
 

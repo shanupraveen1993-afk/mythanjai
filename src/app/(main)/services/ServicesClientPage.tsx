@@ -29,7 +29,7 @@ export default function ServicesClientPage() {
   const [sortBy, setSortBy] = useState<"recent" | "rating" | "name">("recent");
 
   const categoryOptions = React.useMemo(() => [
-    { label: "All Services (அனைத்தும்)", value: "All" },
+    { label: "All Services", value: "All" },
     ...SERVICE_CATEGORIES.map((cat) => ({ label: cat, value: cat })),
   ], []);
 

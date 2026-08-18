@@ -27,7 +27,7 @@ export default function NeedClientPage() {
   const [sortBy, setSortBy] = useState<"recent" | "price_low" | "price_high">("recent");
 
   const categoryOptions = React.useMemo(() => [
-    { label: "All Categories (அனைத்தும்)", value: "All" },
+    { label: "All Categories", value: "All" },
     ...CLASSIFIED_CATEGORIES.map((cat) => ({ label: cat, value: cat })),
   ], []);
 
