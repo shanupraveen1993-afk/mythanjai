@@ -180,13 +180,13 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
 
       {/* Line 1: Name (only) on LEFT + Rating Badge (if > 0) on RIGHT */}
       <div className="flex items-center justify-between gap-3 w-full">
-        <h3 className="font-heading font-black text-base sm:text-lg text-slate-900 line-clamp-1 leading-snug">
+        <h3 className="font-heading font-bold text-base sm:text-lg text-slate-900 line-clamp-1 leading-snug">
           {post.name}
         </h3>
 
         {/* Rating Badge: ONLY displayed if rating > 0 */}
         {hasRating && (
-          <span className="inline-flex items-center gap-1 bg-amber-50 border border-amber-300 text-amber-950 font-extrabold px-2.5 py-0.5 rounded-md text-xs shadow-2xs shrink-0">
+          <span className="inline-flex items-center gap-1 bg-amber-50 border border-amber-300 text-amber-950 font-semibold px-2.5 py-0.5 rounded-md text-xs shadow-2xs shrink-0">
             <Star className="w-3.5 h-3.5 fill-amber-400 text-amber-400" />
             <span>{ratingDisplay} ★</span>
           </span>
@@ -195,7 +195,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
 
       {/* Line 2: Outlined Royal Blue Category Tag (No fill, blue text, blue border, blue icon) */}
       <div className="flex items-center gap-2 text-xs">
-        <span className="inline-flex items-center gap-1.5 border border-[#1d4ed8] text-[#1d4ed8] bg-transparent font-extrabold px-2.5 py-0.5 rounded-md text-xs">
+        <span className="inline-flex items-center gap-1.5 border border-[#1d4ed8] text-[#1d4ed8] bg-transparent font-semibold px-2.5 py-0.5 rounded-md text-xs">
           {getCategoryIllustration(post.skill_category)}
           <span>{post.skill_category}</span>
         </span>
@@ -203,15 +203,15 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
 
       {/* Line 3: Description */}
       {post.description && (
-        <p className="text-xs text-slate-600 font-medium leading-relaxed line-clamp-3 bg-slate-50/80 border border-slate-200/60 p-3 rounded-lg">
+        <p className="text-xs text-slate-600 font-normal leading-relaxed line-clamp-3 bg-slate-50/80 border border-slate-200/60 p-3 rounded-lg">
           {post.description}
         </p>
       )}
 
       {/* Line 4: Location/Address on LEFT + Save & Share Icons on RIGHT */}
-      <div className="flex items-center justify-between text-xs text-slate-600 font-bold border-t border-b border-slate-100 py-2.5 my-0.5">
+      <div className="flex items-center justify-between text-xs text-slate-600 font-normal border-t border-b border-slate-100 py-2.5 my-0.5">
         {/* Left: Location Tag */}
-        <span className="inline-flex items-center gap-1 text-slate-700 bg-slate-100 px-2.5 py-1 rounded-md font-extrabold">
+        <span className="inline-flex items-center gap-1 text-slate-700 bg-slate-100 px-2.5 py-1 rounded-md font-normal">
           <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
           <span>{post.area_tag}</span>
         </span>
@@ -247,7 +247,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
       {/* Line 5 (Footer Row): Posted Date (Month Year) on LEFT + Call & WhatsApp Buttons on RIGHT */}
       <div className="pt-2 flex items-end justify-between gap-2 mt-auto">
         {/* Left: Posted Date (Month & Year) */}
-        <span className="text-[11px] font-bold text-slate-400 flex items-center gap-1 shrink-0 pb-1">
+        <span className="text-[11px] font-normal text-slate-400 flex items-center gap-1 shrink-0 pb-1">
           <Calendar className="w-3.5 h-3.5 text-slate-400" />
           <span>{(() => {
             if (!post.created_at) return "Added on Mar 2026";
@@ -270,7 +270,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
             target="_blank"
             rel="noopener noreferrer"
             onClick={(e) => e.stopPropagation()}
-            className="bg-[#128C7E] text-white font-black text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer"
+            className="bg-[#128C7E] text-white font-bold text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer"
           >
             <MessageSquare className="w-4 h-4 text-white fill-current" />
             <span>Chat</span>
@@ -279,7 +279,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
           <a
             href={callUrl}
             onClick={(e) => e.stopPropagation()}
-            className="bg-[#f59e0b] text-slate-950 font-black text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer"
+            className="bg-[#f59e0b] text-slate-950 font-bold text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer"
           >
             <Phone className="w-4 h-4 text-slate-950" />
             <span>Call</span>

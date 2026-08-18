@@ -236,7 +236,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
           <div className="flex flex-col gap-1.5">
             {/* 1st Line Below Image: Price in Amber Yellow */}
             <div className="flex items-center justify-between">
-              <span className="font-heading font-black text-base sm:text-lg text-amber-600">
+              <span className="font-heading font-bold text-base sm:text-lg text-amber-600">
                 {isLookingFor
                   ? `₹${listing.expected_price_from || "5k"} - ₹${listing.expected_price_to || "15k"}`
                   : (() => {
@@ -250,17 +250,17 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
             </div>
 
             {/* 2nd Line: Item Title */}
-            <h3 className="font-heading font-black text-sm text-slate-900 line-clamp-1 group-hover:text-amber-600 transition-colors">
+            <h3 className="font-heading font-bold text-sm text-slate-900 line-clamp-1 group-hover:text-amber-600 transition-colors">
               {listing.title}
             </h3>
 
             {/* Description */}
-            <p className="text-xs text-slate-600 font-medium line-clamp-2 leading-relaxed">
+            <p className="text-xs text-slate-600 font-normal line-clamp-2 leading-relaxed">
               {listing.description}
             </p>
 
             {/* Address Row */}
-            <div className="flex items-center text-slate-600 text-[11px] font-medium gap-1 pt-1">
+            <div className="flex items-center text-slate-600 text-[11px] font-normal gap-1 pt-1">
               <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
               <span className="truncate">{listing.location || "Medical College Rd, Thanjavur"}</span>
             </div>
@@ -271,7 +271,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
             <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
               <div className="flex items-center gap-1.5">
                 <span className={`w-2.5 h-2.5 rounded-full ${isAvailable ? "bg-emerald-500 animate-pulse" : "bg-amber-500"}`} />
-                <span className={`text-[11px] font-bold ${isAvailable ? "text-emerald-700" : "text-amber-700"}`}>
+                <span className={`text-[11px] font-medium ${isAvailable ? "text-emerald-700" : "text-amber-700"}`}>
                   {isAvailable ? "Available Now (கிடைக்கிறார்)" : "Currently Busy (தற்சமயம் வர இயலாது)"}
                 </span>
               </div>
@@ -281,7 +281,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
                 <button
                   type="button"
                   onClick={handleToggleAvailability}
-                  className={`text-[10px] font-extrabold px-2.5 py-1 rounded-full border transition-all cursor-pointer active:scale-95 ${
+                  className={`text-[10px] font-semibold px-2.5 py-1 rounded-full border transition-all cursor-pointer active:scale-95 ${
                     isAvailable
                       ? "bg-emerald-50 text-emerald-800 border-emerald-300 hover:bg-emerald-100"
                       : "bg-amber-50 text-amber-800 border-amber-300 hover:bg-amber-100"
@@ -297,7 +297,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
           {/* Card Footer Bar: Left = Relative Posted Date (Bottom-aligned), Right = 2 Larger Action Buttons (Chat & Call) */}
           <div className="pt-2.5 border-t border-slate-100 flex items-end justify-between gap-2 mt-auto">
             {/* Left Side: Relative Posted Date (Bottom Aligned) */}
-            <span className="text-[11px] font-bold text-slate-400 flex items-center gap-1 shrink-0 pb-1">
+            <span className="text-[11px] font-normal text-slate-400 flex items-center gap-1 shrink-0 pb-1">
               <Calendar className="w-3.5 h-3.5 text-slate-400" />
               <span>{formatRelativeTime(listing.created_at)}</span>
             </span>
@@ -321,7 +321,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
                         }
                         setIsChatOpen(true);
                       }}
-                      className="bg-[#128C7E] text-white font-black text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer"
+                      className="bg-[#128C7E] text-white font-bold text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer"
                     >
                       <MessageSquare className="w-4 h-4 text-white fill-current" />
                       <span>Chat</span>
@@ -337,7 +337,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
                           toast.info("This provider is currently busy/unavailable.");
                         }
                       }}
-                      className="bg-[#f59e0b] text-slate-950 font-black text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer"
+                      className="bg-[#f59e0b] text-slate-950 font-bold text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer"
                     >
                       <Phone className="w-4 h-4 text-slate-950" />
                       <span>Call</span>

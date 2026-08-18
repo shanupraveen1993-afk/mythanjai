@@ -174,7 +174,7 @@ export default function TopHeader({
               href="/namma_thanjai_release.apk"
               download="namma_thanjai_release.apk"
               onClick={handleGetAppClick}
-              className="bg-[#1d4ed8] text-white hover:bg-blue-700 text-xs px-3.5 py-1.5 rounded-lg font-extrabold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none transition-colors"
+              className="bg-[#1d4ed8] text-white hover:bg-blue-700 text-xs px-3.5 py-1.5 rounded-lg font-bold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none transition-colors"
               title="Download Namma Thanjai Android App"
               aria-label="Download Namma Thanjai Android App"
             >
@@ -188,7 +188,7 @@ export default function TopHeader({
             <button
               type="button"
               onClick={handleDynamicPostClick}
-              className="bg-[#f59e0b] text-slate-950 hover:bg-[#d97706] hover:text-white text-xs px-3.5 py-1.5 rounded-lg font-extrabold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer transition-colors"
+              className="bg-[#f59e0b] text-slate-950 hover:bg-[#d97706] hover:text-white text-xs px-3.5 py-1.5 rounded-lg font-bold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer transition-colors"
               title={postInfo.label}
             >
               <Plus className="w-3.5 h-3.5 stroke-[3] text-slate-950" />

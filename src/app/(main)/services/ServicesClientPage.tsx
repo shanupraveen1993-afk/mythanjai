@@ -106,7 +106,7 @@ export default function ServicesClientPage() {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="custom-select-arrow pr-8 pl-3.5 py-2.5 min-h-[44px] text-xs sm:text-sm font-bold bg-white border border-slate-300 rounded-xl shadow-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 cursor-pointer max-w-[170px] sm:max-w-[220px] truncate"
+            className="custom-select-arrow pr-8 pl-3.5 py-2.5 min-h-[44px] text-xs sm:text-sm font-semibold bg-white border border-slate-300 rounded-xl shadow-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 cursor-pointer max-w-[170px] sm:max-w-[220px] truncate"
           >
             <option value="All">All Services</option>
             {SERVICE_CATEGORIES.map((cat) => (
@@ -120,7 +120,7 @@ export default function ServicesClientPage() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as any)}
-            className="custom-select-arrow pr-8 pl-3.5 py-2.5 min-h-[44px] text-xs sm:text-sm font-bold bg-white border border-slate-300 rounded-xl shadow-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 cursor-pointer shrink-0 font-bold text-slate-800"
+            className="custom-select-arrow pr-8 pl-3.5 py-2.5 min-h-[44px] text-xs sm:text-sm font-semibold bg-white border border-slate-300 rounded-xl shadow-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 cursor-pointer shrink-0"
           >
             <option value="recent">Recently Added</option>
             <option value="rating">Highest Rated</option>

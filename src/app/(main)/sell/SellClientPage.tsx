@@ -115,7 +115,7 @@ export default function SellClientPage() {
             <select
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full appearance-none pr-8 pl-3 py-2 text-xs sm:text-sm font-extrabold bg-white border border-slate-300/90 rounded-lg shadow-2xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#1d4ed8]/30 cursor-pointer truncate"
+              className="w-full appearance-none pr-8 pl-3 py-2 text-xs sm:text-sm font-semibold bg-white border border-slate-300/90 rounded-lg shadow-2xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1d4ed8]/30 cursor-pointer truncate"
             >
               <option value="All">All Categories (அனைத்தும்)</option>
               {CLASSIFIED_CATEGORIES.map((cat) => (
@@ -132,7 +132,7 @@ export default function SellClientPage() {
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as any)}
-              className="appearance-none pr-8 pl-3 py-2 text-xs sm:text-sm font-extrabold bg-white border border-slate-300/90 rounded-lg shadow-2xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#1d4ed8]/30 cursor-pointer"
+              className="appearance-none pr-8 pl-3 py-2 text-xs sm:text-sm font-semibold bg-white border border-slate-300/90 rounded-lg shadow-2xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1d4ed8]/30 cursor-pointer"
             >
               <option value="recent">Recently Added</option>
               <option value="price_low">Price: Low to High</option>

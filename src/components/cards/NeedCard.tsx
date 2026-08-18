@@ -204,7 +204,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
 
           {/* Top Left: Glassmorphism Category Badge Overlay (Same as Sell Card) */}
           <div className="absolute top-2.5 left-2.5 z-10">
-            <span className="bg-slate-950/40 backdrop-blur-md text-white font-extrabold text-[11px] px-2.5 py-1 rounded-md border border-white/20 shadow-2xs">
+            <span className="bg-slate-950/40 backdrop-blur-md text-white font-semibold text-[11px] px-2.5 py-1 rounded-md border border-white/20 shadow-2xs">
               {post.category || "Requirement"}
             </span>
           </div>
@@ -255,25 +255,25 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
           <div className="flex flex-col gap-1.5">
             {/* 1st Line: Budget / Price in Amber Yellow */}
             <div className="flex items-center justify-between">
-              <span className="font-heading font-black text-base sm:text-lg text-amber-600">
+              <span className="font-heading font-bold text-base sm:text-lg text-amber-600">
                 {displayPriceText || "Budget: Negotiable"}
               </span>
             </div>
 
             {/* 2nd Line: Requirement Title */}
-            <h3 className="font-heading font-black text-sm text-slate-900 line-clamp-2 leading-snug group-hover:text-amber-600 transition-colors">
+            <h3 className="font-heading font-bold text-sm text-slate-900 line-clamp-2 leading-snug group-hover:text-amber-600 transition-colors">
               {post.title}
             </h3>
 
             {/* Requirement Description */}
             {post.description && (
-              <p className="text-xs text-slate-600 font-medium line-clamp-3 leading-relaxed">
+              <p className="text-xs text-slate-600 font-normal line-clamp-3 leading-relaxed">
                 {post.description}
               </p>
             )}
 
             {/* Address Row */}
-            <div className="flex items-center text-slate-600 text-[11px] font-medium gap-1 pt-1">
+            <div className="flex items-center text-slate-600 text-[11px] font-normal gap-1 pt-1">
               <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
               <span className="truncate">{post.area_tag || "Medical College Rd, Thanjavur"}</span>
             </div>
@@ -282,7 +282,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
           {/* Card Footer Bar: Left = Relative Posted Date (Bottom-aligned), Right = 2 Larger Action Buttons (Chat & Call) */}
           <div className="pt-2.5 border-t border-slate-100 flex items-end justify-between gap-2 mt-auto">
             {/* Left Side: Relative Posted Date (Bottom Aligned) */}
-            <span className="text-[11px] font-bold text-slate-400 flex items-center gap-1 shrink-0 pb-1">
+            <span className="text-[11px] font-normal text-slate-400 flex items-center gap-1 shrink-0 pb-1">
               <Calendar className="w-3.5 h-3.5 text-slate-400" />
               <span>{formatDate(post.created_at)}</span>
             </span>
@@ -305,7 +305,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
                       e.stopPropagation();
                       setIsChatOpen(true);
                     }}
-                    className="bg-[#128C7E] text-white font-black text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer"
+                    className="bg-[#128C7E] text-white font-bold text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer"
                   >
                     <MessageSquare className="w-4 h-4 text-white fill-current" />
                     <span>Chat</span>
@@ -314,7 +314,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
                   <a
                     href={callUrl}
                     onClick={(e) => e.stopPropagation()}
-                    className="bg-[#f59e0b] text-slate-950 font-black text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer"
+                    className="bg-[#f59e0b] text-slate-950 font-bold text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer"
                   >
                     <Phone className="w-4 h-4 text-slate-950" />
                     <span>Call</span>
