@@ -199,9 +199,9 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
         {/* Card Content Body (Human-Centric Hierarchy) */}
         <div className="p-3.5 sm:p-4 flex flex-col gap-2 flex-1 justify-between">
           <div className="flex flex-col gap-1.5">
-            {/* 1st Line Below Image: Price in Bold Slate */}
+            {/* 1st Line Below Image: Price in Amber Yellow */}
             <div className="flex items-center justify-between">
-              <span className="font-heading font-black text-base sm:text-lg text-slate-900">
+              <span className="font-heading font-black text-base sm:text-lg text-amber-600">
                 {isLookingFor
                   ? `₹${listing.expected_price_from || "5k"} - ₹${listing.expected_price_to || "15k"}`
                   : listing.price || "₹2,50,000"}
@@ -260,13 +260,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
           {/* Footer Seller Info & Views / Share (Standardized Size) */}
           <div className="pt-2.5 border-t border-slate-100 flex flex-col gap-2.5">
             <div className="flex items-center justify-between text-xs font-bold text-slate-600">
-              <div className="flex items-center gap-1.5">
-                <span className="w-5 h-5 rounded-full bg-amber-100 text-amber-800 font-black text-[10px] flex items-center justify-center border border-amber-300">
-                  {(listing.seller_name || "S")[0].toUpperCase()}
-                </span>
-                <span className="truncate max-w-[110px] text-slate-800 font-bold">{listing.seller_name || "Seller"}</span>
-                <UserCheck className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-              </div>
+              <span className="truncate max-w-[140px] text-slate-800 font-bold">{listing.seller_name || "Seller"}</span>
 
               {/* Views counter & Share button Standardized Size */}
               <div className="flex items-center gap-3 shrink-0">
@@ -305,9 +299,9 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
                         }
                         setIsChatOpen(true);
                       }}
-                      className="bg-[#25D366] text-white hover:bg-[#128C7E] font-extrabold text-xs py-1.5 px-4 rounded-lg flex items-center justify-center gap-1.5 shadow-2xs transition-colors cursor-pointer shrink-0"
+                      className="bg-[#25D366] text-white hover:bg-[#128C7E] active:bg-[#075E54] font-black text-xs py-1.5 px-4 rounded-lg flex items-center justify-center gap-1.5 shadow-2xs transition-colors cursor-pointer shrink-0"
                     >
-                      <MessageSquare className="w-3.5 h-3.5 text-white" />
+                      <MessageSquare className="w-3.5 h-3.5 text-white fill-current" />
                       <span>Chat</span>
                     </button>
                   )}
