@@ -162,32 +162,22 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
             className="object-cover group-hover:scale-105 transition-transform duration-300"
           />
           
-          {/* Top Left: Location & Area Overlay Badge */}
-          <div className="absolute top-2.5 left-2.5 flex items-center gap-1 z-10">
-            <span className="bg-slate-950/80 backdrop-blur-xs text-white font-bold text-[11px] px-2.5 py-1 rounded-md flex items-center gap-1">
-              <MapPin className="w-3 h-3 text-amber-400 shrink-0" />
-              <span className="truncate max-w-[120px]">{listing.location || "Thanjavur"}</span>
+          {/* Top Left: Category Badge Overlay */}
+          <div className="absolute top-2.5 left-2.5 z-10">
+            <span className="bg-slate-950/85 backdrop-blur-xs text-white font-extrabold text-[11px] px-2.5 py-1 rounded-md border border-slate-800">
+              {listing.category || listing.type || "Classified"}
             </span>
           </div>
 
-          {/* Top Right: Price / Budget Overlay Badge */}
-          <div className="absolute top-2.5 right-2.5 z-10">
-            <span className="bg-slate-950/85 backdrop-blur-xs text-white font-heading font-extrabold text-xs sm:text-sm px-3 py-1 rounded-full shadow-xs border border-slate-800 inline-block">
-              {isLookingFor
-                ? `₹${listing.expected_price_from || "5k"} - ₹${listing.expected_price_to || "15k"}`
-                : listing.price || "₹2 Lakhs"}
-            </span>
-          </div>
-
-          {/* Action Overlay Buttons: Save & Report */}
-          <div className="absolute bottom-2.5 right-2.5 flex items-center gap-1.5 z-10">
+          {/* Top Right: Vertical Action Buttons Stack (Save & Report) */}
+          <div className="absolute top-2.5 right-2.5 flex flex-col gap-1.5 z-10">
             <button
               type="button"
               onClick={handleSaveToggle}
-              className={`w-7 h-7 rounded-full border shadow-2xs flex items-center justify-center transition-all cursor-pointer ${
+              className={`w-7 h-7 rounded-md border backdrop-blur-xs shadow-2xs flex items-center justify-center transition-all cursor-pointer ${
                 isSaved
                   ? "bg-amber-500 text-slate-950 border-amber-400"
-                  : "bg-slate-900/80 text-white border-slate-700 hover:bg-slate-900"
+                  : "bg-slate-950/80 text-white border-slate-800 hover:bg-slate-900"
               }`}
               title={isSaved ? "Saved" : "Save Listing"}
               aria-label={isSaved ? "Remove saved listing" : "Save this listing"}
@@ -197,22 +187,24 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
             <button
               type="button"
               onClick={handleReportListing}
-              className="w-7 h-7 rounded-full border border-slate-700 bg-slate-900/80 text-slate-300 hover:text-rose-400 hover:bg-slate-900 flex items-center justify-center transition-all cursor-pointer shadow-2xs"
+              className="w-7 h-7 rounded-md border border-slate-800 bg-slate-950/80 text-slate-300 hover:text-rose-400 hover:bg-slate-900 flex items-center justify-center transition-all cursor-pointer shadow-2xs backdrop-blur-xs"
               title="Report Listing"
               aria-label="Report this listing"
             >
-              <Flag className="w-3 h-3" />
+              <Flag className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
 
-        {/* Card Content Body (OLX Hierarchy) */}
+        {/* Card Content Body (Human-Centric Hierarchy) */}
         <div className="p-3.5 sm:p-4 flex flex-col gap-2 flex-1 justify-between">
-          <div>
-            {/* Category & Relative Time Row */}
-            <div className="flex items-center justify-between gap-2 mb-1">
-              <span className="text-[10px] font-extrabold uppercase tracking-wider text-amber-800 bg-amber-50 border border-amber-200/70 px-2 py-0.5 rounded-md inline-block">
-                {listing.category || listing.type || "Classified"}
+          <div className="flex flex-col gap-1.5">
+            {/* 1st Line Below Image: Price in Bold Slate */}
+            <div className="flex items-center justify-between">
+              <span className="font-heading font-black text-base sm:text-lg text-slate-900">
+                {isLookingFor
+                  ? `₹${listing.expected_price_from || "5k"} - ₹${listing.expected_price_to || "15k"}`
+                  : listing.price || "₹2,50,000"}
               </span>
               <span className="text-[11px] font-bold text-slate-400 flex items-center gap-1">
                 <Calendar className="w-3 h-3 text-slate-400" />
@@ -220,25 +212,21 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
               </span>
             </div>
 
-            {/* Item Title */}
+            {/* 2nd Line: Item Title */}
             <h3 className="font-heading font-black text-sm text-slate-900 line-clamp-1 group-hover:text-amber-600 transition-colors">
               {listing.title}
             </h3>
-
-            {/* Key Specifications Line (OLX Metadata Pills) */}
-            <div className="flex flex-wrap gap-1 my-1.5">
-              <span className="text-[10px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200/60">
-                {listing.type === "sell" ? "Direct Sale" : listing.type === "service" ? "Doorstep Service" : "Local Tanjore"}
-              </span>
-              <span className="text-[10px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200/60">
-                0% Brokerage
-              </span>
-            </div>
 
             {/* Description */}
             <p className="text-xs text-slate-600 font-medium line-clamp-2 leading-relaxed">
               {listing.description}
             </p>
+
+            {/* Address Row */}
+            <div className="flex items-center text-slate-600 text-[11px] font-medium gap-1 pt-1">
+              <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+              <span className="truncate">{listing.location || "Medical College Rd, Thanjavur"}</span>
+            </div>
           </div>
 
           {/* Service Provider Availability Banner (Only for Service Listings) */}
@@ -269,7 +257,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
             </div>
           )}
 
-          {/* Footer Seller Info & Action Buttons */}
+          {/* Footer Seller Info & Views / Share (Right-Aligned) */}
           <div className="pt-2.5 border-t border-slate-100 flex flex-col gap-2.5">
             <div className="flex items-center justify-between text-xs font-bold text-slate-500">
               <div className="flex items-center gap-1.5">
@@ -280,28 +268,28 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
                 <UserCheck className="w-3.5 h-3.5 text-amber-500 shrink-0" />
               </div>
 
-              {/* Views counter */}
-              <div className="flex items-center gap-2">
-                <span className="flex items-center gap-1 text-[11px]">
-                  <Eye className="w-3 h-3 text-slate-400" />
+              {/* Views counter & Share button Right-Aligned */}
+              <div className="flex items-center gap-2.5 shrink-0">
+                <span className="flex items-center gap-1 text-[11px] text-slate-500">
+                  <Eye className="w-3.5 h-3.5 text-slate-400" />
                   {views}
                 </span>
                 <button
                   type="button"
                   onClick={handleShare}
-                  className="flex items-center gap-1 text-[11px] hover:text-slate-700 transition-colors"
+                  className="flex items-center gap-1 text-[11px] text-slate-500 hover:text-slate-900 transition-colors cursor-pointer"
                   title="Share"
                 >
-                  <Share2 className="w-3 h-3 text-slate-400" />
+                  <Share2 className="w-3.5 h-3.5 text-slate-400" />
                   {shares}
                 </button>
               </div>
             </div>
 
-            {/* Action Buttons Row */}
+            {/* Action Buttons Row: WhatsApp Green Chat + Yellow Call */}
             <div className="flex items-center gap-2">
               {isOwnPost ? (
-                <div className="w-full py-2 rounded-xl bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1.5">
+                <div className="w-full py-2 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1.5">
                   <UserCheck className="w-3.5 h-3.5 text-slate-500" />
                   <span>Your Listing</span>
                 </div>
@@ -317,9 +305,9 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
                         }
                         setIsChatOpen(true);
                       }}
-                      className="btn btn-chat btn-sm flex-1 text-xs"
+                      className="bg-[#25D366] text-white hover:bg-[#128C7E] font-extrabold text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 flex-1 shadow-2xs transition-colors cursor-pointer"
                     >
-                      <MessageSquare className="w-3.5 h-3.5 text-[#78350F]" />
+                      <MessageSquare className="w-3.5 h-3.5 text-white" />
                       <span>Chat</span>
                     </button>
                   )}
@@ -333,9 +321,9 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
                           toast.info("This provider is currently busy/unavailable.");
                         }
                       }}
-                      className="btn btn-call btn-sm flex-1 text-xs"
+                      className="bg-[#f59e0b] text-slate-950 font-extrabold border border-[#d97706] hover:bg-[#d97706] hover:text-white text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 flex-1 shadow-2xs transition-colors cursor-pointer"
                     >
-                      <Phone className="w-3.5 h-3.5 text-white" />
+                      <Phone className="w-3.5 h-3.5 text-slate-950 group-hover:text-white" />
                       <span>Call</span>
                     </a>
                   )}

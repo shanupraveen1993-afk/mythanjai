@@ -30,9 +30,7 @@ import {
   Lock,
   Sparkles,
 } from "lucide-react";
-import NeedCard from "@/components/cards/NeedCard";
-import ServiceCard from "@/components/cards/ServiceCard";
-import ShopCard from "@/components/cards/ShopCard";
+import ListingCard from "@/components/cards/ListingCard";
 import ThanjavurLocationInput from "@/components/location/ThanjavurLocationInput";
 import { NeedOrSalePost, ServiceProviderPost, ShopPost, OfferPost } from "@/types";
 
@@ -804,38 +802,34 @@ export default function PostForm({ segment }: PostFormProps) {
                     <div className="flex flex-col gap-1">
                       <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                         <Phone className="w-3.5 h-3.5 text-slate-400" />
-                        <Lock className="w-3 h-3 text-slate-400" />
-                        Contact phone (Locked) *
+                        Contact phone number (Editable) *
                       </label>
                       <input
                         type="tel"
-                        disabled
-                        readOnly
                         required
-                        placeholder="Auto-filled from account"
+                        placeholder="e.g. 9994837342"
                         value={phone}
-                        className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-slate-100 text-slate-500 cursor-not-allowed select-none"
+                        onChange={(e) => setPhone(e.target.value)}
+                        className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
                       />
                     </div>
                   </div>
                 )}
 
-                {/* SERVICE SPECIFIC FIELDS: Phone (Locked) */}
+                {/* SERVICE SPECIFIC FIELDS: Phone (Editable) */}
                 {segment === "service" && (
                   <div className="flex flex-col gap-1">
                     <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                       <Phone className="w-3.5 h-3.5 text-slate-400" />
-                      <Lock className="w-3 h-3 text-slate-400" />
-                      Contact phone number (Locked) *
+                      Contact phone number (Editable) *
                     </label>
                     <input
                       type="tel"
-                      disabled
-                      readOnly
                       required
-                      placeholder="Auto-filled from account"
+                      placeholder="e.g. 9994837342"
                       value={phone}
-                      className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-slate-100 text-slate-500 cursor-not-allowed select-none"
+                      onChange={(e) => setPhone(e.target.value)}
+                      className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
                     />
                   </div>
                 )}
@@ -922,46 +916,44 @@ export default function PostForm({ segment }: PostFormProps) {
                 </div>
               </div>
             )}
+            {/* Redesigned Image Upload Dropzone with Cancel (X) Preview Button */}
             {segment !== "offer" && segment !== "service" && (
-              <div className="flex flex-col gap-1">
+              <div className="flex flex-col gap-2">
                 <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                   <Camera className="w-3.5 h-3.5 text-slate-400" />
                   <span>{config.imagePlaceholder}</span>
                 </label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  onChange={handleImageChange}
-                  className="text-xs text-slate-600 file:mr-4 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-slate-100 file:text-slate-800 hover:file:bg-slate-200 cursor-pointer"
-                />
-              </div>
-            )}
-
-            {/* Offer Video Reel Upload Dropzone */}
-            {segment === "offer" && (
-              <div className="flex flex-col gap-1.5 mt-2 bg-amber-500/10 border border-amber-400/50 rounded-xl p-3">
-                <label className="text-xs font-black text-slate-900 flex items-center gap-1.5 uppercase tracking-wider">
-                  <Video className="w-4 h-4 text-amber-600 shrink-0" />
-                  <span>Upload Offer Video Reel (Vertical 9:16 Format)</span>
-                </label>
-                <p className="text-xs text-slate-500 font-bold">
-                  Upload a promotional reel video of your shop/offer (.mp4, .webm).
-                </p>
-                <input
-                  type="file"
-                  accept="video/mp4,video/webm,video/quicktime"
-                  onChange={(e) => {
-                    const file = e.target.files?.[0];
-                    if (file) {
-                      setSelectedVideo(file);
-                      setVideoPreview(URL.createObjectURL(file));
-                    }
-                  }}
-                  className="text-xs text-slate-700 file:mr-3 file:py-2 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-black file:bg-amber-500 file:text-slate-950 hover:file:bg-amber-400 cursor-pointer border border-slate-200 rounded-lg p-1.5 bg-white"
-                />
-                {videoPreview && (
-                  <div className="mt-2 max-w-[160px] rounded-xl overflow-hidden border-2 border-amber-400 shadow-md">
-                    <video src={videoPreview} controls className="w-full aspect-[9/16] object-cover" />
+                
+                {imagePreview ? (
+                  <div className="relative w-full h-40 rounded-lg overflow-hidden border border-slate-200 shadow-2xs group">
+                    <img src={imagePreview} alt="Uploaded photo" className="w-full h-full object-cover" />
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSelectedImage(null);
+                        setImagePreview("");
+                      }}
+                      className="absolute top-2 right-2 bg-slate-950/85 hover:bg-slate-950 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs font-black shadow-md cursor-pointer transition-transform hover:scale-110"
+                      title="Remove image"
+                    >
+                      ✕
+                    </button>
+                  </div>
+                ) : (
+                  <div className="w-full bg-slate-50 border-2 border-dashed border-slate-300 hover:border-slate-400 p-4 rounded-lg flex flex-col items-center justify-center text-center gap-2 transition-all">
+                    <label className="w-full flex flex-col items-center justify-center gap-1.5 cursor-pointer py-2">
+                      <div className="w-9 h-9 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold shadow-2xs">
+                        <Camera className="w-4 h-4" />
+                      </div>
+                      <span className="text-xs font-extrabold text-slate-800">Click to Upload Photo</span>
+                      <span className="text-[11px] text-slate-500 font-medium">JPEG, PNG, WebP up to 5MB</span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageChange}
+                        className="hidden"
+                      />
+                    </label>
                   </div>
                 )}
               </div>
@@ -1001,7 +993,7 @@ export default function PostForm({ segment }: PostFormProps) {
                 </div>
               )}
               {segment === "sell" || segment === "need" ? (
-                <NeedCard post={previewSellOrNeedPost} isPreview={true} />
+                <ListingCard listing={previewSellOrNeedPost as any} />
               ) : segment === "service" ? (
                 <ServiceCard post={previewServicePost} isPreview={true} />
               ) : (

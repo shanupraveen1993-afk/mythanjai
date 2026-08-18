@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useFirestore } from "@/hooks/use-firestore";
 import ListingCard, { ListingItem } from "@/components/cards/ListingCard";
 import { NeedOrSalePost } from "@/types";
-import { Plus, Loader2, ArrowUpDown, ShoppingBag } from "lucide-react";
+import { Plus, ShoppingBag, Loader2, Filter, ArrowUpDown } from "lucide-react";
 import { CLASSIFIED_CATEGORIES } from "@/lib/constants";
 import { isListingQuarantined } from "@/lib/moderation";
 import WebAppScrollFAB from "@/components/common/WebAppScrollFAB";
@@ -106,7 +106,7 @@ export default function SellClientPage() {
         </h2>
         <button
           onClick={handlePostItem}
-          className="btn-secondary text-xs px-4 py-2 uppercase tracking-wider shrink-0 rounded-xl gap-1.5"
+          className="btn-secondary text-xs px-4 py-2 uppercase tracking-wider shrink-0 rounded-lg gap-1.5 hover:scale-[1.02] hover:brightness-105 active:scale-95 transition-all cursor-pointer"
         >
           <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
           <span>Post Item</span>
@@ -115,32 +115,38 @@ export default function SellClientPage() {
 
       {/* LISTING CONTAINER */}
       <div className="flex flex-col gap-3">
-        {/* Category & Sort Side-by-Side Filter Bar */}
+        {/* Category & Sort Side-by-Side Native Filter Controls */}
         <div className="py-1 flex items-center gap-2 sm:gap-3 bg-transparent w-full">
           {/* Category Dropdown */}
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="custom-select-arrow pr-8 pl-3.5 py-2.5 min-h-[44px] text-xs sm:text-sm font-bold bg-white border border-slate-300 rounded-xl shadow-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 cursor-pointer max-w-[170px] sm:max-w-[220px] truncate"
-          >
-            <option value="All">All Categories</option>
-            {CLASSIFIED_CATEGORIES.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
+          <div className="relative flex-1 max-w-[200px] sm:max-w-[240px]">
+            <select
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              className="w-full appearance-none pr-8 pl-3 py-2 text-xs sm:text-sm font-extrabold bg-white border border-slate-300/90 rounded-lg shadow-2xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#1d4ed8]/30 cursor-pointer truncate"
+            >
+              <option value="All">All Categories (அனைத்தும்)</option>
+              {CLASSIFIED_CATEGORIES.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+            <Filter className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+          </div>
 
-          {/* Sort By Dropdown (Side-by-Side directly next to Category) */}
-          <select
-            value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
-            className="custom-select-arrow pr-8 pl-3.5 py-2.5 min-h-[44px] text-xs sm:text-sm font-bold bg-white border border-slate-300 rounded-xl shadow-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 cursor-pointer shrink-0"
-          >
-            <option value="recent">Recently Added</option>
-            <option value="price_low">Price: Low to High</option>
-            <option value="price_high">Price: High to Low</option>
-          </select>
+          {/* Sort By Dropdown */}
+          <div className="relative shrink-0">
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value as any)}
+              className="appearance-none pr-8 pl-3 py-2 text-xs sm:text-sm font-extrabold bg-white border border-slate-300/90 rounded-lg shadow-2xs text-slate-900 focus:outline-none focus:ring-2 focus:ring-[#1d4ed8]/30 cursor-pointer"
+            >
+              <option value="recent">Recently Added</option>
+              <option value="price_low">Price: Low to High</option>
+              <option value="price_high">Price: High to Low</option>
+            </select>
+            <ArrowUpDown className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
+          </div>
         </div>
 
       {/* Feed */}

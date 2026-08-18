@@ -138,15 +138,15 @@ export default function TopHeader({
           );
         })()}
 
-        {/* Right Side: Get App + Profile Icon (+ Post Ad button on 4 Segment pages) */}
+        {/* Right Side: Get App + Post Ad + Chat Icon (Logged in) + Profile Icon */}
         <div className="flex items-center gap-2 shrink-0">
-          {/* 1. Get App Button — Homepage ONLY (Yellow Primary Design) */}
+          {/* 1. Get App Button — Homepage ONLY */}
           {isHomePage && (
             <a
               href="/namma_thanjai_release.apk"
               download="namma_thanjai_release.apk"
               onClick={handleGetAppClick}
-              className="bg-[#f59e0b] text-slate-950 border border-[#d97706] hover:bg-[#d97706] hover:text-white text-xs px-3.5 py-1.5 rounded-lg font-extrabold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none transition-colors"
+              className="bg-[#f59e0b] text-slate-950 border border-[#d97706] hover:bg-[#d97706] hover:text-white text-xs px-3 py-1.5 rounded-lg font-extrabold shrink-0 flex items-center gap-1 shadow-2xs cursor-pointer select-none transition-colors"
               title="Download Namma Thanjai Android App"
               aria-label="Download Namma Thanjai Android App"
             >
@@ -155,7 +155,31 @@ export default function TopHeader({
             </a>
           )}
 
-          {/* 3. Profile Icon */}
+          {/* 2. Universal + Post Ad Button */}
+          <button
+            type="button"
+            onClick={onPostClick}
+            className="btn-secondary text-xs px-3 py-1.5 rounded-lg flex items-center gap-1 cursor-pointer shrink-0 font-extrabold"
+            title="Post Free Ad"
+          >
+            <Plus className="w-3.5 h-3.5 text-[#1d4ed8] stroke-[2.5]" />
+            <span className="hidden sm:inline">Post Ad</span>
+          </button>
+
+          {/* 3. Universal Chat Button (For Logged-in Users) */}
+          {isAuthVerified && (
+            <button
+              type="button"
+              onClick={() => router.push("/chat")}
+              className="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition-all cursor-pointer active:scale-95 border border-slate-200 shrink-0"
+              title="In-App Direct Chat"
+              aria-label="View messages"
+            >
+              <MessageSquare className="w-4 h-4 text-slate-600" />
+            </button>
+          )}
+
+          {/* 4. Profile / Sign In Button */}
           <button
             type="button"
             onClick={() => {
@@ -166,8 +190,8 @@ export default function TopHeader({
                 onSignInClick?.();
               }
             }}
-            className="flex items-center justify-center w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold transition-all cursor-pointer active:scale-95 border border-slate-200"
-            title={isAuthVerified ? `Profile (${phoneDisplay})` : "Login / Profile"}
+            className="flex items-center justify-center w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold transition-all cursor-pointer active:scale-95 border border-slate-200 shrink-0"
+            title={isAuthVerified ? `Profile (${phoneDisplay})` : "Sign In / Profile"}
             aria-label={isAuthVerified ? "View profile" : "Sign in or register"}
           >
             <User className="w-4 h-4 text-slate-600" />
