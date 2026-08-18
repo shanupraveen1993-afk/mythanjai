@@ -61,19 +61,7 @@ export default function ProfileClientPage() {
   const [savedPosts, setSavedPosts] = useState<any[]>([]);
   const [postsLoading, setPostsLoading] = useState(true);
 
-  // Provider Availability State
-  const [isAvailableNow, setIsAvailableNow] = useState(() => {
-    if (typeof window === "undefined") return true;
-    return localStorage.getItem("namma_thanjai_provider_availability") !== "offline";
-  });
 
-  const handleToggleAvailability = (newStatus: boolean) => {
-    setIsAvailableNow(newStatus);
-    if (typeof window !== "undefined") {
-      localStorage.setItem("namma_thanjai_provider_availability", newStatus ? "available" : "offline");
-    }
-    toast.success(newStatus ? "Status updated: AVAILABLE NOW (Public)" : "Status updated: OFFLINE");
-  };
 
   const handleToggleSoldState = (postId: string, currentSold: boolean) => {
     setMyPosts((prev) =>
@@ -430,46 +418,7 @@ export default function ProfileClientPage() {
               </p>
             </div>
 
-            {/* Service Provider Availability Hub (Section 3 Page 6 PRD) */}
-            <div className="bg-slate-900 text-white rounded-2xl p-4 flex flex-col gap-2.5 shadow-sm font-sans border border-slate-800">
-              <div className="flex items-center justify-between">
-                <span className="text-xs font-black uppercase tracking-wider text-amber-400">
-                  Service Provider Status
-                </span>
-                <span className={`text-xs font-extrabold px-2 py-0.5 rounded-md ${
-                  isAvailableNow ? "bg-emerald-500 text-white animate-pulse" : "bg-slate-700 text-slate-300"
-                }`}>
-                  {isAvailableNow ? "• AVAILABLE NOW" : "OFFLINE"}
-                </span>
-              </div>
-              <p className="text-xs text-slate-300 leading-relaxed font-medium">
-                Control your on-duty availability badge across Local Service feeds in real-time.
-              </p>
-              <div className="grid grid-cols-2 gap-2 mt-1">
-                <button
-                  type="button"
-                  onClick={() => handleToggleAvailability(true)}
-                  className={`py-2 px-2 text-xs font-extrabold rounded-xl border transition-all cursor-pointer ${
-                    isAvailableNow
-                      ? "bg-emerald-600 text-white border-emerald-500 shadow-sm"
-                      : "bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-750"
-                  }`}
-                >
-                  AVAILABLE NOW
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleToggleAvailability(false)}
-                  className={`py-2 px-2 text-xs font-extrabold rounded-xl border transition-all cursor-pointer ${
-                    !isAvailableNow
-                      ? "bg-slate-700 text-white border-slate-600 shadow-sm"
-                      : "bg-slate-800 text-slate-400 border-slate-700 hover:bg-slate-750"
-                  }`}
-                >
-                  OFFLINE / BUSY
-                </button>
-              </div>
-            </div>
+
 
             {/* Verification Status */}
             {isDbVerified ? (

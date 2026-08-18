@@ -88,14 +88,14 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
 
   const getCategoryIllustration = (category: string) => {
     switch (category?.toLowerCase()) {
-      case "plumber": return <Wrench className="w-3.5 h-3.5 text-emerald-600" />;
-      case "electrician": return <Zap className="w-3.5 h-3.5 text-amber-600" />;
-      case "carpenter": return <Hammer className="w-3.5 h-3.5 text-amber-700" />;
-      case "painter": return <Paintbrush className="w-3.5 h-3.5 text-purple-600" />;
-      case "ac technician": return <Wind className="w-3.5 h-3.5 text-blue-600" />;
-      case "auto mechanic": return <Car className="w-3.5 h-3.5 text-rose-600" />;
-      case "cleaning & housekeeping": return <Sparkles className="w-3.5 h-3.5 text-cyan-600" />;
-      default: return <Wrench className="w-3.5 h-3.5 text-emerald-600" />;
+      case "plumber": return <Wrench className="w-3.5 h-3.5 text-[#1d4ed8]" />;
+      case "electrician": return <Zap className="w-3.5 h-3.5 text-[#1d4ed8]" />;
+      case "carpenter": return <Hammer className="w-3.5 h-3.5 text-[#1d4ed8]" />;
+      case "painter": return <Paintbrush className="w-3.5 h-3.5 text-[#1d4ed8]" />;
+      case "ac technician": return <Wind className="w-3.5 h-3.5 text-[#1d4ed8]" />;
+      case "auto mechanic": return <Car className="w-3.5 h-3.5 text-[#1d4ed8]" />;
+      case "cleaning & housekeeping": return <Sparkles className="w-3.5 h-3.5 text-[#1d4ed8]" />;
+      default: return <Wrench className="w-3.5 h-3.5 text-[#1d4ed8]" />;
     }
   };
 
@@ -193,26 +193,12 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
         )}
       </div>
 
-      {/* Line 2: Category Tag + Online / Offline Availability Tag */}
-      <div className="flex items-center gap-2 flex-wrap text-xs">
-        {/* Category Tag (Royal Blue) */}
-        <span className="inline-flex items-center gap-1.5 bg-[#1d4ed8] text-white font-extrabold px-2.5 py-1 rounded-md text-xs border border-blue-600 shadow-2xs">
+      {/* Line 2: Outlined Royal Blue Category Tag (No fill, blue text, blue border, blue icon) */}
+      <div className="flex items-center gap-2 text-xs">
+        <span className="inline-flex items-center gap-1.5 border border-[#1d4ed8] text-[#1d4ed8] bg-transparent font-extrabold px-2.5 py-0.5 rounded-md text-xs">
           {getCategoryIllustration(post.skill_category)}
           <span>{post.skill_category}</span>
         </span>
-
-        {/* Online / Offline Tag */}
-        {(post as any).is_available_now !== false ? (
-          <span className="inline-flex items-center gap-1 bg-emerald-50 border border-emerald-300 text-emerald-800 font-extrabold px-2.5 py-1 rounded-md text-xs">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse inline-block" />
-            <span>Online</span>
-          </span>
-        ) : (
-          <span className="inline-flex items-center gap-1 bg-slate-100 border border-slate-300 text-slate-500 font-bold px-2.5 py-1 rounded-md text-xs">
-            <span className="w-2 h-2 rounded-full bg-slate-400 inline-block" />
-            <span>Offline</span>
-          </span>
-        )}
       </div>
 
       {/* Line 3: Description */}
