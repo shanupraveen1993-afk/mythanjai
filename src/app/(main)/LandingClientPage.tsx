@@ -75,7 +75,7 @@ export default function LandingClientPage() {
     <div className="w-full flex flex-col gap-8 text-slate-800 font-sans pb-24 bg-[#f8fafc] min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col gap-8 pt-4">
         {/* ── Genuine Premium Hero Banner: What We Do in Thanjavur ── */}
-        <section className="relative rounded-3xl overflow-hidden bg-slate-900 border border-slate-800 shadow-md my-2">
+        <section className="relative rounded-xl overflow-hidden bg-slate-900 border border-slate-800 shadow-md my-2">
           {/* Visual Hero Image Overlay */}
           <div className="absolute inset-0 z-0">
             <img
@@ -88,7 +88,7 @@ export default function LandingClientPage() {
 
           <div className="relative z-10 p-6 sm:p-10 flex flex-col gap-3.5 max-w-3xl">
             <div className="flex items-center gap-2">
-              <span className="text-[10px] font-extrabold uppercase tracking-wide bg-slate-900 text-amber-400 border border-slate-800 px-3 py-1 rounded-full shadow-2xs">
+              <span className="text-[10px] font-extrabold uppercase tracking-wide bg-slate-900 text-amber-400 border border-slate-800 px-3 py-1 rounded-md shadow-2xs">
                 WHAT WE DO • நம்ம தஞ்சாவூர்
               </span>
               <span className="text-xs text-amber-300 font-bold hidden sm:inline-block">
@@ -118,7 +118,7 @@ export default function LandingClientPage() {
               <div
                 key={card.id}
                 onClick={() => router.push(card.path)}
-                className="bg-white rounded-xl sm:rounded-2xl border border-slate-200/90 p-3 sm:p-4 shadow-2xs hover:shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between gap-2.5 group cursor-pointer"
+                className="bg-white rounded-xl border border-slate-200/90 p-3 sm:p-4 shadow-2xs hover:shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between gap-2.5 group cursor-pointer"
               >
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center gap-2">
@@ -364,8 +364,8 @@ export default function LandingClientPage() {
           </div>
         </section>
 
-        {/* ── High-Engagement Visual "Steps to Use Namma Thanjai" Section (Full Yellow Design) ── */}
-        <section className="bg-[#f59e0b] border border-[#d97706] text-slate-950 rounded-2xl p-5 sm:p-8 flex flex-col gap-5 shadow-md my-4 font-sans">
+        {/* ── High-Engagement Visual "Steps to Use Namma Thanjai" Section (Structured Human-Centric Geometry) ── */}
+        <section className="bg-[#f59e0b] border border-[#d97706] text-slate-950 rounded-xl p-5 sm:p-8 flex flex-col gap-5 shadow-md my-4 font-sans">
           <div className="flex flex-col gap-1 max-w-xl">
             <span className="text-[10px] font-black uppercase tracking-wider text-white bg-slate-950 px-2.5 py-0.5 rounded-md w-fit border border-slate-900">
               3 EASY STEPS • 3 எளிய படிகள்
@@ -382,7 +382,7 @@ export default function LandingClientPage() {
                 <span className="w-8 h-8 rounded-lg bg-slate-950 text-white font-heading font-black text-sm flex items-center justify-center shadow-2xs">
                   01
                 </span>
-                <span className="text-[10px] font-extrabold text-amber-900 bg-amber-100/90 px-2 py-0.5 rounded-full border border-amber-300/80">
+                <span className="text-[10px] font-extrabold text-amber-900 bg-amber-100/90 px-2 py-0.5 rounded-md border border-amber-300/80">
                   STEP 1
                 </span>
               </div>
@@ -402,7 +402,7 @@ export default function LandingClientPage() {
                 <span className="w-8 h-8 rounded-lg bg-slate-950 text-white font-heading font-black text-sm flex items-center justify-center shadow-2xs">
                   02
                 </span>
-                <span className="text-[10px] font-extrabold text-amber-900 bg-amber-100/90 px-2 py-0.5 rounded-full border border-amber-300/80">
+                <span className="text-[10px] font-extrabold text-amber-900 bg-amber-100/90 px-2 py-0.5 rounded-md border border-amber-300/80">
                   STEP 2
                 </span>
               </div>
@@ -422,7 +422,7 @@ export default function LandingClientPage() {
                 <span className="w-8 h-8 rounded-lg bg-slate-950 text-white font-heading font-black text-sm flex items-center justify-center shadow-2xs">
                   03
                 </span>
-                <span className="text-[10px] font-extrabold text-amber-900 bg-amber-100/90 px-2 py-0.5 rounded-full border border-amber-300/80">
+                <span className="text-[10px] font-extrabold text-amber-900 bg-amber-100/90 px-2 py-0.5 rounded-md border border-amber-300/80">
                   STEP 3
                 </span>
               </div>
