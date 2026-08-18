@@ -7,7 +7,7 @@ import ShopCard from "@/components/cards/ShopCard";
 import { ShopPost } from "@/types";
 import { Plus, Loader2, Store, ArrowUpDown } from "lucide-react";
 import { SHOP_CATEGORIES } from "@/lib/constants";
-import { isListingQuarantined } from "@/lib/moderation";
+import WebAppScrollFAB from "@/components/common/WebAppScrollFAB";
 
 const SAMPLE_POSTS: ShopPost[] = [
   { id: "sh_glen", userId: "sample", shop_name: "GLEN Exclusive Gallery", category: "Electronics & Mobiles", address_text: "New Busstand Road, Thanjavur", landmark: "Near New Bus Stand", hours: "9:30 AM – 9 PM", valid_from: "2026-08-10", valid_to: "2026-08-25", phone: "9876543225", area_tag: "New Bus Stand", offer_title: "Up to 60% OFF — Grand Opening Sale", offer_description: "Massive discounts on kitchen chimneys, hobs, cooktops & gas stoves.", image_url: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&auto=format&fit=crop", latitude: 10.7852, longitude: 79.1162, is_claimed: true, created_at: new Date() as any },
@@ -91,35 +91,21 @@ export default function ShopsClientPage() {
         <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight">
           Local Offers
         </h2>
-        {/* PRIMARY GOLD POST BUTTON */}
+        {/* BLACK OUTLINED POST BUTTON */}
         <button
           onClick={handlePostOffer}
-          className="flex items-center gap-1.5 btn-primary text-xs px-4 py-2 uppercase tracking-wider cursor-pointer shrink-0"
+          className="flex items-center gap-1.5 btn-outline text-xs px-4 py-2 uppercase tracking-wider cursor-pointer shrink-0 font-black text-slate-900 border-2 border-slate-900 hover:bg-slate-900 hover:text-white transition-all"
         >
-          <Plus className="w-3.5 h-3.5 stroke-[2.5] text-[#0F172A]" />
+          <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
           <span>Post Offer</span>
         </button>
       </div>
 
       {/* LISTING CONTAINER */}
       <div className="flex flex-col gap-3">
-        {/* Category & Sort Side-by-Side Filter Bar */}
-        <div className="py-1 flex items-center gap-2 sm:gap-3 bg-transparent w-full">
-          {/* Category Dropdown */}
-          <select
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="custom-select-arrow pr-8 pl-3.5 py-2 text-xs sm:text-sm font-bold bg-white border border-slate-300 rounded-xl shadow-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 cursor-pointer max-w-[170px] sm:max-w-[220px] truncate"
-          >
-            <option value="All">All Offers</option>
-            {SHOP_CATEGORIES.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-
-          {/* Sort By Dropdown (Side-by-Side directly next to Category) */}
+        {/* Sort By Filter Bar (Category dropdown removed for random/validity stream) */}
+        <div className="py-1 flex items-center justify-between bg-transparent w-full">
+          <span className="text-xs font-bold text-slate-500">Live Offers Stream (சலுகைகள்)</span>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as any)}
@@ -147,6 +133,9 @@ export default function ShopsClientPage() {
         </div>
       )}
       </div>
+
+      {/* Web App Floating Action Button (FAB) on 2nd Screen Scroll */}
+      <WebAppScrollFAB postRoute="/post/offer" label="Post Offer" />
     </div>
   );
 }

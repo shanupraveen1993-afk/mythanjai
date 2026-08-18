@@ -33,6 +33,7 @@ import {
 import NeedCard from "@/components/cards/NeedCard";
 import ServiceCard from "@/components/cards/ServiceCard";
 import ShopCard from "@/components/cards/ShopCard";
+import ThanjavurLocationInput from "@/components/location/ThanjavurLocationInput";
 import { NeedOrSalePost, ServiceProviderPost, ShopPost, OfferPost } from "@/types";
 
 type SegmentType = "sell" | "need" | "service" | "offer";
@@ -545,7 +546,7 @@ export default function PostForm({ segment }: PostFormProps) {
           
           {/* LEFT COLUMN: Form Controls */}
           <form onSubmit={handleSubmit} className="lg:col-span-7 flex flex-col gap-4 bg-white border border-slate-200 rounded-xl p-5 sm:p-6 shadow-2xs">
-            {/* OFFER FORM INPUTS IN EXACT REQUESTED ORDER */}
+            {/* OFFER FORM INPUTS IN REVISED REQUESTED ORDER */}
             {segment === "offer" ? (
               <>
                 {/* 1. UPLOAD VISITING CARD / FLYER PHOTO (TOP) */}
@@ -586,11 +587,11 @@ export default function PostForm({ segment }: PostFormProps) {
                   )}
                 </div>
 
-                {/* 1B. EXPLICIT STORE NAME / OFFER TITLE INPUT */}
+                {/* 2. EXPLICIT SHOP NAME INPUT */}
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center justify-between">
                     <label className="text-xs font-semibold text-slate-700">
-                      Store Name / Offer Title *
+                      Shop Name *
                     </label>
                     <span className={`text-xs font-medium ${title.length >= config.maxTitleChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>
                       {title.length}/{config.maxTitleChars}
@@ -605,16 +606,13 @@ export default function PostForm({ segment }: PostFormProps) {
                     onChange={(e) => setTitle(e.target.value)}
                     className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-colors"
                   />
-                  <span className="text-xs text-slate-400 font-medium">
-                    Fills from visiting card photo or type manually above.
-                  </span>
                 </div>
 
-                {/* 2. OFFER DETAILS / DESCRIPTION */}
+                {/* 3. OFFER DESCRIPTION */}
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <label className="text-xs font-semibold text-slate-700">Offer Details / Description *</label>
+                      <label className="text-xs font-semibold text-slate-700">Offer Description *</label>
                       <button
                         type="button"
                         onClick={handleBlurDescription}
@@ -629,7 +627,7 @@ export default function PostForm({ segment }: PostFormProps) {
                         ) : (
                           <>
                             <Sparkles className="w-3 h-3 text-amber-600 fill-amber-500" />
-                            <span>✨ AI Auto-Fill & Format</span>
+                            <span>✨ AI Auto-Format</span>
                           </>
                         )}
                       </button>
@@ -650,14 +648,15 @@ export default function PostForm({ segment }: PostFormProps) {
                   />
                 </div>
 
-                {/* 3. OFFER VALIDITY (VALID FROM & VALID TO DATES) */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                {/* 4. OFFER VALIDITY RANGE (VALID FROM TO VALID TO DATES) */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50 border border-slate-200/80 p-3.5 rounded-xl">
                   <div className="flex flex-col gap-1">
                     <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
-                      <Calendar className="w-3.5 h-3.5 text-slate-400" /> Valid From Date
+                      <Calendar className="w-3.5 h-3.5 text-amber-600" /> Valid From Date *
                     </label>
                     <input
                       type="date"
+                      required
                       value={validFrom}
                       onChange={(e) => setValidFrom(e.target.value)}
                       className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
@@ -665,10 +664,11 @@ export default function PostForm({ segment }: PostFormProps) {
                   </div>
                   <div className="flex flex-col gap-1">
                     <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
-                      <Calendar className="w-3.5 h-3.5 text-slate-400" /> Valid To Date
+                      <Calendar className="w-3.5 h-3.5 text-amber-600" /> Valid To Date *
                     </label>
                     <input
                       type="date"
+                      required
                       value={validTo}
                       onChange={(e) => setValidTo(e.target.value)}
                       className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
@@ -676,43 +676,24 @@ export default function PostForm({ segment }: PostFormProps) {
                   </div>
                 </div>
 
-                {/* 3B. CATEGORY & LOCATION IN THANJAVUR (BELOW OFFER COMPONENT) */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50 border border-slate-200/80 p-3.5 rounded-xl">
-                  <div className="flex flex-col gap-1">
-                    <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-                      <Tag className="w-3.5 h-3.5 text-slate-400" />
-                      Store Category *
-                    </label>
-                    <select
-                      value={category}
-                      onChange={(e) => setCategory(e.target.value)}
-                      className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 cursor-pointer"
-                    >
-                      {config.categories.map((cat) => (
-                        <option key={cat} value={cat}>
-                          {cat}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="flex flex-col gap-1">
-                    <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-amber-500" />
-                      Location (AI Auto-Filled)
-                    </label>
-                    <div className="w-full px-3.5 py-2 text-xs font-bold bg-amber-50 border border-amber-300 text-amber-900 rounded-lg flex items-center justify-between shadow-2xs">
-                      <span>{area || "Tanjore Town (General)"}</span>
-                      <span className="text-xs text-amber-800 bg-amber-200/80 px-2 py-0.5 rounded-full font-black uppercase">Auto AI</span>
-                    </div>
-                  </div>
+                {/* 5. ADDRESS (GOOGLE PLACES AUTO-COMPLETE CONSTRAINED TO THANJAVUR) */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                    <MapPin className="w-3.5 h-3.5 text-amber-500" />
+                    Shop Address & Locality (Thanjavur Auto-Complete) *
+                  </label>
+                  <ThanjavurLocationInput
+                    value={area}
+                    onChange={(val) => setArea(val)}
+                    placeholder="Type your Thanjavur shop area or address..."
+                  />
                 </div>
 
-                {/* 4. VIDEO LINK (YOUTUBE / REEL LINK - OPTIONAL) */}
+                {/* 6. OPTIONAL SHORT VIDEO UPLOAD LINK */}
                 <div className="flex flex-col gap-1">
                   <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                     <Video className="w-3.5 h-3.5 text-rose-500" />
-                    Video Link (YouTube or Instagram Reel - optional)
+                    Optional Promo Video Reel Link (YouTube Shorts / Instagram Reel)
                   </label>
                   <input
                     type="url"
@@ -723,33 +704,16 @@ export default function PostForm({ segment }: PostFormProps) {
                   />
                 </div>
 
-                {/* 5. LOCKED PHONE NUMBER WITH SHOW / HIDE TOGGLE SWITCH */}
+                {/* 7. PHONE NUMBER VISIBILITY TOGGLE (YES / NO) */}
                 <div className="flex flex-col gap-3 bg-slate-50 border border-slate-200/80 rounded-xl p-3.5">
-                  <div className="flex flex-col gap-1">
-                    <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-                      <Phone className="w-3.5 h-3.5 text-slate-400" />
-                      <Lock className="w-3 h-3 text-slate-400" />
-                      Registered Contact Phone (Locked) *
-                    </label>
-                    <input
-                      type="tel"
-                      disabled
-                      readOnly
-                      required
-                      placeholder="Auto-filled from account"
-                      value={phone}
-                      className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-slate-100 text-slate-500 cursor-not-allowed select-none"
-                    />
-                  </div>
-
-                  <div className="flex items-center justify-between gap-3 pt-2 border-t border-slate-200/60">
+                  <div className="flex items-center justify-between gap-3">
                     <div className="flex flex-col gap-0.5">
                       <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
                         <Phone className="w-3.5 h-3.5 text-slate-500" />
-                        <span>Show Call & WhatsApp buttons on Card</span>
+                        <span>Show Phone Number on Card (Yes / No)</span>
                       </span>
                       <span className="text-xs text-slate-500 font-medium">
-                        Default is OFF (Only Get Direction is shown). Turn ON to show phone for calls/WhatsApp.
+                        Default is OFF. Turn ON to display your phone number on the offer card.
                       </span>
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer shrink-0">
@@ -759,6 +723,11 @@ export default function PostForm({ segment }: PostFormProps) {
                         onChange={(e) => setShowPhone(e.target.checked)}
                         className="sr-only peer"
                       />
+                      <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500" />
+                    </label>
+                  </div>
+                </div>
+              </>
                       <div className="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-yellow-500"></div>
                     </label>
                   </div>
@@ -789,20 +758,14 @@ export default function PostForm({ segment }: PostFormProps) {
 
                   <div className="flex flex-col gap-1">
                     <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-slate-400" />
-                      Location in Thanjavur *
+                      <MapPin className="w-3.5 h-3.5 text-amber-500" />
+                      Location in Thanjavur (Auto-Complete) *
                     </label>
-                    <select
+                    <ThanjavurLocationInput
                       value={area}
-                      onChange={(e) => setArea(e.target.value)}
-                      className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 cursor-pointer"
-                    >
-                      {TANJORE_LOCALITIES.map((loc) => (
-                        <option key={loc} value={loc}>
-                          {loc}
-                        </option>
-                      ))}
-                    </select>
+                      onChange={(val) => setArea(val)}
+                      placeholder="Type your Thanjavur area or address..."
+                    />
                   </div>
                 </div>
 
@@ -954,7 +917,44 @@ export default function PostForm({ segment }: PostFormProps) {
               </div>
             )}
 
-            {/* Photo Upload (Only for Sell & Need, since Offer uses top visiting card upload container) */}
+            {/* Sell Specific Phone Toggle */}
+            {segment === "sell" && (
+              <div className="flex items-center justify-between gap-3 bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 mt-1">
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                    <Phone className="w-3.5 h-3.5 text-slate-500" />
+                    <span>Show Phone Number on Listing Card (Yes / No)</span>
+                  </span>
+                  <span className="text-xs text-slate-500 font-medium">
+                    Turn ON to let buyers call/WhatsApp you directly. Turn OFF to hide phone number.
+                  </span>
+                </div>
+                <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                  <input
+                    type="checkbox"
+                    checked={showPhone}
+                    onChange={(e) => setShowPhone(e.target.checked)}
+                    className="sr-only peer"
+                  />
+                  <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500" />
+                </label>
+              </div>
+            )}
+
+            {/* Service Provider Availability Status Banner */}
+            {segment === "service" && (
+              <div className="flex items-center justify-between gap-3 bg-emerald-50 border border-emerald-200 rounded-xl p-3.5 mt-1">
+                <div className="flex flex-col gap-0.5">
+                  <span className="text-xs font-bold text-emerald-900 flex items-center gap-1.5">
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                    <span>Default Live Service Availability: Available (கிடைக்கிறார்)</span>
+                  </span>
+                  <span className="text-xs text-emerald-700 font-medium">
+                    Your profile will default to Available when published. You can toggle to Busy anytime in profile.
+                  </span>
+                </div>
+              </div>
+            )}
             {segment !== "offer" && segment !== "service" && (
               <div className="flex flex-col gap-1">
                 <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">

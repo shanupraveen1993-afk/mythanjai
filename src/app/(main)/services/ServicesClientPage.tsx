@@ -7,6 +7,7 @@ import ServiceCard from "@/components/cards/ServiceCard";
 import { ServiceProviderPost } from "@/types";
 import { Plus, Loader2, Wrench, ArrowUpDown } from "lucide-react";
 import { SERVICE_CATEGORIES } from "@/lib/constants";
+import WebAppScrollFAB from "@/components/common/WebAppScrollFAB";
 import { isListingQuarantined } from "@/lib/moderation";
 
 const SAMPLE_POSTS: ServiceProviderPost[] = [
@@ -95,13 +96,13 @@ export default function ServicesClientPage() {
         <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight">
           Skilled Services
         </h2>
-        {/* PRIMARY GOLD POST BUTTON */}
+        {/* BLACK OUTLINED POST BUTTON */}
         <button
           onClick={handlePostService}
-          className="flex items-center gap-1.5 btn-primary text-xs px-4 py-2 uppercase tracking-wider cursor-pointer shrink-0"
+          className="flex items-center gap-1.5 btn-outline text-xs px-4 py-2 uppercase tracking-wider cursor-pointer shrink-0 font-black text-slate-900 border-2 border-slate-900 hover:bg-slate-900 hover:text-white transition-all"
         >
-          <Plus className="w-3.5 h-3.5 stroke-[2.5] text-[#0F172A]" />
-          <span>Add Service</span>
+          <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+          <span>Post Service</span>
         </button>
       </div>
 

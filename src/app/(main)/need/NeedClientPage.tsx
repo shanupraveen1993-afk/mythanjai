@@ -17,6 +17,8 @@ const SAMPLE_POSTS: NeedOrSalePost[] = [
 
 import { useAuth } from "@/hooks/use-auth";
 
+import WebAppScrollFAB from "@/components/common/WebAppScrollFAB";
+
 export default function NeedClientPage() {
   const router = useRouter();
   const { user, profile } = useAuth();
@@ -98,13 +100,13 @@ export default function NeedClientPage() {
         <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight">
           Buyer Requirements
         </h2>
-        {/* PRIMARY GOLD POST BUTTON */}
+        {/* BLACK OUTLINED POST BUTTON */}
         <button
           onClick={handlePostNeed}
-          className="flex items-center gap-1.5 btn-primary text-xs px-4 py-2 uppercase tracking-wider cursor-pointer shrink-0"
+          className="flex items-center gap-1.5 btn-outline text-xs px-4 py-2 uppercase tracking-wider cursor-pointer shrink-0 font-black text-slate-900 border-2 border-slate-900 hover:bg-slate-900 hover:text-white transition-all"
         >
-          <Plus className="w-3.5 h-3.5 stroke-[2.5] text-[#0F172A]" />
-          <span>Post Requirement</span>
+          <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+          <span>Post Need</span>
         </button>
       </div>
 
@@ -153,6 +155,9 @@ export default function NeedClientPage() {
         </div>
       )}
       </div>
+
+      {/* Web App Floating Action Button (FAB) on 2nd Screen Scroll */}
+      <WebAppScrollFAB postRoute="/post/need" label="Post Need" />
     </div>
   );
 }

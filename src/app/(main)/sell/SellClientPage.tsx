@@ -8,6 +8,7 @@ import { NeedOrSalePost } from "@/types";
 import { Plus, Loader2, ArrowUpDown, ShoppingBag } from "lucide-react";
 import { CLASSIFIED_CATEGORIES } from "@/lib/constants";
 import { isListingQuarantined } from "@/lib/moderation";
+import WebAppScrollFAB from "@/components/common/WebAppScrollFAB";
 
 const SAMPLE_POSTS: NeedOrSalePost[] = [
   { id: "sl_cmda", userId: "sample", type: "SELL", raw_text: "2400 Sqft CMDA Approved Plot for sale near New Busstand, Thanjavur.", title: "2400 Sqft Plot near New Busstand", description: "CMDA approved residential land, 40ft tar road, clear title deeds, immediate registration.", category: "Plots & Real Estate", area_tag: "New Bus Stand", price: 3600000, phone: "9876543210", is_verified: true, created_at: new Date() as any, expires_at: new Date() as any },
@@ -103,12 +104,12 @@ export default function SellClientPage() {
         <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight">
           Items for Sale
         </h2>
-        {/* PRIMARY GOLD POST BUTTON */}
+        {/* BLACK OUTLINED POST BUTTON */}
         <button
           onClick={handlePostItem}
-          className="flex items-center gap-1.5 btn-primary text-xs px-4 py-2 uppercase tracking-wider cursor-pointer shrink-0"
+          className="flex items-center gap-1.5 btn-outline text-xs px-4 py-2 uppercase tracking-wider cursor-pointer shrink-0 font-black text-slate-900 border-2 border-slate-900 hover:bg-slate-900 hover:text-white transition-all"
         >
-          <Plus className="w-3.5 h-3.5 stroke-[2.5] text-[#0F172A]" />
+          <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
           <span>Post Item</span>
         </button>
       </div>
@@ -160,6 +161,9 @@ export default function SellClientPage() {
         </div>
       )}
       </div>
+
+      {/* Web App Floating Action Button (FAB) on 2nd Screen Scroll */}
+      <WebAppScrollFAB postRoute="/post/sell" label="Post Item" />
     </div>
   );
 }

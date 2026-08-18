@@ -162,14 +162,16 @@ export default function LandingClientPage() {
           })}
         </section>
 
-        {/* ── 1. SELL Segment Carousel (6 Sample Items) ── */}
+        {/* ── 1. SELL Segment Carousel (New Listings) ── */}
         <section className="flex flex-col gap-3">
           <div className="flex items-center justify-between border-b border-slate-200/60 pb-2">
-            <div>
+            <div className="flex items-center gap-2">
               <h2 className="font-heading font-extrabold text-base text-slate-900">
-                Sell (சமீபத்திய விற்பனை)
+                Sell (விற்பனை)
               </h2>
-              <p className="text-xs text-slate-500">Direct items for sale by local owners</p>
+              <span className="text-[10px] font-black uppercase tracking-wider bg-amber-500 text-slate-950 px-2.5 py-0.5 rounded-full shadow-2xs">
+                New Listing
+              </span>
             </div>
             <button
               onClick={() => router.push("/sell")}
@@ -214,14 +216,16 @@ export default function LandingClientPage() {
           </div>
         </section>
 
-        {/* ── 2. NEED Segment Carousel (6 Sample Items) ── */}
+        {/* ── 2. NEED Segment Carousel (New Listings) ── */}
         <section className="flex flex-col gap-3">
           <div className="flex items-center justify-between border-b border-slate-200/60 pb-2">
-            <div>
+            <div className="flex items-center gap-2">
               <h2 className="font-heading font-extrabold text-base text-slate-900">
                 Need (தேவைகள்)
               </h2>
-              <p className="text-xs text-slate-500">Buyer requirements posted by locals</p>
+              <span className="text-[10px] font-black uppercase tracking-wider bg-amber-500 text-slate-950 px-2.5 py-0.5 rounded-full shadow-2xs">
+                New Listing
+              </span>
             </div>
             <button
               onClick={() => router.push("/need")}
@@ -233,48 +237,49 @@ export default function LandingClientPage() {
 
           <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-2 scrollbar-none">
             {[
-              { title: "Need 1-2 Acres Commercial Land", badge: "Buy", sub: "Plots & Real Estate", price: "Budget ₹50L+", area: "Vallam" },
-              { title: "Need 2 BHK near Medical College", badge: "Rent", sub: "Property Rental", price: "₹10,000/mo", area: "Medical College Rd" },
-              { title: "Need Used Laptop under ₹25,000", badge: "Buy", sub: "Electronics & Mobiles", price: "₹25,000", area: "Tanjore Town" },
-              { title: "Need Brahmin Marriage Caterer", badge: "Service", sub: "General Requirement", price: "Flexible", area: "South Rampart" },
-              { title: "Need Used Scooty Activa / Jupiter", badge: "Buy", sub: "Used Vehicles", price: "Budget ₹40,000", area: "New Bus Stand" },
-              { title: "Need Shop Space for Rent (Main Rd)", badge: "Rent", sub: "Commercial Space", price: "Budget ₹15,000/mo", area: "Old Bus Stand" },
+              { title: "Urgent Requirement: 2 BHK House for Rent", sub: "Rental Wanted", budget: "Budget: ₹12,000/mo", area: "Medical College Road", img: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=400&auto=format&fit=crop" },
+              { title: "Looking to Buy Used Scooter (Activa / Jupiter)", sub: "Vehicle Wanted", budget: "Budget: ₹45,000", area: "Old Bus Stand", img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&auto=format&fit=crop" },
+              { title: "Require 1200 Sqft Residential Plot for Immediate Purchase", sub: "Real Estate Wanted", budget: "Budget: ₹25 Lakhs", area: "Vilar Road", img: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&auto=format&fit=crop" },
+              { title: "Need i5 Laptop for College Student", sub: "Electronics Wanted", budget: "Budget: ₹28,000", area: "Vallam", img: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400&auto=format&fit=crop" },
+              { title: "Urgent: Commercial Shop for Lease on Main Road", sub: "Commercial Wanted", budget: "Lease: ₹5 Lakhs", area: "South Street", img: "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=400&auto=format&fit=crop" },
+              { title: "Looking for Used Washing Machine — Front Load", sub: "Appliance Wanted", budget: "Budget: ₹12,000", area: "Srinivasapuram", img: "https://images.unsplash.com/photo-1582735689369-4fe89db7114c?w=400&auto=format&fit=crop" },
             ].map((item, idx) => (
               <div
                 key={idx}
                 onClick={() => router.push("/need")}
-                className="w-[260px] sm:w-[280px] shrink-0 snap-start bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer flex flex-col justify-between"
+                className="w-[260px] sm:w-[280px] shrink-0 snap-start bg-white rounded-xl border border-slate-200/90 overflow-hidden shadow-2xs hover:border-slate-300 transition-all cursor-pointer flex flex-col justify-between"
               >
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-slate-100 text-slate-700 border border-slate-200">
-                      {item.badge}
-                    </span>
-                    <span className="text-[10px] text-slate-400">Just now</span>
-                  </div>
-                  <h3 className="font-heading font-bold text-xs text-slate-900 line-clamp-2">{item.title}</h3>
-                  <div className="flex items-center text-slate-500 text-[11px] gap-1">
+                <div className="relative h-36 bg-slate-100 overflow-hidden">
+                  <img src={item.img} alt={item.title} className="w-full h-full object-cover" />
+                  <span className="absolute top-2 left-2 bg-amber-500 text-slate-950 font-black text-xs px-2.5 py-0.5 rounded-md">
+                    {item.budget}
+                  </span>
+                </div>
+                <div className="p-3.5 flex flex-col gap-1.5">
+                  <span className="text-[10px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md w-fit">
+                    {item.sub}
+                  </span>
+                  <h3 className="font-heading font-bold text-xs text-slate-900 line-clamp-1">{item.title}</h3>
+                  <div className="flex items-center text-slate-500 text-[11px] gap-1 pt-1">
                     <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
                     <span>{item.area}</span>
                   </div>
-                </div>
-                <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
-                  <span className="font-bold text-slate-900">{item.price}</span>
-                  <span className="text-slate-600 font-bold hover:underline">Contact →</span>
                 </div>
               </div>
             ))}
           </div>
         </section>
 
-        {/* ── 3. LOCAL SERVICES Segment Carousel (6 Sample Items) ── */}
+        {/* ── 3. SERVICES Segment Carousel (New Listings) ── */}
         <section className="flex flex-col gap-3">
           <div className="flex items-center justify-between border-b border-slate-200/60 pb-2">
-            <div>
+            <div className="flex items-center gap-2">
               <h2 className="font-heading font-extrabold text-base text-slate-900">
                 Services (சேவைகள்)
               </h2>
-              <p className="text-xs text-slate-500">Skilled trade professionals in Thanjavur</p>
+              <span className="text-[10px] font-black uppercase tracking-wider bg-amber-500 text-slate-950 px-2.5 py-0.5 rounded-full shadow-2xs">
+                New Listing
+              </span>
             </div>
             <button
               onClick={() => router.push("/services")}
@@ -286,47 +291,52 @@ export default function LandingClientPage() {
 
           <div className="flex overflow-x-auto snap-x snap-mandatory gap-4 pb-2 scrollbar-none">
             {[
-              { name: "Senthil Kumar — Electrician", trade: "Electrician", area: "Tanjore Town", img: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&auto=format&fit=crop" },
-              { name: "Rajesh K — Expert Plumber", trade: "Plumber", area: "Medical College Rd", img: "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=400&auto=format&fit=crop" },
-              { name: "Venu Gopal — Wood Architect", trade: "Carpenter", area: "South Rampart", img: "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?w=400&auto=format&fit=crop" },
-              { name: "Muthu Cool Tech — AC Repair", trade: "AC Technician", area: "Old Bus Stand", img: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&auto=format&fit=crop" },
-              { name: "Ganesan Painters — Interior Paint", trade: "Painter", area: "Vallam", img: "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=400&auto=format&fit=crop" },
-              { name: "Kumar Housekeeping Services", trade: "Cleaning", area: "Medical College Rd", img: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=400&auto=format&fit=crop" },
+              { name: "Karthik — Master Electrician", sub: "Electrician", exp: "12 Yrs Exp", area: "Thanjavur City", img: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&auto=format&fit=crop" },
+              { name: "Suresh Plumbing Works", sub: "Plumber", exp: "8 Yrs Exp", area: "Medical College Rd", img: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=400&auto=format&fit=crop" },
+              { name: "Selvam Home Painting", sub: "Painter", exp: "15 Yrs Exp", area: "New Bus Stand", img: "https://images.unsplash.com/photo-1562259949-e8e7689d7828?w=400&auto=format&fit=crop" },
+              { name: "Ramesh AC Repair & Service", sub: "AC Service", exp: "6 Yrs Exp", area: "Vallam", img: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&auto=format&fit=crop" },
+              { name: "Venkatesh Teak Carpentry", sub: "Carpenter", exp: "20 Yrs Exp", area: "Karanthai", img: "https://images.unsplash.com/photo-1504328345606-18bbc8c9d7d1?w=400&auto=format&fit=crop" },
+              { name: "Murugan House Cleaning & Water Tank", sub: "Cleaning", exp: "5 Yrs Exp", area: "South Street", img: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=400&auto=format&fit=crop" },
             ].map((item, idx) => (
               <div
                 key={idx}
                 onClick={() => router.push("/services")}
-                className="w-[260px] sm:w-[280px] shrink-0 snap-start bg-white rounded-xl border border-slate-200/90 p-4 shadow-2xs hover:border-slate-300 transition-all cursor-pointer flex flex-col justify-between"
+                className="w-[260px] sm:w-[280px] shrink-0 snap-start bg-white rounded-xl border border-slate-200/90 overflow-hidden shadow-2xs hover:border-slate-300 transition-all cursor-pointer flex flex-col justify-between"
               >
-                <div className="flex items-center gap-3 mb-2">
-                  <img src={item.img} alt={item.name} className="w-11 h-11 rounded-full object-cover border border-slate-200 shrink-0" />
-                  <div className="min-w-0">
-                    <h3 className="font-heading font-bold text-xs text-slate-900 truncate">{item.name}</h3>
-                    <span className="inline-block px-2 py-0.5 bg-slate-100 text-slate-700 text-[10px] font-semibold rounded border border-slate-200">
-                      {item.trade}
-                    </span>
-                  </div>
-                </div>
-                <div className="flex items-center justify-between text-[10px] pt-2.5 border-t border-slate-100">
-                  <span className="inline-flex items-center gap-1 font-bold text-emerald-700">
-                    <span className="w-1.5 h-1.5 rounded-full bg-emerald-500" />
-                    Available Now
+                <div className="relative h-36 bg-slate-100 overflow-hidden">
+                  <img src={item.img} alt={item.name} className="w-full h-full object-cover" />
+                  <span className="absolute top-2 left-2 bg-emerald-600 text-white font-black text-xs px-2.5 py-0.5 rounded-md">
+                    Verified Pro
                   </span>
-                  <span className="text-slate-500 font-medium">{item.area}</span>
+                </div>
+                <div className="p-3.5 flex flex-col gap-1.5">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/70">
+                      {item.sub}
+                    </span>
+                    <span className="text-[10px] font-bold text-slate-500">{item.exp}</span>
+                  </div>
+                  <h3 className="font-heading font-bold text-xs text-slate-900 line-clamp-1">{item.name}</h3>
+                  <div className="flex items-center text-slate-500 text-[11px] gap-1 pt-1">
+                    <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
+                    <span>{item.area}</span>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
         </section>
 
-        {/* ── 4. OFFERS Segment Carousel (6 Sample Items) ── */}
+        {/* ── 4. OFFERS Segment Carousel (New Listings) ── */}
         <section className="flex flex-col gap-3">
           <div className="flex items-center justify-between border-b border-slate-200/60 pb-2">
-            <div>
+            <div className="flex items-center gap-2">
               <h2 className="font-heading font-extrabold text-base text-slate-900">
-                Offers (சிறப்பு சலுகைகள்)
+                Offers (சலுகைகள்)
               </h2>
-              <p className="text-xs text-slate-500">Promotions &amp; deals from local stores</p>
+              <span className="text-[10px] font-black uppercase tracking-wider bg-amber-500 text-slate-950 px-2.5 py-0.5 rounded-full shadow-2xs">
+                New Listing
+              </span>
             </div>
             <button
               onClick={() => router.push("/shops")}
