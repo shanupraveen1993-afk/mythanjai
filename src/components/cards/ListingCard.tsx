@@ -257,12 +257,10 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
             </div>
           )}
 
-          {/* Footer Seller Info & Views / Share (Standardized Size) */}
+          {/* Footer Views / Share Row (Seller text removed) */}
           <div className="pt-2.5 border-t border-slate-100 flex flex-col gap-2.5">
-            <div className="flex items-center justify-between text-xs font-bold text-slate-600">
-              <span className="truncate max-w-[140px] text-slate-800 font-bold">{listing.seller_name || "Seller"}</span>
-
-              {/* Views counter & Share button Standardized Size */}
+            <div className="flex items-center justify-end text-xs font-bold text-slate-600">
+              {/* Views counter & Share button */}
               <div className="flex items-center gap-3 shrink-0">
                 <span className="flex items-center gap-1 text-xs font-semibold text-slate-500" title="Views">
                   <Eye className="w-4 h-4 text-slate-400" />
