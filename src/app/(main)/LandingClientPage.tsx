@@ -74,93 +74,89 @@ export default function LandingClientPage() {
   return (
     <div className="w-full flex flex-col gap-8 text-slate-800 font-sans pb-24 bg-[#f8fafc] min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col gap-8 pt-4">
-        {/* ── Genuine Premium Hero Banner: What We Do in Thanjavur ── */}
-        <section className="relative rounded-xl overflow-hidden bg-slate-900 border border-slate-800 shadow-md my-2">
-          {/* Visual Hero Image Overlay */}
-          <div className="absolute inset-0 z-0">
-            <img
-              src="https://images.unsplash.com/photo-1582510003544-4d00b7f74220?w=1200&auto=format&fit=crop"
-              alt="Thanjavur Community Hub"
-              className="w-full h-full object-cover opacity-25"
-            />
-            <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-amber-950/40" />
-          </div>
-
-          <div className="relative z-10 p-6 sm:p-10 flex flex-col gap-3.5 max-w-3xl">
-            <div className="flex items-center gap-2">
-              <span className="text-[10px] font-extrabold uppercase tracking-wide bg-slate-900 text-amber-400 border border-slate-800 px-3 py-1 rounded-md shadow-2xs">
-                WHAT WE DO • நம்ம தஞ்சாவூர்
-              </span>
-              <span className="text-xs text-amber-300 font-bold hidden sm:inline-block">
-                0% Brokerage • Direct 1:1 Contact
-              </span>
-            </div>
-
-            <div className="flex flex-col gap-1">
-              <h1 className="font-heading font-black text-2xl sm:text-4xl text-white tracking-tight leading-tight">
-                Thanjavur&apos;s Direct Local Directory &amp; Marketplace
-              </h1>
-              <p className="font-heading font-extrabold text-sm sm:text-base text-amber-400 mt-0.5">
-                தஞ்சாவூர் மக்களுக்கான நேரடி 4-இன்-1 தகவல் தளம்
-              </p>
-            </div>
-            <p className="text-xs sm:text-sm text-slate-300 font-medium leading-relaxed">
-              Connect directly with local owners, buyers, service experts, and shop offers across Tanjore with zero brokerage.
+        {/* ── 1. Hero Banner (Universal Home Banner) ── */}
+        <div className="relative w-full min-h-[90px] rounded-2xl overflow-hidden bg-slate-950 text-white flex items-center px-4 sm:px-6 py-4 shadow-2xs mt-1">
+          <img src="/thanjavur_temple_illustration.png" alt="Namma Thanjai" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent" />
+          <div className="relative z-10 flex flex-col gap-1 max-w-xl">
+            <span className="bg-[#FBBF24] text-[#0F172A] font-bold text-xs px-2.5 py-0.5 rounded-md tracking-wider w-fit">
+              Namma Thanjai • நம்ம தஞ்சை
+            </span>
+            <h1 className="font-heading font-black text-lg sm:text-xl text-white tracking-tight">
+              Everything you need in our city, all in one place. <span className="text-amber-400 block text-xs sm:text-sm font-extrabold mt-0.5">நம்ம ஊரின் அனைத்து தேவைகளுக்கும் ஒரே இடம்.</span>
+            </h1>
+            <p className="text-xs text-slate-300 font-semibold leading-relaxed">
+              Buy and sell with neighbors, hire reliable services, and explore local shopping offers—built exclusively for our community.
             </p>
           </div>
-        </section>
+        </div>
 
-        {/* ── 4 Segment Feature Cards (Compact 2x2 Grid on Mobile Web App & APK / 4x1 Single Row on Desktop) ── */}
-        <section className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4">
-          {pillarCards.map((card) => {
-            const IconComponent = card.icon;
-            return (
-              <div
-                key={card.id}
-                onClick={() => router.push(card.path)}
-                className="bg-white rounded-xl border border-slate-200/90 p-3 sm:p-4 shadow-2xs hover:shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between gap-2.5 group cursor-pointer"
-              >
-                <div className="flex flex-col gap-2">
-                  <div className="flex items-center gap-2">
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-lg bg-blue-50 border border-blue-200/80 flex items-center justify-center text-[#1d4ed8] group-hover:bg-[#1d4ed8] group-hover:text-white group-hover:border-[#1d4ed8] transition-colors shrink-0 shadow-2xs">
-                      <IconComponent className="w-4 h-4 sm:w-5 sm:h-5 stroke-[2.2]" />
-                    </div>
-                    <h2 className="font-heading font-black text-slate-900 text-xs sm:text-sm leading-tight line-clamp-1">
-                      {card.title}
-                    </h2>
-                  </div>
-
-                  <p className="text-[11px] sm:text-xs text-slate-600 font-medium leading-snug line-clamp-2">
-                    {card.desc}
-                  </p>
-
-                  <div className="flex flex-wrap gap-1">
-                    {card.categories.slice(0, 2).map((cat, i) => (
-                      <span
-                        key={i}
-                        className="text-[10px] sm:text-[11px] font-semibold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200/60 line-clamp-1"
-                      >
-                        {cat}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    router.push(card.path);
-                  }}
-                  className="w-full btn-secondary text-[11px] sm:text-xs py-1.5 sm:py-2 rounded-lg flex items-center justify-center gap-1"
-                >
-                  <span>{card.btnText}</span>
-                  <ChevronRight className="w-3.5 h-3.5 shrink-0 text-[#1d4ed8]" />
-                </button>
+        {/* ── 2x2 Primary Category Entry Hub (Pro UX Interactive Cards) ── */}
+        <div className="grid grid-cols-2 gap-3 my-1">
+          <button
+            onClick={() => router.push("/sell")}
+            className="p-4 bg-white border border-slate-200/90 rounded-2xl flex flex-col justify-between shadow-2xs hover:border-[#1d4ed8]/50 hover:shadow-md transition-all active:scale-[0.98] text-left min-h-[110px] cursor-pointer group"
+          >
+            <div className="flex items-center justify-between gap-1 w-full">
+              <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center group-hover:bg-[#1d4ed8] group-hover:text-white transition-colors">
+                <ShoppingBag className="w-5 h-5 shrink-0" />
               </div>
-            );
-          })}
-        </section>
+              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-[#1d4ed8] group-hover:translate-x-0.5 transition-all" />
+            </div>
+            <div className="mt-3">
+              <div className="font-bold text-sm sm:text-base tracking-tight text-slate-900 group-hover:text-[#1d4ed8] transition-colors">Sell</div>
+              <div className="text-[11px] text-slate-500 font-medium">விற்க வேண்டுமா?</div>
+            </div>
+          </button>
+
+          <button
+            onClick={() => router.push("/need")}
+            className="p-4 bg-white border border-slate-200/90 rounded-2xl flex flex-col justify-between shadow-2xs hover:border-[#1d4ed8]/50 hover:shadow-md transition-all active:scale-[0.98] text-left min-h-[110px] cursor-pointer group"
+          >
+            <div className="flex items-center justify-between gap-1 w-full">
+              <div className="w-9 h-9 rounded-xl bg-blue-50 text-[#1d4ed8] flex items-center justify-center group-hover:bg-[#1d4ed8] group-hover:text-white transition-colors">
+                <Search className="w-5 h-5 shrink-0" />
+              </div>
+              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-[#1d4ed8] group-hover:translate-x-0.5 transition-all" />
+            </div>
+            <div className="mt-3">
+              <div className="font-bold text-sm sm:text-base tracking-tight text-slate-900 group-hover:text-[#1d4ed8] transition-colors">Need</div>
+              <div className="text-[11px] text-slate-500 font-medium">தேவைப்படுகிறதா?</div>
+            </div>
+          </button>
+
+          <button
+            onClick={() => router.push("/services")}
+            className="p-4 bg-white border border-slate-200/90 rounded-2xl flex flex-col justify-between shadow-2xs hover:border-[#1d4ed8]/50 hover:shadow-md transition-all active:scale-[0.98] text-left min-h-[110px] cursor-pointer group"
+          >
+            <div className="flex items-center justify-between gap-1 w-full">
+              <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:bg-[#1d4ed8] group-hover:text-white transition-colors">
+                <Zap className="w-5 h-5 shrink-0" />
+              </div>
+              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-[#1d4ed8] group-hover:translate-x-0.5 transition-all" />
+            </div>
+            <div className="mt-3">
+              <div className="font-bold text-sm sm:text-base tracking-tight text-slate-900 group-hover:text-[#1d4ed8] transition-colors">Local Services</div>
+              <div className="text-[11px] text-slate-500 font-medium">தொழில் வல்லுநர்கள்</div>
+            </div>
+          </button>
+
+          <button
+            onClick={() => router.push("/shops")}
+            className="p-4 bg-white border border-slate-200/90 rounded-2xl flex flex-col justify-between shadow-2xs hover:border-[#1d4ed8]/50 hover:shadow-md transition-all active:scale-[0.98] text-left min-h-[110px] cursor-pointer group"
+          >
+            <div className="flex items-center justify-between gap-1 w-full">
+              <div className="w-9 h-9 rounded-xl bg-rose-50 text-rose-600 flex items-center justify-center group-hover:bg-[#1d4ed8] group-hover:text-white transition-colors">
+                <Sparkles className="w-5 h-5 shrink-0" />
+              </div>
+              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-[#1d4ed8] group-hover:translate-x-0.5 transition-all" />
+            </div>
+            <div className="mt-3">
+              <div className="font-bold text-sm sm:text-base tracking-tight text-slate-900 group-hover:text-[#1d4ed8] transition-colors">Local Offer</div>
+              <div className="text-[11px] text-slate-500 font-medium">சிறப்பு சலுகைகள்</div>
+            </div>
+          </button>
+        </div>
 
         {/* ── 1. SELL Segment Carousel (New Listings) ── */}
         <section className="flex flex-col gap-3">
