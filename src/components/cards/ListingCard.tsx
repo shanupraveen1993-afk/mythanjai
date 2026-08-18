@@ -172,7 +172,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
     <>
       <div 
         onClick={handleCardView}
-        className="bg-white -mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full sm:rounded-2xl overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.06)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.09)] transition-all duration-200 flex flex-col justify-between cursor-pointer font-sans group border-b border-slate-200/80 sm:border sm:border-slate-200/90 card-lift"
+        className="bg-white -mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full sm:rounded-2xl overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.06)] flex flex-col justify-between cursor-pointer font-sans border-b border-slate-200/80 sm:border sm:border-slate-200/90"
       >
         {/* Card Header Media Container (OLX Competitor Standard) */}
         <div className="w-full h-36 sm:h-40 bg-slate-100 relative overflow-hidden">
@@ -180,7 +180,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
             src={imageSrc}
             alt={listing.title}
             fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
+            className="object-cover"
           />
           
           {/* Top Left: Category Badge Overlay (Semi-Transparent Glass) */}
@@ -337,7 +337,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
                           toast.info("This provider is currently busy/unavailable.");
                         }
                       }}
-                      className="bg-[#f59e0b] text-slate-950 font-black border border-[#d97706] text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer"
+                      className="bg-[#f59e0b] text-slate-950 font-black text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer"
                     >
                       <Phone className="w-4 h-4 text-slate-950" />
                       <span>Call</span>

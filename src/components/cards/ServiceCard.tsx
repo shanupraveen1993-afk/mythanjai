@@ -293,7 +293,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
           <a
             href={callUrl}
             onClick={(e) => e.stopPropagation()}
-            className="bg-[#f59e0b] text-slate-950 font-black border border-[#d97706] text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer"
+            className="bg-[#f59e0b] text-slate-950 font-black text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer"
           >
             <Phone className="w-4 h-4 text-slate-950" />
             <span>Call</span>

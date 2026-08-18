@@ -168,13 +168,13 @@ export default function TopHeader({
 
         {/* Right Side: Get App + Dynamic Post CTA + Chat Icon (Logged in) + Profile Icon */}
         <div className="flex items-center gap-2 shrink-0">
-          {/* 1. Get App Button — Homepage ONLY (Royal Blue Primary Design) */}
+          {/* 1. Get App Button — Homepage ONLY (Royal Blue Solid Design) */}
           {isHomePage && (
             <a
               href="/namma_thanjai_release.apk"
               download="namma_thanjai_release.apk"
               onClick={handleGetAppClick}
-              className="bg-[#1d4ed8] text-white border border-blue-600 hover:bg-blue-700 text-xs px-3.5 py-1.5 rounded-lg font-extrabold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none transition-colors"
+              className="bg-[#1d4ed8] text-white hover:bg-blue-700 text-xs px-3.5 py-1.5 rounded-lg font-extrabold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none transition-colors"
               title="Download Namma Thanjai Android App"
               aria-label="Download Namma Thanjai Android App"
             >
@@ -183,12 +183,12 @@ export default function TopHeader({
             </a>
           )}
 
-          {/* 2. Dynamic + Post CTA Button — Other Pages ONLY (Primary Yellow Design) */}
+          {/* 2. Dynamic + Post CTA Button — Other Pages ONLY (Primary Yellow Solid Design) */}
           {!isHomePage && (
             <button
               type="button"
               onClick={handleDynamicPostClick}
-              className="bg-[#f59e0b] text-slate-950 border border-[#d97706] hover:bg-[#d97706] hover:text-white text-xs px-3.5 py-1.5 rounded-lg font-extrabold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer transition-colors"
+              className="bg-[#f59e0b] text-slate-950 hover:bg-[#d97706] hover:text-white text-xs px-3.5 py-1.5 rounded-lg font-extrabold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer transition-colors"
               title={postInfo.label}
             >
               <Plus className="w-3.5 h-3.5 stroke-[3] text-slate-950" />

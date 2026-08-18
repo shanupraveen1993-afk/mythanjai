@@ -192,7 +192,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
             src={illustrationSrc}
             alt={post.title}
             fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
+            className="object-cover"
           />
 
           {/* SOLD / FULFILLED Overlay Banner */}
@@ -314,7 +314,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
                   <a
                     href={callUrl}
                     onClick={(e) => e.stopPropagation()}
-                    className="bg-[#f59e0b] text-slate-950 font-black border border-[#d97706] text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer"
+                    className="bg-[#f59e0b] text-slate-950 font-black text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer"
                   >
                     <Phone className="w-4 h-4 text-slate-950" />
                     <span>Call</span>
