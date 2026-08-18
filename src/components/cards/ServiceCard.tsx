@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Phone, MessageSquare, Award, MapPin, Zap, Droplet, Hammer, Wind, Wrench, Eye, Share2, Bookmark, AlertTriangle, Calendar, Paintbrush, Car, Sparkles, Star, Check, Flag } from "lucide-react";
 import { ServiceProviderPost } from "@/types";
 import { formatRelativeTime } from "@/lib/constants";
@@ -118,6 +118,20 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
     }
   };
 
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const pending = localStorage.getItem("namma_thanjai_pending_feedback");
+      if (pending) {
+        try {
+          const parsed = JSON.parse(pending);
+          if (parsed.id === post.id && parsed.status === "pending") {
+            setIsFeedbackOpen(true);
+          }
+        } catch (e) {}
+      }
+    }
+  }, [post.id]);
+
   const handleReport = (e: React.MouseEvent) => {
     e.stopPropagation();
     const result = reportListing(post.id, "Inappropriate content");
@@ -136,6 +150,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
   // SET 1: Trigger Safety & Contact Verification Modal
   const handleOpenPreContactModal = (e: React.MouseEvent, type: "call" | "whatsapp") => {
     e.preventDefault();
+    e.stopPropagation();
     setContactType(type);
     setIsPreContactOpen(true);
   };
@@ -218,73 +233,60 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
 
         {/* Right: Save & Share Icons (No views count) */}
         <div className="flex items-center gap-2">
-          <button 
+          <button
             type="button"
             onClick={handleToggleSave}
-            className={`w-7 h-7 rounded-md border shadow-2xs flex items-center justify-center transition-all cursor-pointer ${
+            className={`w-7 h-7 rounded-md border flex items-center justify-center transition-colors cursor-pointer ${
               saved
-                ? "bg-amber-500 text-slate-950 border-amber-400 font-bold"
-                : "bg-slate-100 text-slate-600 border-slate-200 hover:bg-slate-200"
+                ? "bg-amber-50 border-amber-300 text-amber-600"
+                : "border-slate-200 bg-white text-slate-500 hover:text-slate-800"
             }`}
-            title={saved ? "Saved" : "Save Service"}
-            aria-label={saved ? "Remove saved service" : "Save this service"}
+            title="Save Service Provider"
           >
-            <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-current" : ""}`} />
+            <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-amber-600" : ""}`} />
           </button>
 
-          <button 
+          <button
             type="button"
-            onClick={handleShare}
-            className="w-7 h-7 rounded-md border border-slate-200 bg-slate-100 text-slate-600 hover:bg-slate-200 flex items-center justify-center transition-all cursor-pointer shadow-2xs"
-            title="Share Service"
-            aria-label="Share this service"
+            onClick={(e) => {
+              e.stopPropagation();
+              window.open(whatsappGroupShareUrl, "_blank");
+            }}
+            className="w-7 h-7 rounded-md border border-slate-200 bg-white text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors cursor-pointer"
+            title="Share via WhatsApp"
           >
             <Share2 className="w-3.5 h-3.5" />
+          </button>
+          <button
+            type="button"
+            onClick={handleReport}
+            className="w-7 h-7 rounded-md border border-slate-200 bg-white text-slate-400 hover:text-rose-500 hover:border-rose-200 flex items-center justify-center transition-colors cursor-pointer"
+            title="Report Provider"
+          >
+            <Flag className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>
 
-      {/* Line 5 (Footer Row): Posted Date (Month Year) on LEFT + Call & WhatsApp Buttons on RIGHT */}
-      <div className="pt-2 flex items-end justify-between gap-2 mt-auto">
-        {/* Left: Posted Date (Month & Year) */}
-        <span className="text-[11px] font-normal text-slate-400 flex items-center gap-1 shrink-0 pb-1">
-          <Calendar className="w-3.5 h-3.5 text-slate-400" />
-          <span>{(() => {
-            if (!post.created_at) return "Added on Mar 2026";
-            try {
-              const d = (post.created_at as any).seconds ? new Date((post.created_at as any).seconds * 1000) : new Date(post.created_at as any);
-              if (isNaN(d.getTime())) return "Added on Mar 2026";
-              const month = d.toLocaleString("en-US", { month: "short" });
-              const year = d.getFullYear();
-              return `Added on ${month} ${year}`;
-            } catch (e) {
-              return "Added on Mar 2026";
-            }
-          })()}</span>
-        </span>
+      {/* Line 5 (Footer Row): Action CTA Buttons (Chat Teal & Call Amber) */}
+      <div className="flex items-center gap-2 w-full pt-1 mt-auto">
+        <button
+          type="button"
+          onClick={(e) => handleOpenPreContactModal(e, "whatsapp")}
+          className="bg-[#128C7E] text-white font-bold text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer flex-1"
+        >
+          <MessageSquare className="w-4 h-4 text-white fill-current" />
+          <span>Chat</span>
+        </button>
 
-        {/* Right: 2 Larger Action Buttons (WhatsApp #128C7E + Yellow Call) */}
-        <div className="flex items-center gap-2 shrink-0">
-          <a
-            href={whatsappUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            className="bg-[#128C7E] text-white font-bold text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer"
-          >
-            <MessageSquare className="w-4 h-4 text-white fill-current" />
-            <span>Chat</span>
-          </a>
-
-          <a
-            href={callUrl}
-            onClick={(e) => e.stopPropagation()}
-            className="bg-[#f59e0b] text-slate-950 font-bold text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer"
-          >
-            <Phone className="w-4 h-4 text-slate-950" />
-            <span>Call</span>
-          </a>
-        </div>
+        <button
+          type="button"
+          onClick={(e) => handleOpenPreContactModal(e, "call")}
+          className="bg-[#f59e0b] text-slate-950 font-bold text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer flex-1"
+        >
+          <Phone className="w-4 h-4 text-slate-950" />
+          <span>Call</span>
+        </button>
       </div>
 
       {/* SET 1: Pre-Contact Safety Rules Modal */}
