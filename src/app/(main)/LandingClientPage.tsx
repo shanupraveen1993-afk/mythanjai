@@ -166,7 +166,7 @@ export default function LandingClientPage() {
         <section className="flex flex-col gap-3">
           <div className="flex items-center justify-between border-b border-slate-200/60 pb-2">
             <div className="flex items-center gap-2">
-              <h2 className="font-heading font-extrabold text-base text-slate-900">
+              <h2 className="font-heading font-black text-base sm:text-lg text-[#1d4ed8]">
                 Sell (விற்பனை)
               </h2>
               <span className="text-[10px] font-black uppercase tracking-wider bg-slate-900 text-white border border-slate-800 px-2.5 py-0.5 rounded-full shadow-2xs">
@@ -220,7 +220,7 @@ export default function LandingClientPage() {
         <section className="flex flex-col gap-3">
           <div className="flex items-center justify-between border-b border-slate-200/60 pb-2">
             <div className="flex items-center gap-2">
-              <h2 className="font-heading font-extrabold text-base text-slate-900">
+              <h2 className="font-heading font-black text-base sm:text-lg text-[#1d4ed8]">
                 Need (தேவைகள்)
               </h2>
               <span className="text-[10px] font-black uppercase tracking-wider bg-slate-900 text-white border border-slate-800 px-2.5 py-0.5 rounded-full shadow-2xs">
@@ -274,7 +274,7 @@ export default function LandingClientPage() {
         <section className="flex flex-col gap-3">
           <div className="flex items-center justify-between border-b border-slate-200/60 pb-2">
             <div className="flex items-center gap-2">
-              <h2 className="font-heading font-extrabold text-base text-slate-900">
+              <h2 className="font-heading font-black text-base sm:text-lg text-[#1d4ed8]">
                 Services (சேவைகள்)
               </h2>
               <span className="text-[10px] font-black uppercase tracking-wider bg-slate-900 text-white border border-slate-800 px-2.5 py-0.5 rounded-full shadow-2xs">
@@ -328,7 +328,7 @@ export default function LandingClientPage() {
         <section className="flex flex-col gap-3">
           <div className="flex items-center justify-between border-b border-slate-200/60 pb-2">
             <div className="flex items-center gap-2">
-              <h2 className="font-heading font-extrabold text-base text-slate-900">
+              <h2 className="font-heading font-black text-base sm:text-lg text-[#1d4ed8]">
                 Offers (சலுகைகள்)
               </h2>
               <span className="text-[10px] font-black uppercase tracking-wider bg-slate-900 text-white border border-slate-800 px-2.5 py-0.5 rounded-full shadow-2xs">
@@ -376,10 +376,10 @@ export default function LandingClientPage() {
           </div>
         </section>
 
-        {/* ── High-Engagement Visual "Steps to Use Namma Thanjai" Section (Redesigned Light Surface) ── */}
+        {/* ── High-Engagement Visual "Steps to Use Namma Thanjai" Section (Yellow Step Badges) ── */}
         <section className="bg-white border border-slate-200/90 text-slate-900 rounded-2xl p-5 sm:p-8 flex flex-col gap-5 shadow-xs my-4 font-sans">
           <div className="flex flex-col gap-1 max-w-xl">
-            <span className="text-[10px] font-black uppercase tracking-wider text-[#1d4ed8] bg-blue-50 px-2.5 py-0.5 rounded-md w-fit border border-blue-200">
+            <span className="text-[10px] font-black uppercase tracking-wider text-amber-800 bg-amber-50 px-2.5 py-0.5 rounded-md w-fit border border-amber-200">
               3 EASY STEPS • 3 எளிய படிகள்
             </span>
             <h2 className="font-heading font-black text-lg sm:text-2xl text-slate-900 tracking-tight mt-1">
@@ -391,10 +391,10 @@ export default function LandingClientPage() {
             {/* Step 1 */}
             <div className="bg-slate-50 border border-slate-200/80 p-4 sm:p-5 rounded-xl flex flex-col justify-between gap-3 group hover:border-[#1d4ed8]/50 transition-all">
               <div className="flex items-center justify-between">
-                <span className="w-8 h-8 rounded-lg bg-[#1d4ed8] text-white font-heading font-black text-sm flex items-center justify-center shadow-2xs">
+                <span className="w-8 h-8 rounded-lg bg-[#f59e0b] text-slate-950 font-heading font-black text-sm flex items-center justify-center shadow-2xs border border-[#d97706]">
                   01
                 </span>
-                <span className="text-[10px] font-bold text-slate-500 bg-white px-2 py-0.5 rounded-full border border-slate-200">
+                <span className="text-[10px] font-extrabold text-slate-600 bg-white px-2 py-0.5 rounded-full border border-slate-200">
                   STEP 1
                 </span>
               </div>
@@ -411,10 +411,10 @@ export default function LandingClientPage() {
             {/* Step 2 */}
             <div className="bg-slate-50 border border-slate-200/80 p-4 sm:p-5 rounded-xl flex flex-col justify-between gap-3 group hover:border-[#1d4ed8]/50 transition-all">
               <div className="flex items-center justify-between">
-                <span className="w-8 h-8 rounded-lg bg-[#1d4ed8] text-white font-heading font-black text-sm flex items-center justify-center shadow-2xs">
+                <span className="w-8 h-8 rounded-lg bg-[#f59e0b] text-slate-950 font-heading font-black text-sm flex items-center justify-center shadow-2xs border border-[#d97706]">
                   02
                 </span>
-                <span className="text-[10px] font-bold text-slate-500 bg-white px-2 py-0.5 rounded-full border border-slate-200">
+                <span className="text-[10px] font-extrabold text-slate-600 bg-white px-2 py-0.5 rounded-full border border-slate-200">
                   STEP 2
                 </span>
               </div>
@@ -431,10 +431,10 @@ export default function LandingClientPage() {
             {/* Step 3 */}
             <div className="bg-slate-50 border border-slate-200/80 p-4 sm:p-5 rounded-xl flex flex-col justify-between gap-3 group hover:border-[#1d4ed8]/50 transition-all">
               <div className="flex items-center justify-between">
-                <span className="w-8 h-8 rounded-lg bg-[#1d4ed8] text-white font-heading font-black text-sm flex items-center justify-center shadow-2xs">
+                <span className="w-8 h-8 rounded-lg bg-[#f59e0b] text-slate-950 font-heading font-black text-sm flex items-center justify-center shadow-2xs border border-[#d97706]">
                   03
                 </span>
-                <span className="text-[10px] font-bold text-slate-500 bg-white px-2 py-0.5 rounded-full border border-slate-200">
+                <span className="text-[10px] font-extrabold text-slate-600 bg-white px-2 py-0.5 rounded-full border border-slate-200">
                   STEP 3
                 </span>
               </div>

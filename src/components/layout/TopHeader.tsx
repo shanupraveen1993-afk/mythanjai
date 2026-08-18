@@ -140,17 +140,17 @@ export default function TopHeader({
 
         {/* Right Side: Get App + Profile Icon (+ Post Ad button on 4 Segment pages) */}
         <div className="flex items-center gap-2 shrink-0">
-          {/* 1. Get App Button — Homepage ONLY (Secondary Outlined Blue CTA) */}
+          {/* 1. Get App Button — Homepage ONLY (Yellow Primary Design) */}
           {isHomePage && (
             <a
               href="/namma_thanjai_release.apk"
               download="namma_thanjai_release.apk"
               onClick={handleGetAppClick}
-              className="btn-secondary text-xs px-3.5 py-1.5 shrink-0 flex items-center gap-1.5 select-none"
+              className="bg-[#f59e0b] text-slate-950 border border-[#d97706] hover:bg-[#d97706] hover:text-white text-xs px-3.5 py-1.5 rounded-full font-extrabold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none transition-colors"
               title="Download Namma Thanjai Android App"
               aria-label="Download Namma Thanjai Android App"
             >
-              <Download className="w-3.5 h-3.5 shrink-0 text-[#1d4ed8]" />
+              <Download className="w-3.5 h-3.5 shrink-0 text-slate-950 group-hover:text-white" />
               <span>Get App</span>
             </a>
           )}
