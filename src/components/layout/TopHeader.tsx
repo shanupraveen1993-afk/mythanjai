@@ -171,16 +171,16 @@ export default function TopHeader({
 
           return (
             <div className="flex items-center gap-2 shrink-0">
-              {/* 1. Get App Button (Logo Color: Amber tone matching logo, stays until clicked once) */}
+              {/* 1. Get App Button (Royal Blue secondary button without hover effect) */}
               {!hasClickedGetApp && (
                 <a
                   href="/namma_thanjai_release.apk"
                   download="namma_thanjai_release.apk"
                   onClick={handleGetAppClick}
-                  className="bg-amber-500/10 hover:bg-amber-500/20 text-amber-700 hover:text-amber-800 border border-amber-400/80 text-xs px-3.5 py-1.5 rounded-full font-extrabold transition-all shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer active:scale-95"
+                  className="bg-[#1d4ed8] text-white border border-[#1d4ed8] text-xs px-3.5 py-1.5 rounded-full font-extrabold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none"
                   title="Download Namma Thanjai Android App"
                 >
-                  <Download className="w-3.5 h-3.5 shrink-0 text-amber-600" />
+                  <Download className="w-3.5 h-3.5 shrink-0 text-white" />
                   <span>Get App</span>
                 </a>
               )}

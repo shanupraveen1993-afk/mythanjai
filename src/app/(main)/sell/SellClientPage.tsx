@@ -85,15 +85,15 @@ export default function SellClientPage() {
       <div className="relative w-full min-h-[90px] rounded-2xl overflow-hidden bg-slate-950 text-white flex items-center px-4 sm:px-6 py-3.5 shadow-2xs mt-1">
         <img src="/thanjavur_temple_illustration.png" alt="Sell" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent" />
-        <div className="relative z-10 flex flex-col gap-0.5 max-w-lg">
+        <div className="relative z-10 flex flex-col gap-1 max-w-xl">
           <span className="text-xs font-black text-[#F9B637] uppercase tracking-widest">
-            Local Matchmaker • Thanjavur Marketplace
+            LOCAL MARKETPLACE • தஞ்சாவூர் நேரடி விற்பனை
           </span>
-          <h1 className="font-heading font-black text-lg sm:text-xl uppercase">
-            Items for Sale in Thanjavur
+          <h1 className="font-heading font-black text-lg sm:text-xl text-white tracking-tight">
+            Items for Sale in Thanjavur <span className="text-amber-400 block text-xs sm:text-sm font-extrabold mt-0.5">தஞ்சாவூர் நேரடி விற்பனை பொருட்கள்</span>
           </h1>
-          <p className="text-xs text-slate-300 font-semibold">
-            CMDA plots, vehicles, electronics & household goods. Direct deals with zero brokerage.
+          <p className="text-xs text-slate-300 font-semibold leading-relaxed">
+            CMDA plots, vehicles, electronics &amp; household goods directly from local Tanjore owners (0% brokerage).
           </p>
         </div>
       </div>

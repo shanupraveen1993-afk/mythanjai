@@ -96,11 +96,16 @@ export default function LandingClientPage() {
               </span>
             </div>
 
-            <h1 className="font-heading font-black text-2xl sm:text-4xl text-white tracking-tight leading-tight">
-              Thanjavur&apos;s Direct Local Directory &amp; Community Marketplace
-            </h1>
+            <div className="flex flex-col gap-1">
+              <h1 className="font-heading font-black text-2xl sm:text-4xl text-white tracking-tight leading-tight">
+                Thanjavur&apos;s Direct Local Directory &amp; Community Marketplace
+              </h1>
+              <p className="font-heading font-extrabold text-sm sm:text-lg text-amber-400 mt-0.5">
+                நம்ம தஞ்சாவூரின் நேரடி 4-இன்-1 வணிக மற்றும் சேவை தளம்
+              </p>
+            </div>
             <p className="text-xs sm:text-sm text-slate-300 font-medium leading-relaxed">
-              Namma Thanjai connects residents, buyers, local owners, verified skilled workers, and neighborhood shops directly across Tanjore — with zero brokerage, zero commission, and zero middleman fees.
+              Connect directly with verified local owners, buyers, technicians, and neighborhood stores across Tanjore with zero brokerage and zero commission.
             </p>
           </div>
         </section>
@@ -113,7 +118,7 @@ export default function LandingClientPage() {
               <div
                 key={card.id}
                 onClick={() => router.push(card.path)}
-                className="bg-white rounded-xl sm:rounded-2xl border border-slate-200/90 p-3 sm:p-4 shadow-2xs hover:shadow-xs hover:border-amber-400/80 transition-all flex flex-col justify-between gap-2.5 group cursor-pointer"
+                className="bg-white rounded-xl sm:rounded-2xl border border-slate-200/90 p-3 sm:p-4 shadow-2xs hover:shadow-xs hover:border-slate-300 transition-all flex flex-col justify-between gap-2.5 group cursor-pointer"
               >
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center gap-2">
@@ -147,10 +152,10 @@ export default function LandingClientPage() {
                     e.stopPropagation();
                     router.push(card.path);
                   }}
-                  className="w-full btn-secondary text-[11px] sm:text-xs font-bold py-1.5 sm:py-2 rounded-lg flex items-center justify-center gap-1 cursor-pointer shadow-2xs active:scale-98"
+                  className="w-full bg-[#1d4ed8] text-white text-[11px] sm:text-xs font-bold py-1.5 sm:py-2 rounded-lg flex items-center justify-center gap-1 cursor-pointer shadow-2xs"
                 >
                   <span>{card.btnText}</span>
-                  <ChevronRight className="w-3.5 h-3.5 shrink-0 text-slate-400" />
+                  <ChevronRight className="w-3.5 h-3.5 shrink-0 text-white/80" />
                 </button>
               </div>
             );
@@ -364,52 +369,76 @@ export default function LandingClientPage() {
           </div>
         </section>
 
-        {/* ── Gentle "Steps to Use Namma Thanjai" Section ── */}
-        <section className="bg-slate-900 text-white rounded-2xl p-6 sm:p-10 flex flex-col gap-6 shadow-xs border border-slate-800 my-4">
-          <div className="flex flex-col gap-1.5 max-w-xl">
-            <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400 bg-slate-800 px-2.5 py-1 rounded-md w-fit border border-slate-700">
-              COMMUNITY PLATFORM
+        {/* ── High-Engagement Visual "Steps to Use Namma Thanjai" Section ── */}
+        <section className="bg-slate-900 text-white rounded-2xl p-5 sm:p-8 flex flex-col gap-5 shadow-xs border border-slate-800 my-4">
+          <div className="flex flex-col gap-1 max-w-xl">
+            <span className="text-[10px] font-bold uppercase tracking-widest text-amber-400 bg-amber-500/10 px-2.5 py-0.5 rounded-md w-fit border border-amber-500/20">
+              3 EASY STEPS • 3 எளிய படிகள்
             </span>
-            <h2 className="font-heading font-black text-lg sm:text-2xl text-white tracking-tight">
-              Steps to Use Namma Thanjai
+            <h2 className="font-heading font-black text-lg sm:text-2xl text-white tracking-tight mt-1">
+              How Namma Thanjai Works
             </h2>
-            <p className="text-xs text-slate-400 font-medium">
-              Connecting Tanjore residents directly with 0 brokerage, 0 commission, and direct local communication.
-            </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-1">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
             {/* Step 1 */}
-            <div className="bg-slate-800/80 border border-slate-700/80 p-5 rounded-xl flex flex-col gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-slate-700 text-amber-400 font-heading font-black text-sm flex items-center justify-center">
-                1
+            <div className="bg-slate-800/90 border border-slate-700/80 p-4 sm:p-5 rounded-xl flex flex-col justify-between gap-3 group hover:border-amber-500/50 transition-all">
+              <div className="flex items-center justify-between">
+                <span className="w-8 h-8 rounded-lg bg-amber-500 text-slate-950 font-heading font-black text-sm flex items-center justify-center shadow-2xs">
+                  01
+                </span>
+                <span className="text-[10px] font-bold text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">
+                  STEP 1
+                </span>
               </div>
-              <h3 className="font-heading font-bold text-xs text-white">Browse or Post Listings</h3>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                Post your items for sale, buyer requirements, skilled tradesperson profile, or local store discounts for free.
-              </p>
+              <div className="flex flex-col gap-1">
+                <h3 className="font-heading font-black text-sm text-white">
+                  Pick Segment <span className="text-amber-400 font-extrabold text-xs block mt-0.5">பிரிவைத் தேர்ந்தெடு</span>
+                </h3>
+                <p className="text-[11px] text-slate-400 font-medium">
+                  Choose Sell, Need, Services, or Store Offers.
+                </p>
+              </div>
             </div>
 
             {/* Step 2 */}
-            <div className="bg-slate-800/80 border border-slate-700/80 p-5 rounded-xl flex flex-col gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-slate-700 text-amber-400 font-heading font-black text-sm flex items-center justify-center">
-                2
+            <div className="bg-slate-800/90 border border-slate-700/80 p-4 sm:p-5 rounded-xl flex flex-col justify-between gap-3 group hover:border-amber-500/50 transition-all">
+              <div className="flex items-center justify-between">
+                <span className="w-8 h-8 rounded-lg bg-amber-500 text-slate-950 font-heading font-black text-sm flex items-center justify-center shadow-2xs">
+                  02
+                </span>
+                <span className="text-[10px] font-bold text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">
+                  STEP 2
+                </span>
               </div>
-              <h3 className="font-heading font-bold text-xs text-white">Direct 1:1 Contact</h3>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                Connect directly with posters via verified phone calls, direct WhatsApp handoff, or built-in in-app chat.
-              </p>
+              <div className="flex flex-col gap-1">
+                <h3 className="font-heading font-black text-sm text-white">
+                  Post or Browse <span className="text-amber-400 font-extrabold text-xs block mt-0.5">பதிவிடு / தேடு</span>
+                </h3>
+                <p className="text-[11px] text-slate-400 font-medium">
+                  Post in 30s or browse verified local Tanjore listings.
+                </p>
+              </div>
             </div>
 
             {/* Step 3 */}
-            <div className="bg-slate-800/80 border border-slate-700/80 p-5 rounded-xl flex flex-col gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-slate-700 text-amber-400 font-heading font-black text-sm flex items-center justify-center">
-                3
+            <div className="bg-slate-800/90 border border-slate-700/80 p-4 sm:p-5 rounded-xl flex flex-col justify-between gap-3 group hover:border-amber-500/50 transition-all">
+              <div className="flex items-center justify-between">
+                <span className="w-8 h-8 rounded-lg bg-amber-500 text-slate-950 font-heading font-black text-sm flex items-center justify-center shadow-2xs">
+                  03
+                </span>
+                <span className="text-[10px] font-bold text-amber-300 bg-amber-500/10 px-2 py-0.5 rounded-full border border-amber-500/20">
+                  STEP 3
+                </span>
               </div>
-              <h3 className="font-heading font-bold text-xs text-white">Deal Directly with Locals</h3>
-              <p className="text-xs text-slate-300 leading-relaxed">
-                Transact 1:1 with local Thanjavur residents with zero middleman commission or brokerage fees.
-              </p>
+              <div className="flex flex-col gap-1">
+                <h3 className="font-heading font-black text-sm text-white">
+                  Direct Connect <span className="text-amber-400 font-extrabold text-xs block mt-0.5">நேரடி தொடர்பு</span>
+                </h3>
+                <p className="text-[11px] text-slate-400 font-medium">
+                  Call or chat directly with Tanjore locals (0% brokerage).
+                </p>
+              </div>
             </div>
           </div>
         </section>

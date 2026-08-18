@@ -129,14 +129,30 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
 
   const isLookingFor = listing.type === "looking_for" || listing.expected_price_from;
 
+  // Service Provider Availability State (Only for service listing type)
+  const isServiceListing = listing.type === "service";
+  const [isAvailable, setIsAvailable] = useState<boolean>(true);
+
+  // Toggle Service Availability (Only for own service listing)
+  const handleToggleAvailability = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const nextState = !isAvailable;
+    setIsAvailable(nextState);
+    if (typeof window !== "undefined") {
+      try {
+        localStorage.setItem(`namma_thanjai_service_avail_${listing.id}`, String(nextState));
+      } catch (err) {}
+    }
+  };
+
   return (
     <>
       <div 
         onClick={handleCardView}
         className="bg-white -mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full sm:rounded-2xl overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.06)] hover:shadow-[0_6px_20px_rgba(0,0,0,0.09)] transition-all duration-200 flex flex-col justify-between cursor-pointer font-sans group border-b border-slate-200/80 sm:border sm:border-slate-200/90 card-lift"
       >
-        {/* Card Header Media Container */}
-        <div className="w-full h-32 sm:h-36 bg-slate-100 relative overflow-hidden">
+        {/* Card Header Media Container (OLX Competitor Standard) */}
+        <div className="w-full h-36 sm:h-40 bg-slate-100 relative overflow-hidden">
           <Image
             src={imageSrc}
             alt={listing.title}
@@ -144,87 +160,132 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
             className="object-cover group-hover:scale-105 transition-transform duration-300"
           />
           
-          {/* Category & Relative Date Tag */}
-          <div className="absolute top-3 left-3 flex items-center gap-1.5 z-10">
-            <span className="bg-slate-950/80 backdrop-blur-xs text-white font-bold text-xs uppercase tracking-wider px-2.5 py-1 rounded-md">
-              {listing.category || listing.type || "Classified"}
+          {/* Top Left: Location & Area Overlay Badge */}
+          <div className="absolute top-2.5 left-2.5 flex items-center gap-1 z-10">
+            <span className="bg-slate-950/80 backdrop-blur-xs text-white font-bold text-[11px] px-2.5 py-1 rounded-md flex items-center gap-1">
+              <MapPin className="w-3 h-3 text-amber-400 shrink-0" />
+              <span className="truncate max-w-[120px]">{listing.location || "Thanjavur"}</span>
             </span>
-            <span className="bg-slate-950/80 backdrop-blur-xs text-slate-200 font-medium text-xs px-2 py-1 rounded-md flex items-center gap-1">
-              <Calendar className="w-2.5 h-2.5 text-slate-300" />
-              <span>{formatRelativeTime(listing.created_at)}</span>
+          </div>
+
+          {/* Top Right: BOLD Price / Budget Overlay Badge (OLX Standard) */}
+          <div className="absolute top-2.5 right-2.5 z-10">
+            <span className="bg-amber-500 text-slate-950 font-heading font-black text-xs sm:text-sm px-3 py-1 rounded-full shadow-xs border border-amber-400/90 inline-block">
+              {isLookingFor
+                ? `₹${listing.expected_price_from || "5k"} - ₹${listing.expected_price_to || "15k"}`
+                : listing.price || "₹2 Lakhs"}
             </span>
           </div>
 
           {/* Action Overlay Buttons: Save & Report */}
-          <div className="absolute top-3 right-3 flex items-center gap-1.5 z-10">
+          <div className="absolute bottom-2.5 right-2.5 flex items-center gap-1.5 z-10">
             <button
+              type="button"
               onClick={handleSaveToggle}
-              className={`w-8 h-8 rounded-full border shadow-xs flex items-center justify-center transition-all cursor-pointer ${
+              className={`w-7 h-7 rounded-full border shadow-2xs flex items-center justify-center transition-all cursor-pointer ${
                 isSaved
                   ? "bg-amber-500 text-slate-950 border-amber-400"
-                  : "bg-white/90 text-slate-700 border-slate-200 hover:bg-white"
+                  : "bg-slate-900/80 text-white border-slate-700 hover:bg-slate-900"
               }`}
               title={isSaved ? "Saved" : "Save Listing"}
             >
-              <Bookmark className={`w-4 h-4 ${isSaved ? "fill-current" : ""}`} />
+              <Bookmark className={`w-3.5 h-3.5 ${isSaved ? "fill-current" : ""}`} />
             </button>
             <button
+              type="button"
               onClick={handleReportListing}
-              className="w-8 h-8 rounded-full border border-slate-200 bg-white/90 text-slate-500 hover:text-rose-600 hover:bg-white flex items-center justify-center transition-all cursor-pointer shadow-xs"
+              className="w-7 h-7 rounded-full border border-slate-700 bg-slate-900/80 text-slate-300 hover:text-rose-400 hover:bg-slate-900 flex items-center justify-center transition-all cursor-pointer shadow-2xs"
               title="Report Listing"
             >
-              <Flag className="w-3.5 h-3.5" />
+              <Flag className="w-3 h-3" />
             </button>
           </div>
         </div>
 
-        {/* Card Content Body */}
-        <div className="p-4 flex flex-col gap-2.5 flex-1 justify-between">
+        {/* Card Content Body (OLX Hierarchy) */}
+        <div className="p-3.5 sm:p-4 flex flex-col gap-2 flex-1 justify-between">
           <div>
-            {/* Price Row */}
-            <div className="flex justify-between items-center mb-1">
-              <span className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight">
-                {isLookingFor
-                  ? `₹${listing.expected_price_from || "5,000"} - ₹${listing.expected_price_to || "15,000"}`
-                  : listing.price || "₹2 Lakhs"}
+            {/* Category & Relative Time Row */}
+            <div className="flex items-center justify-between gap-2 mb-1">
+              <span className="text-[10px] font-extrabold uppercase tracking-wider text-amber-800 bg-amber-50 border border-amber-200/70 px-2 py-0.5 rounded-md inline-block">
+                {listing.category || listing.type || "Classified"}
+              </span>
+              <span className="text-[11px] font-bold text-slate-400 flex items-center gap-1">
+                <Calendar className="w-3 h-3 text-slate-400" />
+                <span>{formatRelativeTime(listing.created_at)}</span>
               </span>
             </div>
 
-            {/* Title */}
-            <h3 className="font-heading font-extrabold text-sm text-slate-800 line-clamp-1 group-hover:text-amber-600 transition-colors">
+            {/* Item Title */}
+            <h3 className="font-heading font-black text-sm text-slate-900 line-clamp-1 group-hover:text-amber-600 transition-colors">
               {listing.title}
             </h3>
 
+            {/* Key Specifications Line (OLX Metadata Pills) */}
+            <div className="flex flex-wrap gap-1 my-1.5">
+              <span className="text-[10px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200/60">
+                {listing.type === "sell" ? "Direct Sale" : listing.type === "service" ? "Doorstep Service" : "Local Tanjore"}
+              </span>
+              <span className="text-[10px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md border border-slate-200/60">
+                0% Brokerage
+              </span>
+            </div>
+
             {/* Description */}
-            <p className="text-xs text-slate-500 font-semibold line-clamp-2 mt-1 leading-relaxed">
+            <p className="text-xs text-slate-500 font-medium line-clamp-2 leading-relaxed">
               {listing.description}
             </p>
           </div>
 
-          {/* Footer Metadata & Actions */}
-          <div className="pt-3 border-t border-slate-100 flex flex-col gap-3">
-            <div className="flex items-center justify-between text-xs font-bold text-slate-400">
-              <div className="flex items-center gap-1">
-                <MapPin className="w-3.5 h-3.5 text-amber-500" />
-                <span className="truncate max-w-[120px]">{listing.location || "Thanjavur District"}</span>
+          {/* Service Provider Availability Banner (Only for Service Listings) */}
+          {isServiceListing && (
+            <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
+              <div className="flex items-center gap-1.5">
+                <span className={`w-2.5 h-2.5 rounded-full ${isAvailable ? "bg-emerald-500 animate-pulse" : "bg-amber-500"}`} />
+                <span className={`text-[11px] font-bold ${isAvailable ? "text-emerald-700" : "text-amber-700"}`}>
+                  {isAvailable ? "Available Now (கிடைக்கிறார்)" : "Currently Busy (தற்சமயம் வர இயலாது)"}
+                </span>
               </div>
 
-              {/* Views & Shares counters */}
-              <div className="flex items-center gap-3">
-                {views < 15 ? (
-                  <span className="inline-flex items-center gap-1 text-xs font-black text-amber-800 bg-amber-100 border border-amber-300 px-2 py-0.5 rounded-md">
-                    <Sparkles className="w-3 h-3 fill-amber-500 text-amber-600" />
-                    <span>New</span>
-                  </span>
-                ) : (
-                  <span className="flex items-center gap-1">
-                    <Eye className="w-3 h-3 text-slate-400" />
-                    {views} views
-                  </span>
-                )}
+              {/* Service Provider Only Toggle Control */}
+              {isOwnPost && (
                 <button
+                  type="button"
+                  onClick={handleToggleAvailability}
+                  className={`text-[10px] font-extrabold px-2.5 py-1 rounded-full border transition-all cursor-pointer active:scale-95 ${
+                    isAvailable
+                      ? "bg-emerald-50 text-emerald-800 border-emerald-300 hover:bg-emerald-100"
+                      : "bg-amber-50 text-amber-800 border-amber-300 hover:bg-amber-100"
+                  }`}
+                  title="Toggle Your Service Availability"
+                >
+                  {isAvailable ? "Set to Busy" : "Set to Available"}
+                </button>
+              )}
+            </div>
+          )}
+
+          {/* Footer Seller Info & Action Buttons */}
+          <div className="pt-2.5 border-t border-slate-100 flex flex-col gap-2.5">
+            <div className="flex items-center justify-between text-xs font-bold text-slate-500">
+              <div className="flex items-center gap-1.5">
+                <span className="w-5 h-5 rounded-full bg-amber-100 text-amber-700 font-black text-[10px] flex items-center justify-center border border-amber-300">
+                  {(listing.seller_name || "T")[0].toUpperCase()}
+                </span>
+                <span className="truncate max-w-[110px] text-slate-800 font-bold">{listing.seller_name || "Tanjore Local"}</span>
+                <UserCheck className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+              </div>
+
+              {/* Views counter */}
+              <div className="flex items-center gap-2">
+                <span className="flex items-center gap-1 text-[11px]">
+                  <Eye className="w-3 h-3 text-slate-400" />
+                  {views}
+                </span>
+                <button
+                  type="button"
                   onClick={handleShare}
-                  className="flex items-center gap-1 hover:text-slate-700 transition-colors"
+                  className="flex items-center gap-1 text-[11px] hover:text-slate-700 transition-colors"
                   title="Share"
                 >
                   <Share2 className="w-3 h-3 text-slate-400" />
@@ -244,8 +305,12 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
                 <>
                   {!isLookingFor && (
                     <button
+                      type="button"
                       onClick={(e) => {
                         e.stopPropagation();
+                        if (isServiceListing && !isAvailable) {
+                          alert("Note: This service provider is currently busy/unavailable. You may leave a message in chat.");
+                        }
                         setIsChatOpen(true);
                       }}
                       className="btn btn-chat btn-sm flex-1 text-xs"
@@ -258,7 +323,12 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
                   {(listing.show_phone !== false) && (
                     <a
                       href={`tel:${listing.phone || "919994837342"}`}
-                      onClick={(e) => e.stopPropagation()}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (isServiceListing && !isAvailable) {
+                          alert("Note: This service provider is currently marked as busy/unavailable.");
+                        }
+                      }}
                       className="btn btn-call btn-sm flex-1 text-xs"
                     >
                       <Phone className="w-3.5 h-3.5 text-white" />
