@@ -210,11 +210,11 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
 
       {/* Line 4: Location/Address on LEFT + Save & Share Icons on RIGHT */}
       <div className="flex items-center justify-between text-xs text-slate-600 font-normal border-t border-b border-slate-100 py-2.5 my-0.5">
-        {/* Left: Location Tag */}
-        <span className="inline-flex items-center gap-1 text-slate-700 bg-slate-100 px-2.5 py-1 rounded-md font-normal">
+        {/* Standardized Location Tag */}
+        <div className="flex items-center gap-1 text-xs text-slate-600 font-normal">
           <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-          <span>{post.area_tag}</span>
-        </span>
+          <span className="truncate">{post.area_tag || "Thanjavur"}</span>
+        </div>
 
         {/* Right: Save & Share Icons (No views count) */}
         <div className="flex items-center gap-2">

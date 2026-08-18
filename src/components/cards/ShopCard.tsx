@@ -212,7 +212,7 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
             src={images[0]}
             alt={post.shop_name}
             fill
-            className="object-cover group-hover:scale-105 transition-transform duration-300"
+            className="object-cover"
             unoptimized
           />
         </div>
@@ -236,12 +236,12 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
           <div className={`border rounded-xl p-3 flex flex-col gap-1.5 mt-0.5 font-sans ${
             isExpired ? "bg-slate-50 border-slate-200 text-slate-500 opacity-75" : "bg-amber-50/60 border-amber-200/80 text-slate-900"
           }`}>
-            <div className="flex items-center gap-1.5 text-slate-900 font-black text-xs truncate">
+            <div className="flex items-center gap-1.5 text-slate-900 font-bold text-xs truncate">
               <Sparkles className="w-3.5 h-3.5 fill-amber-500 text-amber-600 shrink-0" />
               <span className="truncate">{post.offer_title}</span>
             </div>
             {post.offer_description && (
-              <p className="text-xs text-slate-600 font-medium leading-relaxed bg-white/95 p-2 rounded-lg border border-amber-100/60">
+              <p className="text-xs text-slate-600 font-normal leading-relaxed bg-white/95 p-2 rounded-lg border border-amber-100/60">
                 {post.offer_description}
               </p>
             )}
@@ -249,29 +249,17 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
         )}
 
         {/* 2. Offer Validity Badge */}
-        <div className={`flex items-center gap-1 px-2.5 py-1 rounded-lg border font-bold text-xs w-fit ${
+        <div className={`flex items-center gap-1 px-2.5 py-1 rounded-lg border font-semibold text-xs w-fit ${
           isExpired ? "text-rose-700 bg-rose-50 border-rose-200" : "text-slate-700 bg-slate-100 border-slate-200"
         }`}>
           <Calendar className="w-3.5 h-3.5 text-slate-500" />
           <span>{isExpired ? "Offer Expired" : validityText}</span>
         </div>
 
-        {/* 3. Location & Address Box (Placed Below Offer) */}
-        <div className="flex flex-col gap-1 text-xs text-slate-600 font-semibold bg-slate-50 p-2.5 rounded-xl border border-slate-200/60">
-          <div className="flex items-center gap-1 text-slate-800 font-bold">
-            <MapPin className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-            <span>{post.area_tag || "Thanjavur"}</span>
-          </div>
-          {post.address_text && (
-            <p className="text-xs text-slate-500 font-medium leading-relaxed line-clamp-2 pl-4">
-              {post.address_text}
-              {post.landmark && (
-                <span className="block mt-0.5 text-slate-700 font-bold truncate">
-                  Near: {post.landmark}
-                </span>
-              )}
-            </p>
-          )}
+        {/* 3. Standardized Location Tag */}
+        <div className="flex items-center text-slate-600 text-xs font-normal gap-1 pt-0.5">
+          <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+          <span className="truncate">{post.address_text || post.area_tag || "Thanjavur"}</span>
         </div>
 
         {/* Video Reel Promo (Data-Saver Optimized Preload) */}

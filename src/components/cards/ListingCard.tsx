@@ -259,9 +259,9 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
               {listing.description}
             </p>
 
-            {/* Address Row */}
-            <div className="flex items-center text-slate-600 text-[11px] font-normal gap-1 pt-1">
-              <MapPin className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+            {/* Standardized Location Tag */}
+            <div className="flex items-center text-slate-600 text-xs font-normal gap-1 pt-0.5">
+              <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
               <span className="truncate">{listing.location || "Medical College Rd, Thanjavur"}</span>
             </div>
           </div>
