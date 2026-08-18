@@ -168,17 +168,17 @@ export default function TopHeader({
 
         {/* Right Side: Get App + Dynamic Post CTA + Chat Icon (Logged in) + Profile Icon */}
         <div className="flex items-center gap-2 shrink-0">
-          {/* 1. Get App Button — Homepage ONLY */}
+          {/* 1. Get App Button — Homepage ONLY (Royal Blue Primary Design) */}
           {isHomePage && (
             <a
               href="/namma_thanjai_release.apk"
               download="namma_thanjai_release.apk"
               onClick={handleGetAppClick}
-              className="bg-[#f59e0b] text-slate-950 border border-[#d97706] hover:bg-[#d97706] hover:text-white text-xs px-3.5 py-1.5 rounded-lg font-extrabold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none transition-colors"
+              className="bg-[#1d4ed8] text-white border border-blue-600 hover:bg-blue-700 text-xs px-3.5 py-1.5 rounded-lg font-extrabold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none transition-colors"
               title="Download Namma Thanjai Android App"
               aria-label="Download Namma Thanjai Android App"
             >
-              <Download className="w-3.5 h-3.5 shrink-0 text-slate-950 group-hover:text-white" />
+              <Download className="w-3.5 h-3.5 shrink-0 text-white" />
               <span>Get App</span>
             </a>
           )}
