@@ -8,6 +8,8 @@ import { ServiceProviderPost } from "@/types";
 import { Plus, Loader2, Wrench, ArrowUpDown } from "lucide-react";
 import { SERVICE_CATEGORIES } from "@/lib/constants";
 import WebAppScrollFAB from "@/components/common/WebAppScrollFAB";
+import CustomDropdown from "@/components/ui/CustomDropdown";
+import { Filter } from "lucide-react";
 import { isListingQuarantined } from "@/lib/moderation";
 
 const SAMPLE_POSTS: ServiceProviderPost[] = [
@@ -24,6 +26,18 @@ export default function ServicesClientPage() {
   const router = useRouter();
   const { user, profile } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [sortBy, setSortBy] = useState<"recent" | "rating" | "name">("recent");
+
+  const categoryOptions = React.useMemo(() => [
+    { label: "All Services (அனைத்தும்)", value: "All" },
+    ...SERVICE_CATEGORIES.map((cat) => ({ label: cat, value: cat })),
+  ], []);
+
+  const sortOptions = React.useMemo(() => [
+    { label: "Recently Added", value: "recent" },
+    { label: "Highest Rated", value: "rating" },
+    { label: "Name (A-Z)", value: "name" },
+  ], []);
 
   const isAuthVerified = Boolean(profile?.isVerified || user);
 
@@ -37,7 +51,6 @@ export default function ServicesClientPage() {
     }
     router.push("/post/service");
   };
-  const [sortBy, setSortBy] = useState<"recent" | "rating" | "name">("recent");
 
   const { data: firestorePosts, loading } = useFirestore<ServiceProviderPost>({
     collectionName: "services",
@@ -100,32 +113,25 @@ export default function ServicesClientPage() {
 
       {/* LISTING CONTAINER */}
       <div className="flex flex-col gap-3">
-        {/* Category & Sort Side-by-Side Filter Bar */}
+        {/* Category & Sort Custom Dropdown Controls */}
         <div className="py-1 flex items-center gap-2 sm:gap-3 bg-transparent w-full">
           {/* Category Dropdown */}
-          <select
+          <CustomDropdown
+            options={categoryOptions}
             value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-            className="custom-select-arrow pr-8 pl-3.5 py-2.5 min-h-[44px] text-xs sm:text-sm font-semibold bg-white border border-slate-300 rounded-xl shadow-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 cursor-pointer max-w-[170px] sm:max-w-[220px] truncate"
-          >
-            <option value="All">All Services</option>
-            {SERVICE_CATEGORIES.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
+            onChange={(val) => setSelectedCategory(val)}
+            icon={<Filter className="w-3.5 h-3.5" />}
+            className="flex-1 max-w-[210px] sm:max-w-[250px]"
+          />
 
-          {/* Sort By Dropdown (Side-by-Side directly next to Category) */}
-          <select
+          {/* Sort By Dropdown */}
+          <CustomDropdown
+            options={sortOptions}
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value as any)}
-            className="custom-select-arrow pr-8 pl-3.5 py-2.5 min-h-[44px] text-xs sm:text-sm font-semibold bg-white border border-slate-300 rounded-xl shadow-xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-yellow-500/50 cursor-pointer shrink-0"
-          >
-            <option value="recent">Recently Added</option>
-            <option value="rating">Highest Rated</option>
-            <option value="name">Name (A-Z)</option>
-          </select>
+            onChange={(val) => setSortBy(val as any)}
+            icon={<ArrowUpDown className="w-3.5 h-3.5" />}
+            className="shrink-0"
+          />
         </div>
 
       {/* Feed */}

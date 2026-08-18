@@ -9,6 +9,7 @@ import { Plus, ShoppingBag, Loader2, Filter, ArrowUpDown } from "lucide-react";
 import { CLASSIFIED_CATEGORIES } from "@/lib/constants";
 import { isListingQuarantined } from "@/lib/moderation";
 import WebAppScrollFAB from "@/components/common/WebAppScrollFAB";
+import CustomDropdown from "@/components/ui/CustomDropdown";
 
 const SAMPLE_POSTS: NeedOrSalePost[] = [
   { id: "sl_cmda", userId: "sample", type: "SELL", raw_text: "2400 Sqft CMDA Approved Plot for sale near New Busstand, Thanjavur.", title: "2400 Sqft Plot near New Busstand", description: "CMDA approved residential land, 40ft tar road, clear title deeds, immediate registration.", category: "Plots & Real Estate", area_tag: "New Bus Stand", price: 3600000, phone: "9876543210", is_verified: true, image_url: "/hero_building_visual.png", created_at: new Date() as any, expires_at: new Date() as any },
@@ -22,7 +23,20 @@ import { useAuth } from "@/hooks/use-auth";
 export default function SellClientPage() {
   const router = useRouter();
   const { user, profile } = useAuth();
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [sortBy, setSortBy] = useState<"recent" | "price_low" | "price_high">("recent");
+  const [localPosts, setLocalPosts] = useState<NeedOrSalePost[]>([]);
+
+  const categoryOptions = React.useMemo(() => [
+    { label: "All Categories (அனைத்தும்)", value: "All" },
+    ...CLASSIFIED_CATEGORIES.map((cat) => ({ label: cat, value: cat })),
+  ], []);
+
+  const sortOptions = React.useMemo(() => [
+    { label: "Recently Added", value: "recent" },
+    { label: "Price: Low to High", value: "price_low" },
+    { label: "Price: High to Low", value: "price_high" },
+  ], []);
 
   const isAuthVerified = Boolean(profile?.isVerified || user);
 
@@ -36,15 +50,12 @@ export default function SellClientPage() {
     }
     router.push("/post/sell");
   };
-  const [sortBy, setSortBy] = useState<"recent" | "price_low" | "price_high">("recent");
 
   const { data: firestorePosts, loading } = useFirestore<NeedOrSalePost>({
     collectionName: "needs_and_sales",
     areaTag: "All Areas",
     category: "All",
   });
-
-  const [localPosts, setLocalPosts] = useState<NeedOrSalePost[]>([]);
 
   useEffect(() => {
     try {
@@ -108,38 +119,25 @@ export default function SellClientPage() {
 
       {/* LISTING CONTAINER */}
       <div className="flex flex-col gap-3">
-        {/* Category & Sort Side-by-Side Native Filter Controls */}
+        {/* Category & Sort Custom Dropdown Controls */}
         <div className="py-1 flex items-center gap-2 sm:gap-3 bg-transparent w-full">
           {/* Category Dropdown */}
-          <div className="relative flex-1 max-w-[200px] sm:max-w-[240px]">
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full appearance-none pr-8 pl-3 py-2 text-xs sm:text-sm font-semibold bg-white border border-slate-300/90 rounded-lg shadow-2xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1d4ed8]/30 cursor-pointer truncate"
-            >
-              <option value="All">All Categories (அனைத்தும்)</option>
-              {CLASSIFIED_CATEGORIES.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
-            <Filter className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-          </div>
+          <CustomDropdown
+            options={categoryOptions}
+            value={selectedCategory}
+            onChange={(val) => setSelectedCategory(val)}
+            icon={<Filter className="w-3.5 h-3.5" />}
+            className="flex-1 max-w-[210px] sm:max-w-[250px]"
+          />
 
           {/* Sort By Dropdown */}
-          <div className="relative shrink-0">
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
-              className="appearance-none pr-8 pl-3 py-2 text-xs sm:text-sm font-semibold bg-white border border-slate-300/90 rounded-lg shadow-2xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1d4ed8]/30 cursor-pointer"
-            >
-              <option value="recent">Recently Added</option>
-              <option value="price_low">Price: Low to High</option>
-              <option value="price_high">Price: High to Low</option>
-            </select>
-            <ArrowUpDown className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-          </div>
+          <CustomDropdown
+            options={sortOptions}
+            value={sortBy}
+            onChange={(val) => setSortBy(val as any)}
+            icon={<ArrowUpDown className="w-3.5 h-3.5" />}
+            className="shrink-0"
+          />
         </div>
 
       {/* Feed */}

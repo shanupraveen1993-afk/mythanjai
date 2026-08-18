@@ -7,6 +7,8 @@ import ShopCard from "@/components/cards/ShopCard";
 import { ShopPost } from "@/types";
 import { Plus, Loader2, Store, ArrowUpDown } from "lucide-react";
 import { SHOP_CATEGORIES } from "@/lib/constants";
+import CustomDropdown from "@/components/ui/CustomDropdown";
+import { Filter } from "lucide-react";
 import WebAppScrollFAB from "@/components/common/WebAppScrollFAB";
 import { isListingQuarantined } from "@/lib/moderation";
 
@@ -22,6 +24,11 @@ export default function ShopsClientPage() {
   const router = useRouter();
   const { user, profile } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
+
+  const categoryOptions = React.useMemo(() => [
+    { label: "All Store Offers (அனைத்தும்)", value: "All" },
+    ...SHOP_CATEGORIES.map((cat) => ({ label: cat, value: cat })),
+  ], []);
 
   const isAuthVerified = Boolean(profile?.isVerified || user);
 
@@ -96,6 +103,16 @@ export default function ShopsClientPage() {
 
       {/* LISTING CONTAINER */}
       <div className="flex flex-col gap-3">
+        {/* Category Custom Dropdown Control */}
+        <div className="py-1 flex items-center gap-2 sm:gap-3 bg-transparent w-full">
+          <CustomDropdown
+            options={categoryOptions}
+            value={selectedCategory}
+            onChange={(val) => setSelectedCategory(val)}
+            icon={<Filter className="w-3.5 h-3.5" />}
+            className="w-full max-w-[260px]"
+          />
+        </div>
 
       {/* Feed */}
       {loading ? (

@@ -8,6 +8,7 @@ import { NeedOrSalePost } from "@/types";
 import { Plus, Loader2, Search, ArrowUpDown, Filter } from "lucide-react";
 import { CLASSIFIED_CATEGORIES } from "@/lib/constants";
 import { isListingQuarantined } from "@/lib/moderation";
+import CustomDropdown from "@/components/ui/CustomDropdown";
 
 const SAMPLE_POSTS: NeedOrSalePost[] = [
   { id: "nd_2bhk", userId: "sample", type: "NEED", raw_text: "Urgent need 2 BHK individual house for rent near Medical College.", title: "Need 2 BHK House for Rent", description: "Looking for independent 2 BHK with car parking in Medical College area.", category: "Property Rental", area_tag: "Medical College Road", price: 12000, phone: "9876543214", is_verified: true, created_at: new Date() as any, expires_at: new Date() as any },
@@ -23,6 +24,18 @@ export default function NeedClientPage() {
   const router = useRouter();
   const { user, profile } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [sortBy, setSortBy] = useState<"recent" | "price_low" | "price_high">("recent");
+
+  const categoryOptions = React.useMemo(() => [
+    { label: "All Categories (அனைத்தும்)", value: "All" },
+    ...CLASSIFIED_CATEGORIES.map((cat) => ({ label: cat, value: cat })),
+  ], []);
+
+  const sortOptions = React.useMemo(() => [
+    { label: "Recently Added", value: "recent" },
+    { label: "Budget: Low to High", value: "price_low" },
+    { label: "Budget: High to Low", value: "price_high" },
+  ], []);
 
   const isAuthVerified = Boolean(profile?.isVerified || user);
 
@@ -36,7 +49,6 @@ export default function NeedClientPage() {
     }
     router.push("/post/need");
   };
-  const [sortBy, setSortBy] = useState<"recent" | "price_low" | "price_high">("recent");
 
   const { data: firestorePosts, loading } = useFirestore<NeedOrSalePost>({
     collectionName: "needs_and_sales",
@@ -104,38 +116,25 @@ export default function NeedClientPage() {
 
       {/* LISTING CONTAINER */}
       <div className="flex flex-col gap-3">
-        {/* Category & Sort Side-by-Side Native Filter Controls */}
+        {/* Category & Sort Custom Dropdown Controls */}
         <div className="py-1 flex items-center gap-2 sm:gap-3 bg-transparent w-full">
           {/* Category Dropdown */}
-          <div className="relative flex-1 max-w-[200px] sm:max-w-[240px]">
-            <select
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className="w-full appearance-none pr-8 pl-3 py-2 text-xs sm:text-sm font-semibold bg-white border border-slate-300/90 rounded-lg shadow-2xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1d4ed8]/30 cursor-pointer truncate"
-            >
-              <option value="All">All Categories (அனைத்தும்)</option>
-              {CLASSIFIED_CATEGORIES.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
-            <Filter className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-          </div>
+          <CustomDropdown
+            options={categoryOptions}
+            value={selectedCategory}
+            onChange={(val) => setSelectedCategory(val)}
+            icon={<Filter className="w-3.5 h-3.5" />}
+            className="flex-1 max-w-[210px] sm:max-w-[250px]"
+          />
 
           {/* Sort By Dropdown */}
-          <div className="relative shrink-0">
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value as any)}
-              className="appearance-none pr-8 pl-3 py-2 text-xs sm:text-sm font-semibold bg-white border border-slate-300/90 rounded-lg shadow-2xs text-slate-800 focus:outline-none focus:ring-2 focus:ring-[#1d4ed8]/30 cursor-pointer"
-            >
-              <option value="recent">Recently Added</option>
-              <option value="price_low">Budget: Low to High</option>
-              <option value="price_high">Budget: High to Low</option>
-            </select>
-            <ArrowUpDown className="w-3.5 h-3.5 text-slate-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
-          </div>
+          <CustomDropdown
+            options={sortOptions}
+            value={sortBy}
+            onChange={(val) => setSortBy(val as any)}
+            icon={<ArrowUpDown className="w-3.5 h-3.5" />}
+            className="shrink-0"
+          />
         </div>
 
       {/* Feed */}
