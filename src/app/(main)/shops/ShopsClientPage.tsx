@@ -92,10 +92,9 @@ export default function ShopsClientPage() {
         <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight">
           Local Offers
         </h2>
-        {/* OUTLINED ROYAL BLUE POST BUTTON */}
         <button
           onClick={handlePostOffer}
-          className="flex items-center gap-1.5 text-xs px-4 py-2 uppercase tracking-wider cursor-pointer shrink-0 font-black text-[#1d4ed8] border-2 border-[#1d4ed8] hover:bg-blue-50 transition-all rounded-xl shadow-2xs"
+          className="btn-secondary text-xs px-4 py-2 uppercase tracking-wider shrink-0 rounded-xl gap-1.5"
         >
           <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
           <span>Post Offer</span>

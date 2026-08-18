@@ -140,31 +140,19 @@ export default function TopHeader({
 
         {/* Right Side: Get App + Profile Icon (+ Post Ad button on 4 Segment pages) */}
         <div className="flex items-center gap-2 shrink-0">
-          {/* 1. Get App Button — Homepage ONLY */}
+          {/* 1. Get App Button — Homepage ONLY (Secondary Outlined Blue CTA) */}
           {isHomePage && (
             <a
               href="/namma_thanjai_release.apk"
               download="namma_thanjai_release.apk"
               onClick={handleGetAppClick}
-              className="bg-[#1d4ed8] text-white border border-[#1d4ed8] text-xs px-3.5 py-1.5 rounded-full font-extrabold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none"
+              className="btn-secondary text-xs px-3.5 py-1.5 shrink-0 flex items-center gap-1.5 select-none"
               title="Download Namma Thanjai Android App"
               aria-label="Download Namma Thanjai Android App"
             >
-              <Download className="w-3.5 h-3.5 shrink-0 text-white" />
+              <Download className="w-3.5 h-3.5 shrink-0 text-[#1d4ed8]" />
               <span>Get App</span>
             </a>
-          )}
-
-          {/* 2. Action Post Button (Shown ONLY on 4 segment pages /sell, /need, /services, /shops) */}
-          {!isHomePage && (
-            <button
-              type="button"
-              onClick={onPostClick}
-              className="btn-primary text-xs px-3.5 py-1.5 shrink-0 flex items-center gap-1 font-black shadow-2xs"
-            >
-              <Plus className="w-3.5 h-3.5 stroke-[2.5] shrink-0 text-slate-950" />
-              <span>Post Ad</span>
-            </button>
           )}
 
           {/* 3. Profile Icon */}

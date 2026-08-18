@@ -152,7 +152,7 @@ export default function LandingClientPage() {
                     e.stopPropagation();
                     router.push(card.path);
                   }}
-                  className="w-full border border-[#1d4ed8] text-[#1d4ed8] hover:bg-blue-50 text-[11px] sm:text-xs font-black py-1.5 sm:py-2 rounded-lg flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs"
+                  className="w-full btn-secondary text-[11px] sm:text-xs py-1.5 sm:py-2 rounded-lg flex items-center justify-center gap-1"
                 >
                   <span>{card.btnText}</span>
                   <ChevronRight className="w-3.5 h-3.5 shrink-0 text-[#1d4ed8]" />
