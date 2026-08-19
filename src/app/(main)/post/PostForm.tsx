@@ -1012,11 +1012,11 @@ export default function PostForm({ segment }: PostFormProps) {
               </div>
             )}
 
-            {/* Submit Button (v2.0 Tactile 3D btn-primary) */}
+            {/* Submit Button */}
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 sm:py-4 btn-primary text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer mt-2"
+              className="w-full py-3.5 sm:py-4 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer mt-2 rounded-lg shadow-sm transition-colors"
             >
               {loading ? (
                 <>
