@@ -184,15 +184,15 @@ export default function TopHeader({
             </a>
           )}
 
-          {/* 2. Dynamic + Post CTA Button — Other Pages ONLY */}
+          {/* 2. Dynamic + Post CTA Button — Other Pages ONLY (Yellow Primary Style) */}
           {!isHomePage && (
             <button
               type="button"
               onClick={handleDynamicPostClick}
-              className="bg-[#1d4ed8] hover:bg-[#1e40af] text-white text-xs px-3.5 py-1.5 rounded-lg font-bold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer"
+              className="bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-xs px-3.5 py-1.5 rounded-lg font-heading font-black shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none"
               title={postInfo.label}
             >
-              <Plus className="w-3.5 h-3.5 stroke-[3] text-white" />
+              <Plus className="w-3.5 h-3.5 stroke-[3] text-[#0F172A]" />
               <span>{postInfo.label}</span>
             </button>
           )}
