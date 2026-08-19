@@ -51,7 +51,7 @@ export default function RootLayout({
             __html: `
               (function() {
                 if (typeof window !== 'undefined') {
-                  var TARGET_VERSION = 'v39.0_primary_yellow_post_ctas_and_fab_position';
+                  var TARGET_VERSION = 'v40.0_explore_buttons_outlined_blue_with_blue_chevron';
                   var currentVer = localStorage.getItem('namma_thanjai_cache_version');
                   if (currentVer !== TARGET_VERSION) {
                     localStorage.setItem('namma_thanjai_cache_version', TARGET_VERSION);
