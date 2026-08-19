@@ -455,7 +455,7 @@ export default function PostForm({ segment }: PostFormProps) {
         localPostRecord.offer_description = cleanDesc;
         localPostRecord.image_url = imagePreview || safeFirestoreImageUrl;
         localPostRecord.video_url = uploadedVideoUrl || "";
-        localPostRecord.address_text = `${area}, Thanjavur`;
+        localPostRecord.address_text = area ? `${area}, Thanjavur` : "Thanjavur";
 
         try {
           await addDoc(collection(db, "shops"), {
@@ -468,7 +468,7 @@ export default function PostForm({ segment }: PostFormProps) {
             latitude: 10.7870,
             longitude: 79.1378,
             google_maps_url: googleMapsUrl.trim() || "",
-            address_text: `${area}, Thanjavur`,
+            address_text: area ? `${area}, Thanjavur` : "Thanjavur",
             hours: "Special Local Offer",
             is_claimed: true,
             created_at: timestamp,
@@ -551,7 +551,7 @@ export default function PostForm({ segment }: PostFormProps) {
       userId: user?.uid || "preview_user",
       shop_name: title.trim() || "GLEN Exclusive Store",
       category: category || config.categories[0],
-      address_text: `${area}, Thanjavur`,
+      address_text: area ? `${area}, Thanjavur` : "Thanjavur",
       landmark: "Near Main Road",
       hours: "Valid 30 Days",
       valid_from: validFrom || undefined,
@@ -769,42 +769,26 @@ export default function PostForm({ segment }: PostFormProps) {
             ) : (
               /* NON-OFFER FORMS (SELL, NEED, SERVICE) */
               <>
-                {/* ROW 1: Category & Location Inputs in 1 Row Side-by-Side */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  <div className="flex flex-col gap-1">
-                    <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-                      <Tag className="w-3.5 h-3.5 text-slate-400" />
-                      Category *
-                    </label>
-                    <select
-                      value={category}
-                      onChange={(e) => setCategory(e.target.value)}
-                      className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 cursor-pointer"
-                    >
-                      {config.categories.map((cat) => (
-                        <option key={cat} value={cat}>
-                          {cat}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div className="flex flex-col gap-1">
-                    <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-amber-500" />
-                      <span>{segment === "need" ? "Preferred Locations (Up to 3) *" : "Address / Location *"}</span>
-                    </label>
-                    <input
-                      type="text"
-                      value={area}
-                      onChange={(e) => setArea(e.target.value)}
-                      placeholder={segment === "need" ? "e.g. Medical College Rd, Old Bus Stand, Vallam" : "Type your address or location..."}
-                      className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
-                    />
-                  </div>
+                {/* ROW 1: Category only (full width for non-offer) */}
+                <div className="flex flex-col gap-1">
+                  <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                    <Tag className="w-3.5 h-3.5 text-slate-400" />
+                    Category *
+                  </label>
+                  <select
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
+                    className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 cursor-pointer"
+                  >
+                    {config.categories.map((cat) => (
+                      <option key={cat} value={cat}>
+                        {cat}
+                      </option>
+                    ))}
+                  </select>
                 </div>
 
-                {/* ROW 2: Title with Character Limit Counter */}
+                {/* ROW 2: Title (for sell/need) or Name (for service) */}
                 <div className="flex flex-col gap-1">
                   <div className="flex items-center justify-between">
                     <label className="text-xs font-semibold text-slate-700">
@@ -831,14 +815,31 @@ export default function PostForm({ segment }: PostFormProps) {
                   />
                 </div>
 
-                {/* PRICE & PHONE IN 1 ROW SIDE-BY-SIDE (FOR SELL & NEED) */}
-                {(segment === "sell" || segment === "need") && (
+                {/* Service: Location below name */}
+                {segment === "service" && (
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                      <MapPin className="w-3.5 h-3.5 text-amber-500" />
+                      Service Location / Area *
+                    </label>
+                    <input
+                      type="text"
+                      value={area}
+                      onChange={(e) => setArea(e.target.value)}
+                      placeholder="e.g. Anna Nagar, Medical College Rd, Vallam"
+                      className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
+                    />
+                  </div>
+                )}
+
+                {/* PRICE + LOCATION in 1 row (FOR SELL) */}
+                {segment === "sell" && (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <div className="flex flex-col gap-1">
                       <div className="flex items-center justify-between">
                         <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
                           <IndianRupee className="w-3.5 h-3.5 text-emerald-600" />
-                          {segment === "sell" ? "Price (₹)" : "Budget (₹)"}
+                          Price (₹)
                         </label>
                         {formattedPriceBadge && (
                           <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
@@ -857,15 +858,54 @@ export default function PostForm({ segment }: PostFormProps) {
 
                     <div className="flex flex-col gap-1">
                       <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-                        <Phone className="w-3.5 h-3.5 text-slate-400" />
-                        Contact phone number (Editable) *
+                        <MapPin className="w-3.5 h-3.5 text-amber-500" />
+                        Address / Location *
                       </label>
                       <input
-                        type="tel"
-                        required
-                        placeholder="e.g. 9994837342"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
+                        type="text"
+                        value={area}
+                        onChange={(e) => setArea(e.target.value)}
+                        placeholder="Type your address or location..."
+                        className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {/* BUDGET + LOCATION in 1 row (FOR NEED) */}
+                {segment === "need" && (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="flex flex-col gap-1">
+                      <div className="flex items-center justify-between">
+                        <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
+                          <IndianRupee className="w-3.5 h-3.5 text-emerald-600" />
+                          Budget (₹)
+                        </label>
+                        {formattedPriceBadge && (
+                          <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
+                            {formattedPriceBadge}
+                          </span>
+                        )}
+                      </div>
+                      <input
+                        type="number"
+                        placeholder="e.g. 10000"
+                        value={price}
+                        onChange={(e) => setPrice(e.target.value)}
+                        className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
+                      />
+                    </div>
+
+                    <div className="flex flex-col gap-1">
+                      <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                        <MapPin className="w-3.5 h-3.5 text-amber-500" />
+                        Preferred Locations (Up to 3) *
+                      </label>
+                      <input
+                        type="text"
+                        value={area}
+                        onChange={(e) => setArea(e.target.value)}
+                        placeholder="e.g. Medical College Rd, Old Bus Stand, Vallam"
                         className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
                       />
                     </div>
@@ -874,6 +914,24 @@ export default function PostForm({ segment }: PostFormProps) {
 
                 {/* SERVICE SPECIFIC FIELDS: Phone (Editable) */}
                 {segment === "service" && (
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                      <Phone className="w-3.5 h-3.5 text-slate-400" />
+                      Contact phone number (Editable) *
+                    </label>
+                    <input
+                      type="tel"
+                      required
+                      placeholder="e.g. 9994837342"
+                      value={phone}
+                      onChange={(e) => setPhone(e.target.value)}
+                      className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
+                    />
+                  </div>
+                )}
+
+                {/* SELL/NEED: Phone field (below location, above description) */}
+                {(segment === "sell" || segment === "need") && (
                   <div className="flex flex-col gap-1">
                     <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                       <Phone className="w-3.5 h-3.5 text-slate-400" />
@@ -940,10 +998,10 @@ export default function PostForm({ segment }: PostFormProps) {
                 <div className="flex flex-col gap-0.5">
                   <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
                     <Phone className="w-3.5 h-3.5 text-slate-500" />
-                    <span>Show Phone Number on Listing Card (Yes / No)</span>
+                    <span>Display your phone number publicly</span>
                   </span>
                   <span className="text-xs text-slate-500 font-medium">
-                    Turn ON to let buyers call/WhatsApp you directly. Turn OFF to hide phone number.
+                    ON — Buyers can call or WhatsApp you directly from the listing. OFF — Phone is hidden.
                   </span>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer shrink-0">

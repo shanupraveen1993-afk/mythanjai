@@ -88,7 +88,7 @@ export default function FloatingPostButton() {
         className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs sm:text-sm rounded-xl shadow-xl cursor-pointer select-none active:scale-[0.98] transition-all uppercase tracking-wide border border-amber-400/60"
       >
         <Plus className="w-4 h-4 stroke-[3] shrink-0 text-[#0F172A]" />
-        <span>+ {label}</span>
+        <span>{label}</span>
       </button>
     </div>
   );
