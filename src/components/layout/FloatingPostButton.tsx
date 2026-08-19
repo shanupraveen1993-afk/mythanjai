@@ -36,26 +36,31 @@ export default function FloatingPostButton() {
   useEffect(() => {
     if (!isCategoryPage) return;
 
+    let ticking = false;
     const handleScroll = () => {
-      const currentScrollY = window.scrollY || document.documentElement.scrollTop || 0;
-
-      // Activate on second fold (scrolled past 80px)
-      if (currentScrollY > 80) {
-        if (currentScrollY < lastScrollY - 2) {
-          setIsVisible(true); // Scrolling UP -> Arise from bottom
-        } else if (currentScrollY > lastScrollY + 6) {
-          setIsVisible(false); // Scrolling DOWN -> Hide into bottom
-        } else {
-          setIsVisible(true); // Settled on 2nd fold -> Visible
-        }
-      } else {
-        setIsVisible(false);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const currentScrollY = window.scrollY || document.documentElement.scrollTop || 0;
+          if (currentScrollY > 60) {
+            if (currentScrollY < lastScrollY - 2) {
+              setIsVisible(true);
+            } else if (currentScrollY > lastScrollY + 6) {
+              setIsVisible(false);
+            } else {
+              setIsVisible(true);
+            }
+          } else {
+            setIsVisible(false);
+          }
+          setLastScrollY(currentScrollY);
+          ticking = false;
+        });
+        ticking = true;
       }
-      setLastScrollY(currentScrollY);
     };
 
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll(); // Initial check
+    handleScroll();
 
     return () => {
       window.removeEventListener("scroll", handleScroll);
@@ -66,11 +71,14 @@ export default function FloatingPostButton() {
 
   return (
     <div
-      style={{ bottom: "calc(5.75rem + env(safe-area-inset-bottom, 0px))" }}
-      className={`fixed left-4 right-4 max-w-md mx-auto z-[10000] md:hidden transition-all duration-300 transform ${
+      style={{
+        bottom: "calc(4.75rem + env(safe-area-inset-bottom, 12px))",
+        willChange: "transform, opacity",
+      }}
+      className={`fixed left-4 right-4 max-w-md mx-auto z-[10000] md:hidden transition-all duration-300 transform-gpu ${
         isVisible
           ? "translate-y-0 opacity-100 pointer-events-auto"
-          : "translate-y-20 opacity-0 pointer-events-none"
+          : "translate-y-16 opacity-0 pointer-events-none"
       }`}
     >
       <button
@@ -85,7 +93,7 @@ export default function FloatingPostButton() {
           }
           router.push(route);
         }}
-        className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs sm:text-sm rounded-xl shadow-xl cursor-pointer select-none active:scale-[0.98] transition-all uppercase tracking-wide border border-amber-400/60"
+        className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs sm:text-sm rounded-xl shadow-xl cursor-pointer select-none active:scale-[0.97] transition-all uppercase tracking-wide border border-amber-400/60 touch-manipulation"
       >
         <Plus className="w-4 h-4 stroke-[3] shrink-0 text-[#0F172A]" />
         <span>{label}</span>

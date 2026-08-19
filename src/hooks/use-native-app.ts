@@ -30,10 +30,11 @@ export function useNativeApp() {
       })
       .catch(() => {});
 
-    // 2. Android Native Status Bar Styling
+    // 2. Android Native Status Bar Styling — Prevent white header bleed into notification bar
     import("@capacitor/status-bar")
       .then(({ StatusBar, Style }) => {
         if (unmounted) return;
+        StatusBar.setOverlaysWebView({ overlay: false }).catch(() => {});
         StatusBar.setStyle({ style: Style.Dark }).catch(() => {});
         StatusBar.setBackgroundColor({ color: "#0F172A" }).catch(() => {});
       })

@@ -67,6 +67,7 @@ body {
   font-family: var(--font-sans), 'Red Hat Text', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-tap-highlight-color: transparent;
 }
 
 .font-heading {
@@ -74,6 +75,11 @@ body {
 }
 
 /* ── Master Button Architecture (Primary Yellow/Amber Brand Color System) ── */
+button, a, .btn {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
 .btn {
   display: inline-flex;
   align-items: center;
@@ -82,7 +88,7 @@ body {
   font-weight: 700;
   border-radius: var(--radius-btn);
   gap: 8px;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   user-select: none;
   line-height: 1;
