@@ -189,19 +189,19 @@ export default function HomeClientPage() {
                 Buy &amp; Sell items directly with Tanjore owners with 0 brokerage
               </p>
 
-              <div className="pt-2 border-t border-slate-100 hidden sm:flex flex-wrap gap-1.5">
-                {["Plots & Real Estate", "Bikes & Scooters"].map((cat, i) => (
+              <div className="pt-2 border-t border-slate-100 hidden sm:flex items-center gap-1 sm:gap-1.5 flex-nowrap overflow-hidden">
+                {["Plots", "Bikes"].map((cat, i) => (
                   <span
                     key={i}
                     onClick={() => router.push(`/sell?category=${encodeURIComponent(cat)}`)}
-                    className="text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors"
+                    className="text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors whitespace-nowrap shrink-0"
                   >
                     {cat}
                   </span>
                 ))}
                 <span
                   onClick={() => router.push("/sell")}
-                  className="text-[11px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 hover:bg-[#1d4ed8] hover:text-white cursor-pointer transition-colors"
+                  className="text-[11px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 hover:bg-[#1d4ed8] hover:text-white cursor-pointer transition-colors whitespace-nowrap shrink-0"
                 >
                   +12 More
                 </span>
@@ -236,19 +236,19 @@ export default function HomeClientPage() {
                 Post your requirements or find buyers in Thanjavur
               </p>
 
-              <div className="pt-2 border-t border-slate-100 hidden sm:flex flex-wrap gap-1.5">
-                {["Car Wanted", "House Rental"].map((cat, i) => (
+              <div className="pt-2 border-t border-slate-100 hidden sm:flex items-center gap-1 sm:gap-1.5 flex-nowrap overflow-hidden">
+                {["Cars", "Rentals"].map((cat, i) => (
                   <span
                     key={i}
                     onClick={() => router.push(`/need?category=${encodeURIComponent(cat)}`)}
-                    className="text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors"
+                    className="text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors whitespace-nowrap shrink-0"
                   >
                     {cat}
                   </span>
                 ))}
                 <span
                   onClick={() => router.push("/need")}
-                  className="text-[11px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 hover:bg-[#1d4ed8] hover:text-white cursor-pointer transition-colors"
+                  className="text-[11px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 hover:bg-[#1d4ed8] hover:text-white cursor-pointer transition-colors whitespace-nowrap shrink-0"
                 >
                   +10 More
                 </span>
@@ -283,19 +283,19 @@ export default function HomeClientPage() {
                 Hire verified doorstep technicians &amp; skilled workers
               </p>
 
-              <div className="pt-2 border-t border-slate-100 hidden sm:flex flex-wrap gap-1.5">
+              <div className="pt-2 border-t border-slate-100 hidden sm:flex items-center gap-1 sm:gap-1.5 flex-nowrap overflow-hidden">
                 {["Electrician", "Plumber"].map((cat, i) => (
                   <span
                     key={i}
                     onClick={() => router.push(`/services?category=${encodeURIComponent(cat)}`)}
-                    className="text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors"
+                    className="text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors whitespace-nowrap shrink-0"
                   >
                     {cat}
                   </span>
                 ))}
                 <span
                   onClick={() => router.push("/services")}
-                  className="text-[11px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 hover:bg-[#1d4ed8] hover:text-white cursor-pointer transition-colors"
+                  className="text-[11px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 hover:bg-[#1d4ed8] hover:text-white cursor-pointer transition-colors whitespace-nowrap shrink-0"
                 >
                   +15 More
                 </span>
@@ -330,19 +330,19 @@ export default function HomeClientPage() {
                 Discover exclusive store discounts &amp; deals from Tanjore shops
               </p>
 
-              <div className="pt-2 border-t border-slate-100 hidden sm:flex flex-wrap gap-1.5">
-                {["Store Discounts", "Cafes & Dining"].map((cat, i) => (
+              <div className="pt-2 border-t border-slate-100 hidden sm:flex items-center gap-1 sm:gap-1.5 flex-nowrap overflow-hidden">
+                {["Discounts", "Cafes"].map((cat, i) => (
                   <span
                     key={i}
                     onClick={() => router.push(`/shops?category=${encodeURIComponent(cat)}`)}
-                    className="text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors"
+                    className="text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors whitespace-nowrap shrink-0"
                   >
                     {cat}
                   </span>
                 ))}
                 <span
                   onClick={() => router.push("/shops")}
-                  className="text-[11px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 hover:bg-[#1d4ed8] hover:text-white cursor-pointer transition-colors"
+                  className="text-[11px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 hover:bg-[#1d4ed8] hover:text-white cursor-pointer transition-colors whitespace-nowrap shrink-0"
                 >
                   +10 More
                 </span>
