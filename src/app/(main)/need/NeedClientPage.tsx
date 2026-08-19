@@ -133,15 +133,15 @@ export default function NeedClientPage() {
 
       {/* LISTING CONTAINER */}
       <div className="flex flex-col gap-3">
-        {/* Category & Sort Custom Dropdown Controls */}
-        <div className="py-1 flex items-center gap-2 sm:gap-3 bg-transparent w-full">
+        {/* Category & Sort Custom Dropdown Controls (Hug Content) */}
+        <div className="py-1 flex items-center gap-2 sm:gap-3 bg-transparent w-full flex-wrap">
           {/* Category Dropdown */}
           <CustomDropdown
             options={categoryOptions}
             value={selectedCategory}
             onChange={(val) => setSelectedCategory(val)}
             icon={<Filter className="w-3.5 h-3.5" />}
-            className="flex-1 max-w-[210px] sm:max-w-[250px]"
+            className="w-fit shrink-0"
           />
 
           {/* Sort By Dropdown */}
@@ -150,7 +150,7 @@ export default function NeedClientPage() {
             value={sortBy}
             onChange={(val) => setSortBy(val as any)}
             icon={<ArrowUpDown className="w-3.5 h-3.5" />}
-            className="shrink-0"
+            className="w-fit shrink-0"
           />
         </div>
 
