@@ -11,6 +11,20 @@ export default function StaticApkCard({
 }) {
   const { toast } = useToast();
   const [isDownloading, setIsDownloading] = useState(false);
+  const [isNative, setIsNative] = useState(false);
+
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const cap = (window as any).Capacitor;
+        if (cap && cap.isNativePlatform && cap.isNativePlatform()) {
+          setIsNative(true);
+        }
+      } catch (e) {}
+    }
+  }, []);
+
+  if (isNative) return null;
 
   const handleDownloadApk = () => {
     setIsDownloading(true);
