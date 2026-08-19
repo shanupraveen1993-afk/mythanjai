@@ -235,12 +235,6 @@ function MainLayoutContent({
         </React.Suspense>
       )}
 
-      {/* Universal Directory Search Bar */}
-      {pathname !== "/profile" && !isChatRoute && !isOnboardingView && !isPostRoute && !isLandingMode && (
-        <React.Suspense fallback={null}>
-          <UniversalSearchBar />
-        </React.Suspense>
-      )}
 
       {/* Main Content Panel */}
       <main
