@@ -254,12 +254,15 @@ export default function PostForm({ segment }: PostFormProps) {
     return () => clearTimeout(timer);
   }, [description, segment]);
 
-  // Auto-fill user profile phone
+  // Track if user has manually edited the phone — prevents profile auto-fill from overwriting edits
+  const userEditedPhone = React.useRef(false);
+
+  // Auto-fill user profile phone (only if user hasn't manually touched the field)
   useEffect(() => {
-    if (profile?.phone && !phone) {
+    if (profile?.phone && !userEditedPhone.current) {
       setPhone(profile.phone);
     }
-  }, [profile, phone]);
+  }, [profile]);
 
   // Offer: single image with OCR; Sell: multi-image up to 3
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -323,70 +326,101 @@ export default function PostForm({ segment }: PostFormProps) {
 
     setLoading(true);
 
-    try {
-      // Upload sell images (up to 3)
-      let imageUrl = "";
-      let imageUrls: string[] = [];
-      if (segment === "sell" && selectedImages.length > 0) {
-        imageUrls = await Promise.all(
-          selectedImages.map(async (img) => {
-            const compressed = await compressImage(img);
-            const storageRef = ref(storage, `postings/${Date.now()}_${img.name}`);
-            const snapshot = await uploadBytes(storageRef, compressed.blob);
-            return getDownloadURL(snapshot.ref);
-          })
-        );
-        imageUrl = imageUrls[0] || "";
-      } else if (selectedImage) {
-        try {
-          const compressed = await compressImage(selectedImage);
-          const storageRef = ref(storage, `postings/${Date.now()}_${selectedImage.name}`);
-          const snapshot = await uploadBytes(storageRef, compressed.blob);
-          imageUrl = await getDownloadURL(snapshot.ref);
-          imageUrls = [imageUrl];
-        } catch {
-          imageUrl = imagePreview || "";
-          imageUrls = imageUrl ? [imageUrl] : [];
-        }
-      }
+    const timestamp = serverTimestamp();
+    const uid = user?.uid || "guest_user";
+    const cleanDesc = description.trim();
+    const newPostId = `user_post_${Date.now()}`;
 
-      // If imageUrl is empty or a base64 data string, fallback to clean public placeholder for Firestore to prevent >1MB rejection
-      const safeFirestoreImageUrl = imageUrl && !imageUrl.startsWith("data:") 
-        ? imageUrl 
-        : segment === "offer" 
+    // ── STEP 1: Build local record immediately ───────────────────────────────
+    const safeFirestoreImageUrl =
+      imagePreview && !imagePreview.startsWith("data:")
+        ? imagePreview
+        : segment === "offer"
         ? "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&auto=format&fit=crop"
         : "/thanjavur_temple_illustration.png";
 
-      const timestamp = serverTimestamp();
-      const uid = user?.uid || "guest_user";
-      const cleanDesc = description.trim();
-      const newPostId = `user_post_${Date.now()}`;
+    const localPostRecord: any = {
+      id: newPostId,
+      userId: uid,
+      category,
+      area_tag: area,
+      phone: phone || "9876543210",
+      created_at: new Date().toISOString(),
+      is_verified: true,
+    };
 
-      // Local Post Record for 100% Instant Feed Persistence
-      const localPostRecord: any = {
-        id: newPostId,
-        userId: uid,
-        category,
-        area_tag: area,
-        phone: phone || "9876543210",
-        created_at: new Date().toISOString(),
-        is_verified: true,
-      };
+    if (segment === "sell" || segment === "need") {
+      localPostRecord.type = segment === "sell" ? "SELL" : "NEED";
+      localPostRecord.title = title.trim();
+      localPostRecord.description = cleanDesc;
+      localPostRecord.price = price || null;
+      localPostRecord.show_phone = showPhone;
+      localPostRecord.image_url =
+        segment === "sell" && imagePreviews.length > 0
+          ? imagePreviews[0]
+          : imagePreview || safeFirestoreImageUrl;
+      if (segment === "sell" && imagePreviews.length > 0) {
+        localPostRecord.image_urls = imagePreviews;
+      }
+    } else if (segment === "service") {
+      localPostRecord.name = title.trim();
+      localPostRecord.skill_category = category;
+      localPostRecord.is_available_now = isAvailable;
+      localPostRecord.experience = allWorkingDays === "Yes" ? "All Working Days" : "Flexible Days";
+      localPostRecord.working_hours = sundayLeave === "Yes" ? "Sunday Off" : "Open 7 Days";
+      localPostRecord.description = cleanDesc;
+      localPostRecord.image_url = imagePreview || safeFirestoreImageUrl;
+    } else if (segment === "offer") {
+      localPostRecord.shop_name = title.trim();
+      localPostRecord.offer_title = title.trim();
+      localPostRecord.offer_description = cleanDesc;
+      localPostRecord.image_url = imagePreview || safeFirestoreImageUrl;
+      localPostRecord.video_url = "";
+      localPostRecord.address_text = area ? `${area}, Thanjavur` : "Thanjavur";
+    }
 
-      if (segment === "sell" || segment === "need") {
-        localPostRecord.type = segment === "sell" ? "SELL" : "NEED";
-        localPostRecord.title = title.trim();
-        localPostRecord.description = cleanDesc;
-        localPostRecord.price = price ? parseFloat(price) : null;
-        localPostRecord.show_phone = showPhone;
-        if (segment === "sell" && imagePreviews.length > 0) {
-          localPostRecord.image_url = imagePreviews[0];
-          localPostRecord.image_urls = imagePreviews;
-        } else {
-          localPostRecord.image_url = imagePreview || safeFirestoreImageUrl;
+    // ── STEP 2: Persist locally & redirect IMMEDIATELY (optimistic) ──────────
+    try {
+      const storedPosts = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+      storedPosts.unshift(localPostRecord);
+      localStorage.setItem("namma_thanjai_local_posts", JSON.stringify(storedPosts.slice(0, 50)));
+    } catch (e) {}
+
+    setSuccess(true);
+    setLoading(false);
+    toast.success("Post published! Syncing in background...");
+    router.push(config.redirectPath);
+
+    // ── STEP 3: Upload images + Firestore write in background (non-blocking) ──
+    (async () => {
+      try {
+        let imageUrl = safeFirestoreImageUrl;
+        let imageUrls: string[] = [];
+
+        // Only upload if a new local File was chosen (not an existing URL)
+        if (segment === "sell" && selectedImages.length > 0) {
+          imageUrls = await Promise.all(
+            selectedImages.map(async (img) => {
+              const compressed = await compressImage(img);
+              const storageRef = ref(storage, `postings/${Date.now()}_${img.name}`);
+              const snapshot = await uploadBytes(storageRef, compressed.blob);
+              return getDownloadURL(snapshot.ref);
+            })
+          );
+          imageUrl = imageUrls[0] || imageUrl;
+        } else if (selectedImage) {
+          try {
+            const compressed = await compressImage(selectedImage);
+            const storageRef = ref(storage, `postings/${Date.now()}_${selectedImage.name}`);
+            const snapshot = await uploadBytes(storageRef, compressed.blob);
+            imageUrl = await getDownloadURL(snapshot.ref);
+            imageUrls = [imageUrl];
+          } catch {
+            imageUrl = safeFirestoreImageUrl;
+          }
         }
 
-        try {
+        if (segment === "sell" || segment === "need") {
           await addDoc(collection(db, "needs_and_sales"), {
             userId: uid,
             type: segment === "sell" ? "SELL" : "NEED",
@@ -395,10 +429,10 @@ export default function PostForm({ segment }: PostFormProps) {
             raw_text: cleanDesc,
             category,
             area_tag: area,
-            price: price ? parseFloat(price) : null,
+            price: price || null,
             phone: phone || "9876543210",
             show_phone: showPhone,
-            image_url: safeFirestoreImageUrl,
+            image_url: imageUrl,
             image_urls: imageUrls.length > 0 ? imageUrls : undefined,
             youtube_url: youtubeUrl.trim() || "",
             google_maps_url: googleMapsUrl.trim() || "",
@@ -406,18 +440,7 @@ export default function PostForm({ segment }: PostFormProps) {
             created_at: timestamp,
             expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
           });
-        } catch (fErr) {
-          console.warn("Firestore write skipped, relying on local storage persistence:", fErr);
-        }
-      } else if (segment === "service") {
-        localPostRecord.name = title.trim();
-        localPostRecord.skill_category = category;
-        localPostRecord.is_available_now = isAvailable;
-        localPostRecord.experience = allWorkingDays === "Yes" ? "All Working Days" : "Flexible Days";
-        localPostRecord.working_hours = sundayLeave === "Yes" ? "Sunday Off" : "Open 7 Days";
-        localPostRecord.description = cleanDesc;
-
-        try {
+        } else if (segment === "service") {
           await addDoc(collection(db, "services"), {
             userId: uid,
             name: title.trim(),
@@ -431,41 +454,29 @@ export default function PostForm({ segment }: PostFormProps) {
             negative_reports_count: 0,
             status: "active",
             description: cleanDesc,
-            image_url: safeFirestoreImageUrl,
+            image_url: imageUrl,
             is_verified: true,
             created_at: timestamp,
           });
-        } catch (fErr) {
-          console.warn("Firestore write skipped, relying on local storage persistence:", fErr);
-        }
-      } else if (segment === "offer") {
-        let uploadedVideoUrl = "";
-        if (selectedVideo) {
-          try {
-            const videoRef = ref(storage, `offer_reels/${Date.now()}_${selectedVideo.name}`);
-            const snap = await uploadBytes(videoRef, selectedVideo);
-            uploadedVideoUrl = await getDownloadURL(snap.ref);
-          } catch (vErr) {
-            console.warn("Offer video reel upload fallback:", vErr);
+        } else if (segment === "offer") {
+          let uploadedVideoUrl = "";
+          if (selectedVideo) {
+            try {
+              const videoRef = ref(storage, `offer_reels/${Date.now()}_${selectedVideo.name}`);
+              const snap = await uploadBytes(videoRef, selectedVideo);
+              uploadedVideoUrl = await getDownloadURL(snap.ref);
+            } catch (vErr) {
+              console.warn("Video reel upload fallback:", vErr);
+            }
           }
-        }
-
-        localPostRecord.shop_name = title.trim();
-        localPostRecord.offer_title = title.trim();
-        localPostRecord.offer_description = cleanDesc;
-        localPostRecord.image_url = imagePreview || safeFirestoreImageUrl;
-        localPostRecord.video_url = uploadedVideoUrl || "";
-        localPostRecord.address_text = area ? `${area}, Thanjavur` : "Thanjavur";
-
-        try {
           await addDoc(collection(db, "shops"), {
             userId: uid,
             shop_name: title.trim(),
             category,
             area_tag: area,
             phone: phone || "9876543210",
-            image_url: safeFirestoreImageUrl,
-            latitude: 10.7870,
+            image_url: imageUrl,
+            latitude: 10.787,
             longitude: 79.1378,
             google_maps_url: googleMapsUrl.trim() || "",
             address_text: area ? `${area}, Thanjavur` : "Thanjavur",
@@ -479,31 +490,11 @@ export default function PostForm({ segment }: PostFormProps) {
             show_phone: showPhone,
             video_url: uploadedVideoUrl || "",
           });
-        } catch (fErr) {
-          console.warn("Firestore write skipped, relying on local storage persistence:", fErr);
         }
+      } catch (bgErr) {
+        console.warn("Background Firestore sync error (post already in local feed):", bgErr);
       }
-
-      // Save to LocalStorage for instant 100% reliable feed persistence
-      try {
-        const storedPosts = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-        storedPosts.unshift(localPostRecord);
-        localStorage.setItem("namma_thanjai_local_posts", JSON.stringify(storedPosts.slice(0, 50)));
-      } catch (e) {}
-
-      setSuccess(true);
-      setTimeout(() => {
-        router.push(config.redirectPath);
-      }, 600);
-    } catch (err) {
-      console.error("Posting submission error:", err);
-      setSuccess(true);
-      setTimeout(() => {
-        router.push(config.redirectPath);
-      }, 600);
-    } finally {
-      setLoading(false);
-    }
+    })();
   };
 
   // Direct 1:1 Live Preview Cards Data
@@ -848,8 +839,9 @@ export default function PostForm({ segment }: PostFormProps) {
                         )}
                       </div>
                       <input
-                        type="number"
-                        placeholder="e.g. 2500000"
+                        type="text"
+                        inputMode="decimal"
+                        placeholder="e.g. 25,00,000 or 1200/sqft"
                         value={price}
                         onChange={(e) => setPrice(e.target.value)}
                         className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
@@ -888,8 +880,9 @@ export default function PostForm({ segment }: PostFormProps) {
                         )}
                       </div>
                       <input
-                        type="number"
-                        placeholder="e.g. 10000"
+                        type="text"
+                        inputMode="decimal"
+                        placeholder="e.g. 10,000 or 500/month"
                         value={price}
                         onChange={(e) => setPrice(e.target.value)}
                         className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
@@ -924,7 +917,7 @@ export default function PostForm({ segment }: PostFormProps) {
                       required
                       placeholder="e.g. 9994837342"
                       value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
+                      onChange={(e) => { userEditedPhone.current = true; setPhone(e.target.value); }}
                       className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
                     />
                   </div>
@@ -942,7 +935,7 @@ export default function PostForm({ segment }: PostFormProps) {
                       required
                       placeholder="e.g. 9994837342"
                       value={phone}
-                      onChange={(e) => setPhone(e.target.value)}
+                      onChange={(e) => { userEditedPhone.current = true; setPhone(e.target.value); }}
                       className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
                     />
                   </div>
