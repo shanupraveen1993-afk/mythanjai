@@ -123,20 +123,11 @@ export default function SellClientPage() {
         </div>
       </div>
 
-      {/* 2. TITLE BAR with Secondary Outlined Blue My Listing Button */}
+      {/* 2. TITLE BAR */}
       <div className="py-2.5 flex items-center justify-between gap-3 w-full border-b border-slate-200/80">
         <h2 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight">
           Items &amp; Property for Sale (விற்பனை)
         </h2>
-        <button
-          type="button"
-          onClick={() => router.push("/profile")}
-          className="px-3 py-1.5 rounded-lg bg-blue-50/80 hover:bg-blue-100 text-[#1d4ed8] border border-[#1d4ed8]/30 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer shrink-0 shadow-2xs"
-          title="View My Listings"
-        >
-          <UserCheck className="w-3.5 h-3.5 text-[#1d4ed8]" />
-          <span>My Listing</span>
-        </button>
       </div>
 
       {/* LISTING CONTAINER */}

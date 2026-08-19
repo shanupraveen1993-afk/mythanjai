@@ -51,7 +51,7 @@ export default function RootLayout({
             __html: `
               (function() {
                 if (typeof window !== 'undefined') {
-                  var TARGET_VERSION = 'v36.0_logo_blue_ctas_whatsapp_hero_login_fab_centered_v1';
+                  var TARGET_VERSION = 'v37.0_purged_all_my_listing_buttons_and_landing_hero_login';
                   var currentVer = localStorage.getItem('namma_thanjai_cache_version');
                   if (currentVer !== TARGET_VERSION) {
                     localStorage.setItem('namma_thanjai_cache_version', TARGET_VERSION);
