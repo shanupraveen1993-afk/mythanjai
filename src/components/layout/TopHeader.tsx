@@ -214,23 +214,23 @@ export default function TopHeader({
               href="/namma_thanjai_release.apk"
               download="namma_thanjai_release.apk"
               onClick={handleGetAppClick}
-              className="relative group overflow-hidden bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-xs px-3.5 py-1.5 rounded-lg font-heading font-black shrink-0 flex items-center gap-1.5 shadow-xs cursor-pointer select-none border border-amber-400/50 transition-all duration-300"
+              className="relative group overflow-hidden bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-sm px-4 py-2 rounded-lg font-heading font-black shrink-0 flex items-center gap-2 shadow-xs cursor-pointer select-none border border-amber-400/50 transition-all duration-300"
               title="Download Namma Thanjai Android App"
               aria-label="Download Namma Thanjai Android App"
             >
               {/* Soft Light Sweep Gold Shine Effect */}
               <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-amber-100/70 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
-              <Download className="w-3.5 h-3.5 shrink-0 text-[#0F172A] stroke-[2.5] relative z-10" />
+              <Download className="w-4 h-4 shrink-0 text-[#0F172A] stroke-[2.5] relative z-10" />
               <span className="relative z-10">Get App</span>
             </a>
           ) : !isHomePage ? (
             <button
               type="button"
               onClick={handleDynamicPostClick}
-              className="bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-xs px-3.5 py-1.5 rounded-lg font-heading font-black shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none"
+              className="bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-sm px-4 py-2 rounded-lg font-heading font-black shrink-0 flex items-center gap-2 shadow-2xs cursor-pointer select-none"
               title={postInfo.label}
             >
-              <Plus className="w-3.5 h-3.5 stroke-[3] text-[#0F172A]" />
+              <Plus className="w-4 h-4 stroke-[3] text-[#0F172A]" />
               <span>{postInfo.label}</span>
             </button>
           ) : null}
