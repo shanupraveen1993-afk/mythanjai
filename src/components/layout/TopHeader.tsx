@@ -167,20 +167,22 @@ export default function TopHeader({
           );
         })()}
 
-        {/* Right Side: Get App + Dynamic Post CTA + Chat Icon (Logged in) + Profile Icon */}
-        <div className="flex items-center gap-2 shrink-0">
-          {/* 1. Get App Button — Homepage ONLY (Yellow Primary Style) */}
+        {/* Right Side: Get App + Dynamic Post CTA + Chat Icon (Logged in) + Profile Icon (Pushed to far right end corner) */}
+        <div className="flex items-center justify-end gap-2 shrink-0 ml-auto">
+          {/* 1. Get App Button — Homepage ONLY (Yellow Primary Style with subtle attention pulse sheen) */}
           {isHomePage && !isNativeApp && (
             <a
               href="/namma_thanjai_release.apk"
               download="namma_thanjai_release.apk"
               onClick={handleGetAppClick}
-              className="bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-xs px-3.5 py-1.5 rounded-lg font-heading font-black shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none"
+              className="relative group overflow-hidden bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-xs px-3.5 py-1.5 rounded-lg font-heading font-black shrink-0 flex items-center gap-1.5 shadow-xs cursor-pointer select-none ring-2 ring-amber-400/40 animate-pulse hover:animate-none transition-all duration-300"
               title="Download Namma Thanjai Android App"
               aria-label="Download Namma Thanjai Android App"
             >
-              <Download className="w-3.5 h-3.5 shrink-0 text-[#0F172A] stroke-[2.5]" />
-              <span>Get App</span>
+              {/* Subtle sheen shine sweep */}
+              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/40 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
+              <Download className="w-3.5 h-3.5 shrink-0 text-[#0F172A] stroke-[2.5] relative z-10" />
+              <span className="relative z-10">Get App</span>
             </a>
           )}
 

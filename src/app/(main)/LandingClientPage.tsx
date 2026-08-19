@@ -88,30 +88,22 @@ export default function LandingClientPage() {
               Everything you need in our city, all in one place. <span className="text-amber-400 block text-xs sm:text-base font-extrabold mt-1">நம்ம ஊரின் அனைத்து தேவைகளுக்கும் ஒரே இடம்.</span>
             </h1>
 
-            {/* Direct WhatsApp Login Input Box */}
-            <div className="mt-2 flex flex-row items-center justify-start gap-2 w-fit">
-              <input
-                type="tel"
-                placeholder="Enter 10-digit Mobile Number"
-                className="w-48 sm:w-64 px-3.5 py-2 bg-white text-slate-900 placeholder-slate-500 text-xs font-bold rounded-lg border border-slate-200 shadow-2xs focus:outline-none focus:ring-2 focus:ring-[#FBBF24] transition-all"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && typeof window !== "undefined") {
-                    window.dispatchEvent(new Event("namma_thanjai_open_signin"));
-                  }
-                }}
-              />
-              <button
-                type="button"
-                onClick={() => {
-                  if (typeof window !== "undefined") {
-                    window.dispatchEvent(new Event("namma_thanjai_open_signin"));
-                  }
-                }}
-                className="shrink-0 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs px-4 py-2 rounded-lg shadow-2xs cursor-pointer transition-all flex items-center justify-center gap-1.5 select-none"
-              >
-                <span>Verify &amp; Login →</span>
-              </button>
-            </div>
+            {/* Register to Post Button (Input field removed. Hidden when verified to fill space) */}
+            {!isAuthVerified && (
+              <div className="mt-2.5 flex items-center justify-start w-fit">
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (typeof window !== "undefined") {
+                      window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+                    }
+                  }}
+                  className="shrink-0 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs sm:text-sm px-5 py-2.5 rounded-lg shadow-md cursor-pointer transition-all flex items-center justify-center gap-1.5 select-none"
+                >
+                  <span>Register to Post →</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
