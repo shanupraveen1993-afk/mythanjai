@@ -126,7 +126,7 @@ export default function LandingClientPage() {
                 </div>
                 <div>
                   <h2 className="font-heading font-bold text-[#1d4ed8] text-sm sm:text-base leading-tight">
-                    Sell
+                    Items for Sale
                   </h2>
                   <span className="block text-xs font-bold text-[#1d4ed8]/85 leading-tight">
                     விற்பனை
@@ -175,7 +175,7 @@ export default function LandingClientPage() {
                 </div>
                 <div>
                   <h2 className="font-heading font-bold text-[#1d4ed8] text-sm sm:text-base leading-tight">
-                    Need
+                    Items Looking For
                   </h2>
                   <span className="block text-xs font-bold text-[#1d4ed8]/85 leading-tight">
                     தேவைகள்
@@ -224,7 +224,7 @@ export default function LandingClientPage() {
                 </div>
                 <div>
                   <h2 className="font-heading font-bold text-[#1d4ed8] text-sm sm:text-base leading-tight">
-                    Services
+                    Local Service
                   </h2>
                   <span className="block text-xs font-bold text-[#1d4ed8]/85 leading-tight">
                     சேவைகள்
@@ -273,7 +273,7 @@ export default function LandingClientPage() {
                 </div>
                 <div>
                   <h2 className="font-heading font-bold text-[#1d4ed8] text-sm sm:text-base leading-tight">
-                    Offers
+                    Local Offer
                   </h2>
                   <span className="block text-xs font-bold text-[#1d4ed8]/85 leading-tight">
                     சலுகைகள்
@@ -314,14 +314,12 @@ export default function LandingClientPage() {
           </div>
         </section>
 
-        {/* ── 1. SELL Segment Carousel (New Listings) ── */}
-        <section className="flex flex-col gap-3">
-          <div className="flex items-center justify-between border-b border-slate-200/60 pb-2">
-            <div className="flex items-center gap-2">
-              <h2 className="font-heading font-black text-base sm:text-lg text-[#1d4ed8]">
-                Post to Sell (விற்பனை)
-              </h2>
-            </div>
+        {/* ── SELL Preview ───────────────────────── */}
+        <section className="flex flex-col gap-3 my-2">
+          <div className="flex items-center justify-between">
+            <h2 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight">
+              Items for Sale (விற்பனை)
+            </h2>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => router.push("/sell")}
@@ -367,14 +365,12 @@ export default function LandingClientPage() {
           </div>
         </section>
 
-        {/* ── 2. NEED Segment Carousel (New Listings) ── */}
-        <section className="flex flex-col gap-3">
-          <div className="flex items-center justify-between border-b border-slate-200/60 pb-2">
-            <div className="flex items-center gap-2">
-              <h2 className="font-heading font-black text-base sm:text-lg text-[#1d4ed8]">
-                Post Your Requirement (தேவைகள்)
-              </h2>
-            </div>
+        {/* ── NEED Preview ───────────────────────── */}
+        <section className="flex flex-col gap-3 my-2">
+          <div className="flex items-center justify-between">
+            <h2 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight">
+              Items Looking For (தேவைகள்)
+            </h2>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => router.push("/need")}
@@ -420,14 +416,12 @@ export default function LandingClientPage() {
           </div>
         </section>
 
-        {/* ── 3. SERVICES Segment Carousel (New Listings) ── */}
-        <section className="flex flex-col gap-3">
-          <div className="flex items-center justify-between border-b border-slate-200/60 pb-2">
-            <div className="flex items-center gap-2">
-              <h2 className="font-heading font-black text-base sm:text-lg text-[#1d4ed8]">
-                Add Your Service (சேவைகள்)
-              </h2>
-            </div>
+        {/* ── SERVICES Preview ───────────────────── */}
+        <section className="flex flex-col gap-3 my-2">
+          <div className="flex items-center justify-between">
+            <h2 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight">
+              Local Service (சேவைகள்)
+            </h2>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => router.push("/services")}
@@ -473,14 +467,12 @@ export default function LandingClientPage() {
           </div>
         </section>
 
-        {/* ── 4. OFFERS Segment Carousel (New Listings) ── */}
-        <section className="flex flex-col gap-3">
-          <div className="flex items-center justify-between border-b border-slate-200/60 pb-2">
-            <div className="flex items-center gap-2">
-              <h2 className="font-heading font-black text-base sm:text-lg text-[#1d4ed8]">
-                Post Your Offer (சலுகைகள்)
-              </h2>
-            </div>
+        {/* ── OFFERS Preview ─────────────────────── */}
+        <section className="flex flex-col gap-3 my-2">
+          <div className="flex items-center justify-between">
+            <h2 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight">
+              Local Offer (சலுகைகள்)
+            </h2>
             <div className="flex items-center gap-2">
               <button
                 onClick={() => router.push("/shops")}

@@ -179,7 +179,7 @@ export default function HomeClientPage() {
                 </div>
                 <div>
                   <h2 className="font-heading font-bold text-[#1d4ed8] text-sm sm:text-base leading-tight">
-                    Sell
+                    Items for Sale
                   </h2>
                   <span className="block text-xs font-bold text-[#1d4ed8]/85 leading-tight">
                     விற்பனை
@@ -228,7 +228,7 @@ export default function HomeClientPage() {
                 </div>
                 <div>
                   <h2 className="font-heading font-bold text-[#1d4ed8] text-sm sm:text-base leading-tight">
-                    Need
+                    Items Looking For
                   </h2>
                   <span className="block text-xs font-bold text-[#1d4ed8]/85 leading-tight">
                     தேவைகள்
@@ -277,7 +277,7 @@ export default function HomeClientPage() {
                 </div>
                 <div>
                   <h2 className="font-heading font-bold text-[#1d4ed8] text-sm sm:text-base leading-tight">
-                    Services
+                    Local Service
                   </h2>
                   <span className="block text-xs font-bold text-[#1d4ed8]/85 leading-tight">
                     சேவைகள்
@@ -326,7 +326,7 @@ export default function HomeClientPage() {
                 </div>
                 <div>
                   <h2 className="font-heading font-bold text-[#1d4ed8] text-sm sm:text-base leading-tight">
-                    Offers
+                    Local Offer
                   </h2>
                   <span className="block text-xs font-bold text-[#1d4ed8]/85 leading-tight">
                     சலுகைகள்
@@ -372,7 +372,7 @@ export default function HomeClientPage() {
 
         {/* ── SELL Preview ───────────────────────── */}
         <PreviewSection
-          title="Sell (சமீபத்திய விற்பனை)"
+          title="Items for Sale (விற்பனை)"
           subtitle="Items for sale by local residents"
           seeAllPath="/sell"
           accentColor="bg-yellow-500"
@@ -387,7 +387,7 @@ export default function HomeClientPage() {
 
         {/* ── NEED Preview ───────────────────────── */}
         <PreviewSection
-          title="Need (தேவைகள்)"
+          title="Items Looking For (தேவைகள்)"
           subtitle="Requirements from local buyers"
           seeAllPath="/need"
           accentColor="bg-yellow-500"
@@ -402,7 +402,7 @@ export default function HomeClientPage() {
 
         {/* ── SERVICES Preview ───────────────────── */}
         <PreviewSection
-          title="Local Services (உள்ளூர் சேவைகள்)"
+          title="Local Service (சேவைகள்)"
           subtitle="Verified skilled tradespeople near you"
           seeAllPath="/services"
           accentColor="bg-yellow-500"
@@ -417,7 +417,7 @@ export default function HomeClientPage() {
 
         {/* ── OFFERS Preview ─────────────────────── */}
         <PreviewSection
-          title="Local Offer (சிறப்பு சலுகைகள்)"
+          title="Local Offer (சலுகைகள்)"
           subtitle="Store discounts & deals from Thanjavur shops"
           seeAllPath="/shops"
           accentColor="bg-yellow-500"

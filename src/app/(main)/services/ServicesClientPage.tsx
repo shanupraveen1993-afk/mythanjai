@@ -124,7 +124,7 @@ export default function ServicesClientPage() {
       {/* 2. TITLE BAR */}
       <div className="py-2.5 flex items-center justify-between gap-3 w-full border-b border-slate-200/80">
         <h2 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight">
-          Verified Local Services (சேவைகள்)
+          Local Service (சேவைகள்)
         </h2>
       </div>
 
