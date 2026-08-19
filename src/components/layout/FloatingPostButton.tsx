@@ -67,7 +67,7 @@ export default function FloatingPostButton() {
   return (
     <div
       style={{ bottom: "calc(5.75rem + env(safe-area-inset-bottom, 0px))" }}
-      className={`fixed left-1/2 -translate-x-1/2 z-[10000] md:hidden transition-all duration-300 transform ${
+      className={`fixed left-4 right-4 max-w-md mx-auto z-[10000] md:hidden transition-all duration-300 transform ${
         isVisible
           ? "translate-y-0 opacity-100 pointer-events-auto"
           : "translate-y-20 opacity-0 pointer-events-none"
@@ -85,10 +85,10 @@ export default function FloatingPostButton() {
           }
           router.push(route);
         }}
-        className="flex items-center gap-1.5 px-5 py-2.5 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs rounded-full shadow-lg cursor-pointer select-none active:scale-95 transition-all uppercase tracking-wide border border-amber-400/60 whitespace-nowrap"
+        className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs sm:text-sm rounded-xl shadow-xl cursor-pointer select-none active:scale-[0.98] transition-all uppercase tracking-wide border border-amber-400/60"
       >
         <Plus className="w-4 h-4 stroke-[3] shrink-0 text-[#0F172A]" />
-        <span>{label}</span>
+        <span>+ {label}</span>
       </button>
     </div>
   );
