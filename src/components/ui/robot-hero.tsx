@@ -1141,46 +1141,7 @@ export function RobotHero({
                 </div>
               )}
 
-              {/* Expandable WhatsApp OTP Form */}
-              {showRegisterForm && (
-                <form onSubmit={handleMobileSubmit} className="flex flex-col gap-2 pt-2 border-t border-slate-200 animate-fade-in mt-1">
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-amber-600 uppercase tracking-wider flex items-center gap-1">
-                      <Sparkles className="w-3.5 h-3.5" /> Enter WhatsApp Number
-                    </span>
-                    <span className="text-xs text-slate-400 font-semibold">10-Digit Mobile</span>
-                  </div>
-                  <div className="flex items-center gap-1.5">
-                    <div className="relative flex-1">
-                      <span className="absolute left-2.5 top-1/2 -translate-y-1/2 text-xs font-black text-amber-600">+91</span>
-                      <input
-                        type="tel"
-                        required
-                        maxLength={10}
-                        value={mobileNumber}
-                        onChange={(e) => setMobileNumber(e.target.value.replace(/\D/g, "").slice(0, 10))}
-                        placeholder="Enter WhatsApp No"
-                        disabled={isVerifying}
-                        className="w-full bg-white border border-slate-300 text-slate-900 rounded-lg pl-10 pr-2 py-2 text-xs font-semibold focus:outline-none focus:border-[#0F172A]"
-                      />
-                    </div>
-                    <button
-                      type="submit"
-                      disabled={isVerifying}
-                      className="btn-primary text-xs px-4 py-2.5 flex items-center gap-1.5 shrink-0 cursor-pointer"
-                    >
-                      {isVerifying ? (
-                        <Loader2 className="w-4 h-4 animate-spin text-[#0F172A]" />
-                      ) : (
-                        <>
-                          <span>Verify</span>
-                          <ArrowRight className="w-3.5 h-3.5 text-[#0F172A]" />
-                        </>
-                      )}
-                    </button>
-                  </div>
-                </form>
-              )}
+
             </div>
           )}
 
