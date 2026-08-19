@@ -85,7 +85,7 @@ export default function FloatingPostButton() {
           }
           router.push(route);
         }}
-        className="flex items-center gap-2 px-6 py-3 bg-[#f59e0b] text-slate-950 font-black text-sm rounded-full shadow-md cursor-pointer select-none active:scale-95 transition-transform uppercase tracking-wide"
+        className="flex items-center gap-2 px-6 py-3 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-black text-sm rounded-full shadow-md cursor-pointer select-none active:scale-95 transition-transform uppercase tracking-wide border border-amber-400/50"
       >
         <Plus className="w-4 h-4 stroke-[3] shrink-0" />
         <span>{label}</span>

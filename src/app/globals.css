@@ -94,19 +94,19 @@ body {
   justify-content: center;
   font-family: var(--font-heading), 'Red Hat Display', sans-serif;
   font-weight: 800;
-  border-radius: 9999px;
+  border-radius: 8px;
   gap: 8px;
-  background-color: #f59e0b;
-  color: #0f172a;
+  background-color: #FBBF24;
+  color: #0F172A;
   border: none;
-  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.25);
+  box-shadow: 0 2px 8px rgba(251, 191, 36, 0.25);
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
 }
 .btn-primary:hover {
-  background-color: #d97706;
-  color: #ffffff;
-  box-shadow: 0 4px 14px rgba(217, 119, 6, 0.35);
+  background-color: #F59E0B;
+  color: #0F172A;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.35);
 }
 .btn-primary:active {
   transform: scale(0.97);

@@ -18,8 +18,8 @@
 
 export const COLOR_TOKENS = {
   // Primary CTA Action
-  primaryCTA: "#f59e0b",
-  primaryCTAHover: "#eab308",
+  primaryCTA: "#FBBF24",
+  primaryCTAHover: "#F59E0B",
   primaryCTAText: "#0f172a",
 
   // Brand Identity Accent

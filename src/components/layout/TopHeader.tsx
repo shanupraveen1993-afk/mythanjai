@@ -123,7 +123,7 @@ export default function TopHeader({
           const isServiceActive = pathname.includes("/services") || pathname.includes("/post/service") || activeTab === "services";
           const isOfferActive = pathname.includes("/shops") || pathname.includes("/offers") || activeTab === "shops";
 
-          const activeStyle = "bg-[#f59e0b] text-slate-950 font-extrabold shadow-2xs rounded-lg";
+          const activeStyle = "bg-[#FBBF24] text-[#0F172A] font-extrabold shadow-2xs rounded-lg";
           const inactiveStyle = "text-slate-600 hover:text-slate-900 font-bold transition-colors";
 
           return (

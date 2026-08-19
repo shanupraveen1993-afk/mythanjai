@@ -338,7 +338,7 @@ export default function PostClientPage() {
                 setImagePreview("");
                 setSelectedImage(null);
               }}
-              className="flex-1 py-3 bg-[#f59e0b] border border-[#d97706] text-slate-950 text-xs font-black rounded-lg hover:bg-[#d97706] hover:text-white transition-colors cursor-pointer"
+              className="flex-1 py-3 bg-[#FBBF24] border border-amber-400 text-[#0F172A] text-xs font-black rounded-lg hover:bg-amber-400 transition-colors cursor-pointer select-none"
             >
               Post Another
             </button>
