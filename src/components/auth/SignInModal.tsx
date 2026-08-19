@@ -22,6 +22,9 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
   const [step, setStep] = useState<"phone" | "otp">("phone");
   const [phoneUpdating, setPhoneUpdating] = useState(false);
 
+  const phoneInputRef = React.useRef<HTMLInputElement>(null);
+  const otpInputRef = React.useRef<HTMLInputElement>(null);
+
   const isHeaderLoginRef = React.useRef(false);
   const pendingTargetRef = React.useRef<string | null>(null);
 
@@ -35,6 +38,11 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
         isHeaderLoginRef.current = sessionStorage.getItem("namma_thanjai_header_login_active") === "true";
         pendingTargetRef.current = sessionStorage.getItem("namma_thanjai_target_post_route");
       }
+      
+      // Auto-focus phone input immediately when modal opens
+      if (step === "phone") {
+        setTimeout(() => phoneInputRef.current?.focus(), 50);
+      }
     } else {
       setStep("phone");
       setOtpCode("");
@@ -46,6 +54,13 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
       }
     }
   }, [isOpen]);
+
+  // Auto-focus OTP input whenever step transitions to "otp"
+  useEffect(() => {
+    if (isOpen && step === "otp") {
+      setTimeout(() => otpInputRef.current?.focus(), 50);
+    }
+  }, [isOpen, step]);
 
   // Listen to profile verification state to auto-close modal if already verified
   useEffect(() => {
@@ -90,16 +105,19 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
           window.scrollTo({ top: 0, left: 0, behavior: "instant" });
         }
 
-        if (!isHeaderLogin && pendingTarget && pendingTarget.startsWith("/post/")) {
+        if (pendingTarget) {
           router.push(pendingTarget);
+        } else if (typeof window !== "undefined" && window.location.pathname.includes("/profile")) {
+          // Stay on profile page smoothly
+          router.refresh();
         } else {
-          router.push("/sell");
+          router.push("/profile");
         }
       } else {
         toast.error("Verification failed.");
       }
     } catch (err: any) {
-      toast.error("Verification failed: " + err.message);
+      toast.error("Verification failed: " + (err?.message || "Unknown error"));
     } finally {
       setPhoneUpdating(false);
     }
@@ -157,6 +175,8 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">+91</span>
                   <input
+                    ref={phoneInputRef}
+                    autoFocus
                     type="tel"
                     required
                     value={phoneNumber}
@@ -194,6 +214,8 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
                   6-Digit OTP Code
                 </label>
                 <input
+                  ref={otpInputRef}
+                  autoFocus
                   type="text"
                   required
                   maxLength={6}

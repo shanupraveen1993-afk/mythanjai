@@ -144,12 +144,12 @@ export default function InAppChatModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl w-full max-w-md overflow-hidden flex flex-col h-[560px] animate-scale-up font-sans relative">
+      <div className="bg-white rounded-xl border border-slate-200 shadow-2xl w-full max-w-md overflow-hidden flex flex-col h-[560px] animate-scale-up font-sans relative">
         
         {/* Contextual Scam Alert Warning Modal Overlay */}
         {scamAlertTriggered && (
           <div className="absolute inset-0 z-60 bg-slate-950/80 backdrop-blur-xs flex items-center justify-center p-5">
-            <div className="bg-white border-2 border-red-500 rounded-3xl p-6 flex flex-col items-center text-center gap-3 max-w-xs shadow-2xl animate-bounce-short">
+            <div className="bg-white border-2 border-red-500 rounded-xl p-6 flex flex-col items-center text-center gap-3 max-w-xs shadow-2xl animate-bounce-short">
               <div className="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center">
                 <ShieldAlert className="w-7 h-7" />
               </div>

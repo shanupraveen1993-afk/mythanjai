@@ -1,15 +1,17 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
-import { Eye, Share2, Bookmark, Phone, MessageSquare, MapPin, UserCheck, Calendar, Sparkles, Flag } from "lucide-react";
+import { Share2, Bookmark, Phone, MessageSquare, MapPin, Calendar, Flag, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { doc, updateDoc, increment, arrayUnion, arrayRemove } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/hooks/use-auth";
-import { formatRelativeTime, getCategoryBadgeStyle } from "@/lib/constants";
+import { formatRelativeTime } from "@/lib/constants";
 import InAppChatModal from "@/components/chat/InAppChatModal";
 import { reportListing } from "@/lib/moderation";
 import { useToast } from "@/context/ToastContext";
+import CategoryVectorIllustration from "@/components/ui/CategoryVectorIllustration";
+import CategoryIcon from "@/components/ui/CategoryIcon";
 
 export interface ListingItem {
   id: string;
@@ -35,6 +37,90 @@ export interface ListingItem {
   created_at?: any;
 }
 
+// ── Fullscreen Image Gallery Modal ─────────────────────────────────────────
+function GalleryModal({ images, startIndex, onClose }: { images: string[]; startIndex: number; onClose: () => void }) {
+  const [current, setCurrent] = useState(startIndex);
+
+  useEffect(() => {
+    const handleKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") setCurrent((p) => Math.min(p + 1, images.length - 1));
+      if (e.key === "ArrowLeft") setCurrent((p) => Math.max(p - 1, 0));
+      if (e.key === "Escape") onClose();
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [images.length, onClose]);
+
+  return (
+    <div
+      className="fixed inset-0 z-[200] bg-slate-950/95 backdrop-blur-md flex flex-col items-center justify-center font-sans"
+      onClick={onClose}
+    >
+      <button
+        type="button"
+        onClick={onClose}
+        className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/10 text-white flex items-center justify-center hover:bg-white/20 transition cursor-pointer z-10"
+        aria-label="Close gallery"
+      >
+        <X className="w-5 h-5" />
+      </button>
+
+      <span className="absolute top-5 left-1/2 -translate-x-1/2 text-white/80 text-xs font-bold tracking-wider">
+        {current + 1} / {images.length}
+      </span>
+
+      <div
+        className="relative w-full max-w-2xl max-h-[80vh] mx-4 flex items-center justify-center"
+        onClick={(e) => e.stopPropagation()}
+      >
+        <img
+          src={images[current]}
+          alt={`Photo ${current + 1}`}
+          className="max-w-full max-h-[80vh] object-contain rounded-2xl shadow-2xl"
+        />
+      </div>
+
+      {images.length > 1 && (
+        <>
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setCurrent((p) => Math.max(p - 1, 0)); }}
+            disabled={current === 0}
+            className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition disabled:opacity-30 cursor-pointer"
+            aria-label="Previous image"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button
+            type="button"
+            onClick={(e) => { e.stopPropagation(); setCurrent((p) => Math.min(p + 1, images.length - 1)); }}
+            disabled={current === images.length - 1}
+            className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition disabled:opacity-30 cursor-pointer"
+            aria-label="Next image"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+        </>
+      )}
+
+      {images.length > 1 && (
+        <div className="absolute bottom-6 flex gap-2">
+          {images.map((_, i) => (
+            <button
+              key={i}
+              type="button"
+              onClick={(e) => { e.stopPropagation(); setCurrent(i); }}
+              className={`w-2 h-2 rounded-full transition-all cursor-pointer ${i === current ? "bg-amber-400 scale-125" : "bg-white/40"}`}
+              aria-label={`Go to image ${i + 1}`}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Sell Card Component (Figma Wireframe Exact Implementation) ──────────────
 export default function ListingCard({ listing }: { listing: ListingItem }) {
   const { user, profile } = useAuth();
   const { toast } = useToast();
@@ -42,8 +128,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
   const [isSaved, setIsSaved] = useState(
     user?.uid && listing.saved_by ? listing.saved_by.includes(user.uid) : false
   );
-  const [views, setViews] = useState(listing.views_count || 12);
-  const [shares, setShares] = useState(listing.shares_count || 3);
+  const [galleryIndex, setGalleryIndex] = useState<number | null>(null);
 
   const isOwnPost = React.useMemo(() => {
     if (user?.uid && listing.seller_id === user.uid) return true;
@@ -57,63 +142,39 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
     return false;
   }, [user, profile, listing]);
 
-  // Increment views count on card interaction
-  const handleCardView = async () => {
-    setViews((prev) => prev + 1);
-    try {
-      const listingRef = doc(db, "classifieds", listing.id);
-      await updateDoc(listingRef, { views_count: increment(1) });
-    } catch (e) {
-      // Silent catch
-    }
-  };
-
-  // Share action with share count increment
+  // Share action
   const handleShare = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    setShares((prev) => prev + 1);
-    const shareData = {
-      title: listing.title,
-      text: `${listing.title} on Namma Thanjavur`,
-      url: window.location.href,
-    };
-
     try {
       if (navigator.share) {
-        await navigator.share(shareData);
+        await navigator.share({ title: listing.title, text: `${listing.title} on Namma Thanjavur`, url: window.location.href });
       } else {
         await navigator.clipboard.writeText(window.location.href);
         toast.success("Link copied to clipboard!");
       }
       const listingRef = doc(db, "classifieds", listing.id);
       await updateDoc(listingRef, { shares_count: increment(1) });
-    } catch (e) {
-      // Silent catch
-    }
+    } catch (e) {}
   };
 
-  // Toggle Save / Bookmark
+  // Toggle Save
   const handleSaveToggle = async (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!user) {
       toast.error("Sign in to save listings.");
       return;
     }
-
     const nextState = !isSaved;
     setIsSaved(nextState);
-
     try {
       const listingRef = doc(db, "classifieds", listing.id);
       await updateDoc(listingRef, {
         saved_by: nextState ? arrayUnion(user.uid) : arrayRemove(user.uid),
       });
-    } catch (e) {
-      // Silent catch
-    }
+    } catch (e) {}
   };
 
-  // Report Listing trigger
+  // Report Listing
   const handleReportListing = (e: React.MouseEvent) => {
     e.stopPropagation();
     const result = reportListing(listing.id, "Inappropriate content");
@@ -126,231 +187,192 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
 
   const getCategoryIllustration = (category?: string) => {
     const cat = (category || "").toLowerCase();
-    if (cat.includes("real estate") || cat.includes("plot") || cat.includes("house") || cat.includes("land") || cat.includes("property")) {
-      return "/hero_building_visual.png";
-    }
-    if (cat.includes("vehicle") || cat.includes("car") || cat.includes("bike") || cat.includes("scooter") || cat.includes("auto")) {
-      return "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=600&auto=format&fit=crop";
-    }
-    if (cat.includes("electronic") || cat.includes("mobile") || cat.includes("laptop") || cat.includes("tv") || cat.includes("phone")) {
-      return "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&auto=format&fit=crop";
-    }
-    if (cat.includes("household") || cat.includes("furniture") || cat.includes("appliance") || cat.includes("home")) {
-      return "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&auto=format&fit=crop";
-    }
-    if (cat.includes("fashion") || cat.includes("cloth") || cat.includes("dress") || cat.includes("wear")) {
-      return "https://images.unsplash.com/photo-1445205170230-053b83016050?w=600&auto=format&fit=crop";
-    }
+    if (cat.includes("real estate") || cat.includes("plot") || cat.includes("house") || cat.includes("land") || cat.includes("property")) return "/hero_building_visual.png";
+    if (cat.includes("vehicle") || cat.includes("car") || cat.includes("bike") || cat.includes("scooter") || cat.includes("auto")) return "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=600&auto=format&fit=crop";
+    if (cat.includes("electronic") || cat.includes("mobile") || cat.includes("laptop") || cat.includes("tv") || cat.includes("phone")) return "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&auto=format&fit=crop";
+    if (cat.includes("household") || cat.includes("furniture") || cat.includes("appliance") || cat.includes("home")) return "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&auto=format&fit=crop";
+    if (cat.includes("fashion") || cat.includes("cloth") || cat.includes("dress") || cat.includes("wear")) return "https://images.unsplash.com/photo-1445205170230-053b83016050?w=600&auto=format&fit=crop";
     return "/thanjavur_temple_illustration.png";
   };
 
+  // Collect all images for multi-image gallery
+  const allImages = React.useMemo<string[]>(() => {
+    const arr: string[] = [];
+    const push = (v: any) => { if (typeof v === "string" && v.trim()) arr.push(v); };
+    (listing.images || []).forEach(push);
+    ((listing as any).image_urls || []).forEach(push);
+    if (!arr.length) push(listing.image_url);
+    return arr.filter(Boolean);
+  }, [listing]);
+
   const categoryFallback = getCategoryIllustration(listing.category || listing.type);
-  const imageSrc =
-    (listing.images && listing.images[0]) ||
-    (listing.image_url && listing.image_url !== "/thanjavur_temple_illustration.png" ? listing.image_url : null) ||
-    categoryFallback;
+  const imageSrc = allImages[0] || categoryFallback;
+  const extraCount = allImages.length - 1;
 
   const isLookingFor = listing.type === "looking_for" || listing.expected_price_from;
 
-  // Service Provider Availability State (Only for service listing type)
-  const isServiceListing = listing.type === "service";
-  const [isAvailable, setIsAvailable] = useState<boolean>(true);
+  const formattedPrice = React.useMemo(() => {
+    if (isLookingFor) return `₹${listing.expected_price_from || "5k"} - ₹${listing.expected_price_to || "15k"}`;
+    if (!listing.price) return "₹2,50,000";
+    const str = String(listing.price).replace(/[^0-9.]/g, "");
+    const num = Number(str);
+    if (isNaN(num) || num === 0) return String(listing.price).startsWith("₹") ? listing.price : `₹${listing.price}`;
+    return `₹${num.toLocaleString("en-IN")}`;
+  }, [listing.price, listing.expected_price_from, listing.expected_price_to, isLookingFor]);
 
-  // Toggle Service Availability (Only for own service listing)
-  const handleToggleAvailability = (e: React.MouseEvent) => {
-    e.stopPropagation();
-    const nextState = !isAvailable;
-    setIsAvailable(nextState);
-    if (typeof window !== "undefined") {
-      try {
-        localStorage.setItem(`namma_thanjai_service_avail_${listing.id}`, String(nextState));
-      } catch (err) {}
-    }
-  };
+  const rawPhone = String(listing.phone || "9876543210");
+  const cleanPhone = rawPhone.replace(/\D/g, "");
+  const formattedPhone = cleanPhone.startsWith("91") ? cleanPhone : `91${cleanPhone}`;
+  const callUrl = `tel:${cleanPhone}`;
+  const whatsappUrl = `https://wa.me/${formattedPhone}?text=${encodeURIComponent(
+    `Hello! I saw your listing "${listing.title}" on Namma Thanjai. Is it available?`
+  )}`;
 
   return (
     <>
-      <div 
-        onClick={handleCardView}
-        className="bg-white -mx-4 sm:mx-0 w-[calc(100%+2rem)] sm:w-full sm:rounded-2xl overflow-hidden shadow-[0_4px_16px_rgba(0,0,0,0.06)] flex flex-col justify-between cursor-pointer font-sans border-b border-slate-200/80 sm:border sm:border-slate-200/90 h-full"
-      >
-        {/* Card Header Media Container (OLX Competitor Standard) */}
-        <div className="w-full h-36 sm:h-40 bg-slate-100 relative overflow-hidden">
-          <Image
-            src={imageSrc}
-            alt={listing.title}
-            fill
-            className="object-cover"
-          />
-          
-          {/* Top Left: Category Badge Overlay (OLX Standard Clean Dark Glassmorphism) */}
-          <div className="absolute top-2.5 left-2.5 z-10">
-            <span className="bg-slate-950/40 backdrop-blur-md text-white font-semibold text-[11px] px-2.5 py-1 rounded-md border border-white/20 shadow-2xs">
-              {listing.category || listing.type || "Classified"}
-            </span>
-          </div>
+      <div className="bg-white rounded-xl p-4 flex flex-col justify-between shadow-2xs hover:shadow-md transition-all duration-200 border border-slate-200/90 relative font-sans h-full">
+        <div className="flex flex-col gap-3 flex-1">
 
-          {/* Top Right: Vertical 3 Action Buttons Stack (1st: Flag, 2nd: Save, 3rd: Share) */}
-          <div className="absolute top-2.5 right-2.5 flex flex-col gap-1.5 z-10">
-            {/* 1st: Flag / Report */}
-            <button
-              type="button"
-              onClick={handleReportListing}
-              className="w-7 h-7 rounded-md border border-white/20 bg-slate-950/40 text-white hover:text-rose-400 hover:bg-slate-950/70 flex items-center justify-center transition-all cursor-pointer shadow-2xs backdrop-blur-md"
-              title="Report Listing"
-              aria-label="Report this listing"
+          {/* ── TOP HEADER BLOCK: Left Image Box + Right Details Column ── */}
+          <div className="flex items-start gap-3 w-full">
+            
+            {/* LEFT: Compact Square Image Container with +N Badge (w-20 h-20 sm:w-24 sm:h-24) */}
+            <div
+              className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl bg-slate-100 relative overflow-hidden shrink-0 border border-slate-200/80 shadow-2xs group/img cursor-pointer"
+              onClick={(e) => {
+                if (allImages.length > 0) {
+                  e.stopPropagation();
+                  setGalleryIndex(0);
+                }
+              }}
             >
-              <Flag className="w-3.5 h-3.5" />
-            </button>
-
-            {/* 2nd: Save / Bookmark */}
-            <button
-              type="button"
-              onClick={handleSaveToggle}
-              className={`w-7 h-7 rounded-md border backdrop-blur-md shadow-2xs flex items-center justify-center transition-all cursor-pointer ${
-                isSaved
-                  ? "bg-amber-500 text-slate-950 border-amber-400 font-bold"
-                  : "bg-slate-950/40 text-white border-white/20 hover:bg-slate-950/70"
-              }`}
-              title={isSaved ? "Saved" : "Save Listing"}
-              aria-label={isSaved ? "Remove saved listing" : "Save this listing"}
-            >
-              <Bookmark className={`w-3.5 h-3.5 ${isSaved ? "fill-current" : ""}`} />
-            </button>
-
-            {/* 3rd: Share */}
-            <button
-              type="button"
-              onClick={handleShare}
-              className="w-7 h-7 rounded-md border border-white/20 bg-slate-950/40 text-white hover:bg-slate-950/70 flex items-center justify-center transition-all cursor-pointer shadow-2xs backdrop-blur-md"
-              title="Share Listing"
-              aria-label="Share this listing"
-            >
-              <Share2 className="w-3.5 h-3.5" />
-            </button>
-          </div>
-        </div>
-
-        {/* Card Content Body (Human-Centric Hierarchy) */}
-        <div className="p-3.5 sm:p-4 flex flex-col gap-2 flex-1 justify-between">
-          <div className="flex flex-col gap-1.5">
-            {/* 1st Line Below Image: Price in Amber Yellow */}
-            <div className="flex items-center justify-between">
-              <span className="font-heading font-bold text-base sm:text-lg text-amber-600">
-                {isLookingFor
-                  ? `₹${listing.expected_price_from || "5k"} - ₹${listing.expected_price_to || "15k"}`
-                  : (() => {
-                      if (!listing.price) return "₹2,50,000";
-                      const str = String(listing.price).replace(/[^0-9.]/g, "");
-                      const num = Number(str);
-                      if (isNaN(num) || num === 0) return String(listing.price).startsWith("₹") ? listing.price : `₹${listing.price}`;
-                      return `₹${num.toLocaleString("en-IN")}`;
-                    })()}
-              </span>
+              {allImages.length > 0 ? (
+                <Image
+                  src={imageSrc}
+                  alt={listing.title}
+                  fill
+                  className="object-cover transition-transform duration-300 group-hover/img:scale-105"
+                />
+              ) : (
+                <CategoryVectorIllustration category={listing.category || listing.type} type="sell" variant="tile" />
+              )}
+              {/* +N Badge overlay on bottom-right of image */}
+              {extraCount > 0 && (
+                <div className="absolute bottom-1.5 right-1.5 bg-slate-950/85 backdrop-blur-md text-amber-400 text-[10px] font-black px-1.5 py-0.5 rounded-md border border-amber-400/40 shadow-md">
+                  +{extraCount}
+                </div>
+              )}
             </div>
 
-            {/* 2nd Line: Item Title */}
-            <h3 className="font-heading font-bold text-sm text-slate-800 line-clamp-1 group-hover:text-amber-600 transition-colors">
-              {listing.title}
-            </h3>
+            {/* RIGHT COLUMN: Category Badge (top-right) + Price (large) + Title */}
+            <div className="flex-1 min-w-0 flex flex-col justify-between self-stretch">
+              {/* Top Row: Category Name with Logo Blue Tiny Icon */}
+              <div className="flex items-center justify-end">
+                <CategoryIcon category={listing.category || listing.type} />
+              </div>
 
-            {/* Description */}
-            <p className="text-xs text-slate-600 font-normal line-clamp-3 leading-relaxed">
-              {listing.description}
+              {/* Price: Large Bold Text */}
+              <div className="font-heading font-black text-lg sm:text-xl text-amber-600 tracking-tight my-0.5">
+                {formattedPrice}
+              </div>
+
+              {/* Title: 3 Lines max in fixed space */}
+              <h3 className="font-heading font-bold text-xs sm:text-sm text-slate-800 line-clamp-3 leading-snug">
+                {listing.title}
+              </h3>
+            </div>
+          </div>
+
+          {/* ── MIDDLE SECTION: Fixed Height Description Box ── */}
+          <div className="min-h-[4.5rem] bg-slate-50/80 border border-slate-200/60 p-2.5 rounded-xl flex items-center">
+            <p className="text-xs text-slate-600 font-normal leading-relaxed line-clamp-3">
+              {listing.description || "No detailed description provided."}
             </p>
+          </div>
 
-            {/* Standardized Location Tag */}
-            <div className="flex items-center text-slate-600 text-xs font-normal gap-1 pt-0.5">
+          {/* ── ROW 3: Location on Left + 3 Icon Buttons on Right ── */}
+          <div className="flex items-center justify-between text-xs text-slate-600 border-t border-b border-slate-100 py-2 my-0.5 gap-2">
+            {/* Location Tag */}
+            <div className="flex items-center gap-1 text-xs text-slate-600 font-medium truncate">
               <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
               <span className="truncate">{listing.location || "Medical College Rd, Thanjavur"}</span>
             </div>
+
+            {/* 3 Square Action Icon Buttons (Save, Share, Report) */}
+            <div className="flex items-center gap-1.5 shrink-0">
+              {/* 1st: Save */}
+              <button
+                type="button"
+                onClick={handleSaveToggle}
+                className={`w-7 h-7 rounded-md border flex items-center justify-center transition-colors cursor-pointer ${
+                  isSaved
+                    ? "bg-amber-50 border-amber-300 text-amber-600"
+                    : "border-slate-200 bg-white text-slate-500 hover:text-slate-800"
+                }`}
+                title={isSaved ? "Saved" : "Save Listing"}
+              >
+                <Bookmark className={`w-3.5 h-3.5 ${isSaved ? "fill-amber-600" : ""}`} />
+              </button>
+
+              {/* 2nd: Share */}
+              <button
+                type="button"
+                onClick={handleShare}
+                className="w-7 h-7 rounded-md border border-slate-200 bg-white text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors cursor-pointer"
+                title="Share Listing"
+              >
+                <Share2 className="w-3.5 h-3.5" />
+              </button>
+
+              {/* 3rd: Report */}
+              <button
+                type="button"
+                onClick={handleReportListing}
+                className="w-7 h-7 rounded-md border border-slate-200 bg-white text-slate-400 hover:text-rose-500 hover:border-rose-200 flex items-center justify-center transition-colors cursor-pointer"
+                title="Report Listing"
+              >
+                <Flag className="w-3.5 h-3.5" />
+              </button>
+            </div>
           </div>
+        </div>
 
-          {/* Service Provider Availability Banner (Only for Service Listings) */}
-          {isServiceListing && (
-            <div className="pt-2 border-t border-slate-100 flex items-center justify-between gap-2">
-              <div className="flex items-center gap-1.5">
-                <span className={`w-2.5 h-2.5 rounded-full ${isAvailable ? "bg-emerald-500 animate-pulse" : "bg-amber-500"}`} />
-                <span className={`text-[11px] font-medium ${isAvailable ? "text-emerald-700" : "text-amber-700"}`}>
-                  {isAvailable ? "Available Now (கிடைக்கிறார்)" : "Currently Busy (தற்சமயம் வர இயலாது)"}
-                </span>
-              </div>
+        {/* ── FOOTER ROW: Date Ago (Left) + 2 Rectangular Buttons (Right) ── */}
+        <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2 mt-auto">
+          {/* Left: Date Ago */}
+          <span className="text-[11px] font-medium text-slate-400 flex items-center gap-1 shrink-0">
+            <Calendar className="w-3.5 h-3.5 text-slate-400" />
+            <span>{formatRelativeTime(listing.created_at)}</span>
+          </span>
 
-              {/* Service Provider Only Toggle Control */}
-              {isOwnPost && (
-                <button
-                  type="button"
-                  onClick={handleToggleAvailability}
-                  className={`text-[10px] font-semibold px-2.5 py-1 rounded-full border transition-all cursor-pointer active:scale-95 ${
-                    isAvailable
-                      ? "bg-emerald-50 text-emerald-800 border-emerald-300 hover:bg-emerald-100"
-                      : "bg-amber-50 text-amber-800 border-amber-300 hover:bg-amber-100"
-                  }`}
-                  title="Toggle Your Service Availability"
-                >
-                  {isAvailable ? "Set to Busy" : "Set to Available"}
-                </button>
-              )}
-            </div>
-          )}
+          {/* Right: 2 Rectangular CTA Buttons (Dark WhatsApp Green #128C7E & Call Yellow) */}
+          <div className="flex items-center gap-2 shrink-0">
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="bg-[#128C7E] text-white font-bold text-xs py-1.5 px-3.5 rounded-lg flex items-center justify-center gap-1.5 min-h-[36px] shadow-2xs cursor-pointer"
+            >
+              <MessageSquare className="w-3.5 h-3.5 text-white fill-current" />
+              <span>WhatsApp</span>
+            </a>
 
-          {/* Card Footer Bar: Left = Relative Posted Date (Bottom-aligned), Right = 2 Larger Action Buttons (Chat & Call) */}
-          <div className="pt-2.5 border-t border-slate-100 flex items-end justify-between gap-2 mt-auto">
-            {/* Left Side: Relative Posted Date (Bottom Aligned) */}
-            <span className="text-[11px] font-normal text-slate-400 flex items-center gap-1 shrink-0 pb-1">
-              <Calendar className="w-3.5 h-3.5 text-slate-400" />
-              <span>{formatRelativeTime(listing.created_at)}</span>
-            </span>
-
-            {/* Right Side: 2 Larger Action Buttons (Chat #128C7E + Yellow Call) */}
-            <div className="flex items-center gap-2 shrink-0">
-              {isOwnPost ? (
-                <div className="px-4 py-2 rounded-lg bg-slate-100 border border-slate-200 text-slate-700 font-bold text-xs flex items-center justify-center gap-1.5 min-h-[38px]">
-                  <UserCheck className="w-4 h-4 text-slate-500" />
-                  <span>Your Listing</span>
-                </div>
-              ) : (
-                <>
-                  {!isLookingFor && (
-                    <button
-                      type="button"
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (isServiceListing && !isAvailable) {
-                          toast.info("This provider is currently busy. Leave a message in chat.");
-                        }
-                        setIsChatOpen(true);
-                      }}
-                      className="bg-[#128C7E] text-white font-bold text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer"
-                    >
-                      <MessageSquare className="w-4 h-4 text-white fill-current" />
-                      <span>Chat</span>
-                    </button>
-                  )}
-
-                  {(listing.show_phone !== false) && (
-                    <a
-                      href={`tel:${listing.phone || "919994837342"}`}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        if (isServiceListing && !isAvailable) {
-                          toast.info("This provider is currently busy/unavailable.");
-                        }
-                      }}
-                      className="bg-[#f59e0b] text-slate-950 font-bold text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer"
-                    >
-                      <Phone className="w-4 h-4 text-slate-950" />
-                      <span>Call</span>
-                    </a>
-                  )}
-                </>
-              )}
-            </div>
+            {(listing.show_phone !== false) && (
+              <a
+                href={callUrl}
+                onClick={(e) => e.stopPropagation()}
+                className="bg-[#f59e0b] text-slate-950 font-bold text-xs py-1.5 px-3.5 rounded-lg flex items-center justify-center gap-1.5 min-h-[36px] shadow-2xs cursor-pointer"
+              >
+                <Phone className="w-3.5 h-3.5 text-slate-950" />
+                <span>Call</span>
+              </a>
+            )}
           </div>
         </div>
       </div>
 
-      {/* In-App Chat Modal for Sell Items */}
+      {/* In-App Chat Modal */}
       <InAppChatModal
         isOpen={isChatOpen}
         onClose={() => setIsChatOpen(false)}
@@ -359,6 +381,15 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
         sellerId={listing.seller_id || "seller_default"}
         sellerName={listing.seller_name || "Seller"}
       />
+
+      {/* Fullscreen Gallery Modal for multi-images */}
+      {galleryIndex !== null && allImages.length > 0 && (
+        <GalleryModal
+          images={allImages}
+          startIndex={galleryIndex}
+          onClose={() => setGalleryIndex(null)}
+        />
+      )}
     </>
   );
 }

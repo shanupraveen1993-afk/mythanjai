@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useFirestore } from "@/hooks/use-firestore";
 import NeedCard from "@/components/cards/NeedCard";
 import { NeedOrSalePost } from "@/types";
-import { Plus, Loader2, Search, ArrowUpDown, Filter } from "lucide-react";
+import { Plus, Loader2, Search, ArrowUpDown, Filter, UserCheck } from "lucide-react";
 import { CLASSIFIED_CATEGORIES } from "@/lib/constants";
 import { isListingQuarantined } from "@/lib/moderation";
 import CustomDropdown from "@/components/ui/CustomDropdown";
@@ -107,24 +107,40 @@ export default function NeedClientPage() {
   return (
     <div className="flex flex-col gap-3 pb-24 w-full font-sans">
 
-      {/* 1. Hero Banner — Reduced top margin & Local Matchmaker tagline */}
-      <div className="relative w-full min-h-[90px] rounded-2xl overflow-hidden bg-slate-950 text-white flex items-center px-4 sm:px-6 py-3.5 shadow-2xs mt-1">
-        <img src="/thanjavur_temple_illustration.png" alt="Need" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent" />
-        <div className="relative z-10 flex flex-col gap-1 max-w-xl">
-          <span className="bg-[#FBBF24] text-[#0F172A] font-bold text-xs px-2.5 py-0.5 rounded-md tracking-wider w-fit">Buyer Requests • உங்கள் தேவைகள்</span>
-          <h1 className="font-heading font-black text-lg sm:text-xl text-white tracking-tight">
-            Tell the community exactly what you are looking for. <span className="text-amber-400 block text-xs sm:text-sm font-extrabold mt-0.5">உங்களுக்கு தேவையானதை இங்கே பதிவிடுங்கள்.</span>
+      {/* 1. Hero Banner — Clean Commercial Design (16px radius) */}
+      <div className="relative w-full rounded-2xl overflow-hidden bg-[#0F172A] text-white flex items-center px-6 sm:px-8 py-7 sm:py-8 shadow-sm mt-2">
+        <img src="/thanjavur_temple_illustration.png" alt="Need" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-15 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0F172A] via-[#0F172A]/90 to-transparent" />
+        <div className="relative z-10 flex flex-col gap-2.5 max-w-2xl">
+          <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-400/20 text-amber-300 font-bold text-xs px-3 py-1 rounded-md w-fit">
+            <span>LOCAL REQUIREMENTS</span>
+            <span className="text-amber-400">•</span>
+            <span>உங்கள் தேவைகள்</span>
+          </div>
+          <h1 className="font-heading font-black text-xl sm:text-2xl lg:text-3xl text-white tracking-tight leading-snug">
+            Explore Local Requirements &amp; Post Your Need.
+            <span className="text-amber-400 block text-xs sm:text-base font-bold mt-1">உங்களுக்கு தேவையானதை இங்கே பதிவிடுங்கள்.</span>
           </h1>
-          <p className="text-xs text-slate-300 font-semibold leading-relaxed">Post your requirement for land, cars, rentals, or items — local owners will contact you directly.</p>
+          <p className="text-xs sm:text-sm text-slate-300 font-normal leading-relaxed">
+            Looking for land, vehicles, rental homes, or products in Thanjavur? Verified local sellers will contact you directly.
+          </p>
         </div>
       </div>
 
-      {/* 2. TITLE BAR */}
+      {/* 2. TITLE BAR with Secondary Outlined Blue My Listing Button */}
       <div className="py-2.5 flex items-center justify-between gap-3 w-full border-b border-slate-200/80">
         <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight">
-          Buyer Requirements
+          Local Requirements &amp; Needs (தேவைகள்)
         </h2>
+        <button
+          type="button"
+          onClick={() => router.push("/profile")}
+          className="px-3 py-1.5 rounded-lg bg-blue-50/80 hover:bg-blue-100 text-[#1d4ed8] border border-[#1d4ed8]/30 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer shrink-0 shadow-2xs"
+          title="View My Listings"
+        >
+          <UserCheck className="w-3.5 h-3.5 text-[#1d4ed8]" />
+          <span>My Listing</span>
+        </button>
       </div>
 
       {/* LISTING CONTAINER */}

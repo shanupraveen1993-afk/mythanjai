@@ -43,7 +43,7 @@ export default function OfferCard({ post }: OfferCardProps) {
   }, [post.valid_from, post.valid_to, post.hours]);
 
   return (
-    <div className="group block bg-white border border-slate-200/90 rounded-2xl overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col relative w-full font-sans">
+    <div className="group block bg-white border border-slate-200/90 rounded-xl overflow-hidden shadow-xs hover:shadow-md transition-all flex flex-col relative w-full font-sans">
       {/* Featured Badge Overlay */}
       {post.is_featured && (
         <div className="absolute top-2.5 left-2.5 z-20 bg-[#FBBF24] text-[#0F172A] text-xs font-black uppercase tracking-wider px-2 py-0.5 rounded-xl flex items-center gap-1 shadow-md border-b border-[#D97706]">

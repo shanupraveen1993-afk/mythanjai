@@ -135,7 +135,7 @@ export default function SwipeUpOnboarding({
                 </span>
 
                 {/* Visual Card */}
-                <div className="w-full max-w-[340px] bg-slate-900/90 border border-slate-800 rounded-3xl overflow-hidden shadow-[0_15px_40px_rgba(0,0,0,0.8)] mt-4 backdrop-blur-md">
+                <div className="w-full max-w-[340px] bg-slate-900/90 border border-slate-800 rounded-xl overflow-hidden shadow-[0_15px_40px_rgba(0,0,0,0.8)] mt-4 backdrop-blur-md">
                   <div className="relative w-full h-44 overflow-hidden">
                     <img
                       src={slide.img}

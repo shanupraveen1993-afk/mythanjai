@@ -152,6 +152,9 @@ export default function PostForm({ segment }: PostFormProps) {
   const [isAvailable, setIsAvailable] = useState<boolean>(true);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
+  // Sell: supports up to 3 images
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
   const [videoPreview, setVideoPreview] = useState<string>("");
 
@@ -258,32 +261,42 @@ export default function PostForm({ segment }: PostFormProps) {
     }
   }, [profile, phone]);
 
+  // Offer: single image with OCR; Sell: multi-image up to 3
   const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (segment === "sell") {
+      const files = Array.from(e.target.files || []);
+      if (!files.length) return;
+      const remaining = 3 - selectedImages.length;
+      const toAdd = files.slice(0, remaining);
+      const newFiles = [...selectedImages, ...toAdd].slice(0, 3);
+      setSelectedImages(newFiles);
+      // Generate previews for new files
+      const previews = await Promise.all(
+        newFiles.map(
+          (f) =>
+            new Promise<string>((resolve) => {
+              const reader = new FileReader();
+              reader.onloadend = () => resolve(reader.result as string);
+              reader.readAsDataURL(f);
+            })
+        )
+      );
+      setImagePreviews(previews);
+      return;
+    }
+    // Offer single image
     const file = e.target.files?.[0];
     if (!file) return;
-
     setSelectedImage(file);
     const reader = new FileReader();
-    reader.onloadend = () => {
-      setImagePreview(reader.result as string);
-    };
+    reader.onloadend = () => setImagePreview(reader.result as string);
     reader.readAsDataURL(file);
-
     if (segment === "offer") {
       setIsOcrScanning(true);
       try {
         const compressed = await compressImage(file, 800, 800, 0.7);
         const apiEndpoint = getApiUrl("/api/gemini-ocr");
-
-        const res = await fetch(apiEndpoint, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            imageBase64: compressed.base64,
-            mimeType: compressed.blob.type,
-          }),
-        });
-
+        const res = await fetch(apiEndpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ imageBase64: compressed.base64, mimeType: compressed.blob.type }) });
         const result = await res.json();
         if (result.success && result.data) {
           const { shop_name, detected_area, category: ocrCat, phone: ocrPhone } = result.data;
@@ -311,16 +324,29 @@ export default function PostForm({ segment }: PostFormProps) {
     setLoading(true);
 
     try {
+      // Upload sell images (up to 3)
       let imageUrl = "";
-      if (selectedImage) {
+      let imageUrls: string[] = [];
+      if (segment === "sell" && selectedImages.length > 0) {
+        imageUrls = await Promise.all(
+          selectedImages.map(async (img) => {
+            const compressed = await compressImage(img);
+            const storageRef = ref(storage, `postings/${Date.now()}_${img.name}`);
+            const snapshot = await uploadBytes(storageRef, compressed.blob);
+            return getDownloadURL(snapshot.ref);
+          })
+        );
+        imageUrl = imageUrls[0] || "";
+      } else if (selectedImage) {
         try {
           const compressed = await compressImage(selectedImage);
           const storageRef = ref(storage, `postings/${Date.now()}_${selectedImage.name}`);
           const snapshot = await uploadBytes(storageRef, compressed.blob);
           imageUrl = await getDownloadURL(snapshot.ref);
-        } catch (uploadErr) {
-          console.warn("Image upload fallback:", uploadErr);
-          imageUrl = "";
+          imageUrls = [imageUrl];
+        } catch {
+          imageUrl = imagePreview || "";
+          imageUrls = imageUrl ? [imageUrl] : [];
         }
       }
 
@@ -352,7 +378,13 @@ export default function PostForm({ segment }: PostFormProps) {
         localPostRecord.title = title.trim();
         localPostRecord.description = cleanDesc;
         localPostRecord.price = price ? parseFloat(price) : null;
-        localPostRecord.image_url = imagePreview || safeFirestoreImageUrl;
+        localPostRecord.show_phone = showPhone;
+        if (segment === "sell" && imagePreviews.length > 0) {
+          localPostRecord.image_url = imagePreviews[0];
+          localPostRecord.image_urls = imagePreviews;
+        } else {
+          localPostRecord.image_url = imagePreview || safeFirestoreImageUrl;
+        }
 
         try {
           await addDoc(collection(db, "needs_and_sales"), {
@@ -365,7 +397,9 @@ export default function PostForm({ segment }: PostFormProps) {
             area_tag: area,
             price: price ? parseFloat(price) : null,
             phone: phone || "9876543210",
+            show_phone: showPhone,
             image_url: safeFirestoreImageUrl,
+            image_urls: imageUrls.length > 0 ? imageUrls : undefined,
             youtube_url: youtubeUrl.trim() || "",
             google_maps_url: googleMapsUrl.trim() || "",
             is_verified: true,
@@ -486,11 +520,12 @@ export default function PostForm({ segment }: PostFormProps) {
       price: price || (segment === "sell" ? "2500000" : "10000"),
       phone: phone || "9876543210",
       image_url: imagePreview || "/thanjavur_temple_illustration.png",
+      show_phone: showPhone,
       is_verified: true,
       created_at: new Date() as any,
       expires_at: new Date(Date.now() + 30 * 86400000) as any,
     };
-  }, [title, description, category, area, price, phone, imagePreview, segment, user, config.categories]);
+  }, [title, description, category, area, price, phone, imagePreview, segment, user, config.categories, showPhone]);
 
   const previewServicePost = useMemo<ServiceProviderPost>(() => {
     return {
@@ -566,9 +601,9 @@ export default function PostForm({ segment }: PostFormProps) {
             {segment === "offer" ? (
               <>
                 {/* 1. UPLOAD VISITING CARD / FLYER PHOTO (TOP) */}
-                <div className="w-full bg-slate-50 border-2 border-dashed border-slate-300 hover:border-slate-400 p-4 rounded-2xl flex flex-col items-center justify-center text-center gap-2 transition-all group relative">
+                <div className="w-full bg-slate-50 border-2 border-dashed border-slate-300 hover:border-slate-400 p-4 rounded-xl flex flex-col items-center justify-center text-center gap-2 transition-all group relative">
                   {isOcrScanning && (
-                    <div className="absolute inset-0 bg-white/90 backdrop-blur-xs rounded-2xl z-20 flex flex-col items-center justify-center gap-2">
+                    <div className="absolute inset-0 bg-white/90 backdrop-blur-xs rounded-xl z-20 flex flex-col items-center justify-center gap-2">
                       <Loader2 className="w-6 h-6 animate-spin text-slate-800" />
                       <span className="text-xs font-bold text-slate-800">Reading Store Name & Location from Card...</span>
                     </div>
@@ -584,7 +619,7 @@ export default function PostForm({ segment }: PostFormProps) {
                     </div>
                   ) : (
                     <label className="w-full flex flex-col items-center justify-center gap-2 cursor-pointer py-2">
-                      <div className="w-11 h-11 rounded-2xl bg-slate-900 text-white flex items-center justify-center font-bold shadow-sm group-hover:scale-105 transition-transform">
+                      <div className="w-10 h-10 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold shadow-sm group-hover:scale-105 transition-transform">
                         <Camera className="w-5 h-5 stroke-[2.5]" />
                       </div>
                       <div className="flex flex-col items-center">
@@ -595,7 +630,7 @@ export default function PostForm({ segment }: PostFormProps) {
                           Fills Store Name & Location directly into Live Preview!
                         </span>
                       </div>
-                      <span className="bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-bold text-xs px-3.5 py-1.5 rounded-xl transition-all border border-yellow-400 shadow-2xs mt-0.5">
+                      <span className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs px-3.5 py-1.5 rounded-lg transition-all border border-amber-400 shadow-2xs mt-0.5">
                         Upload Card Photo →
                       </span>
                       <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
@@ -757,13 +792,13 @@ export default function PostForm({ segment }: PostFormProps) {
                   <div className="flex flex-col gap-1">
                     <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                       <MapPin className="w-3.5 h-3.5 text-amber-500" />
-                      <span>Address / Location *</span>
+                      <span>{segment === "need" ? "Preferred Locations (Up to 3) *" : "Address / Location *"}</span>
                     </label>
                     <input
                       type="text"
                       value={area}
                       onChange={(e) => setArea(e.target.value)}
-                      placeholder="Type your address or location..."
+                      placeholder={segment === "need" ? "e.g. Medical College Rd, Old Bus Stand, Vallam" : "Type your address or location..."}
                       className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
                     />
                   </div>
@@ -923,46 +958,56 @@ export default function PostForm({ segment }: PostFormProps) {
               </div>
             )}
 
-            {/* Image Upload Dropzone */}
-            {/* Redesigned Image Upload Dropzone with Cancel (X) Preview Button */}
-            {segment !== "offer" && segment !== "service" && (
+            {/* Image Upload — Sell: multi (up to 3), Offer: handled separately above */}
+            {segment === "sell" && (
               <div className="flex flex-col gap-2">
                 <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
                   <Camera className="w-3.5 h-3.5 text-slate-400" />
-                  <span>{config.imagePlaceholder}</span>
+                  <span>Photos — up to 3 images (tap to add)</span>
                 </label>
-                
-                {imagePreview ? (
-                  <div className="relative w-full h-40 rounded-lg overflow-hidden border border-slate-200 shadow-2xs group">
-                    <img src={imagePreview} alt="Uploaded photo" className="w-full h-full object-cover" />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setSelectedImage(null);
-                        setImagePreview("");
-                      }}
-                      className="absolute top-2 right-2 bg-slate-950/85 hover:bg-slate-950 text-white w-7 h-7 rounded-full flex items-center justify-center text-xs font-black shadow-md cursor-pointer transition-transform hover:scale-110"
-                      title="Remove image"
-                    >
-                      ✕
-                    </button>
-                  </div>
-                ) : (
-                  <div className="w-full bg-slate-50 border-2 border-dashed border-slate-300 hover:border-slate-400 p-4 rounded-lg flex flex-col items-center justify-center text-center gap-2 transition-all">
-                    <label className="w-full flex flex-col items-center justify-center gap-1.5 cursor-pointer py-2">
-                      <div className="w-9 h-9 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold shadow-2xs">
-                        <Camera className="w-4 h-4" />
+
+                {/* Preview strip */}
+                {imagePreviews.length > 0 && (
+                  <div className="flex gap-2 flex-wrap">
+                    {imagePreviews.map((src, idx) => (
+                      <div key={idx} className="relative w-20 h-20 rounded-xl overflow-hidden border border-slate-200 shadow-xs shrink-0">
+                        <img src={src} alt={`Photo ${idx + 1}`} className="w-full h-full object-cover" />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newFiles = selectedImages.filter((_, i) => i !== idx);
+                            const newPreviews = imagePreviews.filter((_, i) => i !== idx);
+                            setSelectedImages(newFiles);
+                            setImagePreviews(newPreviews);
+                          }}
+                          className="absolute top-0.5 right-0.5 bg-slate-950/80 text-white w-5 h-5 rounded-full flex items-center justify-center text-[10px] font-black cursor-pointer"
+                          title="Remove"
+                        >
+                          ✕
+                        </button>
                       </div>
-                      <span className="text-xs font-extrabold text-slate-800">Click to Upload Photo</span>
-                      <span className="text-[11px] text-slate-500 font-medium">JPEG, PNG, WebP up to 5MB</span>
-                      <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                        className="hidden"
-                      />
-                    </label>
+                    ))}
                   </div>
+                )}
+
+                {/* Add more button — visible until 3 images */}
+                {imagePreviews.length < 3 && (
+                  <label className="w-full bg-slate-50 border-2 border-dashed border-slate-300 hover:border-slate-400 p-4 rounded-lg flex flex-col items-center justify-center text-center gap-2 transition-all cursor-pointer">
+                    <div className="w-9 h-9 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold shadow-2xs">
+                      <Camera className="w-4 h-4" />
+                    </div>
+                    <span className="text-xs font-extrabold text-slate-800">
+                      {imagePreviews.length === 0 ? "Click to Upload Photos" : `Add More (${imagePreviews.length}/3)`}
+                    </span>
+                    <span className="text-[11px] text-slate-500 font-medium">JPEG, PNG, WebP up to 5MB each</span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      multiple
+                      onChange={handleImageChange}
+                      className="hidden"
+                    />
+                  </label>
                 )}
               </div>
             )}

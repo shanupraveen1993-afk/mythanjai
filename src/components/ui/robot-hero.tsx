@@ -939,7 +939,7 @@ export function RobotHero({
 
           {/* Clean Brand Logo Badge (No effects/animations) */}
           <div className="relative w-16 h-16 sm:w-20 sm:h-20 md:w-22 md:h-22 shrink-0 mt-3 sm:mt-4 md:mt-5 select-none">
-            <div className="relative w-full h-full rounded-3xl overflow-hidden bg-white shadow-[0_8px_32px_rgba(245,158,11,0.22)] border border-amber-100 flex items-center justify-center p-1.5">
+            <div className="relative w-full h-full rounded-xl overflow-hidden bg-white shadow-[0_8px_32px_rgba(245,158,11,0.22)] border border-amber-100 flex items-center justify-center p-1.5">
               <img
                 src="/namma_thanjai_logo.png"
                 alt="namma thanjai logo"

@@ -73,21 +73,22 @@ export default function TopHeader({
   // Hamburger Menu Drawer state for Web App
   const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
-  // "Get App" header persistence & 1-time click dismissal rule
-  const [hasClickedGetApp, setHasClickedGetApp] = useState<boolean>(true);
+  // Native APK detection — hide Get App when running inside Capacitor
+  const [isNativeApp, setIsNativeApp] = useState<boolean>(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const clicked = localStorage.getItem("namma_thanjai_get_app_clicked");
-      setHasClickedGetApp(Boolean(clicked));
+      try {
+        const cap = (window as any).Capacitor;
+        if (cap && cap.isNativePlatform && cap.isNativePlatform()) {
+          setIsNativeApp(true);
+        }
+      } catch (e) {}
     }
   }, []);
 
   const handleGetAppClick = () => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("namma_thanjai_get_app_clicked", "true");
-      setHasClickedGetApp(true);
-    }
+    // no-op persistence, kept for backward compat
   };
 
   return (
@@ -122,8 +123,8 @@ export default function TopHeader({
           const isServiceActive = pathname.includes("/services") || pathname.includes("/post/service") || activeTab === "services";
           const isOfferActive = pathname.includes("/shops") || pathname.includes("/offers") || activeTab === "shops";
 
-          const activeStyle = "bg-[#1d4ed8] text-white font-extrabold shadow-xs rounded-lg border border-[#1d4ed8]";
-          const inactiveStyle = "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60 font-bold transition-all duration-200";
+          const activeStyle = "bg-[#f59e0b] text-slate-950 font-extrabold shadow-2xs rounded-lg";
+          const inactiveStyle = "text-slate-600 hover:text-slate-900 font-bold transition-colors";
 
           return (
             <div className="hidden md:flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl border border-slate-200/80 font-heading backdrop-blur-sm">
@@ -168,13 +169,13 @@ export default function TopHeader({
 
         {/* Right Side: Get App + Dynamic Post CTA + Chat Icon (Logged in) + Profile Icon */}
         <div className="flex items-center gap-2 shrink-0">
-          {/* 1. Get App Button — Homepage ONLY (Royal Blue Solid Design) */}
-          {isHomePage && (
+          {/* 1. Get App Button — Homepage ONLY, hidden on native APK */}
+          {isHomePage && !isNativeApp && (
             <a
               href="/namma_thanjai_release.apk"
               download="namma_thanjai_release.apk"
               onClick={handleGetAppClick}
-              className="bg-[#1d4ed8] text-white hover:bg-blue-700 text-xs px-3.5 py-1.5 rounded-lg font-bold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none transition-colors"
+              className="bg-[#1d4ed8] text-white text-xs px-3.5 py-1.5 rounded-lg font-bold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none"
               title="Download Namma Thanjai Android App"
               aria-label="Download Namma Thanjai Android App"
             >
@@ -183,12 +184,12 @@ export default function TopHeader({
             </a>
           )}
 
-          {/* 2. Dynamic + Post CTA Button — Other Pages ONLY (Primary Yellow Solid Design) */}
+          {/* 2. Dynamic + Post CTA Button — Other Pages ONLY (Solid Yellow Design, No Unwanted Hover) */}
           {!isHomePage && (
             <button
               type="button"
               onClick={handleDynamicPostClick}
-              className="bg-[#f59e0b] text-slate-950 hover:bg-[#d97706] hover:text-white text-xs px-3.5 py-1.5 rounded-lg font-bold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer transition-colors"
+              className="bg-[#f59e0b] text-slate-950 text-xs px-3.5 py-1.5 rounded-lg font-bold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer"
               title={postInfo.label}
             >
               <Plus className="w-3.5 h-3.5 stroke-[3] text-slate-950" />

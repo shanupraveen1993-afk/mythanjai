@@ -308,7 +308,7 @@ export default function PostClientPage() {
       </div>
 
       {success ? (
-        <div className="bg-white border border-slate-200 rounded-3xl p-8 flex flex-col items-center text-center gap-4 my-8">
+        <div className="bg-white border border-slate-200 rounded-xl p-8 flex flex-col items-center text-center gap-4 my-8">
           <div className="w-14 h-14 rounded-full bg-emerald-500 text-white flex items-center justify-center shadow-sm">
             <Check className="w-8 h-8 stroke-[3]" />
           </div>
@@ -324,7 +324,7 @@ export default function PostClientPage() {
                 };
                 router.push(redirectMap[segment]);
               }}
-              className="flex-1 py-3 border-2 border-[#1d4ed8] text-[#1d4ed8] text-xs font-black rounded-xl hover:bg-blue-50 transition-colors cursor-pointer"
+              className="flex-1 py-3 border-2 border-[#1d4ed8] text-[#1d4ed8] text-xs font-black rounded-lg hover:bg-blue-50 transition-colors cursor-pointer"
             >
               View Feed
             </button>
@@ -338,14 +338,14 @@ export default function PostClientPage() {
                 setImagePreview("");
                 setSelectedImage(null);
               }}
-              className="flex-1 py-3 bg-[#f59e0b] border border-[#d97706] text-slate-950 text-xs font-black rounded-xl hover:bg-[#d97706] hover:text-white transition-colors cursor-pointer"
+              className="flex-1 py-3 bg-[#f59e0b] border border-[#d97706] text-slate-950 text-xs font-black rounded-lg hover:bg-[#d97706] hover:text-white transition-colors cursor-pointer"
             >
               Post Another
             </button>
           </div>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="flex flex-col gap-6 bg-white border border-slate-200 rounded-3xl p-6 sm:p-8 shadow-sm">
+        <form onSubmit={handleSubmit} className="flex flex-col gap-6 bg-white border border-slate-200 rounded-xl p-6 sm:p-8 shadow-xs">
           {/* Form Progress Bar */}
           <div className="flex items-center gap-2 pb-1">
             <div className={`h-1 flex-1 rounded-full transition-all ${title ? "bg-[#1d4ed8]" : "bg-slate-200"}`} />
@@ -356,17 +356,17 @@ export default function PostClientPage() {
           </div>
           {/* Validation Alert */}
           {validationError && (
-            <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-2xl text-xs font-bold text-rose-800 flex items-center gap-2 animate-shake">
+            <div className="p-3.5 bg-rose-50 border border-rose-200 rounded-lg text-xs font-bold text-rose-800 flex items-center gap-2 animate-shake">
               <span>⚠️ {validationError}</span>
             </div>
           )}
 
           {/* Segment Selector Tabs */}
           <div className="flex flex-col gap-2">
-            <label className="text-xs font-black text-slate-700 uppercase tracking-wider">
+            <label className="text-xs font-bold text-slate-700 uppercase tracking-wider">
               Select Posting Segment
             </label>
-            <div className="grid grid-cols-4 gap-2 bg-slate-100 p-1.5 rounded-2xl border border-slate-200">
+            <div className="grid grid-cols-4 gap-2 bg-slate-100 p-1.5 rounded-xl border border-slate-200">
               {[
                 { id: "sell", label: "Sell", icon: ShoppingBag, color: "text-orange-600" },
                 { id: "need", label: "Need", icon: HelpCircle, color: "text-blue-600" },
@@ -419,7 +419,7 @@ export default function PostClientPage() {
               }
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-2xl bg-slate-50 focus:bg-white focus:outline-none focus:border-slate-900 transition-colors"
+              className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-lg bg-slate-50 focus:bg-white focus:outline-none focus:border-slate-900 transition-colors"
             />
           </div>
 
@@ -432,7 +432,7 @@ export default function PostClientPage() {
             <select
               value={category}
               onChange={(e) => setCategory(e.target.value)}
-              className="w-full px-4 py-3 text-sm font-bold border border-slate-200 rounded-2xl bg-slate-50 focus:bg-white focus:outline-none focus:border-slate-900 cursor-pointer"
+              className="w-full px-4 py-3 text-sm font-bold border border-slate-200 rounded-lg bg-slate-50 focus:bg-white focus:outline-none focus:border-slate-900 cursor-pointer"
             >
               {categories.map((cat) => (
                 <option key={cat} value={cat}>
@@ -451,7 +451,7 @@ export default function PostClientPage() {
             <select
               value={area}
               onChange={(e) => setArea(e.target.value)}
-              className="w-full px-4 py-3 text-sm font-bold border border-slate-200 rounded-2xl bg-slate-50 focus:bg-white focus:outline-none focus:border-slate-900 cursor-pointer"
+              className="w-full px-4 py-3 text-sm font-bold border border-slate-200 rounded-lg bg-slate-50 focus:bg-white focus:outline-none focus:border-slate-900 cursor-pointer"
             >
               {TANJORE_LOCALITIES.map((loc) => (
                 <option key={loc} value={loc}>
@@ -472,7 +472,7 @@ export default function PostClientPage() {
                 placeholder="e.g. 12500"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
-                className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-2xl bg-slate-50 focus:bg-white focus:outline-none focus:border-slate-900"
+                className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-lg bg-slate-50 focus:bg-white focus:outline-none focus:border-slate-900"
               />
             </div>
           )}
@@ -488,7 +488,7 @@ export default function PostClientPage() {
                 placeholder="e.g. 8+ Years Experience"
                 value={experience}
                 onChange={(e) => setExperience(e.target.value)}
-                className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-2xl bg-slate-50 focus:bg-white focus:outline-none focus:border-slate-900"
+                className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-lg bg-slate-50 focus:bg-white focus:outline-none focus:border-slate-900"
               />
             </div>
           )}
@@ -552,7 +552,7 @@ export default function PostClientPage() {
               placeholder="Describe your item, house rental features, or offer details..."
               value={description}
               onChange={(e) => setDescription(e.target.value)}
-              className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-2xl bg-slate-50 focus:bg-white focus:outline-none focus:border-slate-900 resize-none"
+              className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-lg bg-slate-50 focus:bg-white focus:outline-none focus:border-slate-900 resize-none"
             />
           </div>
 

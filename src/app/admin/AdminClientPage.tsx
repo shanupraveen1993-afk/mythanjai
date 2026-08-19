@@ -395,7 +395,7 @@ export default function AdminClientPage() {
   if (!isAdmin) {
     return (
       <div className="flex-1 flex flex-col items-center justify-center p-6 bg-slate-900 text-white min-h-screen font-sans">
-        <div className="w-full max-w-sm flex flex-col gap-5 bg-slate-800/90 border border-slate-700/80 p-6 rounded-3xl shadow-2xl backdrop-blur-md">
+        <div className="w-full max-w-sm flex flex-col gap-5 bg-slate-800/90 border border-slate-700/80 p-6 rounded-xl shadow-2xl backdrop-blur-md">
           <div className="flex flex-col items-center text-center gap-2">
             <div className="w-14 h-14 rounded-2xl bg-yellow-500 text-slate-950 flex items-center justify-center shadow-lg shadow-yellow-500/20">
               <Shield className="w-7 h-7 stroke-[2.5]" />
@@ -557,7 +557,7 @@ export default function AdminClientPage() {
 
         {/* SECTION 1: DEDICATED VIDEO REEL UPLOADER TAB */}
         {activeTab === "video_upload" ? (
-          <div className="bg-white border border-slate-200/90 rounded-3xl p-6 shadow-sm flex flex-col gap-6 max-w-2xl mx-auto w-full font-sans">
+          <div className="bg-white border border-slate-200/90 rounded-xl p-6 shadow-sm flex flex-col gap-6 max-w-2xl mx-auto w-full font-sans">
             <div className="flex items-center gap-3 border-b border-slate-100 pb-4">
               <div className="w-12 h-12 rounded-2xl bg-yellow-500/10 text-yellow-600 flex items-center justify-center border border-yellow-500/20 shrink-0">
                 <Video className="w-6 h-6 stroke-[2.5]" />
@@ -806,7 +806,7 @@ export default function AdminClientPage() {
               <span className="text-xs font-extrabold text-slate-500">Loading Moderation Queue...</span>
             </div>
           ) : filteredItems.length === 0 ? (
-            <div className="text-center py-20 text-xs font-bold text-slate-500 border border-dashed border-slate-300 rounded-3xl bg-white shadow-2xs">
+            <div className="text-center py-20 text-xs font-bold text-slate-500 border border-dashed border-slate-300 rounded-xl bg-white shadow-2xs">
               No listings matching filter criteria.
             </div>
           ) : (

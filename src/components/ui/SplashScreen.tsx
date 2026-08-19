@@ -45,7 +45,7 @@ export default function SplashScreen({
       {/* Main Branding Container */}
       <div className="relative flex flex-col items-center justify-center gap-4 px-6 text-center">
         {/* Official Namma Thanjai Logo Image */}
-        <div className="w-20 h-20 rounded-3xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center p-3 mb-2 shadow-[0_0_30px_rgba(245,158,11,0.35)] backdrop-blur-xs animate-scale-up">
+        <div className="w-20 h-20 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center p-3 mb-2 shadow-[0_0_30px_rgba(245,158,11,0.35)] backdrop-blur-xs animate-scale-up">
           <Image
             src="/namma_thanjai_logo.png"
             alt="Namma Thanjai Logo"

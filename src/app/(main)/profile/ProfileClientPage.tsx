@@ -84,10 +84,17 @@ export default function ProfileClientPage() {
     toast.success("Listing renewed for another 30 Days!");
   };
 
-  // PWA Install prompt states
+  // PWA Install prompt states & Native App Detection
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isInstallable, setIsInstallable] = useState(false);
   const [isIOS, setIsIOS] = useState(false);
+  const [isNativeApp, setIsNativeApp] = useState(false);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      setIsNativeApp(Boolean((window as any).Capacitor?.isNativePlatform()));
+    }
+  }, []);
 
   // Listen to Firestore profile changes in real-time on Profile Page to trigger visual verification cues
   useEffect(() => {
@@ -575,8 +582,8 @@ export default function ProfileClientPage() {
             )}
           </div>
 
-          {/* PWA INSTALL WIDGET CARD */}
-          {isInstallable && (
+          {/* PWA INSTALL / ADD WIDGET CARD (Website Only — Not visible in Native APK) */}
+          {!isNativeApp && isInstallable && (
             <div className="bg-gradient-to-tr from-amber-600 to-amber-400 text-slate-950 rounded-2xl p-4 shadow-md flex flex-col gap-3 relative overflow-hidden">
               <div className="absolute top-[-20px] right-[-20px] opacity-10">
                 <Download className="w-32 h-32 text-slate-950" />
@@ -584,17 +591,17 @@ export default function ProfileClientPage() {
               <div className="relative z-10">
                 <h4 className="font-heading font-black text-sm flex items-center gap-1.5 text-slate-950 font-bold">
                   <Sparkles className="w-4 h-4 text-amber-100 animate-pulse fill-current" />
-                  No Download Needed!
+                  Add Home Screen Widget (Website Only)
                 </h4>
                 <p className="text-xs text-slate-900 mt-1 leading-relaxed">
-                  Click here to add Namma Thanjai directly to your home screen — instant access, zero storage!
+                  Add Namma Thanjai directly to your phone home screen for 1-tap quick access without downloading.
                 </p>
               </div>
               <button
                 onClick={handleInstallClick}
                 className="w-full bg-slate-950 hover:bg-slate-900 text-white font-bold py-2 rounded-xl text-xs transition-colors shadow-md relative z-10 active:scale-[0.98]"
               >
-                🚀 Add to Home Screen
+                🚀 Add Widget to Home Screen
               </button>
             </div>
           )}

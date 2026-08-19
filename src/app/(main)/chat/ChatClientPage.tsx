@@ -81,72 +81,11 @@ export default function ChatClientPage() {
 
   const chatBottomRef = useRef<HTMLDivElement | null>(null);
 
-  // Sample messages mapped by sample chat ID
-  const SAMPLE_MESSAGES_MAP: Record<string, ChatMessage[]> = {
-    sample_chat_room: [
-      { id: "m1", senderId: "buyer_guest", senderName: "You", text: "Hello Senthil sir! Is the 2400 Sqft plot in Vallam still available?", timestamp: new Date(Date.now() - 3600000) },
-      { id: "m2", senderId: "seller_senthil", senderName: "Senthil (Seller)", text: "Vanakkam! Yes, plot is available with clear parent document & EC. When can you visit?", timestamp: new Date(Date.now() - 1800000) },
-      { id: "m3", senderId: "buyer_guest", senderName: "You", text: "Can I inspect the plot tomorrow morning at 10 AM?", timestamp: new Date(Date.now() - 600000) },
-      { id: "m4", senderId: "seller_senthil", senderName: "Senthil (Seller)", text: "Yes sir, clear EC documents available. When can you visit?", timestamp: new Date(Date.now() - 120000) },
-    ],
-    sample_chat_textiles: [
-      { id: "t1", senderId: "buyer_guest", senderName: "You", text: "Hi, do you have silk saree wedding offer discounts active today?", timestamp: new Date(Date.now() - 7200000) },
-      { id: "t2", senderId: "kavitha_store", senderName: "Kavitha Textiles", text: "Vanakkam! Yes, 25% OFF Zari Silk Saree grand opening discount is valid till Sunday.", timestamp: new Date(Date.now() - 3600000) },
-      { id: "t3", senderId: "kavitha_store", senderName: "Kavitha Textiles", text: "Wedding collections in stock! Store open till 9 PM.", timestamp: new Date(Date.now() - 900000) },
-    ],
-    sample_chat_plumber: [
-      { id: "p1", senderId: "buyer_guest", senderName: "You", text: "Need urgent plumbing repair for tank overflow near Medical College Road.", timestamp: new Date(Date.now() - 14400000) },
-      { id: "p2", senderId: "rajesh_trade", senderName: "Rajesh (Plumber)", text: "Vanakkam sir, I am near South Rampart right now.", timestamp: new Date(Date.now() - 7200000) },
-      { id: "p3", senderId: "rajesh_trade", senderName: "Rajesh (Plumber)", text: "I can visit your home near Medical College in 30 minutes.", timestamp: new Date(Date.now() - 3600000) },
-    ],
-    sample_chat_iphone: [
-      { id: "i1", senderId: "arun_buyer", senderName: "Arun Prasad", text: "Hi! Interested in your iPhone 13 Blue. What is the battery health percentage?", timestamp: new Date(Date.now() - 28800000) },
-      { id: "i2", senderId: "buyer_guest", senderName: "You", text: "Battery health is 88%, original box and bill available.", timestamp: new Date(Date.now() - 18000000) },
-      { id: "i3", senderId: "arun_buyer", senderName: "Arun Prasad", text: "Is battery health 88%? Can I inspect today near New Bus Stand?", timestamp: new Date(Date.now() - 10800000) },
-    ],
-  };
+  // Sample messages removed to provide clean slate for user live testing
+  const SAMPLE_MESSAGES_MAP: Record<string, ChatMessage[]> = {};
 
-  // Initialize or load active chat room from query params or threads
+  // Initialize or load active chat room from query params or user threads
   useEffect(() => {
-    const DEFAULT_DUMMY_THREADS: ChatThread[] = [
-      {
-        chatId: "sample_chat_room",
-        listingId: "sample_101",
-        listingTitle: "2400 Sqft CMDA Plot in Vallam",
-        peerId: "seller_senthil",
-        peerName: "Senthil Kumar (Seller)",
-        lastMessage: "Yes sir, clear EC documents available. When can you visit?",
-        lastTimestamp: new Date(Date.now() - 120000),
-      },
-      {
-        chatId: "sample_chat_textiles",
-        listingId: "sample_102",
-        listingTitle: "Silk Saree 25% Grand Opening Offer",
-        peerId: "kavitha_store",
-        peerName: "Kavitha Textiles (Store Owner)",
-        lastMessage: "Wedding collections in stock! Store open till 9 PM.",
-        lastTimestamp: new Date(Date.now() - 900000),
-      },
-      {
-        chatId: "sample_chat_plumber",
-        listingId: "sample_103",
-        listingTitle: "Verified Home Electrician & Plumber",
-        peerId: "rajesh_trade",
-        peerName: "Rajesh R (Plumber Trade)",
-        lastMessage: "I can visit your home near Medical College in 30 minutes.",
-        lastTimestamp: new Date(Date.now() - 3600000),
-      },
-      {
-        chatId: "sample_chat_iphone",
-        listingId: "sample_104",
-        listingTitle: "iPhone 13 128GB Blue (Used)",
-        peerId: "arun_buyer",
-        peerName: "Arun Prasad (Buyer)",
-        lastMessage: "Is battery health 88%? Can I inspect today near New Bus Stand?",
-        lastTimestamp: new Date(Date.now() - 10800000),
-      },
-    ];
-
     if (queryListingId && querySellerId && user?.uid) {
       const generatedChatId = `${queryListingId}_${[user.uid, querySellerId].sort().join("_")}`;
       setActiveChatId(generatedChatId);
@@ -168,14 +107,9 @@ export default function ChatClientPage() {
             lastMessage: "Click to start conversation...",
             lastTimestamp: new Date(),
           },
-          ...DEFAULT_DUMMY_THREADS,
+          ...prev,
         ];
       });
-    } else {
-      setActiveChatId("sample_chat_room");
-      setActiveListingTitle("2400 Sqft CMDA Plot in Vallam");
-      setActivePeerName("Senthil Kumar (Seller)");
-      setThreads(DEFAULT_DUMMY_THREADS);
     }
   }, [queryListingId, querySellerId, queryTitle, user?.uid]);
 

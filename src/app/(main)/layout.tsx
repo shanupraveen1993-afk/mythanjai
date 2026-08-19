@@ -268,10 +268,7 @@ function MainLayoutContent({
         )}
       </main>
 
-      {/* Floating Post Button — mobile */}
-      {!isOnboardingView && !isPostRoute && <FloatingPostButton />}
-
-      {/* Bottom Navigation Bar — Shown on Homepage & across Web App */}
+      {/* Persistent Opinion Feedback Manager */}
       {!isStandaloneView && !isOnboardingView && !isSignInOpen && (
         <BottomTabBar
           activeTab={getActiveTab()}

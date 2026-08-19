@@ -26,7 +26,7 @@ export default function PreContactVerificationModal({
 
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-xs flex items-center justify-center p-4">
-      <div className="bg-white rounded-3xl border border-slate-200 shadow-2xl w-full max-w-sm overflow-hidden flex flex-col p-6 font-sans relative animate-scale-up">
+      <div className="bg-white rounded-xl border border-slate-200 shadow-2xl w-full max-w-sm overflow-hidden flex flex-col p-6 font-sans relative animate-scale-up">
         
         {/* Close Button */}
         <button

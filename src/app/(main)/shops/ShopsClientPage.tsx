@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useFirestore } from "@/hooks/use-firestore";
 import ShopCard from "@/components/cards/ShopCard";
 import { ShopPost } from "@/types";
-import { Plus, Loader2, Store, ArrowUpDown } from "lucide-react";
+import { Plus, Loader2, Store, ArrowUpDown, UserCheck } from "lucide-react";
 import { SHOP_CATEGORIES } from "@/lib/constants";
 import CustomDropdown from "@/components/ui/CustomDropdown";
 import { Filter } from "lucide-react";
@@ -81,38 +81,44 @@ export default function ShopsClientPage() {
   return (
     <div className="flex flex-col gap-3 pb-24 w-full font-sans">
 
-      {/* 1. Hero Banner */}
-      <div className="relative w-full min-h-[120px] rounded-2xl overflow-hidden bg-slate-950 text-white flex items-center px-5 sm:px-8 py-5 shadow-2xs mt-2">
-        <img src="/thanjavur_temple_illustration.png" alt="Shops" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent" />
-        <div className="relative z-10 flex flex-col gap-1 max-w-xl">
-          <span className="bg-[#FBBF24] text-[#0F172A] font-bold text-xs px-2.5 py-0.5 rounded-md tracking-wider w-fit">Shop &amp; Save • சலுகைகள்</span>
-          <h1 className="font-heading font-black text-lg sm:text-xl text-white tracking-tight">
-            Discover the best discounts from your favorite local stores. <span className="text-amber-400 block text-xs sm:text-sm font-extrabold mt-0.5">நம்ம ஊர் கடைகளின் சிறப்பு தள்ளுபடிகளை காணுங்கள்.</span>
+      {/* 1. Hero Banner — Clean Commercial Design (16px radius) */}
+      <div className="relative w-full rounded-2xl overflow-hidden bg-[#0F172A] text-white flex items-center px-6 sm:px-8 py-7 sm:py-8 shadow-sm mt-2">
+        <img src="/thanjavur_temple_illustration.png" alt="Shops" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-15 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-[#0F172A] via-[#0F172A]/90 to-transparent" />
+        <div className="relative z-10 flex flex-col gap-2.5 max-w-2xl">
+          <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-400/20 text-amber-300 font-bold text-xs px-3 py-1 rounded-md w-fit">
+            <span>LOCAL STORE OFFERS</span>
+            <span className="text-amber-400">•</span>
+            <span>சலுகைகள்</span>
+          </div>
+          <h1 className="font-heading font-black text-xl sm:text-2xl lg:text-3xl text-white tracking-tight leading-snug">
+            Discover Exclusive Local Store Deals in Thanjavur.
+            <span className="text-amber-400 block text-xs sm:text-base font-bold mt-1">நம்ம ஊர் கடைகளின் சிறப்பு தள்ளுபடிகள்.</span>
           </h1>
-          <p className="text-xs text-slate-300 font-semibold leading-relaxed">Grand opening deals, festival discounts &amp; exclusive store offers from Thanjavur shop owners.</p>
+          <p className="text-xs sm:text-sm text-slate-300 font-normal leading-relaxed">
+            Grand opening discounts, festival sales &amp; exclusive store offers directly from Thanjavur shop owners.
+          </p>
         </div>
       </div>
 
-      {/* 2. TITLE BAR */}
+      {/* 2. TITLE BAR with Secondary Outlined Blue My Listing Button */}
       <div className="py-2.5 flex items-center justify-between gap-3 w-full border-b border-slate-200/80">
         <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight">
-          Local Offers
+          Local Store Deals &amp; Offers (சலுகைகள்)
         </h2>
+        <button
+          type="button"
+          onClick={() => router.push("/profile")}
+          className="px-3 py-1.5 rounded-lg bg-blue-50/80 hover:bg-blue-100 text-[#1d4ed8] border border-[#1d4ed8]/30 font-bold text-xs flex items-center gap-1.5 transition-colors cursor-pointer shrink-0 shadow-2xs"
+          title="View My Listings"
+        >
+          <UserCheck className="w-3.5 h-3.5 text-[#1d4ed8]" />
+          <span>My Listing</span>
+        </button>
       </div>
 
       {/* LISTING CONTAINER */}
       <div className="flex flex-col gap-3">
-        {/* Category Custom Dropdown Control */}
-        <div className="py-1 flex items-center gap-2 sm:gap-3 bg-transparent w-full">
-          <CustomDropdown
-            options={categoryOptions}
-            value={selectedCategory}
-            onChange={(val) => setSelectedCategory(val)}
-            icon={<Filter className="w-3.5 h-3.5" />}
-            className="w-full max-w-[260px]"
-          />
-        </div>
 
       {/* Feed */}
       {loading ? (

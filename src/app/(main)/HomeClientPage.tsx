@@ -3,7 +3,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
-import { MapPin, ChevronRight, ShoppingBag, Search, Wrench, Store, ArrowRight, Lock } from "lucide-react";
+import { MapPin, ChevronRight, ShoppingBag, Search, Wrench, Store, ArrowRight, Lock, UserCheck } from "lucide-react";
 import RobotHero from "@/components/ui/robot-hero";
 import CategoryBridgeFeed from "@/components/home/CategoryBridgeFeed";
 
@@ -50,12 +50,22 @@ export function PreviewSection({
           </h2>
           <p className="text-xs text-slate-500 font-bold mt-0.5">{subtitle}</p>
         </div>
-        <button
-          onClick={() => router.push(seeAllPath)}
-          className="flex items-center gap-1 text-xs font-black text-amber-600 hover:text-amber-700 transition-colors cursor-pointer"
-        >
-          See All <ArrowRight className="w-3.5 h-3.5" />
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => router.push("/profile")}
+            className="px-2.5 py-1 rounded-lg bg-blue-50/80 hover:bg-blue-100 text-[#1d4ed8] border border-[#1d4ed8]/30 text-[11px] font-bold flex items-center gap-1 transition-colors cursor-pointer shadow-2xs"
+            title="View My Listings"
+          >
+            <UserCheck className="w-3 h-3 text-[#1d4ed8]" />
+            <span>My Listing</span>
+          </button>
+          <button
+            onClick={() => router.push(seeAllPath)}
+            className="flex items-center gap-1 text-xs font-black text-amber-600 hover:text-amber-700 transition-colors cursor-pointer"
+          >
+            See All <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
       </div>
 
       {/* Cards row with edge-to-edge bleed scroll on mobile */}
@@ -127,194 +137,210 @@ export default function HomeClientPage() {
   return (
     <div className="w-full flex flex-col gap-8 text-slate-800 font-sans mt-3">
 
-        {/* ── 1. Hero Banner (Universal Home Banner) ── */}
-        <div className="relative w-full min-h-[90px] rounded-2xl overflow-hidden bg-slate-950 text-white flex items-center px-4 sm:px-6 py-4 shadow-2xs mt-1">
-          <img src="/thanjavur_temple_illustration.png" alt="Namma Thanjai" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-20 pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/90 to-transparent" />
-          <div className="relative z-10 flex flex-col gap-1 max-w-xl">
-            <span className="bg-[#FBBF24] text-[#0F172A] font-bold text-xs px-2.5 py-0.5 rounded-md tracking-wider w-fit">
+        {/* ── 1. Hero Banner (Universal Home Banner - Prominent & Standout) ── */}
+        <div className="relative w-full min-h-[160px] sm:min-h-[200px] rounded-2xl overflow-hidden bg-slate-950 text-white flex items-center px-6 sm:px-8 py-6 sm:py-8 shadow-md mt-1">
+          <img src="/thanjavur_temple_illustration.png" alt="Namma Thanjai" className="absolute right-0 top-0 h-full w-3/5 object-cover opacity-35 pointer-events-none" />
+          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/85 to-transparent" />
+          <div className="relative z-10 flex flex-col gap-2 max-w-xl">
+            <span className="bg-[#FBBF24] text-[#0F172A] font-bold text-xs px-3 py-1 rounded-md tracking-wider w-fit shadow-2xs">
               Namma Thanjai • நம்ம தஞ்சை
             </span>
-            <h1 className="font-heading font-black text-lg sm:text-xl text-white tracking-tight">
-              Everything you need in our city, all in one place. <span className="text-amber-400 block text-xs sm:text-sm font-extrabold mt-0.5">நம்ம ஊரின் அனைத்து தேவைகளுக்கும் ஒரே இடம்.</span>
+            <h1 className="font-heading font-black text-xl sm:text-2xl text-white tracking-tight leading-snug">
+              Everything you need in our city, all in one place. <span className="text-amber-400 block text-xs sm:text-base font-extrabold mt-1">நம்ம ஊரின் அனைத்து தேவைகளுக்கும் ஒரே இடம்.</span>
             </h1>
-            <p className="text-xs text-slate-300 font-semibold leading-relaxed">
+            <p className="text-xs sm:text-sm text-slate-300 font-medium leading-relaxed">
               Buy and sell with neighbors, hire reliable services, and explore local shopping offers—built exclusively for our community.
             </p>
           </div>
         </div>
 
-        {/* ── 4 Segment Feature Pillar Cards (4*1 Layout with Description, Categories & Explore CTA) ── */}
-        <section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5 my-1">
+        {/* ── 4 Segment Category Cards (Simple & Clean) ── */}
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-1">
           {/* Card 1: SELL */}
-          <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-2xs hover:shadow-xs hover:border-[#1d4ed8]/50 transition-all flex flex-col justify-between gap-4 group text-left">
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-xl bg-amber-50 border border-amber-200/80 flex items-center justify-center text-amber-600 group-hover:bg-[#1d4ed8] group-hover:text-white group-hover:border-[#1d4ed8] transition-colors shrink-0 shadow-2xs">
-                  <ShoppingBag className="w-5 h-5 stroke-[2.2]" />
+          <div className="bg-white rounded-xl border border-slate-200 p-4 flex flex-col justify-between gap-3 text-left hover:border-[#1d4ed8]/50 transition-all">
+            <div className="flex flex-col gap-2.5">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-lg bg-blue-50 text-[#1d4ed8] flex items-center justify-center shrink-0">
+                  <ShoppingBag className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="font-heading font-black text-slate-900 text-sm sm:text-base leading-tight">
-                    SELL (விற்பனை)
+                  <h2 className="font-heading font-bold text-[#1d4ed8] text-sm sm:text-base leading-tight">
+                    Post to Sell (விற்பனை)
                   </h2>
-                  <span className="text-[10px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full border border-amber-200/70 inline-block mt-0.5">
-                    Thanjavur Local
-                  </span>
+                  <span className="text-[10px] font-medium text-slate-500">Thanjavur Local</span>
                 </div>
               </div>
 
-              <p className="text-xs text-slate-500 font-medium leading-snug">
+              <p className="text-xs text-slate-600 font-normal leading-snug">
                 Buy &amp; Sell items directly with Tanjore owners with 0 brokerage
               </p>
 
-              <div className="pt-2 border-t border-slate-100 flex flex-wrap gap-1.5">
-                {["Plots & Real Estate", "Bikes & Scooters", "Smartphones", "Cars & Autos"].map((cat, i) => (
+              <div className="pt-2 border-t border-slate-100 hidden sm:flex flex-wrap gap-1.5">
+                {["Plots & Real Estate", "Bikes & Scooters"].map((cat, i) => (
                   <span
                     key={i}
                     onClick={() => router.push(`/sell?category=${encodeURIComponent(cat)}`)}
-                    className="text-[11px] font-bold text-slate-700 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200/70 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors"
+                    className="text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors"
                   >
                     {cat}
                   </span>
                 ))}
+                <span
+                  onClick={() => router.push("/sell")}
+                  className="text-[11px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 hover:bg-[#1d4ed8] hover:text-white cursor-pointer transition-colors"
+                >
+                  +12 More
+                </span>
               </div>
             </div>
 
             <button
               onClick={() => router.push("/sell")}
-              className="w-full bg-[#1d4ed8] hover:bg-[#1e40af] text-white text-xs font-bold py-2.5 px-4 rounded-xl flex items-center justify-between gap-1.5 cursor-pointer shadow-2xs active:scale-98 transition-all"
+              className="w-full mt-1 bg-white border border-[#1d4ed8] hover:bg-blue-50/60 text-[#1d4ed8] text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-between cursor-pointer transition-colors shadow-2xs"
             >
               <span>Explore Sell</span>
-              <ChevronRight className="w-4 h-4 shrink-0 text-white" />
+              <ChevronRight className="w-4 h-4 shrink-0 text-[#1d4ed8]" />
             </button>
           </div>
 
           {/* Card 2: NEED */}
-          <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-2xs hover:shadow-xs hover:border-[#1d4ed8]/50 transition-all flex flex-col justify-between gap-4 group text-left">
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-xl bg-blue-50 border border-blue-200/80 flex items-center justify-center text-[#1d4ed8] group-hover:bg-[#1d4ed8] group-hover:text-white group-hover:border-[#1d4ed8] transition-colors shrink-0 shadow-2xs">
-                  <Search className="w-5 h-5 stroke-[2.2]" />
+          <div className="bg-white rounded-xl border border-slate-200 p-4 flex flex-col justify-between gap-3 text-left hover:border-[#1d4ed8]/50 transition-all">
+            <div className="flex flex-col gap-2.5">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-lg bg-blue-50 text-[#1d4ed8] flex items-center justify-center shrink-0">
+                  <Search className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="font-heading font-black text-slate-900 text-sm sm:text-base leading-tight">
-                    NEED (தேவைகள்)
+                  <h2 className="font-heading font-bold text-[#1d4ed8] text-sm sm:text-base leading-tight">
+                    Post Your Requirement (தேவைகள்)
                   </h2>
-                  <span className="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded-full border border-blue-200/70 inline-block mt-0.5">
-                    Thanjavur Local
-                  </span>
+                  <span className="text-[10px] font-medium text-slate-500">Thanjavur Local</span>
                 </div>
               </div>
 
-              <p className="text-xs text-slate-500 font-medium leading-snug">
+              <p className="text-xs text-slate-600 font-normal leading-snug">
                 Post your requirements or find buyers in Thanjavur
               </p>
 
-              <div className="pt-2 border-t border-slate-100 flex flex-wrap gap-1.5">
-                {["Car Wanted", "House Rental Wanted", "Land Wanted", "Laptop Wanted"].map((cat, i) => (
+              <div className="pt-2 border-t border-slate-100 hidden sm:flex flex-wrap gap-1.5">
+                {["Car Wanted", "House Rental"].map((cat, i) => (
                   <span
                     key={i}
                     onClick={() => router.push(`/need?category=${encodeURIComponent(cat)}`)}
-                    className="text-[11px] font-bold text-slate-700 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200/70 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors"
+                    className="text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors"
                   >
                     {cat}
                   </span>
                 ))}
+                <span
+                  onClick={() => router.push("/need")}
+                  className="text-[11px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 hover:bg-[#1d4ed8] hover:text-white cursor-pointer transition-colors"
+                >
+                  +10 More
+                </span>
               </div>
             </div>
 
             <button
               onClick={() => router.push("/need")}
-              className="w-full bg-[#1d4ed8] hover:bg-[#1e40af] text-white text-xs font-bold py-2.5 px-4 rounded-xl flex items-center justify-between gap-1.5 cursor-pointer shadow-2xs active:scale-98 transition-all"
+              className="w-full mt-1 bg-white border border-[#1d4ed8] hover:bg-blue-50/60 text-[#1d4ed8] text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-between cursor-pointer transition-colors shadow-2xs"
             >
               <span>Explore Need</span>
-              <ChevronRight className="w-4 h-4 shrink-0 text-white" />
+              <ChevronRight className="w-4 h-4 shrink-0 text-[#1d4ed8]" />
             </button>
           </div>
 
           {/* Card 3: SERVICES */}
-          <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-2xs hover:shadow-xs hover:border-[#1d4ed8]/50 transition-all flex flex-col justify-between gap-4 group text-left">
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-xl bg-emerald-50 border border-emerald-200/80 flex items-center justify-center text-emerald-600 group-hover:bg-[#1d4ed8] group-hover:text-white group-hover:border-[#1d4ed8] transition-colors shrink-0 shadow-2xs">
-                  <Wrench className="w-5 h-5 stroke-[2.2]" />
+          <div className="bg-white rounded-xl border border-slate-200 p-4 flex flex-col justify-between gap-3 text-left hover:border-[#1d4ed8]/50 transition-all">
+            <div className="flex flex-col gap-2.5">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-lg bg-blue-50 text-[#1d4ed8] flex items-center justify-center shrink-0">
+                  <Wrench className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="font-heading font-black text-slate-900 text-sm sm:text-base leading-tight">
-                    SERVICES (சேவைகள்)
+                  <h2 className="font-heading font-bold text-[#1d4ed8] text-sm sm:text-base leading-tight">
+                    Add Your Service (சேவைகள்)
                   </h2>
-                  <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/70 inline-block mt-0.5">
-                    Thanjavur Local
-                  </span>
+                  <span className="text-[10px] font-medium text-slate-500">Thanjavur Local</span>
                 </div>
               </div>
 
-              <p className="text-xs text-slate-500 font-medium leading-snug">
+              <p className="text-xs text-slate-600 font-normal leading-snug">
                 Hire verified doorstep technicians &amp; skilled workers
               </p>
 
-              <div className="pt-2 border-t border-slate-100 flex flex-wrap gap-1.5">
-                {["Electrician", "Plumber", "Carpenter", "Painter & AC Repair"].map((cat, i) => (
+              <div className="pt-2 border-t border-slate-100 hidden sm:flex flex-wrap gap-1.5">
+                {["Electrician", "Plumber"].map((cat, i) => (
                   <span
                     key={i}
                     onClick={() => router.push(`/services?category=${encodeURIComponent(cat)}`)}
-                    className="text-[11px] font-bold text-slate-700 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200/70 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors"
+                    className="text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors"
                   >
                     {cat}
                   </span>
                 ))}
+                <span
+                  onClick={() => router.push("/services")}
+                  className="text-[11px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 hover:bg-[#1d4ed8] hover:text-white cursor-pointer transition-colors"
+                >
+                  +15 More
+                </span>
               </div>
             </div>
 
             <button
               onClick={() => router.push("/services")}
-              className="w-full bg-[#1d4ed8] hover:bg-[#1e40af] text-white text-xs font-bold py-2.5 px-4 rounded-xl flex items-center justify-between gap-1.5 cursor-pointer shadow-2xs active:scale-98 transition-all"
+              className="w-full mt-1 bg-white border border-[#1d4ed8] hover:bg-blue-50/60 text-[#1d4ed8] text-[#1d4ed8] text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-between cursor-pointer transition-colors shadow-2xs"
             >
               <span>Explore Services</span>
-              <ChevronRight className="w-4 h-4 shrink-0 text-white" />
+              <ChevronRight className="w-4 h-4 shrink-0 text-[#1d4ed8]" />
             </button>
           </div>
 
           {/* Card 4: OFFERS */}
-          <div className="bg-white rounded-2xl border border-slate-200/90 p-5 shadow-2xs hover:shadow-xs hover:border-[#1d4ed8]/50 transition-all flex flex-col justify-between gap-4 group text-left">
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center gap-3">
-                <div className="w-11 h-11 rounded-xl bg-rose-50 border border-rose-200/80 flex items-center justify-center text-rose-600 group-hover:bg-[#1d4ed8] group-hover:text-white group-hover:border-[#1d4ed8] transition-colors shrink-0 shadow-2xs">
-                  <Store className="w-5 h-5 stroke-[2.2]" />
+          <div className="bg-white rounded-xl border border-slate-200 p-4 flex flex-col justify-between gap-3 text-left hover:border-[#1d4ed8]/50 transition-all">
+            <div className="flex flex-col gap-2.5">
+              <div className="flex items-center gap-2.5">
+                <div className="w-9 h-9 rounded-lg bg-blue-50 text-[#1d4ed8] flex items-center justify-center shrink-0">
+                  <Store className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="font-heading font-black text-slate-900 text-sm sm:text-base leading-tight">
-                    OFFERS (சலுகைகள்)
+                  <h2 className="font-heading font-bold text-[#1d4ed8] text-sm sm:text-base leading-tight">
+                    Post Your Offer (சலுகைகள்)
                   </h2>
-                  <span className="text-[10px] font-bold text-rose-700 bg-rose-50 px-2 py-0.5 rounded-full border border-rose-200/70 inline-block mt-0.5">
-                    Thanjavur Local
-                  </span>
+                  <span className="text-[10px] font-medium text-slate-500">Thanjavur Local</span>
                 </div>
               </div>
 
-              <p className="text-xs text-slate-500 font-medium leading-snug">
+              <p className="text-xs text-slate-600 font-normal leading-snug">
                 Discover exclusive store discounts &amp; deals from Tanjore shops
               </p>
 
-              <div className="pt-2 border-t border-slate-100 flex flex-wrap gap-1.5">
-                {["Store Discounts", "Cafes & Dining", "Textiles & Sarees", "Jewelry & Gold"].map((cat, i) => (
+              <div className="pt-2 border-t border-slate-100 hidden sm:flex flex-wrap gap-1.5">
+                {["Store Discounts", "Cafes & Dining"].map((cat, i) => (
                   <span
                     key={i}
                     onClick={() => router.push(`/shops?category=${encodeURIComponent(cat)}`)}
-                    className="text-[11px] font-bold text-slate-700 bg-slate-50 px-2.5 py-1 rounded-md border border-slate-200/70 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors"
+                    className="text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors"
                   >
                     {cat}
                   </span>
                 ))}
+                <span
+                  onClick={() => router.push("/shops")}
+                  className="text-[11px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 hover:bg-[#1d4ed8] hover:text-white cursor-pointer transition-colors"
+                >
+                  +10 More
+                </span>
               </div>
             </div>
 
             <button
               onClick={() => router.push("/shops")}
-              className="w-full bg-[#1d4ed8] hover:bg-[#1e40af] text-white text-xs font-bold py-2.5 px-4 rounded-xl flex items-center justify-between gap-1.5 cursor-pointer shadow-2xs active:scale-98 transition-all"
+              className="w-full mt-1 bg-white border border-[#1d4ed8] hover:bg-blue-50/60 text-[#1d4ed8] text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-between cursor-pointer transition-colors shadow-2xs"
             >
               <span>Explore Offers</span>
-              <ChevronRight className="w-4 h-4 shrink-0 text-white" />
+              <ChevronRight className="w-4 h-4 shrink-0 text-[#1d4ed8]" />
             </button>
           </div>
         </section>
