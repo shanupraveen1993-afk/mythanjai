@@ -190,13 +190,13 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
 
         {/* Top right save/share/report */}
         <div className="absolute top-2.5 right-2.5 flex flex-col gap-1.5 z-20">
-          <button type="button" onClick={handleToggleSave} className={`w-7 h-7 rounded-md border backdrop-blur-md shadow-2xs flex items-center justify-center transition-all cursor-pointer ${saved ? "bg-amber-500 text-slate-950 border-amber-400" : "bg-slate-950/50 text-white border-white/20"}`} aria-label="Save offer">
+          <button type="button" onClick={handleToggleSave} className={`w-7 h-7 rounded-xl border backdrop-blur-md shadow-2xs flex items-center justify-center transition-all cursor-pointer ${saved ? "bg-amber-500 text-slate-950 border-amber-400" : "bg-slate-950/50 text-white border-white/20"}`} aria-label="Save offer">
             <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-current" : ""}`} />
           </button>
-          <button type="button" onClick={handleShare} className="w-7 h-7 rounded-md border border-white/20 bg-slate-950/50 text-white flex items-center justify-center transition-all cursor-pointer backdrop-blur-md" aria-label="Share offer">
+          <button type="button" onClick={handleShare} className="w-7 h-7 rounded-xl border border-white/20 bg-slate-950/50 text-white flex items-center justify-center transition-all cursor-pointer backdrop-blur-md" aria-label="Share offer">
             <Share2 className="w-3.5 h-3.5" />
           </button>
-          <button type="button" onClick={handleReport} className="w-7 h-7 rounded-md border border-white/20 bg-slate-950/50 text-white hover:text-rose-400 flex items-center justify-center transition-all cursor-pointer backdrop-blur-md" aria-label="Report offer">
+          <button type="button" onClick={handleReport} className="w-7 h-7 rounded-xl border border-white/20 bg-slate-950/50 text-white hover:text-rose-400 flex items-center justify-center transition-all cursor-pointer backdrop-blur-md" aria-label="Report offer">
             <Flag className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -296,13 +296,13 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
 
         {/* Top Right: Save / Share / Report */}
         <div className="absolute top-2.5 right-2.5 flex flex-col gap-1.5 z-20">
-          <button type="button" onClick={handleToggleSave} className={`w-7 h-7 rounded-md border backdrop-blur-md shadow-2xs flex items-center justify-center transition-all cursor-pointer ${saved ? "bg-amber-500 text-slate-950 border-amber-400" : "bg-slate-950/40 text-white border-white/20 hover:bg-slate-950/70"}`} aria-label={saved ? "Remove saved offer" : "Save offer"}>
+          <button type="button" onClick={handleToggleSave} className={`w-7 h-7 rounded-xl border backdrop-blur-md shadow-2xs flex items-center justify-center transition-all cursor-pointer ${saved ? "bg-amber-500 text-slate-950 border-amber-400" : "bg-slate-950/40 text-white border-white/20 hover:bg-slate-950/70"}`} aria-label={saved ? "Remove saved offer" : "Save offer"}>
             <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-current" : ""}`} />
           </button>
-          <button type="button" onClick={handleShare} className="w-7 h-7 rounded-md border border-white/20 bg-slate-950/40 text-white hover:bg-slate-950/70 flex items-center justify-center transition-all cursor-pointer shadow-2xs backdrop-blur-md" aria-label="Share offer">
+          <button type="button" onClick={handleShare} className="w-7 h-7 rounded-xl border border-white/20 bg-slate-950/40 text-white hover:bg-slate-950/70 flex items-center justify-center transition-all cursor-pointer shadow-2xs backdrop-blur-md" aria-label="Share offer">
             <Share2 className="w-3.5 h-3.5" />
           </button>
-          <button type="button" onClick={handleReport} className="w-7 h-7 rounded-md border border-white/20 bg-slate-950/40 text-white hover:text-rose-400 hover:bg-slate-950/70 flex items-center justify-center transition-all cursor-pointer shadow-2xs backdrop-blur-md" aria-label="Report offer">
+          <button type="button" onClick={handleReport} className="w-7 h-7 rounded-xl border border-white/20 bg-slate-950/40 text-white hover:text-rose-400 hover:bg-slate-950/70 flex items-center justify-center transition-all cursor-pointer shadow-2xs backdrop-blur-md" aria-label="Report offer">
             <Flag className="w-3.5 h-3.5" />
           </button>
         </div>
@@ -394,10 +394,10 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
 
           {/* Utility Icon Buttons */}
           <div className="flex items-center gap-1.5 shrink-0">
-            <button type="button" onClick={handleToggleSave} className={`w-7 h-7 rounded-md border flex items-center justify-center transition-colors cursor-pointer ${saved ? "bg-amber-50 border-amber-300 text-amber-600" : "border-slate-200 bg-white text-slate-500 hover:text-slate-800"}`} title="Save Offer">
+            <button type="button" onClick={handleToggleSave} className={`w-7 h-7 rounded-xl border flex items-center justify-center transition-colors cursor-pointer ${saved ? "bg-amber-50 border-amber-300 text-amber-600" : "border-slate-200 bg-white text-slate-500 hover:text-slate-800"}`} title="Save Offer">
               <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-amber-600" : ""}`} />
             </button>
-            <button type="button" onClick={handleShare} className="w-7 h-7 rounded-md border border-slate-200 bg-white text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors cursor-pointer" title="Share Offer">
+            <button type="button" onClick={handleShare} className="w-7 h-7 rounded-xl border border-slate-200 bg-white text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors cursor-pointer" title="Share Offer">
               <Share2 className="w-3.5 h-3.5" />
             </button>
           </div>

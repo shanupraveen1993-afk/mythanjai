@@ -30,6 +30,7 @@
 
   /* Spacing & Radius Standards */
   --space-unit:             8px;
+  --radius-btn:             12px;   /* Universal button radius */
   --radius-sm:              8px;
   --radius-lg:              12px;
   --radius-xl:              16px;
@@ -79,7 +80,7 @@ body {
   justify-content: center;
   font-family: var(--font-heading), 'Red Hat Display', sans-serif;
   font-weight: 700;
-  border-radius: 9999px;
+  border-radius: var(--radius-btn);
   gap: 8px;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
@@ -94,7 +95,7 @@ body {
   justify-content: center;
   font-family: var(--font-heading), 'Red Hat Display', sans-serif;
   font-weight: 800;
-  border-radius: 8px;
+  border-radius: var(--radius-btn);
   gap: 8px;
   background-color: #FBBF24;
   color: #0F172A;
@@ -128,7 +129,7 @@ body {
   justify-content: center;
   font-family: var(--font-heading), 'Red Hat Display', sans-serif;
   font-weight: 800;
-  border-radius: 9999px;
+  border-radius: var(--radius-btn);
   gap: 8px;
   background-color: #ffffff;
   color: #334155;
@@ -153,7 +154,7 @@ body {
   justify-content: center;
   font-family: var(--font-heading), 'Red Hat Display', sans-serif;
   font-weight: 800;
-  border-radius: 9999px;
+  border-radius: var(--radius-btn);
   gap: 6px;
   background-color: transparent;
   color: #0f172a;
@@ -177,6 +178,7 @@ body {
   background-color: #0F172A;
   color: #FFFFFF;
   border: 1px solid #1E293B;
+  border-radius: var(--radius-btn);
   font-weight: 800;
   transition: all 0.2s ease;
 }
@@ -190,6 +192,7 @@ body {
   background-color: #128C7E;
   color: #FFFFFF;
   border: 1px solid #075E54;
+  border-radius: var(--radius-btn);
   font-weight: 800;
   transition: all 0.2s ease;
 }
@@ -203,6 +206,7 @@ body {
   background-color: #FEF3C7;
   color: #78350F;
   border: 1px solid #FDE68A;
+  border-radius: var(--radius-btn);
   font-weight: 800;
   transition: all 0.2s ease;
 }
@@ -216,6 +220,7 @@ body {
   background-color: #2563EB;
   color: #FFFFFF;
   border: 1px solid #1D4ED8;
+  border-radius: var(--radius-btn);
   font-weight: 800;
   transition: all 0.2s ease;
 }
