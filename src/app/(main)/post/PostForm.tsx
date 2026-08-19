@@ -1016,7 +1016,7 @@ export default function PostForm({ segment }: PostFormProps) {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3.5 sm:py-4 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer mt-2 rounded-lg shadow-sm transition-colors"
+              className="w-full py-3.5 sm:py-4 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer mt-2 rounded-lg shadow-sm transition-colors select-none"
             >
               {loading ? (
                 <>

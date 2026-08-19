@@ -31,14 +31,14 @@ export default function WebAppScrollFAB({ postRoute, label = "Post Ad" }: WebApp
   if (!showFAB) return null;
 
   return (
-    <div className="md:hidden fixed bottom-20 left-4 right-4 z-[10000] max-w-sm mx-auto animate-in slide-in-from-bottom-5 fade-in-50 duration-200 pointer-events-auto">
+    <div className="md:hidden fixed bottom-[4.25rem] left-4 right-4 z-[10000] max-w-sm mx-auto animate-in slide-in-from-bottom-5 fade-in-50 duration-200 pointer-events-auto">
       <button
         type="button"
         onClick={() => router.push(postRoute)}
-        className="w-full bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-3 px-4 rounded-xl shadow-xl flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition-all border border-[#1e40af]/40 backdrop-blur-md"
+        className="w-full bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs sm:text-sm py-3 px-4 rounded-xl shadow-xl flex items-center justify-center gap-2 cursor-pointer active:scale-[0.98] transition-all border border-amber-400/50 select-none"
         title={`Click to ${label}`}
       >
-        <Plus className="w-4 h-4 stroke-[3] text-white" />
+        <Plus className="w-4 h-4 stroke-[3] text-[#0F172A]" />
         <span>+ {label}</span>
       </button>
     </div>
