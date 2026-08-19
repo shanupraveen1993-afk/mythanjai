@@ -134,7 +134,7 @@ export default function HomeClientPage() {
           <img src="/thanjavur_temple_illustration.png" alt="Namma Thanjai" className="absolute right-0 top-0 h-full w-3/5 object-cover opacity-35 pointer-events-none" />
           <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/85 to-transparent" />
           <div className="relative z-10 flex flex-col gap-2 max-w-xl">
-            <span className="bg-[#FBBF24] text-[#0F172A] font-bold text-xs px-3 py-1 rounded-md tracking-wider w-fit shadow-2xs">
+            <span className="text-white font-extrabold text-xs sm:text-sm tracking-wider w-fit underline decoration-[#FBBF24] decoration-2 underline-offset-4 pb-0.5">
               Namma Thanjai • நம்ம தஞ்சை
             </span>
             <h1 className="font-heading font-black text-xl sm:text-2xl text-white tracking-tight leading-snug">
