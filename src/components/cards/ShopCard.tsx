@@ -314,7 +314,7 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
 
         {/* Info Details */}
         <div className="p-4 flex flex-col gap-2.5 flex-1">
-          <h3 className="font-heading font-bold text-sm sm:text-base text-slate-800 leading-snug line-clamp-1 truncate min-w-0">
+          <h3 className="font-sans font-extrabold text-sm sm:text-base text-slate-900 leading-snug line-clamp-1 truncate min-w-0">
             {post.shop_name}
           </h3>
 
@@ -340,7 +340,7 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
           </div>
 
           {/* Location */}
-          <div className="flex items-center text-slate-600 text-xs font-normal gap-1">
+          <div className="flex items-center text-slate-600 text-[11px] font-semibold gap-1">
             <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
             <span className="truncate">{post.address_text || post.area_tag || "Thanjavur"}</span>
           </div>

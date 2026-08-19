@@ -156,14 +156,14 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
           </div>
 
           {/* Provider / Business Name Title */}
-          <h3 className="font-heading font-black text-sm sm:text-base text-slate-900 line-clamp-2 leading-snug">
+          <h3 className="font-sans font-extrabold text-sm sm:text-base text-slate-900 line-clamp-2 leading-snug">
             {post.name}
           </h3>
         </div>
 
         {/* ── MIDDLE SECTION: Fixed Height Description Box ── */}
         <div className="min-h-[4.25rem] bg-slate-50/80 border border-slate-200/60 p-2.5 rounded-xl flex items-center">
-          <p className="text-xs text-slate-600 font-normal leading-relaxed line-clamp-3">
+          <p className="text-xs text-slate-700 font-normal leading-relaxed line-clamp-3">
             {post.description || "Verified trade professional serving Thanjavur region."}
           </p>
         </div>
@@ -171,7 +171,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
         {/* ── ROW 3: Location + Posted Date on Left + 3 Utility Icon Buttons on Right ── */}
         <div className="flex items-center justify-between text-xs text-slate-600 border-t border-b border-slate-100 py-1.5 my-0.5 gap-2">
           {/* Location & Posted Month */}
-          <div className="flex items-center gap-1.5 text-[11px] text-slate-600 font-medium truncate min-w-0">
+          <div className="flex items-center gap-1.5 text-[11px] text-slate-600 font-semibold truncate min-w-0">
             <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
             <span className="truncate">{post.area_tag || "Thanjavur"}</span>
             <span className="text-slate-300">•</span>

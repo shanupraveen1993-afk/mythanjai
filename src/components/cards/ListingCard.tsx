@@ -272,12 +272,12 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
               </div>
 
               {/* Price: Large Bold Text */}
-              <div className="font-heading font-black text-lg sm:text-xl text-amber-600 tracking-tight my-0.5">
+              <div className="font-heading font-black text-lg sm:text-xl text-[#0F172A] tracking-tight my-0.5">
                 {formattedPrice}
               </div>
 
               {/* Title: 3 Lines max in fixed space */}
-              <h3 className="font-heading font-bold text-xs sm:text-sm text-slate-800 line-clamp-3 leading-snug">
+              <h3 className="font-sans font-extrabold text-sm text-slate-900 line-clamp-3 leading-snug">
                 {listing.title}
               </h3>
             </div>
@@ -285,7 +285,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
 
           {/* ── MIDDLE SECTION: Fixed Height Description Box ── */}
           <div className="min-h-[4.5rem] bg-slate-50/80 border border-slate-200/60 p-2.5 rounded-xl flex items-center">
-            <p className="text-xs text-slate-600 font-normal leading-relaxed line-clamp-3">
+            <p className="text-xs text-slate-700 font-normal leading-relaxed line-clamp-3">
               {listing.description || "No detailed description provided."}
             </p>
           </div>
@@ -293,7 +293,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
           {/* ── ROW 3: Location on Left + 3 Icon Buttons on Right ── */}
           <div className="flex items-center justify-between text-xs text-slate-600 border-t border-b border-slate-100 py-2 my-0.5 gap-2">
             {/* Location Tag */}
-            <div className="flex items-center gap-1 text-xs text-slate-600 font-medium truncate">
+            <div className="flex items-center gap-1 text-[11px] text-slate-600 font-semibold truncate">
               <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
               <span className="truncate">{listing.location || "Medical College Rd, Thanjavur"}</span>
             </div>

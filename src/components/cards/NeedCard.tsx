@@ -131,20 +131,20 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
                 </span>
               )}
             </div>
-            <div className="font-heading font-black text-base sm:text-lg text-amber-600 tracking-tight shrink-0">
+            <div className="font-heading font-black text-base sm:text-lg text-[#0F172A] tracking-tight shrink-0">
               {displayPriceText}
             </div>
           </div>
 
           {/* Title: 2-3 Lines max in clean font */}
-          <h3 className="font-heading font-bold text-sm sm:text-base text-slate-800 line-clamp-2 leading-snug">
+          <h3 className="font-sans font-extrabold text-sm text-slate-900 line-clamp-2 leading-snug">
             {post.title}
           </h3>
         </div>
 
         {/* ── MIDDLE SECTION: Fixed Height Description Box ── */}
         <div className="min-h-[4.25rem] bg-slate-50/80 border border-slate-200/60 p-2.5 rounded-xl flex items-center">
-          <p className="text-xs text-slate-600 font-normal leading-relaxed line-clamp-3">
+          <p className="text-xs text-slate-700 font-normal leading-relaxed line-clamp-3">
             {post.description || "No specific requirement details provided."}
           </p>
         </div>
@@ -152,7 +152,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
         {/* ── ROW 3: Preferred Locations on Left + 3 Icon Buttons on Right ── */}
         <div className="flex items-center justify-between text-xs text-slate-600 border-t border-b border-slate-100 py-2 my-0.5 gap-2">
           {/* Preferred Locations Clean Text */}
-          <div className="flex items-center gap-1 text-xs text-slate-600 font-medium truncate flex-1">
+          <div className="flex items-center gap-1 text-[11px] text-slate-600 font-semibold truncate flex-1">
             <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
             <span className="truncate">{locationList.join(" • ")}</span>
           </div>
