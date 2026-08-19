@@ -264,10 +264,13 @@ function MainLayoutContent({
 
       {/* Persistent Opinion Feedback Manager */}
       {!isStandaloneView && !isOnboardingView && !isSignInOpen && (
-        <BottomTabBar
-          activeTab={getActiveTab()}
-          onTabChange={handleTabChange}
-        />
+        <>
+          <BottomTabBar
+            activeTab={getActiveTab()}
+            onTabChange={handleTabChange}
+          />
+          <FloatingPostButton />
+        </>
       )}
 
       {/* Persistent Opinion Feedback Manager */}
