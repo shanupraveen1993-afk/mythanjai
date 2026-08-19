@@ -168,10 +168,10 @@ export default function HomeClientPage() {
           </div>
         </div>
 
-        {/* ── 4 Segment Category Cards (Simple & Clean) ── */}
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 my-1">
+        {/* ── 4 Segment Category Cards (2x2 Mobile WebApp, 4x1 Desktop Website) ── */}
+        <section className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 my-1">
           {/* Card 1: SELL */}
-          <div className="bg-white rounded-xl border border-slate-200 p-4 flex flex-col justify-between gap-3 text-left hover:border-[#1d4ed8]/50 transition-all">
+          <div className="bg-white rounded-xl border border-slate-200 p-3 sm:p-4 flex flex-col justify-between gap-2 sm:gap-3 text-left hover:border-[#1d4ed8]/50 transition-all">
             <div className="flex flex-col gap-2.5">
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 rounded-lg bg-blue-50 text-[#1d4ed8] flex items-center justify-center shrink-0">
@@ -218,7 +218,7 @@ export default function HomeClientPage() {
           </div>
 
           {/* Card 2: NEED */}
-          <div className="bg-white rounded-xl border border-slate-200 p-4 flex flex-col justify-between gap-3 text-left hover:border-[#1d4ed8]/50 transition-all">
+          <div className="bg-white rounded-xl border border-slate-200 p-3 sm:p-4 flex flex-col justify-between gap-2 sm:gap-3 text-left hover:border-[#1d4ed8]/50 transition-all">
             <div className="flex flex-col gap-2.5">
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 rounded-lg bg-blue-50 text-[#1d4ed8] flex items-center justify-center shrink-0">
@@ -265,7 +265,7 @@ export default function HomeClientPage() {
           </div>
 
           {/* Card 3: SERVICES */}
-          <div className="bg-white rounded-xl border border-slate-200 p-4 flex flex-col justify-between gap-3 text-left hover:border-[#1d4ed8]/50 transition-all">
+          <div className="bg-white rounded-xl border border-slate-200 p-3 sm:p-4 flex flex-col justify-between gap-2 sm:gap-3 text-left hover:border-[#1d4ed8]/50 transition-all">
             <div className="flex flex-col gap-2.5">
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 rounded-lg bg-blue-50 text-[#1d4ed8] flex items-center justify-center shrink-0">
@@ -312,7 +312,7 @@ export default function HomeClientPage() {
           </div>
 
           {/* Card 4: OFFERS */}
-          <div className="bg-white rounded-xl border border-slate-200 p-4 flex flex-col justify-between gap-3 text-left hover:border-[#1d4ed8]/50 transition-all">
+          <div className="bg-white rounded-xl border border-slate-200 p-3 sm:p-4 flex flex-col justify-between gap-2 sm:gap-3 text-left hover:border-[#1d4ed8]/50 transition-all">
             <div className="flex flex-col gap-2.5">
               <div className="flex items-center gap-2.5">
                 <div className="w-9 h-9 rounded-lg bg-blue-50 text-[#1d4ed8] flex items-center justify-center shrink-0">
