@@ -516,7 +516,7 @@ export default function PostForm({ segment }: PostFormProps) {
       created_at: new Date() as any,
       expires_at: new Date(Date.now() + 30 * 86400000) as any,
     };
-  }, [title, description, category, area, price, phone, imagePreview, segment, user, config.categories, showPhone]);
+  }, [title, description, previewDescription, category, area, price, phone, imagePreview, segment, user, config.categories, showPhone]);
 
   const previewServicePost = useMemo<ServiceProviderPost>(() => {
     return {
@@ -534,7 +534,7 @@ export default function PostForm({ segment }: PostFormProps) {
       is_verified: true,
       created_at: new Date() as any,
     };
-  }, [title, description, category, area, allWorkingDays, sundayLeave, phone, imagePreview, user, config.categories]);
+  }, [title, description, previewDescription, category, area, allWorkingDays, sundayLeave, phone, imagePreview, user, config.categories]);
 
   const previewShopPost = useMemo<ShopPost>(() => {
     return {
@@ -550,7 +550,7 @@ export default function PostForm({ segment }: PostFormProps) {
       phone: phone || "9876543210",
       area_tag: area || TANJORE_LOCALITIES[0],
       offer_title: title.trim() || "Exclusive Discount Offer",
-      offer_description: description.trim() || previewDescription || "Special offer details and promotion terms...",
+      offer_description: previewDescription || description.trim() || "Special offer details and promotion terms...",
       image_url: imagePreview || "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&auto=format&fit=crop",
       latitude: 10.7870,
       longitude: 79.1378,
@@ -558,7 +558,7 @@ export default function PostForm({ segment }: PostFormProps) {
       is_claimed: true,
       created_at: new Date() as any,
     };
-  }, [title, description, category, area, validFrom, validTo, showPhone, phone, imagePreview, user, config.categories]);
+  }, [title, description, previewDescription, category, area, validFrom, validTo, showPhone, phone, imagePreview, user, config.categories]);
 
   const formattedPriceBadge = formatIndianCurrencyText(price);
 
