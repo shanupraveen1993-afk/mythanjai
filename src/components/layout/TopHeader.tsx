@@ -167,39 +167,9 @@ export default function TopHeader({
           );
         })()}
 
-        {/* Right Side: Get App + Dynamic Post CTA + Chat Icon (Logged in) + Profile Icon (Pushed to far right end corner) */}
+        {/* Right Side: Chat Icon -> Profile Icon -> Primary Yellow Button (Get App / + Post as absolute last button) */}
         <div className="flex items-center justify-end gap-2 shrink-0 ml-auto">
-          {/* 1. Get App Button — Homepage ONLY (Yellow Primary Style with soft light sweep gold shine) */}
-          {isHomePage && !isNativeApp && (
-            <a
-              href="/namma_thanjai_release.apk"
-              download="namma_thanjai_release.apk"
-              onClick={handleGetAppClick}
-              className="relative group overflow-hidden bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-xs px-3.5 py-1.5 rounded-lg font-heading font-black shrink-0 flex items-center gap-1.5 shadow-xs cursor-pointer select-none border border-amber-400/50 transition-all duration-300"
-              title="Download Namma Thanjai Android App"
-              aria-label="Download Namma Thanjai Android App"
-            >
-              {/* Soft Light Sweep Gold Shine Effect */}
-              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-amber-100/70 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
-              <Download className="w-3.5 h-3.5 shrink-0 text-[#0F172A] stroke-[2.5] relative z-10" />
-              <span className="relative z-10">Get App</span>
-            </a>
-          )}
-
-          {/* 2. Dynamic + Post CTA Button — Other Pages ONLY (Yellow Primary Style) */}
-          {!isHomePage && (
-            <button
-              type="button"
-              onClick={handleDynamicPostClick}
-              className="bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-xs px-3.5 py-1.5 rounded-lg font-heading font-black shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none"
-              title={postInfo.label}
-            >
-              <Plus className="w-3.5 h-3.5 stroke-[3] text-[#0F172A]" />
-              <span>{postInfo.label}</span>
-            </button>
-          )}
-
-          {/* 3. Universal Chat Button (Highlighted when active on /chat) */}
+          {/* 1. Universal Chat Button (Highlighted when active on /chat) */}
           {isAuthVerified && (
             <button
               type="button"
@@ -216,7 +186,7 @@ export default function TopHeader({
             </button>
           )}
 
-          {/* 4. Profile / Sign In Button (Highlighted when active on /profile) */}
+          {/* 2. Profile / Sign In Button (Highlighted when active on /profile) */}
           <button
             type="button"
             onClick={() => {
@@ -237,6 +207,33 @@ export default function TopHeader({
           >
             <User className={`w-4 h-4 ${pathname === "/profile" ? "text-white" : "text-slate-600"}`} />
           </button>
+
+          {/* 3. Primary Yellow Button — Get App (Homepage) OR + Post CTA (Other Pages) — EXTREME LAST BUTTON IN HEADER */}
+          {isHomePage && !isNativeApp ? (
+            <a
+              href="/namma_thanjai_release.apk"
+              download="namma_thanjai_release.apk"
+              onClick={handleGetAppClick}
+              className="relative group overflow-hidden bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-xs px-3.5 py-1.5 rounded-lg font-heading font-black shrink-0 flex items-center gap-1.5 shadow-xs cursor-pointer select-none border border-amber-400/50 transition-all duration-300"
+              title="Download Namma Thanjai Android App"
+              aria-label="Download Namma Thanjai Android App"
+            >
+              {/* Soft Light Sweep Gold Shine Effect */}
+              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-amber-100/70 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
+              <Download className="w-3.5 h-3.5 shrink-0 text-[#0F172A] stroke-[2.5] relative z-10" />
+              <span className="relative z-10">Get App</span>
+            </a>
+          ) : !isHomePage ? (
+            <button
+              type="button"
+              onClick={handleDynamicPostClick}
+              className="bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-xs px-3.5 py-1.5 rounded-lg font-heading font-black shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none"
+              title={postInfo.label}
+            >
+              <Plus className="w-3.5 h-3.5 stroke-[3] text-[#0F172A]" />
+              <span>{postInfo.label}</span>
+            </button>
+          ) : null}
         </div>
       </div>
     </header>
