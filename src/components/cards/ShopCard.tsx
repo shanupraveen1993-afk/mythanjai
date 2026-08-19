@@ -248,18 +248,18 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
               href={directionUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 bg-[#128C7E] hover:bg-[#075e54] text-white font-bold text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow cursor-pointer transition-colors"
+              className="flex-1 bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[38px] shadow cursor-pointer transition-colors"
             >
-              <Navigation className="w-3.5 h-3.5" />
+              <Navigation className="w-3.5 h-3.5 shrink-0" />
               <span>{t("getDirection")}</span>
             </a>
             {post.show_phone !== false && (
               <a
                 href={callUrl}
                 onClick={(e) => e.stopPropagation()}
-                className="bg-[#f59e0b] text-slate-950 font-bold text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow cursor-pointer shrink-0"
+                className="bg-[#f59e0b] hover:bg-amber-500 text-slate-950 font-heading font-black text-xs py-2 px-4 rounded-xl flex items-center justify-center gap-1.5 min-h-[38px] shadow cursor-pointer shrink-0 transition-colors"
               >
-                <Phone className="w-4 h-4" />
+                <Phone className="w-4 h-4 text-slate-950 shrink-0" />
                 <span>Call</span>
               </a>
             )}
@@ -351,18 +351,18 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
               href={directionUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 bg-[#128C7E] text-white font-bold text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer"
+              className="flex-1 bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-xs py-2 px-4 rounded-xl flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer transition-colors"
             >
-              <Navigation className="w-3.5 h-3.5 text-white" />
+              <Navigation className="w-3.5 h-3.5 text-white shrink-0" />
               <span>{t("getDirection")}</span>
             </a>
             {(post as any).is_available_now !== false && post.show_phone !== false && (
               <a
                 href={callUrl}
                 onClick={(e) => e.stopPropagation()}
-                className="bg-[#f59e0b] text-slate-950 font-bold text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer shrink-0"
+                className="bg-[#f59e0b] hover:bg-amber-500 text-slate-950 font-heading font-black text-xs py-2 px-4 rounded-xl flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer shrink-0 transition-colors"
               >
-                <Phone className="w-4 h-4 text-slate-950" />
+                <Phone className="w-4 h-4 text-slate-950 shrink-0" />
                 <span>Call</span>
               </a>
             )}

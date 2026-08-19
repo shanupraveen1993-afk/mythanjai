@@ -183,30 +183,30 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
             <button
               type="button"
               onClick={handleToggleSave}
-              className={`w-6.5 h-6.5 rounded-md border flex items-center justify-center transition-colors cursor-pointer ${
+              className={`w-7 h-7 rounded-xl border flex items-center justify-center transition-colors cursor-pointer ${
                 saved
                   ? "bg-amber-50 border-amber-300 text-amber-600"
                   : "border-slate-200 bg-white text-slate-500 hover:text-slate-800"
               }`}
               title="Save Provider"
             >
-              <Bookmark className={`w-3 h-3 ${saved ? "fill-amber-600" : ""}`} />
+              <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-amber-600" : ""}`} />
             </button>
             <button
               type="button"
               onClick={handleShare}
-              className="w-6.5 h-6.5 rounded-md border border-slate-200 bg-white text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors cursor-pointer"
+              className="w-7 h-7 rounded-xl border border-slate-200 bg-white text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors cursor-pointer"
               title="Share via WhatsApp"
             >
-              <Share2 className="w-3 h-3" />
+              <Share2 className="w-3.5 h-3.5" />
             </button>
             <button
               type="button"
               onClick={handleReport}
-              className="w-6.5 h-6.5 rounded-md border border-slate-200 bg-white text-slate-400 hover:text-rose-500 hover:border-rose-200 flex items-center justify-center transition-colors cursor-pointer"
+              className="w-7 h-7 rounded-xl border border-slate-200 bg-white text-slate-400 hover:text-rose-500 hover:border-rose-200 flex items-center justify-center transition-colors cursor-pointer"
               title="Report Provider"
             >
-              <Flag className="w-3 h-3" />
+              <Flag className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
@@ -217,18 +217,18 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
         <button
           type="button"
           onClick={(e) => handleOpenPreContactModal(e, "whatsapp")}
-          className="flex-1 bg-[#128C7E] hover:bg-[#075e54] text-white font-bold text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 min-h-[36px] shadow-2xs cursor-pointer transition-colors"
+          className="flex-1 bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[36px] shadow-2xs cursor-pointer transition-colors"
         >
-          <MessageSquare className="w-3.5 h-3.5 text-white fill-current" />
+          <MessageSquare className="w-3.5 h-3.5 text-white fill-current shrink-0" />
           <span>WhatsApp</span>
         </button>
 
         <button
           type="button"
           onClick={(e) => handleOpenPreContactModal(e, "call")}
-          className="flex-1 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-bold text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 min-h-[36px] shadow-2xs cursor-pointer transition-colors"
+          className="flex-1 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[36px] shadow-2xs cursor-pointer transition-colors"
         >
-          <Phone className="w-3.5 h-3.5 text-white" />
+          <Phone className="w-3.5 h-3.5 text-white shrink-0" />
           <span>Call</span>
         </button>
       </div>

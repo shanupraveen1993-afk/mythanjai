@@ -204,7 +204,7 @@ export default function HomeClientPage() {
 
             <button
               onClick={() => router.push("/sell")}
-              className="w-full mt-1 bg-white border border-[#1d4ed8] hover:bg-blue-50/60 text-[#1d4ed8] text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs text-center"
+              className="w-full mt-1 bg-white border border-[#1d4ed8] hover:bg-blue-50/60 text-[#1d4ed8] text-xs font-heading font-black py-2 px-3 rounded-xl flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs text-center"
             >
               <span>Explore Sell</span>
               <ChevronRight className="w-4 h-4 shrink-0 text-[#1d4ed8]" />
@@ -253,7 +253,7 @@ export default function HomeClientPage() {
 
             <button
               onClick={() => router.push("/need")}
-              className="w-full mt-1 bg-white border border-[#1d4ed8] hover:bg-blue-50/60 text-[#1d4ed8] text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs text-center"
+              className="w-full mt-1 bg-white border border-[#1d4ed8] hover:bg-blue-50/60 text-[#1d4ed8] text-xs font-heading font-black py-2 px-3 rounded-xl flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs text-center"
             >
               <span>Explore Need</span>
               <ChevronRight className="w-4 h-4 shrink-0 text-[#1d4ed8]" />
@@ -302,7 +302,7 @@ export default function HomeClientPage() {
 
             <button
               onClick={() => router.push("/services")}
-              className="w-full mt-1 bg-white border border-[#1d4ed8] hover:bg-blue-50/60 text-[#1d4ed8] text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs text-center"
+              className="w-full mt-1 bg-white border border-[#1d4ed8] hover:bg-blue-50/60 text-[#1d4ed8] text-xs font-heading font-black py-2 px-3 rounded-xl flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs text-center"
             >
               <span>Explore Services</span>
               <ChevronRight className="w-4 h-4 shrink-0 text-[#1d4ed8]" />
@@ -351,7 +351,7 @@ export default function HomeClientPage() {
 
             <button
               onClick={() => router.push("/shops")}
-              className="w-full mt-1 bg-white border border-[#1d4ed8] hover:bg-blue-50/60 text-[#1d4ed8] text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs text-center"
+              className="w-full mt-1 bg-white border border-[#1d4ed8] hover:bg-blue-50/60 text-[#1d4ed8] text-xs font-heading font-black py-2 px-3 rounded-xl flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs text-center"
             >
               <span>Explore Offers</span>
               <ChevronRight className="w-4 h-4 shrink-0 text-[#1d4ed8]" />

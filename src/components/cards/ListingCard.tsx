@@ -304,7 +304,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
               <button
                 type="button"
                 onClick={handleSaveToggle}
-                className={`w-7 h-7 rounded-md border flex items-center justify-center transition-colors cursor-pointer ${
+                className={`w-7 h-7 rounded-xl border flex items-center justify-center transition-colors cursor-pointer ${
                   isSaved
                     ? "bg-amber-50 border-amber-300 text-amber-600"
                     : "border-slate-200 bg-white text-slate-500 hover:text-slate-800"
@@ -318,7 +318,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
               <button
                 type="button"
                 onClick={handleShare}
-                className="w-7 h-7 rounded-md border border-slate-200 bg-white text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors cursor-pointer"
+                className="w-7 h-7 rounded-xl border border-slate-200 bg-white text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors cursor-pointer"
                 title="Share Listing"
               >
                 <Share2 className="w-3.5 h-3.5" />
@@ -328,7 +328,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
               <button
                 type="button"
                 onClick={handleReportListing}
-                className="w-7 h-7 rounded-md border border-slate-200 bg-white text-slate-400 hover:text-rose-500 hover:border-rose-200 flex items-center justify-center transition-colors cursor-pointer"
+                className="w-7 h-7 rounded-xl border border-slate-200 bg-white text-slate-400 hover:text-rose-500 hover:border-rose-200 flex items-center justify-center transition-colors cursor-pointer"
                 title="Report Listing"
               >
                 <Flag className="w-3.5 h-3.5" />
@@ -352,9 +352,9 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
-              className="bg-[#128C7E] text-white font-bold text-xs py-1.5 px-3.5 rounded-lg flex items-center justify-center gap-1.5 min-h-[36px] shadow-2xs cursor-pointer"
+              className="bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-xs py-1.5 px-3.5 rounded-xl flex items-center justify-center gap-1.5 min-h-[36px] shadow-2xs cursor-pointer transition-colors"
             >
-              <MessageSquare className="w-3.5 h-3.5 text-white fill-current" />
+              <MessageSquare className="w-3.5 h-3.5 text-white fill-current shrink-0" />
               <span>WhatsApp</span>
             </a>
 
@@ -362,9 +362,9 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
               <a
                 href={callUrl}
                 onClick={(e) => e.stopPropagation()}
-                className="bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-bold text-xs py-1.5 px-3.5 rounded-lg flex items-center justify-center gap-1.5 min-h-[36px] shadow-2xs cursor-pointer transition-colors"
+                className="bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs py-1.5 px-3.5 rounded-xl flex items-center justify-center gap-1.5 min-h-[36px] shadow-2xs cursor-pointer transition-colors"
               >
-                <Phone className="w-3.5 h-3.5 text-white" />
+                <Phone className="w-3.5 h-3.5 text-white shrink-0" />
                 <span>Call</span>
               </a>
             )}

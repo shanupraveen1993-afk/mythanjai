@@ -51,7 +51,7 @@ export default function RootLayout({
             __html: `
               (function() {
                 if (typeof window !== 'undefined') {
-                  var TARGET_VERSION = 'v63.0_phone_fix_price_text_optimistic_publish';
+                  var TARGET_VERSION = 'v64.0_standardized_all_buttons';
                   var currentVer = localStorage.getItem('namma_thanjai_cache_version');
                   if (currentVer !== TARGET_VERSION) {
                     localStorage.setItem('namma_thanjai_cache_version', TARGET_VERSION);
