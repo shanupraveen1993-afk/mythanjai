@@ -585,11 +585,11 @@ export default function PostClientPage() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full py-4 btn-primary text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer mt-2"
+            className="w-full py-3.5 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm rounded-lg shadow-sm flex items-center justify-center gap-2 cursor-pointer mt-2 transition-colors uppercase tracking-wider"
           >
             {loading ? (
               <>
-                <Loader2 className="w-5 h-5 animate-spin text-[#0F172A]" />
+                <Loader2 className="w-5 h-5 animate-spin text-white" />
                 <span>Publishing Post...</span>
               </>
             ) : (

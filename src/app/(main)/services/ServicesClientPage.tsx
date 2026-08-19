@@ -108,25 +108,22 @@ export default function ServicesClientPage() {
       <div className="relative w-full rounded-2xl overflow-hidden bg-[#0F172A] text-white flex items-center px-6 sm:px-8 py-7 sm:py-8 shadow-sm mt-2">
         <img src="/thanjavur_temple_illustration.png" alt="Services" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-15 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0F172A] via-[#0F172A]/90 to-transparent" />
-        <div className="relative z-10 flex flex-col gap-2.5 max-w-2xl">
+        <div className="relative z-10 flex flex-col gap-2 max-w-2xl">
           <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-400/20 text-amber-300 font-bold text-xs px-3 py-1 rounded-md w-fit">
             <span>LOCAL TRADE SERVICES</span>
             <span className="text-amber-400">•</span>
             <span>சிறந்த சேவைகள்</span>
           </div>
-          <h1 className="font-heading font-black text-xl sm:text-2xl lg:text-3xl text-white tracking-tight leading-snug">
-            Find Verified Local Trade Experts in Thanjavur.
+          <h1 className="font-heading font-black text-xl sm:text-2xl text-white tracking-tight leading-snug">
+            Verified Local Services
             <span className="text-amber-400 block text-xs sm:text-base font-bold mt-1">உங்கள் வேலைகளுக்கு நம்பகமான ஆட்களை நாடுங்கள்.</span>
           </h1>
-          <p className="text-xs sm:text-sm text-slate-300 font-normal leading-relaxed">
-            Direct contact with verified local electricians, plumbers, carpenters, technicians &amp; trade pros across Thanjavur.
-          </p>
         </div>
       </div>
 
       {/* 2. TITLE BAR with Secondary Outlined Blue My Listing Button */}
       <div className="py-2.5 flex items-center justify-between gap-3 w-full border-b border-slate-200/80">
-        <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight">
+        <h2 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight">
           Verified Local Services (சேவைகள்)
         </h2>
         <button

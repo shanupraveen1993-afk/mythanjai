@@ -226,9 +226,9 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
         <button
           type="button"
           onClick={(e) => handleOpenPreContactModal(e, "call")}
-          className="flex-1 bg-[#f59e0b] hover:bg-[#eab308] text-slate-950 font-bold text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 min-h-[36px] shadow-2xs cursor-pointer transition-colors"
+          className="flex-1 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-bold text-xs py-2 px-3 rounded-lg flex items-center justify-center gap-1.5 min-h-[36px] shadow-2xs cursor-pointer transition-colors"
         >
-          <Phone className="w-3.5 h-3.5 text-slate-950" />
+          <Phone className="w-3.5 h-3.5 text-white" />
           <span>Call</span>
         </button>
       </div>

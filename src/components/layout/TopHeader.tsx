@@ -169,48 +169,52 @@ export default function TopHeader({
 
         {/* Right Side: Get App + Dynamic Post CTA + Chat Icon (Logged in) + Profile Icon */}
         <div className="flex items-center gap-2 shrink-0">
-          {/* 1. Get App Button — Homepage ONLY, hidden on native APK */}
+          {/* 1. Get App Button — Homepage ONLY (Yellow Primary Style) */}
           {isHomePage && !isNativeApp && (
             <a
               href="/namma_thanjai_release.apk"
               download="namma_thanjai_release.apk"
               onClick={handleGetAppClick}
-              className="bg-[#1d4ed8] text-white text-xs px-3.5 py-1.5 rounded-lg font-bold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none"
+              className="bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-xs px-3.5 py-1.5 rounded-lg font-heading font-black shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none"
               title="Download Namma Thanjai Android App"
               aria-label="Download Namma Thanjai Android App"
             >
-              <Download className="w-3.5 h-3.5 shrink-0 text-white" />
+              <Download className="w-3.5 h-3.5 shrink-0 text-[#0F172A] stroke-[2.5]" />
               <span>Get App</span>
             </a>
           )}
 
-          {/* 2. Dynamic + Post CTA Button — Other Pages ONLY (Solid Yellow Design, No Unwanted Hover) */}
+          {/* 2. Dynamic + Post CTA Button — Other Pages ONLY */}
           {!isHomePage && (
             <button
               type="button"
               onClick={handleDynamicPostClick}
-              className="bg-[#f59e0b] text-slate-950 text-xs px-3.5 py-1.5 rounded-lg font-bold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer"
+              className="bg-[#1d4ed8] hover:bg-[#1e40af] text-white text-xs px-3.5 py-1.5 rounded-lg font-bold shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer"
               title={postInfo.label}
             >
-              <Plus className="w-3.5 h-3.5 stroke-[3] text-slate-950" />
+              <Plus className="w-3.5 h-3.5 stroke-[3] text-white" />
               <span>{postInfo.label}</span>
             </button>
           )}
 
-          {/* 3. Universal Chat Button (For Logged-in Users) */}
+          {/* 3. Universal Chat Button (Highlighted when active on /chat) */}
           {isAuthVerified && (
             <button
               type="button"
               onClick={() => router.push("/chat")}
-              className="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition-all cursor-pointer active:scale-95 border border-slate-200 shrink-0"
+              className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border shrink-0 ${
+                pathname === "/chat"
+                  ? "bg-[#1d4ed8] text-white border-[#1d4ed8] shadow-sm"
+                  : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
+              }`}
               title="In-App Direct Chat"
               aria-label="View messages"
             >
-              <MessageSquare className="w-4 h-4 text-slate-600" />
+              <MessageSquare className={`w-4 h-4 ${pathname === "/chat" ? "text-white fill-white/20" : "text-slate-600"}`} />
             </button>
           )}
 
-          {/* 4. Profile / Sign In Button */}
+          {/* 4. Profile / Sign In Button (Highlighted when active on /profile) */}
           <button
             type="button"
             onClick={() => {
@@ -221,11 +225,15 @@ export default function TopHeader({
                 onSignInClick?.();
               }
             }}
-            className="flex items-center justify-center w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold transition-all cursor-pointer active:scale-95 border border-slate-200 shrink-0"
+            className={`flex items-center justify-center w-9 h-9 rounded-full transition-all cursor-pointer border shrink-0 ${
+              pathname === "/profile"
+                ? "bg-[#1d4ed8] text-white border-[#1d4ed8] shadow-sm"
+                : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
+            }`}
             title={isAuthVerified ? `Profile (${phoneDisplay})` : "Sign In / Profile"}
             aria-label={isAuthVerified ? "View profile" : "Sign in or register"}
           >
-            <User className="w-4 h-4 text-slate-600" />
+            <User className={`w-4 h-4 ${pathname === "/profile" ? "text-white" : "text-slate-600"}`} />
           </button>
         </div>
       </div>

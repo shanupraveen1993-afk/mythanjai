@@ -111,25 +111,22 @@ export default function NeedClientPage() {
       <div className="relative w-full rounded-2xl overflow-hidden bg-[#0F172A] text-white flex items-center px-6 sm:px-8 py-7 sm:py-8 shadow-sm mt-2">
         <img src="/thanjavur_temple_illustration.png" alt="Need" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-15 pointer-events-none" />
         <div className="absolute inset-0 bg-gradient-to-r from-[#0F172A] via-[#0F172A]/90 to-transparent" />
-        <div className="relative z-10 flex flex-col gap-2.5 max-w-2xl">
+        <div className="relative z-10 flex flex-col gap-2 max-w-2xl">
           <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-400/20 text-amber-300 font-bold text-xs px-3 py-1 rounded-md w-fit">
             <span>LOCAL REQUIREMENTS</span>
             <span className="text-amber-400">•</span>
             <span>உங்கள் தேவைகள்</span>
           </div>
-          <h1 className="font-heading font-black text-xl sm:text-2xl lg:text-3xl text-white tracking-tight leading-snug">
-            Explore Local Requirements &amp; Post Your Need.
+          <h1 className="font-heading font-black text-xl sm:text-2xl text-white tracking-tight leading-snug">
+            Local Requirements &amp; Needs
             <span className="text-amber-400 block text-xs sm:text-base font-bold mt-1">உங்களுக்கு தேவையானதை இங்கே பதிவிடுங்கள்.</span>
           </h1>
-          <p className="text-xs sm:text-sm text-slate-300 font-normal leading-relaxed">
-            Looking for land, vehicles, rental homes, or products in Thanjavur? Verified local sellers will contact you directly.
-          </p>
         </div>
       </div>
 
       {/* 2. TITLE BAR with Secondary Outlined Blue My Listing Button */}
       <div className="py-2.5 flex items-center justify-between gap-3 w-full border-b border-slate-200/80">
-        <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight">
+        <h2 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight">
           Local Requirements &amp; Needs (தேவைகள்)
         </h2>
         <button

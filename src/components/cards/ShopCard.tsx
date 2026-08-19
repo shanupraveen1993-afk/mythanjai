@@ -374,12 +374,19 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
 
   // ── STATE C: CORPORATE SHOP INFO CARD (No Media Provided Fallback) ───────
   return (
-    <div className="bg-white rounded-xl p-4 flex flex-col justify-between shadow-2xs hover:shadow-md transition-all duration-200 border border-slate-200/90 relative font-sans h-full">
+    <div className={`bg-white rounded-xl p-4 flex flex-col justify-between shadow-2xs hover:shadow-md transition-all duration-200 border border-slate-200/90 relative font-sans h-full ${isExpired ? "opacity-75 grayscale-[0.25]" : ""}`}>
       <div className="flex flex-col gap-3 flex-1">
         {/* Top Row: Shop Name + Category & Utility Buttons */}
         <div className="flex items-start justify-between gap-3 w-full">
           <div className="flex flex-col gap-1 min-w-0">
-            <CategoryIcon category={post.category || (post as any).offer_category} />
+            <div className="flex items-center gap-2">
+              <CategoryIcon category={post.category || (post as any).offer_category} />
+              {isExpired && (
+                <span className="text-[10px] font-black bg-slate-800 text-rose-300 px-2 py-0.5 rounded-md uppercase tracking-wider shrink-0">
+                  EXPIRED OFFER
+                </span>
+              )}
+            </div>
             <h3 className="font-heading font-black text-base sm:text-lg text-slate-900 line-clamp-1 truncate mt-0.5">
               {post.shop_name}
             </h3>
@@ -392,9 +399,6 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
             </button>
             <button type="button" onClick={handleShare} className="w-7 h-7 rounded-md border border-slate-200 bg-white text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors cursor-pointer" title="Share Offer">
               <Share2 className="w-3.5 h-3.5" />
-            </button>
-            <button type="button" onClick={handleReport} className="w-7 h-7 rounded-md border border-slate-200 bg-white text-slate-400 hover:text-rose-500 flex items-center justify-center transition-colors cursor-pointer" title="Report Offer">
-              <Flag className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
@@ -433,7 +437,7 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
           href={directionUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-1 bg-[#128C7E] text-white font-bold text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer"
+          className="flex-1 bg-[#128C7E] hover:bg-[#075e54] text-white font-bold text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer transition-colors"
         >
           <Navigation className="w-3.5 h-3.5 text-white" />
           <span>{t("getDirection")}</span>
@@ -442,9 +446,9 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
           <a
             href={callUrl}
             onClick={(e) => e.stopPropagation()}
-            className="bg-[#f59e0b] text-slate-950 font-bold text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer shrink-0"
+            className="bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-bold text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer shrink-0 transition-colors"
           >
-            <Phone className="w-4 h-4 text-slate-950" />
+            <Phone className="w-4 h-4 text-white" />
             <span>Call</span>
           </a>
         )}

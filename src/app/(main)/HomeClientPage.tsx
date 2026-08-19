@@ -52,14 +52,6 @@ export function PreviewSection({
         </div>
         <div className="flex items-center gap-2">
           <button
-            onClick={() => router.push("/profile")}
-            className="px-2.5 py-1 rounded-lg bg-blue-50/80 hover:bg-blue-100 text-[#1d4ed8] border border-[#1d4ed8]/30 text-[11px] font-bold flex items-center gap-1 transition-colors cursor-pointer shadow-2xs"
-            title="View My Listings"
-          >
-            <UserCheck className="w-3 h-3 text-[#1d4ed8]" />
-            <span>My Listing</span>
-          </button>
-          <button
             onClick={() => router.push(seeAllPath)}
             className="flex items-center gap-1 text-xs font-black text-amber-600 hover:text-amber-700 transition-colors cursor-pointer"
           >
@@ -138,7 +130,7 @@ export default function HomeClientPage() {
     <div className="w-full flex flex-col gap-8 text-slate-800 font-sans mt-3">
 
         {/* ── 1. Hero Banner (Universal Home Banner - Prominent & Standout) ── */}
-        <div className="relative w-full min-h-[160px] sm:min-h-[200px] rounded-2xl overflow-hidden bg-slate-950 text-white flex items-center px-6 sm:px-8 py-6 sm:py-8 shadow-md mt-1">
+        <div className="relative w-full min-h-[160px] sm:min-h-[200px] rounded-xl overflow-hidden bg-slate-950 text-white flex items-center px-6 sm:px-8 py-6 sm:py-8 shadow-md mt-1">
           <img src="/thanjavur_temple_illustration.png" alt="Namma Thanjai" className="absolute right-0 top-0 h-full w-3/5 object-cover opacity-35 pointer-events-none" />
           <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/85 to-transparent" />
           <div className="relative z-10 flex flex-col gap-2 max-w-xl">
@@ -148,9 +140,31 @@ export default function HomeClientPage() {
             <h1 className="font-heading font-black text-xl sm:text-2xl text-white tracking-tight leading-snug">
               Everything you need in our city, all in one place. <span className="text-amber-400 block text-xs sm:text-base font-extrabold mt-1">நம்ம ஊரின் அனைத்து தேவைகளுக்கும் ஒரே இடம்.</span>
             </h1>
-            <p className="text-xs sm:text-sm text-slate-300 font-medium leading-relaxed">
-              Buy and sell with neighbors, hire reliable services, and explore local shopping offers—built exclusively for our community.
-            </p>
+
+            {/* Direct WhatsApp Login Input Box */}
+            <div className="mt-2 flex flex-col sm:flex-row items-center gap-2 w-full max-w-md">
+              <input
+                type="tel"
+                placeholder="Enter 10-digit Mobile Number"
+                className="w-full px-3.5 py-2.5 bg-white/10 border border-white/20 rounded-lg text-white placeholder-slate-400 text-xs font-semibold focus:outline-none focus:bg-white/20 transition-all"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && typeof window !== "undefined") {
+                    window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+                  }
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => {
+                  if (typeof window !== "undefined") {
+                    window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+                  }
+                }}
+                className="w-full sm:w-auto shrink-0 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs px-4 py-2.5 rounded-lg shadow-sm cursor-pointer transition-all flex items-center justify-center gap-1.5"
+              >
+                <span>Verify &amp; Login →</span>
+              </button>
+            </div>
           </div>
         </div>
 
@@ -196,10 +210,9 @@ export default function HomeClientPage() {
 
             <button
               onClick={() => router.push("/sell")}
-              className="w-full mt-1 bg-white border border-[#1d4ed8] hover:bg-blue-50/60 text-[#1d4ed8] text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-between cursor-pointer transition-colors shadow-2xs"
+              className="w-full mt-1 bg-[#1d4ed8] hover:bg-[#1e40af] text-white text-xs font-bold py-2.5 px-3 rounded-lg flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs text-center"
             >
-              <span>Explore Sell</span>
-              <ChevronRight className="w-4 h-4 shrink-0 text-[#1d4ed8]" />
+              <span>Explore Sell →</span>
             </button>
           </div>
 
@@ -243,10 +256,9 @@ export default function HomeClientPage() {
 
             <button
               onClick={() => router.push("/need")}
-              className="w-full mt-1 bg-white border border-[#1d4ed8] hover:bg-blue-50/60 text-[#1d4ed8] text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-between cursor-pointer transition-colors shadow-2xs"
+              className="w-full mt-1 bg-[#1d4ed8] hover:bg-[#1e40af] text-white text-xs font-bold py-2.5 px-3 rounded-lg flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs text-center"
             >
-              <span>Explore Need</span>
-              <ChevronRight className="w-4 h-4 shrink-0 text-[#1d4ed8]" />
+              <span>Explore Need →</span>
             </button>
           </div>
 
@@ -290,10 +302,9 @@ export default function HomeClientPage() {
 
             <button
               onClick={() => router.push("/services")}
-              className="w-full mt-1 bg-white border border-[#1d4ed8] hover:bg-blue-50/60 text-[#1d4ed8] text-[#1d4ed8] text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-between cursor-pointer transition-colors shadow-2xs"
+              className="w-full mt-1 bg-[#1d4ed8] hover:bg-[#1e40af] text-white text-xs font-bold py-2.5 px-3 rounded-lg flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs text-center"
             >
-              <span>Explore Services</span>
-              <ChevronRight className="w-4 h-4 shrink-0 text-[#1d4ed8]" />
+              <span>Explore Services →</span>
             </button>
           </div>
 
@@ -337,10 +348,9 @@ export default function HomeClientPage() {
 
             <button
               onClick={() => router.push("/shops")}
-              className="w-full mt-1 bg-white border border-[#1d4ed8] hover:bg-blue-50/60 text-[#1d4ed8] text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-between cursor-pointer transition-colors shadow-2xs"
+              className="w-full mt-1 bg-[#1d4ed8] hover:bg-[#1e40af] text-white text-xs font-bold py-2.5 px-3 rounded-lg flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs text-center"
             >
-              <span>Explore Offers</span>
-              <ChevronRight className="w-4 h-4 shrink-0 text-[#1d4ed8]" />
+              <span>Explore Offers →</span>
             </button>
           </div>
         </section>

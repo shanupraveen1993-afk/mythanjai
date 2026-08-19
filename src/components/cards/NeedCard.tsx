@@ -230,9 +230,9 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
               <a
                 href={callUrl}
                 onClick={(e) => e.stopPropagation()}
-                className="bg-[#f59e0b] text-slate-950 font-bold text-xs py-1.5 px-3.5 rounded-lg flex items-center justify-center gap-1.5 min-h-[36px] shadow-2xs cursor-pointer"
+                className="bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-bold text-xs py-1.5 px-3.5 rounded-lg flex items-center justify-center gap-1.5 min-h-[36px] shadow-2xs cursor-pointer transition-colors"
               >
-                <Phone className="w-3.5 h-3.5 text-slate-950" />
+                <Phone className="w-3.5 h-3.5 text-white" />
                 <span>Call</span>
               </a>
             </>
