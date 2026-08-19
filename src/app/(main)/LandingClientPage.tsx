@@ -126,9 +126,12 @@ export default function LandingClientPage() {
                 </div>
                 <div>
                   <h2 className="font-heading font-bold text-[#1d4ed8] text-sm sm:text-base leading-tight">
-                    Sell (விற்பனை)
+                    Sell
                   </h2>
-                  <span className="text-[10px] font-medium text-slate-500">Thanjavur Local</span>
+                  <span className="block text-xs font-bold text-[#1d4ed8]/85 leading-tight">
+                    விற்பனை
+                  </span>
+                  <span className="block text-[10px] font-medium text-slate-500 mt-0.5">Thanjavur Local</span>
                 </div>
               </div>
 
@@ -173,9 +176,12 @@ export default function LandingClientPage() {
                 </div>
                 <div>
                   <h2 className="font-heading font-bold text-[#1d4ed8] text-sm sm:text-base leading-tight">
-                    Need (தேவைகள்)
+                    Need
                   </h2>
-                  <span className="text-[10px] font-medium text-slate-500">Thanjavur Local</span>
+                  <span className="block text-xs font-bold text-[#1d4ed8]/85 leading-tight">
+                    தேவைகள்
+                  </span>
+                  <span className="block text-[10px] font-medium text-slate-500 mt-0.5">Thanjavur Local</span>
                 </div>
               </div>
 
@@ -220,9 +226,12 @@ export default function LandingClientPage() {
                 </div>
                 <div>
                   <h2 className="font-heading font-bold text-[#1d4ed8] text-sm sm:text-base leading-tight">
-                    Services (சேவைகள்)
+                    Services
                   </h2>
-                  <span className="text-[10px] font-medium text-slate-500">Thanjavur Local</span>
+                  <span className="block text-xs font-bold text-[#1d4ed8]/85 leading-tight">
+                    சேவைகள்
+                  </span>
+                  <span className="block text-[10px] font-medium text-slate-500 mt-0.5">Thanjavur Local</span>
                 </div>
               </div>
 
@@ -267,9 +276,12 @@ export default function LandingClientPage() {
                 </div>
                 <div>
                   <h2 className="font-heading font-bold text-[#1d4ed8] text-sm sm:text-base leading-tight">
-                    Offers (சலுகைகள்)
+                    Offers
                   </h2>
-                  <span className="text-[10px] font-medium text-slate-500">Thanjavur Local</span>
+                  <span className="block text-xs font-bold text-[#1d4ed8]/85 leading-tight">
+                    சலுகைகள்
+                  </span>
+                  <span className="block text-[10px] font-medium text-slate-500 mt-0.5">Thanjavur Local</span>
                 </div>
               </div>
 
