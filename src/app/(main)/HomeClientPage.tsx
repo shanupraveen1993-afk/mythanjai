@@ -184,7 +184,6 @@ export default function HomeClientPage() {
                   <span className="block text-xs font-bold text-[#1d4ed8]/85 leading-tight">
                     விற்பனை
                   </span>
-                  <span className="block text-[10px] font-medium text-slate-500 mt-0.5">Thanjavur Local</span>
                 </div>
               </div>
 
@@ -234,7 +233,6 @@ export default function HomeClientPage() {
                   <span className="block text-xs font-bold text-[#1d4ed8]/85 leading-tight">
                     தேவைகள்
                   </span>
-                  <span className="block text-[10px] font-medium text-slate-500 mt-0.5">Thanjavur Local</span>
                 </div>
               </div>
 
@@ -284,7 +282,6 @@ export default function HomeClientPage() {
                   <span className="block text-xs font-bold text-[#1d4ed8]/85 leading-tight">
                     சேவைகள்
                   </span>
-                  <span className="block text-[10px] font-medium text-slate-500 mt-0.5">Thanjavur Local</span>
                 </div>
               </div>
 
@@ -334,7 +331,6 @@ export default function HomeClientPage() {
                   <span className="block text-xs font-bold text-[#1d4ed8]/85 leading-tight">
                     சலுகைகள்
                   </span>
-                  <span className="block text-[10px] font-medium text-slate-500 mt-0.5">Thanjavur Local</span>
                 </div>
               </div>
 

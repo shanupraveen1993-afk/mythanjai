@@ -51,7 +51,7 @@ export default function RootLayout({
             __html: `
               (function() {
                 if (typeof window !== 'undefined') {
-                  var TARGET_VERSION = 'v49.0_refined_post_card_font_hierarchy';
+                  var TARGET_VERSION = 'v50.0_removed_thanjavur_local_subtext';
                   var currentVer = localStorage.getItem('namma_thanjai_cache_version');
                   if (currentVer !== TARGET_VERSION) {
                     localStorage.setItem('namma_thanjai_cache_version', TARGET_VERSION);
