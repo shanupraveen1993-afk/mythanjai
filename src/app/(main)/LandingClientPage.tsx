@@ -118,7 +118,7 @@ export default function LandingClientPage() {
                 </div>
                 <div>
                   <h2 className="font-heading font-bold text-[#1d4ed8] text-sm sm:text-base leading-tight">
-                    Items for Sale
+                    Sell
                   </h2>
                   <span className="block text-xs font-bold text-[#1d4ed8]/85 leading-tight">
                     விற்பனை
@@ -167,7 +167,7 @@ export default function LandingClientPage() {
                 </div>
                 <div>
                   <h2 className="font-heading font-bold text-[#1d4ed8] text-sm sm:text-base leading-tight">
-                    Items Looking For
+                    Need
                   </h2>
                   <span className="block text-xs font-bold text-[#1d4ed8]/85 leading-tight">
                     தேவைகள்
@@ -216,7 +216,7 @@ export default function LandingClientPage() {
                 </div>
                 <div>
                   <h2 className="font-heading font-bold text-[#1d4ed8] text-sm sm:text-base leading-tight">
-                    Local Service
+                    Service
                   </h2>
                   <span className="block text-xs font-bold text-[#1d4ed8]/85 leading-tight">
                     சேவைகள்
@@ -265,7 +265,7 @@ export default function LandingClientPage() {
                 </div>
                 <div>
                   <h2 className="font-heading font-bold text-[#1d4ed8] text-sm sm:text-base leading-tight">
-                    Local Offer
+                    Offer
                   </h2>
                   <span className="block text-xs font-bold text-[#1d4ed8]/85 leading-tight">
                     சலுகைகள்
