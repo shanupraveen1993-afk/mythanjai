@@ -30,7 +30,7 @@ export default function GlobalError({
             Something went wrong
           </h1>
           <p className="text-xs text-slate-500 font-medium leading-relaxed mt-1">
-            An unexpected error occurred while loading this view. Please try refreshing or return home.
+            {error?.message || "An unexpected error occurred while loading this view. Please try refreshing or return home."}
           </p>
         </div>
 

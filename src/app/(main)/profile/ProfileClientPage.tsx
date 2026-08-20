@@ -134,21 +134,31 @@ export default function ProfileClientPage() {
     }
   }, []);
 
-  // Listen to Firestore profile changes in real-time
+  // Listen to Firestore profile changes in real-time safely
   useEffect(() => {
-    if (!user) return;
-    const docRef = doc(db, "users", user.uid);
-    const unsubscribe = onSnapshot(docRef, (docSnap) => {
-      if (docSnap.exists()) {
-        const data = docSnap.data();
-        if (data.isVerified) {
-          setIsDbVerified(true);
-        } else {
-          setIsDbVerified(false);
+    if (!user || !user.uid) return;
+    try {
+      const docRef = doc(db, "users", user.uid);
+      const unsubscribe = onSnapshot(
+        docRef,
+        (docSnap) => {
+          if (docSnap.exists()) {
+            const data = docSnap.data();
+            if (data.isVerified) {
+              setIsDbVerified(true);
+            } else {
+              setIsDbVerified(false);
+            }
+          }
+        },
+        (err) => {
+          console.warn("Profile Firestore snapshot warning:", err);
         }
-      }
-    });
-    return () => unsubscribe();
+      );
+      return () => unsubscribe();
+    } catch (e) {
+      console.warn("Profile Firestore listener error:", e);
+    }
   }, [user]);
 
   // Listen for Chrome/Android Install Prompt
