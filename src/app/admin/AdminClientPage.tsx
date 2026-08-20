@@ -6,9 +6,11 @@ import {
   collection,
   getDocs,
   doc,
+  setDoc,
   deleteDoc,
   updateDoc,
 } from "firebase/firestore";
+import { SELL_SAMPLES, NEED_SAMPLES, SERVICE_SAMPLES, SHOP_SAMPLES } from "@/lib/sampleData";
 import {
   Shield,
   Trash2,
@@ -116,6 +118,55 @@ export default function AdminClientPage() {
       setItems(mergedListings);
     } catch (error) {
       console.error("Error loading queue:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSeedFirestore = async () => {
+    if (!confirm("Seed all 20 sample listings to live Firestore for admin phone 9994837342?")) return;
+    setLoading(true);
+    try {
+      // 1. Seed Sell Samples
+      for (const sample of SELL_SAMPLES) {
+        await setDoc(doc(db, "needs_and_sales", sample.id), {
+          ...sample,
+          created_at: new Date(),
+          updated_at: new Date(),
+        }, { merge: true });
+      }
+
+      // 2. Seed Need Samples
+      for (const sample of NEED_SAMPLES) {
+        await setDoc(doc(db, "needs_and_sales", sample.id), {
+          ...sample,
+          created_at: new Date(),
+          updated_at: new Date(),
+        }, { merge: true });
+      }
+
+      // 3. Seed Service Samples
+      for (const sample of SERVICE_SAMPLES) {
+        await setDoc(doc(db, "services", sample.id), {
+          ...sample,
+          created_at: new Date(),
+          updated_at: new Date(),
+        }, { merge: true });
+      }
+
+      // 4. Seed Shop Samples
+      for (const sample of SHOP_SAMPLES) {
+        await setDoc(doc(db, "shops", sample.id), {
+          ...sample,
+          created_at: new Date(),
+          updated_at: new Date(),
+        }, { merge: true });
+      }
+
+      toast.success("Successfully seeded 20 sample listings to Firestore for admin 9994837342!");
+      await fetchModerationQueue();
+    } catch (err: any) {
+      toast.error(`Seeding failed: ${err.message}`);
     } finally {
       setLoading(false);
     }
@@ -279,6 +330,15 @@ export default function AdminClientPage() {
         </div>
 
         <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={handleSeedFirestore}
+            className="flex items-center gap-1.5 text-xs text-amber-950 bg-amber-400 hover:bg-amber-300 border border-amber-500 px-3 py-1.5 rounded-xl font-black transition-all cursor-pointer shadow-xs"
+            title="Seed 20 Sample Listings to Live Firestore for Admin 9994837342"
+          >
+            <span>🌱 Seed Live Posts (9994837342)</span>
+          </button>
+
           <button
             type="button"
             onClick={fetchModerationQueue}
