@@ -3,8 +3,13 @@
 import React, { useState, useEffect } from "react";
 import { MapPin, Bell, ShieldCheck, Check, X } from "lucide-react";
 
-export default function NativePermissionsModal() {
-  const [isOpen, setIsOpen] = useState(false);
+interface NativePermissionsModalProps {
+  isOpen?: boolean;
+  onComplete?: () => void;
+}
+
+export default function NativePermissionsModal({ isOpen: propIsOpen, onComplete }: NativePermissionsModalProps) {
+  const [internalOpen, setInternalOpen] = useState(false);
   const [isNative, setIsNative] = useState(false);
 
   useEffect(() => {
@@ -13,22 +18,19 @@ export default function NativePermissionsModal() {
         const cap = (window as any).Capacitor;
         if (cap && cap.isNativePlatform && cap.isNativePlatform()) {
           setIsNative(true);
-          const hasPrompted = localStorage.getItem("namma_thanjai_permissions_prompted_v1");
-          if (!hasPrompted) {
-            // Show modal after 1.5s delay on first native launch
-            const timer = setTimeout(() => setIsOpen(true), 1500);
-            return () => clearTimeout(timer);
-          }
         }
       } catch (e) {}
     }
   }, []);
 
-  if (!isNative || !isOpen) return null;
+  const isOpen = propIsOpen !== undefined ? propIsOpen : internalOpen;
+
+  if (!isOpen) return null;
 
   const handleGrantPermissions = async () => {
     localStorage.setItem("namma_thanjai_permissions_prompted_v1", "true");
-    setIsOpen(false);
+    setInternalOpen(false);
+    if (onComplete) onComplete();
 
     try {
       const cap = (window as any).Capacitor;
@@ -45,7 +47,8 @@ export default function NativePermissionsModal() {
 
   const handleDismiss = () => {
     localStorage.setItem("namma_thanjai_permissions_prompted_v1", "true");
-    setIsOpen(false);
+    setInternalOpen(false);
+    if (onComplete) onComplete();
   };
 
   return (

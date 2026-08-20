@@ -198,7 +198,13 @@ export default function SwipeUpOnboarding({
               <div className="w-full flex flex-col items-center gap-2 z-20">
                 <button
                   type="button"
-                  onClick={() => scrollToSlide(idx + 1)}
+                  onClick={() => {
+                    if (idx < WALKTHROUGH_SLIDES.length - 1) {
+                      scrollToSlide(idx + 1);
+                    } else {
+                      if (onComplete) onComplete();
+                    }
+                  }}
                   className={`w-full bg-gradient-to-r ${slide.accentColor} text-slate-950 font-heading font-black text-sm py-3.5 px-6 rounded-2xl shadow-[0_0_25px_rgba(245,158,11,0.4)] active:scale-95 transition-all flex items-center justify-center gap-2 group cursor-pointer`}
                 >
                   <span>

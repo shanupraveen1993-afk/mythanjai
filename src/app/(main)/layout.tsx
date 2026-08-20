@@ -84,9 +84,12 @@ function MainLayoutContent({
   // Startup Flow State: Strictly for Capacitor Native Mobile App
   const [showSplash, setShowSplash] = useState(() => {
     if (typeof window === "undefined") return false;
-    return Boolean((window as any).Capacitor?.isNativePlatform());
+    const isNative = Boolean((window as any).Capacitor?.isNativePlatform());
+    const hasCompletedOnboarding = Boolean(localStorage.getItem("namma_thanjai_onboarding_completed_v4"));
+    return isNative && !hasCompletedOnboarding;
   });
   const [showWalkthrough, setShowWalkthrough] = useState(false);
+  const [showPermissionsModal, setShowPermissionsModal] = useState(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -96,6 +99,7 @@ function MainLayoutContent({
       if (!isNative) {
         setShowSplash(false);
         setShowWalkthrough(false);
+        setShowPermissionsModal(false);
         return;
       }
 
@@ -105,32 +109,24 @@ function MainLayoutContent({
           SplashScreen.hide().catch(() => {});
         })
         .catch(() => {});
-
-      const hasSeenWalkthrough = localStorage.getItem("namma_thanjai_has_seen_walkthrough_v3");
-      if (!hasSeenWalkthrough) {
-        setShowWalkthrough(true);
-      }
     }
   }, []);
 
   const handleSplashComplete = () => {
     setShowSplash(false);
-    if (typeof window !== "undefined") {
-      const isNative = Boolean((window as any).Capacitor?.isNativePlatform());
-      if (isNative) {
-        const hasSeenWalkthrough = localStorage.getItem("namma_thanjai_has_seen_walkthrough_v3");
-        if (!hasSeenWalkthrough) {
-          setShowWalkthrough(true);
-        }
-      }
-    }
+    setShowWalkthrough(true);
   };
 
   const handleWalkthroughComplete = () => {
-    if (typeof window !== "undefined") {
-      localStorage.setItem("namma_thanjai_has_seen_walkthrough_v3", "true");
-    }
     setShowWalkthrough(false);
+    setShowPermissionsModal(true);
+  };
+
+  const handlePermissionsComplete = () => {
+    setShowPermissionsModal(false);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("namma_thanjai_onboarding_completed_v4", "true");
+    }
   };
 
   const handleCloseSignIn = () => {
@@ -214,18 +210,32 @@ function MainLayoutContent({
   const isOnboardingView = false;
   const isFullWidthPage = isStandaloneView || isLandingMode;
 
+  if (showSplash) {
+    return (
+      <div className="w-full min-h-screen bg-[#0F172A]">
+        <SplashScreen onComplete={handleSplashComplete} />
+      </div>
+    );
+  }
+
+  if (showWalkthrough) {
+    return (
+      <div className="w-full min-h-screen bg-slate-950">
+        <SwipeUpOnboarding onComplete={handleWalkthroughComplete} />
+      </div>
+    );
+  }
+
+  if (showPermissionsModal) {
+    return (
+      <div className="w-full min-h-screen bg-slate-950 flex items-center justify-center">
+        <NativePermissionsModal isOpen={true} onComplete={handlePermissionsComplete} />
+      </div>
+    );
+  }
+
   return (
     <div className="w-full min-h-screen flex flex-col relative bg-[#f8fafc] font-sans">
-      {/* 1. Animated Splash Screen */}
-      {showSplash && (
-        <SplashScreen onComplete={handleSplashComplete} />
-      )}
-
-      {/* 2. Interactive 3-Slide Walkthrough Overlay */}
-      {showWalkthrough && (
-        <SwipeUpOnboarding onComplete={handleWalkthroughComplete} />
-      )}
-
       <React.Suspense fallback={null}>
         <SearchParamSync onAreaSync={setSelectedArea} onAuthSync={setIsSignInOpen} />
       </React.Suspense>
