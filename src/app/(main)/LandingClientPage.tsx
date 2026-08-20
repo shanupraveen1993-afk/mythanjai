@@ -205,7 +205,7 @@ export default function LandingClientPage() {
             </div>
           </div>
         ) : (
-          /* Default State: 4 Segment Category Cards with Block Set Tone Titles */
+          /* Default State: 4 Segment Category Cards with Pure Bold Black Titles */
           <section className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 my-1">
             {/* Card 1: SELL */}
             <div className="bg-white rounded-xl border-2 border-slate-200 hover:border-slate-400 p-3 sm:p-4 flex flex-col justify-between gap-2 sm:gap-3 text-left transition-all shadow-xs">
@@ -215,9 +215,9 @@ export default function LandingClientPage() {
                     <ShoppingBag className="w-5 h-5" />
                   </div>
                   <div>
-                    <span className="inline-block bg-slate-950 text-white font-heading font-black text-xs px-2.5 py-0.5 rounded-lg uppercase tracking-wider">
+                    <h2 className="font-heading font-black text-slate-950 text-sm sm:text-base leading-tight">
                       Sell
-                    </span>
+                    </h2>
                     <span className="block text-[11px] font-bold text-slate-500 leading-tight mt-0.5">
                       விற்பனை
                     </span>
@@ -264,9 +264,9 @@ export default function LandingClientPage() {
                     <Search className="w-5 h-5" />
                   </div>
                   <div>
-                    <span className="inline-block bg-slate-950 text-white font-heading font-black text-xs px-2.5 py-0.5 rounded-lg uppercase tracking-wider">
+                    <h2 className="font-heading font-black text-slate-950 text-sm sm:text-base leading-tight">
                       Need
-                    </span>
+                    </h2>
                     <span className="block text-[11px] font-bold text-slate-500 leading-tight mt-0.5">
                       தேவைகள்
                     </span>
@@ -313,9 +313,9 @@ export default function LandingClientPage() {
                     <Wrench className="w-5 h-5" />
                   </div>
                   <div>
-                    <span className="inline-block bg-slate-950 text-white font-heading font-black text-xs px-2.5 py-0.5 rounded-lg uppercase tracking-wider">
+                    <h2 className="font-heading font-black text-slate-950 text-sm sm:text-base leading-tight">
                       Service
-                    </span>
+                    </h2>
                     <span className="block text-[11px] font-bold text-slate-500 leading-tight mt-0.5">
                       சேவைகள்
                     </span>
@@ -362,9 +362,9 @@ export default function LandingClientPage() {
                     <Store className="w-5 h-5" />
                   </div>
                   <div>
-                    <span className="inline-block bg-slate-950 text-white font-heading font-black text-xs px-2.5 py-0.5 rounded-lg uppercase tracking-wider">
+                    <h2 className="font-heading font-black text-slate-950 text-sm sm:text-base leading-tight">
                       Offer
-                    </span>
+                    </h2>
                     <span className="block text-[11px] font-bold text-slate-500 leading-tight mt-0.5">
                       சலுகைகள்
                     </span>

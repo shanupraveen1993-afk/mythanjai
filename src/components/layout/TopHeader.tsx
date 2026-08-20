@@ -94,7 +94,7 @@ export default function TopHeader({
   return (
     <header
       className="fixed top-0 left-0 right-0 z-50 bg-white/96 backdrop-blur-xl border-b border-slate-200/80 shadow-[0_1px_12px_rgba(0,0,0,0.06)] flex flex-col justify-end"
-      style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 36px)" }}
+      style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
     >
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-3 relative">
 
