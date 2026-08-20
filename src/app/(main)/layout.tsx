@@ -85,43 +85,29 @@ function MainLayoutContent({
   const [isSignInOpen, setIsSignInOpen] = useState(false);
 
   // Startup Flow State: Strictly for Capacitor Native Mobile App
-  const [showSplash, setShowSplash] = useState(() => {
-    if (typeof window === "undefined") return false;
-    const isNative = Boolean((window as any).Capacitor?.isNativePlatform());
-    const hasCompletedOnboarding = Boolean(localStorage.getItem("namma_thanjai_onboarding_completed_v4"));
-    return isNative && !hasCompletedOnboarding;
-  });
   const [showWalkthrough, setShowWalkthrough] = useState(false);
   const [showPermissionsModal, setShowPermissionsModal] = useState(false);
-
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     setIsMounted(true);
     if (typeof window !== "undefined") {
-      const isNative = Boolean((window as any).Capacitor?.isNativePlatform());
+      const isNative = Boolean((window as any).Capacitor?.isNativePlatform() || window.navigator.userAgent.includes("Capacitor"));
+      const hasCompletedOnboarding = Boolean(localStorage.getItem("namma_thanjai_onboarding_completed_v4"));
 
-      // Website (non-native) ALWAYS bypasses splash screen and walkthrough overlays completely
-      if (!isNative) {
-        setShowSplash(false);
-        setShowWalkthrough(false);
-        setShowPermissionsModal(false);
-        return;
+      if (isNative) {
+        import("@capacitor/splash-screen")
+          .then(({ SplashScreen }) => {
+            SplashScreen.hide().catch(() => {});
+          })
+          .catch(() => {});
+
+        if (!hasCompletedOnboarding) {
+          setShowWalkthrough(true);
+        }
       }
-
-      // Native Capacitor APK startup handling
-      import("@capacitor/splash-screen")
-        .then(({ SplashScreen }) => {
-          SplashScreen.hide().catch(() => {});
-        })
-        .catch(() => {});
     }
   }, []);
-
-  const handleSplashComplete = () => {
-    setShowSplash(false);
-    setShowWalkthrough(true);
-  };
 
   const handleWalkthroughComplete = () => {
     setShowWalkthrough(false);
@@ -151,8 +137,7 @@ function MainLayoutContent({
       }
     }
   };
-
-  // Determine current active tab based on pathname
+// Determine current active tab based on pathname
   const getActiveTab = (): AppTab => {
     if (pathname.includes("/sell") || pathname.includes("/post/sell")) return "sell";
     if (pathname.includes("/need") || pathname.includes("/post/need")) return "need";
@@ -215,14 +200,6 @@ function MainLayoutContent({
   const isStandaloneView = isChatRoute;
   const isOnboardingView = false;
   const isFullWidthPage = isStandaloneView || isLandingMode;
-
-  if (showSplash) {
-    return (
-      <div className="w-full min-h-screen bg-white">
-        <SplashScreen onComplete={handleSplashComplete} />
-      </div>
-    );
-  }
 
   if (showWalkthrough) {
     return (

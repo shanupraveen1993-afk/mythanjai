@@ -15,16 +15,13 @@ export function useNativeApp() {
       .then(({ App }) => {
         if (unmounted) return;
         App.addListener("backButton", ({ canGoBack }) => {
-          if (pathname === "/onboarding") {
-            // Exit app on double back on onboarding screen
+          if (pathname === "/" || pathname === "/home" || pathname === "/onboarding") {
+            // Exit app when on home page or onboarding
             App.exitApp();
-          } else if (pathname === "/") {
-            // Send back to onboarding if on home page
-            router.push("/onboarding");
           } else if (canGoBack) {
             router.back();
           } else {
-            router.push("/onboarding");
+            router.push("/");
           }
         }).catch(() => {});
       })
