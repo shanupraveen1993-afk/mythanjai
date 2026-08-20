@@ -86,12 +86,14 @@ export default function ChatClientPage() {
 
   // Initialize or load active chat room from query params or user threads
   useEffect(() => {
-    if (queryListingId && querySellerId && user?.uid) {
-      const generatedChatId = `${queryListingId}_${[user.uid, querySellerId].sort().join("_")}`;
+    if (queryListingId || querySellerId || (queryTitle && queryTitle !== "Classified Item")) {
+      const currentUserId = user?.uid || "guest_user";
+      const sellerId = querySellerId || "seller_contact";
+      const generatedChatId = `${queryListingId || "post"}_${[currentUserId, sellerId].sort().join("_")}`;
       setActiveChatId(generatedChatId);
       setActiveListingTitle(queryTitle);
-      setActivePeerId(querySellerId);
-      setActivePeerName("Seller");
+      setActivePeerId(sellerId);
+      setActivePeerName(queryTitle !== "Classified Item" ? queryTitle : "Seller / Contact");
       setShowMobileChat(true);
 
       // Add to thread list if not present
@@ -100,10 +102,10 @@ export default function ChatClientPage() {
         const updated = [
           {
             chatId: generatedChatId,
-            listingId: queryListingId,
+            listingId: queryListingId || "post",
             listingTitle: queryTitle,
-            peerId: querySellerId,
-            peerName: "Seller / Contact",
+            peerId: sellerId,
+            peerName: queryTitle !== "Classified Item" ? queryTitle : "Seller / Contact",
             lastMessage: "Click to start conversation...",
             lastTimestamp: new Date(),
           },
