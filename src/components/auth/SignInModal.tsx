@@ -58,27 +58,6 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
   useEffect(() => {
     if (isOpen && step === "otp") {
       setTimeout(() => otpInputRef.current?.focus(), 50);
-
-      // WebOTP API SMS auto-read listener (safely wrapped for WebView compatibility)
-      if (typeof window !== "undefined" && "OTPCredential" in window && (navigator as any)?.credentials?.get) {
-        try {
-          const ac = new AbortController();
-          (navigator as any).credentials
-            .get({
-              otp: { transport: ["sms"] },
-              signal: ac.signal,
-            })
-            .then((otp: any) => {
-              if (otp && otp.code) {
-                setOtpCode(otp.code);
-                toast.success("OTP auto-read from SMS!");
-              }
-            })
-            .catch(() => {});
-        } catch (err) {
-          console.warn("WebOTP not supported in Webview context:", err);
-        }
-      }
     }
   }, [isOpen, step]);
 
