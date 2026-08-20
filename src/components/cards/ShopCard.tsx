@@ -262,13 +262,17 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
             </span>
           </div>
 
-          {/* CTA Buttons — NO CHAT ON OFFERS: ONLY Get Directions & Call */}
-          <div className="flex items-center gap-2 mt-1 w-full">
+          {/* CTA Buttons — Date Tag + Get Directions + Call Shop in single horizontal row */}
+          <div className="flex items-center gap-2 mt-2 w-full pt-2 border-t border-slate-800/60">
+            <div className="flex items-center gap-1 text-[11px] font-bold text-slate-300 bg-slate-900/90 border border-slate-700/80 rounded-xl px-2.5 py-2 min-h-[44px] shrink-0 justify-center">
+              <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+              <span>{validityText}</span>
+            </div>
             <a
               href={directionUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[40px] shadow cursor-pointer transition-colors"
+              className="flex-1 bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow cursor-pointer transition-colors"
             >
               <Navigation className="w-4 h-4 shrink-0" />
               <span>{t("getDirection")}</span>
@@ -277,7 +281,7 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
               <a
                 href={`tel:${post.phone}`}
                 onClick={(e) => e.stopPropagation()}
-                className="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-heading font-black text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[40px] shadow cursor-pointer transition-colors"
+                className="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow cursor-pointer transition-colors"
               >
                 <Phone className="w-4 h-4 text-slate-950 shrink-0" />
                 <span>Call Shop</span>
@@ -362,25 +366,23 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
             </div>
           )}
 
-          {/* Validity badge */}
-          <div className={`flex items-center gap-1 px-2.5 py-1 rounded-lg border font-semibold text-xs w-fit ${isExpired ? "text-rose-700 bg-rose-50 border-rose-200" : "text-slate-700 bg-slate-100 border-slate-200"}`}>
-            <Calendar className="w-3.5 h-3.5 text-slate-500" />
-            <span>{isExpired ? "Offer Expired" : validityText}</span>
-          </div>
-
           {/* Location */}
           <div className="flex items-center text-slate-600 text-[11px] font-semibold gap-1">
             <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
             <span className="truncate">{post.address_text || post.area_tag || "Thanjavur"}</span>
           </div>
 
-          {/* Footer CTAs — NO CHAT ON OFFERS: ONLY Get Directions & Call */}
-          <div className="pt-2 flex items-center gap-2 mt-auto w-full">
+          {/* Footer CTAs — Date Tag + Get Directions + Call Shop in single horizontal row */}
+          <div className="pt-2.5 flex items-center gap-2 mt-auto w-full border-t border-slate-100">
+            <div className="flex items-center gap-1 text-[11px] font-bold text-slate-500 bg-slate-100/90 border border-slate-200/80 rounded-xl px-2.5 py-2 min-h-[44px] shrink-0 justify-center">
+              <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+              <span>{isExpired ? "Expired" : validityText}</span>
+            </div>
             <a
               href={directionUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[40px] shadow cursor-pointer transition-colors"
+              className="flex-1 bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow cursor-pointer transition-colors"
             >
               <Navigation className="w-4 h-4 text-white shrink-0" />
               <span>{t("getDirection")}</span>
@@ -389,7 +391,7 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
               <a
                 href={callUrl}
                 onClick={(e) => e.stopPropagation()}
-                className="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-heading font-black text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[40px] shadow cursor-pointer transition-colors"
+                className="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow cursor-pointer transition-colors"
               >
                 <Phone className="w-4 h-4 text-slate-950 shrink-0" />
                 <span>Call Shop</span>
@@ -455,27 +457,24 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
           </p>
         </div>
 
-        {/* Location & Validity Info Row */}
-        <div className="flex items-center justify-between text-xs text-slate-600 py-1.5 my-0.5 gap-2">
-          <div className="flex items-center gap-1 text-xs text-slate-600 font-medium truncate">
-            <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-            <span className="truncate">{post.address_text || post.area_tag || "Thanjavur"}</span>
-          </div>
-
-          <div className="flex items-center gap-1 text-[11px] font-semibold text-slate-500 shrink-0">
-            <Calendar className="w-3.5 h-3.5 text-slate-400" />
-            <span>{validityText}</span>
-          </div>
+        {/* Location Info Row */}
+        <div className="flex items-center gap-1 text-xs text-slate-600 font-medium truncate py-1">
+          <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+          <span className="truncate">{post.address_text || post.area_tag || "Thanjavur"}</span>
         </div>
       </div>
 
-      {/* Footer CTAs — NO CHAT ON OFFERS: ONLY Get Directions & Call */}
-      <div className="pt-2 flex items-center gap-2 mt-auto w-full">
+      {/* Footer CTAs — Date Tag + Get Directions + Call Shop in single horizontal row */}
+      <div className="pt-2.5 flex items-center gap-2 mt-auto w-full border-t border-slate-100">
+        <div className="flex items-center gap-1 text-[11px] font-bold text-slate-500 bg-slate-100/90 border border-slate-200/80 rounded-xl px-2.5 py-2 min-h-[44px] shrink-0 justify-center">
+          <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+          <span>{isExpired ? "Expired" : validityText}</span>
+        </div>
         <a
           href={directionUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-1 bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[40px] shadow cursor-pointer transition-colors"
+          className="flex-1 bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow cursor-pointer transition-colors"
         >
           <Navigation className="w-4 h-4 text-white shrink-0" />
           <span>{t("getDirection")}</span>
@@ -484,7 +483,7 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
           <a
             href={callUrl}
             onClick={(e) => e.stopPropagation()}
-            className="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-heading font-black text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[40px] shadow cursor-pointer transition-colors"
+            className="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow cursor-pointer transition-colors"
           >
             <Phone className="w-4 h-4 text-slate-950 shrink-0" />
             <span>Call Shop</span>

@@ -98,9 +98,9 @@ export default function TopHeader({
     >
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-3 relative">
 
-        {/* Left Side: Native Back Button for Sub-Screens vs Home Logo */}
+        {/* Left Side: Native Back Button ONLY for true sub-screens vs Home Logo */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0 z-20">
-          {pathname !== "/" && pathname !== "/home" ? (
+          {pathname.includes("/profile") || pathname.includes("/post") || pathname.includes("/chat") || pathname.includes("/admin") ? (
             <button
               type="button"
               onClick={() => {
@@ -133,16 +133,12 @@ export default function TopHeader({
         </div>
 
         {/* Center: Sub-Screen Title or 5 Category Tabs */}
-        {pathname !== "/" && pathname !== "/home" ? (
+        {pathname.includes("/profile") || pathname.includes("/post") || pathname.includes("/chat") || pathname.includes("/admin") ? (
           <div className="absolute left-1/2 -translate-x-1/2 font-heading font-black text-sm sm:text-base text-slate-900 truncate max-w-[180px] sm:max-w-xs text-center z-10">
             {pathname.includes("/profile") ? "My Profile"
               : pathname.includes("/post") ? "Post a Free Ad"
               : pathname.includes("/chat") ? "Direct Messages"
               : pathname.includes("/admin") ? "Admin Dashboard"
-              : pathname.includes("/sell") ? "Items for Sale"
-              : pathname.includes("/need") ? "Buyer Requirements"
-              : pathname.includes("/services") ? "Local Services"
-              : pathname.includes("/shops") || pathname.includes("/offers") ? "Store Offers"
               : "Namma Thanjai"}
           </div>
         ) : (

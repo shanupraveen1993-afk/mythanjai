@@ -8,6 +8,7 @@ import { useToast } from "@/context/ToastContext";
 import PreContactVerificationModal from "@/components/modals/PreContactVerificationModal";
 import { useAuth } from "@/hooks/use-auth";
 import { reportListing } from "@/lib/moderation";
+import { formatRelativeTime } from "@/lib/constants";
 
 import CategoryVectorIllustration from "@/components/ui/CategoryVectorIllustration";
 import CategoryIcon from "@/components/ui/CategoryIcon";
@@ -283,8 +284,15 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
         </div>
       </div>
 
-      {/* ── FOOTER ROW: Full-Width 2 Rectangular CTA Buttons (WhatsApp Outlined Black & Call Blue) ── */}
-      <div className="pt-2 flex items-center gap-2 mt-auto">
+      {/* Single Horizontal Bottom Action Row: Date + Secondary Button + Primary Button */}
+      <div className="pt-2.5 flex items-center gap-2 mt-auto w-full border-t border-slate-100">
+        {/* 1. Date Tag */}
+        <div className="flex items-center gap-1 text-[11px] font-bold text-slate-500 bg-slate-100/90 border border-slate-200/80 rounded-xl px-2.5 py-2 min-h-[44px] shrink-0 justify-center">
+          <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+          <span>{formatRelativeTime(post.created_at)}</span>
+        </div>
+
+        {/* 2. Secondary CTA: Request Call Back */}
         <button
           type="button"
           onClick={(e) => {
@@ -303,18 +311,19 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
             }
             toast.success(`Call Back Requested! ${post.name} has been notified to call you.`);
           }}
-          className="flex-1 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[36px] shadow-2xs cursor-pointer transition-colors"
+          className="flex-1 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow-2xs cursor-pointer transition-colors"
         >
-          <Phone className="w-3.5 h-3.5 text-[#0F172A] shrink-0 stroke-[2.5]" />
-          <span>Request Call Back</span>
+          <Phone className="w-4 h-4 text-[#0F172A] shrink-0 stroke-[2.5]" />
+          <span>Call Back</span>
         </button>
 
+        {/* 3. Primary CTA: Direct Call */}
         <button
           type="button"
           onClick={(e) => handleOpenPreContactModal(e, "call")}
-          className="flex-1 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[36px] shadow-2xs cursor-pointer transition-colors"
+          className="flex-1 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow-2xs cursor-pointer transition-colors"
         >
-          <Phone className="w-3.5 h-3.5 text-white shrink-0" />
+          <Phone className="w-4 h-4 text-white shrink-0" />
           <span>Call</span>
         </button>
       </div>

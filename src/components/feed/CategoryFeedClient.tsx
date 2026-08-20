@@ -210,19 +210,6 @@ export default function CategoryFeedClient({ segmentType }: CategoryFeedClientPr
 
   return (
     <div className="flex flex-col gap-0 mt-0 pb-24">
-      {/* Native App Top Navigation Bar with Back Button */}
-      <div className="flex items-center justify-between bg-white border-b border-slate-200/80 px-4 py-2.5 shadow-2xs">
-        <button
-          type="button"
-          onClick={() => router.push("/")}
-          className="flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-slate-950 cursor-pointer"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Home</span>
-        </button>
-        <span className="font-heading font-black text-xs sm:text-sm text-slate-900 uppercase tracking-wider">{config.label} Marketplace</span>
-      </div>
-
       {/* ── Hero Banner ──────────────────────────────── */}
       <div className="relative w-full min-h-[160px] sm:min-h-[200px] overflow-hidden bg-slate-950 text-white flex items-center px-6 sm:px-10 py-8">
         <img
