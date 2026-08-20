@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { db, storage } from "@/lib/firebase";
 import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -37,14 +37,19 @@ type SegmentType = "sell" | "need" | "service" | "offer";
 
 export default function PostClientPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { user, profile } = useAuth();
   const { toast } = useToast();
+  const [segment, setSegment] = useState<SegmentType>("sell");
 
-  const initialType = (searchParams.get("type") || "sell").toLowerCase() as SegmentType;
-  const [segment, setSegment] = useState<SegmentType>(
-    ["sell", "need", "service", "offer"].includes(initialType) ? initialType : "sell"
-  );
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const initialType = (params.get("type") || "sell").toLowerCase() as SegmentType;
+      if (["sell", "need", "service", "offer"].includes(initialType)) {
+        setSegment(initialType);
+      }
+    }
+  }, []);
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { db, storage } from "@/lib/firebase";
 import { collection, addDoc, doc, getDoc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
@@ -106,9 +106,17 @@ const SEGMENT_CONFIG: Record<
 export default function PostForm({ segment }: PostFormProps) {
   const { toast } = useToast();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const editId = searchParams?.get("edit");
-  const editCol = searchParams?.get("col");
+  const [editId, setEditId] = useState<string | null>(null);
+  const [editCol, setEditCol] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      setEditId(params.get("edit"));
+      setEditCol(params.get("col"));
+    }
+  }, []);
+
   const config = SEGMENT_CONFIG[segment];
   const { user, profile, loading: authLoading } = useAuth();
   const isAuthVerified = Boolean(profile?.isVerified || user);

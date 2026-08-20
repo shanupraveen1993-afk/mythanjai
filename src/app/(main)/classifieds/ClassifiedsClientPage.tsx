@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useFirestore } from "@/hooks/use-firestore";
 import NeedCard from "@/components/cards/NeedCard";
@@ -15,21 +15,25 @@ import { isListingQuarantined } from "@/lib/moderation";
 
 export default function ClassifiedsClientPage() {
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { user, profile, loading } = useAuth();
   
-  const area = (searchParams.get("area") || "All Areas") as TanjoreLocality | "All Areas";
-  const rawCat = searchParams.get("category");
-  const urlCategory = rawCat ? decodeURIComponent(rawCat.replace(/\+/g, " ")) : null;
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(urlCategory);
-  const searchQuery = searchParams.get("query") || "";
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [area, setArea] = useState<TanjoreLocality | "All Areas">("All Areas");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [targetPostId, setTargetPostId] = useState<string | null>(null);
 
   useEffect(() => {
-    const cat = searchParams.get("category");
-    if (cat) {
-      setSelectedCategory(decodeURIComponent(cat.replace(/\+/g, " ")));
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const rawCat = params.get("category");
+      if (rawCat) {
+        setSelectedCategory(decodeURIComponent(rawCat.replace(/\+/g, " ")));
+      }
+      setArea((params.get("area") || "All Areas") as TanjoreLocality | "All Areas");
+      setSearchQuery(params.get("query") || "");
+      setTargetPostId(params.get("post"));
     }
-  }, [searchParams]);
+  }, []);
 
   const [activeType, setActiveType] = useState<"need" | "sale">("need");
 
@@ -96,8 +100,6 @@ export default function ClassifiedsClientPage() {
     }
   ]);
 
-  const targetPostId = searchParams.get("post");
-
   // Real-time Firestore Query subscription
   const { data: posts, loading: postsLoading } = useFirestore<NeedOrSalePost>({
     collectionName: "needs_and_sales",
@@ -137,18 +139,22 @@ export default function ClassifiedsClientPage() {
   const handleCategorySelect = (category?: string | null) => {
     if (category && typeof category === "string") {
       setSelectedCategory(category);
-      const params = new URLSearchParams(searchParams.toString());
-      params.set("category", category);
-      router.replace(`/classifieds?${params.toString()}`, { scroll: false });
+      if (typeof window !== "undefined") {
+        const params = new URLSearchParams(window.location.search);
+        params.set("category", category);
+        router.replace(`/classifieds?${params.toString()}`, { scroll: false });
+      }
     }
   };
 
   const handleClearCategory = () => {
     setSelectedCategory(null);
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete("category");
-    const queryString = params.toString();
-    router.replace(queryString ? `/classifieds?${queryString}` : "/classifieds", { scroll: false });
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      params.delete("category");
+      const queryString = params.toString();
+      router.replace(queryString ? `/classifieds?${queryString}` : "/classifieds", { scroll: false });
+    }
   };
 
   // Filter posts by search query & moderation quarantine status

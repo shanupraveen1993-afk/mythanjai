@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   X,
   Send,
@@ -59,17 +59,31 @@ const SCAM_KEYWORDS = [
 export default function ChatClientPage() {
   const { toast } = useToast();
   const router = useRouter();
-  const searchParams = useSearchParams();
   const { user, profile } = useAuth();
 
-  const queryListingId = searchParams.get("listingId") || "";
-  const querySellerId = searchParams.get("sellerId") || "";
-  const queryTitle = searchParams.get("title") || "Classified Item";
-
+  const [queryListingId, setQueryListingId] = useState<string>("");
+  const [querySellerId, setQuerySellerId] = useState<string>("");
+  const [queryTitle, setQueryTitle] = useState<string>("Classified Item");
   const [activeChatId, setActiveChatId] = useState<string>("");
-  const [activeListingTitle, setActiveListingTitle] = useState<string>(queryTitle);
+  const [activeListingTitle, setActiveListingTitle] = useState<string>("Classified Item");
   const [activePeerName, setActivePeerName] = useState<string>("Seller / Contact");
-  const [activePeerId, setActivePeerId] = useState<string>(querySellerId);
+  const [activePeerId, setActivePeerId] = useState<string>("");
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      setQueryListingId(params.get("listingId") || "");
+      const sellerId = params.get("sellerId") || "";
+      setQuerySellerId(sellerId);
+      if (sellerId) setActivePeerId(sellerId);
+      const title = params.get("title");
+      if (title) {
+        const decoded = decodeURIComponent(title);
+        setQueryTitle(decoded);
+        setActiveListingTitle(decoded);
+      }
+    }
+  }, []);
 
   const [threads, setThreads] = useState<ChatThread[]>([]);
   const [messages, setMessages] = useState<ChatMessage[]>([]);

@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import TopHeader from "@/components/layout/TopHeader";
 import BottomTabBar, { AppTab } from "@/components/layout/BottomTabBar";
 import { TanjoreLocality } from "@/lib/constants";
@@ -39,21 +39,24 @@ function SearchParamSync({
   onAreaSync: (area: TanjoreLocality | "All Areas") => void;
   onAuthSync: (isOpen: boolean) => void;
 }) {
-  const searchParams = useSearchParams();
+  const pathname = usePathname();
 
   useEffect(() => {
-    const areaParam = searchParams.get("area");
-    if (areaParam) {
-      onAreaSync(areaParam as TanjoreLocality | "All Areas");
-    } else {
-      onAreaSync("All Areas");
-    }
+    if (typeof window !== "undefined") {
+      const searchParams = new URLSearchParams(window.location.search);
+      const areaParam = searchParams.get("area");
+      if (areaParam) {
+        onAreaSync(areaParam as TanjoreLocality | "All Areas");
+      } else {
+        onAreaSync("All Areas");
+      }
 
-    const authParam = searchParams.get("auth");
-    if (authParam === "popup" || authParam === "signin" || authParam === "register") {
-      onAuthSync(true);
+      const authParam = searchParams.get("auth");
+      if (authParam === "popup" || authParam === "signin" || authParam === "register") {
+        onAuthSync(true);
+      }
     }
-  }, [searchParams, onAreaSync, onAuthSync]);
+  }, [pathname, onAreaSync, onAuthSync]);
 
   useEffect(() => {
     const handleCustomOpen = () => onAuthSync(true);

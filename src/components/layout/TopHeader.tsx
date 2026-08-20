@@ -5,7 +5,7 @@ import { MapPin, Plus, User, ShieldCheck, Check, MessageSquare, Globe, Download,
 import { TANJORE_LOCALITIES, TanjoreLocality } from "@/lib/constants";
 import SearchableAreaDropdown from "./SearchableAreaDropdown";
 import { AppTab } from "./BottomTabBar";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/context/ToastContext";
 import { useLanguage } from "@/context/LanguageContext";
