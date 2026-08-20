@@ -482,7 +482,7 @@ export default function ProfileClientPage() {
                           {profile?.displayName || displayName || "Namma Thanjai User"}
                         </h2>
                         <p className="text-xs text-slate-500 font-semibold truncate mt-0.5">
-                          {isDbVerified ? `+91 ${phoneNumber || '9876543210'}` : "Not verified yet"}
+                          {isDbVerified && phoneNumber ? `+91 ${phoneNumber}` : "Not verified yet"}
                         </p>
                       </div>
                       <button onClick={() => setIsEditingName(true)} className="w-8 h-8 flex items-center justify-center rounded-xl text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-colors shrink-0 cursor-pointer" title="Edit Name">
@@ -503,10 +503,18 @@ export default function ProfileClientPage() {
                         )}
                       </span>
                     ) : (
-                      <span className="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-1 rounded-xl text-xs font-black">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (typeof window !== "undefined") {
+                            window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+                          }
+                        }}
+                        className="inline-flex items-center gap-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 border border-amber-200 px-2.5 py-1 rounded-xl text-xs font-black cursor-pointer transition-colors"
+                      >
                         <AlertCircle className="w-3.5 h-3.5" />
                         Verify to Unlock Posting
-                      </span>
+                      </button>
                     )}
                   </div>
                 </div>
@@ -534,14 +542,18 @@ export default function ProfileClientPage() {
               </div>
               <div className="flex flex-col">
                 <span className="text-xs font-black text-slate-900">Registered Mobile</span>
-                <span className="text-xs text-slate-500 font-semibold">+91 {phoneNumber || "9876543210"}</span>
+                <span className="text-xs text-slate-500 font-semibold">{phoneNumber ? `+91 ${phoneNumber}` : "Not linked yet"}</span>
               </div>
             </div>
             <button
-              onClick={() => setVerificationPending(true)}
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+                }
+              }}
               className="text-xs font-black text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-300 px-3 py-1.5 rounded-xl cursor-pointer transition-colors"
             >
-              Change Mobile
+              {phoneNumber ? "Change Mobile" : "Verify Mobile"}
             </button>
           </div>
 
