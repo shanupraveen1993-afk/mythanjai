@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import Image from "next/image";
-import { Phone, MessageSquare, MapPin, Store, Sparkles, Calendar, Navigation, Share2, Bookmark, Lock, Flag, Camera, Clock, Video, Play } from "lucide-react";
+import { Phone, MessageSquare, MapPin, Store, Sparkles, Calendar, Navigation, Share2, Bookmark, Lock, Flag, Camera, Clock, Video, Play, Pause } from "lucide-react";
 import { ShopPost } from "@/types";
 import { useToast } from "@/context/ToastContext";
 import { useLanguage } from "@/context/LanguageContext";
@@ -54,6 +54,20 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
   const { toast } = useToast();
   const { t } = useLanguage();
   const [saved, setSaved] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(false);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const togglePlay = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (videoRef.current) {
+      if (isPlaying) {
+        videoRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+      }
+    }
+  };
 
   // Expired & Ends Today logic
   const { isExpired, isEndsToday } = React.useMemo(() => {
@@ -186,21 +200,30 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
             </div>
           </div>
         )}
-        {/* Full video background */}
+        {/* Full video background with lazy preload & click to play */}
         <video
+          ref={videoRef}
           src={videoSrc}
-          controls
+          poster={(post as any).cover_image_url || (post as any).cover_image || undefined}
           playsInline
-          preload="metadata"
-          className="absolute inset-0 w-full h-full object-cover z-0"
+          loop
+          preload="none"
+          onClick={togglePlay}
+          className="absolute inset-0 w-full h-full object-cover z-0 cursor-pointer"
         />
 
-        {/* Centered Play Button Overlay */}
-        <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
-          <div className="w-12 h-12 rounded-full bg-slate-950/70 text-amber-400 border border-amber-400/40 backdrop-blur-md flex items-center justify-center shadow-xl">
-            <Play className="w-6 h-6 fill-amber-400 ml-0.5" />
-          </div>
-        </div>
+        {/* Centered Play / Pause Button Overlay */}
+        {!isPlaying && (
+          <button
+            type="button"
+            onClick={togglePlay}
+            className="absolute inset-0 z-20 flex items-center justify-center bg-slate-950/20 hover:bg-slate-950/40 transition-all cursor-pointer"
+          >
+            <div className="w-14 h-14 rounded-full bg-slate-950/80 text-amber-400 border-2 border-amber-400/60 backdrop-blur-md flex items-center justify-center shadow-2xl hover:scale-110 transition-transform">
+              <Play className="w-7 h-7 fill-amber-400 ml-1" />
+            </div>
+          </button>
+        )}
 
         {/* Reel badge top right */}
         <div className="absolute top-2.5 left-2.5 z-20 flex items-center gap-1 bg-slate-950/70 backdrop-blur-md text-amber-400 text-xs font-black uppercase tracking-widest px-2 py-0.5 rounded-lg border border-amber-400/30">
