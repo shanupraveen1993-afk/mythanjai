@@ -80,7 +80,7 @@ function MainLayoutContent({
   const [selectedArea, setSelectedArea] = useState<TanjoreLocality | "All Areas">("All Areas");
   const [isSignInOpen, setIsSignInOpen] = useState(false);
 
-  // Startup Flow State: Splash Screen strictly for Capacitor Native App (disabled on website)
+  // Startup Flow State: Strictly for Capacitor Native Mobile App
   const [showSplash, setShowSplash] = useState(() => {
     if (typeof window === "undefined") return false;
     return Boolean((window as any).Capacitor?.isNativePlatform());
@@ -88,17 +88,25 @@ function MainLayoutContent({
   const [showWalkthrough, setShowWalkthrough] = useState(false);
 
   useEffect(() => {
-    // Dismiss native Capacitor Splash Screen on Android/iOS when React app mounts
-    import("@capacitor/splash-screen")
-      .then(({ SplashScreen }) => {
-        SplashScreen.hide().catch(() => {});
-      })
-      .catch(() => {});
-
     if (typeof window !== "undefined") {
       const isNative = Boolean((window as any).Capacitor?.isNativePlatform());
+
+      // Website (non-native) ALWAYS bypasses splash screen and walkthrough overlays completely
+      if (!isNative) {
+        setShowSplash(false);
+        setShowWalkthrough(false);
+        return;
+      }
+
+      // Native Capacitor APK startup handling
+      import("@capacitor/splash-screen")
+        .then(({ SplashScreen }) => {
+          SplashScreen.hide().catch(() => {});
+        })
+        .catch(() => {});
+
       const hasSeenWalkthrough = localStorage.getItem("namma_thanjai_has_seen_walkthrough_v3");
-      if (!isNative && !hasSeenWalkthrough) {
+      if (!hasSeenWalkthrough) {
         setShowWalkthrough(true);
       }
     }
@@ -107,9 +115,12 @@ function MainLayoutContent({
   const handleSplashComplete = () => {
     setShowSplash(false);
     if (typeof window !== "undefined") {
-      const hasSeenWalkthrough = localStorage.getItem("namma_thanjai_has_seen_walkthrough_v3");
-      if (!hasSeenWalkthrough) {
-        setShowWalkthrough(true);
+      const isNative = Boolean((window as any).Capacitor?.isNativePlatform());
+      if (isNative) {
+        const hasSeenWalkthrough = localStorage.getItem("namma_thanjai_has_seen_walkthrough_v3");
+        if (!hasSeenWalkthrough) {
+          setShowWalkthrough(true);
+        }
       }
     }
   };
