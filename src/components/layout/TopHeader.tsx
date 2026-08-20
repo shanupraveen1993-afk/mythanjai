@@ -103,7 +103,7 @@ export default function TopHeader({
   return (
     <header
       className="fixed top-0 left-0 right-0 z-50 bg-white/96 backdrop-blur-xl border-b border-slate-200/80 shadow-[0_1px_12px_rgba(0,0,0,0.06)] flex flex-col justify-end"
-      style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 40px)" }}
+      style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
     >
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-3 relative">
 
@@ -211,24 +211,20 @@ export default function TopHeader({
             </button>
           )}
 
-          {/* Profile / Sign In Button (Highlighted when active on /profile) */}
+          {/* Profile Button — Always directs to /profile page */}
           <button
             type="button"
             onClick={() => {
-              if (isAuthVerified) {
-                onTabChange?.("profile");
-                router.push("/profile");
-              } else {
-                onSignInClick?.();
-              }
+              onTabChange?.("profile");
+              router.push("/profile");
             }}
             className={`flex items-center justify-center w-9 h-9 rounded-full transition-all cursor-pointer border shrink-0 ${
               pathname === "/profile"
                 ? "bg-[#1d4ed8] text-white border-[#1d4ed8] shadow-sm"
                 : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
             }`}
-            title={isAuthVerified ? `Profile (${phoneDisplay})` : "Sign In / Profile"}
-            aria-label={isAuthVerified ? "View profile" : "Sign in or register"}
+            title="Profile & Account"
+            aria-label="View profile"
           >
             <User className={`w-4 h-4 ${pathname === "/profile" ? "text-white" : "text-slate-600"}`} />
           </button>
