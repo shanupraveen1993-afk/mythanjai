@@ -14,7 +14,7 @@ import {
   deleteDoc,
   onSnapshot,
 } from "firebase/firestore";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import {
   User,
   Phone,
@@ -51,21 +51,22 @@ export default function ProfileClientPage() {
   const { toast } = useToast();
   const { user, profile, loading: authLoading, updatePhone, updateDisplayName, signOutUser } = useAuth();
   const router = useRouter();
-  const searchParams = useSearchParams();
-
   // 2-Screen Architecture Navigation State
   const [activeView, setActiveView] = useState<"dashboard" | "listings" | "saved">("dashboard");
 
   useEffect(() => {
-    const tab = searchParams.get("tab");
-    if (tab === "listings") {
-      setActiveView("listings");
-    } else if (tab === "saved") {
-      setActiveView("saved");
-    } else {
-      setActiveView("dashboard");
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      const tab = params.get("tab");
+      if (tab === "listings" || tab === "my_posts") {
+        setActiveView("listings");
+      } else if (tab === "saved" || tab === "bookmarks") {
+        setActiveView("saved");
+      } else {
+        setActiveView("dashboard");
+      }
     }
-  }, [searchParams]);
+  }, []);
 
   const [phoneNumber, setPhoneNumber] = useState("");
   const [phoneUpdating, setPhoneUpdating] = useState(false);

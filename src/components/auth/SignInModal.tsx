@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { X, Phone, MessageSquare, Zap, Loader2, CheckCircle } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
-import { useSearchParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useToast } from "@/context/ToastContext";
 
 interface SignInModalProps {
@@ -15,7 +15,6 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
   const { toast } = useToast();
   const { profile, updatePhone } = useAuth();
   const router = useRouter();
-  const searchParams = useSearchParams();
   
   const [phoneNumber, setPhoneNumber] = useState("");
   const [otpCode, setOtpCode] = useState("");
