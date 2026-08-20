@@ -286,7 +286,7 @@ function MainLayoutContent({
       )}
 
       {/* Persistent Opinion Feedback Manager & Native Permissions Modal */}
-      <NativePermissionsModal />
+      <NativePermissionsModal isOpen={showPermissionsModal} onComplete={handlePermissionsComplete} />
       <PendingFeedbackPrompt />
 
       {/* Sign-In Modal */}

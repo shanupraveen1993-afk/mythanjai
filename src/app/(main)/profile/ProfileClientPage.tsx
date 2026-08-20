@@ -243,17 +243,20 @@ export default function ProfileClientPage() {
     fetchMyPosts();
   }, [user, profile?.phone]);
 
-  // Load saved posts from localStorage on mount
+  // Load saved posts from localStorage on mount & when activeView changes
   useEffect(() => {
     if (typeof window !== "undefined") {
       try {
-        const saved = JSON.parse(localStorage.getItem("namma_thanjai_saved_posts") || "[]");
-        setSavedPosts(saved);
+        const saved1 = JSON.parse(localStorage.getItem("namma_thanjai_saved_posts") || "[]");
+        const saved2 = JSON.parse(localStorage.getItem("my_thanjai_saved_posts") || "[]");
+        const combined = [...saved1, ...saved2];
+        const uniqueSaved = Array.from(new Map(combined.map((item: any) => [item.id, item])).values());
+        setSavedPosts(uniqueSaved);
       } catch (e) {
         setSavedPosts([]);
       }
     }
-  }, []);
+  }, [activeView]);
 
   // Sync profile details to local state
   useEffect(() => {
