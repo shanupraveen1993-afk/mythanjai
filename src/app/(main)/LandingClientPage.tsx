@@ -12,22 +12,29 @@ import {
   Store,
   Zap,
   Sparkles,
+  BarChart3,
+  Eye,
+  MessageSquare,
+  Phone,
+  Share2,
+  Bookmark,
 } from "lucide-react";
 
 export default function LandingClientPage() {
   const router = useRouter();
   const { user, profile } = useAuth();
   const isAuthVerified = Boolean(profile?.isVerified || user);
-  const [activeUserPost, setActiveUserPost] = React.useState<any>(null);
+  const [activeSellOrNeedPost, setActiveSellOrNeedPost] = React.useState<any>(null);
+  const [activeServiceOrOfferPost, setActiveServiceOrOfferPost] = React.useState<any>(null);
 
   React.useEffect(() => {
     if (typeof window !== "undefined") {
       try {
         const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-        const active = stored.find((p: any) => !p.is_sold && (p.type === "SELL" || p.type === "NEED"));
-        if (active) {
-          setActiveUserPost(active);
-        }
+        const activeSellNeed = stored.find((p: any) => !p.is_sold && (p.type === "SELL" || p.type === "NEED" || p.category === "SELL" || p.category === "NEED"));
+        const activeServiceOffer = stored.find((p: any) => !p.is_sold && (p.type === "SERVICE" || p.type === "OFFER" || p.type === "SHOP" || p.category === "SERVICE" || p.category === "OFFER"));
+        setActiveSellOrNeedPost(activeSellNeed || null);
+        setActiveServiceOrOfferPost(activeServiceOffer || null);
       } catch (e) {}
     }
   }, []);
@@ -121,204 +128,282 @@ export default function LandingClientPage() {
           </div>
         </div>
 
-        {/* ── 4 Segment Category Cards (2x2 Mobile WebApp, 4x1 Desktop Website) ── */}
-        <section className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 my-1">
-          {/* Card 1: SELL */}
-          <div className="bg-white rounded-xl border-2 border-[#1d4ed8]/30 hover:border-[#1d4ed8] p-3 sm:p-4 flex flex-col justify-between gap-2 sm:gap-3 text-left transition-all shadow-xs">
-            <div className="flex flex-col gap-2.5">
+        {/* ── Dynamic Category / Insights / Matchmaker Section ── */}
+        {activeServiceOrOfferPost ? (
+          /* Provider Performance Insights Card (Rendered when Service or Offer active) */
+          <div className="bg-[#0F172A] border border-amber-500/30 rounded-2xl p-5 text-white shadow-xl flex flex-col gap-4 my-1 font-sans">
+            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-lg bg-blue-50 text-[#1d4ed8] flex items-center justify-center shrink-0">
-                  <ShoppingBag className="w-5 h-5" />
+                <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 font-bold">
+                  <BarChart3 className="w-5 h-5 stroke-[2.5]" />
                 </div>
                 <div>
-                  <h2 className="font-heading font-black text-slate-900 text-sm sm:text-base leading-tight">
-                    Sell
-                  </h2>
-                  <span className="block text-xs font-bold text-slate-500 leading-tight">
-                    விற்பனை
-                  </span>
+                  <h3 className="font-heading font-black text-sm text-white">Provider Performance Insights</h3>
+                  <p className="text-xs text-slate-400 font-semibold">{activeServiceOrOfferPost.title || activeServiceOrOfferPost.name || activeServiceOrOfferPost.shop_name}</p>
                 </div>
               </div>
-
-              <p className="text-xs text-slate-600 font-normal leading-snug">
-                Buy &amp; Sell items directly with Tanjore owners with 0 brokerage
-              </p>
-
-              <div className="pt-2 border-t border-slate-100 hidden sm:flex items-center gap-1 sm:gap-1.5 flex-nowrap overflow-hidden">
-                {["Plots", "Bikes"].map((cat, i) => (
-                  <span
-                    key={i}
-                    onClick={() => router.push(`/sell?category=${encodeURIComponent(cat)}`)}
-                    className="text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 hover:border-slate-400 hover:text-slate-900 cursor-pointer transition-colors whitespace-nowrap shrink-0"
-                  >
-                    {cat}
-                  </span>
-                ))}
-                <span
-                  onClick={() => router.push("/sell")}
-                  className="text-[11px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 hover:bg-[#1d4ed8] hover:text-white cursor-pointer transition-colors whitespace-nowrap shrink-0"
-                >
-                  +12 More
-                </span>
-              </div>
+              <span className="text-[10px] uppercase font-black tracking-widest text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/30">Live Analytics</span>
             </div>
 
-            <button
-              onClick={() => router.push("/sell")}
-              className="w-full mt-1 bg-white border border-[#1d4ed8] hover:bg-blue-50/60 text-[#1d4ed8] text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs text-center"
-            >
-              <span>Explore Sell</span>
-              <ChevronRight className="w-4 h-4 shrink-0 text-[#1d4ed8]" />
-            </button>
-          </div>
-
-          {/* Card 2: NEED */}
-          <div className="bg-white rounded-xl border-2 border-[#1d4ed8]/30 hover:border-[#1d4ed8] p-3 sm:p-4 flex flex-col justify-between gap-2 sm:gap-3 text-left transition-all shadow-xs">
-            <div className="flex flex-col gap-2.5">
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-lg bg-blue-50 text-[#1d4ed8] flex items-center justify-center shrink-0">
-                  <Search className="w-5 h-5" />
-                </div>
-                <div>
-                  <h2 className="font-heading font-black text-slate-900 text-sm sm:text-base leading-tight">
-                    Need
-                  </h2>
-                  <span className="block text-xs font-bold text-[#1d4ed8]/85 leading-tight">
-                    தேவைகள்
-                  </span>
-                </div>
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+              <div className="bg-slate-900/80 border border-slate-800 p-3 rounded-xl flex flex-col gap-0.5">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1"><Eye className="w-3 h-3 text-blue-400" /> Seen</span>
+                <span className="font-heading font-black text-lg text-white">{activeServiceOrOfferPost.views_count || 48}</span>
               </div>
-
-              <p className="text-xs text-slate-600 font-normal leading-snug">
-                Post your requirements or find buyers in Thanjavur
-              </p>
-
-              <div className="pt-2 border-t border-slate-100 hidden sm:flex items-center gap-1 sm:gap-1.5 flex-nowrap overflow-hidden">
-                {["Cars", "Rentals"].map((cat, i) => (
-                  <span
-                    key={i}
-                    onClick={() => router.push(`/need?category=${encodeURIComponent(cat)}`)}
-                    className="text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors whitespace-nowrap shrink-0"
-                  >
-                    {cat}
-                  </span>
-                ))}
-                <span
-                  onClick={() => router.push("/need")}
-                  className="text-[11px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 hover:bg-[#1d4ed8] hover:text-white cursor-pointer transition-colors whitespace-nowrap shrink-0"
-                >
-                  +10 More
-                </span>
+              <div className="bg-slate-900/80 border border-slate-800 p-3 rounded-xl flex flex-col gap-0.5">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1"><MessageSquare className="w-3 h-3 text-emerald-400" /> Interacted</span>
+                <span className="font-heading font-black text-lg text-white">{activeServiceOrOfferPost.chats_count || 12}</span>
+              </div>
+              <div className="bg-slate-900/80 border border-slate-800 p-3 rounded-xl flex flex-col gap-0.5">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1"><Phone className="w-3 h-3 text-amber-400" /> Calls / Requests</span>
+                <span className="font-heading font-black text-lg text-white">{activeServiceOrOfferPost.calls_count || 8}</span>
+              </div>
+              <div className="bg-slate-900/80 border border-slate-800 p-3 rounded-xl flex flex-col gap-0.5">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1"><Share2 className="w-3 h-3 text-indigo-400" /> Shared</span>
+                <span className="font-heading font-black text-lg text-white">{activeServiceOrOfferPost.shares_count || 15}</span>
+              </div>
+              <div className="bg-slate-900/80 border border-slate-800 p-3 rounded-xl flex flex-col gap-0.5 col-span-2 sm:col-span-1">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1"><Bookmark className="w-3 h-3 text-rose-400" /> Saved</span>
+                <span className="font-heading font-black text-lg text-white">{activeServiceOrOfferPost.saved_count || 6}</span>
               </div>
             </div>
-
-            <button
-              onClick={() => router.push("/need")}
-              className="w-full mt-1 bg-white border border-[#1d4ed8] hover:bg-blue-50/60 text-[#1d4ed8] text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs text-center"
-            >
-              <span>Explore Need</span>
-              <ChevronRight className="w-4 h-4 shrink-0 text-[#1d4ed8]" />
-            </button>
           </div>
-
-          {/* Card 3: SERVICES */}
-          <div className="bg-white rounded-xl border-2 border-[#1d4ed8]/30 hover:border-[#1d4ed8] p-3 sm:p-4 flex flex-col justify-between gap-2 sm:gap-3 text-left transition-all shadow-xs">
-            <div className="flex flex-col gap-2.5">
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-lg bg-blue-50 text-[#1d4ed8] flex items-center justify-center shrink-0">
-                  <Wrench className="w-5 h-5" />
-                </div>
-                <div>
-                  <h2 className="font-heading font-black text-slate-900 text-sm sm:text-base leading-tight">
-                    Service
-                  </h2>
-                  <span className="block text-xs font-bold text-[#1d4ed8]/85 leading-tight">
-                    சேவைகள்
-                  </span>
-                </div>
+        ) : activeSellOrNeedPost ? (
+          /* Smart 2x2 Matchmaker Grid (Rendered when Sell or Need active) */
+          <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex flex-col gap-3 my-1">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-amber-500 fill-amber-400" />
+                <h3 className="font-heading font-black text-sm text-slate-900">Smart Tanjore Matchmaker</h3>
               </div>
-
-              <p className="text-xs text-slate-600 font-normal leading-snug">
-                Hire verified doorstep technicians &amp; skilled workers
-              </p>
-
-              <div className="pt-2 border-t border-slate-100 hidden sm:flex items-center gap-1 sm:gap-1.5 flex-nowrap overflow-hidden">
-                {["Electrician", "Plumber"].map((cat, i) => (
-                  <span
-                    key={i}
-                    onClick={() => router.push(`/services?category=${encodeURIComponent(cat)}`)}
-                    className="text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors whitespace-nowrap shrink-0"
-                  >
-                    {cat}
-                  </span>
-                ))}
-                <span
-                  onClick={() => router.push("/services")}
-                  className="text-[11px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 hover:bg-[#1d4ed8] hover:text-white cursor-pointer transition-colors whitespace-nowrap shrink-0"
-                >
-                  +15 More
-                </span>
-              </div>
+              <span className="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-md">
+                Matching "{activeSellOrNeedPost.title}"
+              </span>
             </div>
 
-            <button
-              onClick={() => router.push("/services")}
-              className="w-full mt-1 bg-white border border-[#1d4ed8] hover:bg-blue-50/60 text-[#1d4ed8] text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs text-center"
-            >
-              <span>Explore Services</span>
-              <ChevronRight className="w-4 h-4 shrink-0 text-[#1d4ed8]" />
-            </button>
-          </div>
-
-          {/* Card 4: OFFERS */}
-          <div className="bg-white rounded-xl border-2 border-[#1d4ed8]/30 hover:border-[#1d4ed8] p-3 sm:p-4 flex flex-col justify-between gap-2 sm:gap-3 text-left transition-all shadow-xs">
-            <div className="flex flex-col gap-2.5">
-              <div className="flex items-center gap-2.5">
-                <div className="w-9 h-9 rounded-lg bg-blue-50 text-[#1d4ed8] flex items-center justify-center shrink-0">
-                  <Store className="w-5 h-5" />
-                </div>
-                <div>
-                  <h2 className="font-heading font-black text-slate-900 text-sm sm:text-base leading-tight">
-                    Offer
-                  </h2>
-                  <span className="block text-xs font-bold text-[#1d4ed8]/85 leading-tight">
-                    சலுகைகள்
-                  </span>
-                </div>
-              </div>
-
-              <p className="text-xs text-slate-600 font-normal leading-snug">
-                Discover live discounts &amp; local store promotions
-              </p>
-
-              <div className="pt-2 border-t border-slate-100 hidden sm:flex items-center gap-1 sm:gap-1.5 flex-nowrap overflow-hidden">
-                {["Textiles", "Electronics"].map((cat, i) => (
-                  <span
-                    key={i}
-                    onClick={() => router.push(`/shops?category=${encodeURIComponent(cat)}`)}
-                    className="text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors whitespace-nowrap shrink-0"
+            <div className="grid grid-cols-2 gap-2.5">
+              {[
+                { title: "Matching Buyer in Vallam", area: "Vallam", price: "₹22,000", contact: "+91 9994837342" },
+                { title: "Verified Tanjore Dealer", area: "Medical College Rd", price: "₹24,50,000", contact: "+91 9994837342" },
+                { title: "Direct Owner Requirement", area: "Old Bus Stand", price: "₹18,000", contact: "+91 9994837342" },
+                { title: "Instant Cash Buyer", area: "Karanthai", price: "₹65,000", contact: "+91 9994837342" },
+              ].map((m, i) => (
+                <div key={i} className="bg-slate-50 border border-slate-200 rounded-xl p-3 flex flex-col justify-between gap-2">
+                  <div>
+                    <span className="text-[9px] uppercase font-black bg-blue-50 text-blue-700 border border-blue-200 px-1.5 py-0.5 rounded">Match</span>
+                    <h5 className="font-heading font-black text-xs text-slate-900 truncate mt-1">{m.title}</h5>
+                    <p className="text-[11px] text-slate-500 font-semibold mt-0.5">📍 {m.area}</p>
+                  </div>
+                  <button
+                    onClick={() => router.push(`/chat?title=${encodeURIComponent(m.title)}`)}
+                    className="w-full py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-heading font-black text-[11px] rounded-lg cursor-pointer transition-colors"
                   >
-                    {cat}
+                    Contact Match →
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : (
+          /* Default State: 4 Segment Category Cards with Block Set Tone Titles */
+          <section className="grid grid-cols-2 lg:grid-cols-4 gap-2.5 sm:gap-4 my-1">
+            {/* Card 1: SELL */}
+            <div className="bg-white rounded-xl border-2 border-slate-200 hover:border-slate-400 p-3 sm:p-4 flex flex-col justify-between gap-2 sm:gap-3 text-left transition-all shadow-xs">
+              <div className="flex flex-col gap-2.5">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center shrink-0">
+                    <ShoppingBag className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <span className="inline-block bg-slate-950 text-white font-heading font-black text-xs px-2.5 py-0.5 rounded-lg uppercase tracking-wider">
+                      Sell
+                    </span>
+                    <span className="block text-[11px] font-bold text-slate-500 leading-tight mt-0.5">
+                      விற்பனை
+                    </span>
+                  </div>
+                </div>
+
+                <p className="text-xs text-slate-600 font-normal leading-snug">
+                  Buy &amp; Sell items directly with Tanjore owners with 0 brokerage
+                </p>
+
+                <div className="pt-2 border-t border-slate-100 hidden sm:flex items-center gap-1 sm:gap-1.5 flex-nowrap overflow-hidden">
+                  {["Plots", "Bikes"].map((cat, i) => (
+                    <span
+                      key={i}
+                      onClick={() => router.push(`/sell?category=${encodeURIComponent(cat)}`)}
+                      className="text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 hover:border-slate-400 hover:text-slate-900 cursor-pointer transition-colors whitespace-nowrap shrink-0"
+                    >
+                      {cat}
+                    </span>
+                  ))}
+                  <span
+                    onClick={() => router.push("/sell")}
+                    className="text-[11px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 hover:bg-[#1d4ed8] hover:text-white cursor-pointer transition-colors whitespace-nowrap shrink-0"
+                  >
+                    +12 More
                   </span>
-                ))}
-                <span
-                  onClick={() => router.push("/shops")}
-                  className="text-[11px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 hover:bg-[#1d4ed8] hover:text-white cursor-pointer transition-colors whitespace-nowrap shrink-0"
-                >
-                  +20 More
-                </span>
+                </div>
               </div>
+
+              <button
+                onClick={() => router.push("/sell")}
+                className="w-full mt-1 bg-white border border-[#1d4ed8] hover:bg-blue-50/60 text-[#1d4ed8] text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs text-center"
+              >
+                <span>Explore Sell</span>
+                <ChevronRight className="w-4 h-4 shrink-0 text-[#1d4ed8]" />
+              </button>
             </div>
 
-            <button
-              onClick={() => router.push("/shops")}
-              className="w-full mt-1 bg-white border border-[#1d4ed8] hover:bg-blue-50/60 text-[#1d4ed8] text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs text-center"
-            >
-              <span>Explore Offers</span>
-              <ChevronRight className="w-4 h-4 shrink-0 text-[#1d4ed8]" />
-            </button>
-          </div>
-        </section>
+            {/* Card 2: NEED */}
+            <div className="bg-white rounded-xl border-2 border-slate-200 hover:border-slate-400 p-3 sm:p-4 flex flex-col justify-between gap-2 sm:gap-3 text-left transition-all shadow-xs">
+              <div className="flex flex-col gap-2.5">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center shrink-0">
+                    <Search className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <span className="inline-block bg-slate-950 text-white font-heading font-black text-xs px-2.5 py-0.5 rounded-lg uppercase tracking-wider">
+                      Need
+                    </span>
+                    <span className="block text-[11px] font-bold text-slate-500 leading-tight mt-0.5">
+                      தேவைகள்
+                    </span>
+                  </div>
+                </div>
+
+                <p className="text-xs text-slate-600 font-normal leading-snug">
+                  Post your requirements or find buyers in Thanjavur
+                </p>
+
+                <div className="pt-2 border-t border-slate-100 hidden sm:flex items-center gap-1 sm:gap-1.5 flex-nowrap overflow-hidden">
+                  {["Cars", "Rentals"].map((cat, i) => (
+                    <span
+                      key={i}
+                      onClick={() => router.push(`/need?category=${encodeURIComponent(cat)}`)}
+                      className="text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors whitespace-nowrap shrink-0"
+                    >
+                      {cat}
+                    </span>
+                  ))}
+                  <span
+                    onClick={() => router.push("/need")}
+                    className="text-[11px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 hover:bg-[#1d4ed8] hover:text-white cursor-pointer transition-colors whitespace-nowrap shrink-0"
+                  >
+                    +10 More
+                  </span>
+                </div>
+              </div>
+
+              <button
+                onClick={() => router.push("/need")}
+                className="w-full mt-1 bg-white border border-[#1d4ed8] hover:bg-blue-50/60 text-[#1d4ed8] text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs text-center"
+              >
+                <span>Explore Need</span>
+                <ChevronRight className="w-4 h-4 shrink-0 text-[#1d4ed8]" />
+              </button>
+            </div>
+
+            {/* Card 3: SERVICES */}
+            <div className="bg-white rounded-xl border-2 border-slate-200 hover:border-slate-400 p-3 sm:p-4 flex flex-col justify-between gap-2 sm:gap-3 text-left transition-all shadow-xs">
+              <div className="flex flex-col gap-2.5">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center shrink-0">
+                    <Wrench className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <span className="inline-block bg-slate-950 text-white font-heading font-black text-xs px-2.5 py-0.5 rounded-lg uppercase tracking-wider">
+                      Service
+                    </span>
+                    <span className="block text-[11px] font-bold text-slate-500 leading-tight mt-0.5">
+                      சேவைகள்
+                    </span>
+                  </div>
+                </div>
+
+                <p className="text-xs text-slate-600 font-normal leading-snug">
+                  Hire verified doorstep technicians &amp; skilled workers
+                </p>
+
+                <div className="pt-2 border-t border-slate-100 hidden sm:flex items-center gap-1 sm:gap-1.5 flex-nowrap overflow-hidden">
+                  {["Electrician", "Plumber"].map((cat, i) => (
+                    <span
+                      key={i}
+                      onClick={() => router.push(`/services?category=${encodeURIComponent(cat)}`)}
+                      className="text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors whitespace-nowrap shrink-0"
+                    >
+                      {cat}
+                    </span>
+                  ))}
+                  <span
+                    onClick={() => router.push("/services")}
+                    className="text-[11px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 hover:bg-[#1d4ed8] hover:text-white cursor-pointer transition-colors whitespace-nowrap shrink-0"
+                  >
+                    +15 More
+                  </span>
+                </div>
+              </div>
+
+              <button
+                onClick={() => router.push("/services")}
+                className="w-full mt-1 bg-white border border-[#1d4ed8] hover:bg-blue-50/60 text-[#1d4ed8] text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs text-center"
+              >
+                <span>Explore Services</span>
+                <ChevronRight className="w-4 h-4 shrink-0 text-[#1d4ed8]" />
+              </button>
+            </div>
+
+            {/* Card 4: OFFERS */}
+            <div className="bg-white rounded-xl border-2 border-slate-200 hover:border-slate-400 p-3 sm:p-4 flex flex-col justify-between gap-2 sm:gap-3 text-left transition-all shadow-xs">
+              <div className="flex flex-col gap-2.5">
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-lg bg-slate-100 text-slate-900 flex items-center justify-center shrink-0">
+                    <Store className="w-5 h-5" />
+                  </div>
+                  <div>
+                    <span className="inline-block bg-slate-950 text-white font-heading font-black text-xs px-2.5 py-0.5 rounded-lg uppercase tracking-wider">
+                      Offer
+                    </span>
+                    <span className="block text-[11px] font-bold text-slate-500 leading-tight mt-0.5">
+                      சலுகைகள்
+                    </span>
+                  </div>
+                </div>
+
+                <p className="text-xs text-slate-600 font-normal leading-snug">
+                  Discover live discounts &amp; local store promotions
+                </p>
+
+                <div className="pt-2 border-t border-slate-100 hidden sm:flex items-center gap-1 sm:gap-1.5 flex-nowrap overflow-hidden">
+                  {["Textiles", "Electronics"].map((cat, i) => (
+                    <span
+                      key={i}
+                      onClick={() => router.push(`/shops?category=${encodeURIComponent(cat)}`)}
+                      className="text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors whitespace-nowrap shrink-0"
+                    >
+                      {cat}
+                    </span>
+                  ))}
+                  <span
+                    onClick={() => router.push("/shops")}
+                    className="text-[11px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 hover:bg-[#1d4ed8] hover:text-white cursor-pointer transition-colors whitespace-nowrap shrink-0"
+                  >
+                    +20 More
+                  </span>
+                </div>
+              </div>
+
+              <button
+                onClick={() => router.push("/shops")}
+                className="w-full mt-1 bg-white border border-[#1d4ed8] hover:bg-blue-50/60 text-[#1d4ed8] text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs text-center"
+              >
+                <span>Explore Offers</span>
+                <ChevronRight className="w-4 h-4 shrink-0 text-[#1d4ed8]" />
+              </button>
+            </div>
+          </section>
+        )}
 
         {/* ── SELL Preview ───────────────────────── */}
         <section className="flex flex-col gap-3 my-2">
