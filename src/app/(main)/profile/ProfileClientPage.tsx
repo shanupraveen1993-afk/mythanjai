@@ -466,16 +466,16 @@ export default function ProfileClientPage() {
                 </div>
               </div>
 
-              {/* Free Plan Pill with ₹100 Strikethrough */}
-              <div className="flex items-center justify-between text-xs bg-slate-50 border border-slate-200/80 rounded-xl px-3.5 py-2.5">
-                <span className="font-bold text-slate-700 flex items-center gap-1.5">
-                  <Sparkles className="w-4 h-4 text-amber-500 fill-amber-400 shrink-0" />
-                  Free Plan — 30 day listings
+              {/* Highlighted Free Plan Card */}
+              <div className="bg-amber-400 text-slate-950 font-heading font-black text-sm p-3.5 rounded-2xl flex items-center justify-between shadow-xs">
+                <span className="flex items-center gap-1.5">
+                  <Sparkles className="w-4.5 h-4.5 text-slate-950 fill-slate-950 shrink-0" />
+                  <span>Free Plan</span>
                 </span>
-                <span className="font-black text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-lg flex items-center gap-1">
-                  <span className="line-through text-slate-400 font-medium">₹100</span>
-                  <span>₹0</span>
-                </span>
+                <div className="flex items-center gap-1.5 bg-slate-950 text-amber-400 px-3 py-1 rounded-xl text-xs">
+                  <span className="line-through opacity-70 text-[11px] text-slate-300 font-medium">₹100</span>
+                  <span className="font-black text-sm text-amber-300">₹0</span>
+                </div>
               </div>
             </div>
           </div>
@@ -502,7 +502,7 @@ export default function ProfileClientPage() {
           {/* Settings & Links Card List */}
           <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden flex flex-col divide-y divide-slate-100">
             
-            {/* My Listings Row */}
+            {/* My Listings Row — Unboxed Number */}
             <div
               onClick={() => setActiveView("listings")}
               className="flex items-center justify-between p-4 hover:bg-slate-50 cursor-pointer transition-colors group"
@@ -514,14 +514,14 @@ export default function ProfileClientPage() {
                 <span className="font-heading font-black text-sm text-slate-900">My Listings</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="bg-amber-400 text-slate-950 font-black text-xs px-2.5 py-0.5 rounded-lg">
+                <span className="text-slate-500 font-bold text-sm">
                   {myPosts.length}
                 </span>
                 <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-slate-700 transition-colors" />
               </div>
             </div>
 
-            {/* Saved Items Row */}
+            {/* Saved Items Row — Unboxed Number & Removed Tamil text */}
             <div
               onClick={() => setActiveView("saved")}
               className="flex items-center justify-between p-4 hover:bg-slate-50 cursor-pointer transition-colors group"
@@ -530,10 +530,10 @@ export default function ProfileClientPage() {
                 <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
                   <Bookmark className="w-4 h-4 fill-amber-600" />
                 </div>
-                <span className="font-heading font-black text-sm text-slate-900">Saved Items (சேமிக்கப்பட்டவை)</span>
+                <span className="font-heading font-black text-sm text-slate-900">Saved Items</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="bg-slate-900 text-white font-black text-xs px-2.5 py-0.5 rounded-lg">
+                <span className="text-slate-500 font-bold text-sm">
                   {savedPosts.length}
                 </span>
                 <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-slate-700 transition-colors" />
@@ -553,8 +553,11 @@ export default function ProfileClientPage() {
               </Link>
             )}
 
-            {/* Sign Out Row */}
-            <div
+          </div>
+
+          {/* Relocated Sign Out at Bottom of Screen (unhighlighted text button) */}
+          <div className="w-full flex justify-center pt-6 pb-12">
+            <button
               onClick={async () => {
                 await signOutUser();
                 if (typeof window !== "undefined") {
@@ -565,17 +568,10 @@ export default function ProfileClientPage() {
                 toast.success("Logged out successfully.");
                 router.push("/");
               }}
-              className="flex items-center justify-between p-4 hover:bg-red-50 cursor-pointer transition-colors group"
+              className="text-slate-400 font-medium hover:text-red-500 text-xs transition-colors cursor-pointer"
             >
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-red-50 text-red-500 flex items-center justify-center shrink-0">
-                  <LogOut className="w-4 h-4" />
-                </div>
-                <span className="font-heading font-black text-sm text-slate-900 group-hover:text-red-600 transition-colors">Sign Out</span>
-              </div>
-              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-red-400 transition-colors" />
-            </div>
-
+              Sign Out
+            </button>
           </div>
         </div>
       )}

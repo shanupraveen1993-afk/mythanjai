@@ -474,8 +474,12 @@ export default function ChatClientPage() {
             <div ref={chatBottomRef} />
           </div>
 
-          {/* WhatsApp Message Input Form */}
-          <form onSubmit={handleSendMessage} className="p-3 bg-slate-100 border-t border-slate-200 flex items-center gap-2">
+          {/* WhatsApp Message Input Form — Elevated above mobile bottom gesture bar */}
+          <form
+            onSubmit={handleSendMessage}
+            className="p-3 sm:p-4 bg-slate-100 border-t border-slate-200 flex items-center gap-2 mb-2 sm:mb-3"
+            style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 24px)" }}
+          >
             <input
               type="text"
               value={inputText}
