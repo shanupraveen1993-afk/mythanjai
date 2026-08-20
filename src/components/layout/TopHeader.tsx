@@ -30,9 +30,17 @@ export default function TopHeader({
 }: TopHeaderProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const searchParams = useSearchParams();
   const { user, profile } = useAuth();
   const { lang, toggleLanguage, t } = useLanguage();
+
+  const [profileTab, setProfileTab] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      setProfileTab(params.get("tab") || params.get("view"));
+    }
+  }, [pathname]);
 
   // Web App Back Button Navigation Handler
   useBackNavigation();
@@ -137,7 +145,7 @@ export default function TopHeader({
         {pathname.includes("/profile") || pathname.includes("/post") || pathname.includes("/chat") || pathname.includes("/admin") ? (
           <div className="absolute left-1/2 -translate-x-1/2 font-heading font-black text-sm sm:text-base text-slate-900 truncate max-w-[180px] sm:max-w-xs text-center z-10">
             {pathname.includes("/profile")
-              ? (searchParams.get("tab") === "listings" ? "My Listings" : searchParams.get("tab") === "saved" ? "Saved Items" : "My Profile")
+              ? (profileTab === "listings" ? "My Listings" : profileTab === "saved" ? "Saved Items" : "My Profile")
               : pathname.includes("/post") ? "Post a Free Ad"
               : pathname.includes("/chat") ? "Direct Messages"
               : pathname.includes("/admin") ? "Admin Dashboard"

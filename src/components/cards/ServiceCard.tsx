@@ -284,22 +284,20 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
         </div>
       </div>
 
-      {/* Footer Action Row: Plain Text Posted Month+Year (Left) + Distinct CTA Buttons (Right) */}
-      <div className="pt-2.5 flex items-center justify-between gap-3 mt-auto w-full border-t border-slate-100">
-        {/* 1. Plain Text Month + Year (e.g. Aug 2026, no box) */}
-        <span className="text-[11px] font-medium text-slate-400 shrink-0 select-none">
+      {/* Footer Action Row: Plain Text Date Ago (Left) + 2 Fixed 128px CTA Buttons (Right) */}
+      <div className="pt-3 flex items-center justify-between gap-4 sm:gap-6 mt-auto w-full border-t border-slate-100">
+        <span className="text-xs font-semibold text-slate-600 shrink-0 select-none">
           {(() => {
             try {
-              const d = new Date((post.created_at as any)?.seconds ? (post.created_at as any).seconds * 1000 : post.created_at || Date.now());
-              return d.toLocaleString("default", { month: "short", year: "numeric" });
+              return formatRelativeTime(post.created_at || new Date().toISOString());
             } catch {
               return "Aug 2026";
             }
           })()}
         </span>
 
-        {/* 2. Secondary CTA & 3. Primary CTA Buttons */}
-        <div className="flex items-center gap-2 flex-1 justify-end min-w-0">
+        {/* 2. Secondary CTA & 3. Primary CTA Buttons (Exact w-[128px] each) */}
+        <div className="flex items-center gap-2 shrink-0 justify-end">
           <button
             type="button"
             onClick={(e) => {
@@ -318,7 +316,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
               }
               toast.success(`Call Back Requested! ${post.name} has been notified to call you.`);
             }}
-            className="flex-1 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
+            className="w-[128px] shrink-0 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
           >
             <Phone className="w-4 h-4 text-[#0F172A] shrink-0 stroke-[2.5]" />
             <span>Call Back</span>
@@ -327,7 +325,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
           <button
             type="button"
             onClick={(e) => handleOpenPreContactModal(e, "call")}
-            className="flex-1 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
+            className="w-[128px] shrink-0 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
           >
             <Phone className="w-4 h-4 text-white shrink-0" />
             <span>Call</span>

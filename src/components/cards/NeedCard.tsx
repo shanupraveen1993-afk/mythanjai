@@ -171,28 +171,28 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
                 </span>
               )}
             </div>
-            <div className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight shrink-0">
+            <div className="font-heading font-black text-xl sm:text-2xl text-slate-900 tracking-tight shrink-0">
               {displayPriceText}
             </div>
           </div>
 
-          {/* Title: 2-3 Lines max in clean font */}
-          <h3 className="font-sans font-extrabold text-sm text-slate-900 line-clamp-2 leading-snug">
+          {/* Title: Slightly lower opacity/contrast than price tag */}
+          <h3 className="font-sans font-extrabold text-sm sm:text-base text-slate-700 line-clamp-2 leading-snug">
             {post.title}
           </h3>
         </div>
 
-        {/* ── MIDDLE SECTION: Fixed Height Description Box ── */}
+        {/* ── MIDDLE SECTION: Description Box ── */}
         <div className="min-h-[4.25rem] bg-slate-50/80 border border-slate-200/60 p-2.5 rounded-xl flex items-center">
-          <p className="text-xs text-slate-700 font-normal leading-relaxed line-clamp-3">
+          <p className="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed line-clamp-3">
             {post.description || "No specific requirement details provided."}
           </p>
         </div>
 
         {/* ── ROW 3: Preferred Locations on Left + 3 Icon Buttons on Right ── */}
-        <div className="flex items-center justify-between text-xs text-slate-600 border-t border-b border-slate-100 py-2 my-0.5 gap-2">
+        <div className="flex items-center justify-between text-xs border-t border-b border-slate-100 py-2 my-0.5 gap-2">
           {/* Preferred Locations Clean Text */}
-          <div className="flex items-center gap-1 text-[11px] text-slate-600 font-semibold truncate flex-1">
+          <div className="flex items-center gap-1 text-xs text-slate-600 font-semibold truncate flex-1">
             <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
             <span className="truncate">{locationList.join(" • ")}</span>
           </div>
@@ -236,19 +236,19 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
         </div>
       </div>
 
-      {/* Footer Action Row: Plain Text Date Ago (Left) + Distinct CTA Buttons (Right) */}
-      <div className="pt-2.5 flex items-center justify-between gap-3 mt-auto w-full border-t border-slate-100">
-        {/* 1. Plain Text Relative Date (OLX style, no box/border) */}
-        <span className="text-[11px] font-medium text-slate-400 shrink-0 select-none">
+      {/* Footer Action Row: Plain Text Date Ago (Left) + 2 Fixed 128px CTA Buttons (Right) */}
+      <div className="pt-3 flex items-center justify-between gap-4 sm:gap-6 mt-auto w-full border-t border-slate-100">
+        {/* 1. Plain Text Relative Date */}
+        <span className="text-xs font-semibold text-slate-600 shrink-0 select-none">
           {formatRelativeTime(post.created_at)}
         </span>
 
-        {/* 2. Secondary CTA & 3. Primary CTA Buttons */}
-        <div className="flex items-center gap-2 flex-1 justify-end min-w-0">
+        {/* 2. Secondary CTA & 3. Primary CTA Buttons (Exact w-[128px] each) */}
+        <div className="flex items-center gap-2 shrink-0 justify-end">
           {isOwnPost ? (
             <Link
               href="/profile?tab=my_posts"
-              className="flex-1 max-w-[140px] rounded-xl bg-slate-100 border border-slate-200 text-slate-800 font-heading font-black text-xs sm:text-sm py-2.5 px-3 flex items-center justify-center gap-1.5 min-h-[44px] cursor-pointer"
+              className="w-[128px] shrink-0 rounded-xl bg-slate-100 border border-slate-200 text-slate-800 font-heading font-black text-xs sm:text-sm py-2.5 px-3 flex items-center justify-center gap-1.5 min-h-[46px] cursor-pointer"
             >
               <Pencil className="w-4 h-4 text-slate-600 shrink-0" />
               <span>Edit</span>
@@ -267,7 +267,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
                   }
                   router.push(`/chat?listingId=${post.id}&sellerId=${post.userId || ""}&title=${encodeURIComponent(post.title)}`);
                 }}
-                className="flex-1 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
+                className="w-[128px] shrink-0 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
               >
                 <MessageSquare className="w-4 h-4 text-[#0F172A] shrink-0" />
                 <span>Chat</span>
@@ -276,7 +276,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
               <a
                 href={callUrl}
                 onClick={(e) => e.stopPropagation()}
-                className="flex-1 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
+                className="w-[128px] shrink-0 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
               >
                 <Phone className="w-4 h-4 text-white shrink-0" />
                 <span>Call</span>

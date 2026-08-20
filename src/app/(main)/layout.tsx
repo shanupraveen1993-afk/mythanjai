@@ -91,7 +91,10 @@ function MainLayoutContent({
   const [showWalkthrough, setShowWalkthrough] = useState(false);
   const [showPermissionsModal, setShowPermissionsModal] = useState(false);
 
+  const [isMounted, setIsMounted] = useState(false);
+
   useEffect(() => {
+    setIsMounted(true);
     if (typeof window !== "undefined") {
       const isNative = Boolean((window as any).Capacitor?.isNativePlatform());
 
@@ -212,7 +215,7 @@ function MainLayoutContent({
 
   if (showSplash) {
     return (
-      <div className="w-full min-h-screen bg-[#0F172A]">
+      <div className="w-full min-h-screen bg-white">
         <SplashScreen onComplete={handleSplashComplete} />
       </div>
     );
@@ -220,7 +223,7 @@ function MainLayoutContent({
 
   if (showWalkthrough) {
     return (
-      <div className="w-full min-h-screen bg-slate-950">
+      <div className="w-full min-h-screen bg-white">
         <SwipeUpOnboarding onComplete={handleWalkthroughComplete} />
       </div>
     );
@@ -228,7 +231,7 @@ function MainLayoutContent({
 
   if (showPermissionsModal) {
     return (
-      <div className="w-full min-h-screen bg-slate-950 flex items-center justify-center">
+      <div className="w-full min-h-screen bg-white flex items-center justify-center">
         <NativePermissionsModal isOpen={true} onComplete={handlePermissionsComplete} />
       </div>
     );
