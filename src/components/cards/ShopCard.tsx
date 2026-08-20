@@ -7,6 +7,8 @@ import { ShopPost } from "@/types";
 import { useToast } from "@/context/ToastContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { reportListing } from "@/lib/moderation";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/use-auth";
 import CategoryIcon from "@/components/ui/CategoryIcon";
 
 function formatOfferValidity(validFrom?: any, validTo?: any, createdAt?: any) {
@@ -46,7 +48,9 @@ interface ShopCardProps {
   isGuest?: boolean;
 }
 
-export default function ShopCard({ post, isPreview = false, index, isGuest = false }: ShopCardProps) {
+export default function ShopCard({ post, isPreview = false, index = 0, isGuest = false }: ShopCardProps) {
+  const router = useRouter();
+  const { user, profile } = useAuth();
   const { toast } = useToast();
   const { t } = useLanguage();
   const [saved, setSaved] = useState(false);
@@ -253,6 +257,23 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
               <Navigation className="w-3.5 h-3.5 shrink-0" />
               <span>{t("getDirection")}</span>
             </a>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (!user && !profile) {
+                  if (typeof window !== "undefined") {
+                    window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+                  }
+                  return;
+                }
+                router.push(`/chat?listingId=${post.id}&sellerId=${post.userId || post.phone || ""}&title=${encodeURIComponent(post.shop_name)}`);
+              }}
+              className="flex-1 border-2 border-white text-white bg-white/10 hover:bg-white/20 font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[38px] cursor-pointer transition-colors backdrop-blur-md"
+            >
+              <MessageSquare className="w-3.5 h-3.5 text-white shrink-0" />
+              <span>Chat</span>
+            </button>
             {post.show_phone !== false && (
               <a
                 href={callUrl}
@@ -356,6 +377,23 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
               <Navigation className="w-3.5 h-3.5 text-white shrink-0" />
               <span>{t("getDirection")}</span>
             </a>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (!user && !profile) {
+                  if (typeof window !== "undefined") {
+                    window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+                  }
+                  return;
+                }
+                router.push(`/chat?listingId=${post.id}&sellerId=${post.userId || post.phone || ""}&title=${encodeURIComponent(post.shop_name)}`);
+              }}
+              className="flex-1 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer transition-colors"
+            >
+              <MessageSquare className="w-3.5 h-3.5 text-[#0F172A] fill-[#0F172A]/10 shrink-0 stroke-[2.5]" />
+              <span>Chat</span>
+            </button>
             {(post as any).is_available_now !== false && post.show_phone !== false && (
               <a
                 href={callUrl}

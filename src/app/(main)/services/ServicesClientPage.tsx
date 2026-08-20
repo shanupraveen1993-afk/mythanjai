@@ -130,9 +130,9 @@ export default function ServicesClientPage() {
         <button
           type="button"
           onClick={() => router.push("/profile?tab=my_posts")}
-          className="px-3.5 py-1.5 rounded-xl bg-[#1d4ed8] hover:bg-blue-800 text-white font-heading font-black text-xs flex items-center justify-center gap-1.5 shadow-xs cursor-pointer transition-all active:scale-95 shrink-0"
+          className="text-[#1d4ed8] hover:text-blue-800 font-heading font-black text-xs hover:underline flex items-center gap-1 cursor-pointer transition-all active:scale-95 shrink-0"
         >
-          <UserCheck className="w-3.5 h-3.5 text-amber-300" />
+          <UserCheck className="w-3.5 h-3.5" />
           <span>My Listings →</span>
         </button>
       </div>

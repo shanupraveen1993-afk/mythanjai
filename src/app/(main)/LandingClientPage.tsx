@@ -131,10 +131,10 @@ export default function LandingClientPage() {
                   <ShoppingBag className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="font-heading font-bold text-[#1d4ed8] text-sm sm:text-base leading-tight">
+                  <h2 className="font-heading font-black text-slate-900 text-sm sm:text-base leading-tight">
                     Sell
                   </h2>
-                  <span className="block text-xs font-bold text-[#1d4ed8]/85 leading-tight">
+                  <span className="block text-xs font-bold text-slate-500 leading-tight">
                     விற்பனை
                   </span>
                 </div>
@@ -149,26 +149,26 @@ export default function LandingClientPage() {
                   <span
                     key={i}
                     onClick={() => router.push(`/sell?category=${encodeURIComponent(cat)}`)}
-                    className="text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors whitespace-nowrap shrink-0"
+                    className="text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 hover:border-slate-400 hover:text-slate-900 cursor-pointer transition-colors whitespace-nowrap shrink-0"
                   >
                     {cat}
                   </span>
                 ))}
                 <span
                   onClick={() => router.push("/sell")}
-                  className="text-[11px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 hover:bg-[#1d4ed8] hover:text-white cursor-pointer transition-colors whitespace-nowrap shrink-0"
+                  className="text-[11px] font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded border border-slate-300 hover:bg-slate-900 hover:text-white cursor-pointer transition-colors whitespace-nowrap shrink-0"
                 >
-                  +12 More
+                  Explore All →
                 </span>
               </div>
             </div>
 
             <button
               onClick={() => router.push("/sell")}
-              className="w-full mt-1 bg-white border border-[#1d4ed8] hover:bg-blue-50/60 text-[#1d4ed8] text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs text-center"
+              className="w-full mt-1 bg-white border border-slate-300 hover:bg-slate-100 text-slate-900 text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs text-center"
             >
-              <span>Explore Sell</span>
-              <ChevronRight className="w-4 h-4 shrink-0 text-[#1d4ed8]" />
+              <span>Explore All →</span>
+              <ChevronRight className="w-4 h-4 shrink-0 text-slate-900" />
             </button>
           </div>
 
@@ -180,10 +180,10 @@ export default function LandingClientPage() {
                   <Search className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="font-heading font-bold text-[#1d4ed8] text-sm sm:text-base leading-tight">
+                  <h2 className="font-heading font-black text-slate-900 text-sm sm:text-base leading-tight">
                     Need
                   </h2>
-                  <span className="block text-xs font-bold text-[#1d4ed8]/85 leading-tight">
+                  <span className="block text-xs font-bold text-slate-500 leading-tight">
                     தேவைகள்
                   </span>
                 </div>
@@ -198,26 +198,26 @@ export default function LandingClientPage() {
                   <span
                     key={i}
                     onClick={() => router.push(`/need?category=${encodeURIComponent(cat)}`)}
-                    className="text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors whitespace-nowrap shrink-0"
+                    className="text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 hover:border-slate-400 hover:text-slate-900 cursor-pointer transition-colors whitespace-nowrap shrink-0"
                   >
                     {cat}
                   </span>
                 ))}
                 <span
                   onClick={() => router.push("/need")}
-                  className="text-[11px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 hover:bg-[#1d4ed8] hover:text-white cursor-pointer transition-colors whitespace-nowrap shrink-0"
+                  className="text-[11px] font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded border border-slate-300 hover:bg-slate-900 hover:text-white cursor-pointer transition-colors whitespace-nowrap shrink-0"
                 >
-                  +10 More
+                  Explore All →
                 </span>
               </div>
             </div>
 
             <button
               onClick={() => router.push("/need")}
-              className="w-full mt-1 bg-white border border-[#1d4ed8] hover:bg-blue-50/60 text-[#1d4ed8] text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs text-center"
+              className="w-full mt-1 bg-white border border-slate-300 hover:bg-slate-100 text-slate-900 text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs text-center"
             >
-              <span>Explore Need</span>
-              <ChevronRight className="w-4 h-4 shrink-0 text-[#1d4ed8]" />
+              <span>Explore All →</span>
+              <ChevronRight className="w-4 h-4 shrink-0 text-slate-900" />
             </button>
           </div>
 
@@ -229,10 +229,10 @@ export default function LandingClientPage() {
                   <Wrench className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="font-heading font-bold text-[#1d4ed8] text-sm sm:text-base leading-tight">
+                  <h2 className="font-heading font-black text-slate-900 text-sm sm:text-base leading-tight">
                     Service
                   </h2>
-                  <span className="block text-xs font-bold text-[#1d4ed8]/85 leading-tight">
+                  <span className="block text-xs font-bold text-slate-500 leading-tight">
                     சேவைகள்
                   </span>
                 </div>
@@ -247,26 +247,26 @@ export default function LandingClientPage() {
                   <span
                     key={i}
                     onClick={() => router.push(`/services?category=${encodeURIComponent(cat)}`)}
-                    className="text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors whitespace-nowrap shrink-0"
+                    className="text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 hover:border-slate-400 hover:text-slate-900 cursor-pointer transition-colors whitespace-nowrap shrink-0"
                   >
                     {cat}
                   </span>
                 ))}
                 <span
                   onClick={() => router.push("/services")}
-                  className="text-[11px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 hover:bg-[#1d4ed8] hover:text-white cursor-pointer transition-colors whitespace-nowrap shrink-0"
+                  className="text-[11px] font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded border border-slate-300 hover:bg-slate-900 hover:text-white cursor-pointer transition-colors whitespace-nowrap shrink-0"
                 >
-                  +15 More
+                  Explore All →
                 </span>
               </div>
             </div>
 
             <button
               onClick={() => router.push("/services")}
-              className="w-full mt-1 bg-white border border-[#1d4ed8] hover:bg-blue-50/60 text-[#1d4ed8] text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs text-center"
+              className="w-full mt-1 bg-white border border-slate-300 hover:bg-slate-100 text-slate-900 text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs text-center"
             >
-              <span>Explore Services</span>
-              <ChevronRight className="w-4 h-4 shrink-0 text-[#1d4ed8]" />
+              <span>Explore All →</span>
+              <ChevronRight className="w-4 h-4 shrink-0 text-slate-900" />
             </button>
           </div>
 
@@ -278,44 +278,44 @@ export default function LandingClientPage() {
                   <Store className="w-5 h-5" />
                 </div>
                 <div>
-                  <h2 className="font-heading font-bold text-[#1d4ed8] text-sm sm:text-base leading-tight">
+                  <h2 className="font-heading font-black text-slate-900 text-sm sm:text-base leading-tight">
                     Offer
                   </h2>
-                  <span className="block text-xs font-bold text-[#1d4ed8]/85 leading-tight">
+                  <span className="block text-xs font-bold text-slate-500 leading-tight">
                     சலுகைகள்
                   </span>
                 </div>
               </div>
 
               <p className="text-xs text-slate-600 font-normal leading-snug">
-                Discover exclusive store discounts &amp; deals from Tanjore shops
+                Discover live discounts &amp; local store promotions
               </p>
 
               <div className="pt-2 border-t border-slate-100 hidden sm:flex items-center gap-1 sm:gap-1.5 flex-nowrap overflow-hidden">
-                {["Discounts", "Cafes"].map((cat, i) => (
+                {["Textiles", "Electronics"].map((cat, i) => (
                   <span
                     key={i}
                     onClick={() => router.push(`/shops?category=${encodeURIComponent(cat)}`)}
-                    className="text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors whitespace-nowrap shrink-0"
+                    className="text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 hover:border-slate-400 hover:text-slate-900 cursor-pointer transition-colors whitespace-nowrap shrink-0"
                   >
                     {cat}
                   </span>
                 ))}
                 <span
                   onClick={() => router.push("/shops")}
-                  className="text-[11px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 hover:bg-[#1d4ed8] hover:text-white cursor-pointer transition-colors whitespace-nowrap shrink-0"
+                  className="text-[11px] font-bold text-slate-900 bg-slate-100 px-2 py-0.5 rounded border border-slate-300 hover:bg-slate-900 hover:text-white cursor-pointer transition-colors whitespace-nowrap shrink-0"
                 >
-                  +10 More
+                  Explore All →
                 </span>
               </div>
             </div>
 
             <button
               onClick={() => router.push("/shops")}
-              className="w-full mt-1 bg-white border border-[#1d4ed8] hover:bg-blue-50/60 text-[#1d4ed8] text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs text-center"
+              className="w-full mt-1 bg-white border border-slate-300 hover:bg-slate-100 text-slate-900 text-xs font-bold py-2 px-3 rounded-lg flex items-center justify-center gap-1 cursor-pointer transition-colors shadow-2xs text-center"
             >
-              <span>Explore Offers</span>
-              <ChevronRight className="w-4 h-4 shrink-0 text-[#1d4ed8]" />
+              <span>Explore All →</span>
+              <ChevronRight className="w-4 h-4 shrink-0 text-slate-900" />
             </button>
           </div>
         </section>

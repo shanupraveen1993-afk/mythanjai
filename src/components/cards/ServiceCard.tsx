@@ -12,14 +12,17 @@ import { reportListing } from "@/lib/moderation";
 import CategoryVectorIllustration from "@/components/ui/CategoryVectorIllustration";
 import CategoryIcon from "@/components/ui/CategoryIcon";
 
+import { useRouter } from "next/navigation";
+
 interface ServiceCardProps {
   post: ServiceProviderPost;
   isPreview?: boolean;
 }
 
 export default function ServiceCard({ post, isPreview = false }: ServiceCardProps) {
+  const router = useRouter();
   const { toast } = useToast();
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [saved, setSaved] = useState(() => {
     if (typeof window !== "undefined") {
       try {
@@ -252,11 +255,20 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
       <div className="pt-2 flex items-center gap-2 mt-auto">
         <button
           type="button"
-          onClick={(e) => handleOpenPreContactModal(e, "whatsapp")}
+          onClick={(e) => {
+            e.stopPropagation();
+            if (!user && !profile) {
+              if (typeof window !== "undefined") {
+                window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+              }
+              return;
+            }
+            router.push(`/chat?listingId=${post.id}&sellerId=${post.userId || post.phone || ""}&title=${encodeURIComponent(post.name)}`);
+          }}
           className="flex-1 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[36px] shadow-2xs cursor-pointer transition-colors"
         >
           <MessageSquare className="w-3.5 h-3.5 text-[#0F172A] fill-[#0F172A]/10 shrink-0 stroke-[2.5]" />
-          <span>WhatsApp</span>
+          <span>Chat</span>
         </button>
 
         <button

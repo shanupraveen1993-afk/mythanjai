@@ -449,26 +449,6 @@ export default function ProfileClientPage() {
                 )}
               </div>
             </div>
-          </div>
-
-          {/* Stats Bar — Active / Sold / Saved */}
-          {isDbVerified && (
-            <div className="grid grid-cols-3 gap-2 bg-slate-50 border border-slate-200/80 rounded-xl p-3">
-              <div className="flex flex-col items-center gap-0.5">
-                <span className="font-heading font-black text-lg text-slate-950">{activeCount}</span>
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Active</span>
-              </div>
-              <div className="flex flex-col items-center gap-0.5 border-x border-slate-200">
-                <span className="font-heading font-black text-lg text-slate-950">{soldCount}</span>
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Sold</span>
-              </div>
-              <div className="flex flex-col items-center gap-0.5">
-                <span className="font-heading font-black text-lg text-slate-950">{savedCount}</span>
-                <span className="text-[10px] font-bold text-slate-500 uppercase tracking-wide">Saved</span>
-              </div>
-            </div>
-          )}
-
           {/* Account Plan pill */}
           <div className="flex items-center justify-between text-xs bg-slate-50 border border-slate-100 rounded-xl px-3 py-2">
             <span className="font-bold text-slate-700 flex items-center gap-1.5">
@@ -859,6 +839,7 @@ export default function ProfileClientPage() {
         </p>
       )}
 
+    </div>
     </div>
   );
 }
