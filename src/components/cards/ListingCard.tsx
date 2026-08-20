@@ -253,7 +253,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
     return `₹${num.toLocaleString("en-IN")}`;
   }, [listing.price, listing.expected_price_from, listing.expected_price_to, isLookingFor]);
 
-  const rawPhone = String(listing.phone || "9876543210");
+  const rawPhone = String(listing.phone || "");
   const cleanPhone = rawPhone.replace(/\D/g, "");
   const formattedPhone = cleanPhone.startsWith("91") ? cleanPhone : `91${cleanPhone}`;
   const callUrl = `tel:${cleanPhone}`;

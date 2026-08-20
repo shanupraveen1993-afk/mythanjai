@@ -98,7 +98,7 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
     }
   }, [post.id, post.shop_name]);
 
-  const rawPhone = String((post as any).whatsapp_phone || post.phone || "9876543210");
+  const rawPhone = String((post as any).whatsapp_phone || post.phone || "");
   const cleanPhone = rawPhone.replace(/\D/g, "");
   const formattedPhone = cleanPhone.startsWith("91") ? cleanPhone : `91${cleanPhone}`;
 

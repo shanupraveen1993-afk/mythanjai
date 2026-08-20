@@ -25,6 +25,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const p1 = localStorage.getItem("my_thanjai_phone");
+      const p2 = localStorage.getItem("namma_thanjai_phone");
+      if (p1 === "9876543210" || p2 === "9876543210") {
+        localStorage.removeItem("my_thanjai_phone");
+        localStorage.removeItem("namma_thanjai_phone");
+        localStorage.removeItem("my_thanjai_verified");
+        localStorage.removeItem("namma_thanjai_verified");
+      }
+    }
+
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
 
@@ -36,11 +47,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
           if (userDoc.exists()) {
             const data = userDoc.data() as UserProfile;
-            const storedPhone = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_phone") || localStorage.getItem("namma_thanjai_phone") || "") : "";
+            let storedPhone = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_phone") || localStorage.getItem("namma_thanjai_phone") || "") : "";
+            if (storedPhone === "9876543210") storedPhone = "";
             const storedVerified = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_verified") === "true" || localStorage.getItem("namma_thanjai_verified") === "true") : false;
 
             // Preserve existing verified phone number for verified users
-            if (storedVerified && storedPhone && (!data.phone || !data.isVerified)) {
+            if (storedVerified && storedPhone && storedPhone !== "9876543210" && (!data.phone || !data.isVerified)) {
               data.phone = storedPhone;
               data.isVerified = true;
             }

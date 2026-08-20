@@ -76,7 +76,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
 
   const hasRealReviews = Boolean((post as any).review_count && Number((post as any).review_count) > 0);
 
-  const rawPhone = String(post.phone || "9876543210");
+  const rawPhone = String(post.phone || "");
   const cleanPhone = rawPhone.replace(/\D/g, "");
   const formattedPhone = cleanPhone.startsWith("91") ? cleanPhone : `91${cleanPhone}`;
   

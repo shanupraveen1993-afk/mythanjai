@@ -54,7 +54,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
     return false;
   }, [user, profile, post, isPreview]);
 
-  const rawPhone = String(post.phone || "9876543210");
+  const rawPhone = String(post.phone || "");
   const cleanPhone = rawPhone.replace(/\D/g, "");
   const formattedPhone = cleanPhone.startsWith("91") ? cleanPhone : `91${cleanPhone}`;
   const callUrl = `tel:${cleanPhone}`;
