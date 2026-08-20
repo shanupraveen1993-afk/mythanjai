@@ -425,18 +425,18 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
                 href={directionUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[40px] shrink-0 w-auto shadow-2xs cursor-pointer transition-colors"
+                className="flex-1 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
               >
-                <Navigation className="w-3.5 h-3.5 text-[#0F172A] shrink-0" />
+                <Navigation className="w-4 h-4 text-[#0F172A] shrink-0" />
                 <span>{t("getDirection")}</span>
               </a>
               {(post as any).is_available_now !== false && post.show_phone !== false && (
                 <a
                   href={callUrl}
                   onClick={(e) => e.stopPropagation()}
-                  className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-heading font-black text-xs py-2 px-3.5 rounded-xl flex items-center justify-center gap-1.5 min-h-[40px] shrink-0 w-auto shadow-2xs cursor-pointer transition-colors"
+                  className="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
                 >
-                  <Phone className="w-3.5 h-3.5 text-slate-950 shrink-0" />
+                  <Phone className="w-4 h-4 text-slate-950 shrink-0" />
                   <span>Call Shop</span>
                 </a>
               )}
@@ -533,18 +533,18 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
             href={directionUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[40px] shrink-0 w-auto shadow-2xs cursor-pointer transition-colors"
+            className="flex-1 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
           >
-            <Navigation className="w-3.5 h-3.5 text-[#0F172A] shrink-0" />
+            <Navigation className="w-4 h-4 text-[#0F172A] shrink-0" />
             <span>{t("getDirection")}</span>
           </a>
           {(post as any).is_available_now !== false && post.show_phone !== false && (
             <a
               href={callUrl}
               onClick={(e) => e.stopPropagation()}
-              className="bg-amber-500 hover:bg-amber-600 text-slate-950 font-heading font-black text-xs py-2 px-3.5 rounded-xl flex items-center justify-center gap-1.5 min-h-[40px] shrink-0 w-auto shadow-2xs cursor-pointer transition-colors"
+              className="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
             >
-              <Phone className="w-3.5 h-3.5 text-slate-950 shrink-0" />
+              <Phone className="w-4 h-4 text-slate-950 shrink-0" />
               <span>Call Shop</span>
             </a>
           )}

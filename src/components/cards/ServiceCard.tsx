@@ -318,16 +318,16 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
               }
               toast.success(`Call Back Requested! ${post.name} has been notified to call you.`);
             }}
-            className="border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[40px] shrink-0 w-auto shadow-2xs cursor-pointer transition-colors"
+            className="flex-1 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
           >
-            <Phone className="w-3.5 h-3.5 text-[#0F172A] shrink-0 stroke-[2.5]" />
+            <Phone className="w-4 h-4 text-[#0F172A] shrink-0 stroke-[2.5]" />
             <span>Call Back</span>
           </button>
 
           <button
             type="button"
             onClick={(e) => handleOpenPreContactModal(e, "call")}
-            className="bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs py-2 px-3.5 rounded-xl flex items-center justify-center gap-1.5 min-h-[40px] shrink-0 w-auto shadow-2xs cursor-pointer transition-colors"
+            className="flex-1 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
           >
             <Phone className="w-4 h-4 text-white shrink-0" />
             <span>Call</span>

@@ -88,7 +88,7 @@ export default function SwipeUpOnboarding({
       {/* Fixed Top Header */}
       <div
         className="absolute top-0 left-0 right-0 z-30 px-6 max-w-md mx-auto flex items-center justify-between pointer-events-auto"
-        style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 44px)" }}
+        style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 56px)" }}
       >
         <div className="flex items-center gap-2.5">
           <div className="w-10 h-10 rounded-2xl bg-white border border-slate-200 flex items-center justify-center p-2 shadow-xs backdrop-blur-md">
@@ -101,9 +101,8 @@ export default function SwipeUpOnboarding({
             />
           </div>
           <div>
-            <h1 className="font-heading font-black text-base text-slate-900 leading-tight flex items-center gap-1.5">
-              <span>Namma Thanjai</span>
-              <span className="text-[10px] font-black uppercase tracking-wider text-amber-700 bg-amber-100 border border-amber-300 px-1.5 py-0.5 rounded-md">APK</span>
+            <h1 className="font-heading font-black text-base text-slate-900 leading-tight">
+              Namma Thanjai
             </h1>
             <p className="text-xs text-amber-600 font-bold tracking-wider">
               Thanjavur Direct Network
@@ -132,56 +131,52 @@ export default function SwipeUpOnboarding({
           return (
             <div
               key={slide.id}
-              className="w-full h-full snap-start snap-always shrink-0 flex flex-col justify-between pt-28 pb-8 px-6 max-w-md mx-auto relative"
+              className="w-full h-full snap-start snap-always shrink-0 flex flex-col justify-between pt-32 pb-8 px-6 max-w-md mx-auto relative"
             >
               {/* Background Ambient Lighting per slide */}
               <div className="absolute top-1/4 right-0 w-80 h-80 bg-amber-400/10 blur-[100px] rounded-full pointer-events-none" />
               <div className="absolute bottom-1/4 left-0 w-80 h-80 bg-yellow-400/10 blur-[100px] rounded-full pointer-events-none" />
 
-              {/* Main Visual Card */}
-              <div className="flex-1 flex flex-col items-center justify-center z-10">
+              {/* Main Visual Content — Freestyle Layout (No Card Container Boxes) */}
+              <div className="flex-1 flex flex-col items-center justify-center z-10 w-full text-center gap-3">
                 {/* Step Badge */}
                 <span className="text-xs font-black uppercase tracking-widest px-3.5 py-1 rounded-full border shadow-2xs bg-amber-50 text-amber-800 border-amber-200/80">
                   {slide.badgeEn}
                 </span>
 
-                {/* Visual Card */}
-                <div className="w-full max-w-[340px] bg-white border border-slate-200/90 rounded-2xl overflow-hidden shadow-xl mt-4">
-                  <div className="relative w-full h-44 overflow-hidden">
-                    <img
-                      src={slide.img}
-                      alt={slide.titleEn}
-                      className="w-full h-full object-cover"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
-                    
-                    <div className="absolute top-3 left-3 w-10 h-10 rounded-xl bg-white/90 border border-slate-200 backdrop-blur-md flex items-center justify-center shadow-sm">
-                      <IconComp className="w-5 h-5 text-amber-600" />
-                    </div>
-
-                    <span className="absolute bottom-3 left-4 right-4 font-heading font-black text-lg text-white leading-snug drop-shadow-md">
-                      {slide.titleEn}
-                    </span>
-                  </div>
-
-                  <div className="p-4 flex flex-col gap-3">
-                    <p className="text-xs text-slate-600 font-medium leading-relaxed">
-                      {slide.subtitleEn}
-                    </p>
-
-                    <div className="flex flex-col gap-1.5 border-t border-slate-100 pt-3">
-                      {slide.highlightsEn.map((item, hIdx) => (
-                        <div key={hIdx} className="flex items-center gap-2 text-xs font-bold text-slate-800">
-                          <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-                          <span>{item}</span>
-                        </div>
-                      ))}
-                    </div>
+                {/* Hero Image — Freestyle Rounded Image */}
+                <div className="relative w-full max-w-[320px] h-44 rounded-2xl overflow-hidden shadow-md my-1">
+                  <img
+                    src={slide.img}
+                    alt={slide.titleEn}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-transparent to-transparent" />
+                  <div className="absolute top-3 left-3 w-9 h-9 rounded-xl bg-white/90 border border-slate-200 backdrop-blur-md flex items-center justify-center shadow-sm">
+                    <IconComp className="w-4 h-4 text-amber-600" />
                   </div>
                 </div>
 
+                {/* Title & Subtitle in Freestyle Layout */}
+                <h3 className="font-heading font-black text-xl text-slate-900 leading-snug px-2">
+                  {slide.titleEn}
+                </h3>
+                <p className="text-xs text-slate-600 font-medium leading-relaxed max-w-[300px]">
+                  {slide.subtitleEn}
+                </p>
+
+                {/* Highlights List in Freestyle */}
+                <div className="flex flex-col gap-1.5 pt-1 w-full max-w-[280px]">
+                  {slide.highlightsEn.map((item, hIdx) => (
+                    <div key={hIdx} className="flex items-center justify-center gap-2 text-xs font-bold text-slate-800">
+                      <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
+                      <span>{item}</span>
+                    </div>
+                  ))}
+                </div>
+
                 {/* Step Indicator Dots */}
-                <div className="flex items-center justify-center gap-2 mt-4">
+                <div className="flex items-center justify-center gap-2 mt-2">
                   {WALKTHROUGH_SLIDES.map((s, i) => (
                     <button
                       key={s.id}

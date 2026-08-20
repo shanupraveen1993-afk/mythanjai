@@ -138,9 +138,36 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
     }
   };
 
+  const [resendTimer, setResendTimer] = useState(30);
+  const [canResend, setCanResend] = useState(false);
+
+  useEffect(() => {
+    let interval: any = null;
+    if (step === "otp") {
+      setResendTimer(30);
+      setCanResend(false);
+      interval = setInterval(() => {
+        setResendTimer((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            setCanResend(true);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [step]);
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/70 backdrop-blur-sm p-4 animate-fade-in">
-      <div className="bg-white border border-slate-200/90 w-full max-w-sm rounded-2xl p-6 shadow-2xl relative text-slate-800">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-950/70 backdrop-blur-sm p-0 sm:p-4 animate-fade-in">
+      <div className="bg-white border border-slate-200/90 w-full max-w-sm rounded-t-3xl sm:rounded-2xl p-6 shadow-2xl relative text-slate-800">
+        
+        {/* Native App Drag Handle Bar */}
+        <div className="w-12 h-1 bg-slate-300 rounded-full mx-auto mb-4 sm:hidden" />
 
         {/* Header Close */}
         <button
@@ -159,36 +186,43 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
         {/* Modal Body */}
         {profile?.isVerified ? (
           <div className="flex flex-col items-center justify-center text-center py-6 gap-3 animate-fade-in">
-            <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-200">
+            <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-200 shadow-2xs">
               <CheckCircle className="w-6 h-6 stroke-[2.5]" />
             </div>
             <div>
-              <h3 className="font-heading font-extrabold text-sm text-slate-900">
+              <h3 className="font-heading font-extrabold text-base text-slate-900">
                 Verification Successful
               </h3>
-              <p className="text-xs text-slate-500 mt-1">
+              <p className="text-xs text-slate-500 mt-1 font-medium">
                 Your WhatsApp number is verified. Directing to target page...
               </p>
             </div>
           </div>
         ) : step === "phone" ? (
           <div className="flex flex-col gap-4">
-            <div>
-              <h3 className="font-heading font-extrabold text-sm text-slate-900">
-                WhatsApp Verification
-              </h3>
-              <p className="text-xs text-slate-500 mt-1">
-                Enter your 10-digit mobile number to receive WhatsApp OTP code.
-              </p>
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-[#128C7E] shrink-0">
+                <MessageSquare className="w-5 h-5 fill-[#128C7E]" />
+              </div>
+              <div>
+                <h3 className="font-heading font-black text-base text-slate-900 leading-tight">
+                  WhatsApp Verification
+                </h3>
+                <p className="text-xs text-slate-500 font-medium">
+                  Enter your 10-digit mobile number for WhatsApp OTP
+                </p>
+              </div>
             </div>
 
-            <form onSubmit={handleSendOtp} className="flex flex-col gap-3">
-              <div className="flex flex-col gap-1">
-                <label className="text-xs font-black text-slate-400 uppercase tracking-wider">
-                  WhatsApp Number
+            <form onSubmit={handleSendOtp} className="flex flex-col gap-3 mt-1">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[11px] font-black text-slate-500 uppercase tracking-wider">
+                  WhatsApp Mobile Number
                 </label>
                 <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-400">+91</span>
+                  <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-black text-slate-700 bg-slate-200/60 px-2 py-0.5 rounded-md">
+                    +91 🇮🇳
+                  </span>
                   <input
                     ref={phoneInputRef}
                     autoFocus
@@ -199,16 +233,16 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, "").slice(0, 10))}
                     placeholder="9994837342"
-                    className="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:border-amber-400 focus:bg-white transition-colors"
+                    className="w-full pl-22 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-black text-slate-900 focus:outline-none focus:border-[#128C7E] focus:bg-white transition-colors"
                   />
                 </div>
               </div>
 
               <button
                 type="submit"
-                className="w-full py-2.5 btn-primary text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
+                className="w-full py-3 bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-xs uppercase tracking-wider rounded-xl flex items-center justify-center gap-2 shadow-md cursor-pointer transition-all active:scale-98 mt-1"
               >
-                <MessageSquare className="w-3.5 h-3.5 text-[#0F172A]" />
+                <MessageSquare className="w-4 h-4 fill-white shrink-0" />
                 <span>Send WhatsApp OTP →</span>
               </button>
             </form>
@@ -216,18 +250,30 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
         ) : (
           <div className="flex flex-col gap-4 animate-fade-in">
             <div>
-              <h3 className="font-heading font-extrabold text-sm text-slate-900">
-                Enter 6-Digit WhatsApp OTP
-              </h3>
-              <p className="text-xs text-slate-500 mt-1">
-                OTP sent to <strong className="text-slate-900">+91 {phoneNumber}</strong>.
-                <span className="block text-amber-600 font-bold mt-0.5">Testing Code: 123456</span>
+              <div className="flex items-center justify-between gap-2">
+                <h3 className="font-heading font-black text-base text-slate-900">
+                  Enter 6-Digit WhatsApp OTP
+                </h3>
+                <button
+                  type="button"
+                  onClick={() => setStep("phone")}
+                  disabled={phoneUpdating}
+                  className="text-xs font-black text-blue-600 hover:text-blue-800 bg-blue-50 border border-blue-200 px-2.5 py-1 rounded-lg cursor-pointer flex items-center gap-1 shrink-0"
+                >
+                  <span>✏️ Change Number</span>
+                </button>
+              </div>
+              <p className="text-xs text-slate-600 font-medium mt-1">
+                OTP sent to <strong className="text-slate-900 font-bold">+91 {phoneNumber}</strong>
+                <span className="inline-block ml-2 text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-md font-bold text-[11px]">
+                  Testing Code: 123456
+                </span>
               </p>
             </div>
 
             <form onSubmit={handleVerifyOtp} className="flex flex-col gap-3">
-              <div className="flex flex-col gap-1">
-                <label className="text-xs font-black text-slate-400 uppercase tracking-wider">
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[11px] font-black text-slate-500 uppercase tracking-wider text-center">
                   6-Digit OTP Code
                 </label>
                 <input
@@ -238,38 +284,58 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
                   maxLength={6}
                   value={otpCode}
                   onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                  placeholder="Enter 123456"
+                  placeholder="123456"
                   disabled={phoneUpdating}
-                  className="w-full bg-slate-50 border border-slate-300 text-slate-900 text-center tracking-[0.4em] font-extrabold rounded-xl py-2.5 text-base focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500 focus:outline-none"
+                  className="w-full bg-slate-50 border border-slate-300 text-slate-900 text-center tracking-[0.5em] font-black rounded-xl py-3 text-lg focus:ring-2 focus:ring-[#128C7E] focus:border-[#128C7E] focus:outline-none"
                 />
               </div>
 
               <button
                 type="submit"
                 disabled={phoneUpdating}
-                className="w-full py-2.5 btn-primary text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
+                className="w-full py-3 bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-xs uppercase tracking-wider rounded-xl flex items-center justify-center gap-2 shadow-md cursor-pointer transition-all active:scale-98"
               >
                 {phoneUpdating ? (
                   <>
-                    <Loader2 className="w-4 h-4 animate-spin text-[#0F172A]" />
+                    <Loader2 className="w-4 h-4 animate-spin text-white" />
                     <span>Verifying OTP...</span>
                   </>
                 ) : (
                   <>
-                    <CheckCircle className="w-3.5 h-3.5 text-[#0F172A]" />
-                    <span>Verify OTP & Login</span>
+                    <CheckCircle className="w-4 h-4 text-white" />
+                    <span>Verify OTP & Proceed</span>
                   </>
                 )}
               </button>
 
-              <button
-                type="button"
-                onClick={() => setStep("phone")}
-                disabled={phoneUpdating}
-                className="text-xs font-bold text-slate-500 hover:text-slate-800 text-center cursor-pointer hover:underline"
-              >
-                ← Change Mobile Number
-              </button>
+              <div className="flex items-center justify-between border-t border-slate-100 pt-3 text-xs">
+                {canResend ? (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setResendTimer(30);
+                      setCanResend(false);
+                      toast.success("WhatsApp OTP resent to +91 " + phoneNumber);
+                    }}
+                    className="font-bold text-[#128C7E] hover:underline cursor-pointer flex items-center gap-1"
+                  >
+                    <span>🔄 Resend OTP via WhatsApp</span>
+                  </button>
+                ) : (
+                  <span className="font-semibold text-slate-400">
+                    Resend OTP in <strong className="text-slate-700 font-bold">{resendTimer}s</strong>
+                  </span>
+                )}
+
+                <button
+                  type="button"
+                  onClick={() => setStep("phone")}
+                  disabled={phoneUpdating}
+                  className="font-bold text-slate-600 hover:text-slate-900 cursor-pointer"
+                >
+                  ← Back
+                </button>
+              </div>
             </form>
           </div>
         )}

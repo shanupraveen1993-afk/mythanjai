@@ -89,6 +89,7 @@ export default function CreatePostModal({
   defaultType = "needs",
   defaultCategory,
   defaultClassifiedType,
+  editPost,
 }: CreatePostModalProps) {
   const { toast } = useToast();
   const [step, setStep] = useState(1);
@@ -133,18 +134,54 @@ export default function CreatePostModal({
   const { profile } = useAuth();
 
   useEffect(() => {
-    if (defaultArea) setArea(defaultArea);
-    if (defaultType) setType(defaultType);
-    if (defaultClassifiedType) setClassifiedType(defaultClassifiedType);
-    if (defaultCategory) {
-      if (CLASSIFIED_CATEGORIES.includes(defaultCategory as any)) setClassifiedCategory(defaultCategory as any);
-      if (SERVICE_CATEGORIES.includes(defaultCategory as any)) setServiceCategory(defaultCategory as any);
-      if (SHOP_CATEGORIES.includes(defaultCategory as any)) setShopCategory(defaultCategory as any);
+    if (!isOpen) return;
+
+    if (editPost) {
+      const postType = (editPost.type?.toLowerCase() === "need" || editPost.type?.toLowerCase() === "sell" || editPost.type?.toLowerCase() === "needs")
+        ? "needs"
+        : (editPost.skill_category ? "services" : (editPost.shop_name ? "shops" : "needs"));
+      
+      setType(postType as PostType);
+
+      if (editPost.type?.toUpperCase() === "NEED") {
+        setClassifiedType("NEED");
+      } else if (editPost.type?.toUpperCase() === "SELL") {
+        setClassifiedType("SELL");
+      }
+
+      setTitle(editPost.title || editPost.name || editPost.shop_name || "");
+      setDescription(editPost.description || editPost.offer_description || "");
+      setPrice(editPost.price ? String(editPost.price) : "");
+      setPhone(editPost.phone || profile?.phone || "");
+      setArea(editPost.area_tag || editPost.location || editPost.address_text || "");
+
+      if (editPost.category) {
+        if (CLASSIFIED_CATEGORIES.includes(editPost.category as any)) setClassifiedCategory(editPost.category as any);
+        if (SERVICE_CATEGORIES.includes(editPost.category as any)) setServiceCategory(editPost.category as any);
+        if (SHOP_CATEGORIES.includes(editPost.category as any)) setShopCategory(editPost.category as any);
+        if (OFFER_CATEGORIES.includes(editPost.category as any)) setOfferCategory(editPost.category as any);
+      }
+
+      if (editPost.image_url) {
+        setImagePreview(editPost.image_url);
+      }
+
+      setStep(2);
+    } else {
+      setStep(1);
+      if (defaultArea) setArea(defaultArea);
+      if (defaultType) setType(defaultType);
+      if (defaultClassifiedType) setClassifiedType(defaultClassifiedType);
+      if (defaultCategory) {
+        if (CLASSIFIED_CATEGORIES.includes(defaultCategory as any)) setClassifiedCategory(defaultCategory as any);
+        if (SERVICE_CATEGORIES.includes(defaultCategory as any)) setServiceCategory(defaultCategory as any);
+        if (SHOP_CATEGORIES.includes(defaultCategory as any)) setShopCategory(defaultCategory as any);
+      }
+      if (profile?.phone && !phone) {
+        setPhone(profile.phone);
+      }
     }
-    if (profile?.phone && !phone) {
-      setPhone(profile.phone);
-    }
-  }, [defaultArea, defaultType, defaultCategory, defaultClassifiedType, isOpen, profile]);
+  }, [defaultArea, defaultType, defaultCategory, defaultClassifiedType, isOpen, profile, editPost]);
 
   if (!isOpen) return null;
 

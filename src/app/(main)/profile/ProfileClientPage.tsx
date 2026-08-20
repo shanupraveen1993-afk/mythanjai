@@ -14,7 +14,7 @@ import {
   deleteDoc,
   onSnapshot,
 } from "firebase/firestore";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   User,
   Phone,
@@ -51,9 +51,21 @@ export default function ProfileClientPage() {
   const { toast } = useToast();
   const { user, profile, loading: authLoading, updatePhone, updateDisplayName, signOutUser } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   // 2-Screen Architecture Navigation State
   const [activeView, setActiveView] = useState<"dashboard" | "listings" | "saved">("dashboard");
+
+  useEffect(() => {
+    const tab = searchParams.get("tab");
+    if (tab === "listings") {
+      setActiveView("listings");
+    } else if (tab === "saved") {
+      setActiveView("saved");
+    } else {
+      setActiveView("dashboard");
+    }
+  }, [searchParams]);
 
   const [phoneNumber, setPhoneNumber] = useState("");
   const [phoneUpdating, setPhoneUpdating] = useState(false);
@@ -521,7 +533,7 @@ export default function ProfileClientPage() {
             
             {/* My Listings Row — Unboxed Number */}
             <div
-              onClick={() => setActiveView("listings")}
+              onClick={() => router.push("/profile?tab=listings")}
               className="flex items-center justify-between p-4 hover:bg-slate-50 cursor-pointer transition-colors group"
             >
               <div className="flex items-center gap-3">
@@ -540,7 +552,7 @@ export default function ProfileClientPage() {
 
             {/* Saved Items Row — Unboxed Number & Removed Tamil text */}
             <div
-              onClick={() => setActiveView("saved")}
+              onClick={() => router.push("/profile?tab=saved")}
               className="flex items-center justify-between p-4 hover:bg-slate-50 cursor-pointer transition-colors group"
             >
               <div className="flex items-center gap-3">

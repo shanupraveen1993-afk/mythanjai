@@ -10,7 +10,7 @@ const config: CapacitorConfig = {
   },
   android: {
     allowMixedContent: true,
-    backgroundColor: '#0F172A',
+    backgroundColor: '#FFFFFF',
     captureInput: true,
   },
   plugins: {
@@ -18,7 +18,7 @@ const config: CapacitorConfig = {
       launchShowDuration: 2000,
       launchAutoHide: true,
       launchFadeOutDuration: 300,
-      backgroundColor: '#0F172A',
+      backgroundColor: '#FFFFFF',
       androidScaleType: 'CENTER_CROP',
       showSpinner: false,
       splashFullScreen: true,
