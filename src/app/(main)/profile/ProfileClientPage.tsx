@@ -45,6 +45,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useToast } from "@/context/ToastContext";
+import CreatePostModal from "@/components/modals/CreatePostModal";
 
 export default function ProfileClientPage() {
   const { toast } = useToast();
@@ -75,9 +76,10 @@ export default function ProfileClientPage() {
   const [savedPosts, setSavedPosts] = useState<any[]>([]);
   const [postsLoading, setPostsLoading] = useState(true);
 
-  // Delete confirm & Testify state
+  // Delete confirm & Testify & Edit Modal state
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [testifyPost, setTestifyPost] = useState<any>(null);
+  const [editingPost, setEditingPost] = useState<any>(null);
 
   const handleTestifyTrue = (postId: string) => {
     setMyPosts((prev) =>
@@ -594,30 +596,12 @@ export default function ProfileClientPage() {
       {/* SCREEN 2A: MY LISTINGS SUB-PAGE */}
       {activeView === "listings" && (
         <div className="flex flex-col gap-4 animate-fade-in">
-          <div className="flex items-center justify-between bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm">
-            <button
-              onClick={() => setActiveView("dashboard")}
-              className="flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-slate-950 cursor-pointer"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              <span>Back to Profile</span>
-            </button>
-            <div className="flex items-center gap-2">
-              <h3 className="font-heading font-black text-base text-slate-900">My Listings</h3>
-              <span className="bg-amber-400 text-slate-950 font-black text-xs px-2.5 py-0.5 rounded-lg">
-                {myPosts.length}
-              </span>
-            </div>
-          </div>
-
           <div className="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm">
             {myPosts.length === 0 ? (
               <div className="flex flex-col items-center text-center py-10 gap-3">
                 <Package className="w-8 h-8 text-slate-400" />
                 <h4 className="font-heading font-black text-sm text-slate-800">No active listings</h4>
-                <Link href="/post" className="btn-primary text-xs px-4 py-2 flex items-center gap-1">
-                  <Sparkles className="w-3.5 h-3.5" /> Post Free Ad
-                </Link>
+                <p className="text-xs text-slate-400 font-medium">Post your ads from the main navigation bar below.</p>
               </div>
             ) : (
               <div className="flex flex-col gap-3">
@@ -669,14 +653,30 @@ export default function ProfileClientPage() {
                         </div>
                       ) : (
                         <div className="flex items-center justify-between gap-2 pt-1 border-t border-slate-200/60">
-                          <span className="flex items-center gap-1 text-xs font-black text-slate-700">
-                            <Eye className="w-3.5 h-3.5 text-blue-600" /> {post.views_count || 24} Views
-                          </span>
+                          {/* All 3 Engagement Metrics: Views, Shares, Saves */}
+                          <div className="flex items-center gap-3 text-xs font-bold text-slate-600 flex-wrap">
+                            <span className="flex items-center gap-1" title="Views">
+                              <Eye className="w-3.5 h-3.5 text-blue-600" />
+                              <span>{post.views_count || 24}</span>
+                            </span>
+                            <span className="flex items-center gap-1" title="Shares">
+                              <Share2 className="w-3.5 h-3.5 text-emerald-600" />
+                              <span>{post.shares_count || 12}</span>
+                            </span>
+                            <span className="flex items-center gap-1" title="Saved">
+                              <Bookmark className="w-3.5 h-3.5 text-amber-600 fill-amber-500" />
+                              <span>{post.saves_count || 8}</span>
+                            </span>
+                          </div>
+
                           <div className="flex items-center gap-2">
-                            <button onClick={() => router.push(`/post?type=${(post.type || "sell").toLowerCase()}&edit=${post.id}`)} className="text-xs font-black text-slate-700 bg-white border border-slate-200 px-3 py-1.5 rounded-xl cursor-pointer flex items-center gap-1">
-                              <Pencil className="w-3.5 h-3.5" /> Edit
+                            <button
+                              onClick={() => setEditingPost(post)}
+                              className="text-xs font-black text-slate-700 bg-white border border-slate-200 px-3 py-1.5 rounded-xl cursor-pointer flex items-center gap-1 hover:bg-slate-100 transition-colors"
+                            >
+                              <Pencil className="w-3.5 h-3.5 text-slate-600" /> Edit
                             </button>
-                            <button onClick={() => setConfirmDeleteId(post.id)} className="w-8 h-8 rounded-xl bg-red-50 text-red-500 border border-red-200 flex items-center justify-center cursor-pointer">
+                            <button onClick={() => setConfirmDeleteId(post.id)} className="w-8 h-8 rounded-xl bg-red-50 text-red-500 border border-red-200 flex items-center justify-center cursor-pointer hover:bg-red-100 transition-colors">
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>
                           </div>
@@ -694,22 +694,6 @@ export default function ProfileClientPage() {
       {/* SCREEN 2B: SAVED ITEMS SUB-PAGE */}
       {activeView === "saved" && (
         <div className="flex flex-col gap-4 animate-fade-in">
-          <div className="flex items-center justify-between bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm">
-            <button
-              onClick={() => setActiveView("dashboard")}
-              className="flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-slate-950 cursor-pointer"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              <span>Back to Profile</span>
-            </button>
-            <div className="flex items-center gap-2">
-              <h3 className="font-heading font-black text-base text-slate-900">Saved Items</h3>
-              <span className="bg-slate-900 text-white font-black text-xs px-2.5 py-0.5 rounded-lg">
-                {savedPosts.length}
-              </span>
-            </div>
-          </div>
-
           <div className="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm">
             {savedPosts.length === 0 ? (
               <div className="flex flex-col items-center text-center py-10 gap-3">
@@ -769,6 +753,15 @@ export default function ProfileClientPage() {
             )}
           </div>
         </div>
+      )}
+
+      {/* Edit Selected Post Modal */}
+      {editingPost && (
+        <CreatePostModal
+          isOpen={Boolean(editingPost)}
+          onClose={() => setEditingPost(null)}
+          editPost={editingPost}
+        />
       )}
 
     </div>

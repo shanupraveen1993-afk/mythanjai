@@ -10,11 +10,7 @@ import { CLASSIFIED_CATEGORIES } from "@/lib/constants";
 import { isListingQuarantined } from "@/lib/moderation";
 import CustomDropdown from "@/components/ui/CustomDropdown";
 
-const SAMPLE_POSTS: NeedOrSalePost[] = [
-  { id: "nd_2bhk", userId: "sample", type: "NEED", raw_text: "Urgent need 2 BHK individual house for rent near Medical College.", title: "Need 2 BHK House for Rent", description: "Looking for independent 2 BHK with car parking in Medical College area.", category: "Property Rental", area_tag: "Medical College Road", price: 12000, phone: "9876543214", is_verified: true, created_at: new Date() as any, expires_at: new Date() as any },
-  { id: "nd_activa", userId: "sample", type: "NEED", raw_text: "Need Honda Activa 6G in good condition.", title: "Need Honda Activa 6G", description: "Buying Activa 6G (2021-2023 model). Budget up to Rs. 55,000.", category: "Used Vehicles", area_tag: "Old Bus Stand", price: 55000, phone: "9876543215", is_verified: true, created_at: new Date() as any, expires_at: new Date() as any },
-  { id: "nd_laptop", userId: "sample", type: "NEED", raw_text: "Need Core i5 laptop for online college classes.", title: "Need i5 Laptop for Studies", description: "Looking for used Dell/HP i5 laptop with 8GB RAM for engineering student.", category: "Electronics & Mobiles", area_tag: "Vallam", price: 22000, phone: "9876543216", is_verified: true, created_at: new Date() as any, expires_at: new Date() as any },
-];
+import { NEED_SAMPLES } from "@/lib/sampleData";
 
 import { useAuth } from "@/hooks/use-auth";
 
@@ -68,7 +64,7 @@ export default function NeedClientPage() {
 
   const filteredPosts = React.useMemo(() => {
     const ids = new Set([...(firestorePosts || []).map((p) => p.id), ...localPosts.map((p) => p.id)]);
-    const seeds = SAMPLE_POSTS.filter((p) => !ids.has(p.id));
+    const seeds = NEED_SAMPLES.filter((p) => !ids.has(p.id));
     let list = [...localPosts, ...seeds, ...(firestorePosts || [])];
 
     list = list.filter((p) => {

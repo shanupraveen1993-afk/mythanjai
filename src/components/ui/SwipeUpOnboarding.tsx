@@ -83,7 +83,7 @@ export default function SwipeUpOnboarding({
   };
 
   return (
-    <div className="fixed inset-0 z-[99990] bg-[#0F172A] text-white select-none font-sans overflow-hidden">
+    <div className="fixed inset-0 z-[99990] bg-slate-50 text-slate-900 select-none font-sans overflow-hidden">
       
       {/* Fixed Top Header */}
       <div
@@ -91,21 +91,21 @@ export default function SwipeUpOnboarding({
         style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 44px)" }}
       >
         <div className="flex items-center gap-2.5">
-          <div className="w-10 h-10 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center p-2 shadow-xs backdrop-blur-md">
+          <div className="w-10 h-10 rounded-2xl bg-white border border-slate-200 flex items-center justify-center p-2 shadow-xs backdrop-blur-md">
             <Image
               src="/namma_thanjai_logo.png"
               alt="Namma Thanjai Logo"
               width={40}
               height={40}
-              className="w-full h-full object-contain filter drop-shadow-sm"
+              className="w-full h-full object-contain"
             />
           </div>
           <div>
-            <h1 className="font-heading font-black text-base text-white leading-tight flex items-center gap-1.5">
+            <h1 className="font-heading font-black text-base text-slate-900 leading-tight flex items-center gap-1.5">
               <span>Namma Thanjai</span>
-              <span className="text-[10px] font-black uppercase tracking-wider text-amber-400 bg-amber-400/10 border border-amber-400/30 px-1.5 py-0.5 rounded-md">APK</span>
+              <span className="text-[10px] font-black uppercase tracking-wider text-amber-700 bg-amber-100 border border-amber-300 px-1.5 py-0.5 rounded-md">APK</span>
             </h1>
-            <p className="text-xs text-amber-400/90 font-bold tracking-wider">
+            <p className="text-xs text-amber-600 font-bold tracking-wider">
               Thanjavur Direct Network
             </p>
           </div>
@@ -114,7 +114,7 @@ export default function SwipeUpOnboarding({
         <button
           type="button"
           onClick={onComplete}
-          className="text-xs font-black text-slate-300 hover:text-white bg-slate-900/90 border border-slate-700/80 px-4 py-2 rounded-xl transition-all cursor-pointer active:scale-95 shadow-md backdrop-blur-md"
+          className="text-xs font-black text-slate-700 hover:text-slate-950 bg-white border border-slate-300 px-4 py-2 rounded-xl transition-all cursor-pointer active:scale-95 shadow-2xs backdrop-blur-md"
         >
           Skip
         </button>
@@ -135,28 +135,28 @@ export default function SwipeUpOnboarding({
               className="w-full h-full snap-start snap-always shrink-0 flex flex-col justify-between pt-28 pb-8 px-6 max-w-md mx-auto relative"
             >
               {/* Background Ambient Lighting per slide */}
-              <div className="absolute top-1/4 right-0 w-80 h-80 bg-amber-500/10 blur-[100px] rounded-full pointer-events-none" />
-              <div className="absolute bottom-1/4 left-0 w-80 h-80 bg-yellow-500/10 blur-[100px] rounded-full pointer-events-none" />
+              <div className="absolute top-1/4 right-0 w-80 h-80 bg-amber-400/10 blur-[100px] rounded-full pointer-events-none" />
+              <div className="absolute bottom-1/4 left-0 w-80 h-80 bg-yellow-400/10 blur-[100px] rounded-full pointer-events-none" />
 
-              {/* Main Visual Reel Card */}
+              {/* Main Visual Card */}
               <div className="flex-1 flex flex-col items-center justify-center z-10">
                 {/* Step Badge */}
-                <span className={`text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full border shadow-sm ${slide.badgeColor}`}>
+                <span className="text-xs font-black uppercase tracking-widest px-3.5 py-1 rounded-full border shadow-2xs bg-amber-50 text-amber-800 border-amber-200/80">
                   {slide.badgeEn}
                 </span>
 
                 {/* Visual Card */}
-                <div className="w-full max-w-[340px] bg-slate-900/90 border border-slate-800 rounded-xl overflow-hidden shadow-[0_15px_40px_rgba(0,0,0,0.8)] mt-4 backdrop-blur-md">
+                <div className="w-full max-w-[340px] bg-white border border-slate-200/90 rounded-2xl overflow-hidden shadow-xl mt-4">
                   <div className="relative w-full h-44 overflow-hidden">
                     <img
                       src={slide.img}
                       alt={slide.titleEn}
                       className="w-full h-full object-cover"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-slate-950/20 to-transparent" />
                     
-                    <div className="absolute top-3 left-3 w-10 h-10 rounded-xl bg-slate-950/80 border border-white/20 backdrop-blur-md flex items-center justify-center shadow-md">
-                      <IconComp className="w-5 h-5 text-amber-400" />
+                    <div className="absolute top-3 left-3 w-10 h-10 rounded-xl bg-white/90 border border-slate-200 backdrop-blur-md flex items-center justify-center shadow-sm">
+                      <IconComp className="w-5 h-5 text-amber-600" />
                     </div>
 
                     <span className="absolute bottom-3 left-4 right-4 font-heading font-black text-lg text-white leading-snug drop-shadow-md">
@@ -165,14 +165,14 @@ export default function SwipeUpOnboarding({
                   </div>
 
                   <div className="p-4 flex flex-col gap-3">
-                    <p className="text-xs text-slate-300 font-medium leading-relaxed">
+                    <p className="text-xs text-slate-600 font-medium leading-relaxed">
                       {slide.subtitleEn}
                     </p>
 
-                    <div className="flex flex-col gap-1.5 border-t border-slate-800/80 pt-3">
+                    <div className="flex flex-col gap-1.5 border-t border-slate-100 pt-3">
                       {slide.highlightsEn.map((item, hIdx) => (
-                        <div key={hIdx} className="flex items-center gap-2 text-xs font-bold text-slate-200">
-                          <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                        <div key={hIdx} className="flex items-center gap-2 text-xs font-bold text-slate-800">
+                          <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
                           <span>{item}</span>
                         </div>
                       ))}
@@ -189,8 +189,8 @@ export default function SwipeUpOnboarding({
                       onClick={() => scrollToSlide(i)}
                       className={`h-2 rounded-full transition-all duration-300 ${
                         i === idx
-                          ? "w-8 bg-amber-400"
-                          : "w-2 bg-slate-800 hover:bg-slate-700"
+                          ? "w-8 bg-amber-500"
+                          : "w-2 bg-slate-300 hover:bg-slate-400"
                       }`}
                     />
                   ))}
@@ -208,7 +208,7 @@ export default function SwipeUpOnboarding({
                       if (onComplete) onComplete();
                     }
                   }}
-                  className={`w-full bg-gradient-to-r ${slide.accentColor} text-slate-950 font-heading font-black text-sm py-3.5 px-6 rounded-2xl shadow-[0_0_25px_rgba(245,158,11,0.4)] active:scale-95 transition-all flex items-center justify-center gap-2 group cursor-pointer`}
+                  className="w-full bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-sm py-3.5 px-6 rounded-2xl shadow-md active:scale-95 transition-all flex items-center justify-center gap-2 group cursor-pointer border border-amber-400/60"
                 >
                   <span>
                     {idx < WALKTHROUGH_SLIDES.length - 1
@@ -220,10 +220,10 @@ export default function SwipeUpOnboarding({
 
                 <div
                   onClick={() => scrollToSlide(idx + 1)}
-                  className="flex flex-col items-center gap-0.5 text-slate-400 text-xs font-bold cursor-pointer animate-bounce mt-1"
+                  className="flex flex-col items-center gap-0.5 text-slate-500 text-xs font-bold cursor-pointer animate-bounce mt-1"
                 >
-                  <ChevronUp className="w-4 h-4 text-amber-400" />
-                  <span>Swipe Up to Proceed (Instagram Feed Style)</span>
+                  <ChevronUp className="w-4 h-4 text-amber-600" />
+                  <span>Swipe Up to Proceed</span>
                 </div>
               </div>
             </div>

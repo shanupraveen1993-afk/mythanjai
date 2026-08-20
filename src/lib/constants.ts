@@ -138,20 +138,31 @@ export const CATEGORY_ILLUSTRATIONS = CATEGORY_IMAGE_MAP;
  */
 export function formatIndianCurrencyText(amount: number | string | null | undefined): string {
   if (amount === null || amount === undefined || amount === "") return "";
-  const num = typeof amount === "number" ? amount : parseFloat(String(amount).replace(/,/g, ""));
-  if (isNaN(num) || num <= 0) return String(amount);
+  const str = String(amount).trim();
 
+  let suffix = "";
+  let numericPart = str;
+  if (str.includes("/")) {
+    const parts = str.split("/");
+    numericPart = parts[0];
+    suffix = ` / ${parts[1]}`;
+  }
+
+  const num = parseFloat(numericPart.replace(/[^0-9.]/g, ""));
+  if (isNaN(num) || num <= 0) return str;
+
+  let formatted = "";
   if (num >= 10000000) {
     const cr = num / 10000000;
-    const formattedCr = cr % 1 === 0 ? cr : cr.toFixed(2);
-    return `₹${formattedCr} Cr`;
-  }
-  if (num >= 100000) {
+    formatted = `₹${cr % 1 === 0 ? cr : cr.toFixed(2)} Cr`;
+  } else if (num >= 100000) {
     const lakh = num / 100000;
-    const formattedLakh = lakh % 1 === 0 ? lakh : lakh.toFixed(2);
-    return `₹${formattedLakh} Lakhs`;
+    formatted = `₹${lakh % 1 === 0 ? lakh : lakh.toFixed(2)} Lakhs`;
+  } else {
+    formatted = `₹${num.toLocaleString("en-IN")}`;
   }
-  return `₹${num.toLocaleString("en-IN")}`;
+
+  return `${formatted}${suffix}`;
 }
 
 /**

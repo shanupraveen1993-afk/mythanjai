@@ -135,7 +135,8 @@ export default function TopHeader({
         {/* Center: Sub-Screen Title or 5 Category Tabs */}
         {pathname.includes("/profile") || pathname.includes("/post") || pathname.includes("/chat") || pathname.includes("/admin") ? (
           <div className="absolute left-1/2 -translate-x-1/2 font-heading font-black text-sm sm:text-base text-slate-900 truncate max-w-[180px] sm:max-w-xs text-center z-10">
-            {pathname.includes("/profile") ? "My Profile"
+            {pathname.includes("/profile")
+              ? "My Profile"
               : pathname.includes("/post") ? "Post a Free Ad"
               : pathname.includes("/chat") ? "Direct Messages"
               : pathname.includes("/admin") ? "Admin Dashboard"
@@ -183,24 +184,25 @@ export default function TopHeader({
           ) : null
         )}
 
-        {/* Right Side: Chat Icon -> Profile Icon -> Primary Yellow Button (Get App / + Post as absolute last button) */}
+        {/* Right Side: On /profile, ONLY Profile icon is shown */}
         <div className="flex items-center justify-end gap-2 shrink-0 ml-auto z-20">
-          {/* 1. Universal Chat Button (Always visible on all screens next to Profile) */}
-          <button
-            type="button"
-            onClick={() => router.push("/chat")}
-            className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border shrink-0 ${
-              pathname === "/chat"
-                ? "bg-[#1d4ed8] text-white border-[#1d4ed8] shadow-sm"
-                : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
-            }`}
-            title="In-App Direct Chat"
-            aria-label="View messages"
-          >
-            <MessageSquare className={`w-4 h-4 ${pathname === "/chat" ? "text-white fill-white/20" : "text-slate-600"}`} />
-          </button>
+          {!pathname.includes("/profile") && (
+            <button
+              type="button"
+              onClick={() => router.push("/chat")}
+              className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border shrink-0 ${
+                pathname === "/chat"
+                  ? "bg-[#1d4ed8] text-white border-[#1d4ed8] shadow-sm"
+                  : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
+              }`}
+              title="In-App Direct Chat"
+              aria-label="View messages"
+            >
+              <MessageSquare className={`w-4 h-4 ${pathname === "/chat" ? "text-white fill-white/20" : "text-slate-600"}`} />
+            </button>
+          )}
 
-          {/* 2. Profile / Sign In Button (Highlighted when active on /profile) */}
+          {/* Profile / Sign In Button (Highlighted when active on /profile) */}
           <button
             type="button"
             onClick={() => {
@@ -222,33 +224,34 @@ export default function TopHeader({
             <User className={`w-4 h-4 ${pathname === "/profile" ? "text-white" : "text-slate-600"}`} />
           </button>
 
-          {/* 3. Primary Yellow Button — Get App (Homepage) OR + Post CTA (Other Pages) */}
-          {isHomePage && !isNativeApp ? (
-            <a
-              href="/namma_thanjai_release.apk"
-              download="namma_thanjai_release.apk"
-              onClick={handleGetAppClick}
-              className="relative group overflow-hidden bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-sm px-4 py-2 rounded-xl font-heading font-black shrink-0 flex items-center gap-2 shadow-xs cursor-pointer select-none border border-amber-400/50 transition-all duration-300"
-              title="Download Namma Thanjai Android App"
-              aria-label="Download Namma Thanjai Android App"
-            >
-              {/* Soft Light Sweep Gold Shine Effect */}
-              <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-amber-100/70 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
-              <Download className="w-4 h-4 shrink-0 text-[#0F172A] stroke-[2.5] relative z-10" />
-              <span className="relative z-10">Get App</span>
-            </a>
-          ) : !isHomePage ? (
-            <button
-              type="button"
-              onClick={handleDynamicPostClick}
-              className="bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-sm px-3.5 sm:px-4 py-2 rounded-xl font-heading font-black shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none touch-manipulation active:scale-[0.97] transition-all"
-              title={postInfo.label}
-            >
-              <Plus className="w-4 h-4 stroke-[3] text-[#0F172A]" />
-              <span className="hidden md:inline">{postInfo.label}</span>
-              <span className="md:hidden">Post</span>
-            </button>
-          ) : null}
+          {/* Primary Yellow Button — ONLY on non-profile pages */}
+          {!pathname.includes("/profile") && (
+            isHomePage && !isNativeApp ? (
+              <a
+                href="/namma_thanjai_release.apk"
+                download="namma_thanjai_release.apk"
+                onClick={handleGetAppClick}
+                className="relative group overflow-hidden bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-sm px-4 py-2 rounded-xl font-heading font-black shrink-0 flex items-center gap-2 shadow-xs cursor-pointer select-none border border-amber-400/50 transition-all duration-300"
+                title="Download Namma Thanjai Android App"
+                aria-label="Download Namma Thanjai Android App"
+              >
+                <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-amber-100/70 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
+                <Download className="w-4 h-4 shrink-0 text-[#0F172A] stroke-[2.5] relative z-10" />
+                <span className="relative z-10">Get App</span>
+              </a>
+            ) : !isHomePage ? (
+              <button
+                type="button"
+                onClick={handleDynamicPostClick}
+                className="bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-sm px-3.5 sm:px-4 py-2 rounded-xl font-heading font-black shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none touch-manipulation active:scale-[0.97] transition-all"
+                title={postInfo.label}
+              >
+                <Plus className="w-4 h-4 stroke-[3] text-[#0F172A]" />
+                <span className="hidden md:inline">{postInfo.label}</span>
+                <span className="md:hidden">Post</span>
+              </button>
+            ) : null
+          )}
         </div>
       </div>
     </header>

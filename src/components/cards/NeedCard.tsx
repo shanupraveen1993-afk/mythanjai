@@ -171,7 +171,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
                 </span>
               )}
             </div>
-            <div className="font-heading font-black text-base sm:text-lg text-[#0F172A] tracking-tight shrink-0">
+            <div className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight shrink-0">
               {displayPriceText}
             </div>
           </div>
@@ -267,16 +267,16 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
                   }
                   router.push(`/chat?listingId=${post.id}&sellerId=${post.userId || ""}&title=${encodeURIComponent(post.title)}`);
                 }}
-                className="flex-1 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow-2xs cursor-pointer transition-colors"
+                className="border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[40px] shrink-0 w-auto shadow-2xs cursor-pointer transition-colors"
               >
-                <MessageSquare className="w-4 h-4 text-[#0F172A] shrink-0" />
+                <MessageSquare className="w-3.5 h-3.5 text-[#0F172A] shrink-0" />
                 <span>Chat</span>
               </button>
 
               <a
                 href={callUrl}
                 onClick={(e) => e.stopPropagation()}
-                className="flex-1 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow-2xs cursor-pointer transition-colors"
+                className="bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs py-2 px-3.5 rounded-xl flex items-center justify-center gap-1.5 min-h-[40px] shrink-0 w-auto shadow-2xs cursor-pointer transition-colors"
               >
                 <Phone className="w-4 h-4 text-white shrink-0" />
                 <span>Call</span>

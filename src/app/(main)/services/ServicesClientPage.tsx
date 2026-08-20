@@ -12,13 +12,7 @@ import CustomDropdown from "@/components/ui/CustomDropdown";
 import { Filter } from "lucide-react";
 import { isListingQuarantined } from "@/lib/moderation";
 
-const SAMPLE_POSTS: ServiceProviderPost[] = [
-  { id: "sv_elec", userId: "sample", name: "Senthil Kumar — Home Electrician", skill_category: "Electrician", area_tag: "Tanjore Town (General)", phone: "9876543220", rating: 4.9, description: "Expert house wiring, DB box installation, inverter assembly, three-phase connections.", is_verified: true, created_at: new Date() as any },
-  { id: "sv_plumb", userId: "sample", name: "Rajesh K — Expert Plumber", skill_category: "Plumber", area_tag: "Medical College Road", phone: "9876543221", rating: 4.8, description: "Pipe fitting, water tank washing, Kaveri line tap connections, motor pump installation.", is_verified: true, created_at: new Date() as any },
-  { id: "sv_ac", userId: "sample", name: "Muthu Cool Tech — AC & Fridge", skill_category: "AC & Fridge Repair", area_tag: "Old Bus Stand", phone: "9876543222", rating: 4.9, description: "Split AC gas filling, deep foam wash, refrigerator compressor repairs.", is_verified: true, created_at: new Date() as any },
-  { id: "sv_carp", userId: "sample", name: "Venu Gopal — Wood Architect", skill_category: "Carpenter", area_tag: "South Rampart (Thenkeezh Street)", phone: "9876543223", rating: 5.0, description: "Modular kitchen woodworks, door laminations, bespoke wardrobes & furniture.", is_verified: true, created_at: new Date() as any },
-  { id: "sv_paint", userId: "sample", name: "Murugan Professional Painters", skill_category: "Painter", area_tag: "Vallam", phone: "9876543224", rating: 4.8, description: "Interior & exterior wall painting, waterproof putty, Asian Paints wall texture.", is_verified: true, created_at: new Date() as any },
-];
+import { SERVICE_SAMPLES } from "@/lib/sampleData";
 
 import { useAuth } from "@/hooks/use-auth";
 
@@ -68,7 +62,7 @@ export default function ServicesClientPage() {
     }
 
     const ids = new Set([...(firestorePosts || []).map((p) => p.id), ...localPosts.map((p) => p.id)]);
-    const seeds = SAMPLE_POSTS.filter((p) => !ids.has(p.id));
+    const seeds = SERVICE_SAMPLES.filter((p) => !ids.has(p.id));
     let list = [...localPosts, ...seeds, ...(firestorePosts || [])].filter((p) => {
       if ((p as any).status === "moderation_review") return false;
       return !isListingQuarantined(p.id);

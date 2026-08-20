@@ -50,23 +50,23 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
     const idx = Math.abs(hash) % 4;
 
     if (text.includes("expert") || text.includes("professional") || text.includes("architect")) {
-      return { label: "🎯 Expert", cls: "bg-emerald-50 text-emerald-700 border-emerald-200" };
+      return { label: "Expert", cls: "bg-emerald-50 text-emerald-700 border-emerald-200" };
     }
     if (text.includes("proficient") || text.includes("master") || text.includes("quality")) {
-      return { label: "🏆 Proficient", cls: "bg-amber-50 text-amber-700 border-amber-200" };
+      return { label: "Proficient", cls: "bg-amber-50 text-amber-700 border-amber-200" };
     }
     if (text.includes("talent") || text.includes("creative") || text.includes("repair")) {
-      return { label: "⚡ Talented", cls: "bg-purple-50 text-purple-700 border-purple-200" };
+      return { label: "Talented", cls: "bg-purple-50 text-purple-700 border-purple-200" };
     }
     if (text.includes("skill") || text.includes("service") || text.includes("wiring")) {
-      return { label: "✨ Skilled", cls: "bg-blue-50 text-blue-700 border-blue-200" };
+      return { label: "Skilled", cls: "bg-blue-50 text-blue-700 border-blue-200" };
     }
 
     const fallbacks = [
-      { label: "✨ Skilled", cls: "bg-blue-50 text-blue-700 border-blue-200" },
-      { label: "⚡ Talented", cls: "bg-purple-50 text-purple-700 border-purple-200" },
-      { label: "🎯 Expert", cls: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-      { label: "🏆 Proficient", cls: "bg-amber-50 text-amber-700 border-amber-200" },
+      { label: "Skilled", cls: "bg-blue-50 text-blue-700 border-blue-200" },
+      { label: "Talented", cls: "bg-purple-50 text-purple-700 border-purple-200" },
+      { label: "Expert", cls: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+      { label: "Proficient", cls: "bg-amber-50 text-amber-700 border-amber-200" },
     ];
     return fallbacks[idx];
   }, [post.description, post.name]);
@@ -318,16 +318,16 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
               }
               toast.success(`Call Back Requested! ${post.name} has been notified to call you.`);
             }}
-            className="flex-1 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow-2xs cursor-pointer transition-colors"
+            className="border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[40px] shrink-0 w-auto shadow-2xs cursor-pointer transition-colors"
           >
-            <Phone className="w-4 h-4 text-[#0F172A] shrink-0 stroke-[2.5]" />
+            <Phone className="w-3.5 h-3.5 text-[#0F172A] shrink-0 stroke-[2.5]" />
             <span>Call Back</span>
           </button>
 
           <button
             type="button"
             onClick={(e) => handleOpenPreContactModal(e, "call")}
-            className="flex-1 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow-2xs cursor-pointer transition-colors"
+            className="bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs py-2 px-3.5 rounded-xl flex items-center justify-center gap-1.5 min-h-[40px] shrink-0 w-auto shadow-2xs cursor-pointer transition-colors"
           >
             <Phone className="w-4 h-4 text-white shrink-0" />
             <span>Call</span>

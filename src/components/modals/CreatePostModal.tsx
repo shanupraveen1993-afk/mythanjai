@@ -53,6 +53,7 @@ interface CreatePostModalProps {
   defaultType?: PostType;
   defaultCategory?: string;
   defaultClassifiedType?: "NEED" | "SELL";
+  editPost?: any;
 }
 
 // Approximate coordinate mapping for Tanjore area tags (enables OSM rendering without Google API costs)
