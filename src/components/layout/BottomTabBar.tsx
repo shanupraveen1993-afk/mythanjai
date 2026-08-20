@@ -18,7 +18,7 @@ export default function BottomTabBar({
   onTabChange,
 }: BottomTabBarProps) {
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePathname() || "";
   const { t } = useLanguage();
 
   const tabs = [

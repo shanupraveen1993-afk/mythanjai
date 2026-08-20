@@ -7,7 +7,7 @@ import { useAuth } from "@/hooks/use-auth";
 
 export default function FloatingPostButton() {
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePathname() || "";
   const { isVerified } = useAuth();
   const isAuthVerified = isVerified;
   const [isVisible, setIsVisible] = useState(false);

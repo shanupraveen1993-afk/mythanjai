@@ -39,7 +39,7 @@ function SearchParamSync({
   onAreaSync: (area: TanjoreLocality | "All Areas") => void;
   onAuthSync: (isOpen: boolean) => void;
 }) {
-  const pathname = usePathname();
+  const pathname = usePathname() || "";
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -73,7 +73,7 @@ function MainLayoutContent({
   children: React.ReactNode;
 }) {
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePathname() || "";
   const { user, profile, loading: authLoading } = useAuth();
   const isAuthVerified = Boolean(profile?.isVerified);
   

@@ -29,7 +29,7 @@ export default function TopHeader({
   onTabChange,
 }: TopHeaderProps) {
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePathname() || "";
   const { user, profile, isVerified } = useAuth();
   const { lang, toggleLanguage, t } = useLanguage();
 
