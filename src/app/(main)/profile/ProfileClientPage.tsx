@@ -345,14 +345,17 @@ export default function ProfileClientPage() {
     toast.success("Listing deleted successfully!");
   };
 
-  // Avatar initials
-  const nameForInitials = profile?.displayName || displayName || user?.displayName || "";
+  // Avatar initials calculation with null-safety
+  const nameForInitials = (profile?.displayName || displayName || user?.displayName || "").trim();
   const initials = nameForInitials
-    .split(" ")
-    .map((w: string) => w[0])
-    .join("")
-    .toUpperCase()
-    .slice(0, 2) || "NT";
+    ? nameForInitials
+        .split(/\s+/)
+        .filter(Boolean)
+        .map((w: string) => (w && w[0] ? w[0] : ""))
+        .join("")
+        .toUpperCase()
+        .slice(0, 2) || "NT"
+    : "NT";
 
   if (authLoading) {
     return (
