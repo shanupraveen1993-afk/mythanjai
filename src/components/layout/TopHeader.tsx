@@ -30,7 +30,7 @@ export default function TopHeader({
 }: TopHeaderProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const { user, profile } = useAuth();
+  const { user, profile, isVerified } = useAuth();
   const { lang, toggleLanguage, t } = useLanguage();
 
   const [profileTab, setProfileTab] = useState<string | null>(null);
@@ -45,7 +45,7 @@ export default function TopHeader({
   // Web App Back Button Navigation Handler
   useBackNavigation();
 
-  const isAuthVerified = Boolean(profile?.isVerified || user);
+  const isAuthVerified = isVerified;
   const showCenterNav = pathname !== "/onboarding" && pathname !== "/chat";
 
   const phoneDisplay = profile?.phone ? `+${profile.phone}` : "+919994837342";

@@ -18,7 +18,7 @@ import WebAppScrollFAB from "@/components/common/WebAppScrollFAB";
 
 export default function NeedClientPage() {
   const router = useRouter();
-  const { user, profile } = useAuth();
+  const { user, profile, isVerified } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [sortBy, setSortBy] = useState<"recent" | "price_low" | "price_high">("recent");
 
@@ -33,7 +33,7 @@ export default function NeedClientPage() {
     { label: "Budget: High to Low", value: "price_high" },
   ], []);
 
-  const isAuthVerified = Boolean(profile?.isVerified || user);
+  const isAuthVerified = isVerified;
 
   const handlePostNeed = () => {
     if (!isAuthVerified) {

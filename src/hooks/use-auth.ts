@@ -9,6 +9,7 @@ import { UserProfile } from "@/types";
 interface AuthContextType {
   user: User | null;
   profile: UserProfile | null;
+  isVerified: boolean;
   loading: boolean;
   updatePhone: (phone: string) => Promise<{ success: boolean }>;
   updateDisplayName: (name: string) => Promise<{ success: boolean }>;
@@ -35,8 +36,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
           if (userDoc.exists()) {
             const data = userDoc.data() as UserProfile;
-            const storedVerified = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_verified") === "true") : false;
-            const storedPhone = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_phone") || "") : "";
+            const storedVerified = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_verified") === "true" || localStorage.getItem("namma_thanjai_verified") === "true") : false;
+            const storedPhone = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_phone") || localStorage.getItem("namma_thanjai_phone") || "") : "";
 
             if (storedVerified) {
               data.isVerified = true;
@@ -54,8 +55,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
             setProfile(data);
           } else {
-            const storedPhone = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_phone") || "") : "";
-            const storedVerified = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_verified") === "true") : false;
+            const storedPhone = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_phone") || localStorage.getItem("namma_thanjai_phone") || "") : "";
+            const storedVerified = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_verified") === "true" || localStorage.getItem("namma_thanjai_verified") === "true") : false;
             const storedDisplayName = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_display_name") || "") : "";
             const newProfile: UserProfile = {
               uid: currentUser.uid,
@@ -72,8 +73,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           console.error("Error fetching user profile:", error);
         }
       } else {
-        const storedPhone = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_phone") || "") : "";
-        const storedVerified = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_verified") === "true") : false;
+        const storedPhone = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_phone") || localStorage.getItem("namma_thanjai_phone") || "") : "";
+        const storedVerified = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_verified") === "true" || localStorage.getItem("namma_thanjai_verified") === "true") : false;
         const storedDisplayName = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_display_name") || "") : "";
         if (storedVerified && storedPhone) {
           setProfile({
@@ -87,6 +88,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         } else {
           setProfile(null);
         }
+
+        // Auto sign-in anonymously so Firebase user object is always populated
+        try {
+          signInAnonymously(auth).catch(() => {});
+        } catch (e) {}
       }
       setLoading(false);
     });
@@ -130,10 +136,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const adminPhone = process.env.NEXT_PUBLIC_ADMIN_PHONE?.replace(/\D/g, "");
     const isAdminPhone = targetPhone.includes("9994837342");
 
-    // Set local persistence
+    // Set local persistence across both key namespaces
     if (typeof window !== "undefined") {
       localStorage.setItem("my_thanjai_verified", "true");
+      localStorage.setItem("namma_thanjai_verified", "true");
       localStorage.setItem("my_thanjai_phone", targetPhone);
+      localStorage.setItem("namma_thanjai_phone", targetPhone);
     }
 
     try {
@@ -182,7 +190,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const signOutUser = async () => {
     if (typeof window !== "undefined") {
       localStorage.removeItem("my_thanjai_verified");
+      localStorage.removeItem("namma_thanjai_verified");
       localStorage.removeItem("my_thanjai_phone");
+      localStorage.removeItem("namma_thanjai_phone");
     }
     setProfile(null);
     try {
@@ -193,9 +203,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const isVerified = Boolean(
+    profile?.isVerified ||
+    (profile?.phone && profile.phone.length >= 10) ||
+    (typeof window !== "undefined" && (localStorage.getItem("my_thanjai_verified") === "true" || localStorage.getItem("namma_thanjai_verified") === "true"))
+  );
+
   return React.createElement(
     AuthContext.Provider,
-    { value: { user, profile, loading, updatePhone, updateDisplayName, setAdminStatus, signOutUser } },
+    { value: { user, profile, isVerified, loading, updatePhone, updateDisplayName, setAdminStatus, signOutUser } },
     children
   );
 }
@@ -206,6 +222,7 @@ export function useAuth() {
     return {
       user: null,
       profile: null,
+      isVerified: false,
       loading: true,
       updatePhone: async () => ({ success: false }),
       updateDisplayName: async () => ({ success: false }),

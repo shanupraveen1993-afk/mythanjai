@@ -22,8 +22,8 @@ import {
 
 export default function LandingClientPage() {
   const router = useRouter();
-  const { user, profile } = useAuth();
-  const isAuthVerified = Boolean(profile?.isVerified || user);
+  const { user, profile, isVerified } = useAuth();
+  const isAuthVerified = isVerified;
   const [activeSellOrNeedPost, setActiveSellOrNeedPost] = React.useState<any>(null);
   const [activeServiceOrOfferPost, setActiveServiceOrOfferPost] = React.useState<any>(null);
 

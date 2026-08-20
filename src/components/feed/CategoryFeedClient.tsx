@@ -102,8 +102,8 @@ interface CategoryFeedClientProps {
 export default function CategoryFeedClient({ segmentType }: CategoryFeedClientProps) {
   const router = useRouter();
   const config = SEGMENT_CONFIG[segmentType];
-  const { user, profile } = useAuth();
-  const isAuthVerified = Boolean(profile?.isVerified || user);
+  const { user, profile, isVerified } = useAuth();
+  const isAuthVerified = isVerified;
 
   // Always use All Areas — no URL query params (prevents Vercel RSC crash)
   const area: "All Areas" = "All Areas";

@@ -22,7 +22,7 @@ import { useAuth } from "@/hooks/use-auth";
 
 export default function ShopsClientPage() {
   const router = useRouter();
-  const { user, profile } = useAuth();
+  const { user, profile, isVerified } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
 
   const categoryOptions = React.useMemo(() => [
@@ -30,7 +30,7 @@ export default function ShopsClientPage() {
     ...SHOP_CATEGORIES.map((cat) => ({ label: cat, value: cat })),
   ], []);
 
-  const isAuthVerified = Boolean(profile?.isVerified || user);
+  const isAuthVerified = isVerified;
 
   const handlePostOffer = () => {
     if (!isAuthVerified) {

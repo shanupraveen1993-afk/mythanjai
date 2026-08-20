@@ -18,7 +18,7 @@ import { useAuth } from "@/hooks/use-auth";
 
 export default function ServicesClientPage() {
   const router = useRouter();
-  const { user, profile } = useAuth();
+  const { user, profile, isVerified } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
   const [sortBy, setSortBy] = useState<"recent" | "rating" | "name">("recent");
 
@@ -33,7 +33,7 @@ export default function ServicesClientPage() {
     { label: "Name (A-Z)", value: "name" },
   ], []);
 
-  const isAuthVerified = Boolean(profile?.isVerified || user);
+  const isAuthVerified = isVerified;
 
   const handlePostService = () => {
     if (!isAuthVerified) {

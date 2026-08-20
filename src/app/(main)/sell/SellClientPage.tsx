@@ -22,7 +22,7 @@ import { useAuth } from "@/hooks/use-auth";
 
 export default function SellClientPage() {
   const router = useRouter();
-  const { user, profile } = useAuth();
+  const { user, profile, isVerified } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [sortBy, setSortBy] = useState<"recent" | "price_low" | "price_high">("recent");
   const [localPosts, setLocalPosts] = useState<NeedOrSalePost[]>([]);
@@ -38,7 +38,7 @@ export default function SellClientPage() {
     { label: "Price: High to Low", value: "price_high" },
   ], []);
 
-  const isAuthVerified = Boolean(profile?.isVerified || user);
+  const isAuthVerified = isVerified;
 
   const handlePostItem = () => {
     if (!isAuthVerified) {

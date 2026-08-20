@@ -8,8 +8,8 @@ import { useAuth } from "@/hooks/use-auth";
 export default function FloatingPostButton() {
   const router = useRouter();
   const pathname = usePathname();
-  const { user, profile } = useAuth();
-  const isAuthVerified = Boolean(profile?.isVerified || user);
+  const { isVerified } = useAuth();
+  const isAuthVerified = isVerified;
   const [isVisible, setIsVisible] = useState(false);
   // useRef instead of useState — prevents scroll listener re-registration on every scroll
   const lastScrollY = useRef(0);

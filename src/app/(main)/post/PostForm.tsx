@@ -118,8 +118,8 @@ export default function PostForm({ segment }: PostFormProps) {
   }, []);
 
   const config = SEGMENT_CONFIG[segment];
-  const { user, profile, loading: authLoading } = useAuth();
-  const isAuthVerified = Boolean(profile?.isVerified || user);
+  const { user, profile, isVerified, loading: authLoading } = useAuth();
+  const isAuthVerified = isVerified;
 
   // Unauthenticated Guest Protection: Wait for auth to finish loading before checking guest status
   useEffect(() => {
