@@ -243,6 +243,10 @@ export default function CategoryFeedClient({ segmentType }: CategoryFeedClientPr
               placeholder={`Search ${config.label}...`}
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
+              autoComplete="on"
+              autoCorrect="on"
+              spellCheck={true}
+              autoCapitalize="sentences"
               className="w-full pl-8 pr-3 py-1.5 text-xs font-medium border border-slate-200 rounded-xl bg-slate-50 focus:outline-none focus:border-slate-400 text-slate-800"
             />
           </div>

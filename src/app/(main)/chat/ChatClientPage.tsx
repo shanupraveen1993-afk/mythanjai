@@ -465,6 +465,10 @@ export default function ChatClientPage() {
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               placeholder="Type a message..."
+              autoComplete="on"
+              autoCorrect="on"
+              spellCheck={true}
+              autoCapitalize="sentences"
               className="flex-1 bg-white border border-slate-200 text-slate-900 rounded-lg px-4 py-2 text-xs font-medium focus:outline-none focus:border-[#00a884]"
             />
             <button

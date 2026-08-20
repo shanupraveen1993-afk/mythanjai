@@ -175,7 +175,19 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
   // ── REEL MODE: Video was uploaded ─────────────────────────────────────────
   if (hasVideo) {
     return (
-      <div className="relative rounded-xl overflow-hidden shadow-md bg-slate-950 font-sans flex flex-col" style={{ minHeight: 420 }}>
+      <div className={`relative rounded-xl overflow-hidden shadow-md bg-slate-950 font-sans flex flex-col ${isExpired ? "opacity-60 grayscale filter pointer-events-none select-none" : ""}`} style={{ minHeight: 420 }}>
+        {/* EXPIRED CENTER OVERLAY BADGE */}
+        {isExpired && (
+          <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-[3px] z-30 flex flex-col items-center justify-center p-4 text-center pointer-events-auto">
+            <div className="bg-rose-600 text-white border-2 border-rose-400 px-5 py-2.5 rounded-2xl shadow-2xl flex flex-col items-center gap-1">
+              <span className="font-heading font-black text-base uppercase tracking-widest">EXPIRED</span>
+              <span className="text-xs font-bold text-rose-100">காலாவதியானது</span>
+            </div>
+            <p className="text-xs text-slate-300 font-semibold mt-2.5 max-w-[210px] leading-snug">
+              This store offer has ended and is no longer active.
+            </p>
+          </div>
+        )}
         {/* Full video background */}
         <video
           src={videoSrc}
@@ -293,7 +305,19 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
   // ── VISITING CARD MODE: Photo cover header ─────────────────────────────
   if (coverImage) {
     return (
-      <div className="bg-white rounded-xl overflow-hidden shadow-2xs border border-slate-200/80 flex flex-col relative font-sans h-full" style={{ minHeight: 420 }}>
+      <div className={`bg-white rounded-xl overflow-hidden shadow-2xs border border-slate-200/80 flex flex-col relative font-sans h-full ${isExpired ? "opacity-60 grayscale filter pointer-events-none select-none" : ""}`} style={{ minHeight: 420 }}>
+        {/* EXPIRED CENTER OVERLAY BADGE */}
+        {isExpired && (
+          <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-[3px] z-30 flex flex-col items-center justify-center p-4 text-center pointer-events-auto">
+            <div className="bg-rose-600 text-white border-2 border-rose-400 px-5 py-2.5 rounded-2xl shadow-2xl flex flex-col items-center gap-1">
+              <span className="font-heading font-black text-base uppercase tracking-widest">EXPIRED</span>
+              <span className="text-xs font-bold text-rose-100">காலாவதியானது</span>
+            </div>
+            <p className="text-xs text-slate-300 font-semibold mt-2.5 max-w-[210px] leading-snug">
+              This store offer has ended and is no longer active.
+            </p>
+          </div>
+        )}
         {/* Featured / Expired / Ends Today banner */}
         {isExpired ? (
           <div className="absolute top-2.5 left-2.5 z-20 bg-rose-600 text-white text-xs font-bold px-2.5 py-0.5 rounded-lg shadow-md">⚠️ Offer Expired</div>
@@ -412,7 +436,19 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
 
   // ── STATE C: CORPORATE SHOP INFO CARD (No Media Provided Fallback) ───────
   return (
-    <div className={`bg-white rounded-xl p-4 flex flex-col justify-between shadow-2xs hover:shadow-md transition-all duration-200 border border-slate-200/90 relative font-sans h-full ${isExpired ? "opacity-75 grayscale-[0.25]" : ""}`}>
+    <div className={`bg-white rounded-xl p-4 flex flex-col justify-between shadow-2xs hover:shadow-md transition-all duration-200 border border-slate-200/90 relative font-sans h-full ${isExpired ? "opacity-60 grayscale filter pointer-events-none select-none" : ""}`}>
+      {/* EXPIRED CENTER OVERLAY BADGE */}
+      {isExpired && (
+        <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-[3px] z-30 flex flex-col items-center justify-center p-4 text-center pointer-events-auto rounded-xl">
+          <div className="bg-rose-600 text-white border-2 border-rose-400 px-5 py-2.5 rounded-2xl shadow-2xl flex flex-col items-center gap-1">
+            <span className="font-heading font-black text-base uppercase tracking-widest">EXPIRED</span>
+            <span className="text-xs font-bold text-rose-100">காலாவதியானது</span>
+          </div>
+          <p className="text-xs text-slate-300 font-semibold mt-2.5 max-w-[210px] leading-snug">
+            This store offer has ended and is no longer active.
+          </p>
+        </div>
+      )}
       <div className="flex flex-col gap-3 flex-1">
         {/* Top Row: Shop Name + Category & Utility Buttons */}
         <div className="flex items-start justify-between gap-3 w-full">
