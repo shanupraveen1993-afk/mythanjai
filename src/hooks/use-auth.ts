@@ -36,13 +36,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
           if (userDoc.exists()) {
             const data = userDoc.data() as UserProfile;
-            const storedVerified = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_verified") === "true" || localStorage.getItem("namma_thanjai_verified") === "true") : false;
-            const storedPhone = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_phone") || localStorage.getItem("namma_thanjai_phone") || "") : "";
-
-            if (storedVerified) {
-              data.isVerified = true;
-              if (storedPhone) data.phone = storedPhone;
-            }
 
             const adminPhone = process.env.NEXT_PUBLIC_ADMIN_PHONE?.replace(/\D/g, "");
             const hasAdminPhone = data.phone && (data.phone.replace(/\D/g, "") === adminPhone || data.phone.includes("9994837342"));
@@ -61,7 +54,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             const newProfile: UserProfile = {
               uid: currentUser.uid,
               phone: storedPhone || "",
-              isVerified: storedVerified || false,
+              isVerified: Boolean(storedVerified && storedPhone),
               isAdmin: storedPhone.includes("9994837342"),
               displayName: storedDisplayName || currentUser.displayName || "",
               createdAt: new Date(),
@@ -73,23 +66,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           console.error("Error fetching user profile:", error);
         }
       } else {
-        const storedPhone = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_phone") || localStorage.getItem("namma_thanjai_phone") || "") : "";
-        const storedVerified = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_verified") === "true" || localStorage.getItem("namma_thanjai_verified") === "true") : false;
-        const storedDisplayName = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_display_name") || "") : "";
-        if (storedVerified && storedPhone) {
-          setProfile({
-            uid: "localStorage_user",
-            phone: storedPhone,
-            isVerified: true,
-            isAdmin: storedPhone.includes("9994837342"),
-            displayName: storedDisplayName || "",
-            createdAt: new Date(),
-          });
-        } else {
-          setProfile(null);
-        }
-
-        // Auto sign-in anonymously so Firebase user object is always populated
+        setProfile(null);
+        // Auto sign-in anonymously so Firebase user object is initialized
         try {
           signInAnonymously(auth).catch(() => {});
         } catch (e) {}
@@ -204,9 +182,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const isVerified = Boolean(
-    profile?.isVerified ||
-    (profile?.phone && profile.phone.length >= 10) ||
-    (typeof window !== "undefined" && (localStorage.getItem("my_thanjai_verified") === "true" || localStorage.getItem("namma_thanjai_verified") === "true"))
+    profile?.isVerified && profile?.phone && profile.phone.replace(/\D/g, "").length >= 10
   );
 
   return React.createElement(
