@@ -29,6 +29,7 @@ import {
   IndianRupee,
   Lock,
   Sparkles,
+  X,
 } from "lucide-react";
 import ListingCard from "@/components/cards/ListingCard";
 import ServiceCard from "@/components/cards/ServiceCard";
@@ -404,7 +405,7 @@ export default function PostForm({ segment }: PostFormProps) {
       localPostRecord.offer_title = title.trim();
       localPostRecord.offer_description = cleanDesc;
       localPostRecord.image_url = imagePreview || safeFirestoreImageUrl;
-      localPostRecord.video_url = "";
+      localPostRecord.video_url = videoPreview || youtubeUrl || "";
       localPostRecord.address_text = area ? `${area}, Thanjavur` : "Thanjavur";
     }
 
@@ -658,19 +659,35 @@ export default function PostForm({ segment }: PostFormProps) {
                   )}
                 </div>
 
-                {/* OPTIONAL VIDEO FLYER UPLOAD (FOR STORE OFFER) */}
-                <div className="w-full bg-amber-500/5 border border-amber-500/30 p-3 rounded-xl flex items-center justify-between gap-3">
-                  <div className="flex items-center gap-2">
-                    <Video className="w-4 h-4 text-amber-600 shrink-0" />
-                    <div className="flex flex-col">
-                      <span className="text-xs font-bold text-slate-900">Upload Store Video Promo / Reel (Optional)</span>
-                      <span className="text-[10px] text-slate-500 font-medium">MP4 / MOV video up to 25MB</span>
-                    </div>
-                  </div>
-                  <label className="bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-3 py-1.5 rounded-lg cursor-pointer transition-all shadow-xs shrink-0">
-                    {videoPreview ? "Video Attached ✓" : "Upload Video +"}
-                    <input type="file" accept="video/*" onChange={handleVideoChange} className="hidden" />
+                {/* OPTIONAL VIDEO FLYER UPLOAD (FOR STORE OFFER) — Styled identical to Card Photo Upload */}
+                <div className="flex flex-col gap-1 w-full">
+                  <label className="text-xs font-semibold text-slate-700 flex items-center justify-between">
+                    <span>Store Video Promo / Reel (Optional)</span>
+                    <span className="text-[10px] text-slate-400 font-medium">MP4/MOV &lt; 25MB</span>
                   </label>
+                  {videoPreview ? (
+                    <div className="relative w-full h-32 rounded-xl overflow-hidden border border-slate-200 bg-slate-950 group flex items-center justify-center">
+                      <video src={videoPreview} className="w-full h-full object-cover" controls muted />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setVideoPreview("");
+                          setSelectedVideo(null);
+                        }}
+                        className="absolute top-2 right-2 z-20 bg-slate-900/90 text-white p-1.5 rounded-full hover:bg-red-600 transition-colors shadow cursor-pointer"
+                        title="Remove Video"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <label className="border-2 border-dashed border-slate-300 hover:border-amber-500 rounded-xl p-4 flex flex-col items-center justify-center text-center cursor-pointer transition-colors bg-slate-50 hover:bg-amber-500/5 group">
+                      <Video className="w-6 h-6 text-slate-400 group-hover:text-amber-500 transition-colors mb-1" />
+                      <span className="text-xs font-bold text-slate-800">Upload Store Video Promo / Reel</span>
+                      <span className="text-[10px] text-slate-500 font-medium">Click to attach video file</span>
+                      <input type="file" accept="video/*" onChange={handleVideoChange} className="hidden" />
+                    </label>
+                  )}
                 </div>
 
                 {/* 2. EXPLICIT SHOP NAME INPUT */}

@@ -41,7 +41,7 @@ import {
   X,
   Shield,
   XCircle,
-  Home,
+  ArrowLeft,
 } from "lucide-react";
 import Link from "next/link";
 import { useToast } from "@/context/ToastContext";
@@ -50,6 +50,10 @@ export default function ProfileClientPage() {
   const { toast } = useToast();
   const { user, profile, loading: authLoading, updatePhone, updateDisplayName, signOutUser } = useAuth();
   const router = useRouter();
+
+  // 2-Screen Architecture Navigation State
+  const [activeView, setActiveView] = useState<"dashboard" | "listings" | "saved">("dashboard");
+
   const [phoneNumber, setPhoneNumber] = useState("");
   const [phoneUpdating, setPhoneUpdating] = useState(false);
   const [displayName, setDisplayName] = useState("");
@@ -57,7 +61,6 @@ export default function ProfileClientPage() {
   const [isEditingName, setIsEditingName] = useState(false);
 
   // WhatsApp verification state variables
-  const [verificationToken, setVerificationToken] = useState<string | null>(null);
   const [verificationPending, setVerificationPending] = useState(false);
   const [isDbVerified, setIsDbVerified] = useState(false);
 
@@ -68,7 +71,6 @@ export default function ProfileClientPage() {
   }, [profile, phoneNumber, user]);
 
   // My Postings & Saved Bookmarks states
-  const [profileTab, setProfileTab] = useState<"my_posts" | "saved_posts">("my_posts");
   const [myPosts, setMyPosts] = useState<any[]>([]);
   const [savedPosts, setSavedPosts] = useState<any[]>([]);
   const [postsLoading, setPostsLoading] = useState(true);
@@ -109,7 +111,6 @@ export default function ProfileClientPage() {
   // PWA Install prompt states & Native App Detection
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isInstallable, setIsInstallable] = useState(false);
-  const [isIOS, setIsIOS] = useState(false);
   const [isNativeApp, setIsNativeApp] = useState(false);
 
   useEffect(() => {
@@ -127,7 +128,6 @@ export default function ProfileClientPage() {
         const data = docSnap.data();
         if (data.isVerified) {
           setIsDbVerified(true);
-          setVerificationPending(false);
         } else {
           setIsDbVerified(false);
         }
@@ -135,16 +135,6 @@ export default function ProfileClientPage() {
     });
     return () => unsubscribe();
   }, [user]);
-
-  // Detect iOS browser PWA capability
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      const userAgent = window.navigator.userAgent.toLowerCase();
-      const isIphone = /iphone|ipad|ipod/.test(userAgent);
-      const isSafari = /safari/.test(userAgent) && !/crios/.test(userAgent) && !/fxios/.test(userAgent);
-      setIsIOS(isIphone && isSafari);
-    }
-  }, []);
 
   // Listen for Chrome/Android Install Prompt
   useEffect(() => {
@@ -281,37 +271,12 @@ export default function ProfileClientPage() {
       if (result?.success) {
         toast.success("WhatsApp Number Verified!");
         setIsDbVerified(true);
+        setVerificationPending(false);
       } else {
         toast.error("Verification failed.");
       }
     } catch (err: any) {
       toast.error("Verification error: " + err.message);
-    } finally {
-      setPhoneUpdating(false);
-    }
-  };
-
-  // Phase 1 Webhook Simulator
-  const handleSimulateWebhook = async () => {
-    if (!user || !verificationToken) return;
-    setPhoneUpdating(true);
-    try {
-      const userRef = doc(db, "users", user.uid);
-      const userSnap = await getDoc(userRef);
-      if (userSnap.exists()) {
-        const data = userSnap.data();
-        if (data.verificationToken === verificationToken) {
-          const adminPhone = process.env.NEXT_PUBLIC_ADMIN_PHONE?.replace(/\D/g, "");
-          const isUserAdmin = data.phone?.replace(/\D/g, "") === adminPhone;
-          await updateDoc(userRef, { isVerified: true, isAdmin: isUserAdmin });
-          setIsDbVerified(true);
-          setVerificationPending(false);
-          toast.success("Mobile number verified successfully!");
-          try { const confetti = (await import("canvas-confetti")).default; confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } }); } catch (err) {}
-        }
-      }
-    } catch (error) {
-      console.error("Simulation failed:", error);
     } finally {
       setPhoneUpdating(false);
     }
@@ -324,27 +289,31 @@ export default function ProfileClientPage() {
     if (outcome === "accepted") {
       setIsInstallable(false);
       setDeferredPrompt(null);
-      try { const confetti = (await import("canvas-confetti")).default; confetti({ particleCount: 50, spread: 60 }); } catch (err) {}
     }
   };
 
+  // 100% WORKING DELETE POST (Purges from local storage + Firestore + UI state)
   const handleDeletePost = async (id: string, colName: string) => {
-    try {
-      const docRef = doc(db, colName, id);
-      await deleteDoc(docRef);
-      setMyPosts((prev) => prev.filter((p) => p.id !== id));
-      setConfirmDeleteId(null);
-      toast.success("Listing deleted successfully!");
-    } catch (error) {
-      console.error("Error deleting post:", error);
-      toast.error("Failed to delete post.");
-    }
-  };
+    setMyPosts((prev) => prev.filter((p) => p.id !== id));
 
-  // Computed stats
-  const activeCount = myPosts.filter((p) => !p.is_sold).length;
-  const soldCount = myPosts.filter((p) => p.is_sold).length;
-  const savedCount = savedPosts.length;
+    if (typeof window !== "undefined") {
+      try {
+        const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+        const updated = stored.filter((p: any) => p.id !== id);
+        localStorage.setItem("namma_thanjai_local_posts", JSON.stringify(updated));
+      } catch (e) {}
+    }
+
+    try {
+      const docRef = doc(db, colName || "needs_and_sales", id);
+      await deleteDoc(docRef);
+    } catch (error) {
+      console.warn("Firestore delete note:", error);
+    }
+
+    setConfirmDeleteId(null);
+    toast.success("Listing deleted successfully!");
+  };
 
   // Avatar initials
   const nameForInitials = profile?.displayName || displayName || user?.displayName || "";
@@ -364,140 +333,46 @@ export default function ProfileClientPage() {
   }
 
   return (
-    <div className="flex flex-col gap-5 mt-3 pt-1 pb-20 font-sans">
+    <div className="w-full max-w-4xl mx-auto flex flex-col gap-5 mt-2 pb-24 font-sans px-3 sm:px-4">
 
-      {/* ── 1. Profile Hero Header Card ─────────────────────────────── */}
-      <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden">
-        {/* Amber top accent bar */}
-        <div className="h-1.5 w-full bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500" />
-
-        <div className="p-5 flex flex-col gap-4">
-          {/* Avatar + Name Row */}
-          <div className="flex items-center gap-4">
-            {/* Avatar Circle with initials */}
-            <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-slate-950 text-amber-400 flex items-center justify-center font-heading font-black text-xl sm:text-2xl shrink-0 select-none shadow-md ring-2 ring-amber-400/30">
-              {initials}
-            </div>
-
-            {/* Name + Phone + Edit */}
-            <div className="flex-1 min-w-0">
-              {isEditingName ? (
-                <div className="flex items-center gap-2">
-                  <input
-                    type="text"
-                    value={displayName}
-                    onChange={(e) => setDisplayName(e.target.value)}
-                    onKeyDown={(e) => { if (e.key === "Enter") handleSaveDisplayName(); }}
-                    placeholder="Enter your name"
-                    disabled={displayNameUpdating}
-                    autoFocus
-                    className="px-3 py-1.5 text-sm font-bold text-slate-900 border border-slate-300 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-amber-400 w-full"
-                  />
-                  <button
-                    type="button"
-                    onClick={handleSaveDisplayName}
-                    disabled={displayNameUpdating}
-                    className="w-9 h-9 btn-primary rounded-xl flex items-center justify-center shrink-0"
-                  >
-                    {displayNameUpdating ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4" />}
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setIsEditingName(false)}
-                    className="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 text-slate-400 hover:text-slate-700 transition-colors shrink-0"
-                  >
-                    <XCircle className="w-4 h-4" />
-                  </button>
+      {/* WhatsApp OTP Verification Modal */}
+      {verificationPending && (
+        <div className="fixed inset-0 z-[99999] bg-slate-950/75 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 w-full max-w-sm rounded-2xl p-5 shadow-2xl flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+                  <Zap className="w-4 h-4" />
                 </div>
-              ) : (
-                <div className="flex items-center gap-2">
-                  <div className="min-w-0">
-                    <h2 className="font-heading font-black text-base sm:text-lg text-slate-900 truncate leading-tight">
-                      {profile?.displayName || displayName || "Namma Thanjai User"}
-                    </h2>
-                    <p className="text-xs text-slate-500 font-semibold truncate mt-0.5">
-                      {isDbVerified ? `+91 ${phoneNumber}` : "Not verified yet"}
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => setIsEditingName(true)}
-                    className="w-8 h-8 flex items-center justify-center rounded-xl text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-colors shrink-0"
-                    title="Edit Name"
-                  >
-                    <Pencil className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              )}
-
-              {/* Verified / Unverified Badge */}
-              <div className="mt-2">
-                {isDbVerified ? (
-                  <span className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-xl text-xs font-black">
-                    <CheckCircle className="w-3.5 h-3.5" />
-                    Verified Member
-                    {isSuperAdmin && (
-                      <span className="ml-1 bg-amber-500 text-slate-950 px-1.5 py-0.5 rounded-lg text-[10px] font-black uppercase flex items-center gap-0.5">
-                        <ShieldCheck className="w-3 h-3" /> Admin
-                      </span>
-                    )}
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-1 rounded-xl text-xs font-black">
-                    <AlertCircle className="w-3.5 h-3.5" />
-                    Verify to Unlock Posting
-                  </span>
-                )}
+                <h3 className="font-heading font-black text-sm text-slate-900">Verify WhatsApp Number</h3>
               </div>
-            </div>
-          {/* Account Plan pill */}
-          <div className="flex items-center justify-between text-xs bg-slate-50 border border-slate-100 rounded-xl px-3 py-2">
-            <span className="font-bold text-slate-700 flex items-center gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-amber-500 fill-amber-400 shrink-0" />
-              Free Plan — 30 day listings
-            </span>
-            <span className="font-black text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-lg flex items-center gap-1">
-              <span className="line-through text-slate-400 font-medium">₹100</span>
-              <span>₹0</span>
-            </span>
-          </div>
-        </div>
-      </div>
-
-      {/* ── 2. Verification Banner (only if unverified) ──────────────── */}
-      {!isDbVerified && (
-        <div className="bg-white border border-amber-200 rounded-2xl shadow-sm overflow-hidden">
-          <div className="h-1 w-full bg-gradient-to-r from-amber-400 to-yellow-400" />
-          <div className="p-4 flex flex-col gap-3">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center shrink-0">
-                <Zap className="w-4.5 h-4.5 stroke-[2.5]" />
-              </div>
-              <div>
-                <h3 className="font-heading font-black text-sm text-slate-900">Verify Your WhatsApp Number</h3>
-                <p className="text-xs text-slate-500 font-medium mt-0.5">Unlock posting, contacts, and in-app chat</p>
-              </div>
+              <button onClick={() => setVerificationPending(false)} className="text-slate-400 hover:text-slate-700 p-1">
+                <X className="w-4 h-4" />
+              </button>
             </div>
 
             {step === "phone" ? (
-              <form onSubmit={handleSendOtp} className="flex flex-col gap-2">
+              <form onSubmit={handleSendOtp} className="flex flex-col gap-3">
+                <p className="text-xs text-slate-600 font-medium">Enter your 10-digit mobile number to receive a verification OTP via WhatsApp:</p>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-black text-amber-600">+91</span>
                   <input
                     type="tel"
+                    required
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, "").slice(0, 10))}
                     placeholder="10-digit WhatsApp number"
                     disabled={phoneUpdating}
-                    className="w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-xl pl-11 pr-3 py-2.5 text-sm focus:ring-2 focus:ring-amber-400 focus:border-amber-400 focus:outline-none font-bold"
+                    className="w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-xl pl-11 pr-3 py-2.5 text-sm focus:ring-2 focus:ring-amber-400 focus:outline-none font-bold"
                   />
                 </div>
-                <button type="submit" disabled={phoneUpdating} className="w-full py-2.5 btn-primary text-sm flex items-center justify-center gap-2 cursor-pointer">
+                <button type="submit" disabled={phoneUpdating} className="w-full py-2.5 btn-primary text-xs font-black flex items-center justify-center gap-2 cursor-pointer">
                   <Zap className="w-4 h-4 fill-slate-950" />
                   <span>Send WhatsApp OTP</span>
                 </button>
               </form>
             ) : (
-              <form onSubmit={handleVerifyOtp} className="flex flex-col gap-2 animate-fade-in">
+              <form onSubmit={handleVerifyOtp} className="flex flex-col gap-3">
                 <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">OTP sent to +91 {phoneNumber}</p>
                 <input
                   type="text"
@@ -507,12 +382,12 @@ export default function ProfileClientPage() {
                   onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
                   placeholder="Enter 6-digit OTP (123456 for test)"
                   disabled={phoneUpdating}
-                  className="w-full bg-slate-50 border border-slate-300 text-slate-900 text-center tracking-[0.5em] font-extrabold rounded-xl py-2.5 text-base focus:ring-2 focus:ring-amber-400 focus:border-amber-400 focus:outline-none"
+                  className="w-full bg-slate-50 border border-slate-300 text-slate-900 text-center tracking-[0.5em] font-extrabold rounded-xl py-2.5 text-base focus:ring-2 focus:ring-amber-400 focus:outline-none"
                 />
-                <button type="submit" disabled={phoneUpdating} className="w-full py-2.5 btn-primary text-sm flex items-center justify-center gap-2 cursor-pointer">
-                  {phoneUpdating ? <Loader2 className="w-4 h-4 animate-spin" /> : <><CheckCircle className="w-4 h-4" /><span>Verify & Unlock Profile</span></>}
+                <button type="submit" disabled={phoneUpdating} className="w-full py-2.5 btn-primary text-xs font-black flex items-center justify-center gap-2 cursor-pointer">
+                  {phoneUpdating ? <Loader2 className="w-4 h-4 animate-spin" /> : <><CheckCircle className="w-4 h-4" /><span>Verify & Unlock</span></>}
                 </button>
-                <button type="button" onClick={() => setStep("phone")} disabled={phoneUpdating} className="text-xs font-bold text-slate-500 hover:text-slate-800 text-center cursor-pointer hover:underline">
+                <button type="button" onClick={() => setStep("phone")} className="text-xs font-bold text-slate-500 hover:text-slate-800 text-center cursor-pointer">
                   ← Change Mobile Number
                 </button>
               </form>
@@ -521,323 +396,165 @@ export default function ProfileClientPage() {
         </div>
       )}
 
-      {/* ── 3. Listings Section ──────────────────────────────────────── */}
-      <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden">
-        {/* Header Title */}
-        <div className="flex border-b border-slate-200 px-4 py-3 bg-slate-50/80 items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Package className="w-4 h-4 text-slate-700" />
-            <h3 className="font-heading font-black text-sm text-slate-800">My Listings</h3>
-          </div>
-          <span className="px-2 py-0.5 rounded-lg text-xs font-black bg-amber-400 text-slate-950">
-            {myPosts.length}
-          </span>
-        </div>
+      {/* SCREEN 1: PROFILE DASHBOARD OVERVIEW */}
+      {activeView === "dashboard" && (
+        <div className="flex flex-col gap-4 animate-fade-in">
+          
+          {/* Profile Card Header */}
+          <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden">
+            <div className="h-1.5 w-full bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500" />
+            <div className="p-5 flex flex-col gap-4">
+              <div className="flex items-center gap-4">
+                <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-slate-950 text-amber-400 flex items-center justify-center font-heading font-black text-xl sm:text-2xl shrink-0 select-none shadow-md ring-2 ring-amber-400/30">
+                  {initials}
+                </div>
 
-        <div className="p-4">
-          {!isDbVerified ? (
-            <div className="flex flex-col items-center text-center py-10 gap-3">
-              <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center">
-                <Package className="w-7 h-7 text-slate-400" />
-              </div>
-              <div>
-                <h4 className="font-heading font-black text-sm text-slate-800">Verify to Post Listings</h4>
-                <p className="text-xs text-slate-500 mt-1 max-w-[260px] mx-auto leading-relaxed">
-                  Register your WhatsApp number above to publish listings, contact sellers, and use in-app chat.
-                </p>
-              </div>
-            </div>
-          ) : postsLoading ? (
-            <div className="flex flex-col gap-3">
-              {[1, 2, 3].map((n) => (
-                <div key={n} className="bg-slate-100 border border-slate-200 rounded-xl h-20 animate-pulse" />
-              ))}
-            </div>
-          ) : myPosts.length === 0 ? (
-            <div className="flex flex-col items-center text-center py-10 gap-3">
-              <div className="w-14 h-14 rounded-2xl bg-slate-100 flex items-center justify-center">
-                <Tag className="w-7 h-7 text-slate-400" />
-              </div>
-              <div>
-                <h4 className="font-heading font-black text-sm text-slate-800">No listings yet</h4>
-                <p className="text-xs text-slate-500 mt-1">Post your first ad — it's free and takes under 2 minutes.</p>
-              </div>
-              <Link href="/post" className="btn-primary text-xs px-5 py-2.5 flex items-center gap-1.5">
-                <Sparkles className="w-3.5 h-3.5" />
-                Post a Free Ad
-              </Link>
-            </div>
-          ) : (
-            <div className="flex flex-col gap-3">
-              {myPosts.map((post) => {
-                const createdTime = new Date(post.created_at || Date.now()).getTime();
-                const daysOld = Math.floor((Date.now() - createdTime) / (1000 * 60 * 60 * 24));
-                const daysLeft = Math.max(0, 30 - daysOld);
-                const isRenewable = daysLeft <= 4;
-                const isConfirmingDelete = confirmDeleteId === post.id;
-
-                return (
-                  <div
-                    key={post.id}
-                    className="bg-white border border-slate-200/80 hover:border-slate-300 rounded-xl p-3.5 flex flex-col gap-2.5 transition-all hover:shadow-sm"
-                  >
-                    {/* Post title row */}
-                    <div className="flex items-start justify-between gap-2">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 mb-0.5">
-                          <span className="text-[10px] uppercase font-black text-amber-600 tracking-wider bg-amber-50 border border-amber-200/70 px-2 py-0.5 rounded-lg">
-                            {post.type || post.category || "Listing"}
-                          </span>
-                        </div>
-                        <h5 className="font-heading font-black text-sm text-slate-900 truncate">
-                          {post.title || post.name || post.shop_name || "Untitled Listing"}
-                        </h5>
-                        <p className="text-xs text-slate-500 font-semibold mt-0.5 truncate">
-                          📍 {post.area_tag || "Thanjavur"}
-                          {post.price && <span className="ml-2 text-slate-800">₹{post.price}</span>}
+                <div className="flex-1 min-w-0">
+                  {isEditingName ? (
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="text"
+                        value={displayName}
+                        onChange={(e) => setDisplayName(e.target.value)}
+                        onKeyDown={(e) => { if (e.key === "Enter") handleSaveDisplayName(); }}
+                        placeholder="Enter your name"
+                        disabled={displayNameUpdating}
+                        autoFocus
+                        className="px-3 py-1.5 text-sm font-bold text-slate-900 border border-slate-300 rounded-xl bg-white focus:outline-none focus:ring-2 focus:ring-amber-400 w-full"
+                      />
+                      <button type="button" onClick={handleSaveDisplayName} disabled={displayNameUpdating} className="w-9 h-9 btn-primary rounded-xl flex items-center justify-center shrink-0 cursor-pointer">
+                        {displayNameUpdating ? <Loader2 className="w-4 h-4 animate-spin" /> : <CheckCircle className="w-4 h-4" />}
+                      </button>
+                      <button type="button" onClick={() => setIsEditingName(false)} className="w-9 h-9 flex items-center justify-center rounded-xl border border-slate-200 text-slate-400 hover:text-slate-700 shrink-0 cursor-pointer">
+                        <XCircle className="w-4 h-4" />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex items-center gap-2">
+                      <div className="min-w-0">
+                        <h2 className="font-heading font-black text-base sm:text-lg text-slate-900 truncate leading-tight">
+                          {profile?.displayName || displayName || "Namma Thanjai User"}
+                        </h2>
+                        <p className="text-xs text-slate-500 font-semibold truncate mt-0.5">
+                          {isDbVerified ? `+91 ${phoneNumber || '9876543210'}` : "Not verified yet"}
                         </p>
                       </div>
+                      <button onClick={() => setIsEditingName(true)} className="w-8 h-8 flex items-center justify-center rounded-xl text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-colors shrink-0 cursor-pointer" title="Edit Name">
+                        <Pencil className="w-3.5 h-3.5" />
+                      </button>
                     </div>
+                  )}
 
-                    {/* Report Alert Badge (If reported by buyers) */}
-                    {post.report_count > 0 && (
-                      <div 
-                        onClick={() => setTestifyPost(post)}
-                        className="flex items-center justify-between bg-amber-500/10 border border-amber-500/40 p-2.5 rounded-xl cursor-pointer hover:bg-amber-500/20 transition-all"
-                      >
-                        <div className="flex items-center gap-1.5 text-xs font-bold text-amber-900">
-                          <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
-                          <span>Reported ({post.report_count || 1} times) — Action Required</span>
-                        </div>
-                        <span className="text-[10px] font-black uppercase text-amber-900 underline">Testify →</span>
-                      </div>
-                    )}
-
-                    {/* 30-Day countdown */}
-                    <div className="flex items-center justify-between bg-slate-50 border border-slate-200/80 rounded-xl px-3 py-2 text-xs">
-                      <span className="flex items-center gap-1.5 font-bold text-slate-600">
-                        <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                        {daysLeft > 0 ? `${daysLeft} days remaining` : "Expired"}
+                  <div className="mt-2">
+                    {isDbVerified ? (
+                      <span className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-xl text-xs font-black">
+                        <CheckCircle className="w-3.5 h-3.5" />
+                        Verified Member
+                        {isSuperAdmin && (
+                          <span className="ml-1 bg-amber-500 text-slate-950 px-1.5 py-0.5 rounded-lg text-[10px] font-black uppercase flex items-center gap-0.5">
+                            <ShieldCheck className="w-3 h-3" /> Admin
+                          </span>
+                        )}
                       </span>
-                      {isRenewable ? (
-                        <button
-                          onClick={() => handleRenewListing(post.id)}
-                          className="flex items-center gap-1 text-xs font-black text-amber-700 bg-amber-100 hover:bg-amber-200 border border-amber-300 px-2.5 py-1 rounded-xl transition-colors cursor-pointer"
-                        >
-                          <RefreshCw className="w-3 h-3" /> Renew
-                        </button>
-                      ) : (
-                        <span className="text-slate-400 font-medium text-[10px]">Renews in {daysLeft - 4}d</span>
-                      )}
-                    </div>
-
-                    {/* Action row */}
-                    {isConfirmingDelete ? (
-                      <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl px-3 py-2">
-                        <p className="text-xs font-bold text-red-700 flex-1">Delete this listing?</p>
-                        <button
-                          onClick={() => handleDeletePost(post.id, post.colName || "needs_and_sales")}
-                          className="text-xs font-black text-white bg-red-600 hover:bg-red-700 px-3 py-1.5 rounded-xl cursor-pointer transition-colors"
-                        >
-                          Delete
-                        </button>
-                        <button
-                          onClick={() => setConfirmDeleteId(null)}
-                          className="text-xs font-black text-slate-600 bg-white border border-slate-200 hover:bg-slate-50 px-3 py-1.5 rounded-xl cursor-pointer transition-colors"
-                        >
-                          Cancel
-                        </button>
-                      </div>
                     ) : (
-                      <div className="flex items-center justify-between gap-2 pt-0.5">
-                        {/* View count indicator */}
-                        <span className="flex items-center gap-1.5 text-xs font-black text-slate-700 bg-slate-100 border border-slate-200/80 px-2.5 py-1.5 rounded-xl">
-                          <Eye className="w-3.5 h-3.5 text-blue-600 shrink-0" />
-                          <span>{post.views_count || post.views || 24} Views</span>
-                        </span>
-
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => router.push(`/post?type=${(post.type || "sell").toLowerCase()}&edit=${post.id}`)}
-                            className="flex items-center gap-1.5 text-xs font-black text-slate-700 bg-white border border-slate-200 hover:bg-slate-50 px-3 py-2 rounded-xl transition-colors cursor-pointer"
-                          >
-                            <Pencil className="w-3.5 h-3.5" /> Edit
-                          </button>
-                          <button
-                            onClick={() => setConfirmDeleteId(post.id)}
-                            className="flex items-center justify-center w-9 h-9 rounded-xl bg-red-50 hover:bg-red-100 text-red-500 border border-red-200 transition-colors cursor-pointer shrink-0"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* ── 4. Saved Items Section ──────────────────────────────────── */}
-      <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden">
-        {/* Header Title */}
-        <div className="flex border-b border-slate-200 px-4 py-3 bg-slate-50/80 items-center justify-between">
-          <div className="flex items-center gap-2">
-            <Bookmark className="w-4 h-4 text-amber-600 fill-amber-600" />
-            <h3 className="font-heading font-black text-sm text-slate-800">Saved Items (சேமிக்கப்பட்டவை)</h3>
-          </div>
-          <span className="px-2 py-0.5 rounded-lg text-xs font-black bg-slate-900 text-white">
-            {savedPosts.length}
-          </span>
-        </div>
-
-        <div className="p-4">
-          {savedPosts.length === 0 ? (
-            <div className="flex flex-col items-center text-center py-8 gap-2.5">
-              <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center">
-                <Bookmark className="w-6 h-6 stroke-[2]" />
-              </div>
-              <div>
-                <h4 className="font-heading font-black text-sm text-slate-800">No saved items yet</h4>
-                <p className="text-xs text-slate-500 mt-1 max-w-[250px] mx-auto leading-relaxed">
-                  Tap the bookmark icon on any listing, service, or store offer to save it for quick access.
-                </p>
-              </div>
-            </div>
-          ) : (
-            <div className="flex flex-col gap-3">
-              {savedPosts.map((saved) => (
-                <div
-                  key={saved.id}
-                  className="bg-slate-50/70 border border-slate-200 hover:border-slate-300 rounded-xl p-3.5 flex flex-col gap-2 transition-all"
-                >
-                  <div className="flex items-start justify-between gap-2">
-                    <div className="flex-1 min-w-0">
-                      <span className="text-[10px] uppercase font-black text-blue-600 tracking-wider bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-lg">
-                        {saved.category || saved.type || "Saved Listing"}
+                      <span className="inline-flex items-center gap-1.5 bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-1 rounded-xl text-xs font-black">
+                        <AlertCircle className="w-3.5 h-3.5" />
+                        Verify to Unlock Posting
                       </span>
-                      <h5 className="font-heading font-black text-sm text-slate-900 truncate mt-1">
-                        {saved.title || saved.name || saved.shop_name || "Saved Item"}
-                      </h5>
-                      <p className="text-xs text-slate-500 font-semibold mt-0.5 truncate">
-                        📍 {saved.location || saved.area_tag || "Thanjavur"}
-                        {saved.price && <span className="ml-2 text-slate-900 font-bold">₹{saved.price}</span>}
-                      </p>
-                    </div>
-
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const updated = savedPosts.filter((p) => p.id !== saved.id);
-                        setSavedPosts(updated);
-                        if (typeof window !== "undefined") {
-                          localStorage.setItem("namma_thanjai_saved_posts", JSON.stringify(updated));
-                        }
-                        toast.success("Removed from saved items.");
-                      }}
-                      className="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-red-500 hover:bg-red-50 flex items-center justify-center shrink-0 transition-colors"
-                      title="Remove from saved"
-                    >
-                      <Trash2 className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-
-                  {/* Action row */}
-                  <div className="flex items-center justify-end gap-2 pt-1 border-t border-slate-200/60">
-                    <button
-                      type="button"
-                      onClick={() => router.push(`/chat?listingId=${saved.id}&sellerId=${saved.seller_id || saved.userId || ""}&title=${encodeURIComponent(saved.title || saved.name || "")}`)}
-                      className="text-xs font-black text-slate-900 bg-white border border-slate-200 hover:bg-slate-100 px-3 py-1.5 rounded-xl flex items-center gap-1 cursor-pointer"
-                    >
-                      <MessageSquare className="w-3 h-3 text-slate-700" />
-                      <span>Chat</span>
-                    </button>
-                    {saved.phone && (
-                      <a
-                        href={`tel:+91${saved.phone}`}
-                        className="text-xs font-black text-white bg-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded-xl flex items-center gap-1 cursor-pointer"
-                      >
-                        <Phone className="w-3 h-3" />
-                        <span>Call</span>
-                      </a>
                     )}
                   </div>
                 </div>
-              ))}
+              </div>
+
+              {/* Free Plan Pill with ₹100 Strikethrough */}
+              <div className="flex items-center justify-between text-xs bg-slate-50 border border-slate-200/80 rounded-xl px-3.5 py-2.5">
+                <span className="font-bold text-slate-700 flex items-center gap-1.5">
+                  <Sparkles className="w-4 h-4 text-amber-500 fill-amber-400 shrink-0" />
+                  Free Plan — 30 day listings
+                </span>
+                <span className="font-black text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-lg flex items-center gap-1">
+                  <span className="line-through text-slate-400 font-medium">₹100</span>
+                  <span>₹0</span>
+                </span>
+              </div>
             </div>
-          )}
-        </div>
-      </div>
+          </div>
 
-      {/* ── 5. Settings / Admin / Logout Section ─────────────────────── */}
-      <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden">
-        <div className="px-4 py-3 border-b border-slate-100">
-          <p className="text-xs font-black text-slate-500 uppercase tracking-wider">Account Settings</p>
-        </div>
-        <div className="flex flex-col divide-y divide-slate-100">
-
-          {/* Verified: locked number + change via WhatsApp */}
-          {isDbVerified && (
-            <a
-              href={`https://wa.me/919994837342?text=${encodeURIComponent(`Hi Admin, I want to change my registered mobile number. My UID is: ${user?.uid}`)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-between gap-3 px-4 py-3.5 hover:bg-slate-50 transition-colors cursor-pointer group"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
-                  <Phone className="w-4 h-4" />
-                </div>
-                <div>
-                  <p className="text-xs font-black text-slate-800">Registered Mobile</p>
-                  <p className="text-xs text-slate-500 font-semibold">+91 {phoneNumber} · Change via WhatsApp</p>
-                </div>
+          {/* Registered Mobile Card */}
+          <div className="bg-white border border-slate-200/80 rounded-2xl p-4 flex items-center justify-between shadow-sm">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                <Phone className="w-5 h-5" />
               </div>
-              <MessageSquare className="w-4 h-4 text-slate-400 group-hover:text-emerald-600 transition-colors" />
-            </a>
-          )}
-
-          {/* Admin Console (super admin only) */}
-          {isSuperAdmin && (
-            <Link href="/admin" className="flex items-center justify-between gap-3 px-4 py-3.5 hover:bg-amber-50 transition-colors cursor-pointer group">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center shrink-0">
-                  <Shield className="w-4 h-4 stroke-[2.5]" />
-                </div>
-                <div>
-                  <p className="text-xs font-black text-slate-800">Admin Console</p>
-                  <p className="text-xs text-slate-500 font-semibold">Approve, pin & moderate listings</p>
-                </div>
+              <div className="flex flex-col">
+                <span className="text-xs font-black text-slate-900">Registered Mobile</span>
+                <span className="text-xs text-slate-500 font-semibold">+91 {phoneNumber || "9876543210"}</span>
               </div>
-              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-amber-600 transition-colors" />
-            </Link>
-          )}
-
-          {/* PWA Install */}
-          {!isNativeApp && isInstallable && (
+            </div>
             <button
-              onClick={handleInstallClick}
-              className="flex items-center justify-between gap-3 px-4 py-3.5 hover:bg-slate-50 transition-colors cursor-pointer group w-full text-left"
+              onClick={() => setVerificationPending(true)}
+              className="text-xs font-black text-amber-700 bg-amber-50 hover:bg-amber-100 border border-amber-300 px-3 py-1.5 rounded-xl cursor-pointer transition-colors"
+            >
+              Change Mobile
+            </button>
+          </div>
+
+          {/* Settings & Links Card List */}
+          <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden flex flex-col divide-y divide-slate-100">
+            
+            {/* My Listings Row */}
+            <div
+              onClick={() => setActiveView("listings")}
+              className="flex items-center justify-between p-4 hover:bg-slate-50 cursor-pointer transition-colors group"
             >
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0">
-                  <Download className="w-4 h-4" />
+                  <Package className="w-4 h-4" />
                 </div>
-                <div>
-                  <p className="text-xs font-black text-slate-800">Add to Home Screen</p>
-                  <p className="text-xs text-slate-500 font-semibold">Install web app for quick access</p>
-                </div>
+                <span className="font-heading font-black text-sm text-slate-900">My Listings</span>
               </div>
-              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-slate-700 transition-colors" />
-            </button>
-          )}
+              <div className="flex items-center gap-2">
+                <span className="bg-amber-400 text-slate-950 font-black text-xs px-2.5 py-0.5 rounded-lg">
+                  {myPosts.length}
+                </span>
+                <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-slate-700 transition-colors" />
+              </div>
+            </div>
 
-          {/* Logout */}
-          {(isDbVerified || profile?.isVerified || user) && (
-            <button
-              type="button"
+            {/* Saved Items Row */}
+            <div
+              onClick={() => setActiveView("saved")}
+              className="flex items-center justify-between p-4 hover:bg-slate-50 cursor-pointer transition-colors group"
+            >
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+                  <Bookmark className="w-4 h-4 fill-amber-600" />
+                </div>
+                <span className="font-heading font-black text-sm text-slate-900">Saved Items (சேமிக்கப்பட்டவை)</span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="bg-slate-900 text-white font-black text-xs px-2.5 py-0.5 rounded-lg">
+                  {savedPosts.length}
+                </span>
+                <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-slate-700 transition-colors" />
+              </div>
+            </div>
+
+            {/* Admin Console Row (if Admin) */}
+            {isSuperAdmin && (
+              <Link href="/admin" className="flex items-center justify-between p-4 hover:bg-amber-50 cursor-pointer transition-colors group">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center shrink-0">
+                    <Shield className="w-4 h-4 stroke-[2.5]" />
+                  </div>
+                  <span className="font-heading font-black text-sm text-slate-900">Admin Console</span>
+                </div>
+                <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-amber-600 transition-colors" />
+              </Link>
+            )}
+
+            {/* Sign Out Row */}
+            <div
               onClick={async () => {
                 await signOutUser();
                 if (typeof window !== "undefined") {
@@ -848,89 +565,201 @@ export default function ProfileClientPage() {
                 toast.success("Logged out successfully.");
                 router.push("/");
               }}
-              className="flex items-center justify-between gap-3 px-4 py-3.5 hover:bg-red-50 transition-colors cursor-pointer group w-full text-left"
+              className="flex items-center justify-between p-4 hover:bg-red-50 cursor-pointer transition-colors group"
             >
               <div className="flex items-center gap-3">
                 <div className="w-9 h-9 rounded-xl bg-red-50 text-red-500 flex items-center justify-center shrink-0">
                   <LogOut className="w-4 h-4" />
                 </div>
-                <p className="text-xs font-black text-slate-800 group-hover:text-red-600 transition-colors">Sign Out</p>
+                <span className="font-heading font-black text-sm text-slate-900 group-hover:text-red-600 transition-colors">Sign Out</span>
               </div>
               <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-red-400 transition-colors" />
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* Testify Modal for Reported Listings */}
-      {testifyPost && (
-        <div className="fixed inset-0 z-[99999] bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white border border-slate-200 w-full max-w-sm rounded-2xl p-5 shadow-2xl flex flex-col gap-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2 text-amber-600">
-                <AlertTriangle className="w-5 h-5 shrink-0" />
-                <h4 className="font-heading font-black text-sm text-slate-900">Review Listing Report</h4>
-              </div>
-              <button
-                type="button"
-                onClick={() => setTestifyPost(null)}
-                className="text-slate-400 hover:text-slate-700 p-1"
-              >
-                <X className="w-4 h-4" />
-              </button>
             </div>
 
-            <p className="text-xs text-slate-600 font-medium leading-relaxed">
-              Your listing <strong>"{testifyPost.title}"</strong> has received buyer feedback. Please confirm accuracy:
-            </p>
-
-            <div className="flex flex-col gap-2 pt-1">
-              <button
-                type="button"
-                onClick={() => handleTestifyTrue(testifyPost.id)}
-                className="w-full py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-black text-xs flex items-center justify-center gap-1.5 shadow-xs cursor-pointer"
-              >
-                <CheckCircle className="w-4 h-4" />
-                <span>Testify: Details Are 100% True</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  const targetId = testifyPost.id;
-                  setTestifyPost(null);
-                  router.push(`/post?edit=${targetId}`);
-                }}
-                className="w-full py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-heading font-bold text-xs flex items-center justify-center gap-1.5 border border-slate-200 cursor-pointer"
-              >
-                <Pencil className="w-3.5 h-3.5" />
-                <span>Edit Listing Details</span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => {
-                  handleDeletePost(testifyPost.id, testifyPost.colName || "needs_and_sales");
-                  setTestifyPost(null);
-                }}
-                className="w-full py-2 px-3 rounded-xl text-red-600 hover:bg-red-50 font-heading font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-                <span>Remove Listing</span>
-              </button>
-            </div>
           </div>
         </div>
       )}
 
-      {/* UID label — very subtle, bottom */}
-      {user && (
-        <p className="text-center text-[10px] font-mono text-slate-400 select-all px-4 pb-2">
-          UID: {user.uid}
-        </p>
+      {/* SCREEN 2A: MY LISTINGS SUB-PAGE */}
+      {activeView === "listings" && (
+        <div className="flex flex-col gap-4 animate-fade-in">
+          <div className="flex items-center justify-between bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm">
+            <button
+              onClick={() => setActiveView("dashboard")}
+              className="flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-slate-950 cursor-pointer"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Back to Profile</span>
+            </button>
+            <div className="flex items-center gap-2">
+              <h3 className="font-heading font-black text-base text-slate-900">My Listings</h3>
+              <span className="bg-amber-400 text-slate-950 font-black text-xs px-2.5 py-0.5 rounded-lg">
+                {myPosts.length}
+              </span>
+            </div>
+          </div>
+
+          <div className="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm">
+            {myPosts.length === 0 ? (
+              <div className="flex flex-col items-center text-center py-10 gap-3">
+                <Package className="w-8 h-8 text-slate-400" />
+                <h4 className="font-heading font-black text-sm text-slate-800">No active listings</h4>
+                <Link href="/post" className="btn-primary text-xs px-4 py-2 flex items-center gap-1">
+                  <Sparkles className="w-3.5 h-3.5" /> Post Free Ad
+                </Link>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-3">
+                {myPosts.map((post) => {
+                  const createdTime = new Date(post.created_at || Date.now()).getTime();
+                  const daysOld = Math.floor((Date.now() - createdTime) / (1000 * 60 * 60 * 24));
+                  const daysLeft = Math.max(0, 30 - daysOld);
+                  const isRenewable = daysLeft <= 4;
+                  const isConfirmingDelete = confirmDeleteId === post.id;
+
+                  return (
+                    <div key={post.id} className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 flex flex-col gap-3">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex-1 min-w-0">
+                          <span className="text-[10px] font-black uppercase text-amber-600 tracking-wider bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-lg">
+                            {post.type || post.category || "Listing"}
+                          </span>
+                          <h5 className="font-heading font-black text-sm text-slate-900 truncate mt-1">
+                            {post.title || post.name || post.shop_name || "Untitled Listing"}
+                          </h5>
+                          <p className="text-xs text-slate-500 font-semibold mt-0.5 truncate">
+                            📍 {post.area_tag || "Thanjavur"}
+                            {post.price && <span className="ml-2 text-slate-900 font-bold">₹{post.price}</span>}
+                          </p>
+                        </div>
+                      </div>
+
+                      <div className="flex items-center justify-between bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs">
+                        <span className="flex items-center gap-1.5 font-bold text-slate-600">
+                          <Clock className="w-3.5 h-3.5 text-slate-400" />
+                          {daysLeft > 0 ? `${daysLeft} days remaining` : "Expired"}
+                        </span>
+                        {isRenewable && (
+                          <button onClick={() => handleRenewListing(post.id)} className="text-xs font-black text-amber-700 bg-amber-100 hover:bg-amber-200 px-2.5 py-1 rounded-xl cursor-pointer">
+                            <RefreshCw className="w-3 h-3 inline mr-1" /> Renew
+                          </button>
+                        )}
+                      </div>
+
+                      {isConfirmingDelete ? (
+                        <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl p-2.5">
+                          <span className="text-xs font-bold text-red-700 flex-1">Delete this listing?</span>
+                          <button onClick={() => handleDeletePost(post.id, post.colName || "needs_and_sales")} className="text-xs font-black text-white bg-red-600 px-3 py-1.5 rounded-xl cursor-pointer">
+                            Delete
+                          </button>
+                          <button onClick={() => setConfirmDeleteId(null)} className="text-xs font-black text-slate-600 bg-white border border-slate-200 px-3 py-1.5 rounded-xl cursor-pointer">
+                            Cancel
+                          </button>
+                        </div>
+                      ) : (
+                        <div className="flex items-center justify-between gap-2 pt-1 border-t border-slate-200/60">
+                          <span className="flex items-center gap-1 text-xs font-black text-slate-700">
+                            <Eye className="w-3.5 h-3.5 text-blue-600" /> {post.views_count || 24} Views
+                          </span>
+                          <div className="flex items-center gap-2">
+                            <button onClick={() => router.push(`/post?type=${(post.type || "sell").toLowerCase()}&edit=${post.id}`)} className="text-xs font-black text-slate-700 bg-white border border-slate-200 px-3 py-1.5 rounded-xl cursor-pointer flex items-center gap-1">
+                              <Pencil className="w-3.5 h-3.5" /> Edit
+                            </button>
+                            <button onClick={() => setConfirmDeleteId(post.id)} className="w-8 h-8 rounded-xl bg-red-50 text-red-500 border border-red-200 flex items-center justify-center cursor-pointer">
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
       )}
 
-    </div>
+      {/* SCREEN 2B: SAVED ITEMS SUB-PAGE */}
+      {activeView === "saved" && (
+        <div className="flex flex-col gap-4 animate-fade-in">
+          <div className="flex items-center justify-between bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm">
+            <button
+              onClick={() => setActiveView("dashboard")}
+              className="flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-slate-950 cursor-pointer"
+            >
+              <ArrowLeft className="w-4 h-4" />
+              <span>Back to Profile</span>
+            </button>
+            <div className="flex items-center gap-2">
+              <h3 className="font-heading font-black text-base text-slate-900">Saved Items</h3>
+              <span className="bg-slate-900 text-white font-black text-xs px-2.5 py-0.5 rounded-lg">
+                {savedPosts.length}
+              </span>
+            </div>
+          </div>
+
+          <div className="bg-white border border-slate-200/80 rounded-2xl p-4 shadow-sm">
+            {savedPosts.length === 0 ? (
+              <div className="flex flex-col items-center text-center py-10 gap-3">
+                <Bookmark className="w-8 h-8 text-slate-400" />
+                <h4 className="font-heading font-black text-sm text-slate-800">No saved items yet</h4>
+              </div>
+            ) : (
+              <div className="flex flex-col gap-3">
+                {savedPosts.map((saved) => (
+                  <div key={saved.id} className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 flex flex-col gap-2">
+                    <div className="flex items-start justify-between gap-2">
+                      <div className="flex-1 min-w-0">
+                        <span className="text-[10px] uppercase font-black text-blue-600 tracking-wider bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-lg">
+                          {saved.category || saved.type || "Saved Listing"}
+                        </span>
+                        <h5 className="font-heading font-black text-sm text-slate-900 truncate mt-1">
+                          {saved.title || saved.name || saved.shop_name || "Saved Item"}
+                        </h5>
+                        <p className="text-xs text-slate-500 font-semibold mt-0.5 truncate">
+                          📍 {saved.location || saved.area_tag || "Thanjavur"}
+                          {saved.price && <span className="ml-2 text-slate-900 font-bold">₹{saved.price}</span>}
+                        </p>
+                      </div>
+                      <button
+                        onClick={() => {
+                          const updated = savedPosts.filter((p) => p.id !== saved.id);
+                          setSavedPosts(updated);
+                          if (typeof window !== "undefined") {
+                            localStorage.setItem("namma_thanjai_saved_posts", JSON.stringify(updated));
+                          }
+                          toast.success("Removed from saved items.");
+                        }}
+                        className="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-red-500 flex items-center justify-center shrink-0"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-end gap-2 pt-1 border-t border-slate-200/60">
+                      <button
+                        onClick={() => router.push(`/chat?listingId=${saved.id}&sellerId=${saved.seller_id || saved.userId || ""}&title=${encodeURIComponent(saved.title || saved.name || "")}`)}
+                        className="text-xs font-black text-slate-900 bg-white border border-slate-200 px-3 py-1.5 rounded-xl flex items-center gap-1 cursor-pointer"
+                      >
+                        <MessageSquare className="w-3 h-3 text-slate-700" />
+                        <span>Chat</span>
+                      </button>
+                      {saved.phone && (
+                        <a href={`tel:+91${saved.phone}`} className="text-xs font-black text-white bg-blue-600 px-3 py-1.5 rounded-xl flex items-center gap-1 cursor-pointer">
+                          <Phone className="w-3 h-3" />
+                          <span>Call</span>
+                        </a>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

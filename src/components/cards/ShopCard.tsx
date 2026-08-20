@@ -258,42 +258,25 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
             </span>
           </div>
 
-          {/* CTA Buttons */}
-          <div className="flex items-center gap-2 mt-1">
+          {/* CTA Buttons — NO CHAT ON OFFERS: ONLY Get Directions & Call */}
+          <div className="flex items-center gap-2 mt-1 w-full">
             <a
               href={directionUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[38px] shadow cursor-pointer transition-colors"
+              className="flex-1 bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[40px] shadow cursor-pointer transition-colors"
             >
-              <Navigation className="w-3.5 h-3.5 shrink-0" />
+              <Navigation className="w-4 h-4 shrink-0" />
               <span>{t("getDirection")}</span>
             </a>
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                if (!user && !profile) {
-                  if (typeof window !== "undefined") {
-                    window.dispatchEvent(new Event("namma_thanjai_open_signin"));
-                  }
-                  return;
-                }
-                router.push(`/chat?listingId=${post.id}&sellerId=${post.userId || post.phone || ""}&title=${encodeURIComponent(post.shop_name)}`);
-              }}
-              className="flex-1 border-2 border-white text-white bg-white/10 hover:bg-white/20 font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[38px] cursor-pointer transition-colors backdrop-blur-md"
-            >
-              <MessageSquare className="w-3.5 h-3.5 text-white shrink-0" />
-              <span>Chat</span>
-            </button>
             {post.show_phone !== false && (
               <a
-                href={callUrl}
+                href={`tel:${post.phone}`}
                 onClick={(e) => e.stopPropagation()}
-                className="bg-[#f59e0b] hover:bg-amber-500 text-slate-950 font-heading font-black text-xs py-2 px-4 rounded-xl flex items-center justify-center gap-1.5 min-h-[38px] shadow cursor-pointer shrink-0 transition-colors"
+                className="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-heading font-black text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[40px] shadow cursor-pointer transition-colors"
               >
                 <Phone className="w-4 h-4 text-slate-950 shrink-0" />
-                <span>Call</span>
+                <span>Call Shop</span>
               </a>
             )}
           </div>
