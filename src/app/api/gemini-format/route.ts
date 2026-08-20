@@ -51,13 +51,13 @@ Raw Description from user:
       let raw = "";
       try {
         const res = await ai.models.generateContent({
-          model: "gemini-1.5-flash",
+          model: "gemini-2.5-flash",
           contents: [{ role: "user", parts: [{ text: offerPrompt }] }],
         });
         raw = res.text?.trim() || "";
       } catch {
         const res = await ai.models.generateContent({
-          model: "gemini-1.5-pro",
+          model: "gemini-2.0-flash",
           contents: [{ role: "user", parts: [{ text: offerPrompt }] }],
         });
         raw = res.text?.trim() || "";
@@ -114,7 +114,7 @@ Templates:
     let formattedText = "";
     try {
       const res = await ai.models.generateContent({
-        model: "gemini-1.5-flash",
+        model: "gemini-2.5-flash",
         contents: [{
           role: "user",
           parts: [
@@ -126,7 +126,7 @@ Templates:
       formattedText = res.text?.trim() || "";
     } catch {
       const res = await ai.models.generateContent({
-        model: "gemini-1.5-pro",
+        model: "gemini-2.0-flash",
         contents: [{
           role: "user",
           parts: [

@@ -36,9 +36,41 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
   const [contactType, setContactType] = useState<"call" | "whatsapp">("call");
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
-  // Rating display check
-  const numericRating = Number(post.rating || 4.8);
-  const ratingDisplay = numericRating > 0 ? numericRating.toFixed(1) : "4.8";
+  // AI Description Text Analyzer: Generates 1 of 4 citation words (Skilled, Talented, Expert, Proficient) strictly from description text
+  const skillBadge = React.useMemo(() => {
+    const text = (post.description || post.name || "").toLowerCase();
+    
+    // Deterministic hash selector for fallback across the 4 words
+    let hash = 0;
+    for (let i = 0; i < text.length; i++) {
+      hash = (hash << 5) - hash + text.charCodeAt(i);
+      hash |= 0;
+    }
+    const idx = Math.abs(hash) % 4;
+
+    if (text.includes("expert") || text.includes("professional") || text.includes("architect")) {
+      return { label: "🎯 Expert", cls: "bg-emerald-50 text-emerald-700 border-emerald-200" };
+    }
+    if (text.includes("proficient") || text.includes("master") || text.includes("quality")) {
+      return { label: "🏆 Proficient", cls: "bg-amber-50 text-amber-700 border-amber-200" };
+    }
+    if (text.includes("talent") || text.includes("creative") || text.includes("repair")) {
+      return { label: "⚡ Talented", cls: "bg-purple-50 text-purple-700 border-purple-200" };
+    }
+    if (text.includes("skill") || text.includes("service") || text.includes("wiring")) {
+      return { label: "✨ Skilled", cls: "bg-blue-50 text-blue-700 border-blue-200" };
+    }
+
+    const fallbacks = [
+      { label: "✨ Skilled", cls: "bg-blue-50 text-blue-700 border-blue-200" },
+      { label: "⚡ Talented", cls: "bg-purple-50 text-purple-700 border-purple-200" },
+      { label: "🎯 Expert", cls: "bg-emerald-50 text-emerald-700 border-emerald-200" },
+      { label: "🏆 Proficient", cls: "bg-amber-50 text-amber-700 border-amber-200" },
+    ];
+    return fallbacks[idx];
+  }, [post.description, post.name]);
+
+  const hasRealReviews = Boolean((post as any).review_count && Number((post as any).review_count) > 0);
 
   const rawPhone = String(post.phone || "9876543210");
   const cleanPhone = rawPhone.replace(/\D/g, "");
@@ -179,17 +211,17 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
 
         {/* ── TOP HEADER BLOCK: Full-Width Title + Category Badge & Rating ── */}
         <div className="flex flex-col gap-2 w-full">
-          {/* Top Row: Category Badge (left) + Rating Badge (right) */}
+          {/* Top Row: Category Badge (left) + Skill Badge / Real Ratings (right) */}
           <div className="flex items-center justify-between gap-2 w-full">
             <CategoryIcon category={post.skill_category} />
-            {numericRating > 0 ? (
+            {hasRealReviews ? (
               <span className="flex items-center gap-1 bg-amber-50 text-amber-700 border border-amber-200 font-extrabold text-[10px] px-2 py-0.5 rounded-md shrink-0">
                 <Star className="w-3 h-3 fill-amber-500 text-amber-500 shrink-0" />
-                <span>{ratingDisplay} ★</span>
+                <span>{Number(post.rating || 0).toFixed(1)} ★ ({(post as any).review_count})</span>
               </span>
             ) : (
-              <span className="text-[9px] font-black bg-slate-100 text-slate-700 border border-slate-200 px-2 py-0.5 rounded-md uppercase tracking-wide shrink-0">
-                VERIFIED SERVICE
+              <span className={`text-[10px] font-black border px-2 py-0.5 rounded-md uppercase tracking-wider shrink-0 ${skillBadge.cls}`}>
+                {skillBadge.label}
               </span>
             )}
           </div>

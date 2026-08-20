@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { MapPin, Plus, User, ShieldCheck, Check, MessageSquare, Globe, Download, Menu, X } from "lucide-react";
+import { MapPin, Plus, User, ShieldCheck, Check, MessageSquare, Globe, Download, Menu, X, ArrowLeft } from "lucide-react";
 import { TANJORE_LOCALITIES, TanjoreLocality } from "@/lib/constants";
 import SearchableAreaDropdown from "./SearchableAreaDropdown";
 import { AppTab } from "./BottomTabBar";
@@ -98,74 +98,94 @@ export default function TopHeader({
     >
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-3 relative">
 
-        {/* Left Side: Permanent Website Branding Logo & App Name */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-          <div
-            onClick={() => router.push("/")}
-            className="flex items-center gap-2 cursor-pointer select-none shrink-0 group"
-          >
-            <div className="w-8 h-8 sm:w-9 sm:h-9 shrink-0 group-hover:scale-[1.08] transition-transform duration-300 flex items-center justify-center">
-              <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="w-full h-full object-contain" />
+        {/* Left Side: Native Back Button for Sub-Screens vs Home Logo */}
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0 z-20">
+          {pathname !== "/" && pathname !== "/home" ? (
+            <button
+              type="button"
+              onClick={() => {
+                if (typeof window !== "undefined" && window.history.length > 1) {
+                  router.back();
+                } else {
+                  router.push("/");
+                }
+              }}
+              className="flex items-center gap-1.5 text-xs font-black text-slate-800 hover:text-slate-950 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-xl border border-slate-200 cursor-pointer shrink-0 transition-colors shadow-2xs"
+            >
+              <ArrowLeft className="w-4 h-4 text-slate-800" />
+              <span>Back</span>
+            </button>
+          ) : (
+            <div
+              onClick={() => router.push("/")}
+              className="flex items-center gap-2 cursor-pointer select-none shrink-0 group"
+            >
+              <div className="w-8 h-8 sm:w-9 sm:h-9 shrink-0 group-hover:scale-[1.08] transition-transform duration-300 flex items-center justify-center">
+                <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="w-full h-full object-contain" />
+              </div>
+              <div className="flex items-center gap-1">
+                <span className="font-heading font-black tracking-tight text-sm sm:text-base md:text-lg leading-none">
+                  <span className="text-[#1d4ed8] font-black">நம்ம</span> <span className="text-[#f59e0b] font-black">thanjai</span>
+                </span>
+              </div>
             </div>
-            <div className="flex items-center gap-1">
-              <span className="font-heading font-black tracking-tight text-sm sm:text-base md:text-lg leading-none">
-                <span className="text-[#1d4ed8] font-black">நம்ம</span> <span className="text-[#f59e0b] font-black">thanjai</span>
-              </span>
-            </div>
-          </div>
+          )}
         </div>
 
-        {/* Center: 5 Category Navigation Tabs — Perfectly Center-Aligned horizontally */}
-        {showCenterNav && (() => {
-          const isHomeActive = pathname === "/home" || pathname === "/" || activeTab === "home";
-          const isSellActive = (pathname.includes("/sell") && !pathname.includes("/post/service")) || activeTab === "sell";
-          const isNeedActive = pathname.includes("/need") || activeTab === "need";
-          const isServiceActive = pathname.includes("/services") || pathname.includes("/post/service") || activeTab === "services";
-          const isOfferActive = pathname.includes("/shops") || pathname.includes("/offers") || activeTab === "shops";
-
-          const activeStyle = "bg-[#FBBF24] text-[#0F172A] font-extrabold shadow-2xs rounded-lg";
-          const inactiveStyle = "text-slate-600 hover:text-slate-900 font-bold transition-colors";
-
-          return (
+        {/* Center: Sub-Screen Title or 5 Category Tabs */}
+        {pathname !== "/" && pathname !== "/home" ? (
+          <div className="absolute left-1/2 -translate-x-1/2 font-heading font-black text-sm sm:text-base text-slate-900 truncate max-w-[180px] sm:max-w-xs text-center z-10">
+            {pathname.includes("/profile") ? "My Profile"
+              : pathname.includes("/post") ? "Post a Free Ad"
+              : pathname.includes("/chat") ? "Direct Messages"
+              : pathname.includes("/admin") ? "Admin Dashboard"
+              : pathname.includes("/sell") ? "Items for Sale"
+              : pathname.includes("/need") ? "Buyer Requirements"
+              : pathname.includes("/services") ? "Local Services"
+              : pathname.includes("/shops") || pathname.includes("/offers") ? "Store Offers"
+              : "Namma Thanjai"}
+          </div>
+        ) : (
+          showCenterNav ? (
             <div className="absolute left-1/2 -translate-x-1/2 hidden md:flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl border border-slate-200/80 font-heading backdrop-blur-sm z-10">
               <button
                 type="button"
                 onClick={() => router.push("/")}
-                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${isHomeActive ? activeStyle : inactiveStyle}`}
+                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${pathname === "/" || pathname === "/home" ? "bg-[#FBBF24] text-[#0F172A] font-extrabold shadow-2xs rounded-lg" : "text-slate-600 hover:text-slate-900 font-bold transition-colors"}`}
               >
                 Home
               </button>
               <button
                 type="button"
                 onClick={() => router.push("/sell")}
-                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${isSellActive ? activeStyle : inactiveStyle}`}
+                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${pathname.includes("/sell") ? "bg-[#FBBF24] text-[#0F172A] font-extrabold shadow-2xs rounded-lg" : "text-slate-600 hover:text-slate-900 font-bold transition-colors"}`}
               >
                 Sell
               </button>
               <button
                 type="button"
                 onClick={() => router.push("/need")}
-                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${isNeedActive ? activeStyle : inactiveStyle}`}
+                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${pathname.includes("/need") ? "bg-[#FBBF24] text-[#0F172A] font-extrabold shadow-2xs rounded-lg" : "text-slate-600 hover:text-slate-900 font-bold transition-colors"}`}
               >
                 Need
               </button>
               <button
                 type="button"
                 onClick={() => router.push("/services")}
-                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${isServiceActive ? activeStyle : inactiveStyle}`}
+                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${pathname.includes("/services") ? "bg-[#FBBF24] text-[#0F172A] font-extrabold shadow-2xs rounded-lg" : "text-slate-600 hover:text-slate-900 font-bold transition-colors"}`}
               >
                 Services
               </button>
               <button
                 type="button"
                 onClick={() => router.push("/shops")}
-                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${isOfferActive ? activeStyle : inactiveStyle}`}
+                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${pathname.includes("/shops") || pathname.includes("/offers") ? "bg-[#FBBF24] text-[#0F172A] font-extrabold shadow-2xs rounded-lg" : "text-slate-600 hover:text-slate-900 font-bold transition-colors"}`}
               >
                 Offers
               </button>
             </div>
-          );
-        })()}
+          ) : null
+        )}
 
         {/* Right Side: Chat Icon -> Profile Icon -> Primary Yellow Button (Get App / + Post as absolute last button) */}
         <div className="flex items-center justify-end gap-2 shrink-0 ml-auto z-20">

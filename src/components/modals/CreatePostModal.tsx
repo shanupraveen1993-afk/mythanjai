@@ -241,13 +241,32 @@ export default function CreatePostModal({
       const currentUser = auth.currentUser;
       const uid = currentUser ? currentUser.uid : "anonymous_guest";
 
-      // 1. AI Formatting of user description
       let finalDescription = description;
       let finalOfferDesc = offerDesc;
 
+      // 1. AI Formatting of user description (with robust client-side fallback for mobile APK)
+      const formatLocally = (raw: string, postType: string) => {
+        if (!raw || !raw.trim()) return "";
+        const lines = raw.split("\n").map((l) => l.trim()).filter(Boolean);
+        const bullets = lines
+          .map((l) => (l.startsWith("•") || l.startsWith("-") ? `• ${l.replace(/^[-•]\s*/, "")}` : `• ${l}`))
+          .join("\n");
+        const titleMap: Record<string, string> = {
+          sell: "Product Details:",
+          need: "Requirement Summary:",
+          services: "Services Offered:",
+          shops: "Store Offer Details:",
+        };
+        return `${titleMap[postType] || "Details:"}\n${bullets}`;
+      };
+
+      const API_URL = typeof window !== "undefined" && window.location.origin.includes("localhost")
+        ? "/api/gemini-format"
+        : "https://mythanjai.vercel.app/api/gemini-format";
+
       if (type === "needs") {
         try {
-          const formatRes = await fetch("/api/gemini-format", {
+          const formatRes = await fetch(API_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ rawDescription: description, type: classifiedType?.toLowerCase() }),
@@ -255,13 +274,15 @@ export default function CreatePostModal({
           const formatData = await formatRes.json();
           if (formatData.success && formatData.formattedText) {
             finalDescription = formatData.formattedText;
+          } else {
+            finalDescription = formatLocally(description, classifiedType?.toLowerCase() || "sell");
           }
         } catch (err) {
-          console.error("AI format failed for classifieds:", err);
+          finalDescription = formatLocally(description, classifiedType?.toLowerCase() || "sell");
         }
       } else if (type === "services") {
         try {
-          const formatRes = await fetch("/api/gemini-format", {
+          const formatRes = await fetch(API_URL, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ rawDescription: description, type: "services" }),
@@ -269,14 +290,16 @@ export default function CreatePostModal({
           const formatData = await formatRes.json();
           if (formatData.success && formatData.formattedText) {
             finalDescription = formatData.formattedText;
+          } else {
+            finalDescription = formatLocally(description, "services");
           }
         } catch (err) {
-          console.error("AI format failed for services:", err);
+          finalDescription = formatLocally(description, "services");
         }
       } else if (type === "shops" || type === "offers") {
         if (offerDesc) {
           try {
-            const formatRes = await fetch("/api/gemini-format", {
+            const formatRes = await fetch(API_URL, {
               method: "POST",
               headers: { "Content-Type": "application/json" },
               body: JSON.stringify({ rawDescription: offerDesc, type: "shops" }),
@@ -284,9 +307,11 @@ export default function CreatePostModal({
             const formatData = await formatRes.json();
             if (formatData.success && formatData.formattedText) {
               finalOfferDesc = formatData.formattedText;
+            } else {
+              finalOfferDesc = formatLocally(offerDesc, "shops");
             }
           } catch (err) {
-            console.error("AI format failed for shop/offer:", err);
+            finalOfferDesc = formatLocally(offerDesc, "shops");
           }
         }
       }
@@ -872,32 +897,19 @@ export default function CreatePostModal({
                             />
                           </div>
 
-                          <div className="grid grid-cols-2 gap-3">
-                            <div>
-                              <label className="block text-[11px] font-bold text-slate-500 mb-1">Category Skill</label>
-                              <select
-                                value={serviceCategory}
-                                onChange={(e) => setServiceCategory(e.target.value as any)}
-                                className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none font-bold"
-                              >
-                                {SERVICE_CATEGORIES.map((c) => (
-                                  <option key={c} value={c}>
-                                    {c}
-                                  </option>
-                                ))}
-                              </select>
-                            </div>
-
-                            <div>
-                              <label className="block text-[11px] font-bold text-slate-500 mb-1">Experience (Years/Text)</label>
-                              <input
-                                type="text"
-                                value={experience}
-                                onChange={(e) => setExperience(e.target.value)}
-                                placeholder="e.g. 8 Years"
-                                className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none font-bold"
-                              />
-                            </div>
+                          <div>
+                            <label className="block text-[11px] font-bold text-slate-500 mb-1">Category Skill</label>
+                            <select
+                              value={serviceCategory}
+                              onChange={(e) => setServiceCategory(e.target.value as any)}
+                              className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none font-bold"
+                            >
+                              {SERVICE_CATEGORIES.map((c) => (
+                                <option key={c} value={c}>
+                                  {c}
+                                </option>
+                              ))}
+                            </select>
                           </div>
                         </div>
                       )}
@@ -1192,8 +1204,8 @@ export default function CreatePostModal({
                         </div>
                       )}
                       {type === "services" && (
-                        <div className="text-slate-500 text-[10px] font-bold mt-1">
-                          Experience: {displayExperience}
+                        <div className="text-emerald-700 text-[10px] font-bold mt-1 flex items-center gap-1">
+                          <span>✨ Verified Local Service</span>
                         </div>
                       )}
                       {type === "shops" && (

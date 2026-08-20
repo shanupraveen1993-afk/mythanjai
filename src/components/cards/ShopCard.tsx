@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { Phone, MessageSquare, MapPin, Store, Sparkles, Calendar, Navigation, Share2, Bookmark, Lock, Flag, Camera, Clock, Video } from "lucide-react";
+import { Phone, MessageSquare, MapPin, Store, Sparkles, Calendar, Navigation, Share2, Bookmark, Lock, Flag, Camera, Clock, Video, Play } from "lucide-react";
 import { ShopPost } from "@/types";
 import { useToast } from "@/context/ToastContext";
 import { useLanguage } from "@/context/LanguageContext";
@@ -177,15 +177,13 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
     return (
       <div className={`relative rounded-xl overflow-hidden shadow-md bg-slate-950 font-sans flex flex-col ${isExpired ? "opacity-60 grayscale filter pointer-events-none select-none" : ""}`} style={{ minHeight: 420 }}>
         {/* EXPIRED CENTER OVERLAY BADGE */}
+        {/* EXPIRED CENTER OVERLAY BADGE — Light transparent overlay (can see content, but cannot interact) */}
         {isExpired && (
-          <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-[3px] z-30 flex flex-col items-center justify-center p-4 text-center pointer-events-auto">
-            <div className="bg-rose-600 text-white border-2 border-rose-400 px-5 py-2.5 rounded-2xl shadow-2xl flex flex-col items-center gap-1">
-              <span className="font-heading font-black text-base uppercase tracking-widest">EXPIRED</span>
-              <span className="text-xs font-bold text-rose-100">காலாவதியானது</span>
+          <div className="absolute inset-0 bg-slate-950/30 backdrop-blur-[1px] z-30 flex flex-col items-center justify-center p-4 text-center pointer-events-none select-none">
+            <div className="bg-rose-600/90 text-white border-2 border-rose-400 px-5 py-2 rounded-2xl shadow-2xl flex flex-col items-center gap-0.5 backdrop-blur-xs">
+              <span className="font-heading font-black text-sm sm:text-base uppercase tracking-widest">EXPIRED</span>
+              <span className="text-[11px] font-bold text-rose-100">காலாவதியானது</span>
             </div>
-            <p className="text-xs text-slate-300 font-semibold mt-2.5 max-w-[210px] leading-snug">
-              This store offer has ended and is no longer active.
-            </p>
           </div>
         )}
         {/* Full video background */}
@@ -194,9 +192,15 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
           controls
           playsInline
           preload="metadata"
-          poster={coverImage || "/placeholder.webp"}
           className="absolute inset-0 w-full h-full object-cover z-0"
         />
+
+        {/* Centered Play Button Overlay */}
+        <div className="absolute inset-0 z-10 flex items-center justify-center pointer-events-none">
+          <div className="w-12 h-12 rounded-full bg-slate-950/70 text-amber-400 border border-amber-400/40 backdrop-blur-md flex items-center justify-center shadow-xl">
+            <Play className="w-6 h-6 fill-amber-400 ml-0.5" />
+          </div>
+        </div>
 
         {/* Reel badge top right */}
         <div className="absolute top-2.5 left-2.5 z-20 flex items-center gap-1 bg-slate-950/70 backdrop-blur-md text-amber-400 text-xs font-black uppercase tracking-widest px-2 py-0.5 rounded-lg border border-amber-400/30">
@@ -289,16 +293,13 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
   if (coverImage) {
     return (
       <div className={`bg-white rounded-xl overflow-hidden shadow-2xs border border-slate-200/80 flex flex-col relative font-sans h-full ${isExpired ? "opacity-60 grayscale filter pointer-events-none select-none" : ""}`} style={{ minHeight: 420 }}>
-        {/* EXPIRED CENTER OVERLAY BADGE */}
+        {/* EXPIRED CENTER OVERLAY BADGE — Light transparent overlay (can see content, but cannot interact) */}
         {isExpired && (
-          <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-[3px] z-30 flex flex-col items-center justify-center p-4 text-center pointer-events-auto">
-            <div className="bg-rose-600 text-white border-2 border-rose-400 px-5 py-2.5 rounded-2xl shadow-2xl flex flex-col items-center gap-1">
-              <span className="font-heading font-black text-base uppercase tracking-widest">EXPIRED</span>
-              <span className="text-xs font-bold text-rose-100">காலாவதியானது</span>
+          <div className="absolute inset-0 bg-slate-950/30 backdrop-blur-[1px] z-30 flex flex-col items-center justify-center p-4 text-center pointer-events-none select-none">
+            <div className="bg-rose-600/90 text-white border-2 border-rose-400 px-5 py-2 rounded-2xl shadow-2xl flex flex-col items-center gap-0.5 backdrop-blur-xs">
+              <span className="font-heading font-black text-sm sm:text-base uppercase tracking-widest">EXPIRED</span>
+              <span className="text-[11px] font-bold text-rose-100">காலாவதியானது</span>
             </div>
-            <p className="text-xs text-slate-300 font-semibold mt-2.5 max-w-[210px] leading-snug">
-              This store offer has ended and is no longer active.
-            </p>
           </div>
         )}
         {/* Featured / Expired / Ends Today banner */}
@@ -373,42 +374,25 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
             <span className="truncate">{post.address_text || post.area_tag || "Thanjavur"}</span>
           </div>
 
-          {/* CTA Buttons */}
-          <div className="flex items-center gap-2 pt-2.5 border-t border-slate-100 mt-auto">
+          {/* Footer CTAs — NO CHAT ON OFFERS: ONLY Get Directions & Call */}
+          <div className="pt-2 flex items-center gap-2 mt-auto w-full">
             <a
               href={directionUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex-1 bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-xs py-2 px-4 rounded-xl flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer transition-colors"
+              className="flex-1 bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[40px] shadow cursor-pointer transition-colors"
             >
-              <Navigation className="w-3.5 h-3.5 text-white shrink-0" />
+              <Navigation className="w-4 h-4 text-white shrink-0" />
               <span>{t("getDirection")}</span>
             </a>
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                if (!user && !profile) {
-                  if (typeof window !== "undefined") {
-                    window.dispatchEvent(new Event("namma_thanjai_open_signin"));
-                  }
-                  return;
-                }
-                router.push(`/chat?listingId=${post.id}&sellerId=${post.userId || post.phone || ""}&title=${encodeURIComponent(post.shop_name)}`);
-              }}
-              className="flex-1 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer transition-colors"
-            >
-              <MessageSquare className="w-3.5 h-3.5 text-[#0F172A] fill-[#0F172A]/10 shrink-0 stroke-[2.5]" />
-              <span>Chat</span>
-            </button>
             {(post as any).is_available_now !== false && post.show_phone !== false && (
               <a
                 href={callUrl}
                 onClick={(e) => e.stopPropagation()}
-                className="bg-[#f59e0b] hover:bg-amber-500 text-slate-950 font-heading font-black text-xs py-2 px-4 rounded-xl flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer shrink-0 transition-colors"
+                className="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-heading font-black text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[40px] shadow cursor-pointer transition-colors"
               >
                 <Phone className="w-4 h-4 text-slate-950 shrink-0" />
-                <span>Call</span>
+                <span>Call Shop</span>
               </a>
             )}
           </div>
@@ -420,16 +404,13 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
   // ── STATE C: CORPORATE SHOP INFO CARD (No Media Provided Fallback) ───────
   return (
     <div className={`bg-white rounded-xl p-4 flex flex-col justify-between shadow-2xs hover:shadow-md transition-all duration-200 border border-slate-200/90 relative font-sans h-full ${isExpired ? "opacity-60 grayscale filter pointer-events-none select-none" : ""}`}>
-      {/* EXPIRED CENTER OVERLAY BADGE */}
+      {/* EXPIRED CENTER OVERLAY BADGE — Light transparent overlay (can see content, but cannot interact) */}
       {isExpired && (
-        <div className="absolute inset-0 bg-slate-950/80 backdrop-blur-[3px] z-30 flex flex-col items-center justify-center p-4 text-center pointer-events-auto rounded-xl">
-          <div className="bg-rose-600 text-white border-2 border-rose-400 px-5 py-2.5 rounded-2xl shadow-2xl flex flex-col items-center gap-1">
-            <span className="font-heading font-black text-base uppercase tracking-widest">EXPIRED</span>
-            <span className="text-xs font-bold text-rose-100">காலாவதியானது</span>
+        <div className="absolute inset-0 bg-slate-950/30 backdrop-blur-[1px] z-30 flex flex-col items-center justify-center p-4 text-center pointer-events-none select-none rounded-xl">
+          <div className="bg-rose-600/90 text-white border-2 border-rose-400 px-5 py-2 rounded-2xl shadow-2xl flex flex-col items-center gap-0.5 backdrop-blur-xs">
+            <span className="font-heading font-black text-sm sm:text-base uppercase tracking-widest">EXPIRED</span>
+            <span className="text-[11px] font-bold text-rose-100">காலாவதியானது</span>
           </div>
-          <p className="text-xs text-slate-300 font-semibold mt-2.5 max-w-[210px] leading-snug">
-            This store offer has ended and is no longer active.
-          </p>
         </div>
       )}
       <div className="flex flex-col gap-3 flex-1">
@@ -488,25 +469,25 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
         </div>
       </div>
 
-      {/* Footer CTAs */}
-      <div className="pt-2 flex items-center gap-2 mt-auto">
+      {/* Footer CTAs — NO CHAT ON OFFERS: ONLY Get Directions & Call */}
+      <div className="pt-2 flex items-center gap-2 mt-auto w-full">
         <a
           href={directionUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-1 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer transition-colors"
+          className="flex-1 bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[40px] shadow cursor-pointer transition-colors"
         >
-          <Navigation className="w-3.5 h-3.5 text-[#0F172A] stroke-[2.5]" />
+          <Navigation className="w-4 h-4 text-white shrink-0" />
           <span>{t("getDirection")}</span>
         </a>
         {(post as any).is_available_now !== false && post.show_phone !== false && (
           <a
             href={callUrl}
             onClick={(e) => e.stopPropagation()}
-            className="bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs py-2 px-4 rounded-xl flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer shrink-0 transition-colors"
+            className="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-heading font-black text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[40px] shadow cursor-pointer transition-colors"
           >
-            <Phone className="w-4 h-4 text-white" />
-            <span>Call</span>
+            <Phone className="w-4 h-4 text-slate-950 shrink-0" />
+            <span>Call Shop</span>
           </a>
         )}
       </div>
