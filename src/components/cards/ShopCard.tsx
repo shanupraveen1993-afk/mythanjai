@@ -285,31 +285,39 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
             </span>
           </div>
 
-          {/* CTA Buttons — Date Tag + Get Directions + Call Shop in single horizontal row */}
-          <div className="flex items-center gap-2 mt-2 w-full pt-2 border-t border-slate-800/60">
-            <div className="flex items-center gap-1 text-[11px] font-bold text-slate-300 bg-slate-900/90 border border-slate-700/80 rounded-xl px-2.5 py-2 min-h-[44px] shrink-0 justify-center">
-              <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-              <span>{validityText}</span>
-            </div>
-            <a
-              href={directionUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1 bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow cursor-pointer transition-colors"
-            >
-              <Navigation className="w-4 h-4 shrink-0" />
-              <span>{t("getDirection")}</span>
-            </a>
-            {post.show_phone !== false && (
+          {/* CTA Buttons — Plain Text Posted Date (Left) + Distinct Buttons (Right) */}
+          <div className="flex items-center justify-between gap-3 mt-2 w-full pt-2 border-t border-slate-800/60">
+            <span className="text-[11px] font-medium text-slate-400 shrink-0 select-none">
+              {(() => {
+                try {
+                  const d = new Date((post.created_at as any)?.seconds ? (post.created_at as any).seconds * 1000 : post.created_at || Date.now());
+                  return d.toLocaleString("default", { month: "short", year: "numeric" });
+                } catch {
+                  return "Aug 2026";
+                }
+              })()}
+            </span>
+            <div className="flex items-center gap-2 flex-1 justify-end min-w-0">
               <a
-                href={`tel:${post.phone}`}
-                onClick={(e) => e.stopPropagation()}
-                className="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow cursor-pointer transition-colors"
+                href={directionUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow cursor-pointer transition-colors"
               >
-                <Phone className="w-4 h-4 text-slate-950 shrink-0" />
-                <span>Call Shop</span>
+                <Navigation className="w-4 h-4 shrink-0" />
+                <span>{t("getDirection")}</span>
               </a>
-            )}
+              {post.show_phone !== false && (
+                <a
+                  href={`tel:${post.phone}`}
+                  onClick={(e) => e.stopPropagation()}
+                  className="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow cursor-pointer transition-colors"
+                >
+                  <Phone className="w-4 h-4 text-slate-950 shrink-0" />
+                  <span>Call Shop</span>
+                </a>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -374,12 +382,17 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
             {post.shop_name}
           </h3>
 
-          {/* Offer title box */}
+          {/* Offer title box with inline validity */}
           {post.offer_title && (
             <div className={`border rounded-xl p-3 flex flex-col gap-1.5 font-sans ${isExpired ? "bg-slate-50 border-slate-200 text-slate-500 opacity-75" : "bg-blue-50/80 border-blue-200 text-blue-950"}`}>
-              <div className="flex items-center gap-1.5 font-bold text-xs truncate">
-                <Sparkles className="w-3.5 h-3.5 fill-blue-600 text-blue-700 shrink-0" />
-                <span className="truncate">{post.offer_title}</span>
+              <div className="flex items-center justify-between gap-2 font-bold text-xs truncate">
+                <span className="flex items-center gap-1.5 truncate">
+                  <Sparkles className="w-3.5 h-3.5 fill-blue-600 text-blue-700 shrink-0" />
+                  <span className="truncate">{post.offer_title}</span>
+                </span>
+                <span className="text-[10px] font-semibold text-slate-500 shrink-0 bg-white/80 px-2 py-0.5 rounded-md border border-slate-200">
+                  {isExpired ? "Expired" : validityText}
+                </span>
               </div>
               {post.offer_description && (
                 <p className="text-xs text-slate-700 font-normal leading-relaxed bg-white/90 p-2 rounded-lg border border-blue-100 line-clamp-3">
@@ -395,31 +408,39 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
             <span className="truncate">{post.address_text || post.area_tag || "Thanjavur"}</span>
           </div>
 
-          {/* Footer CTAs — Date Tag + Get Directions + Call Shop in single horizontal row */}
-          <div className="pt-2.5 flex items-center gap-2 mt-auto w-full border-t border-slate-100">
-            <div className="flex items-center gap-1 text-[11px] font-bold text-slate-500 bg-slate-100/90 border border-slate-200/80 rounded-xl px-2.5 py-2 min-h-[44px] shrink-0 justify-center">
-              <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-              <span>{isExpired ? "Expired" : validityText}</span>
-            </div>
-            <a
-              href={directionUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex-1 bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow cursor-pointer transition-colors"
-            >
-              <Navigation className="w-4 h-4 text-white shrink-0" />
-              <span>{t("getDirection")}</span>
-            </a>
-            {(post as any).is_available_now !== false && post.show_phone !== false && (
+          {/* Footer CTAs — Plain Text Posted Month+Year (Left) + Distinct Buttons (Right) */}
+          <div className="pt-2.5 flex items-center justify-between gap-3 mt-auto w-full border-t border-slate-100">
+            <span className="text-[11px] font-medium text-slate-400 shrink-0 select-none">
+              {(() => {
+                try {
+                  const d = new Date((post.created_at as any)?.seconds ? (post.created_at as any).seconds * 1000 : post.created_at || Date.now());
+                  return d.toLocaleString("default", { month: "short", year: "numeric" });
+                } catch {
+                  return "Aug 2026";
+                }
+              })()}
+            </span>
+            <div className="flex items-center gap-2 flex-1 justify-end min-w-0">
               <a
-                href={callUrl}
-                onClick={(e) => e.stopPropagation()}
-                className="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow cursor-pointer transition-colors"
+                href={directionUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex-1 bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow cursor-pointer transition-colors"
               >
-                <Phone className="w-4 h-4 text-slate-950 shrink-0" />
-                <span>Call Shop</span>
+                <Navigation className="w-4 h-4 text-white shrink-0" />
+                <span>{t("getDirection")}</span>
               </a>
-            )}
+              {(post as any).is_available_now !== false && post.show_phone !== false && (
+                <a
+                  href={callUrl}
+                  onClick={(e) => e.stopPropagation()}
+                  className="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow cursor-pointer transition-colors"
+                >
+                  <Phone className="w-4 h-4 text-slate-950 shrink-0" />
+                  <span>Call Shop</span>
+                </a>
+              )}
+            </div>
           </div>
         </div>
       </div>
@@ -473,8 +494,16 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
           </div>
         )}
 
-        {/* Offer Description Container */}
-        <div className="min-h-[4.25rem] bg-slate-50/80 border border-slate-200/60 p-3 rounded-xl flex items-center">
+        {/* Offer Description Container with inline validity badge */}
+        <div className="min-h-[4.25rem] bg-slate-50/80 border border-slate-200/60 p-3 rounded-xl flex flex-col gap-1.5 justify-center">
+          <div className="flex items-center justify-between gap-2">
+            <span className="text-[11px] font-bold text-slate-800 truncate">
+              {post.offer_title || "Special Store Discount"}
+            </span>
+            <span className="text-[10px] font-semibold text-slate-500 shrink-0 bg-white px-2 py-0.5 rounded-md border border-slate-200">
+              {isExpired ? "Expired" : validityText}
+            </span>
+          </div>
           <p className="text-xs text-slate-600 font-normal leading-relaxed line-clamp-3">
             {post.offer_description || (post as any).offer_details || (post as any).description || "Exclusive store discount directly from shop owner in Thanjavur."}
           </p>
@@ -487,31 +516,39 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
         </div>
       </div>
 
-      {/* Footer CTAs — Date Tag + Get Directions + Call Shop in single horizontal row */}
-      <div className="pt-2.5 flex items-center gap-2 mt-auto w-full border-t border-slate-100">
-        <div className="flex items-center gap-1 text-[11px] font-bold text-slate-500 bg-slate-100/90 border border-slate-200/80 rounded-xl px-2.5 py-2 min-h-[44px] shrink-0 justify-center">
-          <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-          <span>{isExpired ? "Expired" : validityText}</span>
-        </div>
-        <a
-          href={directionUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="flex-1 bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow cursor-pointer transition-colors"
-        >
-          <Navigation className="w-4 h-4 text-white shrink-0" />
-          <span>{t("getDirection")}</span>
-        </a>
-        {(post as any).is_available_now !== false && post.show_phone !== false && (
+      {/* Footer CTAs — Plain Text Posted Month+Year (Left) + Distinct Buttons (Right) */}
+      <div className="pt-2.5 flex items-center justify-between gap-3 mt-auto w-full border-t border-slate-100">
+        <span className="text-[11px] font-medium text-slate-400 shrink-0 select-none">
+          {(() => {
+            try {
+              const d = new Date((post.created_at as any)?.seconds ? (post.created_at as any).seconds * 1000 : post.created_at || Date.now());
+              return d.toLocaleString("default", { month: "short", year: "numeric" });
+            } catch {
+              return "Aug 2026";
+            }
+          })()}
+        </span>
+        <div className="flex items-center gap-2 flex-1 justify-end min-w-0">
           <a
-            href={callUrl}
-            onClick={(e) => e.stopPropagation()}
-            className="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow cursor-pointer transition-colors"
+            href={directionUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex-1 bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow cursor-pointer transition-colors"
           >
-            <Phone className="w-4 h-4 text-slate-950 shrink-0" />
-            <span>Call Shop</span>
+            <Navigation className="w-4 h-4 text-white shrink-0" />
+            <span>{t("getDirection")}</span>
           </a>
-        )}
+          {(post as any).is_available_now !== false && post.show_phone !== false && (
+            <a
+              href={callUrl}
+              onClick={(e) => e.stopPropagation()}
+              className="flex-1 bg-amber-500 hover:bg-amber-600 text-slate-950 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow cursor-pointer transition-colors"
+            >
+              <Phone className="w-4 h-4 text-slate-950 shrink-0" />
+              <span>Call Shop</span>
+            </a>
+          )}
+        </div>
       </div>
     </div>
   );

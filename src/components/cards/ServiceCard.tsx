@@ -284,48 +284,55 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
         </div>
       </div>
 
-      {/* Single Horizontal Bottom Action Row: Date + Secondary Button + Primary Button */}
-      <div className="pt-2.5 flex items-center gap-2 mt-auto w-full border-t border-slate-100">
-        {/* 1. Date Tag */}
-        <div className="flex items-center gap-1 text-[11px] font-bold text-slate-500 bg-slate-100/90 border border-slate-200/80 rounded-xl px-2.5 py-2 min-h-[44px] shrink-0 justify-center">
-          <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-          <span>{formatRelativeTime(post.created_at)}</span>
-        </div>
-
-        {/* 2. Secondary CTA: Request Call Back */}
-        <button
-          type="button"
-          onClick={(e) => {
-            e.stopPropagation();
-            if (typeof window !== "undefined") {
-              try {
-                const callbacks = JSON.parse(localStorage.getItem("namma_thanjai_callback_requests") || "[]");
-                callbacks.push({
-                  id: post.id,
-                  providerName: post.name,
-                  phone: post.phone,
-                  timestamp: Date.now()
-                });
-                localStorage.setItem("namma_thanjai_callback_requests", JSON.stringify(callbacks));
-              } catch (err) {}
+      {/* Footer Action Row: Plain Text Posted Month+Year (Left) + Distinct CTA Buttons (Right) */}
+      <div className="pt-2.5 flex items-center justify-between gap-3 mt-auto w-full border-t border-slate-100">
+        {/* 1. Plain Text Month + Year (e.g. Aug 2026, no box) */}
+        <span className="text-[11px] font-medium text-slate-400 shrink-0 select-none">
+          {(() => {
+            try {
+              const d = new Date((post.created_at as any)?.seconds ? (post.created_at as any).seconds * 1000 : post.created_at || Date.now());
+              return d.toLocaleString("default", { month: "short", year: "numeric" });
+            } catch {
+              return "Aug 2026";
             }
-            toast.success(`Call Back Requested! ${post.name} has been notified to call you.`);
-          }}
-          className="flex-1 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow-2xs cursor-pointer transition-colors"
-        >
-          <Phone className="w-4 h-4 text-[#0F172A] shrink-0 stroke-[2.5]" />
-          <span>Call Back</span>
-        </button>
+          })()}
+        </span>
 
-        {/* 3. Primary CTA: Direct Call */}
-        <button
-          type="button"
-          onClick={(e) => handleOpenPreContactModal(e, "call")}
-          className="flex-1 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow-2xs cursor-pointer transition-colors"
-        >
-          <Phone className="w-4 h-4 text-white shrink-0" />
-          <span>Call</span>
-        </button>
+        {/* 2. Secondary CTA & 3. Primary CTA Buttons */}
+        <div className="flex items-center gap-2 flex-1 justify-end min-w-0">
+          <button
+            type="button"
+            onClick={(e) => {
+              e.stopPropagation();
+              if (typeof window !== "undefined") {
+                try {
+                  const callbacks = JSON.parse(localStorage.getItem("namma_thanjai_callback_requests") || "[]");
+                  callbacks.push({
+                    id: post.id,
+                    providerName: post.name,
+                    phone: post.phone,
+                    timestamp: Date.now()
+                  });
+                  localStorage.setItem("namma_thanjai_callback_requests", JSON.stringify(callbacks));
+                } catch (err) {}
+              }
+              toast.success(`Call Back Requested! ${post.name} has been notified to call you.`);
+            }}
+            className="flex-1 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow-2xs cursor-pointer transition-colors"
+          >
+            <Phone className="w-4 h-4 text-[#0F172A] shrink-0 stroke-[2.5]" />
+            <span>Call Back</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={(e) => handleOpenPreContactModal(e, "call")}
+            className="flex-1 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow-2xs cursor-pointer transition-colors"
+          >
+            <Phone className="w-4 h-4 text-white shrink-0" />
+            <span>Call</span>
+          </button>
+        </div>
       </div>
 
       {/* Pre-Contact Safety Rules Modal */}

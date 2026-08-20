@@ -236,54 +236,54 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
         </div>
       </div>
 
-      {/* ── FOOTER ROW: Date Ago (Left) + 2 Rectangular Buttons (Right) ── */}
-      {/* Single Horizontal Bottom Action Row: Date + Secondary Button + Primary Button */}
-      <div className="pt-2.5 flex items-center gap-2 mt-auto w-full border-t border-slate-100">
-        {/* 1. Date Tag */}
-        <div className="flex items-center gap-1 text-[11px] font-bold text-slate-500 bg-slate-100/90 border border-slate-200/80 rounded-xl px-2.5 py-2 min-h-[44px] shrink-0 justify-center">
-          <Calendar className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-          <span>{formatRelativeTime(post.created_at)}</span>
-        </div>
+      {/* Footer Action Row: Plain Text Date Ago (Left) + Distinct CTA Buttons (Right) */}
+      <div className="pt-2.5 flex items-center justify-between gap-3 mt-auto w-full border-t border-slate-100">
+        {/* 1. Plain Text Relative Date (OLX style, no box/border) */}
+        <span className="text-[11px] font-medium text-slate-400 shrink-0 select-none">
+          {formatRelativeTime(post.created_at)}
+        </span>
 
-        {/* 2. Secondary CTA & 3. Primary CTA */}
-        {isOwnPost ? (
-          <Link
-            href="/profile?tab=my_posts"
-            className="flex-1 rounded-xl bg-slate-100 border border-slate-200 text-slate-800 font-heading font-black text-xs sm:text-sm py-2.5 px-3 flex items-center justify-center gap-1.5 min-h-[44px] cursor-pointer"
-          >
-            <Pencil className="w-4 h-4 text-slate-600 shrink-0" />
-            <span>Edit</span>
-          </Link>
-        ) : (
-          <>
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                if (!user && !profile) {
-                  if (typeof window !== "undefined") {
-                    window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+        {/* 2. Secondary CTA & 3. Primary CTA Buttons */}
+        <div className="flex items-center gap-2 flex-1 justify-end min-w-0">
+          {isOwnPost ? (
+            <Link
+              href="/profile?tab=my_posts"
+              className="flex-1 max-w-[140px] rounded-xl bg-slate-100 border border-slate-200 text-slate-800 font-heading font-black text-xs sm:text-sm py-2.5 px-3 flex items-center justify-center gap-1.5 min-h-[44px] cursor-pointer"
+            >
+              <Pencil className="w-4 h-4 text-slate-600 shrink-0" />
+              <span>Edit</span>
+            </Link>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (!user && !profile) {
+                    if (typeof window !== "undefined") {
+                      window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+                    }
+                    return;
                   }
-                  return;
-                }
-                router.push(`/chat?listingId=${post.id}&sellerId=${post.userId || ""}&title=${encodeURIComponent(post.title)}`);
-              }}
-              className="flex-1 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow-2xs cursor-pointer transition-colors"
-            >
-              <MessageSquare className="w-4 h-4 text-[#0F172A] shrink-0" />
-              <span>Chat</span>
-            </button>
+                  router.push(`/chat?listingId=${post.id}&sellerId=${post.userId || ""}&title=${encodeURIComponent(post.title)}`);
+                }}
+                className="flex-1 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow-2xs cursor-pointer transition-colors"
+              >
+                <MessageSquare className="w-4 h-4 text-[#0F172A] shrink-0" />
+                <span>Chat</span>
+              </button>
 
-            <a
-              href={callUrl}
-              onClick={(e) => e.stopPropagation()}
-              className="flex-1 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow-2xs cursor-pointer transition-colors"
-            >
-              <Phone className="w-4 h-4 text-white shrink-0" />
-              <span>Call</span>
-            </a>
-          </>
-        )}
+              <a
+                href={callUrl}
+                onClick={(e) => e.stopPropagation()}
+                className="flex-1 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow-2xs cursor-pointer transition-colors"
+              >
+                <Phone className="w-4 h-4 text-white shrink-0" />
+                <span>Call</span>
+              </a>
+            </>
+          )}
+        </div>
       </div>
 
       {/* In-App Chat Modal */}
