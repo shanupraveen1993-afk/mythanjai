@@ -237,7 +237,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
       </div>
 
       {/* ── FOOTER ROW: Date Ago (Left) + 2 Rectangular Buttons (Right) ── */}
-      <div className="pt-2.5 border-t border-slate-100 flex items-center justify-between gap-2 mt-auto">
+      <div className="pt-2 flex items-center justify-between gap-2 mt-auto">
         {/* Left: Date Ago */}
         <span className="text-[11px] font-medium text-slate-400 flex items-center gap-1 shrink-0">
           <Calendar className="w-3.5 h-3.5 text-slate-400" />

@@ -418,7 +418,7 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
         </div>
 
         {/* Location & Validity Info Row */}
-        <div className="flex items-center justify-between text-xs text-slate-600 border-t border-b border-slate-100 py-2 my-0.5 gap-2">
+        <div className="flex items-center justify-between text-xs text-slate-600 py-1.5 my-0.5 gap-2">
           <div className="flex items-center gap-1 text-xs text-slate-600 font-medium truncate">
             <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
             <span className="truncate">{post.address_text || post.area_tag || "Thanjavur"}</span>
@@ -432,7 +432,7 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
       </div>
 
       {/* Footer CTAs */}
-      <div className="pt-2.5 border-t border-slate-100 flex items-center gap-2 mt-auto">
+      <div className="pt-2 flex items-center gap-2 mt-auto">
         <a
           href={directionUrl}
           target="_blank"

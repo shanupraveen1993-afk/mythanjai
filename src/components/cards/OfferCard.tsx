@@ -107,7 +107,7 @@ export default function OfferCard({ post }: OfferCardProps) {
         </div>
 
         {/* Footer actions */}
-        <div className="flex items-center justify-between mt-auto pt-2 border-t border-slate-100">
+        <div className="flex items-center justify-between mt-auto pt-2">
           <div className="flex items-center gap-2 text-xs text-slate-500 font-bold">
             <span className="flex items-center gap-1">
               <MapPin className="w-3 h-3 text-amber-500 shrink-0" />

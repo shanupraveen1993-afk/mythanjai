@@ -50,6 +50,11 @@
   --z-toast:                600;
 }
 
+html, body, button, a, input, select, textarea, [role="button"] {
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+}
+
 @theme {
   --color-background: #f8fafc;
   --color-foreground: #0f172a;

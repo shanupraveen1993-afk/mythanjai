@@ -94,6 +94,14 @@ function MainLayoutContent({
         SplashScreen.hide().catch(() => {});
       })
       .catch(() => {});
+
+    if (typeof window !== "undefined") {
+      const isNative = Boolean((window as any).Capacitor?.isNativePlatform());
+      const hasSeenWalkthrough = localStorage.getItem("namma_thanjai_has_seen_walkthrough_v3");
+      if (!isNative && !hasSeenWalkthrough) {
+        setShowWalkthrough(true);
+      }
+    }
   }, []);
 
   const handleSplashComplete = () => {
@@ -111,7 +119,6 @@ function MainLayoutContent({
       localStorage.setItem("namma_thanjai_has_seen_walkthrough_v3", "true");
     }
     setShowWalkthrough(false);
-    router.push("/");
   };
 
   const handleCloseSignIn = () => {

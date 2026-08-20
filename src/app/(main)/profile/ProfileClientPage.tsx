@@ -147,19 +147,45 @@ export default function ProfileClientPage() {
 
   // Fetch user posts from all collections + local storage
   const fetchMyPosts = async () => {
-    if (!user) return;
     setPostsLoading(true);
     const collectionsToQuery = ["needs_and_sales", "services", "shops", "offers"];
     const allFetchedPosts: any[] = [];
+    const userPhone = profile?.phone || user?.phoneNumber?.replace("+", "") || "";
+    const userUid = user?.uid || "";
+
     try {
-      for (const colName of collectionsToQuery) {
-        const colRef = collection(db, colName);
-        const q = query(colRef, where("userId", "==", user.uid));
-        const querySnapshot = await getDocs(q);
-        querySnapshot.forEach((docSnap) => {
-          allFetchedPosts.push({ id: docSnap.id, colName, ...docSnap.data() });
-        });
+      if (userUid || userPhone) {
+        for (const colName of collectionsToQuery) {
+          const colRef = collection(db, colName);
+          const fieldKeys = ["userId", "seller_id", "sellerId", "user_id"];
+          for (const key of fieldKeys) {
+            if (userUid) {
+              try {
+                const q = query(colRef, where(key, "==", userUid));
+                const snap = await getDocs(q);
+                snap.forEach((docSnap) => {
+                  if (!allFetchedPosts.some((p) => p.id === docSnap.id)) {
+                    allFetchedPosts.push({ id: docSnap.id, colName, ...docSnap.data() });
+                  }
+                });
+              } catch (e) {}
+            }
+          }
+
+          if (userPhone) {
+            try {
+              const qPhone = query(colRef, where("phone", "==", userPhone));
+              const snapPhone = await getDocs(qPhone);
+              snapPhone.forEach((docSnap) => {
+                if (!allFetchedPosts.some((p) => p.id === docSnap.id)) {
+                  allFetchedPosts.push({ id: docSnap.id, colName, ...docSnap.data() });
+                }
+              });
+            } catch (e) {}
+          }
+        }
       }
+
       if (typeof window !== "undefined") {
         try {
           const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
@@ -182,8 +208,8 @@ export default function ProfileClientPage() {
   };
 
   useEffect(() => {
-    if (user) fetchMyPosts();
-  }, [user]);
+    fetchMyPosts();
+  }, [user, profile?.phone]);
 
   // Load saved posts from localStorage on mount and when tab switches to saved
   useEffect(() => {

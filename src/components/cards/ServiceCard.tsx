@@ -249,7 +249,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
       </div>
 
       {/* ── FOOTER ROW: Full-Width 2 Rectangular CTA Buttons (WhatsApp Outlined Black & Call Blue) ── */}
-      <div className="pt-2 border-t border-slate-100 flex items-center gap-2 mt-auto">
+      <div className="pt-2 flex items-center gap-2 mt-auto">
         <button
           type="button"
           onClick={(e) => handleOpenPreContactModal(e, "whatsapp")}
