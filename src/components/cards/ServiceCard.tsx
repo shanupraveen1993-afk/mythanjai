@@ -248,14 +248,14 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
         </div>
       </div>
 
-      {/* ── FOOTER ROW: Full-Width 2 Rectangular CTA Buttons (WhatsApp Green #128C7E & Call Yellow #F59E0B) ── */}
+      {/* ── FOOTER ROW: Full-Width 2 Rectangular CTA Buttons (WhatsApp Outlined Black & Call Blue) ── */}
       <div className="pt-2 border-t border-slate-100 flex items-center gap-2 mt-auto">
         <button
           type="button"
           onClick={(e) => handleOpenPreContactModal(e, "whatsapp")}
-          className="flex-1 bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[36px] shadow-2xs cursor-pointer transition-colors"
+          className="flex-1 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[36px] shadow-2xs cursor-pointer transition-colors"
         >
-          <MessageSquare className="w-3.5 h-3.5 text-white fill-current shrink-0" />
+          <MessageSquare className="w-3.5 h-3.5 text-[#0F172A] fill-[#0F172A]/10 shrink-0 stroke-[2.5]" />
           <span>WhatsApp</span>
         </button>
 

@@ -107,11 +107,9 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
 
         if (pendingTarget) {
           router.push(pendingTarget);
-        } else if (typeof window !== "undefined" && window.location.pathname.includes("/profile")) {
-          // Stay on profile page smoothly
-          router.refresh();
         } else {
-          router.push("/profile");
+          // Stay on current page — no auto-redirection
+          router.refresh();
         }
       } else {
         toast.error("Verification failed.");

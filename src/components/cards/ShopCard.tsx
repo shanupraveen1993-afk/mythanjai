@@ -437,16 +437,16 @@ export default function ShopCard({ post, isPreview = false, index, isGuest = fal
           href={directionUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="flex-1 bg-[#128C7E] hover:bg-[#075e54] text-white font-bold text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer transition-colors"
+          className="flex-1 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer transition-colors"
         >
-          <Navigation className="w-3.5 h-3.5 text-white" />
+          <Navigation className="w-3.5 h-3.5 text-[#0F172A] stroke-[2.5]" />
           <span>{t("getDirection")}</span>
         </a>
         {(post as any).is_available_now !== false && post.show_phone !== false && (
           <a
             href={callUrl}
             onClick={(e) => e.stopPropagation()}
-            className="bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-bold text-xs py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer shrink-0 transition-colors"
+            className="bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs py-2 px-4 rounded-xl flex items-center justify-center gap-1.5 min-h-[38px] shadow-2xs cursor-pointer shrink-0 transition-colors"
           >
             <Phone className="w-4 h-4 text-white" />
             <span>Call</span>

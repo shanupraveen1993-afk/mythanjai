@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { MessageSquare, Calendar, MapPin, Share2, Bookmark, Pencil, Flag, Phone } from "lucide-react";
 import { NeedOrSalePost } from "@/types";
@@ -21,6 +22,7 @@ interface NeedCardProps {
 }
 
 export default function NeedCard({ post, onShare, isPreview = false }: NeedCardProps) {
+  const router = useRouter();
   const { toast } = useToast();
   const { user, profile } = useAuth();
   const [saved, setSaved] = useState(() => {
@@ -264,11 +266,11 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
                     }
                     return;
                   }
-                  setIsChatOpen(true);
+                  router.push(`/chat?listingId=${post.id}&sellerId=${post.userId || ""}&title=${encodeURIComponent(post.title)}`);
                 }}
-                className="bg-[#0F172A] hover:bg-slate-800 text-white font-heading font-black text-xs py-1.5 px-3.5 rounded-xl flex items-center justify-center gap-1.5 min-h-[36px] shadow-2xs cursor-pointer transition-colors"
+                className="border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs py-1.5 px-3.5 rounded-xl flex items-center justify-center gap-1.5 min-h-[36px] shadow-2xs cursor-pointer transition-colors"
               >
-                <MessageSquare className="w-3.5 h-3.5 text-white fill-white/20 shrink-0" />
+                <MessageSquare className="w-3.5 h-3.5 text-[#0F172A] fill-[#0F172A]/10 shrink-0 stroke-[2.5]" />
                 <span>Chat</span>
               </button>
 

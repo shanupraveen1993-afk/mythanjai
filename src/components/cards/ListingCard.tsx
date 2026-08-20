@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { Share2, Bookmark, Phone, MessageSquare, MapPin, Calendar, Flag, X, ChevronLeft, ChevronRight } from "lucide-react";
 import { doc, updateDoc, increment } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -122,6 +123,7 @@ function GalleryModal({ images, startIndex, onClose }: { images: string[]; start
 
 // ── Sell Card Component (Figma Wireframe Exact Implementation) ──────────────
 export default function ListingCard({ listing }: { listing: ListingItem }) {
+  const router = useRouter();
   const { user, profile } = useAuth();
   const { toast } = useToast();
   const [isChatOpen, setIsChatOpen] = useState(false);
@@ -383,11 +385,11 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
                   }
                   return;
                 }
-                setIsChatOpen(true);
+                router.push(`/chat?listingId=${listing.id}&sellerId=${listing.seller_id || ""}&title=${encodeURIComponent(listing.title)}`);
               }}
-              className="bg-[#0F172A] hover:bg-slate-800 text-white font-heading font-black text-xs py-1.5 px-3.5 rounded-xl flex items-center justify-center gap-1.5 min-h-[36px] shadow-2xs cursor-pointer transition-colors"
+              className="border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs py-1.5 px-3.5 rounded-xl flex items-center justify-center gap-1.5 min-h-[36px] shadow-2xs cursor-pointer transition-colors"
             >
-              <MessageSquare className="w-3.5 h-3.5 text-white fill-white/20 shrink-0" />
+              <MessageSquare className="w-3.5 h-3.5 text-[#0F172A] fill-[#0F172A]/10 shrink-0 stroke-[2.5]" />
               <span>Chat</span>
             </button>
 
