@@ -290,42 +290,56 @@ export default function ChatClientPage() {
         </div>
       )}
 
-      {/* CHAT HEADER: Two-state — List view shows branding, Conversation view shows peer + back */}
-      <div className="w-full bg-[#075e54] text-white px-4 py-2.5 flex items-center justify-between shadow-md shrink-0 border-b border-[#054c44] relative z-40">
+      {/* CHAT HEADER: Two-state — List view shows branding + back, Conversation view shows peer + back */}
+      <div
+        className="w-full bg-[#075e54] text-white px-4 py-2.5 flex items-center justify-between shadow-md shrink-0 border-b border-[#054c44] relative z-40"
+        style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 40px)" }}
+      >
         {showMobileChat ? (
-          /* Inside a conversation — show back + peer name */
-          <div className="flex items-center gap-3 flex-1">
+          /* Inside a 1-on-1 conversation — show back to inbox + peer name */
+          <div className="flex items-center gap-3 flex-1 min-w-0">
             <button
               onClick={() => setShowMobileChat(false)}
-              className="p-1 text-white hover:bg-white/10 rounded-lg cursor-pointer"
+              className="p-1 text-white hover:bg-white/10 rounded-lg cursor-pointer flex items-center gap-1"
+              title="Back to All Conversations"
             >
               <ArrowLeft className="w-5 h-5" />
+              <span className="text-xs font-bold hidden sm:inline">Inbox</span>
             </button>
             <div className="w-8 h-8 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-xs shrink-0">
               <User className="w-4 h-4" />
             </div>
-            <div className="min-w-0">
-              <h3 className="font-bold text-sm leading-tight text-white truncate">{activePeerName}</h3>
-              <p className="text-xs text-emerald-100 truncate max-w-[200px]">{activeListingTitle}</p>
+            <div className="min-w-0 flex-1">
+              <h3 className="font-heading font-black text-sm leading-tight text-white truncate">{activePeerName}</h3>
+              <p className="text-[11px] text-emerald-100 font-semibold truncate max-w-[200px]">{activeListingTitle}</p>
             </div>
           </div>
         ) : (
-          /* Chat list — show full branding */
-          <div
-            onClick={() => router.push("/")}
-            className="flex items-center gap-2 cursor-pointer select-none"
-          >
-            <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-8 h-8 sm:w-9 sm:h-9 object-contain shrink-0 mix-blend-multiply" />
-            <div className="flex flex-col">
-              <div className="flex items-center gap-1">
-                <span className="font-heading font-bold tracking-tight text-white text-xs sm:text-sm uppercase">
-                  namma thanjai
-                </span>
-                <span className="bg-emerald-400 text-slate-950 font-black text-xs px-1.5 py-0.2 rounded-md uppercase">
-                  CHAT
-                </span>
+          /* Chat Inbox list — show back + full branding */
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            <button
+              onClick={() => router.back()}
+              className="p-1 text-white hover:bg-white/10 rounded-lg cursor-pointer"
+              title="Back to Main Feed"
+            >
+              <ArrowLeft className="w-5 h-5" />
+            </button>
+            <div
+              onClick={() => router.push("/")}
+              className="flex items-center gap-2 cursor-pointer select-none"
+            >
+              <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-8 h-8 sm:w-9 sm:h-9 object-contain shrink-0 mix-blend-multiply" />
+              <div className="flex flex-col">
+                <div className="flex items-center gap-1">
+                  <span className="font-heading font-bold tracking-tight text-white text-xs sm:text-sm uppercase">
+                    namma thanjai
+                  </span>
+                  <span className="bg-emerald-400 text-slate-950 font-black text-[10px] px-1.5 py-0.2 rounded-md uppercase">
+                    CHAT
+                  </span>
+                </div>
+                <span className="text-[11px] text-emerald-100 font-medium">All Conversations Inbox</span>
               </div>
-              <span className="text-xs text-emerald-100 font-medium">All Conversations</span>
             </div>
           </div>
         )}
@@ -334,7 +348,7 @@ export default function ChatClientPage() {
         <button
           onClick={() => router.back()}
           aria-label="Close Chat"
-          className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer"
+          className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer shrink-0 ml-2"
         >
           <X className="w-5 h-5" />
         </button>
