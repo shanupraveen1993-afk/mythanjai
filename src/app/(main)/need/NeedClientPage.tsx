@@ -195,8 +195,6 @@ export default function NeedClientPage() {
       )}
       </div>
 
-      {/* Web App Floating Action Button (FAB) on 2nd Screen Scroll */}
-      <WebAppScrollFAB postRoute="/post/need" label="Post Need" />
     </div>
   );
 }

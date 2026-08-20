@@ -191,7 +191,6 @@ export default function ServicesClientPage() {
         </div>
       )}
       </div>
-      <WebAppScrollFAB postRoute="/post/service" label="Post Service" />
     </div>
   );
 }

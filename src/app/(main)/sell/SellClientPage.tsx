@@ -196,8 +196,6 @@ export default function SellClientPage() {
       )}
       </div>
 
-      {/* Web App Floating Action Button (FAB) on 2nd Screen Scroll */}
-      <WebAppScrollFAB postRoute="/post/sell" label="Post Item" />
     </div>
   );
 }

@@ -126,8 +126,6 @@ export default function ShopsClientPage() {
       )}
       </div>
 
-      {/* Web App Floating Action Button (FAB) on 2nd Screen Scroll */}
-      <WebAppScrollFAB postRoute="/post/offer" label="Post Offer" />
     </div>
   );
 }
