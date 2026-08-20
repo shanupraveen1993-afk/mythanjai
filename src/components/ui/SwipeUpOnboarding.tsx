@@ -86,7 +86,10 @@ export default function SwipeUpOnboarding({
     <div className="fixed inset-0 z-[99990] bg-[#0F172A] text-white select-none font-sans overflow-hidden">
       
       {/* Fixed Top Header */}
-      <div className="absolute top-0 left-0 right-0 z-30 pt-6 px-6 max-w-md mx-auto flex items-center justify-between pointer-events-auto">
+      <div
+        className="absolute top-0 left-0 right-0 z-30 px-6 max-w-md mx-auto flex items-center justify-between pointer-events-auto"
+        style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 44px)" }}
+      >
         <div className="flex items-center gap-2.5">
           <div className="w-10 h-10 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center p-2 shadow-xs backdrop-blur-md">
             <Image
@@ -129,7 +132,7 @@ export default function SwipeUpOnboarding({
           return (
             <div
               key={slide.id}
-              className="w-full h-full snap-start snap-always shrink-0 flex flex-col justify-between pt-20 pb-8 px-6 max-w-md mx-auto relative"
+              className="w-full h-full snap-start snap-always shrink-0 flex flex-col justify-between pt-28 pb-8 px-6 max-w-md mx-auto relative"
             >
               {/* Background Ambient Lighting per slide */}
               <div className="absolute top-1/4 right-0 w-80 h-80 bg-amber-500/10 blur-[100px] rounded-full pointer-events-none" />
