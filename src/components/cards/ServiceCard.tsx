@@ -24,15 +24,18 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
   const router = useRouter();
   const { toast } = useToast();
   const { user, profile } = useAuth();
-  const [saved, setSaved] = useState(() => {
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => {
     if (typeof window !== "undefined") {
       try {
         const savedList: any[] = JSON.parse(localStorage.getItem("namma_thanjai_saved_posts") || "[]");
-        return savedList.some((s) => s.id === post.id);
+        if (savedList.some((s) => s.id === post.id)) {
+          setSaved(true);
+        }
       } catch (e) {}
     }
-    return false;
-  });
+  }, [post.id]);
   const [isPreContactOpen, setIsPreContactOpen] = useState(false);
   const [contactType, setContactType] = useState<"call" | "whatsapp">("call");
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);

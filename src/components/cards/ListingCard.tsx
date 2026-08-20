@@ -127,15 +127,20 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
   const { user, profile } = useAuth();
   const { toast } = useToast();
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [isSaved, setIsSaved] = useState(() => {
+  const [isSaved, setIsSaved] = useState<boolean>(() => {
+    return Boolean(user?.uid && listing.saved_by && listing.saved_by.includes(user.uid));
+  });
+
+  useEffect(() => {
     if (typeof window !== "undefined") {
       try {
         const saved: any[] = JSON.parse(localStorage.getItem("namma_thanjai_saved_posts") || "[]");
-        return saved.some((s) => s.id === listing.id);
+        if (saved.some((s) => s.id === listing.id)) {
+          setIsSaved(true);
+        }
       } catch (e) {}
     }
-    return user?.uid && listing.saved_by ? listing.saved_by.includes(user.uid) : false;
-  });
+  }, [listing.id]);
   const [galleryIndex, setGalleryIndex] = useState<number | null>(null);
 
   const isOwnPost = React.useMemo(() => {

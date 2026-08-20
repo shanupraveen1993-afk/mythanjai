@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { Phone, MessageSquare, MapPin, Store, Sparkles, Calendar, Navigation, Share2, Bookmark, Lock, Flag, Camera, Clock, Video, Play, Pause } from "lucide-react";
 import { ShopPost } from "@/types";
@@ -85,12 +85,18 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
     }
   }, [post.valid_to]);
 
-  const [sharesCount, setSharesCount] = useState(() => {
-    if (typeof window === "undefined") return 19;
-    const stored = localStorage.getItem(`shares_shop_${post.id}`);
-    if (stored) return parseInt(stored, 10);
-    return Math.floor(18 + (post.shop_name?.length || 5) * 2);
-  });
+  const [sharesCount, setSharesCount] = useState(19);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem(`shares_shop_${post.id}`);
+      if (stored) {
+        setSharesCount(parseInt(stored, 10));
+      } else {
+        setSharesCount(Math.floor(18 + (post.shop_name?.length || 5) * 2));
+      }
+    }
+  }, [post.id, post.shop_name]);
 
   const rawPhone = String((post as any).whatsapp_phone || post.phone || "9876543210");
   const cleanPhone = rawPhone.replace(/\D/g, "");
