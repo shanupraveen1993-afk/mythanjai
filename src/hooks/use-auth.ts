@@ -36,6 +36,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
           if (userDoc.exists()) {
             const data = userDoc.data() as UserProfile;
+            const storedPhone = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_phone") || localStorage.getItem("namma_thanjai_phone") || "") : "";
+            const storedVerified = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_verified") === "true" || localStorage.getItem("namma_thanjai_verified") === "true") : false;
+
+            // Preserve existing verified phone number for verified users
+            if (storedVerified && storedPhone && (!data.phone || !data.isVerified)) {
+              data.phone = storedPhone;
+              data.isVerified = true;
+            }
 
             const adminPhone = process.env.NEXT_PUBLIC_ADMIN_PHONE?.replace(/\D/g, "");
             const hasAdminPhone = data.phone && (data.phone.replace(/\D/g, "") === adminPhone || data.phone.includes("9994837342"));
@@ -50,13 +58,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           } else {
             const storedPhone = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_phone") || localStorage.getItem("namma_thanjai_phone") || "") : "";
             const storedVerified = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_verified") === "true" || localStorage.getItem("namma_thanjai_verified") === "true") : false;
-            const storedDisplayName = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_display_name") || "") : "";
+
             const newProfile: UserProfile = {
               uid: currentUser.uid,
-              phone: storedPhone || "",
+              phone: storedVerified ? storedPhone : "",
               isVerified: Boolean(storedVerified && storedPhone),
-              isAdmin: storedPhone.includes("9994837342"),
-              displayName: storedDisplayName || currentUser.displayName || "",
+              isAdmin: Boolean(storedVerified && storedPhone.includes("9994837342")),
+              displayName: currentUser.displayName || "",
               createdAt: new Date(),
             };
             await setDoc(userRef, newProfile, { merge: true });
