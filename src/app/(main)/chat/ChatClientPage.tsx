@@ -97,7 +97,7 @@ export default function ChatClientPage() {
       // Add to thread list if not present
       setThreads((prev) => {
         if (prev.some((t) => t.chatId === generatedChatId)) return prev;
-        return [
+        const updated = [
           {
             chatId: generatedChatId,
             listingId: queryListingId,
@@ -109,6 +109,12 @@ export default function ChatClientPage() {
           },
           ...prev,
         ];
+        if (typeof window !== "undefined") {
+          try {
+            localStorage.setItem("namma_thanjai_chat_threads", JSON.stringify(updated));
+          } catch (e) {}
+        }
+        return updated;
       });
     }
   }, [queryListingId, querySellerId, queryTitle, user?.uid]);

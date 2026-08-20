@@ -18,6 +18,19 @@ export default function LandingClientPage() {
   const router = useRouter();
   const { user, profile } = useAuth();
   const isAuthVerified = Boolean(profile?.isVerified || user);
+  const [activeUserPost, setActiveUserPost] = React.useState<any>(null);
+
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+        const active = stored.find((p: any) => !p.is_sold && (p.type === "SELL" || p.type === "NEED"));
+        if (active) {
+          setActiveUserPost(active);
+        }
+      } catch (e) {}
+    }
+  }, []);
 
   const handleSignInClick = () => {
     if (typeof window !== "undefined") {
@@ -98,9 +111,10 @@ export default function LandingClientPage() {
                       window.dispatchEvent(new Event("namma_thanjai_open_signin"));
                     }
                   }}
-                  className="shrink-0 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs sm:text-sm px-5 py-2.5 rounded-lg shadow-md cursor-pointer transition-all flex items-center justify-center gap-1.5 select-none"
+                  className="bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs uppercase tracking-wider py-2 px-5 rounded-xl transition-all shadow-sm border border-amber-400/80 cursor-pointer active:scale-95 flex items-center gap-1.5"
                 >
-                  <span>Register to Post →</span>
+                  <span>Verify Phone to Post</span>
+                  <ChevronRight className="w-3.5 h-3.5 text-slate-950 stroke-[3]" />
                 </button>
               </div>
             )}

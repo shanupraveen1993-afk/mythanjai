@@ -59,6 +59,23 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
   useEffect(() => {
     if (isOpen && step === "otp") {
       setTimeout(() => otpInputRef.current?.focus(), 50);
+
+      // WebOTP API SMS auto-read listener
+      if (typeof window !== "undefined" && "OTPCredential" in window) {
+        const ac = new AbortController();
+        (navigator as any).credentials
+          .get({
+            otp: { transport: ["sms"] },
+            signal: ac.signal,
+          })
+          .then((otp: any) => {
+            if (otp && otp.code) {
+              setOtpCode(otp.code);
+              toast.success("OTP auto-read from SMS!");
+            }
+          })
+          .catch(() => {});
+      }
     }
   }, [isOpen, step]);
 
@@ -176,11 +193,13 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
                     ref={phoneInputRef}
                     autoFocus
                     type="tel"
+                    inputMode="tel"
+                    autoComplete="tel-national"
                     required
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, "").slice(0, 10))}
-                    placeholder="10-digit mobile number"
-                    className="w-full bg-slate-50 border border-slate-200 text-slate-900 rounded-xl pl-11 pr-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:border-yellow-500 focus:outline-none font-bold"
+                    placeholder="9994837342"
+                    className="w-full pl-11 pr-4 py-2.5 bg-slate-50 border border-slate-200 rounded-xl text-xs font-bold text-slate-900 focus:outline-none focus:border-amber-400 focus:bg-white transition-colors"
                   />
                 </div>
               </div>

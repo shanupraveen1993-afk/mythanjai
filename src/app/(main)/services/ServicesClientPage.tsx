@@ -121,11 +121,20 @@ export default function ServicesClientPage() {
         </div>
       </div>
 
-      {/* 2. TITLE BAR */}
+      {/* 2. TITLE BAR WITH ROYAL BLUE MY LISTINGS BUTTON */}
       <div className="py-2.5 flex items-center justify-between gap-3 w-full border-b border-slate-200/80">
         <h2 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight">
           Local Service (சேவைகள்)
         </h2>
+
+        <button
+          type="button"
+          onClick={() => router.push("/profile?tab=my_posts")}
+          className="px-3.5 py-1.5 rounded-xl bg-[#1d4ed8] hover:bg-blue-800 text-white font-heading font-black text-xs flex items-center justify-center gap-1.5 shadow-xs cursor-pointer transition-all active:scale-95 shrink-0"
+        >
+          <UserCheck className="w-3.5 h-3.5 text-amber-300" />
+          <span>My Listings →</span>
+        </button>
       </div>
 
       {/* LISTING CONTAINER */}

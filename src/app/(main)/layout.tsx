@@ -17,6 +17,7 @@ import SwipeUpOnboarding from "@/components/ui/SwipeUpOnboarding";
 import { useNativeApp } from "@/hooks/use-native-app";
 import FloatingPostButton from "@/components/layout/FloatingPostButton";
 import PendingFeedbackPrompt from "@/components/modals/PendingFeedbackPrompt";
+import NativePermissionsModal from "@/components/native/NativePermissionsModal";
 
 
 export default function MainLayout({
@@ -291,7 +292,8 @@ function MainLayoutContent({
         </>
       )}
 
-      {/* Persistent Opinion Feedback Manager */}
+      {/* Persistent Opinion Feedback Manager & Native Permissions Modal */}
+      <NativePermissionsModal />
       <PendingFeedbackPrompt />
 
       {/* Sign-In Modal */}

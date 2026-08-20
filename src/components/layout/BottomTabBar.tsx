@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { Home, MessageSquare, Wrench, Store, User, Tag, ClipboardList } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 
@@ -53,6 +53,20 @@ export default function BottomTabBar({
       route: "/shops",
     },
   ];
+
+  useEffect(() => {
+    // Prefetch all primary tab routes for 0ms instant tab transitions
+    tabs.forEach((t) => {
+      try {
+        router.prefetch(t.route);
+      } catch (e) {}
+    });
+    try {
+      router.prefetch("/profile");
+      router.prefetch("/chat");
+      router.prefetch("/post/sell");
+    } catch (e) {}
+  }, [router]);
 
   const handleTabClick = (tab: typeof tabs[0]) => {
     if (onTabChange) onTabChange(tab.id);

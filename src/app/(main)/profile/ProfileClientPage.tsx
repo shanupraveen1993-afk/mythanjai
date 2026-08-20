@@ -28,17 +28,20 @@ import {
   ShieldCheck,
   Zap,
   LogOut,
-  Pencil,
-  Shield,
-  Package,
-  Bookmark,
-  Tag,
   Clock,
   RefreshCw,
+  Eye,
+  Tag,
+  Package,
+  Pencil,
   ChevronRight,
+  Bookmark,
+  Share2,
+  AlertTriangle,
+  X,
+  Shield,
   XCircle,
   Home,
-  Eye,
 } from "lucide-react";
 import Link from "next/link";
 import { useToast } from "@/context/ToastContext";
@@ -70,8 +73,17 @@ export default function ProfileClientPage() {
   const [savedPosts, setSavedPosts] = useState<any[]>([]);
   const [postsLoading, setPostsLoading] = useState(true);
 
-  // Delete confirm state (inline, no window.confirm)
+  // Delete confirm & Testify state
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [testifyPost, setTestifyPost] = useState<any>(null);
+
+  const handleTestifyTrue = (postId: string) => {
+    setMyPosts((prev) =>
+      prev.map((p) => (p.id === postId ? { ...p, report_count: 0 } : p))
+    );
+    setTestifyPost(null);
+    toast.success("Listing testified as 100% accurate & true. Report count reset!");
+  };
 
   const handleToggleSoldState = (postId: string, currentSold: boolean) => {
     setMyPosts((prev) =>
@@ -607,6 +619,20 @@ export default function ProfileClientPage() {
                       </div>
                     </div>
 
+                    {/* Report Alert Badge (If reported by buyers) */}
+                    {post.report_count > 0 && (
+                      <div 
+                        onClick={() => setTestifyPost(post)}
+                        className="flex items-center justify-between bg-amber-500/10 border border-amber-500/40 p-2.5 rounded-xl cursor-pointer hover:bg-amber-500/20 transition-all"
+                      >
+                        <div className="flex items-center gap-1.5 text-xs font-bold text-amber-900">
+                          <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
+                          <span>Reported ({post.report_count || 1} times) — Action Required</span>
+                        </div>
+                        <span className="text-[10px] font-black uppercase text-amber-900 underline">Testify →</span>
+                      </div>
+                    )}
+
                     {/* 30-Day countdown */}
                     <div className="flex items-center justify-between bg-slate-50 border border-slate-200/80 rounded-xl px-3 py-2 text-xs">
                       <span className="flex items-center gap-1.5 font-bold text-slate-600">
@@ -764,6 +790,67 @@ export default function ProfileClientPage() {
           )}
         </div>
       </div>
+
+      {/* Testify Modal for Reported Listings */}
+      {testifyPost && (
+        <div className="fixed inset-0 z-[99999] bg-slate-950/70 backdrop-blur-xs flex items-center justify-center p-4">
+          <div className="bg-white border border-slate-200 w-full max-w-sm rounded-2xl p-5 shadow-2xl flex flex-col gap-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2 text-amber-600">
+                <AlertTriangle className="w-5 h-5 shrink-0" />
+                <h4 className="font-heading font-black text-sm text-slate-900">Review Listing Report</h4>
+              </div>
+              <button
+                type="button"
+                onClick={() => setTestifyPost(null)}
+                className="text-slate-400 hover:text-slate-700 p-1"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+
+            <p className="text-xs text-slate-600 font-medium leading-relaxed">
+              Your listing <strong>"{testifyPost.title}"</strong> has received buyer feedback. Please confirm accuracy:
+            </p>
+
+            <div className="flex flex-col gap-2 pt-1">
+              <button
+                type="button"
+                onClick={() => handleTestifyTrue(testifyPost.id)}
+                className="w-full py-2.5 px-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-black text-xs flex items-center justify-center gap-1.5 shadow-xs cursor-pointer"
+              >
+                <CheckCircle className="w-4 h-4" />
+                <span>Testify: Details Are 100% True</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  const targetId = testifyPost.id;
+                  setTestifyPost(null);
+                  router.push(`/post?edit=${targetId}`);
+                }}
+                className="w-full py-2.5 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 font-heading font-bold text-xs flex items-center justify-center gap-1.5 border border-slate-200 cursor-pointer"
+              >
+                <Pencil className="w-3.5 h-3.5" />
+                <span>Edit Listing Details</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  handleDeletePost(testifyPost.id, testifyPost.colName || "needs_and_sales");
+                  setTestifyPost(null);
+                }}
+                className="w-full py-2 px-3 rounded-xl text-red-600 hover:bg-red-50 font-heading font-bold text-xs flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <Trash2 className="w-3.5 h-3.5" />
+                <span>Remove Listing</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* UID label — very subtle, bottom */}
       {user && (

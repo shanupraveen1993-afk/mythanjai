@@ -158,6 +158,19 @@ export default function PostForm({ segment }: PostFormProps) {
   const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
   const [videoPreview, setVideoPreview] = useState<string>("");
 
+  const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      if (file.size > 25 * 1024 * 1024) {
+        toast.error("Video file size must be under 25MB.");
+        return;
+      }
+      setSelectedVideo(file);
+      setVideoPreview(URL.createObjectURL(file));
+      toast.success("Store Video Flyer attached!");
+    }
+  };
+
   // Edit Mode Data Loader
   useEffect(() => {
     if (!editId) return;
@@ -643,6 +656,21 @@ export default function PostForm({ segment }: PostFormProps) {
                       <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
                     </label>
                   )}
+                </div>
+
+                {/* OPTIONAL VIDEO FLYER UPLOAD (FOR STORE OFFER) */}
+                <div className="w-full bg-amber-500/5 border border-amber-500/30 p-3 rounded-xl flex items-center justify-between gap-3">
+                  <div className="flex items-center gap-2">
+                    <Video className="w-4 h-4 text-amber-600 shrink-0" />
+                    <div className="flex flex-col">
+                      <span className="text-xs font-bold text-slate-900">Upload Store Video Promo / Reel (Optional)</span>
+                      <span className="text-[10px] text-slate-500 font-medium">MP4 / MOV video up to 25MB</span>
+                    </div>
+                  </div>
+                  <label className="bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs px-3 py-1.5 rounded-lg cursor-pointer transition-all shadow-xs shrink-0">
+                    {videoPreview ? "Video Attached ✓" : "Upload Video +"}
+                    <input type="file" accept="video/*" onChange={handleVideoChange} className="hidden" />
+                  </label>
                 </div>
 
                 {/* 2. EXPLICIT SHOP NAME INPUT */}
