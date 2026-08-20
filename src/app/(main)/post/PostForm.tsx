@@ -121,34 +121,6 @@ export default function PostForm({ segment }: PostFormProps) {
   const { user, profile, isVerified, loading: authLoading } = useAuth();
   const isAuthVerified = isVerified;
 
-  // Unauthenticated Guest Protection: Wait for auth to finish loading before checking guest status
-  useEffect(() => {
-    if (!authLoading && !isAuthVerified) {
-      if (typeof window !== "undefined") {
-        window.dispatchEvent(new Event("namma_thanjai_open_signin"));
-      }
-    }
-  }, [authLoading, isAuthVerified]);
-
-  if (authLoading) {
-    return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center p-6 text-slate-500 font-heading font-bold text-xs gap-3">
-        <Loader2 className="w-7 h-7 animate-spin text-amber-500" />
-        <span>Loading details...</span>
-      </div>
-    );
-  }
-
-  if (!isAuthVerified) {
-    return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6 text-slate-900 font-heading font-black text-center text-sm">
-        <p className="max-w-xs leading-relaxed text-slate-600 font-bold">
-          Please verify your WhatsApp mobile number to create and publish listings on Namma Thanjai.
-        </p>
-      </div>
-    );
-  }
-
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
@@ -166,19 +138,29 @@ export default function PostForm({ segment }: PostFormProps) {
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
   const [videoPreview, setVideoPreview] = useState<string>("");
+  const [price, setPrice] = useState("");
+  const [hasSpecificPrice, setHasSpecificPrice] = useState<boolean>(true);
+  const [youtubeUrl, setYoutubeUrl] = useState("");
+  const [googleMapsUrl, setGoogleMapsUrl] = useState("");
+  const [allWorkingDays, setAllWorkingDays] = useState("Yes");
+  const [sundayLeave, setSundayLeave] = useState("Yes");
+  const [validFrom, setValidFrom] = useState("");
+  const [validTo, setValidTo] = useState("");
+  const [showPhone, setShowPhone] = useState(false);
 
-  const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      if (file.size > 25 * 1024 * 1024) {
-        toast.error("Video file size must be under 25MB.");
-        return;
+  // AI Description & OCR State
+  const [previewDescription, setPreviewDescription] = useState("");
+  const [isAiRewriting, setIsAiRewriting] = useState(false);
+  const [isOcrScanning, setIsOcrScanning] = useState(false);
+
+  // Unauthenticated Guest Protection: Wait for auth to finish loading before checking guest status
+  useEffect(() => {
+    if (!authLoading && !isAuthVerified) {
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("namma_thanjai_open_signin"));
       }
-      setSelectedVideo(file);
-      setVideoPreview(URL.createObjectURL(file));
-      toast.success("Store Video Flyer attached!");
     }
-  };
+  }, [authLoading, isAuthVerified]);
 
   // Edit Mode Data Loader
   useEffect(() => {
@@ -204,20 +186,24 @@ export default function PostForm({ segment }: PostFormProps) {
     }).catch(() => {});
   }, [editId, editCol, segment]);
 
-  const [price, setPrice] = useState("");
-  const [hasSpecificPrice, setHasSpecificPrice] = useState<boolean>(true);
-  const [youtubeUrl, setYoutubeUrl] = useState("");
-  const [googleMapsUrl, setGoogleMapsUrl] = useState("");
-  const [allWorkingDays, setAllWorkingDays] = useState("Yes");
-  const [sundayLeave, setSundayLeave] = useState("Yes");
-  const [validFrom, setValidFrom] = useState("");
-  const [validTo, setValidTo] = useState("");
-  const [showPhone, setShowPhone] = useState(false);
+  if (authLoading) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center p-6 text-slate-500 font-heading font-bold text-xs gap-3">
+        <Loader2 className="w-7 h-7 animate-spin text-amber-500" />
+        <span>Loading details...</span>
+      </div>
+    );
+  }
 
-  // AI Description & OCR State
-  const [previewDescription, setPreviewDescription] = useState("");
-  const [isAiRewriting, setIsAiRewriting] = useState(false);
-  const [isOcrScanning, setIsOcrScanning] = useState(false);
+  if (!isAuthVerified) {
+    return (
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6 text-slate-900 font-heading font-black text-center text-sm">
+        <p className="max-w-xs leading-relaxed text-slate-600 font-bold">
+          Please verify your WhatsApp mobile number to create and publish listings on Namma Thanjai.
+        </p>
+      </div>
+    );
+  }
 
   const getApiUrl = (endpoint: string) => {
     if (typeof window !== "undefined") {
@@ -227,6 +213,19 @@ export default function PostForm({ segment }: PostFormProps) {
       }
     }
     return endpoint;
+  };
+
+  const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      if (file.size > 25 * 1024 * 1024) {
+        toast.error("Video file size must be under 25MB.");
+        return;
+      }
+      setSelectedVideo(file);
+      setVideoPreview(URL.createObjectURL(file));
+      toast.success("Store Video Flyer attached!");
+    }
   };
 
   const handleBlurDescription = async () => {

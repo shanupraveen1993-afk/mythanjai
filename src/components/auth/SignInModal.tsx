@@ -27,6 +27,9 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
   const isHeaderLoginRef = React.useRef(false);
   const pendingTargetRef = React.useRef<string | null>(null);
 
+  const [resendTimer, setResendTimer] = useState(30);
+  const [canResend, setCanResend] = useState(false);
+
   // Capture intent when modal opens and reset state when closed
   useEffect(() => {
     if (isOpen) {
@@ -52,7 +55,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
         localStorage.removeItem("namma_thanjai_target_post_route");
       }
     }
-  }, [isOpen]);
+  }, [isOpen, step]);
 
   // Auto-focus OTP input whenever step transitions to "otp"
   useEffect(() => {
@@ -68,8 +71,27 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
     }
   }, [isOpen, profile?.isVerified, onClose]);
 
-  if (!isOpen) return null;
-
+  // OTP Countdown timer when step is OTP
+  useEffect(() => {
+    let interval: any = null;
+    if (isOpen && step === "otp") {
+      setResendTimer(30);
+      setCanResend(false);
+      interval = setInterval(() => {
+        setResendTimer((prev) => {
+          if (prev <= 1) {
+            clearInterval(interval);
+            setCanResend(true);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+    }
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [isOpen, step]);
   const handleSendOtp = (e: React.FormEvent) => {
     e.preventDefault();
     if (!phoneNumber || phoneNumber.length !== 10) {
@@ -120,29 +142,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
     }
   };
 
-  const [resendTimer, setResendTimer] = useState(30);
-  const [canResend, setCanResend] = useState(false);
-
-  useEffect(() => {
-    let interval: any = null;
-    if (step === "otp") {
-      setResendTimer(30);
-      setCanResend(false);
-      interval = setInterval(() => {
-        setResendTimer((prev) => {
-          if (prev <= 1) {
-            clearInterval(interval);
-            setCanResend(true);
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-    }
-    return () => {
-      if (interval) clearInterval(interval);
-    };
-  }, [step]);
+  if (!isOpen) return null;
 
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-950/70 backdrop-blur-sm p-0 sm:p-4 animate-fade-in">
