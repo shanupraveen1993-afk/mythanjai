@@ -227,11 +227,11 @@ export default function TopHeader({
             <button
               type="button"
               onClick={handleDynamicPostClick}
-              className="bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-sm px-4 py-2 rounded-xl font-heading font-black shrink-0 flex items-center gap-2 shadow-2xs cursor-pointer select-none"
+              className="md:hidden bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-sm px-4 py-2 rounded-xl font-heading font-black shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none touch-manipulation active:scale-[0.97] transition-all"
               title={postInfo.label}
             >
               <Plus className="w-4 h-4 stroke-[3] text-[#0F172A]" />
-              <span>{postInfo.label}</span>
+              <span>Post</span>
             </button>
           ) : null}
         </div>

@@ -23,7 +23,15 @@ interface NeedCardProps {
 export default function NeedCard({ post, onShare, isPreview = false }: NeedCardProps) {
   const { toast } = useToast();
   const { user, profile } = useAuth();
-  const [saved, setSaved] = useState(false);
+  const [saved, setSaved] = useState(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const savedList: any[] = JSON.parse(localStorage.getItem("namma_thanjai_saved_posts") || "[]");
+        return savedList.some((s) => s.id === post.id);
+      } catch (e) {}
+    }
+    return false;
+  });
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isSold, setIsSold] = useState(false);
   const [isDeleted, setIsDeleted] = useState(false);
@@ -77,7 +85,37 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
 
   const handleToggleSave = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setSaved(!saved);
+    if (!user && !profile) {
+      toast.error("Sign in to save listings.");
+      return;
+    }
+    const nextState = !saved;
+    setSaved(nextState);
+    try {
+      const savedList: any[] = JSON.parse(localStorage.getItem("namma_thanjai_saved_posts") || "[]");
+      if (nextState) {
+        if (!savedList.some((s: any) => s.id === post.id)) {
+          savedList.unshift({
+            id: post.id,
+            title: post.title,
+            price: post.price,
+            image_url: post.image_url,
+            phone: post.phone,
+            area_tag: post.area_tag,
+            category: post.category,
+            type: "NEED",
+            colName: "needs_and_sales",
+            saved_at: new Date().toISOString(),
+          });
+        }
+        localStorage.setItem("namma_thanjai_saved_posts", JSON.stringify(savedList));
+        toast.success("Post saved to your profile!");
+      } else {
+        const updated = savedList.filter((s: any) => s.id !== post.id);
+        localStorage.setItem("namma_thanjai_saved_posts", JSON.stringify(updated));
+        toast.info("Post removed from saved.");
+      }
+    } catch (e) {}
   };
 
   const getCategoryIllustration = (category?: string) => {

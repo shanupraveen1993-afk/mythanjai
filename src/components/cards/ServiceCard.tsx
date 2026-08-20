@@ -20,7 +20,15 @@ interface ServiceCardProps {
 export default function ServiceCard({ post, isPreview = false }: ServiceCardProps) {
   const { toast } = useToast();
   const { user } = useAuth();
-  const [saved, setSaved] = useState(false);
+  const [saved, setSaved] = useState(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const savedList: any[] = JSON.parse(localStorage.getItem("namma_thanjai_saved_posts") || "[]");
+        return savedList.some((s) => s.id === post.id);
+      } catch (e) {}
+    }
+    return false;
+  });
   const [isPreContactOpen, setIsPreContactOpen] = useState(false);
   const [contactType, setContactType] = useState<"call" | "whatsapp">("call");
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
@@ -67,7 +75,35 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
 
   const handleToggleSave = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setSaved(!saved);
+    if (!user) {
+      toast.error("Sign in to save service providers.");
+      return;
+    }
+    const nextState = !saved;
+    setSaved(nextState);
+    try {
+      const savedList: any[] = JSON.parse(localStorage.getItem("namma_thanjai_saved_posts") || "[]");
+      if (nextState) {
+        if (!savedList.some((s: any) => s.id === post.id)) {
+          savedList.unshift({
+            id: post.id,
+            title: post.name,
+            phone: post.phone,
+            area_tag: post.area_tag,
+            category: post.skill_category,
+            type: "SERVICE",
+            colName: "services",
+            saved_at: new Date().toISOString(),
+          });
+        }
+        localStorage.setItem("namma_thanjai_saved_posts", JSON.stringify(savedList));
+        toast.success("Service provider saved to your profile!");
+      } else {
+        const updated = savedList.filter((s: any) => s.id !== post.id);
+        localStorage.setItem("namma_thanjai_saved_posts", JSON.stringify(updated));
+        toast.info("Provider removed from saved.");
+      }
+    } catch (e) {}
   };
 
   const handleOpenPreContactModal = (e: React.MouseEvent, type: "call" | "whatsapp") => {

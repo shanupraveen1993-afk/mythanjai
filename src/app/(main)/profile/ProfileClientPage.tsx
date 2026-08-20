@@ -184,6 +184,18 @@ export default function ProfileClientPage() {
     if (user) fetchMyPosts();
   }, [user]);
 
+  // Load saved posts from localStorage on mount and when tab switches to saved
+  useEffect(() => {
+    if (profileTab === "saved_posts" && typeof window !== "undefined") {
+      try {
+        const saved = JSON.parse(localStorage.getItem("namma_thanjai_saved_posts") || "[]");
+        setSavedPosts(saved);
+      } catch (e) {
+        setSavedPosts([]);
+      }
+    }
+  }, [profileTab]);
+
   // Sync profile details to local state
   useEffect(() => {
     if (profile?.phone) setPhoneNumber(profile.phone.replace(/^91/, ""));
@@ -682,15 +694,51 @@ export default function ProfileClientPage() {
           ) : (
             <div className="flex flex-col gap-3">
               {savedPosts.map((post) => (
-                <div key={post.id} className="bg-white border border-slate-200/80 rounded-xl p-3.5 flex items-center justify-between gap-3 hover:shadow-sm transition-shadow">
-                  <div className="flex-1 min-w-0">
-                    <span className="text-[10px] uppercase font-black text-amber-600 tracking-wider">Saved Item</span>
-                    <h5 className="font-heading font-bold text-sm text-slate-800 truncate mt-0.5">
-                      {post.title || post.name || "Saved Listing"}
-                    </h5>
-                    <span className="text-xs text-slate-500 block mt-0.5">{post.area_tag || post.location || "Thanjavur"}</span>
+                <div key={post.id} className="bg-white border border-slate-200/80 rounded-xl p-3.5 flex items-center justify-between gap-3 hover:shadow-sm transition-shadow group">
+                  <div className="flex items-center gap-3 flex-1 min-w-0">
+                    {/* Type badge dot */}
+                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 ${
+                      post.type === "SERVICE" ? "bg-blue-50" :
+                      post.type === "NEED" ? "bg-amber-50" : "bg-emerald-50"
+                    }`}>
+                      <Bookmark className={`w-4 h-4 ${
+                        post.type === "SERVICE" ? "text-blue-600" :
+                        post.type === "NEED" ? "text-amber-600" : "text-emerald-600"
+                      } fill-current`} />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <span className={`text-[10px] uppercase font-black tracking-wider ${
+                        post.type === "SERVICE" ? "text-blue-600" :
+                        post.type === "NEED" ? "text-amber-600" : "text-emerald-600"
+                      }`}>
+                        {post.type === "SERVICE" ? "Service" : post.type === "NEED" ? "Need" : "Sell"}
+                        {post.category ? ` · ${post.category}` : ""}
+                      </span>
+                      <h5 className="font-heading font-bold text-sm text-slate-800 truncate mt-0.5">
+                        {post.title || post.name || "Saved Listing"}
+                      </h5>
+                      <span className="text-xs text-slate-500 block mt-0.5">
+                        {post.area_tag || post.location || "Thanjavur"}
+                        {post.saved_at ? ` · Saved ${new Date(post.saved_at).toLocaleDateString("en-IN", { month: "short", day: "numeric" })}` : ""}
+                      </span>
+                    </div>
                   </div>
-                  <ChevronRight className="w-4 h-4 text-slate-400 shrink-0" />
+                  {/* Unsave button */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      try {
+                        const updated = savedPosts.filter((s: any) => s.id !== post.id);
+                        localStorage.setItem("namma_thanjai_saved_posts", JSON.stringify(updated));
+                        setSavedPosts(updated);
+                        toast.info("Removed from saved.");
+                      } catch (e) {}
+                    }}
+                    className="w-7 h-7 rounded-lg bg-slate-100 hover:bg-rose-100 hover:text-rose-600 text-slate-400 flex items-center justify-center shrink-0 transition-colors cursor-pointer"
+                    title="Remove from saved"
+                  >
+                    <XCircle className="w-3.5 h-3.5" />
+                  </button>
                 </div>
               ))}
             </div>

@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { Plus, Tag } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Plus } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
-
 import { useAuth } from "@/hooks/use-auth";
 
 export default function FloatingPostButton() {
@@ -12,22 +11,19 @@ export default function FloatingPostButton() {
   const { user, profile } = useAuth();
   const isAuthVerified = Boolean(profile?.isVerified || user);
   const [isVisible, setIsVisible] = useState(false);
-  const [lastScrollY, setLastScrollY] = useState(0);
+  // useRef instead of useState — prevents scroll listener re-registration on every scroll
+  const lastScrollY = useRef(0);
 
-  // GUARANTEE: Floating Scroll-Up Post Button is strictly enabled ONLY on the 4 category segment pages
-  const isCategoryPage = pathname === "/sell" || pathname === "/need" || pathname === "/services" || pathname === "/shops";
+  const isCategoryPage =
+    pathname === "/sell" ||
+    pathname === "/need" ||
+    pathname === "/services" ||
+    pathname === "/shops";
 
-  // Determine button config based on current route
   const getButtonConfig = () => {
-    if (pathname === "/need") {
-      return { label: "Post Need", route: "/post/need" };
-    }
-    if (pathname === "/services") {
-      return { label: "Post Service", route: "/post/service" };
-    }
-    if (pathname === "/shops") {
-      return { label: "Post Offer", route: "/post/offer" };
-    }
+    if (pathname === "/need") return { label: "Post Need", route: "/post/need" };
+    if (pathname === "/services") return { label: "Post Service", route: "/post/service" };
+    if (pathname === "/shops") return { label: "Post Offer", route: "/post/offer" };
     return { label: "Post Item", route: "/post/sell" };
   };
 
@@ -42,9 +38,9 @@ export default function FloatingPostButton() {
         window.requestAnimationFrame(() => {
           const currentScrollY = window.scrollY || document.documentElement.scrollTop || 0;
           if (currentScrollY > 60) {
-            if (currentScrollY < lastScrollY - 2) {
+            if (currentScrollY < lastScrollY.current - 2) {
               setIsVisible(true);
-            } else if (currentScrollY > lastScrollY + 6) {
+            } else if (currentScrollY > lastScrollY.current + 6) {
               setIsVisible(false);
             } else {
               setIsVisible(true);
@@ -52,7 +48,7 @@ export default function FloatingPostButton() {
           } else {
             setIsVisible(false);
           }
-          setLastScrollY(currentScrollY);
+          lastScrollY.current = currentScrollY;
           ticking = false;
         });
         ticking = true;
@@ -61,11 +57,8 @@ export default function FloatingPostButton() {
 
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
-
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-    };
-  }, [lastScrollY, isCategoryPage]);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isCategoryPage]); // Only isCategoryPage dep — no scroll-triggered re-registration
 
   if (!isCategoryPage) return null;
 
@@ -93,7 +86,7 @@ export default function FloatingPostButton() {
           }
           router.push(route);
         }}
-        className="w-full flex items-center justify-center gap-2 py-3 px-4 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs sm:text-sm rounded-xl shadow-xl cursor-pointer select-none active:scale-[0.97] transition-all uppercase tracking-wide border border-amber-400/60 touch-manipulation"
+        className="w-full flex items-center justify-center gap-2 py-3 px-5 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-sm rounded-xl shadow-xl cursor-pointer select-none active:scale-[0.97] transition-all uppercase tracking-wide border border-amber-400/60 touch-manipulation"
       >
         <Plus className="w-4 h-4 stroke-[3] shrink-0 text-[#0F172A]" />
         <span>{label}</span>
@@ -101,4 +94,3 @@ export default function FloatingPostButton() {
     </div>
   );
 }
-

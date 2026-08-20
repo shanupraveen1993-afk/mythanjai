@@ -6,8 +6,8 @@ export const translations = {
     home: "Home",
     sell: "Sell",
     need: "Need",
-    services: "Local Service",
-    offers: "Local Offer",
+    services: "Service",
+    offers: "Offer",
     chat: "Chat",
     profile: "Profile",
     
@@ -76,8 +76,8 @@ export const translations = {
     home: "Home",
     sell: "Sell",
     need: "Need",
-    services: "Local Service",
-    offers: "Local Offer",
+    services: "Service",
+    offers: "Offer",
     chat: "Chat",
     profile: "Profile",
     

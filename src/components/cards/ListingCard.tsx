@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Share2, Bookmark, Phone, MessageSquare, MapPin, Calendar, Flag, X, ChevronLeft, ChevronRight } from "lucide-react";
-import { doc, updateDoc, increment, arrayUnion, arrayRemove } from "firebase/firestore";
+import { doc, updateDoc, increment } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/hooks/use-auth";
 import { formatRelativeTime } from "@/lib/constants";
@@ -125,9 +125,15 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
   const { user, profile } = useAuth();
   const { toast } = useToast();
   const [isChatOpen, setIsChatOpen] = useState(false);
-  const [isSaved, setIsSaved] = useState(
-    user?.uid && listing.saved_by ? listing.saved_by.includes(user.uid) : false
-  );
+  const [isSaved, setIsSaved] = useState(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved: any[] = JSON.parse(localStorage.getItem("namma_thanjai_saved_posts") || "[]");
+        return saved.some((s) => s.id === listing.id);
+      } catch (e) {}
+    }
+    return user?.uid && listing.saved_by ? listing.saved_by.includes(user.uid) : false;
+  });
   const [galleryIndex, setGalleryIndex] = useState<number | null>(null);
 
   const isOwnPost = React.useMemo(() => {
@@ -157,20 +163,40 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
     } catch (e) {}
   };
 
-  // Toggle Save
+  // Toggle Save — persists to localStorage (classifieds collection doesn't exist in this app)
   const handleSaveToggle = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!user) {
+    if (!user && !profile) {
       toast.error("Sign in to save listings.");
       return;
     }
     const nextState = !isSaved;
     setIsSaved(nextState);
     try {
-      const listingRef = doc(db, "classifieds", listing.id);
-      await updateDoc(listingRef, {
-        saved_by: nextState ? arrayUnion(user.uid) : arrayRemove(user.uid),
-      });
+      const saved: any[] = JSON.parse(localStorage.getItem("namma_thanjai_saved_posts") || "[]");
+      if (nextState) {
+        if (!saved.some((s: any) => s.id === listing.id)) {
+          saved.unshift({
+            id: listing.id,
+            title: listing.title,
+            price: listing.price,
+            image_url: listing.image_url,
+            phone: listing.phone,
+            area_tag: listing.location,
+            category: listing.category,
+            type: listing.type,
+            colName: "needs_and_sales",
+            saved_at: new Date().toISOString(),
+          });
+        }
+        toast.success("Listing saved to your profile!");
+      } else {
+        const updated = saved.filter((s: any) => s.id !== listing.id);
+        localStorage.setItem("namma_thanjai_saved_posts", JSON.stringify(updated));
+        toast.info("Listing removed from saved.");
+        return;
+      }
+      localStorage.setItem("namma_thanjai_saved_posts", JSON.stringify(saved));
     } catch (e) {}
   };
 
