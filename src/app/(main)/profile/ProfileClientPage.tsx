@@ -223,9 +223,9 @@ export default function ProfileClientPage() {
     fetchMyPosts();
   }, [user, profile?.phone]);
 
-  // Load saved posts from localStorage on mount and when tab switches to saved
+  // Load saved posts from localStorage on mount
   useEffect(() => {
-    if (profileTab === "saved_posts" && typeof window !== "undefined") {
+    if (typeof window !== "undefined") {
       try {
         const saved = JSON.parse(localStorage.getItem("namma_thanjai_saved_posts") || "[]");
         setSavedPosts(saved);
@@ -233,7 +233,7 @@ export default function ProfileClientPage() {
         setSavedPosts([]);
       }
     }
-  }, [profileTab]);
+  }, []);
 
   // Sync profile details to local state
   useEffect(() => {
@@ -680,7 +680,98 @@ export default function ProfileClientPage() {
         </div>
       </div>
 
-      {/* ── 4. Settings / Admin / Logout Section ─────────────────────── */}
+      {/* ── 4. Saved Items Section ──────────────────────────────────── */}
+      <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden">
+        {/* Header Title */}
+        <div className="flex border-b border-slate-200 px-4 py-3 bg-slate-50/80 items-center justify-between">
+          <div className="flex items-center gap-2">
+            <Bookmark className="w-4 h-4 text-amber-600 fill-amber-600" />
+            <h3 className="font-heading font-black text-sm text-slate-800">Saved Items (சேமிக்கப்பட்டவை)</h3>
+          </div>
+          <span className="px-2 py-0.5 rounded-lg text-xs font-black bg-slate-900 text-white">
+            {savedPosts.length}
+          </span>
+        </div>
+
+        <div className="p-4">
+          {savedPosts.length === 0 ? (
+            <div className="flex flex-col items-center text-center py-8 gap-2.5">
+              <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                <Bookmark className="w-6 h-6 stroke-[2]" />
+              </div>
+              <div>
+                <h4 className="font-heading font-black text-sm text-slate-800">No saved items yet</h4>
+                <p className="text-xs text-slate-500 mt-1 max-w-[250px] mx-auto leading-relaxed">
+                  Tap the bookmark icon on any listing, service, or store offer to save it for quick access.
+                </p>
+              </div>
+            </div>
+          ) : (
+            <div className="flex flex-col gap-3">
+              {savedPosts.map((saved) => (
+                <div
+                  key={saved.id}
+                  className="bg-slate-50/70 border border-slate-200 hover:border-slate-300 rounded-xl p-3.5 flex flex-col gap-2 transition-all"
+                >
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <span className="text-[10px] uppercase font-black text-blue-600 tracking-wider bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-lg">
+                        {saved.category || saved.type || "Saved Listing"}
+                      </span>
+                      <h5 className="font-heading font-black text-sm text-slate-900 truncate mt-1">
+                        {saved.title || saved.name || saved.shop_name || "Saved Item"}
+                      </h5>
+                      <p className="text-xs text-slate-500 font-semibold mt-0.5 truncate">
+                        📍 {saved.location || saved.area_tag || "Thanjavur"}
+                        {saved.price && <span className="ml-2 text-slate-900 font-bold">₹{saved.price}</span>}
+                      </p>
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const updated = savedPosts.filter((p) => p.id !== saved.id);
+                        setSavedPosts(updated);
+                        if (typeof window !== "undefined") {
+                          localStorage.setItem("namma_thanjai_saved_posts", JSON.stringify(updated));
+                        }
+                        toast.success("Removed from saved items.");
+                      }}
+                      className="w-8 h-8 rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-red-500 hover:bg-red-50 flex items-center justify-center shrink-0 transition-colors"
+                      title="Remove from saved"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
+                  {/* Action row */}
+                  <div className="flex items-center justify-end gap-2 pt-1 border-t border-slate-200/60">
+                    <button
+                      type="button"
+                      onClick={() => router.push(`/chat?listingId=${saved.id}&sellerId=${saved.seller_id || saved.userId || ""}&title=${encodeURIComponent(saved.title || saved.name || "")}`)}
+                      className="text-xs font-black text-slate-900 bg-white border border-slate-200 hover:bg-slate-100 px-3 py-1.5 rounded-xl flex items-center gap-1 cursor-pointer"
+                    >
+                      <MessageSquare className="w-3 h-3 text-slate-700" />
+                      <span>Chat</span>
+                    </button>
+                    {saved.phone && (
+                      <a
+                        href={`tel:+91${saved.phone}`}
+                        className="text-xs font-black text-white bg-blue-600 hover:bg-blue-700 px-3 py-1.5 rounded-xl flex items-center gap-1 cursor-pointer"
+                      >
+                        <Phone className="w-3 h-3" />
+                        <span>Call</span>
+                      </a>
+                    )}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ── 5. Settings / Admin / Logout Section ─────────────────────── */}
       <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden">
         <div className="px-4 py-3 border-b border-slate-100">
           <p className="text-xs font-black text-slate-500 uppercase tracking-wider">Account Settings</p>
