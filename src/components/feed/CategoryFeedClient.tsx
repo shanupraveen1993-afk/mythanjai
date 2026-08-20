@@ -3,8 +3,9 @@
 import React, { useState } from "react";
 import { useFirestore } from "@/hooks/use-firestore";
 import { useAuth } from "@/hooks/use-auth";
+import { useRouter } from "next/navigation";
 import { NeedOrSalePost, ServiceProviderPost, ShopPost } from "@/types";
-import { Plus, Loader2, Search, SlidersHorizontal } from "lucide-react";
+import { Plus, Loader2, Search, SlidersHorizontal, ArrowLeft } from "lucide-react";
 import CreatePostModal from "@/components/modals/CreatePostModal";
 import NeedCard from "@/components/cards/NeedCard";
 import ServiceCard from "@/components/cards/ServiceCard";
@@ -125,13 +126,12 @@ const SHOP_SAMPLES: ShopPost[] = [
   { id: "sh_pharma", userId: "sample", shop_name: "Sri Murugan Medical & Pharmacy", category: "Medical & Pharmacy", address_text: "Medical College Road, Thanjavur", landmark: "Opposite MGMGH Gate", hours: "8 AM – 10 PM", phone: "9876543229", area_tag: "Medical College Road", offer_title: "15% OFF on Generic Medicines", offer_description: "Flat 15% discount on all Jan Aushadhi generic medicines available stock.", image_url: "https://images.unsplash.com/photo-1586015555751-63c2057d59b2?w=600&auto=format&fit=crop", latitude: 10.7601, longitude: 79.1135, is_claimed: true, created_at: new Date() as any },
 ];
 
-// ─── Main Component ───────────────────────────────────────────────────────────
-
 interface CategoryFeedClientProps {
   segmentType: SegmentType;
 }
 
 export default function CategoryFeedClient({ segmentType }: CategoryFeedClientProps) {
+  const router = useRouter();
   const config = SEGMENT_CONFIG[segmentType];
   const { user, profile } = useAuth();
   const isAuthVerified = Boolean(profile?.isVerified || user);
@@ -210,6 +210,19 @@ export default function CategoryFeedClient({ segmentType }: CategoryFeedClientPr
 
   return (
     <div className="flex flex-col gap-0 mt-0 pb-24">
+      {/* Native App Top Navigation Bar with Back Button */}
+      <div className="flex items-center justify-between bg-white border-b border-slate-200/80 px-4 py-2.5 shadow-2xs">
+        <button
+          type="button"
+          onClick={() => router.push("/")}
+          className="flex items-center gap-1.5 text-xs font-bold text-slate-700 hover:text-slate-950 cursor-pointer"
+        >
+          <ArrowLeft className="w-4 h-4" />
+          <span>Home</span>
+        </button>
+        <span className="font-heading font-black text-xs sm:text-sm text-slate-900 uppercase tracking-wider">{config.label} Marketplace</span>
+      </div>
+
       {/* ── Hero Banner ──────────────────────────────── */}
       <div className="relative w-full min-h-[160px] sm:min-h-[200px] overflow-hidden bg-slate-950 text-white flex items-center px-6 sm:px-10 py-8">
         <img

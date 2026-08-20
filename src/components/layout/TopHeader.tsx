@@ -169,22 +169,20 @@ export default function TopHeader({
 
         {/* Right Side: Chat Icon -> Profile Icon -> Primary Yellow Button (Get App / + Post as absolute last button) */}
         <div className="flex items-center justify-end gap-2 shrink-0 ml-auto z-20">
-          {/* 1. Universal Chat Button (Highlighted when active on /chat) */}
-          {isAuthVerified && (
-            <button
-              type="button"
-              onClick={() => router.push("/chat")}
-              className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border shrink-0 ${
-                pathname === "/chat"
-                  ? "bg-[#1d4ed8] text-white border-[#1d4ed8] shadow-sm"
-                  : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
-              }`}
-              title="In-App Direct Chat"
-              aria-label="View messages"
-            >
-              <MessageSquare className={`w-4 h-4 ${pathname === "/chat" ? "text-white fill-white/20" : "text-slate-600"}`} />
-            </button>
-          )}
+          {/* 1. Universal Chat Button (Always visible on all screens next to Profile) */}
+          <button
+            type="button"
+            onClick={() => router.push("/chat")}
+            className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border shrink-0 ${
+              pathname === "/chat"
+                ? "bg-[#1d4ed8] text-white border-[#1d4ed8] shadow-sm"
+                : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
+            }`}
+            title="In-App Direct Chat"
+            aria-label="View messages"
+          >
+            <MessageSquare className={`w-4 h-4 ${pathname === "/chat" ? "text-white fill-white/20" : "text-slate-600"}`} />
+          </button>
 
           {/* 2. Profile / Sign In Button (Highlighted when active on /profile) */}
           <button
