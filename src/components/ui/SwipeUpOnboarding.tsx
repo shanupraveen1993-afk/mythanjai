@@ -1,7 +1,8 @@
 "use client";
 
 import React, { useState, useRef } from "react";
-import { ChevronUp, ArrowRight, ShoppingBag, Wrench, Store, ShieldCheck } from "lucide-react";
+import Image from "next/image";
+import { ChevronUp, ArrowRight, ShoppingBag, Wrench, Store, ShieldCheck, CheckCircle2 } from "lucide-react";
 
 export interface WalkthroughSlide {
   id: number;
@@ -19,7 +20,7 @@ const WALKTHROUGH_SLIDES: WalkthroughSlide[] = [
   {
     id: 1,
     badgeEn: "1 OF 3 • MARKETPLACE & RENTALS",
-    titleEn: "Buy, Sell & Post Buyer Requirements",
+    titleEn: "Buy, Sell & Post Requirements",
     subtitleEn: "Direct CMDA plots, houses, cars, bikes, and electronics from Tanjore residents with zero broker fees.",
     icon: ShoppingBag,
     accentColor: "from-amber-500 to-yellow-400",
@@ -30,24 +31,24 @@ const WALKTHROUGH_SLIDES: WalkthroughSlide[] = [
   {
     id: 2,
     badgeEn: "2 OF 3 • VERIFIED TRADESPEOPLE",
-    titleEn: "Hire Verified Skilled Local Services",
+    titleEn: "Hire Verified Local Services",
     subtitleEn: "Electricians, plumbers, carpenters, computer mechanics, and painters available within 30 mins in Thanjavur.",
     icon: Wrench,
     accentColor: "from-emerald-500 to-teal-400",
     badgeColor: "bg-emerald-500/20 text-emerald-300 border-emerald-500/40",
     img: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=800&auto=format&fit=crop",
-    highlightsEn: ["4.9★ Rated Local Electricians & Plumbers", "30-Min Rapid Doorstep Arrival", "Direct WhatsApp Calling"],
+    highlightsEn: ["Verified Local Electricians & Plumbers", "30-Min Rapid Doorstep Arrival", "Direct WhatsApp Calling"],
   },
   {
     id: 3,
     badgeEn: "3 OF 3 • LOCAL STORE DEALS",
-    titleEn: "Exclusive Tanjore Store Offers & Discounts",
+    titleEn: "Exclusive Tanjore Store Offers",
     subtitleEn: "Discover daily discounts on silk handlooms, electronics galleries, restaurants, and organic farm produce.",
     icon: Store,
     accentColor: "from-purple-500 to-indigo-400",
     badgeColor: "bg-purple-500/20 text-purple-300 border-purple-500/40",
     img: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=800&auto=format&fit=crop",
-    highlightsEn: ["Up to 60% Store Grand Opening Discounts", "Visiting Card & Location Maps", "Direct Store Offer Navigation"],
+    highlightsEn: ["Store Grand Opening Discounts", "Location Maps & Visiting Cards", "Direct WhatsApp & Call Contact"],
   },
 ];
 
@@ -82,19 +83,26 @@ export default function SwipeUpOnboarding({
   };
 
   return (
-    <div className="fixed inset-0 z-[99990] bg-slate-950 text-white select-none font-sans overflow-hidden">
+    <div className="fixed inset-0 z-[99990] bg-[#0F172A] text-white select-none font-sans overflow-hidden">
       
       {/* Fixed Top Header */}
       <div className="absolute top-0 left-0 right-0 z-30 pt-6 px-6 max-w-md mx-auto flex items-center justify-between pointer-events-auto">
-        <div className="flex items-center gap-2">
-          <div className="w-9 h-9 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center shadow-inner">
-            <span className="font-heading font-black text-amber-400 text-base">NT</span>
+        <div className="flex items-center gap-2.5">
+          <div className="w-10 h-10 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center p-2 shadow-xs backdrop-blur-md">
+            <Image
+              src="/namma_thanjai_logo.png"
+              alt="Namma Thanjai Logo"
+              width={40}
+              height={40}
+              className="w-full h-full object-contain filter drop-shadow-sm"
+            />
           </div>
           <div>
-            <h1 className="font-heading font-black text-base text-white leading-tight">
-              Namma Thanjai
+            <h1 className="font-heading font-black text-base text-white leading-tight flex items-center gap-1.5">
+              <span>Namma Thanjai</span>
+              <span className="text-[10px] font-black uppercase tracking-wider text-amber-400 bg-amber-400/10 border border-amber-400/30 px-1.5 py-0.5 rounded-md">APK</span>
             </h1>
-            <p className="text-xs text-amber-400 font-bold tracking-wider">
+            <p className="text-xs text-amber-400/90 font-bold tracking-wider">
               Thanjavur Direct Network
             </p>
           </div>
@@ -103,7 +111,7 @@ export default function SwipeUpOnboarding({
         <button
           type="button"
           onClick={onComplete}
-          className="text-xs font-black text-slate-300 hover:text-white bg-slate-900/90 border border-slate-700/80 px-4 py-1.5 rounded-full transition-all cursor-pointer active:scale-95 shadow-md backdrop-blur-md"
+          className="text-xs font-black text-slate-300 hover:text-white bg-slate-900/90 border border-slate-700/80 px-4 py-2 rounded-xl transition-all cursor-pointer active:scale-95 shadow-md backdrop-blur-md"
         >
           Skip
         </button>

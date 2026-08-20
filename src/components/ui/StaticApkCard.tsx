@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Image from "next/image";
 import { Download, Smartphone, CheckCircle2, ShieldCheck } from "lucide-react";
 import { useToast } from "@/context/ToastContext";
 
@@ -51,9 +52,15 @@ export default function StaticApkCard({
         
         {/* Left Column: App Icon + Details */}
         <div className="flex items-start gap-4 flex-1">
-          {/* 48x48px Slate Icon Box with Yellow Icon */}
-          <div className="icon-box-dark shrink-0 mt-1">
-            <Smartphone className="w-6 h-6 stroke-[2]" />
+          {/* Official App Logo */}
+          <div className="w-12 h-12 rounded-2xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center p-2 shrink-0 mt-1 shadow-xs">
+            <Image
+              src="/namma_thanjai_logo.png"
+              alt="Namma Thanjai Official App"
+              width={48}
+              height={48}
+              className="w-full h-full object-contain filter drop-shadow-xs"
+            />
           </div>
 
           <div className="flex flex-col gap-2 flex-1">
