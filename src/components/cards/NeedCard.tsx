@@ -254,16 +254,23 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
             </Link>
           ) : (
             <>
-              <a
-                href={whatsappUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                onClick={(e) => e.stopPropagation()}
-                className="bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-xs py-1.5 px-3.5 rounded-xl flex items-center justify-center gap-1.5 min-h-[36px] shadow-2xs cursor-pointer transition-colors"
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (!user && !profile) {
+                    if (typeof window !== "undefined") {
+                      window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+                    }
+                    return;
+                  }
+                  setIsChatOpen(true);
+                }}
+                className="bg-[#0F172A] hover:bg-slate-800 text-white font-heading font-black text-xs py-1.5 px-3.5 rounded-xl flex items-center justify-center gap-1.5 min-h-[36px] shadow-2xs cursor-pointer transition-colors"
               >
-                <MessageSquare className="w-3.5 h-3.5 text-white fill-current shrink-0" />
-                <span>WhatsApp</span>
-              </a>
+                <MessageSquare className="w-3.5 h-3.5 text-white fill-white/20 shrink-0" />
+                <span>Chat</span>
+              </button>
 
               <a
                 href={callUrl}

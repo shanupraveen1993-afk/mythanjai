@@ -96,10 +96,10 @@ export default function TopHeader({
       className="fixed top-0 left-0 right-0 z-50 bg-white/96 backdrop-blur-xl border-b border-slate-200/80 shadow-[0_1px_12px_rgba(0,0,0,0.06)] flex flex-col justify-end"
       style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
     >
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-3">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-3 relative">
 
         {/* Left Side: Permanent Website Branding Logo & App Name */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 shrink-0">
           <div
             onClick={() => router.push("/")}
             className="flex items-center gap-2 cursor-pointer select-none shrink-0 group"
@@ -115,7 +115,7 @@ export default function TopHeader({
           </div>
         </div>
 
-        {/* Center: 5 Category Navigation Tabs */}
+        {/* Center: 5 Category Navigation Tabs — Perfectly Center-Aligned horizontally */}
         {showCenterNav && (() => {
           const isHomeActive = pathname === "/home" || pathname === "/" || activeTab === "home";
           const isSellActive = (pathname.includes("/sell") && !pathname.includes("/post/service")) || activeTab === "sell";
@@ -127,7 +127,7 @@ export default function TopHeader({
           const inactiveStyle = "text-slate-600 hover:text-slate-900 font-bold transition-colors";
 
           return (
-            <div className="hidden md:flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl border border-slate-200/80 font-heading backdrop-blur-sm">
+            <div className="absolute left-1/2 -translate-x-1/2 hidden md:flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl border border-slate-200/80 font-heading backdrop-blur-sm z-10">
               <button
                 type="button"
                 onClick={() => router.push("/")}
@@ -168,7 +168,7 @@ export default function TopHeader({
         })()}
 
         {/* Right Side: Chat Icon -> Profile Icon -> Primary Yellow Button (Get App / + Post as absolute last button) */}
-        <div className="flex items-center justify-end gap-2 shrink-0 ml-auto">
+        <div className="flex items-center justify-end gap-2 shrink-0 ml-auto z-20">
           {/* 1. Universal Chat Button (Highlighted when active on /chat) */}
           {isAuthVerified && (
             <button
@@ -208,7 +208,7 @@ export default function TopHeader({
             <User className={`w-4 h-4 ${pathname === "/profile" ? "text-white" : "text-slate-600"}`} />
           </button>
 
-          {/* 3. Primary Yellow Button — Get App (Homepage) OR + Post CTA (Other Pages) — EXTREME LAST BUTTON IN HEADER */}
+          {/* 3. Primary Yellow Button — Get App (Homepage) OR + Post CTA (Other Pages) */}
           {isHomePage && !isNativeApp ? (
             <a
               href="/namma_thanjai_release.apk"
@@ -227,11 +227,12 @@ export default function TopHeader({
             <button
               type="button"
               onClick={handleDynamicPostClick}
-              className="md:hidden bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-sm px-4 py-2 rounded-xl font-heading font-black shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none touch-manipulation active:scale-[0.97] transition-all"
+              className="bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-sm px-3.5 sm:px-4 py-2 rounded-xl font-heading font-black shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none touch-manipulation active:scale-[0.97] transition-all"
               title={postInfo.label}
             >
               <Plus className="w-4 h-4 stroke-[3] text-[#0F172A]" />
-              <span>Post</span>
+              <span className="hidden md:inline">{postInfo.label}</span>
+              <span className="md:hidden">Post</span>
             </button>
           ) : null}
         </div>
