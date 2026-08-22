@@ -56,6 +56,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
 
+      const storedPhone = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_phone") || localStorage.getItem("namma_thanjai_phone") || "") : "";
+      const cleanStoredPhone = storedPhone.replace(/\D/g, "");
+      const storedVerified = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_verified") === "true" || localStorage.getItem("namma_thanjai_verified") === "true") : false;
+      const storedDisplayName = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_display_name") || "") : "";
+
+      const activeVerifiedPhone = storedVerified && cleanStoredPhone.length >= 10 && cleanStoredPhone !== "9876543210" ? cleanStoredPhone : "";
+
       if (currentUser) {
         // Fetch or create user profile document in Firestore
         const userRef = doc(db, "users", currentUser.uid);
@@ -64,13 +71,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
           if (userDoc.exists()) {
             const data = userDoc.data() as UserProfile;
-            let storedPhone = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_phone") || localStorage.getItem("namma_thanjai_phone") || "") : "";
-            if (storedPhone === "9876543210") storedPhone = "";
-            const storedVerified = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_verified") === "true" || localStorage.getItem("namma_thanjai_verified") === "true") : false;
 
-            // Preserve existing verified phone number for verified users
-            if (storedVerified && storedPhone && storedPhone !== "9876543210" && (!data.phone || !data.isVerified)) {
-              data.phone = storedPhone;
+            // Preserve verified phone session if active locally
+            if (activeVerifiedPhone) {
+              data.phone = activeVerifiedPhone;
               data.isVerified = true;
             }
 
@@ -80,20 +84,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               await updateDoc(userRef, { isAdmin: true });
               data.isAdmin = true;
             }
-            const storedDisplayName = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_display_name") || "") : "";
-            if (storedDisplayName && data) data.displayName = storedDisplayName;
+            if (storedDisplayName) data.displayName = storedDisplayName;
 
             setProfile(data);
           } else {
-            const storedPhone = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_phone") || localStorage.getItem("namma_thanjai_phone") || "") : "";
-            const storedVerified = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_verified") === "true" || localStorage.getItem("namma_thanjai_verified") === "true") : false;
-
             const newProfile: UserProfile = {
               uid: currentUser.uid,
-              phone: storedVerified ? storedPhone : "",
-              isVerified: Boolean(storedVerified && storedPhone),
-              isAdmin: Boolean(storedVerified && storedPhone.includes("9994837342")),
-              displayName: currentUser.displayName || "",
+              phone: activeVerifiedPhone || "",
+              isVerified: Boolean(activeVerifiedPhone),
+              isAdmin: Boolean(activeVerifiedPhone && activeVerifiedPhone.includes("9994837342")),
+              displayName: storedDisplayName || currentUser.displayName || "Namma Thanjai User",
               createdAt: new Date(),
             };
             await setDoc(userRef, newProfile, { merge: true });
@@ -101,9 +101,30 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }
         } catch (error) {
           console.error("Error fetching user profile:", error);
+          if (activeVerifiedPhone) {
+            setProfile({
+              uid: currentUser.uid,
+              phone: activeVerifiedPhone,
+              isVerified: true,
+              isAdmin: activeVerifiedPhone.includes("9994837342"),
+              displayName: storedDisplayName || "Namma Thanjai User",
+              createdAt: new Date(),
+            });
+          }
         }
       } else {
-        setProfile(null);
+        if (activeVerifiedPhone) {
+          setProfile({
+            uid: "saved_session",
+            phone: activeVerifiedPhone,
+            isVerified: true,
+            isAdmin: activeVerifiedPhone.includes("9994837342"),
+            displayName: storedDisplayName || "Namma Thanjai User",
+            createdAt: new Date(),
+          });
+        } else {
+          setProfile(null);
+        }
         // Auto sign-in anonymously so Firebase user object is initialized
         try {
           signInAnonymously(auth).catch(() => {});
