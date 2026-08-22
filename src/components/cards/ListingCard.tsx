@@ -307,8 +307,8 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
                 </div>
               </div>
 
-              {/* Title: Left-aligned bold text */}
-              <h3 className="font-sans font-extrabold text-sm text-slate-900 line-clamp-3 leading-snug text-left mt-1">
+              {/* Title: Single-line bold text */}
+              <h3 className="font-sans font-extrabold text-sm sm:text-base text-slate-900 truncate line-clamp-1 whitespace-nowrap leading-snug text-left mt-0.5">
                 {listing.title}
               </h3>
             </div>
