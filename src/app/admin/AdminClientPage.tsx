@@ -127,40 +127,42 @@ export default function AdminClientPage() {
     if (!confirm("Seed all 20 sample listings to live Firestore for admin phone 9994837342?")) return;
     setLoading(true);
     try {
+      const sanitizeData = (obj: any) => JSON.parse(JSON.stringify(obj));
+
       // 1. Seed Sell Samples
       for (const sample of SELL_SAMPLES) {
-        await setDoc(doc(db, "needs_and_sales", sample.id), {
+        await setDoc(doc(db, "needs_and_sales", sample.id), sanitizeData({
           ...sample,
-          created_at: new Date(),
-          updated_at: new Date(),
-        }, { merge: true });
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        }), { merge: true });
       }
 
       // 2. Seed Need Samples
       for (const sample of NEED_SAMPLES) {
-        await setDoc(doc(db, "needs_and_sales", sample.id), {
+        await setDoc(doc(db, "needs_and_sales", sample.id), sanitizeData({
           ...sample,
-          created_at: new Date(),
-          updated_at: new Date(),
-        }, { merge: true });
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        }), { merge: true });
       }
 
       // 3. Seed Service Samples
       for (const sample of SERVICE_SAMPLES) {
-        await setDoc(doc(db, "services", sample.id), {
+        await setDoc(doc(db, "services", sample.id), sanitizeData({
           ...sample,
-          created_at: new Date(),
-          updated_at: new Date(),
-        }, { merge: true });
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        }), { merge: true });
       }
 
       // 4. Seed Shop Samples
       for (const sample of SHOP_SAMPLES) {
-        await setDoc(doc(db, "shops", sample.id), {
+        await setDoc(doc(db, "shops", sample.id), sanitizeData({
           ...sample,
-          created_at: new Date(),
-          updated_at: new Date(),
-        }, { merge: true });
+          created_at: new Date().toISOString(),
+          updated_at: new Date().toISOString(),
+        }), { merge: true });
       }
 
       toast.success("Successfully seeded 20 sample listings to Firestore for admin 9994837342!");
