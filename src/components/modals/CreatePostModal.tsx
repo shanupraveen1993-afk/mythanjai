@@ -935,6 +935,10 @@ export default function CreatePostModal({
                               type="text"
                               value={title}
                               onChange={(e) => setTitle(e.target.value)}
+                              autoComplete="on"
+                              autoCorrect="on"
+                              autoCapitalize="sentences"
+                              spellCheck={true}
                               placeholder="e.g. 2BHK House for rent, Used Splendor Bike"
                               className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none font-bold"
                             />
@@ -945,6 +949,10 @@ export default function CreatePostModal({
                             <textarea
                               value={description}
                               onChange={(e) => setDescription(e.target.value)}
+                              autoComplete="on"
+                              autoCorrect="on"
+                              autoCapitalize="sentences"
+                              spellCheck={true}
                               placeholder="Describe item details, condition, size, features..."
                               rows={3}
                               className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none"
