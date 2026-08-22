@@ -35,34 +35,35 @@ export default function SplashScreen({
 
   return (
     <div
-      className={`fixed inset-0 z-[9999] bg-[#0f172a] flex flex-col items-center justify-center select-none transition-opacity duration-500 ${
+      className={`fixed inset-0 z-[9999] bg-slate-50 text-slate-900 flex flex-col items-center justify-between select-none transition-opacity duration-500 overflow-hidden font-sans ${
         stage === "fading" ? "opacity-0 pointer-events-none" : "opacity-100"
       }`}
     >
-      {/* Background ambient glow */}
-      <div className="absolute w-72 h-72 bg-amber-500/10 rounded-full blur-3xl animate-pulse pointer-events-none" />
+      {/* Background ambient lighting matching walkthrough */}
+      <div className="absolute top-1/4 right-0 w-80 h-80 bg-amber-400/15 blur-[100px] rounded-full pointer-events-none" />
+      <div className="absolute bottom-1/4 left-0 w-80 h-80 bg-yellow-400/15 blur-[100px] rounded-full pointer-events-none" />
 
-      {/* Main Branding Container */}
-      <div className="relative flex flex-col items-center justify-center gap-4 px-6 text-center">
+      {/* Main Branding Container — Scrollable body */}
+      <div className="flex-1 w-full overflow-y-auto px-6 py-12 flex flex-col items-center justify-center text-center gap-4 pb-28 z-10">
         {/* Official Namma Thanjai Logo Image */}
-        <div className="w-20 h-20 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center p-3 mb-2 shadow-[0_0_30px_rgba(245,158,11,0.35)] backdrop-blur-xs animate-scale-up">
+        <div className="w-24 h-24 rounded-2xl bg-white border border-slate-200 flex items-center justify-center p-3.5 mb-2 shadow-md backdrop-blur-md animate-scale-up">
           <Image
             src="/namma_thanjai_logo.png"
             alt="Namma Thanjai Logo"
-            width={80}
-            height={80}
-            className="w-full h-full object-contain filter drop-shadow-md"
+            width={96}
+            height={96}
+            className="w-full h-full object-contain filter drop-shadow-sm"
             priority
           />
         </div>
 
         {/* Text Container with Gliding Dot */}
-        <div className="relative inline-flex items-center font-heading font-black text-3xl sm:text-4xl md:text-5xl text-white tracking-tight">
+        <div className="relative inline-flex items-center font-heading font-black text-3xl sm:text-4xl md:text-5xl text-slate-900 tracking-tight">
           <span>Namma Thanjai</span>
 
           {/* Gliding Amber Dot */}
           <span
-            className={`inline-block w-3.5 h-3.5 sm:w-4 sm:h-4 bg-amber-400 rounded-full shadow-[0_0_12px_rgba(251,191,36,0.9)] ml-1.5 transition-all duration-1000 ease-out ${
+            className={`inline-block w-3.5 h-3.5 sm:w-4 sm:h-4 bg-amber-500 rounded-full shadow-[0_0_12px_rgba(245,158,11,0.8)] ml-1.5 transition-all duration-1000 ease-out ${
               stage === "animating"
                 ? "animate-[glideDot_1.3s_cubic-bezier(0.25,1,0.5,1)_forwards]"
                 : "scale-100 opacity-100"
@@ -72,20 +73,33 @@ export default function SplashScreen({
           {/* Trailing Glow Particle during animation */}
           {stage === "animating" && (
             <div className="absolute inset-0 pointer-events-none overflow-hidden">
-              <div className="w-full h-1 bg-gradient-to-r from-transparent via-amber-400/40 to-transparent animate-[laserTrail_1.2s_ease-out_forwards]" />
+              <div className="w-full h-1 bg-gradient-to-r from-transparent via-amber-500/40 to-transparent animate-[laserTrail_1.2s_ease-out_forwards]" />
             </div>
           )}
         </div>
 
         {/* Subtitle / Tagline */}
-        <p className="text-xs sm:text-sm text-slate-400 font-medium tracking-wide mt-2">
-          Thanjavur's Direct Network
+        <p className="text-xs sm:text-sm text-slate-600 font-bold tracking-wide mt-1">
+          Thanjavur's Direct Network • நம்ம ஊர் சந்தை
         </p>
 
         {/* Subtle loading indicator line */}
-        <div className="w-36 h-1 bg-slate-800 rounded-full overflow-hidden mt-6">
-          <div className="h-full bg-gradient-to-r from-yellow-500 to-amber-400 animate-[progressFill_1.8s_ease-in-out_forwards]" />
+        <div className="w-36 h-1 bg-slate-200 rounded-full overflow-hidden mt-4">
+          <div className="h-full bg-gradient-to-r from-yellow-500 to-amber-500 animate-[progressFill_1.8s_ease-in-out_forwards]" />
         </div>
+      </div>
+
+      {/* Fixed Bottom CTA Button */}
+      <div className="fixed bottom-6 left-6 right-6 z-50 max-w-md mx-auto">
+        <button
+          type="button"
+          onClick={() => {
+            if (onComplete) onComplete();
+          }}
+          className="w-full bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-sm py-3.5 px-6 rounded-2xl shadow-md active:scale-95 transition-all flex items-center justify-center gap-2 cursor-pointer border border-amber-400/60"
+        >
+          <span>Proceed to App →</span>
+        </button>
       </div>
 
       {/* Animation keyframes in CSS */}

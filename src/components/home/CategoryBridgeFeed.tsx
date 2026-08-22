@@ -30,9 +30,9 @@ export default function CategoryBridgeFeed() {
     areaTag: "All Areas",
   });
 
-  // Read user's real local posts ONLY from localStorage
-  const { userLatestPost, allCombinedPosts } = useMemo(() => {
-    let localPosts: NeedOrSalePost[] = [];
+  // Read all user's real local posts from localStorage across all 4 category types
+  const { userPosts, allCombinedPosts } = useMemo(() => {
+    let localPosts: any[] = [];
     if (typeof window !== "undefined") {
       try {
         const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
@@ -41,18 +41,14 @@ export default function CategoryBridgeFeed() {
     }
 
     const combined = [...localPosts, ...(firestorePosts || [])];
-
-    // User's latest active post (NEED or SELL)
-    const latest = localPosts.find((p) => p.type === "NEED" || p.type === "SELL") || null;
-    return { userLatestPost: latest, allCombinedPosts: combined };
+    return { userPosts: localPosts, allCombinedPosts: combined };
   }, [firestorePosts]);
 
-  // If user has 0 active listings, show high-converting Matchmaker Onboarding Card
-  if (!userLatestPost) {
+  // If user has 0 active listings, show high-converting Matchmaker Onboarding Banner
+  if (!userPosts || userPosts.length === 0) {
     return (
       <div className="w-full bg-slate-900 text-white rounded-2xl p-5 shadow-md font-sans my-3 flex flex-col sm:flex-row items-center justify-between gap-4 border border-slate-800">
         <div className="flex items-center gap-3.5">
-          {/* Clean White Two Hands Connecting Icon Container */}
           <div className="icon-box-dark shrink-0">
             <Handshake className="w-6 h-6 text-[#FBBF24] stroke-[2.5]" />
           </div>
@@ -85,57 +81,75 @@ export default function CategoryBridgeFeed() {
     );
   }
 
-  // Determine active category & opposite type for real match
-  const activeCategory = userLatestPost.category;
-  const activeType = userLatestPost.type === "NEED" ? "SELL" : "NEED";
-
-  // Real Logic Rule 2: Strict matching of opposite type in exact category/area
-  const matchingListings = useMemo(() => {
-    // Exclude user's own post from matches
-    const otherPosts = allCombinedPosts.filter((p) => p.id !== userLatestPost.id);
-
-    let matches = otherPosts.filter((p) => {
-      const typeMatch = p.type?.toUpperCase() === activeType;
-      const catMatch = !activeCategory || p.category === activeCategory;
-      return typeMatch && catMatch;
-    });
-
-    return matches.slice(0, 3);
-  }, [allCombinedPosts, userLatestPost, activeCategory, activeType]);
-
-  // Real Logic Rule 3: If 0 real matches exist for user's post, hide component completely
-  if (matchingListings.length === 0) {
-    return null;
-  }
-
-  const previewCards: PreviewCard[] = matchingListings.map((post) => {
-    const imgList = post.image_urls || (post as any).images || [];
-    const imgUrl = imgList.length > 0 ? imgList[0] : (post.image_url || "/thanjavur_temple_illustration.png");
-    const priceText = post.price
-      ? typeof post.price === "number"
-        ? `₹${post.price.toLocaleString("en-IN")}`
-        : String(post.price)
-      : "Best Offer";
-
-    return {
-      title: post.title,
-      sub: post.category || "Matched Listing",
-      price: priceText,
-      area: post.area_tag || "Thanjavur",
-      img: imgUrl,
-    };
-  });
-
-  const targetPath = activeType === "SELL" ? "/sell" : "/need";
-
   return (
-    <PreviewSection
-      title="Smart Match"
-      subtitle="Local buyers and sellers matching in Thanjavur"
-      seeAllPath={targetPath}
-      accentColor="bg-[#1d4ed8]"
-      onCardClick={() => router.push(targetPath)}
-      cards={previewCards}
-    />
+    <div className="w-full flex flex-col gap-3 my-3">
+      {userPosts.slice(0, 4).map((post: any) => {
+        const postType = (post.type || post.category || "SELL").toUpperCase();
+        const isSellOrNeed = postType === "SELL" || postType === "NEED";
+        const isService = postType.includes("SERVICE") || post.skill_category;
+        const isShopOrOffer = postType.includes("SHOP") || postType.includes("OFFER") || post.shop_name || post.offer_title;
+
+        if (isSellOrNeed) {
+          const activeCategory = post.category;
+          const activeType = postType === "NEED" ? "SELL" : "NEED";
+
+          const matches = allCombinedPosts.filter((p) => {
+            if (p.id === post.id) return false;
+            const typeMatch = p.type?.toUpperCase() === activeType;
+            const catMatch = !activeCategory || p.category === activeCategory;
+            return typeMatch && catMatch;
+          }).slice(0, 3);
+
+          const previewCards: PreviewCard[] = matches.map((m) => ({
+            id: m.id,
+            title: m.title || "Matched Item",
+            sub: m.category || "Classified",
+            area: m.area_tag || "Thanjavur",
+            price: m.price ? `₹${m.price.toLocaleString("en-IN")}` : "Best Offer",
+            img: m.image_url || "/thanjavur_temple_illustration.png",
+          }));
+
+          return (
+            <PreviewSection
+              key={post.id}
+              title={`Smart Matches for: "${post.title}"`}
+              subtitle={`Direct matches in ${post.area_tag || "Thanjavur"}`}
+              seeAllPath={postType === "NEED" ? "/sell" : "/need"}
+              accentColor="bg-[#1d4ed8]"
+              cards={previewCards}
+              onCardClick={() => router.push(postType === "NEED" ? "/sell" : "/need")}
+            />
+          );
+        }
+
+        // Insight Card for Services or Shop/Offer Posts
+        return (
+          <div key={post.id} className="w-full bg-slate-900 text-white rounded-2xl p-4 shadow-sm font-sans flex items-center justify-between gap-3 border border-slate-800">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center shrink-0">
+                <Handshake className="w-5 h-5 text-amber-400" />
+              </div>
+              <div className="flex flex-col min-w-0">
+                <span className="text-[10px] font-black text-amber-400 uppercase tracking-wider">
+                  {isService ? "Service Insight" : "Store Offer Insight"}
+                </span>
+                <h4 className="font-heading font-black text-sm text-white truncate">
+                  {post.title || post.name || post.shop_name || "Active Post"}
+                </h4>
+                <p className="text-xs text-slate-300 truncate">
+                  📍 {post.area_tag || "Thanjavur"} • Status: Active &amp; Discoverable
+                </p>
+              </div>
+            </div>
+            <button
+              onClick={() => router.push("/profile?tab=my_posts")}
+              className="px-3 py-1.5 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs rounded-xl shrink-0 cursor-pointer"
+            >
+              View Listing →
+            </button>
+          </div>
+        );
+      })}
+    </div>
   );
 }

@@ -153,7 +153,7 @@ export default function HomeClientPage() {
                   }}
                   className="shrink-0 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs sm:text-sm px-5 py-2.5 rounded-lg shadow-md cursor-pointer transition-all flex items-center justify-center gap-1.5 select-none"
                 >
-                  <span>Register to Post Ad →</span>
+                  <span>Register to Post Ad</span>
                 </button>
               </div>
             )}

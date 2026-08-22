@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useFirestore } from "@/hooks/use-firestore";
 import ShopCard from "@/components/cards/ShopCard";
@@ -46,14 +46,101 @@ export default function ShopsClientPage() {
     category: "All",
   });
 
+  const [localPosts, setLocalPosts] = useState<ShopPost[]>([]);
+
+  useEffect(() => {
+    try {
+      let stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+      let shopPosts = stored.filter((p: any) => p.shop_name || p.offer_title || p.type === "OFFER" || p.type === "SHOP");
+
+      if (shopPosts.length === 0) {
+        const sampleSeed: any[] = [
+          {
+            id: "sample_shop_1",
+            type: "OFFER",
+            shop_name: "Tanjore Handloom Silks",
+            offer_title: "Grand Opening — 25% Off All Kanchipuram & Handloom Silks",
+            offer_description: "Exclusive grand inauguration offer! Get flat 25% discount on pure Zari silk sarees, wedding dhotis, and kids ethnic wear. Valid till Sunday.",
+            category: "Textiles & Readymades",
+            area_tag: "New Bus Stand",
+            address_text: "12, Main Road, Near New Bus Stand, Thanjavur",
+            phone: "+91 98765 43210",
+            show_phone: true,
+            hours: "9:30 AM - 9:00 PM",
+            image_url: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=800&auto=format&fit=crop",
+            video_url: "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4",
+            created_at: new Date(Date.now() - 3600000 * 2).toISOString(),
+          },
+          {
+            id: "sample_shop_2",
+            type: "OFFER",
+            shop_name: "Kalyani Electronics",
+            offer_title: "Flat ₹3,000 Instant Cashback on 55\" 4K Smart TVs",
+            offer_description: "Upgrade your living room! Special cashback offer on Samsung, LG & Sony 4K Smart TVs with free doorstep installation & wall mount.",
+            category: "Electronics & Mobiles",
+            area_tag: "Medical College Road",
+            address_text: "45, Medical College Road, Opp. Hospital Gate, Thanjavur",
+            phone: "+91 98765 43210",
+            show_phone: true,
+            hours: "10:00 AM - 9:30 PM",
+            image_url: "https://images.unsplash.com/photo-1593784991095-a205069470b6?w=800&auto=format&fit=crop",
+            created_at: new Date(Date.now() - 3600000 * 6).toISOString(),
+          },
+          {
+            id: "sample_shop_3",
+            type: "OFFER",
+            shop_name: "Royal Tanjore Biryani",
+            offer_title: "Buy 1 Family Biryani Bucket & Get Free Chicken 65 Starter",
+            offer_description: "Authentic Seeraga Samba Mutton & Chicken Biryani. Order 1 Family Bucket and receive 1 Free Chicken 65 starter + cold drinks. AC dining available.",
+            category: "Cafe & Restaurant",
+            area_tag: "South Rampart",
+            address_text: "78, South Rampart, Near Old Bus Stand, Thanjavur",
+            phone: "+91 98765 43210",
+            show_phone: true,
+            hours: "11:00 AM - 10:30 PM",
+            image_url: "https://images.unsplash.com/photo-1563379091339-03b21ab4a4f8?w=800&auto=format&fit=crop",
+            created_at: new Date(Date.now() - 3600000 * 14).toISOString(),
+          },
+          {
+            id: "sample_shop_4",
+            type: "OFFER",
+            shop_name: "Sri Chakra Computers & Mobiles",
+            offer_title: "Free Laptop Cleaning & Thermal Paste Service with OS Format",
+            offer_description: "Monsoon laptop maintenance camp! Get 100% free internal cleaning and CPU thermal paste application with any software service or RAM upgrade.",
+            category: "Electronics & Mobiles",
+            area_tag: "Old Bus Stand",
+            address_text: "22, Clock Tower Complex, Old Bus Stand, Thanjavur",
+            phone: "+91 98765 43210",
+            show_phone: true,
+            hours: "9:00 AM - 8:30 PM",
+            image_url: "https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=800&auto=format&fit=crop",
+            created_at: new Date(Date.now() - 3600000 * 30).toISOString(),
+          },
+          {
+            id: "sample_shop_5",
+            type: "OFFER",
+            shop_name: "Lakshmi Jewellery & Bullion",
+            offer_title: "Zero Making Charges on Antique Gold Ornaments & Coins",
+            offer_description: "Aadi festival gold celebration! Pay 0% making charges on 22K antique gold necklaces, bangles, and BIS hallmarked gold coins.",
+            category: "Gold & Jewelry",
+            area_tag: "Gandhiji Road",
+            address_text: "105, Gandhiji Road, Near Big Temple Signal, Thanjavur",
+            phone: "+91 98765 43210",
+            show_phone: true,
+            hours: "10:00 AM - 9:00 PM",
+            image_url: "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=800&auto=format&fit=crop",
+            created_at: new Date(Date.now() - 3600000 * 50).toISOString(),
+          },
+        ];
+        stored = [...sampleSeed, ...stored];
+        localStorage.setItem("namma_thanjai_local_posts", JSON.stringify(stored));
+        shopPosts = sampleSeed;
+      }
+      setLocalPosts(shopPosts);
+    } catch (e) {}
+  }, []);
+
   const filteredPosts = React.useMemo(() => {
-    let localPosts: ShopPost[] = [];
-    if (typeof window !== "undefined") {
-      try {
-        const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-        localPosts = stored.filter((p: any) => p.shop_name || p.offer_title);
-      } catch (e) {}
-    }
 
     let list = [...localPosts, ...(firestorePosts || [])].filter((p) => {
       if ((p as any).status === "moderation_review") return false;

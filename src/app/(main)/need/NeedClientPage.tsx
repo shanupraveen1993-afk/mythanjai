@@ -56,8 +56,81 @@ export default function NeedClientPage() {
 
   useEffect(() => {
     try {
-      const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-      const needPosts = stored.filter((p: any) => p.type?.toUpperCase() === "NEED");
+      let stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+      let needPosts = stored.filter((p: any) => p.type?.toUpperCase() === "NEED");
+
+      if (needPosts.length === 0) {
+        const sampleSeed: any[] = [
+          {
+            id: "sample_need_1",
+            type: "NEED",
+            title: "Looking for 2BHK House for Rent near Medical College Road",
+            description: "Family looking for 2BHK independent house or apartment for rent with car parking. Prefer 24hr water facility and peaceful residential location.",
+            price: 12000,
+            price_from: 8000,
+            price_to: 12000,
+            category: "Real Estate",
+            area_tag: "Medical College Road",
+            phone: "+91 98765 43210",
+            created_at: new Date(Date.now() - 3600000 * 3).toISOString(),
+          },
+          {
+            id: "sample_need_2",
+            type: "NEED",
+            title: "Looking for Used Honda Activa 5G / 6G in Good Condition",
+            description: "Required well-maintained Honda Activa 5G or 6G scooter. Single owner preferred with clean RC document and good engine condition.",
+            price: 45000,
+            price_from: 35000,
+            price_to: 45000,
+            category: "Vehicles",
+            area_tag: "New Bus Stand",
+            phone: "+91 98765 43210",
+            created_at: new Date(Date.now() - 3600000 * 7).toISOString(),
+          },
+          {
+            id: "sample_need_3",
+            type: "NEED",
+            title: "Need Used Core i5 / Ryzen 5 Laptop for College Project",
+            description: "Engineering student looking for secondhand laptop with 8GB RAM, SSD, and decent battery backup. Immediate purchase for cash.",
+            price: 25000,
+            price_from: null,
+            price_to: 25000,
+            category: "Electronics",
+            area_tag: "Old Bus Stand",
+            phone: "+91 98765 43210",
+            created_at: new Date(Date.now() - 3600000 * 14).toISOString(),
+          },
+          {
+            id: "sample_need_4",
+            type: "NEED",
+            title: "Required 1 Acre Agricultural Land near Vallam for Lease",
+            description: "Farmer looking for 1 to 2 acres of fertile agricultural land near Vallam for seasonal cultivation. Borewell water facility preferred.",
+            price: null,
+            price_from: null,
+            price_to: null,
+            category: "Real Estate",
+            area_tag: "Vallam",
+            phone: "+91 98765 43210",
+            created_at: new Date(Date.now() - 3600000 * 28).toISOString(),
+          },
+          {
+            id: "sample_need_5",
+            type: "NEED",
+            title: "Looking for Used iPad or Android Tablet for Digital Drawing",
+            description: "Artist looking for pre-owned iPad (9th Gen+) or Samsung Galaxy Tab with Stylus support. Good screen condition essential.",
+            price: 15000,
+            price_from: 10000,
+            price_to: 15000,
+            category: "Electronics",
+            area_tag: "South Rampart",
+            phone: "+91 98765 43210",
+            created_at: new Date(Date.now() - 3600000 * 50).toISOString(),
+          },
+        ];
+        stored = [...sampleSeed, ...stored];
+        localStorage.setItem("namma_thanjai_local_posts", JSON.stringify(stored));
+        needPosts = sampleSeed;
+      }
       setLocalPosts(needPosts);
     } catch (e) {}
   }, []);

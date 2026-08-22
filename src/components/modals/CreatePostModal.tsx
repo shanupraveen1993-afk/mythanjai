@@ -102,12 +102,17 @@ export default function CreatePostModal({
   const [area, setArea] = useState<string>("");
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [imagePreview, setImagePreview] = useState<string>("");
+  const [selectedImages, setSelectedImages] = useState<File[]>([]);
+  const [imagePreviews, setImagePreviews] = useState<string[]>([]);
+  const [aiRefining, setAiRefining] = useState<boolean>(false);
 
   // Need/Sale Specific State
   const [classifiedType, setClassifiedType] = useState<"NEED" | "SELL">("NEED");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
+  const [priceFrom, setPriceFrom] = useState("");
+  const [priceTo, setPriceTo] = useState("");
   const [classifiedCategory, setClassifiedCategory] = useState(CLASSIFIED_CATEGORIES[0]);
   const [youtubeUrl, setYoutubeUrl] = useState("");
   const [googleMapsUrl, setGoogleMapsUrl] = useState("");
@@ -183,6 +188,22 @@ export default function CreatePostModal({
     }
   }, [defaultArea, defaultType, defaultCategory, defaultClassifiedType, isOpen, profile, editPost]);
 
+  // 3-second debounced AI refinement trigger on text input
+  useEffect(() => {
+    const textToRefine = description || offerDesc;
+    if (!textToRefine || !textToRefine.trim()) {
+      setAiRefining(false);
+      return;
+    }
+
+    setAiRefining(true);
+    const timer = setTimeout(() => {
+      setAiRefining(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [description, offerDesc]);
+
   if (!isOpen) return null;
 
   if (!auth.currentUser) {
@@ -247,11 +268,26 @@ export default function CreatePostModal({
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      setSelectedImage(file);
-      setImagePreview(URL.createObjectURL(file));
-    }
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    const newFiles = [...selectedImages, ...files].slice(0, 3);
+    setSelectedImages(newFiles);
+    setSelectedImage(newFiles[0]);
+
+    const newPreviews = newFiles.map((file) => URL.createObjectURL(file));
+    setImagePreviews(newPreviews);
+    setImagePreview(newPreviews[0]);
+  };
+
+  const handleRemoveImage = (index: number) => {
+    const updatedFiles = selectedImages.filter((_, i) => i !== index);
+    const updatedPreviews = imagePreviews.filter((_, i) => i !== index);
+
+    setSelectedImages(updatedFiles);
+    setImagePreviews(updatedPreviews);
+    setSelectedImage(updatedFiles[0] || null);
+    setImagePreview(updatedPreviews[0] || "");
   };
 
   const handlePublish = async () => {
@@ -420,7 +456,8 @@ export default function CreatePostModal({
           } else if (type === "services") {
             await addDoc(collection(db, "services"), {
               userId: uid,
-              name: serviceName,
+              name: serviceName.includes("—") ? serviceName : `${serviceName} — ${serviceCategory}`,
+              title: serviceName.includes("—") ? serviceName : `${serviceName} — ${serviceCategory}`,
               skill_category: serviceCategory,
               experience: experience || "Licensed Helper",
               area_tag: area,
@@ -478,7 +515,9 @@ export default function CreatePostModal({
               description: finalDescription || finalOfferDesc || "",
               category: classifiedCategory || serviceCategory || shopCategory || offerCategory || "General",
               area_tag: area,
-              price: price ? parseFloat(price) : null,
+              price: price ? parseFloat(price) : (priceTo ? parseFloat(priceTo) : null),
+              price_from: priceFrom ? parseFloat(priceFrom) : null,
+              price_to: priceTo ? parseFloat(priceTo) : null,
               phone,
               image_url: imageUrl || "",
               created_at: new Date().toISOString(),
@@ -910,34 +949,57 @@ export default function CreatePostModal({
                               rows={3}
                               className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none"
                             />
-                          </div>
-
-                          <div className="grid grid-cols-2 gap-3">
-                            <div>
-                              <label className="block text-[11px] font-bold text-slate-500 mb-1">Price (₹, Text Supported)</label>
-                              <input
-                                type="text"
-                                value={price}
-                                onChange={(e) => setPrice(e.target.value)}
-                                placeholder="e.g. ₹2 Lakhs"
-                                className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none font-bold"
-                              />
+                                {classifiedType === "NEED" ? (
+                            <div className="grid grid-cols-2 gap-3">
+                              <div>
+                                <label className="block text-[11px] font-bold text-slate-500 mb-1">Budget From (₹) (Optional)</label>
+                                <input
+                                  type="number"
+                                  value={priceFrom}
+                                  onChange={(e) => setPriceFrom(e.target.value)}
+                                  placeholder="e.g. 8000"
+                                  className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none font-bold"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-[11px] font-bold text-slate-500 mb-1">Budget To (₹) (Optional)</label>
+                                <input
+                                  type="number"
+                                  value={priceTo}
+                                  onChange={(e) => setPriceTo(e.target.value)}
+                                  placeholder="e.g. 15000"
+                                  className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none font-bold"
+                                />
+                              </div>
                             </div>
-                            <div>
-                              <label className="block text-[11px] font-bold text-slate-500 mb-1">Category</label>
-                              <select
-                                value={classifiedCategory}
-                                onChange={(e) => setClassifiedCategory(e.target.value as any)}
-                                className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none"
-                              >
-                                {CLASSIFIED_CATEGORIES.map((c) => (
-                                  <option key={c} value={c}>
-                                    {c}
-                                  </option>
-                                ))}
-                              </select>
+                          ) : (
+                            <div className="grid grid-cols-2 gap-3">
+                              <div>
+                                <label className="block text-[11px] font-bold text-slate-500 mb-1">Price (₹)</label>
+                                <input
+                                  type="text"
+                                  value={price}
+                                  onChange={(e) => setPrice(e.target.value)}
+                                  placeholder="e.g. ₹2 Lakhs"
+                                  className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none font-bold"
+                                />
+                              </div>
+                              <div>
+                                <label className="block text-[11px] font-bold text-slate-500 mb-1">Category</label>
+                                <select
+                                  value={classifiedCategory}
+                                  onChange={(e) => setClassifiedCategory(e.target.value as any)}
+                                  className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none"
+                                >
+                                  {CLASSIFIED_CATEGORIES.map((c) => (
+                                    <option key={c} value={c}>
+                                      {c}
+                                    </option>
+                                  ))}
+                                </select>
+                              </div>
                             </div>
-                          </div>
+                          )}                          </div>
 
                           {classifiedType === "SELL" && (
                             <div className="flex flex-col gap-3 pt-1">
@@ -1236,6 +1298,17 @@ export default function CreatePostModal({
                         />
                       </div>
 
+                      {/* Show Phone Number Short Toggle */}
+                      <label className="flex items-center gap-2 text-xs font-bold text-slate-800 cursor-pointer bg-slate-50 p-3 rounded-xl border border-slate-200">
+                        <input
+                          type="checkbox"
+                          checked={showPhone}
+                          onChange={(e) => setShowPhone(e.target.checked)}
+                          className="rounded text-amber-500 focus:ring-amber-400 h-4 w-4 cursor-pointer"
+                        />
+                        <span>Show Phone Number on Listing</span>
+                      </label>
+
                       {/* Confirm details summary box */}
                       <div className="bg-slate-50 p-3 rounded-2xl border border-slate-200 text-[10px] text-slate-500 flex flex-col gap-1.5 font-bold">
                         <span className="font-black text-slate-800">Post Preview Summary:</span>
@@ -1253,6 +1326,32 @@ export default function CreatePostModal({
                     Live Post Preview Reference Guide
                   </span>
                   
+                  {/* AI Refinement Status Badge */}
+                  {aiRefining && (
+                    <div className="text-xs font-black text-amber-800 bg-amber-100 border border-amber-300 px-3.5 py-2 rounded-xl animate-pulse flex items-center justify-center gap-2 max-w-sm mx-auto shadow-xs">
+                      <Sparkles className="w-4 h-4 text-amber-600 animate-spin" />
+                      <span>✨ AI is refining your description...</span>
+                    </div>
+                  )}
+
+                  {/* Multi-Image Thumbnail Strip (Up to 3 images) */}
+                  {imagePreviews.length > 0 && (
+                    <div className="flex items-center justify-center gap-2 max-w-sm mx-auto my-1">
+                      {imagePreviews.map((src, i) => (
+                        <div key={i} className="relative w-16 h-16 rounded-xl overflow-hidden border border-slate-200 shadow-2xs group">
+                          <img src={src} alt={`Upload ${i + 1}`} className="w-full h-full object-cover" />
+                          <button
+                            type="button"
+                            onClick={() => handleRemoveImage(i)}
+                            className="absolute top-0.5 right-0.5 bg-rose-600 text-white rounded-full p-0.5 shadow-md hover:bg-rose-700 cursor-pointer"
+                          >
+                            <X className="w-3 h-3" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
                   {/* Mockup Card */}
                   <div className="bg-white border border-slate-200/95 rounded-2xl p-4 shadow-md flex flex-col gap-3.5 w-full max-w-sm mx-auto text-left">
                     {/* Category & Status Badge */}
@@ -1312,7 +1411,7 @@ export default function CreatePostModal({
                     {(type !== "needs" || classifiedType === "SELL") && (
                       <div className="relative aspect-video w-full rounded-xl overflow-hidden bg-slate-50 border border-slate-100 shadow-xs">
                         <img
-                          src={previewImage}
+                          src={imagePreviews[0] || previewImage}
                           alt="Preview illustration"
                           className="w-full h-full object-cover"
                         />
@@ -1346,11 +1445,44 @@ export default function CreatePostModal({
                   <div className="text-[10px] text-slate-400 font-bold mt-2 text-center bg-slate-50 border border-slate-100 p-2.5 rounded-xl max-w-sm mx-auto">
                     This is exactly how other residents in Tanjore will see your listing! Your raw text will be structured by AI to match this design.
                   </div>
+
+                  {/* Primary Submit Button Positioned Directly Below Live Preview Card */}
+                  {step === 3 && (
+                    <div className="flex justify-center gap-3 w-full mt-3 max-w-sm mx-auto">
+                      <button
+                        type="button"
+                        onClick={() => setStep(2)}
+                        className="px-4 py-2.5 btn-secondary text-xs uppercase tracking-wider flex items-center justify-center gap-1 cursor-pointer"
+                      >
+                        <ArrowLeft className="w-4 h-4 text-[#0F172A]" />
+                        <span>Back</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={handlePublish}
+                        disabled={loading}
+                        className="flex-1 py-2.5 btn-primary text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer shadow-md"
+                      >
+                        {loading ? (
+                          <>
+                            <Loader2 className="w-4 h-4 animate-spin text-[#0F172A]" />
+                            <span>Publishing...</span>
+                          </>
+                        ) : (
+                          <>
+                            <Check className="w-4 h-4 text-[#0F172A]" />
+                            <span>Publish Live Post</span>
+                          </>
+                        )}
+                      </button>
+                    </div>
+                  )}
                 </div>
 
               </div>
 
-              {/* ACTION BUTTONS: Rendered at the bottom of both columns, centered */}
+              {/* Step 2 Continue Button */}
               {step === 2 && (
                 <div className="flex justify-center w-full mt-4 pb-4 shrink-0">
                   <button
@@ -1360,38 +1492,6 @@ export default function CreatePostModal({
                   >
                     <span>Continue to Step 3</span>
                     <ArrowRight className="w-4 h-4 text-[#0F172A]" />
-                  </button>
-                </div>
-              )}
-
-              {step === 3 && (
-                <div className="flex justify-center gap-3 w-full mt-4 pb-4 shrink-0">
-                  <button
-                    type="button"
-                    onClick={() => setStep(2)}
-                    className="px-5 py-2.5 btn-secondary text-xs uppercase tracking-wider flex items-center justify-center gap-1 cursor-pointer"
-                  >
-                    <ArrowLeft className="w-4 h-4 text-[#0F172A]" />
-                    <span>Back</span>
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={handlePublish}
-                    disabled={loading}
-                    className="px-8 py-2.5 btn-primary text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 cursor-pointer"
-                  >
-                    {loading ? (
-                      <>
-                        <Loader2 className="w-4 h-4 animate-spin text-[#0F172A]" />
-                        <span>Publishing...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Check className="w-4 h-4 text-[#0F172A]" />
-                        <span>Publish Live Post</span>
-                      </>
-                    )}
                   </button>
                 </div>
               )}

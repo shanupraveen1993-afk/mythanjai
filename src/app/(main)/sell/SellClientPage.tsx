@@ -54,8 +54,76 @@ export default function SellClientPage() {
 
   useEffect(() => {
     try {
-      const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-      const sellPosts = stored.filter((p: any) => p.type?.toUpperCase() === "SELL");
+      let stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+      let sellPosts = stored.filter((p: any) => p.type?.toUpperCase() === "SELL");
+
+      if (sellPosts.length === 0) {
+        const sampleSeed: any[] = [
+          {
+            id: "sample_sell_1",
+            type: "SELL",
+            title: "CMDA Approved 1200 Sq.Ft Plot near New Bus Stand",
+            description: "Prime residential plot located just 500m from New Bus Stand. Clear title deeds, ready for instant house construction. Corner plot with 30ft tar road access.",
+            price: 1850000,
+            category: "Real Estate",
+            area_tag: "New Bus Stand",
+            phone: "+91 98765 43210",
+            image_url: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&auto=format&fit=crop",
+            created_at: new Date(Date.now() - 3600000 * 2).toISOString(),
+          },
+          {
+            id: "sample_sell_2",
+            type: "SELL",
+            title: "Hero Splendor Plus (2022 Model) - Single Owner",
+            description: "2022 Hero Splendor Plus i3s in excellent condition. 18,500 km driven. Single owner with full showroom service records, insurance active till Dec 2026.",
+            price: 54000,
+            category: "Vehicles",
+            area_tag: "Medical College Road",
+            phone: "+91 98765 43210",
+            image_url: "https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=800&auto=format&fit=crop",
+            created_at: new Date(Date.now() - 3600000 * 5).toISOString(),
+          },
+          {
+            id: "sample_sell_3",
+            type: "SELL",
+            title: "Apple iPhone 13 128GB (Starlight) with Bill & Box",
+            description: "Mint condition iPhone 13 128GB Starlight. Battery health 88%. Comes with original box, bill, and fast charging cable. Scratchless screen with tempered glass.",
+            price: 38500,
+            category: "Electronics",
+            area_tag: "Old Bus Stand",
+            phone: "+91 98765 43210",
+            image_url: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=800&auto=format&fit=crop",
+            created_at: new Date(Date.now() - 3600000 * 12).toISOString(),
+          },
+          {
+            id: "sample_sell_4",
+            type: "SELL",
+            title: "Teakwood 6-Seater Dining Table with Cushion Chairs",
+            description: "Pure Burma teakwood 6-seater dining table set. Sturdy design, polished dark finish with comfortable cushioned chairs. Moving out sale.",
+            price: 16000,
+            category: "Furniture",
+            area_tag: "Vallam",
+            phone: "+91 98765 43210",
+            image_url: "https://images.unsplash.com/photo-1617806118233-18e1de247200?w=800&auto=format&fit=crop",
+            created_at: new Date(Date.now() - 3600000 * 24).toISOString(),
+          },
+          {
+            id: "sample_sell_5",
+            type: "SELL",
+            title: "Samsung 43-inch 4K Ultra HD Smart TV",
+            description: "Samsung 43\" Crystal 4K Smart TV in pristine working condition. Built-in Wi-Fi, Netflix, Prime Video, YouTube. Crystal clear display with remote.",
+            price: 22500,
+            category: "Electronics",
+            area_tag: "South Rampart",
+            phone: "+91 98765 43210",
+            image_url: "https://images.unsplash.com/photo-1593784991095-a205069470b6?w=800&auto=format&fit=crop",
+            created_at: new Date(Date.now() - 3600000 * 48).toISOString(),
+          },
+        ];
+        stored = [...sampleSeed, ...stored];
+        localStorage.setItem("namma_thanjai_local_posts", JSON.stringify(stored));
+        sellPosts = sampleSeed;
+      }
       setLocalPosts(sellPosts);
     } catch (e) {}
   }, []);

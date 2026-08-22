@@ -62,10 +62,16 @@ export const SERVICE_CATEGORIES = [
   "AC & Fridge Repair",
   "Mechanic (Bike & Car)",
   "Carpenter",
-  "Painter",
+  "Painter & Waterproofing",
   "Cleaning & Housekeeping",
   "Catering & Cooking",
-  "Driver",
+  "Driver on Call",
+  "RO Water Repair",
+  "Appliance Repair",
+  "Computer & Laptop Repair",
+  "CCTV & Security Tech",
+  "Mason & Construction",
+  "Tile & Marble Work",
   "General Technician",
 ] as const;
 

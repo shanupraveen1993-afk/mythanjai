@@ -155,9 +155,15 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
   const illustrationSrc = getCategoryIllustration(post.category);
 
   const displayPriceText = React.useMemo(() => {
-    if (post.price === null || post.price === undefined || post.price === "") return "Budget Flexible";
-    return formatIndianCurrencyText(post.price);
-  }, [post.price]);
+    const fromVal = (post as any).price_from;
+    const toVal = (post as any).price_to;
+
+    if (fromVal && toVal) return `₹${Number(fromVal).toLocaleString("en-IN")} - ₹${Number(toVal).toLocaleString("en-IN")}`;
+    if (fromVal) return `From ₹${Number(fromVal).toLocaleString("en-IN")}`;
+    if (toVal) return `Up to ₹${Number(toVal).toLocaleString("en-IN")}`;
+    if (post.price !== null && post.price !== undefined && post.price !== "") return formatIndianCurrencyText(post.price);
+    return "Budget Flexible";
+  }, [post.price, (post as any).price_from, (post as any).price_to]);
 
   const locationList = React.useMemo(() => {
     if (!post.area_tag) return ["Thanjavur"];

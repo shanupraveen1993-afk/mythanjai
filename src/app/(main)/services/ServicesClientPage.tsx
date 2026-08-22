@@ -52,15 +52,95 @@ export default function ServicesClientPage() {
     category: "All",
   });
 
-  const filteredPosts = React.useMemo(() => {
-    let localPosts: ServiceProviderPost[] = [];
-    if (typeof window !== "undefined") {
-      try {
-        const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-        localPosts = stored.filter((p: any) => p.name || p.skill_category);
-      } catch (e) {}
-    }
+  const [localPosts, setLocalPosts] = useState<ServiceProviderPost[]>([]);
 
+  useEffect(() => {
+    try {
+      let stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+      let servicePosts = stored.filter((p: any) => p.name || p.skill_category || p.type === "SERVICE");
+
+      if (servicePosts.length === 0) {
+        const sampleSeed: any[] = [
+          {
+            id: "sample_service_1",
+            type: "SERVICE",
+            name: "Senthil — Plumber & Sanitary Fitter",
+            title: "Senthil — Plumber & Sanitary Fitter",
+            skill_category: "Plumber",
+            category: "Plumber",
+            experience: "10+ Years Exp",
+            description: "Expert in house plumbing installations, motor repair, pipe leaks, bathroom fitting, and water tank cleaning. 30-min rapid arrival.",
+            area_tag: "Medical College Road",
+            phone: "+91 98765 43210",
+            rating: 4.9,
+            created_at: new Date(Date.now() - 3600000 * 2).toISOString(),
+          },
+          {
+            id: "sample_service_2",
+            type: "SERVICE",
+            name: "Kannan — House Electrician & Inverter Specialist",
+            title: "Kannan — House Electrician & Inverter Specialist",
+            skill_category: "Electrician",
+            category: "Electrician",
+            experience: "8 Years Exp",
+            description: "Complete house wiring, inverter installation, DB box repair, fan/light fitting, and short circuit fault troubleshooting.",
+            area_tag: "New Bus Stand",
+            phone: "+91 98765 43210",
+            rating: 4.8,
+            created_at: new Date(Date.now() - 3600000 * 5).toISOString(),
+          },
+          {
+            id: "sample_service_3",
+            type: "SERVICE",
+            name: "Murugan — On-Call Car & Bike Mechanic",
+            title: "Murugan — On-Call Car & Bike Mechanic",
+            skill_category: "Mechanic (Bike & Car)",
+            category: "Mechanic (Bike & Car)",
+            experience: "12 Years Exp",
+            description: "24/7 doorstep Breakdown assistance, oil change, engine tuning, brake service, and battery jumpstart anywhere in Thanjavur.",
+            area_tag: "Old Bus Stand",
+            phone: "+91 98765 43210",
+            rating: 4.9,
+            created_at: new Date(Date.now() - 3600000 * 10).toISOString(),
+          },
+          {
+            id: "sample_service_4",
+            type: "SERVICE",
+            name: "Ramesh — AC Repair, Service & Gas Filling",
+            title: "Ramesh — AC Repair, Service & Gas Filling",
+            skill_category: "AC & Fridge Repair",
+            category: "AC & Fridge Repair",
+            experience: "7 Years Exp",
+            description: "Split & Window AC water wash, cooling gas refilling, compressor repair, and annual maintenance service.",
+            area_tag: "Vallam Road",
+            phone: "+91 98765 43210",
+            rating: 4.7,
+            created_at: new Date(Date.now() - 3600000 * 20).toISOString(),
+          },
+          {
+            id: "sample_service_5",
+            type: "SERVICE",
+            name: "Venkatesh — House Painter & Waterproofing",
+            title: "Venkatesh — House Painter & Waterproofing",
+            skill_category: "Painter & Waterproofing",
+            category: "Painter & Waterproofing",
+            experience: "15 Years Exp",
+            description: "Interior/Exterior wall painting, Asian Paints texture work, terrace damp-proof coating, and wood polishing.",
+            area_tag: "South Rampart",
+            phone: "+91 98765 43210",
+            rating: 4.9,
+            created_at: new Date(Date.now() - 3600000 * 36).toISOString(),
+          },
+        ];
+        stored = [...sampleSeed, ...stored];
+        localStorage.setItem("namma_thanjai_local_posts", JSON.stringify(stored));
+        servicePosts = sampleSeed;
+      }
+      setLocalPosts(servicePosts);
+    } catch (e) {}
+  }, []);
+
+  const filteredPosts = React.useMemo(() => {
     const ids = new Set([...(firestorePosts || []).map((p) => p.id), ...localPosts.map((p) => p.id)]);
     const seeds = SERVICE_SAMPLES.filter((p) => !ids.has(p.id));
     let list = [...localPosts, ...seeds, ...(firestorePosts || [])].filter((p) => {

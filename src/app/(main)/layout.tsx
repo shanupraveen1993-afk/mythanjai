@@ -84,13 +84,8 @@ function MainLayoutContent({
   const [selectedArea, setSelectedArea] = useState<TanjoreLocality | "All Areas">("All Areas");
   const [isSignInOpen, setIsSignInOpen] = useState(false);
 
-  // Startup Flow State: Splash Screen -> Walkthrough -> Permissions -> Home
-  const [showSplash, setShowSplash] = useState<boolean>(() => {
-    if (typeof window !== "undefined") {
-      return !sessionStorage.getItem("namma_thanjai_splash_shown_v1");
-    }
-    return true;
-  });
+  // Startup Flow State: Native Splash (APK Only) -> Walkthrough -> Permissions -> Home
+  const [showSplash, setShowSplash] = useState<boolean>(false);
   const [showWalkthrough, setShowWalkthrough] = useState(false);
   const [showPermissionsModal, setShowPermissionsModal] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -108,12 +103,12 @@ function MainLayoutContent({
           })
           .catch(() => {});
 
-        if (!hasCompletedOnboarding && !showSplash) {
+        if (!hasCompletedOnboarding) {
           setShowWalkthrough(true);
         }
       }
     }
-  }, [showSplash]);
+  }, []);
 
   const handleWalkthroughComplete = () => {
     setShowWalkthrough(false);

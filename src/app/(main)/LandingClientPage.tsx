@@ -120,7 +120,7 @@ export default function LandingClientPage() {
                   }}
                   className="bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs uppercase tracking-wider py-2.5 px-5 rounded-xl transition-all shadow-sm border border-amber-400/80 cursor-pointer active:scale-95 flex items-center gap-1.5"
                 >
-                  <span>Register to Post Ad →</span>
+                  <span>Register to Post Ad</span>
                   <ChevronRight className="w-3.5 h-3.5 text-slate-950 stroke-[3]" />
                 </button>
               </div>
