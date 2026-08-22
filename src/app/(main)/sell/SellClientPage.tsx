@@ -11,12 +11,7 @@ import { isListingQuarantined } from "@/lib/moderation";
 import WebAppScrollFAB from "@/components/common/WebAppScrollFAB";
 import CustomDropdown from "@/components/ui/CustomDropdown";
 
-const SAMPLE_POSTS: NeedOrSalePost[] = [
-  { id: "sl_cmda", userId: "sample", type: "SELL", raw_text: "2400 Sqft CMDA Approved Plot for sale near New Busstand, Thanjavur.", title: "2400 Sqft Plot near New Busstand", description: "CMDA approved residential land, 40ft tar road, clear title deeds, immediate registration.", category: "Plots & Real Estate", area_tag: "New Bus Stand", price: 3600000, phone: "9876543210", is_verified: true, image_url: "/hero_building_visual.png", created_at: new Date() as any, expires_at: new Date() as any },
-  { id: "sl_splendor", userId: "sample", type: "SELL", raw_text: "Hero Splendor Plus 2022 model, 14000 km driven, single owner.", title: "Hero Splendor Plus (2022 Model)", description: "First owner, mint condition, 65 kmpl mileage, all service records available.", category: "Used Vehicles", area_tag: "Medical College Road", price: 62000, phone: "9876543211", is_verified: true, image_url: "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=600&auto=format&fit=crop", created_at: new Date() as any, expires_at: new Date() as any },
-  { id: "sl_iphone", userId: "sample", type: "SELL", raw_text: "iPhone 13 128GB Blue color with bill and box.", title: "iPhone 13 (128GB Blue)", description: "88% battery health, scratchless screen, box, original cable & invoice included.", category: "Electronics & Mobiles", area_tag: "Old Bus Stand", price: 38500, phone: "9876543212", is_verified: true, image_url: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&auto=format&fit=crop", created_at: new Date() as any, expires_at: new Date() as any },
-  { id: "sl_teak", userId: "sample", type: "SELL", raw_text: "Teakwood 6 Seater Dining Table with Cushion Chairs.", title: "Teakwood 6-Seater Dining Set", description: "Pure Burma teakwood table with glass top and 6 cushioned matching chairs.", category: "Household Goods", area_tag: "Srinivasapuram", price: 24000, phone: "9876543213", is_verified: true, image_url: "https://images.unsplash.com/photo-1555041469-a586c61ea9bc?w=600&auto=format&fit=crop", created_at: new Date() as any, expires_at: new Date() as any },
-];
+const SAMPLE_POSTS: NeedOrSalePost[] = [];
 
 import { useAuth } from "@/hooks/use-auth";
 
@@ -66,9 +61,7 @@ export default function SellClientPage() {
   }, []);
 
   const filteredPosts = React.useMemo(() => {
-    const ids = new Set([...(firestorePosts || []).map((p) => p.id), ...localPosts.map((p) => p.id)]);
-    const seeds = SAMPLE_POSTS.filter((p) => !ids.has(p.id));
-    let list = [...localPosts, ...seeds, ...(firestorePosts || [])];
+    let list = [...localPosts, ...(firestorePosts || [])];
 
     list = list.filter((p) => {
       if ((p as any).status === "moderation_review") return false;

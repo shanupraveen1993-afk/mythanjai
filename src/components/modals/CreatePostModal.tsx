@@ -469,8 +469,38 @@ export default function CreatePostModal({
               platform,
               created_at: timestamp,
             });
+            // Save new post to local storage for immediate 0ms UI update
+            const newLocalPost = {
+              id: "local_" + Date.now(),
+              userId: uid,
+              type: "OFFER",
+              title: title || serviceName || shopName || offerTitle || "New Listing",
+              description: finalDescription || finalOfferDesc || "",
+              category: classifiedCategory || serviceCategory || shopCategory || offerCategory || "General",
+              area_tag: area,
+              price: price ? parseFloat(price) : null,
+              phone,
+              image_url: imageUrl || "",
+              created_at: new Date().toISOString(),
+            };
+
+            if (typeof window !== "undefined") {
+              try {
+                const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+                localStorage.setItem("namma_thanjai_local_posts", JSON.stringify([newLocalPost, ...stored]));
+              } catch (e) {}
+            }
+
+            toast.success("AI refined success! Post published to Tanjore hub.");
+
+            const targetRoute = "/shops";
+
+            setTimeout(() => {
+              if (typeof window !== "undefined") {
+                window.location.href = targetRoute;
+              }
+            }, 300);
           }
-          toast.success("AI refined success! Post published to Tanjore hub.");
         }
       } catch (firestoreErr) {
         console.warn("Firestore document creation skipped or fallback applied:", firestoreErr);
@@ -491,10 +521,6 @@ export default function CreatePostModal({
       resetForm();
     } catch (error: any) {
       console.error("Error publishing post:", error);
-      try {
-        const confetti = (await import("canvas-confetti")).default;
-        confetti({ particleCount: 80, spread: 60 });
-      } catch (err) {}
       onClose();
       resetForm();
     } finally {

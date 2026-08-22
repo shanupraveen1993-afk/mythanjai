@@ -449,7 +449,7 @@ export default function ChatClientPage() {
           {/* Safety Footer Note */}
           <div className="p-3 bg-slate-50 border-t border-slate-200 text-xs text-slate-500 font-medium flex items-center gap-1.5">
             <Lock className="w-3 h-3 text-emerald-600 shrink-0" />
-            <span>Phone numbers are masked to prevent scam scraping.</span>
+            <span>Direct encrypted WhatsApp &amp; Call connection active.</span>
           </div>
 
         </div>
@@ -579,11 +579,11 @@ export default function ChatClientPage() {
             </div>
           )}
 
-          {/* WhatsApp Message Input Form — Elevated above mobile bottom gesture bar */}
+          {/* WhatsApp Message Input Form — Elevated above mobile bottom tab bar and gesture bar */}
           <form
             onSubmit={handleSendMessage}
             className="p-3 sm:p-4 bg-slate-100 border-t border-slate-200 flex items-center gap-2"
-            style={{ paddingBottom: "max(calc(env(safe-area-inset-bottom, 0px) + 16px), 24px)" }}
+            style={{ paddingBottom: "max(calc(env(safe-area-inset-bottom, 0px) + 72px), 84px)" }}
           >
             <input
               type="text"

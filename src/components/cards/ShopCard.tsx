@@ -168,16 +168,31 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
     );
   }
 
-  const handleShare = (e: React.MouseEvent) => {
+  const handleShare = async (e: React.MouseEvent) => {
     e.stopPropagation();
     const updatedShares = sharesCount + 1;
     setSharesCount(updatedShares);
     if (typeof window !== "undefined") localStorage.setItem(`shares_shop_${post.id}`, String(updatedShares));
-    if (navigator.share) {
-      navigator.share({ title: `${post.shop_name} – ${post.offer_title || "Offer"}`, text: `Check out this offer from ${post.shop_name} in ${post.area_tag}, Thanjavur on Namma Thanjai!`, url: window.location.href }).catch(() => {});
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      toast.success("Offer link copied to clipboard!");
+    const shareUrl = typeof window !== "undefined" ? window.location.href : "https://mythanjai.vercel.app";
+    const shareText = `Check out "${post.shop_name} — ${post.offer_title || "Special Offer"}" in ${post.area_tag || "Thanjavur"} on Namma Thanjai app:\n${shareUrl}`;
+
+    try {
+      if (typeof navigator !== "undefined" && (navigator as any).share) {
+        await (navigator as any).share({
+          title: `${post.shop_name} – ${post.offer_title || "Offer"}`,
+          text: shareText,
+          url: shareUrl,
+        });
+        toast.success("Shared successfully!");
+      } else {
+        const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
+        window.open(waUrl, "_blank");
+      }
+    } catch (err: any) {
+      if (err.name !== "AbortError") {
+        await navigator.clipboard.writeText(shareUrl);
+        toast.success("Offer link copied to clipboard!");
+      }
     }
   };
 

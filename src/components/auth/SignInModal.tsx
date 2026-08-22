@@ -145,8 +145,8 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-slate-950/70 backdrop-blur-sm p-0 sm:p-4 animate-fade-in">
-      <div className="bg-white border border-slate-200/90 w-full max-w-sm rounded-t-3xl sm:rounded-2xl p-6 shadow-2xl relative text-slate-800">
+    <div className="fixed inset-0 z-[999999] flex items-end sm:items-center justify-center bg-slate-950/70 backdrop-blur-sm p-0 animate-fade-in">
+      <div className="bg-white border-t border-slate-200/90 w-full max-w-none sm:max-w-md rounded-t-3xl sm:rounded-2xl p-6 shadow-2xl relative text-slate-800 pb-8 sm:pb-6">
         
         {/* Native App Drag Handle Bar */}
         <div className="w-12 h-1 bg-slate-300 rounded-full mx-auto mb-4 sm:hidden" />

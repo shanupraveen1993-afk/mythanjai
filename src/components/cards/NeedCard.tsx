@@ -62,19 +62,28 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
     `Hello! I saw your post "${post.title}" in ${post.area_tag} on Namma Thanjai!`
   )}`;
 
-  const handleSharePost = (e: React.MouseEvent) => {
+  const handleSharePost = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (onShare) {
-      onShare(post);
-    } else if (navigator.share) {
-      navigator.share({
-        title: post.title,
-        text: `Check out this listing "${post.title}" in ${post.area_tag}, Thanjavur on Namma Thanjai!`,
-        url: window.location.href,
-      }).catch(() => {});
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      toast.success("Post link copied to clipboard!");
+    const shareUrl = typeof window !== "undefined" ? window.location.href : "https://mythanjai.vercel.app";
+    const shareText = `Check out "${post.title}" in ${post.area_tag || "Thanjavur"} on Namma Thanjai app:\n${shareUrl}`;
+
+    try {
+      if (typeof navigator !== "undefined" && (navigator as any).share) {
+        await (navigator as any).share({
+          title: post.title || "Namma Thanjai Requirement",
+          text: shareText,
+          url: shareUrl,
+        });
+        toast.success("Shared successfully!");
+      } else {
+        const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
+        window.open(waUrl, "_blank");
+      }
+    } catch (err: any) {
+      if (err.name !== "AbortError") {
+        await navigator.clipboard.writeText(shareUrl);
+        toast.success("Requirement link copied to clipboard!");
+      }
     }
   };
 

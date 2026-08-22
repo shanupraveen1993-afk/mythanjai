@@ -155,19 +155,32 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
     return false;
   }, [user, profile, listing]);
 
-  // Share action
+  // Native Android System Share Action
   const handleShare = async (e: React.MouseEvent) => {
     e.stopPropagation();
+    const shareUrl = typeof window !== "undefined" ? window.location.href : "https://mythanjai.vercel.app";
+    const shareText = `Check out "${listing.title}" in Thanjavur on Namma Thanjai app:\n${shareUrl}`;
+
     try {
-      if (navigator.share) {
-        await navigator.share({ title: listing.title, text: `${listing.title} on Namma Thanjavur`, url: window.location.href });
+      if (typeof navigator !== "undefined" && (navigator as any).share) {
+        await (navigator as any).share({
+          title: listing.title || "Namma Thanjai Listing",
+          text: shareText,
+          url: shareUrl,
+        });
+        toast.success("Shared successfully!");
       } else {
-        await navigator.clipboard.writeText(window.location.href);
-        toast.success("Link copied to clipboard!");
+        const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
+        window.open(waUrl, "_blank");
       }
-      const listingRef = doc(db, "classifieds", listing.id);
+      const listingRef = doc(db, "needs_and_sales", listing.id);
       await updateDoc(listingRef, { shares_count: increment(1) });
-    } catch (e) {}
+    } catch (err: any) {
+      if (err.name !== "AbortError") {
+        await navigator.clipboard.writeText(shareUrl);
+        toast.success("Listing link copied to clipboard!");
+      }
+    }
   };
 
   // Toggle Save — persists to localStorage (classifieds collection doesn't exist in this app)

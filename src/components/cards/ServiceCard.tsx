@@ -88,17 +88,28 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
     `🛠️ Verified Service in Thanjavur:\n*${post.name}* — ${post.skill_category} in ${post.area_tag}\nContact via Namma Thanjai!`
   )}`;
 
-  const handleShare = (e: React.MouseEvent) => {
+  const handleShare = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (navigator.share) {
-      navigator.share({
-        title: `${post.name} - ${post.skill_category}`,
-        text: `Hire ${post.name} (${post.skill_category}) in ${post.area_tag}, Thanjavur on Namma Thanjai!`,
-        url: window.location.href,
-      }).catch(() => {});
-    } else {
-      navigator.clipboard.writeText(window.location.href);
-      toast.success("Profile link copied to clipboard!");
+    const shareUrl = typeof window !== "undefined" ? window.location.href : "https://mythanjai.vercel.app";
+    const shareText = `Hire ${post.name} (${post.skill_category}) in ${post.area_tag || "Thanjavur"} on Namma Thanjai app:\n${shareUrl}`;
+
+    try {
+      if (typeof navigator !== "undefined" && (navigator as any).share) {
+        await (navigator as any).share({
+          title: `${post.name} - ${post.skill_category}`,
+          text: shareText,
+          url: shareUrl,
+        });
+        toast.success("Shared successfully!");
+      } else {
+        const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
+        window.open(waUrl, "_blank");
+      }
+    } catch (err: any) {
+      if (err.name !== "AbortError") {
+        await navigator.clipboard.writeText(shareUrl);
+        toast.success("Service profile link copied to clipboard!");
+      }
     }
   };
 
