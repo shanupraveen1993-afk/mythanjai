@@ -149,7 +149,7 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
             <span className="text-xs font-bold text-slate-400">{post.area_tag || "Thanjavur"}</span>
           </div>
           <h3 className="font-heading font-black text-base text-slate-900 line-clamp-1">{post.shop_name}</h3>
-          <p className="text-xs text-slate-500 font-bold mt-1 line-clamp-2">{post.offer_title}</p>
+          <p className="text-xs text-slate-500 font-bold mt-1 truncate line-clamp-1 whitespace-nowrap">{post.offer_title}</p>
           <div className="mt-4 h-40 bg-slate-200 rounded-xl w-full" />
         </div>
         <div className="absolute inset-0 bg-[#0F172A]/90 backdrop-blur-md flex flex-col items-center justify-center p-6 text-center text-white z-20">
@@ -277,7 +277,7 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
 
           {/* Offer title */}
           {post.offer_title && (
-            <p className="text-amber-300 text-xs font-bold line-clamp-2 leading-relaxed">{post.offer_title}</p>
+            <p className="text-amber-300 text-xs font-bold truncate line-clamp-1 whitespace-nowrap leading-relaxed">{post.offer_title}</p>
           )}
 
           {/* Validity + location row */}

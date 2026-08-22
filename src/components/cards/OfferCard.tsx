@@ -87,7 +87,7 @@ export default function OfferCard({ post }: OfferCardProps) {
       {/* Details Box */}
       <div className="p-3.5 flex flex-col gap-2 flex-1">
         <div className="flex items-start justify-between gap-2">
-          <h3 className="font-sans font-extrabold text-sm text-slate-900 leading-snug line-clamp-2 group-hover:text-amber-600 transition-colors">
+          <h3 className="font-sans font-extrabold text-sm text-slate-900 leading-snug truncate line-clamp-1 whitespace-nowrap group-hover:text-amber-600 transition-colors">
             {post.title}
           </h3>
         </div>

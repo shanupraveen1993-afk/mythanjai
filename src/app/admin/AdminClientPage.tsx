@@ -470,7 +470,7 @@ export default function AdminClientPage() {
 
                   {/* Details */}
                   <div>
-                    <h4 className="font-heading font-extrabold text-sm text-slate-900 leading-snug line-clamp-2">{item.title}</h4>
+                    <h4 className="font-heading font-extrabold text-sm text-slate-900 leading-snug truncate line-clamp-1 whitespace-nowrap">{item.title}</h4>
                     {item.price !== null && item.price !== undefined && (
                       <span className="text-xs text-emerald-600 font-extrabold block mt-0.5">
                         Price: ₹{item.price.toLocaleString("en-IN")}

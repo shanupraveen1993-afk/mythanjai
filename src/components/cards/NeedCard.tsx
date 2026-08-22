@@ -179,8 +179,8 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
             </div>
           </div>
 
-          {/* Title: Slightly lower opacity/contrast than price tag */}
-          <h3 className="font-sans font-extrabold text-sm sm:text-base text-slate-700 line-clamp-2 leading-snug">
+          {/* Title: Single-line bold text */}
+          <h3 className="font-sans font-extrabold text-sm sm:text-base text-slate-700 truncate line-clamp-1 whitespace-nowrap leading-snug">
             {post.title}
           </h3>
         </div>

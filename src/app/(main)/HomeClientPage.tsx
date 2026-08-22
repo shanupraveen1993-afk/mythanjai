@@ -101,7 +101,7 @@ export function PreviewSection({
               </div>
               <div className={`p-3 flex flex-col gap-1 ${isLocked ? "filter blur-xs" : ""}`}>
                 <div className="flex items-start justify-between gap-2">
-                  <h3 className="font-heading font-extrabold text-xs text-slate-900 leading-snug line-clamp-2 flex-1">
+                  <h3 className="font-heading font-extrabold text-xs text-slate-900 leading-snug truncate line-clamp-1 whitespace-nowrap flex-1">
                     {card.title}
                   </h3>
                   <span className="text-xs font-black text-slate-800 shrink-0">{card.price}</span>

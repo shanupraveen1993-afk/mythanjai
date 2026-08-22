@@ -752,7 +752,7 @@ function ProfileContent() {
                               </span>
                             )}
                           </div>
-                          <h5 className="font-heading font-extrabold text-sm sm:text-base text-slate-950 leading-snug line-clamp-2 mt-0.5">
+                          <h5 className="font-heading font-extrabold text-sm sm:text-base text-slate-950 leading-snug truncate line-clamp-1 whitespace-nowrap mt-0.5">
                             {post.title || post.name || post.shop_name || "Untitled Listing"}
                           </h5>
                           <p className="text-xs text-slate-500 font-semibold truncate">

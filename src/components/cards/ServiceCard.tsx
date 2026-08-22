@@ -231,7 +231,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
           </div>
 
           {/* Provider / Business Name Title */}
-          <h3 className="font-sans font-extrabold text-sm sm:text-base text-slate-900 line-clamp-2 leading-snug">
+          <h3 className="font-sans font-extrabold text-sm sm:text-base text-slate-900 truncate line-clamp-1 whitespace-nowrap leading-snug">
             {post.name}
           </h3>
         </div>

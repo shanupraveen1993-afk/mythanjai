@@ -1260,7 +1260,7 @@ export default function CreatePostModal({
 
                     {/* Title & Price / Metadata */}
                     <div>
-                      <h3 className="font-heading font-extrabold text-sm text-slate-800 leading-snug line-clamp-2">
+                      <h3 className="font-heading font-extrabold text-sm text-slate-800 leading-snug truncate line-clamp-1 whitespace-nowrap">
                         {displayTitle}
                       </h3>
                       
