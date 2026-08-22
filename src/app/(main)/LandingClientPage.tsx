@@ -118,9 +118,9 @@ export default function LandingClientPage() {
                       window.dispatchEvent(new Event("namma_thanjai_open_signin"));
                     }
                   }}
-                  className="bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs uppercase tracking-wider py-2 px-5 rounded-xl transition-all shadow-sm border border-amber-400/80 cursor-pointer active:scale-95 flex items-center gap-1.5"
+                  className="bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs uppercase tracking-wider py-2.5 px-5 rounded-xl transition-all shadow-sm border border-amber-400/80 cursor-pointer active:scale-95 flex items-center gap-1.5"
                 >
-                  <span>Verify Phone to Post</span>
+                  <span>Register to Post Ad →</span>
                   <ChevronRight className="w-3.5 h-3.5 text-slate-950 stroke-[3]" />
                 </button>
               </div>
@@ -169,37 +169,33 @@ export default function LandingClientPage() {
             </div>
           </div>
         ) : activeSellOrNeedPost ? (
-          /* Smart 2x2 Matchmaker Grid (Rendered when Sell or Need active) */
+          /* Smart 2x2 Matchmaker Grid */
           <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex flex-col gap-3 my-1">
             <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
-              <div className="flex items-center gap-2">
-                <Sparkles className="w-4 h-4 text-amber-500 fill-amber-400" />
-                <h3 className="font-heading font-black text-sm text-slate-900">Smart Tanjore Matchmaker</h3>
-              </div>
-              <span className="text-[10px] font-bold text-amber-700 bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-md">
-                Matching "{activeSellOrNeedPost.title}"
+              <h3 className="font-heading font-black text-sm text-slate-900">Smart Match</h3>
+              <span className="text-[10px] font-bold text-slate-600 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-md">
+                Verified Tanjore Matches
               </span>
             </div>
 
             <div className="grid grid-cols-2 gap-2.5">
               {[
-                { title: "Matching Buyer in Vallam", area: "Vallam", price: "₹22,000", contact: "+91 9994837342" },
-                { title: "Verified Tanjore Dealer", area: "Medical College Rd", price: "₹24,50,000", contact: "+91 9994837342" },
-                { title: "Direct Owner Requirement", area: "Old Bus Stand", price: "₹18,000", contact: "+91 9994837342" },
-                { title: "Instant Cash Buyer", area: "Karanthai", price: "₹65,000", contact: "+91 9994837342" },
+                { title: "Matching Buyer in Vallam", area: "Vallam", price: "₹22,000", path: "/need" },
+                { title: "Verified Tanjore Dealer", area: "Medical College Rd", price: "₹24,50,000", path: "/sell" },
+                { title: "Direct Owner Requirement", area: "Old Bus Stand", price: "₹18,000", path: "/need" },
+                { title: "Instant Cash Buyer", area: "Karanthai", price: "₹65,000", path: "/sell" },
               ].map((m, i) => (
-                <div key={i} className="bg-slate-50 border border-slate-200 rounded-xl p-3 flex flex-col justify-between gap-2">
-                  <div>
+                <div
+                  key={i}
+                  onClick={() => router.push(m.path)}
+                  className="bg-slate-50 border border-slate-200 hover:border-slate-400 rounded-xl p-3 flex flex-col justify-between gap-1 cursor-pointer transition-all active:scale-[0.98]"
+                >
+                  <div className="flex items-center justify-between">
                     <span className="text-[9px] uppercase font-black bg-blue-50 text-blue-700 border border-blue-200 px-1.5 py-0.5 rounded">Match</span>
-                    <h5 className="font-heading font-black text-xs text-slate-900 truncate mt-1">{m.title}</h5>
-                    <p className="text-[11px] text-slate-500 font-semibold mt-0.5">📍 {m.area}</p>
+                    <span className="text-[11px] font-black text-slate-900">{m.price}</span>
                   </div>
-                  <button
-                    onClick={() => router.push(`/chat?title=${encodeURIComponent(m.title)}`)}
-                    className="w-full py-1.5 bg-slate-900 hover:bg-slate-800 text-white font-heading font-black text-[11px] rounded-lg cursor-pointer transition-colors"
-                  >
-                    Contact Match →
-                  </button>
+                  <h5 className="font-heading font-black text-xs text-slate-900 truncate mt-1">{m.title}</h5>
+                  <p className="text-[11px] text-slate-500 font-semibold">📍 {m.area}</p>
                 </div>
               ))}
             </div>

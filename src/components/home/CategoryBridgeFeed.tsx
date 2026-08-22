@@ -127,14 +127,13 @@ export default function CategoryBridgeFeed() {
   });
 
   const targetPath = activeType === "SELL" ? "/sell" : "/need";
-  const matchSubtitle = `Matched ${activeType === "SELL" ? "sellers" : "buyers"} for your ${userLatestPost.type.toLowerCase()} listing: "${userLatestPost.title}"`;
 
   return (
     <PreviewSection
-      title="Your Matches"
-      subtitle={matchSubtitle}
+      title="Smart Match"
+      subtitle="Local buyers and sellers matching in Thanjavur"
       seeAllPath={targetPath}
-      accentColor="bg-yellow-500"
+      accentColor="bg-[#1d4ed8]"
       onCardClick={() => router.push(targetPath)}
       cards={previewCards}
     />

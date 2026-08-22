@@ -92,6 +92,20 @@ export default function ChatClientPage() {
   const [scamAlertTriggered, setScamAlertTriggered] = useState(false);
   const [detectedKeyword, setDetectedKeyword] = useState("");
   const [showMobileChat, setShowMobileChat] = useState(false);
+  const [activeMsgAction, setActiveMsgAction] = useState<ChatMessage | null>(null);
+  const longPressTimerRef = useRef<any>(null);
+
+  const handleTouchStart = (msg: ChatMessage) => {
+    longPressTimerRef.current = setTimeout(() => {
+      setActiveMsgAction(msg);
+    }, 500);
+  };
+
+  const handleTouchEnd = () => {
+    if (longPressTimerRef.current) {
+      clearTimeout(longPressTimerRef.current);
+    }
+  };
 
   const chatBottomRef = useRef<HTMLDivElement | null>(null);
 
@@ -344,7 +358,7 @@ export default function ChatClientPage() {
               onClick={() => router.push("/")}
               className="flex items-center gap-2 cursor-pointer select-none"
             >
-              <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-8 h-8 sm:w-9 sm:h-9 object-contain shrink-0 mix-blend-multiply" />
+              <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-8 h-8 sm:w-9 sm:h-9 object-contain shrink-0 filter brightness-0 invert drop-shadow-sm" />
               <div className="flex flex-col">
                 <div className="flex items-center gap-1">
                   <span className="font-heading font-bold tracking-tight text-white text-xs sm:text-sm uppercase">
@@ -373,7 +387,7 @@ export default function ChatClientPage() {
       {/* WHATSAPP MAIN CONTAINER */}
       <div className="flex-1 w-full flex bg-white overflow-hidden">
         
-        {/* LEFT COLUMN: WhatsApp Threads List (Desktop ALWAYS visible, Mobile toggled) */}
+        {/* LEFT COLUMN: WhatsApp Threads List */}
         <div className={`w-full lg:w-80 border-r border-slate-200 flex-col bg-white ${showMobileChat ? "hidden lg:flex" : "flex"}`}>
           
           {/* Threads List Header */}
@@ -443,8 +457,6 @@ export default function ChatClientPage() {
         {/* RIGHT COLUMN: WhatsApp Active Chat Window */}
         <div className={`flex-1 flex-col bg-[#efeae2] relative ${showMobileChat ? "flex" : "hidden lg:flex"}`}>
           
-          {/* Mobile Active Contact Bar — hidden since header now handles this */}
-
           {/* PERMANENT TOP SCAM SAFETY BANNER */}
           <div className="bg-amber-500 text-slate-950 px-4 py-2 flex items-center gap-2 text-xs font-bold border-b border-amber-400">
             <AlertTriangle className="w-4 h-4 shrink-0 stroke-[2.5]" />
@@ -454,7 +466,10 @@ export default function ChatClientPage() {
           </div>
 
           {/* Messages Feed */}
-          <div className="flex-1 p-4 overflow-y-auto flex flex-col gap-2.5 bg-[#efeae2] bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:16px_16px]">
+          <div
+            className="flex-1 p-4 overflow-y-auto flex flex-col gap-2.5 bg-[#efeae2] bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:16px_16px]"
+            style={{ paddingBottom: "calc(max(env(safe-area-inset-bottom, 0px), 16px) + 24px)" }}
+          >
             {messages.length === 0 ? (
               <div className="my-auto text-center flex flex-col items-center gap-2 text-slate-500 bg-white/80 p-4 rounded-xl border border-slate-200/80 max-w-xs mx-auto">
                 <ShieldCheck className="w-8 h-8 text-[#00a884]" />
@@ -469,16 +484,24 @@ export default function ChatClientPage() {
                 return (
                   <div key={msg.id} className={`flex flex-col ${isMe ? "items-end" : "items-start"}`}>
                     <div
-                      className={`px-3 py-2 rounded-lg max-w-[85%] sm:max-w-[70%] text-xs font-medium shadow-2xs ${
+                      onTouchStart={() => handleTouchStart(msg)}
+                      onTouchEnd={handleTouchEnd}
+                      onMouseDown={() => handleTouchStart(msg)}
+                      onMouseUp={handleTouchEnd}
+                      onContextMenu={(e) => {
+                        e.preventDefault();
+                        setActiveMsgAction(msg);
+                      }}
+                      className={`px-3.5 py-2.5 rounded-xl max-w-[85%] sm:max-w-[70%] text-xs font-medium shadow-2xs select-none cursor-pointer transition-transform active:scale-[0.98] ${
                         isMe
-                          ? "bg-[#d9fdd3] text-slate-900 rounded-tr-none"
+                          ? "bg-[#d9fdd3] text-slate-900 rounded-tr-none border border-emerald-200/70"
                           : "bg-white text-slate-900 rounded-tl-none border border-slate-200/70"
                       }`}
                     >
                       {highlightFlaggedText(msg.text)}
-                      <div className="flex items-center justify-end gap-1 mt-1 text-xs text-slate-500">
+                      <div className="flex items-center justify-end gap-1 mt-1 text-[10px] text-slate-500 font-bold">
                         <span>{formatTime(msg.timestamp)}</span>
-                        {isMe && <CheckCheck className="w-3 h-3 text-emerald-600" />}
+                        {isMe && <CheckCheck className="w-3.5 h-3.5 text-emerald-600" />}
                       </div>
                     </div>
                   </div>
@@ -488,11 +511,79 @@ export default function ChatClientPage() {
             <div ref={chatBottomRef} />
           </div>
 
+          {/* Long-Press Action Modal Overlay for Message (Copy, Delete, Share) */}
+          {activeMsgAction && (
+            <div
+              className="fixed inset-0 z-[999999] bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in"
+              onClick={() => setActiveMsgAction(null)}
+            >
+              <div
+                onClick={(e) => e.stopPropagation()}
+                className="bg-white border border-slate-200 rounded-2xl p-4 shadow-2xl w-full max-w-xs flex flex-col gap-3"
+              >
+                <div className="border-b border-slate-100 pb-2 flex items-center justify-between">
+                  <span className="font-heading font-black text-xs text-slate-900">Message Actions</span>
+                  <button onClick={() => setActiveMsgAction(null)} className="text-slate-400 hover:text-slate-700">
+                    <X className="w-4 h-4" />
+                  </button>
+                </div>
+                <div className="bg-slate-50 p-2.5 rounded-xl text-xs text-slate-700 font-medium italic border border-slate-200 line-clamp-2">
+                  "{activeMsgAction.text}"
+                </div>
+
+                <div className="flex flex-col gap-2 pt-1">
+                  {/* Copy Action */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      navigator.clipboard.writeText(activeMsgAction.text);
+                      toast.success("Message copied to clipboard!");
+                      setActiveMsgAction(null);
+                    }}
+                    className="w-full py-2.5 px-3 bg-slate-100 hover:bg-slate-200 text-slate-900 font-heading font-black text-xs rounded-xl flex items-center gap-2 cursor-pointer transition-colors"
+                  >
+                    <span>📋 Copy Message</span>
+                  </button>
+
+                  {/* Share Action */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (navigator.share) {
+                        navigator.share({ text: activeMsgAction.text }).catch(() => {});
+                      } else {
+                        navigator.clipboard.writeText(activeMsgAction.text);
+                        toast.success("Message text copied for sharing!");
+                      }
+                      setActiveMsgAction(null);
+                    }}
+                    className="w-full py-2.5 px-3 bg-blue-50 hover:bg-blue-100 text-blue-800 font-heading font-black text-xs rounded-xl flex items-center gap-2 cursor-pointer transition-colors border border-blue-200"
+                  >
+                    <span>📤 Share Message</span>
+                  </button>
+
+                  {/* Delete Action */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setMessages((prev) => prev.filter((m) => m.id !== activeMsgAction.id));
+                      toast.success("Message deleted.");
+                      setActiveMsgAction(null);
+                    }}
+                    className="w-full py-2.5 px-3 bg-rose-50 hover:bg-rose-100 text-rose-700 font-heading font-black text-xs rounded-xl flex items-center gap-2 cursor-pointer transition-colors border border-rose-200"
+                  >
+                    <span>🗑️ Delete Message</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          )}
+
           {/* WhatsApp Message Input Form — Elevated above mobile bottom gesture bar */}
           <form
             onSubmit={handleSendMessage}
-            className="p-3 sm:p-4 bg-slate-100 border-t border-slate-200 flex items-center gap-2 mb-2 sm:mb-3"
-            style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 24px)" }}
+            className="p-3 sm:p-4 bg-slate-100 border-t border-slate-200 flex items-center gap-2"
+            style={{ paddingBottom: "max(calc(env(safe-area-inset-bottom, 0px) + 16px), 24px)" }}
           >
             <input
               type="text"
@@ -503,15 +594,15 @@ export default function ChatClientPage() {
               autoCorrect="on"
               spellCheck={true}
               autoCapitalize="sentences"
-              className="flex-1 bg-white border border-slate-200 text-slate-900 rounded-lg px-4 py-2 text-xs font-medium focus:outline-none focus:border-[#00a884]"
+              className="flex-1 bg-white border border-slate-300 text-slate-900 rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#00a884]"
             />
             <button
               type="submit"
               disabled={loading || !inputText.trim()}
               aria-label="Send message"
-              className="bg-[#00a884] hover:bg-[#008f6f] active:scale-95 disabled:opacity-50 text-white font-bold p-2.5 rounded-lg transition-all shadow-xs cursor-pointer flex items-center justify-center shrink-0"
+              className="bg-[#00a884] hover:bg-[#008f6f] active:scale-95 disabled:opacity-50 text-white font-bold p-2.5 rounded-xl transition-all shadow-xs cursor-pointer flex items-center justify-center shrink-0"
             >
-              <Send className="w-4 h-4" />
+              <Send className="w-4 h-4 text-white" />
             </button>
           </form>
 

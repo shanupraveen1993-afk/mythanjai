@@ -84,7 +84,13 @@ function MainLayoutContent({
   const [selectedArea, setSelectedArea] = useState<TanjoreLocality | "All Areas">("All Areas");
   const [isSignInOpen, setIsSignInOpen] = useState(false);
 
-  // Startup Flow State: Strictly for Capacitor Native Mobile App
+  // Startup Flow State: Splash Screen -> Walkthrough -> Permissions -> Home
+  const [showSplash, setShowSplash] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      return !sessionStorage.getItem("namma_thanjai_splash_shown_v1");
+    }
+    return true;
+  });
   const [showWalkthrough, setShowWalkthrough] = useState(false);
   const [showPermissionsModal, setShowPermissionsModal] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
@@ -97,17 +103,17 @@ function MainLayoutContent({
 
       if (isNative) {
         import("@capacitor/splash-screen")
-          .then(({ SplashScreen }) => {
-            SplashScreen.hide().catch(() => {});
+          .then(({ SplashScreen: CapSplash }) => {
+            CapSplash.hide().catch(() => {});
           })
           .catch(() => {});
 
-        if (!hasCompletedOnboarding) {
+        if (!hasCompletedOnboarding && !showSplash) {
           setShowWalkthrough(true);
         }
       }
     }
-  }, []);
+  }, [showSplash]);
 
   const handleWalkthroughComplete = () => {
     setShowWalkthrough(false);
@@ -200,6 +206,20 @@ function MainLayoutContent({
   const isStandaloneView = isChatRoute;
   const isOnboardingView = false;
   const isFullWidthPage = isStandaloneView || isLandingMode;
+  if (showSplash) {
+    return (
+      <div className="w-full min-h-screen bg-[#0f172a]">
+        <SplashScreen
+          onComplete={() => {
+            setShowSplash(false);
+            if (typeof window !== "undefined") {
+              sessionStorage.setItem("namma_thanjai_splash_shown_v1", "true");
+            }
+          }}
+        />
+      </div>
+    );
+  }
 
   if (showWalkthrough) {
     return (

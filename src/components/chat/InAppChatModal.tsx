@@ -175,9 +175,7 @@ export default function InAppChatModal({
         {/* Chat Header */}
         <div className="bg-slate-950 text-white p-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="icon-box-dark w-10 h-10 rounded-2xl">
-              <User className="w-5 h-5" />
-            </div>
+            <img src="/namma_thanjai_logo.png" alt="logo" className="w-8 h-8 object-contain shrink-0 filter brightness-0 invert" />
             <div>
               <h3 className="font-heading font-black text-sm text-slate-100">{sellerName}</h3>
               <p className="text-xs text-slate-400 font-semibold truncate max-w-[200px]">
@@ -234,12 +232,16 @@ export default function InAppChatModal({
         </div>
 
         {/* Message Input Form */}
-        <form onSubmit={handleSendMessage} className="p-3 bg-white border-t border-slate-200 flex gap-2">
+        <form onSubmit={handleSendMessage} className="p-3.5 bg-white border-t border-slate-200 flex gap-2">
           <input
             type="text"
             value={inputText}
             onChange={(e) => setInputText(e.target.value)}
             placeholder="Type your message..."
+            autoComplete="on"
+            autoCorrect="on"
+            spellCheck={true}
+            autoCapitalize="sentences"
             className="flex-1 bg-slate-100 border border-slate-200 text-slate-900 rounded-2xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-slate-900"
           />
           <button

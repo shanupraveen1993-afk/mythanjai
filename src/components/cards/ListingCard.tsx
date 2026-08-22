@@ -297,20 +297,18 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
               )}
             </div>
 
-            {/* RIGHT COLUMN: Category Badge (top-right) + Price (large) + Title */}
+            {/* RIGHT COLUMN: Category Badge (left) + Price (right) + Title (left) */}
             <div className="flex-1 min-w-0 flex flex-col justify-between self-stretch">
-              {/* Top Row: Category Name with Logo Blue Tiny Icon */}
-              <div className="flex items-center justify-end">
+              {/* Top Row: Category Name on Left, Price on Right */}
+              <div className="flex items-center justify-between gap-2 w-full">
                 <CategoryIcon category={listing.category || listing.type} />
+                <div className="font-heading font-black text-lg sm:text-xl text-[#0F172A] tracking-tight shrink-0">
+                  {formattedPrice}
+                </div>
               </div>
 
-              {/* Price: Large Bold Text */}
-              <div className="font-heading font-black text-lg sm:text-xl text-[#0F172A] tracking-tight my-0.5">
-                {formattedPrice}
-              </div>
-
-              {/* Title: 3 Lines max in fixed space */}
-              <h3 className="font-sans font-extrabold text-sm text-slate-900 line-clamp-3 leading-snug">
+              {/* Title: Left-aligned bold text */}
+              <h3 className="font-sans font-extrabold text-sm text-slate-900 line-clamp-3 leading-snug text-left mt-1">
                 {listing.title}
               </h3>
             </div>
@@ -371,15 +369,15 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
         </div>
 
         {/* ── FOOTER ROW: Date Ago (Left) + 2 Rectangular Buttons (Right) ── */}
-        <div className="pt-2 flex items-center justify-between gap-2 mt-auto">
+        <div className="pt-2 flex items-center justify-between gap-2 mt-auto border-t border-slate-100">
           {/* Left: Date Ago */}
           <span className="text-[11px] font-medium text-slate-400 flex items-center gap-1 shrink-0">
             <Calendar className="w-3.5 h-3.5 text-slate-400" />
             <span>{formatRelativeTime(listing.created_at)}</span>
           </span>
 
-          {/* Right: 2 Rectangular CTA Buttons (In-App Chat & Call Blue) */}
-          <div className="flex items-center gap-2 shrink-0">
+          {/* Right: 2 Rectangular CTA Buttons (Exact w-[128px] each matching other segments) */}
+          <div className="flex items-center gap-2 shrink-0 justify-end">
             <button
               type="button"
               onClick={(e) => {
@@ -392,9 +390,9 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
                 }
                 router.push(`/chat?listingId=${listing.id}&sellerId=${listing.seller_id || ""}&title=${encodeURIComponent(listing.title)}`);
               }}
-              className="border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs py-1.5 px-3.5 rounded-xl flex items-center justify-center gap-1.5 min-h-[36px] shadow-2xs cursor-pointer transition-colors"
+              className="w-[128px] shrink-0 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
             >
-              <MessageSquare className="w-3.5 h-3.5 text-[#0F172A] fill-[#0F172A]/10 shrink-0 stroke-[2.5]" />
+              <MessageSquare className="w-4 h-4 text-[#0F172A] shrink-0 stroke-[2.5]" />
               <span>Chat</span>
             </button>
 
@@ -402,9 +400,9 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
               <a
                 href={callUrl}
                 onClick={(e) => e.stopPropagation()}
-                className="bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs py-1.5 px-3.5 rounded-xl flex items-center justify-center gap-1.5 min-h-[36px] shadow-2xs cursor-pointer transition-colors"
+                className="w-[128px] shrink-0 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
               >
-                <Phone className="w-3.5 h-3.5 text-white shrink-0" />
+                <Phone className="w-4 h-4 text-white shrink-0" />
                 <span>Call</span>
               </a>
             )}

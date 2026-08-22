@@ -21,7 +21,24 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
-  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [profile, setProfile] = useState<UserProfile | null>(() => {
+    if (typeof window !== "undefined") {
+      const storedPhone = localStorage.getItem("my_thanjai_phone") || localStorage.getItem("namma_thanjai_phone") || "";
+      const storedVerified = localStorage.getItem("my_thanjai_verified") === "true" || localStorage.getItem("namma_thanjai_verified") === "true";
+      const storedName = localStorage.getItem("my_thanjai_display_name") || "";
+      if (storedVerified && storedPhone && storedPhone !== "9876543210") {
+        return {
+          uid: "saved_session",
+          phone: storedPhone,
+          isVerified: true,
+          isAdmin: storedPhone.includes("9994837342"),
+          displayName: storedName || "Namma Thanjai User",
+          createdAt: new Date(),
+        };
+      }
+    }
+    return null;
+  });
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {

@@ -13,8 +13,9 @@ import {
   updateDoc,
   deleteDoc,
   onSnapshot,
+  serverTimestamp,
 } from "firebase/firestore";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   User,
   Phone,
@@ -22,7 +23,6 @@ import {
   Trash2,
   Download,
   AlertCircle,
-  Sparkles,
   Loader2,
   MessageSquare,
   ShieldCheck,
@@ -42,31 +42,39 @@ import {
   Shield,
   XCircle,
   ArrowLeft,
+  RotateCcw,
 } from "lucide-react";
 import Link from "next/link";
 import { useToast } from "@/context/ToastContext";
 import CreatePostModal from "@/components/modals/CreatePostModal";
 
 export default function ProfileClientPage() {
+  return (
+    <React.Suspense fallback={<div className="p-8 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-amber-500" /></div>}>
+      <ProfileContent />
+    </React.Suspense>
+  );
+}
+
+function ProfileContent() {
   const { toast } = useToast();
   const { user, profile, loading: authLoading, updatePhone, updateDisplayName, signOutUser } = useAuth();
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const tabParam = searchParams ? searchParams.get("tab") : null;
+
   // 2-Screen Architecture Navigation State
   const [activeView, setActiveView] = useState<"dashboard" | "listings" | "saved">("dashboard");
 
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      const tab = params.get("tab");
-      if (tab === "listings" || tab === "my_posts") {
-        setActiveView("listings");
-      } else if (tab === "saved" || tab === "bookmarks") {
-        setActiveView("saved");
-      } else {
-        setActiveView("dashboard");
-      }
+    if (tabParam === "listings" || tabParam === "my_posts") {
+      setActiveView("listings");
+    } else if (tabParam === "saved" || tabParam === "bookmarks") {
+      setActiveView("saved");
+    } else {
+      setActiveView("dashboard");
     }
-  }, []);
+  }, [tabParam]);
 
   const [phoneNumber, setPhoneNumber] = useState("");
   const [phoneUpdating, setPhoneUpdating] = useState(false);
@@ -116,11 +124,25 @@ export default function ProfileClientPage() {
     toast.success(!currentSold ? "Listing marked as SOLD!" : "Listing reactivated as Active!");
   };
 
-  const handleRenewListing = (postId: string) => {
+  const handleRenewListing = async (postId: string, colName?: string) => {
+    const newDate = new Date().toISOString();
     setMyPosts((prev) =>
-      prev.map((p) => (p.id === postId ? { ...p, created_at: new Date().toISOString() } : p))
+      prev.map((p) => (p.id === postId ? { ...p, created_at: newDate, is_sold: false } : p))
     );
-    toast.success("Listing renewed for another 30 Days!");
+    if (typeof window !== "undefined") {
+      try {
+        const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+        const updated = stored.map((p: any) =>
+          p.id === postId ? { ...p, created_at: newDate, is_sold: false } : p
+        );
+        localStorage.setItem("namma_thanjai_local_posts", JSON.stringify(updated));
+      } catch (e) {}
+    }
+    try {
+      const docRef = doc(db, colName || "needs_and_sales", postId);
+      await updateDoc(docRef, { created_at: serverTimestamp(), is_sold: false });
+    } catch (e) {}
+    toast.success("Listing reposted successfully! 30-day window reset.");
   };
 
   // PWA Install prompt states & Native App Detection
@@ -381,6 +403,58 @@ export default function ProfileClientPage() {
   return (
     <div className="w-full max-w-4xl mx-auto flex flex-col gap-5 mt-2 pb-24 font-sans px-3 sm:px-4">
 
+      {/* Profile Segmented Tab Control */}
+      <div className="flex items-center gap-1.5 p-1 bg-slate-200/80 rounded-2xl w-full shadow-2xs">
+        <button
+          type="button"
+          onClick={() => {
+            setActiveView("dashboard");
+            router.push("/profile");
+          }}
+          className={`flex-1 py-2.5 px-3 rounded-xl font-heading font-black text-xs sm:text-sm transition-all cursor-pointer text-center ${
+            activeView === "dashboard"
+              ? "bg-white text-slate-950 shadow-xs border border-slate-200"
+              : "text-slate-600 hover:text-slate-950"
+          }`}
+        >
+          Profile Overview
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setActiveView("listings");
+            router.push("/profile?tab=listings");
+          }}
+          className={`flex-1 py-2.5 px-3 rounded-xl font-heading font-black text-xs sm:text-sm transition-all cursor-pointer text-center flex items-center justify-center gap-1.5 ${
+            activeView === "listings"
+              ? "bg-white text-slate-950 shadow-xs border border-slate-200"
+              : "text-slate-600 hover:text-slate-950"
+          }`}
+        >
+          <span>My Listings</span>
+          <span className="bg-slate-100 text-slate-800 px-2 py-0.5 rounded-full text-[10px] font-extrabold border border-slate-200">
+            {myPosts.length}
+          </span>
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setActiveView("saved");
+            router.push("/profile?tab=saved");
+          }}
+          className={`flex-1 py-2.5 px-3 rounded-xl font-heading font-black text-xs sm:text-sm transition-all cursor-pointer text-center flex items-center justify-center gap-1.5 ${
+            activeView === "saved"
+              ? "bg-white text-slate-950 shadow-xs border border-slate-200"
+              : "text-slate-600 hover:text-slate-950"
+          }`}
+        >
+          <span>Saved Items</span>
+          <span className="bg-slate-100 text-slate-800 px-2 py-0.5 rounded-full text-[10px] font-extrabold border border-slate-200">
+            {savedPosts.length}
+          </span>
+        </button>
+      </div>
+
       {/* WhatsApp OTP Verification Modal */}
       {verificationPending && (
         <div className="fixed inset-0 z-[99999] bg-slate-950/75 backdrop-blur-xs flex items-center justify-center p-4">
@@ -523,7 +597,7 @@ export default function ProfileClientPage() {
               {/* Highlighted Free Plan Card */}
               <div className="bg-amber-400 text-slate-950 font-heading font-black text-sm p-3.5 rounded-2xl flex items-center justify-between shadow-xs">
                 <span className="flex items-center gap-1.5">
-                  <Sparkles className="w-4.5 h-4.5 text-slate-950 fill-slate-950 shrink-0" />
+                  <Zap className="w-4.5 h-4.5 text-slate-950 fill-slate-950 shrink-0" />
                   <span>Free Plan</span>
                 </span>
                 <div className="flex items-center gap-1.5 bg-slate-950 text-amber-400 px-3 py-1 rounded-xl text-xs">
@@ -654,37 +728,66 @@ export default function ProfileClientPage() {
                   const isConfirmingDelete = confirmDeleteId === post.id;
 
                   return (
-                    <div key={post.id} className="bg-slate-50 border border-slate-200 rounded-xl p-3.5 flex flex-col gap-3">
-                      <div className="flex items-start justify-between gap-2">
-                        <div className="flex-1 min-w-0">
-                          <span className="text-[10px] font-black uppercase text-amber-600 tracking-wider bg-amber-50 border border-amber-200 px-2 py-0.5 rounded-lg">
-                            {post.type || post.category || "Listing"}
-                          </span>
-                          <h5 className="font-heading font-black text-sm text-slate-900 truncate mt-1">
+                    <div key={post.id} className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col gap-3.5 shadow-2xs hover:border-slate-300 transition-all">
+                      <div className="flex items-start gap-3 w-full">
+                        {/* Post Image preview if available */}
+                        {(post.image_url || (post.image_urls && post.image_urls.length > 0) || post.images) && (
+                          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl bg-slate-200 relative overflow-hidden shrink-0 border border-slate-200">
+                            <img
+                              src={post.image_url || (post.image_urls && post.image_urls[0]) || (post.images && post.images[0]) || "/thanjavur_temple_illustration.png"}
+                              alt={post.title || "Post thumbnail"}
+                              className="w-full h-full object-cover"
+                            />
+                          </div>
+                        )}
+
+                        <div className="flex-1 min-w-0 flex flex-col gap-1">
+                          <div className="flex items-center justify-between gap-2">
+                            <span className="text-[10px] font-black uppercase text-blue-700 tracking-wider bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-lg">
+                              {post.type || post.category || "Listing"}
+                            </span>
+                            {post.price && (
+                              <span className="text-slate-950 font-heading font-black text-sm sm:text-base">
+                                ₹{typeof post.price === "number" ? post.price.toLocaleString("en-IN") : post.price}
+                              </span>
+                            )}
+                          </div>
+                          <h5 className="font-heading font-extrabold text-sm sm:text-base text-slate-950 leading-snug line-clamp-2 mt-0.5">
                             {post.title || post.name || post.shop_name || "Untitled Listing"}
                           </h5>
-                          <p className="text-xs text-slate-500 font-semibold mt-0.5 truncate">
-                            📍 {post.area_tag || "Thanjavur"}
-                            {post.price && <span className="ml-2 text-slate-900 font-bold">₹{post.price}</span>}
+                          <p className="text-xs text-slate-500 font-semibold truncate">
+                            📍 {post.area_tag || post.location || "Thanjavur"}
                           </p>
                         </div>
                       </div>
 
+                      {/* Full Post Description */}
+                      <div className="bg-white border border-slate-200/70 p-3 rounded-xl">
+                        <p className="text-xs text-slate-700 leading-relaxed font-normal">
+                          {post.description || post.offer_description || "No description provided."}
+                        </p>
+                      </div>
+
+                      {/* 30-Day Expiry Bar & Repost CTA */}
                       <div className="flex items-center justify-between bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs">
-                        <span className="flex items-center gap-1.5 font-bold text-slate-600">
-                          <Clock className="w-3.5 h-3.5 text-slate-400" />
-                          {daysLeft > 0 ? `${daysLeft} days remaining` : "Expired"}
+                        <span className="flex items-center gap-1.5 font-bold text-slate-700">
+                          <Clock className="w-3.5 h-3.5 text-amber-600" />
+                          <span>{daysLeft > 0 ? `${daysLeft} days active remaining` : "Expired"}</span>
                         </span>
-                        {isRenewable && (
-                          <button onClick={() => handleRenewListing(post.id)} className="text-xs font-black text-amber-700 bg-amber-100 hover:bg-amber-200 px-2.5 py-1 rounded-xl cursor-pointer">
-                            <RefreshCw className="w-3 h-3 inline mr-1" /> Renew
-                          </button>
-                        )}
+                        <button
+                          type="button"
+                          onClick={() => handleRenewListing(post.id, post.colName)}
+                          className="text-xs font-heading font-black text-white bg-emerald-600 hover:bg-emerald-700 px-3 py-1.5 rounded-xl cursor-pointer flex items-center gap-1.5 shadow-2xs transition-colors"
+                          title="Reset 30-day window"
+                        >
+                          <RotateCcw className="w-3.5 h-3.5 text-white" />
+                          <span>Repost (Reset 30 Days)</span>
+                        </button>
                       </div>
 
                       {isConfirmingDelete ? (
                         <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl p-2.5">
-                          <span className="text-xs font-bold text-red-700 flex-1">Delete this listing?</span>
+                          <span className="text-xs font-bold text-red-700 flex-1">Delete this listing permanently?</span>
                           <button onClick={() => handleDeletePost(post.id, post.colName || "needs_and_sales")} className="text-xs font-black text-white bg-red-600 px-3 py-1.5 rounded-xl cursor-pointer">
                             Delete
                           </button>
@@ -694,7 +797,7 @@ export default function ProfileClientPage() {
                         </div>
                       ) : (
                         <div className="flex items-center justify-between gap-2 pt-1 border-t border-slate-200/60">
-                          {/* All 3 Engagement Metrics: Views, Shares, Saves */}
+                          {/* Engagement Metrics */}
                           <div className="flex items-center gap-3 text-xs font-bold text-slate-600 flex-wrap">
                             <span className="flex items-center gap-1" title="Views">
                               <Eye className="w-3.5 h-3.5 text-blue-600" />
@@ -712,12 +815,18 @@ export default function ProfileClientPage() {
 
                           <div className="flex items-center gap-2">
                             <button
+                              type="button"
                               onClick={() => setEditingPost(post)}
-                              className="text-xs font-black text-slate-700 bg-white border border-slate-200 px-3 py-1.5 rounded-xl cursor-pointer flex items-center gap-1 hover:bg-slate-100 transition-colors"
+                              className="text-xs font-heading font-black text-slate-900 bg-white border border-slate-300 px-3 py-1.5 rounded-xl cursor-pointer flex items-center gap-1 hover:bg-slate-100 transition-colors shadow-2xs"
                             >
-                              <Pencil className="w-3.5 h-3.5 text-slate-600" /> Edit
+                              <Pencil className="w-3.5 h-3.5 text-slate-700" /> Edit Listing
                             </button>
-                            <button onClick={() => setConfirmDeleteId(post.id)} className="w-8 h-8 rounded-xl bg-red-50 text-red-500 border border-red-200 flex items-center justify-center cursor-pointer hover:bg-red-100 transition-colors">
+                            <button
+                              type="button"
+                              onClick={() => setConfirmDeleteId(post.id)}
+                              className="w-8 h-8 rounded-xl bg-red-50 text-red-600 border border-red-200 flex items-center justify-center cursor-pointer hover:bg-red-100 transition-colors"
+                              title="Delete Listing"
+                            >
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>
                           </div>

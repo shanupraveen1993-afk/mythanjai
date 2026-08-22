@@ -1088,7 +1088,7 @@ export function RobotHero({
                     className="bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs sm:text-sm px-4 py-3.5 rounded-2xl border-2 border-amber-400 shadow-lg flex items-center justify-center gap-2 active:scale-95 cursor-pointer select-none"
                   >
                     <Sparkles className="w-4 h-4 text-slate-950 shrink-0 stroke-[2.5]" />
-                    <span>Register to Post →</span>
+                    <span>Register to Post Ad →</span>
                   </button>
 
                   <Link
@@ -1122,7 +1122,7 @@ export function RobotHero({
                     className="w-full py-3.5 sm:py-4 btn-primary text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <Sparkles className="w-4 h-4 text-[#0F172A] shrink-0" />
-                    <span>Register</span>
+                    <span>Register to Post Ad</span>
                   </button>
 
                   <Link
