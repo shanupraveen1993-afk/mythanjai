@@ -406,214 +406,214 @@ export default function PostForm({ segment }: PostFormProps) {
     const cleanDesc = description.trim();
     const targetPostId = editId || `user_post_${Date.now()}`;
 
-    const safeFirestoreImageUrl =
-      imagePreview && !imagePreview.startsWith("data:")
+    const defaultCoverImage =
+      imagePreviews.length > 0
+        ? imagePreviews[0]
+        : imagePreview && !imagePreview.startsWith("data:")
         ? imagePreview
         : segment === "offer"
         ? "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&auto=format&fit=crop"
         : "/thanjavur_temple_illustration.png";
 
-    try {
-      let imageUrl = safeFirestoreImageUrl;
-      let imageUrls: string[] = [];
+    // ── STEP 1: Build & Persist Local Record IMMEDIATELY (0ms Delay) ─────────
+    const localPostRecord: any = {
+      id: targetPostId,
+      userId: uid,
+      category,
+      area_tag: area,
+      phone: phone || "9876543210",
+      created_at: new Date().toISOString(),
+      is_verified: true,
+    };
 
-      // Image upload handling with safe fallback
-      if (segment === "sell" && selectedImages.length > 0) {
-        imageUrls = await Promise.all(
-          selectedImages.map(async (img) => {
-            try {
-              const compressed = await compressImage(img);
-              const storageRef = ref(storage, `postings/${Date.now()}_${img.name}`);
-              const snapshot = await uploadBytes(storageRef, compressed.blob);
-              return await getDownloadURL(snapshot.ref);
-            } catch {
-              const compressed = await compressImage(img);
-              return compressed.base64 || imagePreview || safeFirestoreImageUrl;
-            }
-          })
-        );
-        imageUrl = imageUrls[0] || imageUrl;
-      } else if (selectedImage) {
-        try {
-          const compressed = await compressImage(selectedImage);
-          const storageRef = ref(storage, `postings/${Date.now()}_${selectedImage.name}`);
-          const snapshot = await uploadBytes(storageRef, compressed.blob);
-          imageUrl = await getDownloadURL(snapshot.ref);
-          imageUrls = [imageUrl];
-        } catch {
+    if (segment === "sell" || segment === "need") {
+      localPostRecord.type = segment === "sell" ? "SELL" : "NEED";
+      localPostRecord.title = title.trim();
+      localPostRecord.description = cleanDesc;
+      localPostRecord.price = price || null;
+      localPostRecord.show_phone = showPhone;
+      localPostRecord.image_url = defaultCoverImage;
+      if (imagePreviews.length > 0) {
+        localPostRecord.image_urls = imagePreviews;
+      }
+    } else if (segment === "service") {
+      localPostRecord.name = title.trim();
+      localPostRecord.skill_category = category;
+      localPostRecord.is_available_now = isAvailable;
+      localPostRecord.experience = allWorkingDays === "Yes" ? "All Working Days" : "Flexible Days";
+      localPostRecord.working_hours = sundayLeave === "Yes" ? "Sunday Off" : "Open 7 Days";
+      localPostRecord.description = cleanDesc;
+      localPostRecord.image_url = defaultCoverImage;
+    } else if (segment === "offer") {
+      localPostRecord.shop_name = title.trim();
+      localPostRecord.offer_title = title.trim();
+      localPostRecord.offer_description = cleanDesc;
+      localPostRecord.image_url = defaultCoverImage;
+      localPostRecord.video_url = videoPreview || youtubeUrl || "";
+      localPostRecord.address_text = area ? `${area}, Thanjavur` : "Thanjavur";
+    }
+
+    try {
+      let storedPosts = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+      if (editId) {
+        storedPosts = storedPosts.map((p: any) => (p.id === editId ? { ...p, ...localPostRecord } : p));
+      } else {
+        storedPosts.unshift(localPostRecord);
+      }
+      localStorage.setItem("namma_thanjai_local_posts", JSON.stringify(storedPosts.slice(0, 50)));
+    } catch (e) {}
+
+    // Instant UI Response & Navigation
+    setSuccess(true);
+    setLoading(false);
+    toast.success(editId ? "Post updated successfully!" : "Post published successfully!");
+    router.push(config.redirectPath);
+
+    // ── STEP 2: Background Storage Upload & Firestore Cloud Sync ──────────────
+    (async () => {
+      try {
+        let imageUrl = defaultCoverImage;
+        let imageUrls: string[] = [];
+
+        if (segment === "sell" && selectedImages.length > 0) {
+          imageUrls = await Promise.all(
+            selectedImages.map(async (img) => {
+              try {
+                const compressed = await compressImage(img);
+                const storageRef = ref(storage, `postings/${Date.now()}_${img.name}`);
+                const snapshot = await uploadBytes(storageRef, compressed.blob);
+                return await getDownloadURL(snapshot.ref);
+              } catch {
+                const compressed = await compressImage(img);
+                return compressed.base64 || defaultCoverImage;
+              }
+            })
+          );
+          imageUrl = imageUrls[0] || imageUrl;
+        } else if (selectedImage) {
           try {
             const compressed = await compressImage(selectedImage);
-            imageUrl = compressed.base64 || imagePreview || safeFirestoreImageUrl;
+            const storageRef = ref(storage, `postings/${Date.now()}_${selectedImage.name}`);
+            const snapshot = await uploadBytes(storageRef, compressed.blob);
+            imageUrl = await getDownloadURL(snapshot.ref);
+            imageUrls = [imageUrl];
           } catch {
-            imageUrl = imagePreview || safeFirestoreImageUrl;
+            try {
+              const compressed = await compressImage(selectedImage);
+              imageUrl = compressed.base64 || defaultCoverImage;
+            } catch {
+              imageUrl = defaultCoverImage;
+            }
           }
         }
-      }
 
-      // Build local record
-      const localPostRecord: any = {
-        id: targetPostId,
-        userId: uid,
-        category,
-        area_tag: area,
-        phone: phone || "9876543210",
-        created_at: new Date().toISOString(),
-        is_verified: true,
-      };
+        const targetCol = editCol || (segment === "service" ? "services" : segment === "offer" ? "shops" : "needs_and_sales");
 
-      if (segment === "sell" || segment === "need") {
-        localPostRecord.type = segment === "sell" ? "SELL" : "NEED";
-        localPostRecord.title = title.trim();
-        localPostRecord.description = cleanDesc;
-        localPostRecord.price = price || null;
-        localPostRecord.show_phone = showPhone;
-        localPostRecord.image_url = imageUrl;
-        if (imageUrls.length > 0) {
-          localPostRecord.image_urls = imageUrls;
-        }
-      } else if (segment === "service") {
-        localPostRecord.name = title.trim();
-        localPostRecord.skill_category = category;
-        localPostRecord.is_available_now = isAvailable;
-        localPostRecord.experience = allWorkingDays === "Yes" ? "All Working Days" : "Flexible Days";
-        localPostRecord.working_hours = sundayLeave === "Yes" ? "Sunday Off" : "Open 7 Days";
-        localPostRecord.description = cleanDesc;
-        localPostRecord.image_url = imageUrl;
-      } else if (segment === "offer") {
-        localPostRecord.shop_name = title.trim();
-        localPostRecord.offer_title = title.trim();
-        localPostRecord.offer_description = cleanDesc;
-        localPostRecord.image_url = imageUrl;
-        localPostRecord.video_url = videoPreview || youtubeUrl || "";
-        localPostRecord.address_text = area ? `${area}, Thanjavur` : "Thanjavur";
-      }
-
-      // 1. Save to local storage
-      try {
-        let storedPosts = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-        if (editId) {
-          storedPosts = storedPosts.map((p: any) => (p.id === editId ? { ...p, ...localPostRecord } : p));
-        } else {
-          storedPosts.unshift(localPostRecord);
-        }
-        localStorage.setItem("namma_thanjai_local_posts", JSON.stringify(storedPosts.slice(0, 50)));
-      } catch (e) {}
-
-      // 2. Direct real-time write to Firebase Firestore
-      const targetCol = editCol || (segment === "service" ? "services" : segment === "offer" ? "shops" : "needs_and_sales");
-
-      if (segment === "sell" || segment === "need") {
-        const payload: any = {
-          userId: uid,
-          type: segment === "sell" ? "SELL" : "NEED",
-          title: title.trim(),
-          description: cleanDesc,
-          raw_text: cleanDesc,
-          category,
-          area_tag: area,
-          price: price || null,
-          phone: phone || "9876543210",
-          show_phone: showPhone,
-          image_url: imageUrl,
-          image_urls: imageUrls.length > 0 ? imageUrls : undefined,
-          youtube_url: youtubeUrl.trim() || "",
-          google_maps_url: googleMapsUrl.trim() || "",
-          is_verified: true,
-        };
-        if (editId) {
-          try {
-            await updateDoc(doc(db, targetCol, editId), payload);
-          } catch {
+        if (segment === "sell" || segment === "need") {
+          const payload: any = {
+            userId: uid,
+            type: segment === "sell" ? "SELL" : "NEED",
+            title: title.trim(),
+            description: cleanDesc,
+            raw_text: cleanDesc,
+            category,
+            area_tag: area,
+            price: price || null,
+            phone: phone || "9876543210",
+            show_phone: showPhone,
+            image_url: imageUrl,
+            image_urls: imageUrls.length > 0 ? imageUrls : undefined,
+            youtube_url: youtubeUrl.trim() || "",
+            google_maps_url: googleMapsUrl.trim() || "",
+            is_verified: true,
+          };
+          if (editId) {
+            try {
+              await updateDoc(doc(db, targetCol, editId), payload);
+            } catch {
+              await addDoc(collection(db, targetCol), { ...payload, created_at: timestamp });
+            }
+          } else {
+            await addDoc(collection(db, targetCol), {
+              ...payload,
+              created_at: timestamp,
+              expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+            });
+          }
+        } else if (segment === "service") {
+          const payload: any = {
+            userId: uid,
+            name: title.trim(),
+            skill_category: category,
+            is_available_now: isAvailable,
+            experience: allWorkingDays === "Yes" ? "All Working Days" : "Flexible Days",
+            working_hours: sundayLeave === "Yes" ? "Sunday Off" : "Open 7 Days",
+            area_tag: area,
+            phone: phone || "9876543210",
+            rating: 5.0,
+            description: cleanDesc,
+            image_url: imageUrl,
+            is_verified: true,
+          };
+          if (editId) {
+            try {
+              await updateDoc(doc(db, targetCol, editId), payload);
+            } catch {
+              await addDoc(collection(db, targetCol), { ...payload, created_at: timestamp });
+            }
+          } else {
+            await addDoc(collection(db, targetCol), {
+              ...payload,
+              negative_reports_count: 0,
+              status: "active",
+              created_at: timestamp,
+            });
+          }
+        } else if (segment === "offer") {
+          let uploadedVideoUrl = videoPreview || "";
+          if (selectedVideo) {
+            try {
+              const videoRef = ref(storage, `offer_reels/${Date.now()}_${selectedVideo.name}`);
+              const snap = await uploadBytes(videoRef, selectedVideo);
+              uploadedVideoUrl = await getDownloadURL(snap.ref);
+            } catch (vErr) {
+              console.warn("Video reel upload fallback:", vErr);
+            }
+          }
+          const payload: any = {
+            userId: uid,
+            shop_name: title.trim(),
+            category,
+            area_tag: area,
+            phone: phone || "9876543210",
+            image_url: imageUrl,
+            latitude: 10.787,
+            longitude: 79.1378,
+            google_maps_url: googleMapsUrl.trim() || "",
+            address_text: area ? `${area}, Thanjavur` : "Thanjavur",
+            hours: "Special Local Offer",
+            is_claimed: true,
+            offer_title: title.trim(),
+            offer_description: cleanDesc,
+            valid_from: validFrom || null,
+            valid_to: validTo || null,
+            show_phone: showPhone,
+            video_url: uploadedVideoUrl || "",
+          };
+          if (editId) {
+            try {
+              await updateDoc(doc(db, targetCol, editId), payload);
+            } catch {
+              await addDoc(collection(db, targetCol), { ...payload, created_at: timestamp });
+            }
+          } else {
             await addDoc(collection(db, targetCol), { ...payload, created_at: timestamp });
           }
-        } else {
-          await addDoc(collection(db, targetCol), {
-            ...payload,
-            created_at: timestamp,
-            expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-          });
         }
-      } else if (segment === "service") {
-        const payload: any = {
-          userId: uid,
-          name: title.trim(),
-          skill_category: category,
-          is_available_now: isAvailable,
-          experience: allWorkingDays === "Yes" ? "All Working Days" : "Flexible Days",
-          working_hours: sundayLeave === "Yes" ? "Sunday Off" : "Open 7 Days",
-          area_tag: area,
-          phone: phone || "9876543210",
-          rating: 5.0,
-          description: cleanDesc,
-          image_url: imageUrl,
-          is_verified: true,
-        };
-        if (editId) {
-          try {
-            await updateDoc(doc(db, targetCol, editId), payload);
-          } catch {
-            await addDoc(collection(db, targetCol), { ...payload, created_at: timestamp });
-          }
-        } else {
-          await addDoc(collection(db, targetCol), {
-            ...payload,
-            negative_reports_count: 0,
-            status: "active",
-            created_at: timestamp,
-          });
-        }
-      } else if (segment === "offer") {
-        let uploadedVideoUrl = videoPreview || "";
-        if (selectedVideo) {
-          try {
-            const videoRef = ref(storage, `offer_reels/${Date.now()}_${selectedVideo.name}`);
-            const snap = await uploadBytes(videoRef, selectedVideo);
-            uploadedVideoUrl = await getDownloadURL(snap.ref);
-          } catch (vErr) {
-            console.warn("Video reel upload fallback:", vErr);
-          }
-        }
-        const payload: any = {
-          userId: uid,
-          shop_name: title.trim(),
-          category,
-          area_tag: area,
-          phone: phone || "9876543210",
-          image_url: imageUrl,
-          latitude: 10.787,
-          longitude: 79.1378,
-          google_maps_url: googleMapsUrl.trim() || "",
-          address_text: area ? `${area}, Thanjavur` : "Thanjavur",
-          hours: "Special Local Offer",
-          is_claimed: true,
-          offer_title: title.trim(),
-          offer_description: cleanDesc,
-          valid_from: validFrom || null,
-          valid_to: validTo || null,
-          show_phone: showPhone,
-          video_url: uploadedVideoUrl || "",
-        };
-        if (editId) {
-          try {
-            await updateDoc(doc(db, targetCol, editId), payload);
-          } catch {
-            await addDoc(collection(db, targetCol), { ...payload, created_at: timestamp });
-          }
-        } else {
-          await addDoc(collection(db, targetCol), { ...payload, created_at: timestamp });
-        }
+      } catch (bgSyncErr) {
+        console.warn("Background Firestore sync warning:", bgSyncErr);
       }
-
-      setSuccess(true);
-      setLoading(false);
-      toast.success(editId ? "Post updated successfully!" : "Post published!");
-      router.push(config.redirectPath);
-    } catch (err) {
-      console.error("Post creation error:", err);
-      setLoading(false);
-      toast.error("Error saving post. Redirecting to feed...");
-      router.push(config.redirectPath);
-    }
+    })();
   };
 
   // Direct 1:1 Live Preview Cards Data
@@ -1218,7 +1218,7 @@ export default function PostForm({ segment }: PostFormProps) {
               </div>
             )}
 
-            <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-2xs flex flex-col gap-3 relative">
+            <div className="w-full flex flex-col gap-3 relative">
               {isAiRewriting && (
                 <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-center justify-center gap-2 text-amber-800 font-bold text-xs animate-pulse shadow-2xs">
                   <Sparkles className="w-4 h-4 text-amber-600 fill-amber-400 animate-spin" />
@@ -1239,7 +1239,7 @@ export default function PostForm({ segment }: PostFormProps) {
               type="submit"
               onClick={handleSubmit}
               disabled={loading}
-              className="w-full py-3.5 sm:py-4 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer rounded-xl shadow-md transition-all select-none mt-1"
+              className="w-full py-3.5 sm:py-4 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer rounded-xl shadow-md transition-all select-none mt-2 mb-28 md:mb-6"
             >
               {loading ? (
                 <>

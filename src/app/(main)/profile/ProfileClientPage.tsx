@@ -240,9 +240,10 @@ function ProfileContent() {
           const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
           stored.forEach((localP: any) => {
             if (!allFetchedPosts.some((p) => p.id === localP.id)) {
+              const determinedCol = localP.skill_category ? "services" : (localP.type === "SELL" || localP.type === "NEED") ? "needs_and_sales" : "shops";
               allFetchedPosts.unshift({
                 ...localP,
-                colName: localP.type === "SELL" || localP.type === "NEED" ? "needs_and_sales" : "shops",
+                colName: determinedCol,
               });
             }
           });
@@ -259,7 +260,9 @@ function ProfileContent() {
 
   useEffect(() => {
     fetchMyPosts();
-  }, [user, profile?.phone]);
+    window.addEventListener("focus", fetchMyPosts);
+    return () => window.removeEventListener("focus", fetchMyPosts);
+  }, [user, profile?.phone, activeView]);
 
   // Load saved posts from localStorage on mount & when activeView changes
   useEffect(() => {
