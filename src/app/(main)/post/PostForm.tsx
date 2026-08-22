@@ -381,7 +381,6 @@ export default function PostForm({ segment }: PostFormProps) {
     const cleanDesc = description.trim();
     const targetPostId = editId || `user_post_${Date.now()}`;
 
-    // ── STEP 1: Build local record immediately ───────────────────────────────
     const safeFirestoreImageUrl =
       imagePreview && !imagePreview.startsWith("data:")
         ? imagePreview
@@ -389,210 +388,207 @@ export default function PostForm({ segment }: PostFormProps) {
         ? "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&auto=format&fit=crop"
         : "/thanjavur_temple_illustration.png";
 
-    const localPostRecord: any = {
-      id: targetPostId,
-      userId: uid,
-      category,
-      area_tag: area,
-      phone: phone || "9876543210",
-      created_at: new Date().toISOString(),
-      is_verified: true,
-    };
-
-    if (segment === "sell" || segment === "need") {
-      localPostRecord.type = segment === "sell" ? "SELL" : "NEED";
-      localPostRecord.title = title.trim();
-      localPostRecord.description = cleanDesc;
-      localPostRecord.price = price || null;
-      localPostRecord.show_phone = showPhone;
-      localPostRecord.image_url =
-        segment === "sell" && imagePreviews.length > 0
-          ? imagePreviews[0]
-          : imagePreview || safeFirestoreImageUrl;
-      if (segment === "sell" && imagePreviews.length > 0) {
-        localPostRecord.image_urls = imagePreviews;
-      }
-    } else if (segment === "service") {
-      localPostRecord.name = title.trim();
-      localPostRecord.skill_category = category;
-      localPostRecord.is_available_now = isAvailable;
-      localPostRecord.experience = allWorkingDays === "Yes" ? "All Working Days" : "Flexible Days";
-      localPostRecord.working_hours = sundayLeave === "Yes" ? "Sunday Off" : "Open 7 Days";
-      localPostRecord.description = cleanDesc;
-      localPostRecord.image_url = imagePreview || safeFirestoreImageUrl;
-    } else if (segment === "offer") {
-      localPostRecord.shop_name = title.trim();
-      localPostRecord.offer_title = title.trim();
-      localPostRecord.offer_description = cleanDesc;
-      localPostRecord.image_url = imagePreview || safeFirestoreImageUrl;
-      localPostRecord.video_url = videoPreview || youtubeUrl || "";
-      localPostRecord.address_text = area ? `${area}, Thanjavur` : "Thanjavur";
-    }
-
-    // ── STEP 2: Persist locally & redirect IMMEDIATELY (optimistic) ──────────
     try {
-      let storedPosts = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-      if (editId) {
-        storedPosts = storedPosts.map((p: any) => (p.id === editId ? { ...p, ...localPostRecord } : p));
-      } else {
-        storedPosts.unshift(localPostRecord);
-      }
-      localStorage.setItem("namma_thanjai_local_posts", JSON.stringify(storedPosts.slice(0, 50)));
-    } catch (e) {}
+      let imageUrl = safeFirestoreImageUrl;
+      let imageUrls: string[] = [];
 
-    setSuccess(true);
-    setLoading(false);
-    toast.success(editId ? "Post updated successfully!" : "Post published!");
-    router.push(config.redirectPath);
-
-    // ── STEP 3: Upload images + Firestore write/update in background (safe fallback if Firebase Storage disabled) ──
-    (async () => {
-      try {
-        let imageUrl = safeFirestoreImageUrl;
-        let imageUrls: string[] = [];
-
-        // Only upload if a new local File was chosen (not an existing URL)
-        if (segment === "sell" && selectedImages.length > 0) {
-          imageUrls = await Promise.all(
-            selectedImages.map(async (img) => {
-              try {
-                const compressed = await compressImage(img);
-                const storageRef = ref(storage, `postings/${Date.now()}_${img.name}`);
-                const snapshot = await uploadBytes(storageRef, compressed.blob);
-                return await getDownloadURL(snapshot.ref);
-              } catch {
-                // Safe Fallback if Firebase Storage is not activated: use compressed base64
-                const compressed = await compressImage(img);
-                return compressed.base64 || imagePreview || safeFirestoreImageUrl;
-              }
-            })
-          );
-          imageUrl = imageUrls[0] || imageUrl;
-        } else if (selectedImage) {
+      // Image upload handling with safe fallback
+      if (segment === "sell" && selectedImages.length > 0) {
+        imageUrls = await Promise.all(
+          selectedImages.map(async (img) => {
+            try {
+              const compressed = await compressImage(img);
+              const storageRef = ref(storage, `postings/${Date.now()}_${img.name}`);
+              const snapshot = await uploadBytes(storageRef, compressed.blob);
+              return await getDownloadURL(snapshot.ref);
+            } catch {
+              const compressed = await compressImage(img);
+              return compressed.base64 || imagePreview || safeFirestoreImageUrl;
+            }
+          })
+        );
+        imageUrl = imageUrls[0] || imageUrl;
+      } else if (selectedImage) {
+        try {
+          const compressed = await compressImage(selectedImage);
+          const storageRef = ref(storage, `postings/${Date.now()}_${selectedImage.name}`);
+          const snapshot = await uploadBytes(storageRef, compressed.blob);
+          imageUrl = await getDownloadURL(snapshot.ref);
+          imageUrls = [imageUrl];
+        } catch {
           try {
             const compressed = await compressImage(selectedImage);
-            const storageRef = ref(storage, `postings/${Date.now()}_${selectedImage.name}`);
-            const snapshot = await uploadBytes(storageRef, compressed.blob);
-            imageUrl = await getDownloadURL(snapshot.ref);
-            imageUrls = [imageUrl];
+            imageUrl = compressed.base64 || imagePreview || safeFirestoreImageUrl;
           } catch {
-            // Safe Fallback if Firebase Storage is not activated: use base64 or preview URL
-            try {
-              const compressed = await compressImage(selectedImage);
-              imageUrl = compressed.base64 || imagePreview || safeFirestoreImageUrl;
-            } catch {
-              imageUrl = imagePreview || safeFirestoreImageUrl;
-            }
+            imageUrl = imagePreview || safeFirestoreImageUrl;
           }
         }
+      }
 
-        const targetCol = editCol || (segment === "service" ? "services" : segment === "offer" ? "shops" : "needs_and_sales");
+      // Build local record
+      const localPostRecord: any = {
+        id: targetPostId,
+        userId: uid,
+        category,
+        area_tag: area,
+        phone: phone || "9876543210",
+        created_at: new Date().toISOString(),
+        is_verified: true,
+      };
 
-        if (segment === "sell" || segment === "need") {
-          const payload: any = {
-            userId: uid,
-            type: segment === "sell" ? "SELL" : "NEED",
-            title: title.trim(),
-            description: cleanDesc,
-            raw_text: cleanDesc,
-            category,
-            area_tag: area,
-            price: price || null,
-            phone: phone || "9876543210",
-            show_phone: showPhone,
-            image_url: imageUrl,
-            image_urls: imageUrls.length > 0 ? imageUrls : undefined,
-            youtube_url: youtubeUrl.trim() || "",
-            google_maps_url: googleMapsUrl.trim() || "",
-            is_verified: true,
-          };
-          if (editId) {
-            try {
-              await updateDoc(doc(db, targetCol, editId), payload);
-            } catch {
-              await addDoc(collection(db, targetCol), { ...payload, created_at: timestamp });
-            }
-          } else {
-            await addDoc(collection(db, targetCol), {
-              ...payload,
-              created_at: timestamp,
-              expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-            });
-          }
-        } else if (segment === "service") {
-          const payload: any = {
-            userId: uid,
-            name: title.trim(),
-            skill_category: category,
-            is_available_now: isAvailable,
-            experience: allWorkingDays === "Yes" ? "All Working Days" : "Flexible Days",
-            working_hours: sundayLeave === "Yes" ? "Sunday Off" : "Open 7 Days",
-            area_tag: area,
-            phone: phone || "9876543210",
-            rating: 5.0,
-            description: cleanDesc,
-            image_url: imageUrl,
-            is_verified: true,
-          };
-          if (editId) {
-            try {
-              await updateDoc(doc(db, targetCol, editId), payload);
-            } catch {
-              await addDoc(collection(db, targetCol), { ...payload, created_at: timestamp });
-            }
-          } else {
-            await addDoc(collection(db, targetCol), {
-              ...payload,
-              negative_reports_count: 0,
-              status: "active",
-              created_at: timestamp,
-            });
-          }
-        } else if (segment === "offer") {
-          let uploadedVideoUrl = videoPreview || "";
-          if (selectedVideo) {
-            try {
-              const videoRef = ref(storage, `offer_reels/${Date.now()}_${selectedVideo.name}`);
-              const snap = await uploadBytes(videoRef, selectedVideo);
-              uploadedVideoUrl = await getDownloadURL(snap.ref);
-            } catch (vErr) {
-              console.warn("Video reel upload fallback:", vErr);
-            }
-          }
-          const payload: any = {
-            userId: uid,
-            shop_name: title.trim(),
-            category,
-            area_tag: area,
-            phone: phone || "9876543210",
-            image_url: imageUrl,
-            latitude: 10.787,
-            longitude: 79.1378,
-            google_maps_url: googleMapsUrl.trim() || "",
-            address_text: area ? `${area}, Thanjavur` : "Thanjavur",
-            hours: "Special Local Offer",
-            is_claimed: true,
-            offer_title: title.trim(),
-            offer_description: cleanDesc,
-            valid_from: validFrom || null,
-            valid_to: validTo || null,
-            show_phone: showPhone,
-            video_url: uploadedVideoUrl || "",
-          };
-          if (editId) {
-            try {
-              await updateDoc(doc(db, targetCol, editId), payload);
-            } catch {
-              await addDoc(collection(db, targetCol), { ...payload, created_at: timestamp });
-            }
-          } else {
+      if (segment === "sell" || segment === "need") {
+        localPostRecord.type = segment === "sell" ? "SELL" : "NEED";
+        localPostRecord.title = title.trim();
+        localPostRecord.description = cleanDesc;
+        localPostRecord.price = price || null;
+        localPostRecord.show_phone = showPhone;
+        localPostRecord.image_url = imageUrl;
+        if (imageUrls.length > 0) {
+          localPostRecord.image_urls = imageUrls;
+        }
+      } else if (segment === "service") {
+        localPostRecord.name = title.trim();
+        localPostRecord.skill_category = category;
+        localPostRecord.is_available_now = isAvailable;
+        localPostRecord.experience = allWorkingDays === "Yes" ? "All Working Days" : "Flexible Days";
+        localPostRecord.working_hours = sundayLeave === "Yes" ? "Sunday Off" : "Open 7 Days";
+        localPostRecord.description = cleanDesc;
+        localPostRecord.image_url = imageUrl;
+      } else if (segment === "offer") {
+        localPostRecord.shop_name = title.trim();
+        localPostRecord.offer_title = title.trim();
+        localPostRecord.offer_description = cleanDesc;
+        localPostRecord.image_url = imageUrl;
+        localPostRecord.video_url = videoPreview || youtubeUrl || "";
+        localPostRecord.address_text = area ? `${area}, Thanjavur` : "Thanjavur";
+      }
+
+      // 1. Save to local storage
+      try {
+        let storedPosts = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+        if (editId) {
+          storedPosts = storedPosts.map((p: any) => (p.id === editId ? { ...p, ...localPostRecord } : p));
+        } else {
+          storedPosts.unshift(localPostRecord);
+        }
+        localStorage.setItem("namma_thanjai_local_posts", JSON.stringify(storedPosts.slice(0, 50)));
+      } catch (e) {}
+
+      // 2. Direct real-time write to Firebase Firestore
+      const targetCol = editCol || (segment === "service" ? "services" : segment === "offer" ? "shops" : "needs_and_sales");
+
+      if (segment === "sell" || segment === "need") {
+        const payload: any = {
+          userId: uid,
+          type: segment === "sell" ? "SELL" : "NEED",
+          title: title.trim(),
+          description: cleanDesc,
+          raw_text: cleanDesc,
+          category,
+          area_tag: area,
+          price: price || null,
+          phone: phone || "9876543210",
+          show_phone: showPhone,
+          image_url: imageUrl,
+          image_urls: imageUrls.length > 0 ? imageUrls : undefined,
+          youtube_url: youtubeUrl.trim() || "",
+          google_maps_url: googleMapsUrl.trim() || "",
+          is_verified: true,
+        };
+        if (editId) {
+          try {
+            await updateDoc(doc(db, targetCol, editId), payload);
+          } catch {
             await addDoc(collection(db, targetCol), { ...payload, created_at: timestamp });
           }
+        } else {
+          await addDoc(collection(db, targetCol), {
+            ...payload,
+            created_at: timestamp,
+            expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+          });
         }
-      } catch (bgErr) {
-        console.warn("Background Firestore sync note:", bgErr);
+      } else if (segment === "service") {
+        const payload: any = {
+          userId: uid,
+          name: title.trim(),
+          skill_category: category,
+          is_available_now: isAvailable,
+          experience: allWorkingDays === "Yes" ? "All Working Days" : "Flexible Days",
+          working_hours: sundayLeave === "Yes" ? "Sunday Off" : "Open 7 Days",
+          area_tag: area,
+          phone: phone || "9876543210",
+          rating: 5.0,
+          description: cleanDesc,
+          image_url: imageUrl,
+          is_verified: true,
+        };
+        if (editId) {
+          try {
+            await updateDoc(doc(db, targetCol, editId), payload);
+          } catch {
+            await addDoc(collection(db, targetCol), { ...payload, created_at: timestamp });
+          }
+        } else {
+          await addDoc(collection(db, targetCol), {
+            ...payload,
+            negative_reports_count: 0,
+            status: "active",
+            created_at: timestamp,
+          });
+        }
+      } else if (segment === "offer") {
+        let uploadedVideoUrl = videoPreview || "";
+        if (selectedVideo) {
+          try {
+            const videoRef = ref(storage, `offer_reels/${Date.now()}_${selectedVideo.name}`);
+            const snap = await uploadBytes(videoRef, selectedVideo);
+            uploadedVideoUrl = await getDownloadURL(snap.ref);
+          } catch (vErr) {
+            console.warn("Video reel upload fallback:", vErr);
+          }
+        }
+        const payload: any = {
+          userId: uid,
+          shop_name: title.trim(),
+          category,
+          area_tag: area,
+          phone: phone || "9876543210",
+          image_url: imageUrl,
+          latitude: 10.787,
+          longitude: 79.1378,
+          google_maps_url: googleMapsUrl.trim() || "",
+          address_text: area ? `${area}, Thanjavur` : "Thanjavur",
+          hours: "Special Local Offer",
+          is_claimed: true,
+          offer_title: title.trim(),
+          offer_description: cleanDesc,
+          valid_from: validFrom || null,
+          valid_to: validTo || null,
+          show_phone: showPhone,
+          video_url: uploadedVideoUrl || "",
+        };
+        if (editId) {
+          try {
+            await updateDoc(doc(db, targetCol, editId), payload);
+          } catch {
+            await addDoc(collection(db, targetCol), { ...payload, created_at: timestamp });
+          }
+        } else {
+          await addDoc(collection(db, targetCol), { ...payload, created_at: timestamp });
+        }
       }
-    })();
+
+      setSuccess(true);
+      setLoading(false);
+      toast.success(editId ? "Post updated successfully!" : "Post published!");
+      router.push(config.redirectPath);
+    } catch (err) {
+      console.error("Post creation error:", err);
+      setLoading(false);
+      toast.error("Error saving post. Redirecting to feed...");
+      router.push(config.redirectPath);
+    }
   };
 
   // Direct 1:1 Live Preview Cards Data
@@ -761,9 +757,9 @@ export default function PostForm({ segment }: PostFormProps) {
                 </div>
 
                 {/* 2. EXPLICIT SHOP NAME INPUT */}
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-col gap-1.5">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-semibold text-slate-700">
+                    <label className="text-sm font-bold text-slate-800">
                       Shop Name *
                     </label>
                     <span className={`text-xs font-medium ${title.length >= config.maxTitleChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>
@@ -777,29 +773,29 @@ export default function PostForm({ segment }: PostFormProps) {
                     placeholder="e.g. GLEN Exclusive Gallery / Sri Kumaran Silks"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-colors"
+                    className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all"
                   />
                 </div>
 
                 {/* 3. OFFER DESCRIPTION */}
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-col gap-1.5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
-                      <label className="text-xs font-semibold text-slate-700">Offer Description *</label>
+                      <label className="text-sm font-bold text-slate-800">Offer Description *</label>
                       <button
                         type="button"
                         onClick={handleBlurDescription}
                         disabled={isAiRewriting || !description.trim()}
-                        className="text-xs font-bold text-amber-700 hover:text-amber-800 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 px-2 py-0.5 rounded-md flex items-center gap-1 transition-all cursor-pointer disabled:opacity-50"
+                        className="text-xs font-bold text-amber-700 hover:text-amber-800 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all cursor-pointer disabled:opacity-50"
                       >
                         {isAiRewriting ? (
                           <>
-                            <Loader2 className="w-3 h-3 animate-spin" />
+                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
                             <span>AI Formatting...</span>
                           </>
                         ) : (
                           <>
-                            <Sparkles className="w-3 h-3 text-amber-600 fill-amber-500" />
+                            <Sparkles className="w-3.5 h-3.5 text-amber-600 fill-amber-500" />
                             <span>✨ AI Auto-Format</span>
                           </>
                         )}
@@ -817,42 +813,42 @@ export default function PostForm({ segment }: PostFormProps) {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     onBlur={handleBlurDescription}
-                    className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 ring-1 ring-slate-400 transition-colors leading-relaxed"
+                    className="w-full px-4 py-3 text-sm font-medium border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all leading-relaxed"
                   />
                 </div>
 
                 {/* 4. OFFER VALIDITY RANGE (VALID FROM TO VALID TO DATES) */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50 border border-slate-200/80 p-3.5 rounded-xl">
-                  <div className="flex flex-col gap-1">
-                    <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
-                      <Calendar className="w-3.5 h-3.5 text-amber-600" /> Valid From Date *
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                      <Calendar className="w-4 h-4 text-amber-600" /> Valid From Date *
                     </label>
                     <input
                       type="date"
                       required
                       value={validFrom}
                       onChange={(e) => setValidFrom(e.target.value)}
-                      className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
+                      className="w-full px-4 py-2.5 text-sm font-medium border border-slate-200 rounded-xl bg-white focus:outline-none focus:border-amber-500"
                     />
                   </div>
-                  <div className="flex flex-col gap-1">
-                    <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
-                      <Calendar className="w-3.5 h-3.5 text-amber-600" /> Valid To Date *
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                      <Calendar className="w-4 h-4 text-amber-600" /> Valid To Date *
                     </label>
                     <input
                       type="date"
                       required
                       value={validTo}
                       onChange={(e) => setValidTo(e.target.value)}
-                      className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
+                      className="w-full px-4 py-2.5 text-sm font-medium border border-slate-200 rounded-xl bg-white focus:outline-none focus:border-amber-500"
                     />
                   </div>
                 </div>
 
                 {/* 5. ADDRESS */}
-                <div className="flex flex-col gap-1">
-                  <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-                    <MapPin className="w-3.5 h-3.5 text-amber-500" />
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                    <MapPin className="w-4 h-4 text-amber-500" />
                     <span>Shop Address & Locality *</span>
                   </label>
                   <input
@@ -860,47 +856,40 @@ export default function PostForm({ segment }: PostFormProps) {
                     value={area}
                     onChange={(e) => setArea(e.target.value)}
                     placeholder="Type your shop address or location..."
-                    className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
+                    className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all"
                   />
                 </div>
 
-                {/* 7. PHONE NUMBER VISIBILITY TOGGLE (YES / NO) */}
-                <div className="flex flex-col gap-3 bg-slate-50 border border-slate-200/80 rounded-xl p-3.5">
-                  <div className="flex items-center justify-between gap-3">
-                    <div className="flex flex-col gap-0.5">
-                      <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                        <Phone className="w-3.5 h-3.5 text-slate-500" />
-                        <span>Show Phone Number on Card (Yes / No)</span>
-                      </span>
-                      <span className="text-xs text-slate-500 font-medium">
-                        Default is OFF. Turn ON to display your phone number on the offer card.
-                      </span>
-                    </div>
-                    <label className="relative inline-flex items-center cursor-pointer shrink-0">
-                      <input
-                        type="checkbox"
-                        checked={showPhone}
-                        onChange={(e) => setShowPhone(e.target.checked)}
-                        className="sr-only peer"
-                      />
-                      <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500" />
-                    </label>
-                  </div>
+                {/* 7. PHONE NUMBER VISIBILITY TOGGLE (CLEAN WITHOUT SUBTEXT) */}
+                <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 flex items-center justify-between gap-3">
+                  <span className="text-sm font-bold text-slate-800 flex items-center gap-2">
+                    <Phone className="w-4 h-4 text-amber-600" />
+                    <span>Show Phone Number on Card</span>
+                  </span>
+                  <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                    <input
+                      type="checkbox"
+                      checked={showPhone}
+                      onChange={(e) => setShowPhone(e.target.checked)}
+                      className="sr-only peer"
+                    />
+                    <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500" />
+                  </label>
                 </div>
               </>
             ) : (
               /* NON-OFFER FORMS (SELL, NEED, SERVICE) */
               <>
-                {/* ROW 1: Category only (full width for non-offer) */}
-                <div className="flex flex-col gap-1">
-                  <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-                    <Tag className="w-3.5 h-3.5 text-slate-400" />
+                {/* ROW 1: Category only */}
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                    <Tag className="w-4 h-4 text-slate-400" />
                     Category *
                   </label>
                   <select
                     value={category}
                     onChange={(e) => setCategory(e.target.value)}
-                    className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 cursor-pointer"
+                    className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 cursor-pointer transition-all"
                   >
                     {config.categories.map((cat) => (
                       <option key={cat} value={cat}>
@@ -911,9 +900,9 @@ export default function PostForm({ segment }: PostFormProps) {
                 </div>
 
                 {/* ROW 2: Title (for sell/need) or Name (for service) */}
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-col gap-1.5">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-semibold text-slate-700">
+                    <label className="text-sm font-bold text-slate-800">
                       {segment === "service" ? "Your Full Name *" : "Posting title or item name *"}
                     </label>
                     <span className={`text-xs font-medium ${title.length >= config.maxTitleChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>
@@ -933,15 +922,15 @@ export default function PostForm({ segment }: PostFormProps) {
                     }
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 focus:ring-1 focus:ring-slate-400 transition-colors"
+                    className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all"
                   />
                 </div>
 
                 {/* Service: Location below name */}
                 {segment === "service" && (
-                  <div className="flex flex-col gap-1">
-                    <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-                      <MapPin className="w-3.5 h-3.5 text-amber-500" />
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                      <MapPin className="w-4 h-4 text-amber-500" />
                       Service Location / Area *
                     </label>
                     <input
@@ -949,39 +938,38 @@ export default function PostForm({ segment }: PostFormProps) {
                       value={area}
                       onChange={(e) => setArea(e.target.value)}
                       placeholder="e.g. Anna Nagar, Medical College Rd, Vallam"
-                      className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
+                      className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all"
                     />
                   </div>
                 )}
 
-                {/* PRICE + LOCATION in 1 row (FOR SELL) */}
+                {/* PRICE + LOCATION in 1 row (FOR SELL) — Text Mode for Custom Formats e.g. 5000rs / 5000/month */}
                 {segment === "sell" && (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div className="flex flex-col gap-1">
+                    <div className="flex flex-col gap-1.5">
                       <div className="flex items-center justify-between">
-                        <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
-                          <IndianRupee className="w-3.5 h-3.5 text-emerald-600" />
-                          Price (₹)
+                        <label className="text-sm font-bold text-slate-800 flex items-center gap-1">
+                          <IndianRupee className="w-4 h-4 text-emerald-600" />
+                          Price / Rate
                         </label>
                         {formattedPriceBadge && (
-                          <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
+                          <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
                             {formattedPriceBadge}
                           </span>
                         )}
                       </div>
                       <input
                         type="text"
-                        inputMode="decimal"
-                        placeholder="e.g. 25,00,000 or 1200/sqft"
+                        placeholder="e.g. 5000, 5000rs, or 5000/month"
                         value={price}
                         onChange={(e) => setPrice(e.target.value)}
-                        className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
+                        className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all"
                       />
                     </div>
 
-                    <div className="flex flex-col gap-1">
-                      <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-                        <MapPin className="w-3.5 h-3.5 text-amber-500" />
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                        <MapPin className="w-4 h-4 text-amber-500" />
                         Address / Location *
                       </label>
                       <input
@@ -989,7 +977,7 @@ export default function PostForm({ segment }: PostFormProps) {
                         value={area}
                         onChange={(e) => setArea(e.target.value)}
                         placeholder="Type your address or location..."
-                        className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
+                        className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all"
                       />
                     </div>
                   </div>
@@ -998,41 +986,41 @@ export default function PostForm({ segment }: PostFormProps) {
                 {/* BUDGET + LOCATION in 1 row (FOR NEED) */}
                 {segment === "need" && (
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                    <div className="flex flex-col gap-1">
-                      <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
-                        <IndianRupee className="w-3.5 h-3.5 text-emerald-600" />
-                        Budget From (₹)
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-sm font-bold text-slate-800 flex items-center gap-1">
+                        <IndianRupee className="w-4 h-4 text-emerald-600" />
+                        Budget From
                       </label>
                       <input
-                        type="number"
-                        placeholder="e.g. 5000 (Optional)"
+                        type="text"
+                        placeholder="e.g. 5000, 5000rs (Optional)"
                         value={price}
                         onChange={(e) => setPrice(e.target.value)}
-                        className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 font-bold"
+                        className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all"
                       />
                     </div>
 
-                    <div className="flex flex-col gap-1">
-                      <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-                        <MapPin className="w-3.5 h-3.5 text-amber-500" />
-                        Preferred Locations (Up to 3) *
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                        <MapPin className="w-4 h-4 text-amber-500" />
+                        Preferred Locations *
                       </label>
                       <input
                         type="text"
                         value={area}
                         onChange={(e) => setArea(e.target.value)}
-                        placeholder="e.g. Medical College Rd, Old Bus Stand, Vallam"
-                        className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
+                        placeholder="e.g. Medical College Rd, Vallam"
+                        className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all"
                       />
                     </div>
                   </div>
                 )}
 
-                {/* SERVICE SPECIFIC FIELDS: Phone (Editable) */}
+                {/* SERVICE SPECIFIC FIELDS: Phone */}
                 {segment === "service" && (
-                  <div className="flex flex-col gap-1">
-                    <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-                      <Phone className="w-3.5 h-3.5 text-slate-400" />
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                      <Phone className="w-4 h-4 text-slate-400" />
                       Contact phone number (Editable) *
                     </label>
                     <input
@@ -1041,16 +1029,16 @@ export default function PostForm({ segment }: PostFormProps) {
                       placeholder="e.g. 9994837342"
                       value={phone}
                       onChange={(e) => { userEditedPhone.current = true; setPhone(e.target.value); }}
-                      className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
+                      className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all"
                     />
                   </div>
                 )}
 
-                {/* SELL/NEED: Phone field (below location, above description) */}
+                {/* SELL/NEED: Phone field */}
                 {(segment === "sell" || segment === "need") && (
-                  <div className="flex flex-col gap-1">
-                    <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-                      <Phone className="w-3.5 h-3.5 text-slate-400" />
+                  <div className="flex flex-col gap-1.5">
+                    <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                      <Phone className="w-4 h-4 text-slate-400" />
                       Contact phone number (Editable) *
                     </label>
                     <input
@@ -1059,15 +1047,15 @@ export default function PostForm({ segment }: PostFormProps) {
                       placeholder="e.g. 9994837342"
                       value={phone}
                       onChange={(e) => { userEditedPhone.current = true; setPhone(e.target.value); }}
-                      className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
+                      className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all"
                     />
                   </div>
                 )}
 
-                {/* Description with Character Limit Counter */}
-                <div className="flex flex-col gap-1">
+                {/* Description */}
+                <div className="flex flex-col gap-1.5">
                   <div className="flex items-center justify-between">
-                    <label className="text-xs font-semibold text-slate-700">
+                    <label className="text-sm font-bold text-slate-800">
                       {segment === "service" ? "Work Experience & Skill Details *" : "Description or details *"}
                     </label>
                     <span className={`text-xs font-medium ${description.length >= config.maxDescChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>
@@ -1086,7 +1074,7 @@ export default function PostForm({ segment }: PostFormProps) {
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     onBlur={handleBlurDescription}
-                    className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 resize-none leading-relaxed"
+                    className="w-full px-4 py-3 text-sm font-medium border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all resize-none leading-relaxed"
                   />
                 </div>
               </>
@@ -1094,32 +1082,27 @@ export default function PostForm({ segment }: PostFormProps) {
 
             {/* Sell Specific Links */}
             {segment === "sell" && (
-              <div className="flex flex-col gap-1">
-                <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
-                  <Globe className="w-3.5 h-3.5 text-blue-500" /> Google Maps URL
+              <div className="flex flex-col gap-1.5">
+                <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                  <Globe className="w-4 h-4 text-blue-500" /> Google Maps URL
                 </label>
                 <input
                   type="url"
                   placeholder="https://maps.google.com/..."
                   value={googleMapsUrl}
                   onChange={(e) => setGoogleMapsUrl(e.target.value)}
-                  className="w-full px-3.5 py-2 text-xs font-medium border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
+                  className="w-full px-4 py-3 text-sm font-medium border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all"
                 />
               </div>
             )}
 
-            {/* Sell Specific Phone Toggle */}
+            {/* Sell Specific Phone Toggle (CLEAN WITHOUT SUBTEXT) */}
             {segment === "sell" && (
-              <div className="flex items-center justify-between gap-3 bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 mt-1">
-                <div className="flex flex-col gap-0.5">
-                  <span className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
-                    <Phone className="w-3.5 h-3.5 text-slate-500" />
-                    <span>Display your phone number publicly</span>
-                  </span>
-                  <span className="text-xs text-slate-500 font-medium">
-                    ON — Buyers can call or WhatsApp you directly from the listing. OFF — Phone is hidden.
-                  </span>
-                </div>
+              <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 flex items-center justify-between gap-3 mt-1">
+                <span className="text-sm font-bold text-slate-800 flex items-center gap-2">
+                  <Phone className="w-4 h-4 text-amber-600" />
+                  <span>Display your phone number publicly</span>
+                </span>
                 <label className="relative inline-flex items-center cursor-pointer shrink-0">
                   <input
                     type="checkbox"
@@ -1132,11 +1115,11 @@ export default function PostForm({ segment }: PostFormProps) {
               </div>
             )}
 
-            {/* Image Upload — Sell: multi (up to 3), Offer: handled separately above */}
+            {/* Image Upload */}
             {segment === "sell" && (
               <div className="flex flex-col gap-2">
-                <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-                  <Camera className="w-3.5 h-3.5 text-slate-400" />
+                <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                  <Camera className="w-4 h-4 text-slate-400" />
                   <span>Photos — up to 3 images (tap to add)</span>
                 </label>
 
@@ -1164,16 +1147,16 @@ export default function PostForm({ segment }: PostFormProps) {
                   </div>
                 )}
 
-                {/* Add more button — visible until 3 images */}
+                {/* Add more button */}
                 {imagePreviews.length < 3 && (
-                  <label className="w-full bg-slate-50 border-2 border-dashed border-slate-300 hover:border-slate-400 p-4 rounded-lg flex flex-col items-center justify-center text-center gap-2 transition-all cursor-pointer">
+                  <label className="w-full bg-slate-50 border-2 border-dashed border-slate-300 hover:border-slate-400 p-4 rounded-xl flex flex-col items-center justify-center text-center gap-2 transition-all cursor-pointer">
                     <div className="w-9 h-9 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold shadow-2xs">
                       <Camera className="w-4 h-4" />
                     </div>
-                    <span className="text-xs font-extrabold text-slate-800">
+                    <span className="text-sm font-extrabold text-slate-800">
                       {imagePreviews.length === 0 ? "Click to Upload Photos" : `Add More (${imagePreviews.length}/3)`}
                     </span>
-                    <span className="text-[11px] text-slate-500 font-medium">JPEG, PNG, WebP up to 5MB each</span>
+                    <span className="text-xs text-slate-500 font-medium">JPEG, PNG, WebP up to 5MB each</span>
                     <input
                       type="file"
                       accept="image/*"
@@ -1187,13 +1170,19 @@ export default function PostForm({ segment }: PostFormProps) {
             )}
           </form>
 
-          {/* RIGHT COLUMN: Instant 1:1 Live Preview Card */}
+          {/* RIGHT COLUMN: Instant 1:1 Live Preview Card (PROMINENT HIGHLIGHTED HEADER) */}
           <div className="lg:col-span-5 sticky top-20 flex flex-col gap-3">
-            <div className="flex items-center justify-between px-1">
-              <span className="text-xs font-bold text-slate-700">
-                Live Card Preview
+            <div className="flex items-center justify-between px-3 py-2 bg-gradient-to-r from-amber-500/15 via-amber-400/10 to-amber-500/5 border-l-4 border-amber-500 rounded-r-xl shadow-2xs">
+              <div className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
+                <h3 className="font-heading font-black text-sm text-slate-900 tracking-tight flex items-center gap-1.5">
+                  <Sparkles className="w-4 h-4 text-amber-600 fill-amber-400" />
+                  LIVE CARD PREVIEW
+                </h3>
+              </div>
+              <span className="text-[10px] font-black text-amber-800 bg-amber-200/80 border border-amber-400/60 px-2 py-0.5 rounded-md uppercase tracking-widest shadow-2xs">
+                Real-Time
               </span>
-              <span className="text-xs text-slate-400">Instant preview</span>
             </div>
 
             {/* AI Refinement Status Badge */}

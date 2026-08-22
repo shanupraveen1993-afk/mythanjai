@@ -52,21 +52,38 @@ export default function SellClientPage() {
     category: "All",
   });
 
-  useEffect(() => {
+  const loadLocalPosts = React.useCallback(() => {
     try {
       let stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-      let sellPosts = stored.filter((p: any) => p.type?.toUpperCase() === "SELL");
+      let sellPosts = stored.filter((p: any) => !p.type || p.type.toUpperCase() !== "NEED");
       setLocalPosts(sellPosts);
     } catch (e) {}
   }, []);
 
+  useEffect(() => {
+    loadLocalPosts();
+    window.addEventListener("focus", loadLocalPosts);
+    return () => window.removeEventListener("focus", loadLocalPosts);
+  }, [loadLocalPosts]);
+
   const filteredPosts = React.useMemo(() => {
-    let list = [...localPosts, ...(firestorePosts || [])];
+    let rawList = [...localPosts, ...(firestorePosts || [])];
+
+    // Deduplicate by ID
+    const seenIds = new Set<string>();
+    let list: NeedOrSalePost[] = [];
+    for (const p of rawList) {
+      const pid = p.id || `post_${Math.random()}`;
+      if (!seenIds.has(pid)) {
+        seenIds.add(pid);
+        list.push(p);
+      }
+    }
 
     list = list.filter((p) => {
       if ((p as any).status === "moderation_review") return false;
       if (isListingQuarantined(p.id)) return false;
-      return p.type?.toUpperCase() === "SELL";
+      return !p.type || p.type?.toUpperCase() !== "NEED";
     });
 
     if (selectedCategory !== "All") {
