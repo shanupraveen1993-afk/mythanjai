@@ -125,8 +125,11 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
 
   const handleToggleSave = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!user) {
-      toast.error("Sign in to save service providers.");
+    if (!profile?.isVerified && !user) {
+      toast.info("Please verify your WhatsApp mobile number to save service providers to your profile.");
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+      }
       return;
     }
     const nextState = !saved;

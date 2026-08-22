@@ -205,7 +205,40 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
 
   const handleToggleSave = (e: React.MouseEvent) => {
     e.stopPropagation();
-    setSaved(!saved);
+    if (!profile?.isVerified && !user) {
+      toast.info("Please verify your WhatsApp mobile number to save store offers to your profile.");
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+      }
+      return;
+    }
+    const nextState = !saved;
+    setSaved(nextState);
+    try {
+      const savedList: any[] = JSON.parse(localStorage.getItem("namma_thanjai_saved_posts") || "[]");
+      if (nextState) {
+        if (!savedList.some((s: any) => s.id === post.id)) {
+          savedList.unshift({
+            id: post.id,
+            title: post.shop_name,
+            offer_title: post.offer_title,
+            phone: post.phone,
+            area_tag: post.area_tag,
+            category: post.category,
+            type: "OFFER",
+            colName: "shops",
+            image_url: post.image_url,
+            saved_at: new Date().toISOString(),
+          });
+        }
+        localStorage.setItem("namma_thanjai_saved_posts", JSON.stringify(savedList));
+        toast.success("Store offer saved to your profile!");
+      } else {
+        const updated = savedList.filter((s: any) => s.id !== post.id);
+        localStorage.setItem("namma_thanjai_saved_posts", JSON.stringify(updated));
+        toast.info("Store offer removed from saved.");
+      }
+    } catch (e) {}
   };
 
   // ── REEL MODE: Video was uploaded ─────────────────────────────────────────

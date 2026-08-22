@@ -186,8 +186,11 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
   // Toggle Save — persists to localStorage (classifieds collection doesn't exist in this app)
   const handleSaveToggle = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!user && !profile) {
-      toast.error("Sign in to save listings.");
+    if (!profile?.isVerified && !user) {
+      toast.info("Please verify your WhatsApp mobile number to save listings to your profile.");
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+      }
       return;
     }
     const nextState = !isSaved;
