@@ -4,18 +4,15 @@ import React, { useState, useEffect, useMemo } from "react";
 import { db } from "@/lib/firebase";
 import {
   collection,
-  getDocs,
+  onSnapshot,
   doc,
-  setDoc,
   deleteDoc,
   updateDoc,
 } from "firebase/firestore";
-import { SELL_SAMPLES, NEED_SAMPLES, SERVICE_SAMPLES, SHOP_SAMPLES } from "@/lib/sampleData";
 import {
   Shield,
   Trash2,
   CheckCircle,
-  Wrench,
   ArrowLeft,
   Loader2,
   Search,
@@ -23,6 +20,12 @@ import {
   BarChart2,
   AlertTriangle,
   Clock,
+  Sparkles,
+  ExternalLink,
+  Phone,
+  Tag,
+  MapPin,
+  Check,
 } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/hooks/use-auth";
@@ -38,9 +41,10 @@ type ModerationItem = {
   area_tag: string;
   is_verified?: boolean;
   is_reported?: boolean;
-  price?: number | null;
+  price?: number | string | null;
   category: string;
   created_at: any;
+  image_url?: string;
 };
 
 export default function AdminClientPage() {
@@ -62,122 +66,81 @@ export default function AdminClientPage() {
     }
   }, [profile, user]);
 
-  const fetchModerationQueue = async () => {
+  // Live Real-Time Snapshot Stream from All Live Firestore Collections
+  useEffect(() => {
+    if (!isAdmin) return;
+
     setLoading(true);
     const collectionsToQuery = ["needs_and_sales", "services", "shops", "offers"];
-    const mergedListings: ModerationItem[] = [];
+    const collectionDataMap: Record<string, ModerationItem[]> = {};
 
-    try {
-      for (const colName of collectionsToQuery) {
-        const querySnapshot = await getDocs(collection(db, colName));
-        querySnapshot.forEach((docSnap) => {
-          const data = docSnap.data();
-          mergedListings.push({
-            id: docSnap.id,
-            colName,
-            title: data.title || data.name || data.shop_name || data.offer_title || "Untitled Listing",
-            phone: data.phone || "",
-            area_tag: data.area_tag || "Tanjore Town",
-            is_verified: data.is_verified || false,
-            is_reported: Boolean(data.is_reported || data.flagged),
-            price: data.price !== undefined ? data.price : null,
-            category: data.category || "General",
-            created_at: data.created_at,
+    const unsubscribes = collectionsToQuery.map((colName) => {
+      const colRef = collection(db, colName);
+      return onSnapshot(
+        colRef,
+        (snapshot) => {
+          const colItems: ModerationItem[] = [];
+          snapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+            colItems.push({
+              id: docSnap.id,
+              colName,
+              title: data.title || data.name || data.shop_name || data.offer_title || "Untitled Listing",
+              phone: data.phone || "",
+              area_tag: data.area_tag || "Thanjavur",
+              is_verified: data.is_verified !== false,
+              is_reported: Boolean(data.is_reported || data.flagged || data.negative_reports_count > 0),
+              price: data.price !== undefined ? data.price : null,
+              category: data.category || data.skill_category || "General",
+              created_at: data.created_at,
+              image_url: data.image_url || data.image_urls?.[0],
+            });
           });
-        });
-      }
+          collectionDataMap[colName] = colItems;
 
-      // Also merge local posts from localStorage for local verification
-      if (typeof window !== "undefined") {
-        try {
-          const localPosts = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-          localPosts.forEach((lp: any) => {
-            if (!mergedListings.some((m) => m.id === lp.id)) {
-              mergedListings.push({
-                id: lp.id,
-                colName: lp.type === "SELL" || lp.type === "NEED" ? "needs_and_sales" : lp.type === "SERVICE" ? "services" : "shops",
-                title: lp.title || lp.name || lp.shop_name || lp.offer_title || "Local Post",
-                phone: lp.phone || "",
-                area_tag: lp.area_tag || "Tanjore Town",
-                is_verified: lp.is_verified !== false,
-                is_reported: Boolean(lp.is_reported),
-                price: lp.price || null,
-                category: lp.category || "General",
-                created_at: lp.created_at,
+          // Merge all collections & local posts
+          let merged: ModerationItem[] = Object.values(collectionDataMap).flat();
+
+          if (typeof window !== "undefined") {
+            try {
+              const localPosts = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+              localPosts.forEach((lp: any) => {
+                if (!merged.some((m) => m.id === lp.id)) {
+                  merged.push({
+                    id: lp.id,
+                    colName: lp.skill_category ? "services" : lp.type === "SELL" || lp.type === "NEED" ? "needs_and_sales" : "shops",
+                    title: lp.title || lp.name || lp.shop_name || lp.offer_title || "Local Post",
+                    phone: lp.phone || "",
+                    area_tag: lp.area_tag || "Thanjavur",
+                    is_verified: lp.is_verified !== false,
+                    is_reported: Boolean(lp.is_reported),
+                    price: lp.price || null,
+                    category: lp.category || lp.skill_category || "General",
+                    created_at: lp.created_at,
+                    image_url: lp.image_url,
+                  });
+                }
               });
-            }
+            } catch (e) {}
+          }
+
+          merged.sort((a, b) => {
+            const timeA = a.created_at?.seconds ? a.created_at.seconds * 1000 : new Date(a.created_at || 0).getTime();
+            const timeB = b.created_at?.seconds ? b.created_at.seconds * 1000 : new Date(b.created_at || 0).getTime();
+            return timeB - timeA;
           });
-        } catch (e) {}
-      }
 
-      mergedListings.sort((a, b) => {
-        const timeA = a.created_at?.seconds || 0;
-        const timeB = b.created_at?.seconds || 0;
-        return timeB - timeA;
-      });
-      setItems(mergedListings);
-    } catch (error) {
-      console.error("Error loading queue:", error);
-    } finally {
-      setLoading(false);
-    }
-  };
+          setItems(merged);
+          setLoading(false);
+        },
+        (err) => {
+          console.warn(`Admin stream warning for ${colName}:`, err);
+          setLoading(false);
+        }
+      );
+    });
 
-  const handleSeedFirestore = async () => {
-    if (!confirm("Seed all 20 sample listings to live Firestore for admin phone 9994837342?")) return;
-    setLoading(true);
-    try {
-      const sanitizeData = (obj: any) => JSON.parse(JSON.stringify(obj));
-
-      // 1. Seed Sell Samples
-      for (const sample of SELL_SAMPLES) {
-        await setDoc(doc(db, "needs_and_sales", sample.id), sanitizeData({
-          ...sample,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        }), { merge: true });
-      }
-
-      // 2. Seed Need Samples
-      for (const sample of NEED_SAMPLES) {
-        await setDoc(doc(db, "needs_and_sales", sample.id), sanitizeData({
-          ...sample,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        }), { merge: true });
-      }
-
-      // 3. Seed Service Samples
-      for (const sample of SERVICE_SAMPLES) {
-        await setDoc(doc(db, "services", sample.id), sanitizeData({
-          ...sample,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        }), { merge: true });
-      }
-
-      // 4. Seed Shop Samples
-      for (const sample of SHOP_SAMPLES) {
-        await setDoc(doc(db, "shops", sample.id), sanitizeData({
-          ...sample,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        }), { merge: true });
-      }
-
-      toast.success("Successfully seeded 20 sample listings to Firestore for admin 9994837342!");
-      await fetchModerationQueue();
-    } catch (err: any) {
-      toast.error(`Seeding failed: ${err.message}`);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (isAdmin) {
-      fetchModerationQueue();
-    }
+    return () => unsubscribes.forEach((unsub) => unsub());
   }, [isAdmin]);
 
   const handleVerifyPasscode = async (e: React.FormEvent) => {
@@ -189,12 +152,12 @@ export default function AdminClientPage() {
         confetti({ particleCount: 50, spread: 60 });
       } catch (err) {}
     } else {
-      toast.error("Invalid Admin Security Passcode!");
+      toast.error("Invalid Admin Passcode!");
     }
   };
 
   const handleDelete = async (id: string, colName: string) => {
-    if (!confirm("Delete this listing permanently from database?")) return;
+    if (!confirm("Delete this live listing permanently from database?")) return;
     try {
       await deleteDoc(doc(db, colName, id));
       setItems((prev) => prev.filter((item) => item.id !== id));
@@ -220,9 +183,8 @@ export default function AdminClientPage() {
       setItems((prev) =>
         prev.map((i) => (i.id === item.id ? { ...i, is_verified: nextVerify } : i))
       );
-      toast.success(nextVerify ? "Listing status set to APPROVED!" : "Listing set to pending verification.");
+      toast.success(nextVerify ? "Listing status set to APPROVED ✓" : "Listing set to Pending Review.");
     } catch (error) {
-      // Local fallback
       setItems((prev) =>
         prev.map((i) => (i.id === item.id ? { ...i, is_verified: !item.is_verified } : i))
       );
@@ -256,47 +218,46 @@ export default function AdminClientPage() {
   const getColBadge = (colName: string) => {
     switch (colName) {
       case "needs_and_sales":
-        return <span className="bg-blue-50 text-blue-700 border border-blue-200/80 px-2 py-0.5 rounded-md text-xs font-black uppercase">Marketplace</span>;
+        return <span className="bg-blue-500/20 text-blue-300 border border-blue-400/40 px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider">Sell / Need</span>;
       case "services":
-        return <span className="bg-purple-50 text-purple-700 border border-purple-200/80 px-2 py-0.5 rounded-md text-xs font-black uppercase">Local Service</span>;
+        return <span className="bg-purple-500/20 text-purple-300 border border-purple-400/40 px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider">Service</span>;
       case "shops":
-        return <span className="bg-amber-50 text-amber-800 border border-amber-200/80 px-2 py-0.5 rounded-md text-xs font-black uppercase">Shop Directory</span>;
-      case "offers":
-        return <span className="bg-pink-50 text-pink-700 border border-pink-200/80 px-2 py-0.5 rounded-md text-xs font-black uppercase">Live Offer</span>;
+        return <span className="bg-amber-500/20 text-amber-300 border border-amber-400/40 px-2 py-0.5 rounded-md text-[10px] font-black uppercase tracking-wider">Store Offer</span>;
       default:
         return null;
     }
   };
 
+  // Security Login Screen
   if (!isAdmin) {
     return (
-      <div className="flex-1 flex flex-col items-center justify-center p-6 bg-slate-900 text-white min-h-screen font-sans">
-        <div className="w-full max-w-sm flex flex-col gap-5 bg-slate-800/90 border border-slate-700/80 p-6 rounded-xl shadow-2xl backdrop-blur-md">
-          <div className="flex flex-col items-center text-center gap-2">
-            <div className="w-14 h-14 rounded-2xl bg-yellow-500 text-slate-950 flex items-center justify-center shadow-lg shadow-yellow-500/20">
-              <Shield className="w-7 h-7 stroke-[2.5]" />
+      <div className="flex-1 flex flex-col items-center justify-center p-6 bg-[#0f172a] text-white min-h-screen font-sans">
+        <div className="w-full max-w-sm flex flex-col gap-6 bg-slate-900/90 border border-slate-800 p-8 rounded-3xl shadow-2xl backdrop-blur-2xl">
+          <div className="flex flex-col items-center text-center gap-3">
+            <div className="w-16 h-16 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center shadow-lg shadow-amber-400/20">
+              <Shield className="w-8 h-8 stroke-[2.5]" />
             </div>
-            <h2 className="font-heading font-black text-xl text-white">Admin Command Center</h2>
-            <p className="text-xs text-slate-400 font-medium">Protected console for Namma Thanjai moderation</p>
+            <h2 className="font-heading font-black text-2xl text-white tracking-tight">Admin Console</h2>
+            <p className="text-xs text-slate-400 font-medium">Master moderation portal for Namma Thanjai</p>
           </div>
 
-          <form onSubmit={handleVerifyPasscode} className="flex flex-col gap-3">
+          <form onSubmit={handleVerifyPasscode} className="flex flex-col gap-4">
             <div>
-              <label className="block text-xs font-black text-slate-400 uppercase tracking-wider mb-1.5">
-                Admin Passcode
+              <label className="block text-xs font-black text-slate-400 uppercase tracking-wider mb-2">
+                Security Passcode
               </label>
               <input
                 type="password"
                 required
                 value={passcode}
                 onChange={(e) => setPasscode(e.target.value)}
-                placeholder="Enter security passcode"
-                className="w-full bg-slate-900 border border-slate-700 text-white rounded-xl px-3.5 py-2.5 text-xs focus:ring-2 focus:ring-yellow-500 focus:outline-none font-bold"
+                placeholder="Enter admin passcode"
+                className="w-full bg-slate-950 border border-slate-800 text-white rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-amber-400 focus:outline-none font-bold"
               />
             </div>
             <button
               type="submit"
-              className="w-full py-2.5 btn-primary text-xs uppercase tracking-wider cursor-pointer"
+              className="w-full py-3.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-heading font-black text-xs uppercase tracking-wider cursor-pointer rounded-2xl shadow-md transition-all"
             >
               Verify Passcode & Launch Console →
             </button>
@@ -304,7 +265,7 @@ export default function AdminClientPage() {
 
           <Link
             href="/"
-            className="flex items-center justify-center gap-1.5 text-xs text-slate-400 hover:text-white transition-colors cursor-pointer mt-1 font-bold"
+            className="flex items-center justify-center gap-2 text-xs text-slate-400 hover:text-white transition-colors cursor-pointer font-bold"
           >
             <ArrowLeft className="w-4 h-4" />
             <span>Return to Namma Thanjai App</span>
@@ -315,108 +276,90 @@ export default function AdminClientPage() {
   }
 
   return (
-    <div className="flex-1 bg-slate-100 text-slate-900 flex flex-col min-h-screen font-sans pb-12">
-      {/* Top Header Glass Bar */}
-      <header className="sticky top-0 z-40 bg-slate-900 border-b border-slate-800 text-white px-4 py-3.5 flex items-center justify-between shadow-lg">
+    <div className="flex-1 bg-[#0b1329] text-slate-100 flex flex-col min-h-screen font-sans pb-16">
+      {/* Sleek Master Admin Header */}
+      <header className="sticky top-0 z-40 bg-[#0f172a]/95 backdrop-blur-2xl border-b border-slate-800/80 px-4 sm:px-6 py-4 flex items-center justify-between shadow-xl">
         <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-xl bg-yellow-500 text-slate-950 flex items-center justify-center font-bold shadow-xs">
-            <Shield className="w-4 h-4 stroke-[2.5]" />
+          <div className="w-10 h-10 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center font-bold shadow-md shadow-amber-400/20">
+            <Shield className="w-5 h-5 stroke-[2.5]" />
           </div>
           <div>
-            <h2 className="font-heading font-extrabold text-sm text-white flex items-center gap-2">
-              <span>Admin Moderation Console</span>
-              <span className="bg-yellow-500 text-slate-950 text-xs font-black px-1.5 py-0.5 rounded uppercase">Master Admin</span>
-            </h2>
-            <p className="text-xs text-slate-400">Moderate community listings, verify providers & inspect reported posts</p>
+            <h1 className="font-heading font-black text-base sm:text-lg text-white flex items-center gap-2 tracking-tight">
+              <span>Admin Console</span>
+              <span className="bg-amber-400/20 border border-amber-400/40 text-amber-300 text-[10px] font-black px-2 py-0.5 rounded-full uppercase tracking-wider">
+                Live Online
+              </span>
+            </h1>
+            <p className="text-xs text-slate-400 font-medium">Real-time community listings moderation & verification</p>
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
-          <button
-            type="button"
-            onClick={handleSeedFirestore}
-            className="flex items-center gap-1.5 text-xs text-amber-950 bg-amber-400 hover:bg-amber-300 border border-amber-500 px-3 py-1.5 rounded-xl font-black transition-all cursor-pointer shadow-xs"
-            title="Seed 20 Sample Listings to Live Firestore for Admin 9994837342"
-          >
-            <span>🌱 Seed Live Posts (9994837342)</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={fetchModerationQueue}
-            className="flex items-center gap-1 text-xs text-slate-300 hover:text-white bg-slate-800 border border-slate-700 px-3 py-1.5 rounded-xl font-bold transition-all cursor-pointer"
-            title="Refresh Moderation Data"
-          >
-            <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
-            <span className="hidden sm:inline">Refresh Queue</span>
-          </button>
-
+        <div className="flex items-center gap-3">
           <Link
             href="/"
-            className="flex items-center gap-1 text-xs bg-yellow-500 hover:bg-yellow-400 text-slate-950 font-black px-3.5 py-1.5 rounded-xl shadow-xs transition-all cursor-pointer active:scale-95"
+            className="flex items-center gap-1.5 text-xs bg-amber-400 hover:bg-amber-300 text-slate-950 font-heading font-black px-4 py-2 rounded-xl shadow-md transition-all cursor-pointer"
           >
-            <ArrowLeft className="w-3.5 h-3.5" />
+            <ArrowLeft className="w-4 h-4" />
             <span>Exit Console</span>
           </Link>
         </div>
       </header>
 
-      <div className="flex-1 px-4 py-6 max-w-7xl mx-auto w-full flex flex-col gap-6">
+      <div className="flex-1 px-4 sm:px-6 py-6 max-w-7xl mx-auto w-full flex flex-col gap-6">
         
-        {/* Metric Insights Summary Cards Bar */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-          <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 shadow-2xs flex flex-col gap-1">
-            <span className="text-xs font-black text-slate-400 uppercase tracking-wider">Total Queue Listings</span>
+        {/* Live Metric Cards Bar */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
+          <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 shadow-md flex flex-col gap-1.5 backdrop-blur-md">
+            <span className="text-[11px] font-black text-slate-400 uppercase tracking-wider">Total Live Listings</span>
             <div className="flex items-baseline justify-between mt-1">
-              <span className="text-2xl font-heading font-black text-slate-900">{statsSummary.total}</span>
-              <BarChart2 className="w-4 h-4 text-slate-400" />
+              <span className="text-3xl font-heading font-black text-white">{statsSummary.total}</span>
+              <BarChart2 className="w-5 h-5 text-slate-400" />
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 shadow-2xs flex flex-col gap-1">
-            <span className="text-xs font-black text-emerald-600 uppercase tracking-wider">Approved Posts</span>
+          <div className="bg-slate-900/80 border border-emerald-500/30 rounded-2xl p-4 shadow-md flex flex-col gap-1.5 backdrop-blur-md">
+            <span className="text-[11px] font-black text-emerald-400 uppercase tracking-wider">Approved Posts</span>
             <div className="flex items-baseline justify-between mt-1">
-              <span className="text-2xl font-heading font-black text-emerald-600">{statsSummary.verified}</span>
-              <CheckCircle className="w-4 h-4 text-emerald-500" />
+              <span className="text-3xl font-heading font-black text-emerald-400">{statsSummary.verified}</span>
+              <CheckCircle className="w-5 h-5 text-emerald-400" />
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 shadow-2xs flex flex-col gap-1">
-            <span className="text-xs font-black text-amber-700 uppercase tracking-wider">Pending Review</span>
+          <div className="bg-slate-900/80 border border-amber-500/30 rounded-2xl p-4 shadow-md flex flex-col gap-1.5 backdrop-blur-md">
+            <span className="text-[11px] font-black text-amber-400 uppercase tracking-wider">Pending Review</span>
             <div className="flex items-baseline justify-between mt-1">
-              <span className="text-2xl font-heading font-black text-amber-700">{statsSummary.pending}</span>
-              <Clock className="w-4 h-4 text-amber-500" />
+              <span className="text-3xl font-heading font-black text-amber-400">{statsSummary.pending}</span>
+              <Clock className="w-5 h-5 text-amber-400" />
             </div>
           </div>
 
-          <div className="bg-white border border-slate-200/90 rounded-2xl p-3.5 shadow-2xs flex flex-col gap-1">
-            <span className="text-xs font-black text-rose-600 uppercase tracking-wider">Reported Issues</span>
+          <div className="bg-slate-900/80 border border-rose-500/30 rounded-2xl p-4 shadow-md flex flex-col gap-1.5 backdrop-blur-md">
+            <span className="text-[11px] font-black text-rose-400 uppercase tracking-wider">Reported Issues</span>
             <div className="flex items-baseline justify-between mt-1">
-              <span className="text-2xl font-heading font-black text-rose-600">{statsSummary.reported}</span>
-              <AlertTriangle className="w-4 h-4 text-rose-500" />
+              <span className="text-3xl font-heading font-black text-rose-400">{statsSummary.reported}</span>
+              <AlertTriangle className="w-5 h-5 text-rose-400" />
             </div>
           </div>
         </div>
 
-        {/* Command Toolbar: Search Input + Category Tabs */}
-        <div className="bg-white border border-slate-200/90 rounded-2xl p-3 shadow-2xs flex flex-col sm:flex-row items-center justify-between gap-3">
-          <div className="flex gap-1.5 overflow-x-auto no-scrollbar w-full sm:w-auto">
+        {/* Toolbar: Category Tabs & Search Bar */}
+        <div className="bg-slate-900/90 border border-slate-800 rounded-2xl p-3.5 shadow-md flex flex-col sm:flex-row items-center justify-between gap-3 backdrop-blur-md">
+          <div className="flex gap-2 overflow-x-auto no-scrollbar w-full sm:w-auto">
             {[
               { id: "all", label: "All Queue" },
-              { id: "needs_and_sales", label: "Marketplace" },
-              { id: "services", label: "Local Services" },
-              { id: "shops", label: "Shop Directory" },
-              { id: "offers", label: "Live Offers" },
-              { id: "reported", label: "🚩 Reported Issues" },
+              { id: "needs_and_sales", label: "Sell / Need" },
+              { id: "services", label: "Services" },
+              { id: "shops", label: "Shops & Offers" },
+              { id: "reported", label: "🚩 Flagged Issues" },
             ].map((tab) => (
               <button
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-extrabold shrink-0 transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`px-4 py-2 rounded-xl text-xs font-heading font-black shrink-0 transition-all cursor-pointer ${
                   activeTab === tab.id
-                    ? "bg-slate-900 text-white shadow-xs"
-                    : "text-slate-600 hover:bg-slate-100"
+                    ? "bg-amber-400 text-slate-950 shadow-md"
+                    : "text-slate-400 hover:text-white bg-slate-950/60 border border-slate-800"
                 }`}
               >
                 <span>{tab.label}</span>
@@ -424,45 +367,45 @@ export default function AdminClientPage() {
             ))}
           </div>
 
-          {/* Search Filter Box */}
-          <div className="relative w-full sm:w-64 shrink-0">
-            <Search className="w-3.5 h-3.5 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+          {/* Search Box */}
+          <div className="relative w-full sm:w-72 shrink-0">
+            <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search title or phone..."
+              placeholder="Search title, phone, or locality..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-slate-50 border border-slate-200 rounded-xl pl-9 pr-3 py-1.5 text-xs font-semibold focus:outline-none focus:border-yellow-500 text-slate-800"
+              className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl pl-10 pr-3.5 py-2 text-xs font-semibold focus:outline-none focus:border-amber-400"
             />
           </div>
         </div>
 
-        {/* MAIN MODERATION QUEUE GRID */}
+        {/* LIVE REAL-TIME MODERATION QUEUE GRID */}
         {loading ? (
           <div className="flex flex-col items-center justify-center py-24 gap-3">
-            <Loader2 className="w-7 h-7 animate-spin text-yellow-600" />
-            <span className="text-xs font-extrabold text-slate-500">Loading Community Moderation Queue...</span>
+            <Loader2 className="w-8 h-8 animate-spin text-amber-400" />
+            <span className="text-xs font-black text-slate-400 uppercase tracking-wider">Streaming Live Online Listings...</span>
           </div>
         ) : filteredItems.length === 0 ? (
-          <div className="text-center py-20 text-xs font-bold text-slate-500 border border-dashed border-slate-300 rounded-xl bg-white shadow-2xs">
-            No community listings matching filter criteria.
+          <div className="text-center py-20 text-xs font-bold text-slate-400 border border-dashed border-slate-800 rounded-2xl bg-slate-900/60 p-6">
+            No live community listings matching filter criteria.
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredItems.map((item) => (
               <div
                 key={item.id}
-                className={`bg-white border rounded-2xl p-4 flex flex-col justify-between gap-3 shadow-2xs hover:shadow-md transition-all font-sans ${
-                  item.is_reported ? "border-rose-300 bg-rose-50/20" : "border-slate-200/90"
+                className={`bg-slate-900/90 border rounded-2xl p-4 flex flex-col justify-between gap-4 shadow-lg backdrop-blur-md font-sans transition-all hover:border-slate-700 ${
+                  item.is_reported ? "border-rose-500/50 bg-rose-950/20" : "border-slate-800"
                 }`}
               >
-                <div className="flex flex-col gap-2">
-                  {/* Header item */}
+                <div className="flex flex-col gap-3">
+                  {/* Top Badge Row */}
                   <div className="flex justify-between items-center gap-2">
-                    <div className="flex items-center gap-1.5">
+                    <div className="flex items-center gap-2">
                       {getColBadge(item.colName)}
                       {item.is_reported && (
-                        <span className="bg-rose-100 text-rose-800 border border-rose-200 px-2 py-0.5 rounded-md text-xs font-black uppercase flex items-center gap-1">
+                        <span className="bg-rose-500/20 text-rose-300 border border-rose-500/40 px-2 py-0.5 rounded-md text-[10px] font-black uppercase flex items-center gap-1">
                           <AlertTriangle className="w-3 h-3" />
                           Reported
                         </span>
@@ -470,44 +413,55 @@ export default function AdminClientPage() {
                     </div>
                   </div>
 
-                  {/* Details */}
-                  <div>
-                    <h4 className="font-heading font-extrabold text-sm text-slate-900 leading-snug truncate line-clamp-1 whitespace-nowrap">{item.title}</h4>
-                    {item.price !== null && item.price !== undefined && (
-                      <span className="text-xs text-emerald-600 font-extrabold block mt-0.5">
-                        Price: ₹{item.price.toLocaleString("en-IN")}
-                      </span>
+                  {/* Media + Title Details */}
+                  <div className="flex gap-3">
+                    {item.image_url ? (
+                      <div className="w-14 h-14 rounded-xl overflow-hidden bg-slate-950 shrink-0 border border-slate-800">
+                        <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
+                      </div>
+                    ) : (
+                      <div className="w-14 h-14 rounded-xl bg-slate-950 border border-slate-800 shrink-0 flex items-center justify-center text-slate-600">
+                        <Tag className="w-6 h-6" />
+                      </div>
                     )}
-                    <div className="flex items-center gap-3 text-xs text-slate-500 font-medium mt-1.5">
-                      <span>Area: <strong className="text-slate-800 font-semibold">{item.area_tag}</strong></span>
-                      <span>•</span>
-                      <span>Contact: <strong className="text-slate-800 font-semibold">+{item.phone || "N/A"}</strong></span>
+                    <div className="min-w-0 flex-1">
+                      <h4 className="font-heading font-black text-sm text-white leading-snug line-clamp-1 truncate">{item.title}</h4>
+                      {item.price !== null && item.price !== undefined && (
+                        <span className="text-xs text-amber-400 font-extrabold block mt-0.5">
+                          ₹{typeof item.price === "number" ? item.price.toLocaleString("en-IN") : item.price}
+                        </span>
+                      )}
+                      <div className="flex items-center gap-2 text-[11px] text-slate-400 font-medium mt-1">
+                        <span className="flex items-center gap-1"><MapPin className="w-3 h-3 text-amber-400" />{item.area_tag}</span>
+                        <span>•</span>
+                        <span className="flex items-center gap-1"><Phone className="w-3 h-3 text-amber-400" />+{item.phone}</span>
+                      </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Action Controls: Approve & Delete */}
-                <div className="flex items-center gap-2 pt-2.5 border-t border-slate-100">
+                {/* Moderation Controls: Approve Toggle & Delete */}
+                <div className="flex items-center gap-2 pt-3 border-t border-slate-800/80">
                   <button
                     type="button"
                     onClick={() => handleToggleVerify(item)}
-                    className={`flex items-center justify-center gap-1.5 flex-1 py-2 rounded-xl text-xs font-heading font-black uppercase transition-all cursor-pointer ${
+                    className={`flex items-center justify-center gap-1.5 flex-1 py-2.5 rounded-xl text-xs font-heading font-black uppercase transition-all cursor-pointer ${
                       item.is_verified
-                        ? "bg-emerald-50 text-emerald-700 border border-emerald-300 hover:bg-emerald-100"
-                        : "bg-amber-500 hover:bg-amber-400 text-slate-950 font-black shadow-xs"
+                        ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30"
+                        : "bg-amber-400 hover:bg-amber-300 text-slate-950 font-black shadow-md"
                     }`}
                   >
-                    <CheckCircle className="w-3.5 h-3.5" />
-                    <span>{item.is_verified ? "Approved ✓" : "Approve Post"}</span>
+                    <CheckCircle className="w-4 h-4" />
+                    <span>{item.is_verified ? "Approved ✓" : "Approve Listing"}</span>
                   </button>
 
                   <button
                     type="button"
                     onClick={() => handleDelete(item.id, item.colName)}
-                    className="px-3.5 py-2 rounded-xl bg-rose-50 text-rose-600 hover:bg-rose-100 border border-rose-200 transition-colors shrink-0 cursor-pointer font-heading font-black text-xs flex items-center gap-1"
+                    className="px-3.5 py-2.5 rounded-xl bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 border border-rose-500/40 transition-colors shrink-0 cursor-pointer font-heading font-black text-xs flex items-center gap-1"
                     title="Delete Listing"
                   >
-                    <Trash2 className="w-3.5 h-3.5" />
+                    <Trash2 className="w-4 h-4" />
                     <span>Delete</span>
                   </button>
                 </div>
