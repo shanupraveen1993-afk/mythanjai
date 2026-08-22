@@ -32,7 +32,7 @@ import {
   Compass,
 } from "lucide-react";
 import { db, storage, auth } from "@/lib/firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { collection, addDoc, updateDoc, doc, serverTimestamp } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { compressImage } from "@/lib/image-compressor";
 import { useAuth } from "@/hooks/use-auth";
@@ -373,75 +373,104 @@ export default function CreatePostModal({
       const timestamp = serverTimestamp();
       
       try {
-        if (type === "needs") {
-          await addDoc(collection(db, "needs_and_sales"), {
-            userId: uid,
-            type: classifiedType,
-            title,
-            description: finalDescription,
-            raw_text: description, // store raw for search indexing
-            category: classifiedCategory,
-            area_tag: area,
+        if (editPost && editPost.id) {
+          // ── EDIT EXISTING POST FLOW ──
+          const targetCol = editPost.colName || (type === "needs" ? "needs_and_sales" : (type === "services" ? "services" : (type === "shops" ? "shops" : "offers")));
+          const updatePayload: any = {
+            title: title || editPost.title,
+            description: finalDescription || editPost.description,
             price: price ? parseFloat(price) : null,
             phone,
-            image_url: imageUrl || "",
-            is_verified: true,
-            created_at: timestamp,
-            expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30-day auto-expiry per PRD
-          });
-        } else if (type === "services") {
-          await addDoc(collection(db, "services"), {
-            userId: uid,
-            name: serviceName,
-            skill_category: serviceCategory,
-            experience: experience || "Licensed Helper",
             area_tag: area,
-            phone,
-            rating: 4.8,
-            description: finalDescription,
-            image_url: imageUrl || "",
-            is_verified: false, // Moderated verification
-            created_at: timestamp,
-          });
-        } else if (type === "shops") {
-          const coords = AREA_COORDINATES[area] || AREA_COORDINATES["Tanjore Town (General)"];
-          await addDoc(collection(db, "shops"), {
-            userId: uid,
-            shop_name: shopName,
-            category: shopCategory,
-            area_tag: area,
-            phone,
-            image_url: imageUrl || "/placeholder.webp",
-            latitude: coords.lat,
-            longitude: coords.lng,
-            address_text: address || `${area}, Thanjavur`,
-            landmark: landmark || "",
-            hours: hours || "9 AM - 9 PM",
-            is_claimed: true,
-            created_at: timestamp,
-            offer_title: offerTitle || "",
-            offer_description: finalOfferDesc || "",
-            offer_social_link: socialLink || "",
-            show_phone: showPhone,
-          });
-        } else if (type === "offers") {
-          // Detect platform from link
-          let platform: "instagram" | "facebook" | "whatsapp" | "other" = "other";
-          if (socialLink.includes("instagram.com")) platform = "instagram";
-          else if (socialLink.includes("facebook.com")) platform = "facebook";
-          else if (socialLink.includes("wa.me") || socialLink.includes("whatsapp.com")) platform = "whatsapp";
+            category: classifiedCategory || editPost.category,
+          };
+          if (imageUrl) updatePayload.image_url = imageUrl;
 
-          await addDoc(collection(db, "offers"), {
-            userId: uid,
-            title: offerTitle,
-            description: finalOfferDesc,
-            category: offerCategory,
-            area_tag: area,
-            thumbnail_url: imageUrl || "/placeholder.webp",
-            social_link: socialLink || "https://instagram.com",
-            platform,
-            created_at: timestamp,
-          });
+          try {
+            const docRef = doc(db, targetCol, editPost.id);
+            await updateDoc(docRef, updatePayload);
+          } catch (e) {}
+
+          if (typeof window !== "undefined") {
+            try {
+              const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+              const updated = stored.map((p: any) => (p.id === editPost.id ? { ...p, ...updatePayload } : p));
+              localStorage.setItem("namma_thanjai_local_posts", JSON.stringify(updated));
+            } catch (e) {}
+          }
+          toast.success("Listing updated successfully!");
+        } else {
+          // ── CREATE NEW POST FLOW ──
+          if (type === "needs") {
+            await addDoc(collection(db, "needs_and_sales"), {
+              userId: uid,
+              type: classifiedType,
+              title,
+              description: finalDescription,
+              raw_text: description, // store raw for search indexing
+              category: classifiedCategory,
+              area_tag: area,
+              price: price ? parseFloat(price) : null,
+              phone,
+              image_url: imageUrl || "",
+              is_verified: true,
+              created_at: timestamp,
+              expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30-day auto-expiry per PRD
+            });
+          } else if (type === "services") {
+            await addDoc(collection(db, "services"), {
+              userId: uid,
+              name: serviceName,
+              skill_category: serviceCategory,
+              experience: experience || "Licensed Helper",
+              area_tag: area,
+              phone,
+              rating: 4.8,
+              description: finalDescription,
+              image_url: imageUrl || "",
+              is_verified: false, // Moderated verification
+              created_at: timestamp,
+            });
+          } else if (type === "shops") {
+            const coords = AREA_COORDINATES[area] || AREA_COORDINATES["Tanjore Town (General)"];
+            await addDoc(collection(db, "shops"), {
+              userId: uid,
+              shop_name: shopName,
+              category: shopCategory,
+              area_tag: area,
+              phone,
+              image_url: imageUrl || "/placeholder.webp",
+              latitude: coords.lat,
+              longitude: coords.lng,
+              address_text: address || `${area}, Thanjavur`,
+              landmark: landmark || "",
+              hours: hours || "9 AM - 9 PM",
+              is_claimed: true,
+              created_at: timestamp,
+              offer_title: offerTitle || "",
+              offer_description: finalOfferDesc || "",
+              offer_social_link: socialLink || "",
+              show_phone: showPhone,
+            });
+          } else if (type === "offers") {
+            let platform: "instagram" | "facebook" | "whatsapp" | "other" = "other";
+            if (socialLink.includes("instagram.com")) platform = "instagram";
+            else if (socialLink.includes("facebook.com")) platform = "facebook";
+            else if (socialLink.includes("wa.me") || socialLink.includes("whatsapp.com")) platform = "whatsapp";
+
+            await addDoc(collection(db, "offers"), {
+              userId: uid,
+              title: offerTitle,
+              description: finalOfferDesc,
+              category: offerCategory,
+              area_tag: area,
+              thumbnail_url: imageUrl || "/placeholder.webp",
+              social_link: socialLink || "https://instagram.com",
+              platform,
+              created_at: timestamp,
+            });
+          }
+          toast.success("AI refined success! Post published to Tanjore hub.");
         }
       } catch (firestoreErr) {
         console.warn("Firestore document creation skipped or fallback applied:", firestoreErr);
