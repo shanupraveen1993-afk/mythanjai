@@ -152,6 +152,19 @@ export default function PostForm({ segment }: PostFormProps) {
   const [previewDescription, setPreviewDescription] = useState("");
   const [isAiRewriting, setIsAiRewriting] = useState(false);
   const [isOcrScanning, setIsOcrScanning] = useState(false);
+  const [aiRefining, setAiRefining] = useState(false);
+
+  useEffect(() => {
+    if (!description.trim()) {
+      setAiRefining(false);
+      return;
+    }
+    setAiRefining(true);
+    const timer = setTimeout(() => {
+      setAiRefining(false);
+    }, 3000);
+    return () => clearTimeout(timer);
+  }, [description]);
 
   // Unauthenticated Guest Protection: Wait for auth to finish loading before checking guest status
   useEffect(() => {
@@ -536,24 +549,26 @@ export default function PostForm({ segment }: PostFormProps) {
 
   // Direct 1:1 Live Preview Cards Data
   const previewSellOrNeedPost = useMemo<NeedOrSalePost>(() => {
+    const activeCover = (imagePreviews && imagePreviews.length > 0) ? imagePreviews[0] : (imagePreview || "/thanjavur_temple_illustration.png");
     return {
       id: "preview_post",
       userId: user?.uid || "preview_user",
       type: segment === "sell" ? "SELL" : "NEED",
       raw_text: description.trim(),
       title: title.trim() || (segment === "sell" ? "Sample Item Title" : "Sample Requirement Title"),
-      description: previewDescription || "Live preview description will appear here after AI optimization...",
+      description: previewDescription || description.trim() || "Live preview description will appear here after AI optimization...",
       category: category || config.categories[0],
       area_tag: area || TANJORE_LOCALITIES[0],
       price: price || (segment === "sell" ? "2500000" : "10000"),
-      phone: phone || "9876543210",
-      image_url: imagePreview || "/thanjavur_temple_illustration.png",
+      phone: phone || profile?.phone || "+91 9994837342",
+      image_url: activeCover,
+      image_urls: imagePreviews,
       show_phone: showPhone,
       is_verified: true,
       created_at: new Date() as any,
       expires_at: new Date(Date.now() + 30 * 86400000) as any,
     };
-  }, [title, description, previewDescription, category, area, price, phone, imagePreview, segment, user, config.categories, showPhone]);
+  }, [title, description, previewDescription, category, area, price, phone, profile, imagePreview, imagePreviews, segment, user, config.categories, showPhone]);
 
   const previewServicePost = useMemo<ServiceProviderPost>(() => {
     return {
@@ -932,79 +947,35 @@ export default function PostForm({ segment }: PostFormProps) {
                   </div>
                 )}
 
-                {/* BUDGET + LOCATION in 1 row (FOR NEED) WITH TOGGLE ON/OFF */}
+                {/* BUDGET + LOCATION in 1 row (FOR NEED) */}
                 {segment === "need" && (
-                  <div className="flex flex-col gap-3">
-                    {/* Budget Toggle Switch */}
-                    <div className="flex items-center justify-between bg-slate-50 border border-slate-200/80 p-2.5 rounded-xl">
-                      <span className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="flex flex-col gap-1">
+                      <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
                         <IndianRupee className="w-3.5 h-3.5 text-emerald-600" />
-                        <span>Specify Target Budget</span>
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          const nextState = !hasSpecificPrice;
-                          setHasSpecificPrice(nextState);
-                          if (!nextState) {
-                            setPrice("Flexible / Negotiable");
-                          } else {
-                            setPrice("");
-                          }
-                        }}
-                        className={`px-3 py-1 rounded-lg text-xs font-black transition-all cursor-pointer border ${
-                          hasSpecificPrice
-                            ? "bg-amber-500 text-slate-950 border-amber-400"
-                            : "bg-slate-200 text-slate-700 border-slate-300"
-                        }`}
-                      >
-                        {hasSpecificPrice ? "BUDGET ON" : "PRICE ON REQUEST"}
-                      </button>
+                        Budget From (₹)
+                      </label>
+                      <input
+                        type="number"
+                        placeholder="e.g. 5000 (Optional)"
+                        value={price}
+                        onChange={(e) => setPrice(e.target.value)}
+                        className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400 font-bold"
+                      />
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      <div className="flex flex-col gap-1">
-                        <div className="flex items-center justify-between">
-                          <label className="text-xs font-semibold text-slate-700 flex items-center gap-1">
-                            <IndianRupee className="w-3.5 h-3.5 text-emerald-600" />
-                            {hasSpecificPrice ? "Budget (₹)" : "Budget Status"}
-                          </label>
-                          {hasSpecificPrice && formattedPriceBadge && (
-                            <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">
-                              {formattedPriceBadge}
-                            </span>
-                          )}
-                        </div>
-                        {hasSpecificPrice ? (
-                          <input
-                            type="text"
-                            inputMode="decimal"
-                            placeholder="e.g. 10,000 or 500/month"
-                            value={price}
-                            onChange={(e) => setPrice(e.target.value)}
-                            className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
-                          />
-                        ) : (
-                          <div className="w-full px-3.5 py-2 text-xs font-bold text-slate-600 border border-slate-200 rounded-lg bg-slate-100 flex items-center justify-between">
-                            <span>Flexible / Negotiable</span>
-                            <span className="text-[10px] bg-slate-200 px-2 py-0.5 rounded text-slate-700 font-extrabold">Auto</span>
-                          </div>
-                        )}
-                      </div>
-
-                      <div className="flex flex-col gap-1">
-                        <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
-                          <MapPin className="w-3.5 h-3.5 text-amber-500" />
-                          Preferred Locations (Up to 3) *
-                        </label>
-                        <input
-                          type="text"
-                          value={area}
-                          onChange={(e) => setArea(e.target.value)}
-                          placeholder="e.g. Medical College Rd, Old Bus Stand, Vallam"
-                          className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
-                        />
-                      </div>
+                    <div className="flex flex-col gap-1">
+                      <label className="text-xs font-semibold text-slate-700 flex items-center gap-1.5">
+                        <MapPin className="w-3.5 h-3.5 text-amber-500" />
+                        Preferred Locations (Up to 3) *
+                      </label>
+                      <input
+                        type="text"
+                        value={area}
+                        onChange={(e) => setArea(e.target.value)}
+                        placeholder="e.g. Medical College Rd, Old Bus Stand, Vallam"
+                        className="w-full px-3.5 py-2 text-xs font-semibold border border-slate-200 rounded-lg bg-white focus:outline-none focus:border-slate-400"
+                      />
                     </div>
                   </div>
                 )}
@@ -1166,32 +1137,24 @@ export default function PostForm({ segment }: PostFormProps) {
                 )}
               </div>
             )}
-
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full py-3.5 sm:py-4 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer mt-2 rounded-lg shadow-sm transition-colors select-none"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin text-[#0F172A]" />
-                  <span>Publishing Post...</span>
-                </>
-              ) : (
-                <span>{config.buttonLabel}</span>
-              )}
-            </button>
           </form>
 
           {/* RIGHT COLUMN: Instant 1:1 Live Preview Card */}
-          <div className="lg:col-span-5 sticky top-20 flex flex-col gap-2">
+          <div className="lg:col-span-5 sticky top-20 flex flex-col gap-3">
             <div className="flex items-center justify-between px-1">
               <span className="text-xs font-bold text-slate-700">
                 Live Card Preview
               </span>
               <span className="text-xs text-slate-400">Instant preview</span>
             </div>
+
+            {/* AI Refinement Status Badge */}
+            {aiRefining && (
+              <div className="text-xs font-black text-amber-800 bg-amber-100 border border-amber-300 px-3.5 py-2 rounded-xl animate-pulse flex items-center justify-center gap-2 max-w-sm mx-auto shadow-xs">
+                <Sparkles className="w-4 h-4 text-amber-600 animate-spin" />
+                <span>✨ AI is refining your description...</span>
+              </div>
+            )}
 
             <div className="bg-white border border-slate-200/90 rounded-xl p-4 shadow-2xs flex flex-col gap-3 relative">
               {isAiRewriting && (
@@ -1208,6 +1171,23 @@ export default function PostForm({ segment }: PostFormProps) {
                 <ShopCard post={previewShopPost} isPreview={true} />
               )}
             </div>
+
+            {/* Primary Submit Button Positioned Directly Below Live Preview Card */}
+            <button
+              type="submit"
+              onClick={handleSubmit}
+              disabled={loading}
+              className="w-full py-3.5 sm:py-4 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer rounded-xl shadow-md transition-all select-none mt-1"
+            >
+              {loading ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin text-[#0F172A]" />
+                  <span>Publishing Post...</span>
+                </>
+              ) : (
+                <span>{config.buttonLabel}</span>
+              )}
+            </button>
           </div>
 
         </div>

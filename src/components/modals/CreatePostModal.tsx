@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import {
   X,
   Camera,
+  Video,
   Upload,
   ArrowRight,
   ArrowLeft,
@@ -1256,31 +1257,49 @@ export default function CreatePostModal({
                         </select>
                       </div>
 
-                      {/* Photo Upload widget for Shops/Offers/Sales */}
+                      {/* Equal UI Design Tiles for 1. Visiting Card Upload and 2. Video Reel Upload */}
                       {(type === "shops" || type === "offers" || (type === "needs" && classifiedType === "SELL")) && (
-                        <div>
-                          <label className="block text-[11px] font-bold text-slate-500 mb-1">
-                            {type === "needs" ? "Product Photo Upload (Optional)" : "Storefront / Visiting Card Image Upload"}
-                          </label>
-                          <div className="flex gap-3 items-center">
-                            <label className="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-2xl w-24 h-24 hover:border-yellow-500/60 hover:bg-yellow-50/10 transition-colors cursor-pointer shrink-0">
-                              <Upload className="w-5 h-5 text-slate-400" />
-                              <input
-                                type="file"
-                                accept="image/*"
-                                onChange={handleImageChange}
-                                className="hidden"
-                              />
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2.5 border-t border-slate-100">
+                          {/* Tile 1: Visiting Card / Photo Upload */}
+                          <div className="flex flex-col gap-1.5">
+                            <label className="block text-[11px] font-bold text-slate-600 flex items-center gap-1">
+                              <Camera className="w-3.5 h-3.5 text-amber-600" />
+                              1. Upload Visiting Card / Photo
                             </label>
-                            {imagePreview ? (
-                              <div className="relative w-24 h-24 rounded-2xl overflow-hidden border border-slate-200">
-                                <img src={imagePreview} alt="Preview" className="w-full h-full object-cover" />
-                              </div>
-                            ) : (
-                              <p className="text-[10px] text-slate-400 font-bold leading-snug">
-                                No image uploaded. Default placeholder will display.
-                              </p>
-                            )}
+                            <div className="flex gap-2.5 items-center">
+                              <label className="flex flex-col items-center justify-center border-2 border-dashed border-slate-200 rounded-2xl w-20 h-20 hover:border-amber-400 hover:bg-amber-50/10 transition-colors cursor-pointer shrink-0">
+                                <Upload className="w-5 h-5 text-slate-400" />
+                                <span className="text-[9px] font-bold text-slate-400 mt-1">Select File</span>
+                                <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+                              </label>
+                              {imagePreview ? (
+                                <div className="relative w-20 h-20 rounded-2xl overflow-hidden border border-slate-200 shrink-0">
+                                  <img src={imagePreview} alt="Visiting Card Preview" className="w-full h-full object-cover" />
+                                </div>
+                              ) : (
+                                <p className="text-[10px] text-slate-400 font-bold leading-tight">No card selected</p>
+                              )}
+                            </div>
+                          </div>
+
+                          {/* Tile 2: Video Reel Upload */}
+                          <div className="flex flex-col gap-1.5">
+                            <label className="block text-[11px] font-bold text-slate-600 flex items-center gap-1">
+                              <Video className="w-3.5 h-3.5 text-amber-600" />
+                              2. Upload Video Reel (Link or MP4)
+                            </label>
+                            <input
+                              type="url"
+                              value={socialLink}
+                              onChange={(e) => setSocialLink(e.target.value)}
+                              autoComplete="on"
+                              autoCorrect="on"
+                              autoCapitalize="sentences"
+                              spellCheck={true}
+                              placeholder="e.g. https://instagram.com/reel/..."
+                              className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none font-bold"
+                            />
+                            <p className="text-[9px] text-slate-400 font-bold">Paste Instagram Reel or MP4 link for instant playback</p>
                           </div>
                         </div>
                       )}
