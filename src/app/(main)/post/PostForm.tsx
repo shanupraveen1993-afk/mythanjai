@@ -175,28 +175,53 @@ export default function PostForm({ segment }: PostFormProps) {
     }
   }, [authLoading, isAuthVerified]);
 
-  // Edit Mode Data Loader
+  // Comprehensive Edit Mode Data Loader (Firestore + LocalStorage Fallback)
   useEffect(() => {
     if (!editId) return;
+
+    const populateFields = (data: any) => {
+      if (data.title || data.name || data.shop_name) setTitle(data.title || data.name || data.shop_name);
+      if (data.description || data.offer_description) {
+        const desc = data.description || data.offer_description;
+        setDescription(desc);
+        setPreviewDescription(desc);
+      }
+      if (data.category || data.skill_category) setCategory(data.category || data.skill_category);
+      if (data.area_tag) setArea(data.area_tag);
+      if (data.price !== undefined && data.price !== null) setPrice(String(data.price));
+      if (data.phone) setPhone(data.phone);
+      if (data.show_phone !== undefined) setShowPhone(Boolean(data.show_phone));
+      if (data.google_maps_url) setGoogleMapsUrl(data.google_maps_url);
+      if (data.valid_from) setValidFrom(data.valid_from);
+      if (data.valid_to) setValidTo(data.valid_to);
+      if (data.image_url) setImagePreview(data.image_url);
+      if (data.image_urls && Array.isArray(data.image_urls) && data.image_urls.length > 0) {
+        setImagePreviews(data.image_urls);
+      } else if (data.image_url) {
+        setImagePreviews([data.image_url]);
+      }
+    };
+
+    // 1. Try local storage first for instant load
+    try {
+      const localPosts = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+      const match = localPosts.find((p: any) => p.id === editId);
+      if (match) {
+        populateFields(match);
+      }
+    } catch (e) {}
+
+    // 2. Fetch from Firestore for authoritative cloud data
     const targetCol = editCol || (segment === "service" ? "services" : segment === "offer" ? "shops" : "needs_and_sales");
     const docRef = doc(db, targetCol, editId);
-    getDoc(docRef).then((snap) => {
-      if (snap.exists()) {
-        const data = snap.data();
-        if (data.title || data.name || data.shop_name) setTitle(data.title || data.name || data.shop_name);
-        if (data.description || data.offer_description) {
-          const desc = data.description || data.offer_description;
-          setDescription(desc);
-          setPreviewDescription(desc);
+    getDoc(docRef)
+      .then((snap) => {
+        if (snap.exists()) {
+          populateFields(snap.data());
+          toast.success("Loaded post data for editing!");
         }
-        if (data.category) setCategory(data.category);
-        if (data.area_tag) setArea(data.area_tag);
-        if (data.price) setPrice(String(data.price));
-        if (data.phone) setPhone(data.phone);
-        if (data.image_url) setImagePreview(data.image_url);
-        toast.success("Loaded post data for editing!");
-      }
-    }).catch(() => {});
+      })
+      .catch(() => {});
   }, [editId, editCol, segment]);
 
   if (authLoading) {
