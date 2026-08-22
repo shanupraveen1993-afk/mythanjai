@@ -71,7 +71,7 @@ export default function NeedClientPage() {
             price_to: 12000,
             category: "Real Estate",
             area_tag: "Medical College Road",
-            phone: "+91 98765 43210",
+            phone: "+91 9994837342",
             created_at: new Date(Date.now() - 3600000 * 3).toISOString(),
           },
           {
@@ -84,7 +84,7 @@ export default function NeedClientPage() {
             price_to: 45000,
             category: "Vehicles",
             area_tag: "New Bus Stand",
-            phone: "+91 98765 43210",
+            phone: "+91 9994837342",
             created_at: new Date(Date.now() - 3600000 * 7).toISOString(),
           },
           {
@@ -97,7 +97,7 @@ export default function NeedClientPage() {
             price_to: 25000,
             category: "Electronics",
             area_tag: "Old Bus Stand",
-            phone: "+91 98765 43210",
+            phone: "+91 9994837342",
             created_at: new Date(Date.now() - 3600000 * 14).toISOString(),
           },
           {
@@ -110,7 +110,7 @@ export default function NeedClientPage() {
             price_to: null,
             category: "Real Estate",
             area_tag: "Vallam",
-            phone: "+91 98765 43210",
+            phone: "+91 9994837342",
             created_at: new Date(Date.now() - 3600000 * 28).toISOString(),
           },
           {
@@ -123,7 +123,7 @@ export default function NeedClientPage() {
             price_to: 15000,
             category: "Electronics",
             area_tag: "South Rampart",
-            phone: "+91 98765 43210",
+            phone: "+91 9994837342",
             created_at: new Date(Date.now() - 3600000 * 50).toISOString(),
           },
         ];

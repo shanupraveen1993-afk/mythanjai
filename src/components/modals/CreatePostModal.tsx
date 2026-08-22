@@ -930,29 +930,31 @@ export default function CreatePostModal({
                           </div>
 
                           <div>
-                            <label className="block text-[11px] font-bold text-slate-500 mb-1">Title</label>
+                            <label className="block text-[11px] font-bold text-slate-500 mb-1">Item Title</label>
                             <input
                               type="text"
                               value={title}
                               onChange={(e) => setTitle(e.target.value)}
                               placeholder="e.g. 2BHK House for rent, Used Splendor Bike"
-                              className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none"
+                              className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none font-bold"
                             />
                           </div>
 
                           <div>
-                            <label className="block text-[11px] font-bold text-slate-500 mb-1">Details (Description)</label>
+                            <label className="block text-[11px] font-bold text-slate-500 mb-1">Description</label>
                             <textarea
                               value={description}
                               onChange={(e) => setDescription(e.target.value)}
-                              placeholder="Describe requirement, size, features..."
+                              placeholder="Describe item details, condition, size, features..."
                               rows={3}
                               className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none"
                             />
-                                {classifiedType === "NEED" ? (
+                          </div>
+
+                          {classifiedType === "NEED" ? (
                             <div className="grid grid-cols-2 gap-3">
                               <div>
-                                <label className="block text-[11px] font-bold text-slate-500 mb-1">Budget From (₹) (Optional)</label>
+                                <label className="block text-[11px] font-bold text-slate-500 mb-1">Budget From (₹)</label>
                                 <input
                                   type="number"
                                   value={priceFrom}
@@ -962,7 +964,7 @@ export default function CreatePostModal({
                                 />
                               </div>
                               <div>
-                                <label className="block text-[11px] font-bold text-slate-500 mb-1">Budget To (₹) (Optional)</label>
+                                <label className="block text-[11px] font-bold text-slate-500 mb-1">Budget To (₹)</label>
                                 <input
                                   type="number"
                                   value={priceTo}
@@ -989,7 +991,7 @@ export default function CreatePostModal({
                                 <select
                                   value={classifiedCategory}
                                   onChange={(e) => setClassifiedCategory(e.target.value as any)}
-                                  className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none"
+                                  className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none font-bold"
                                 >
                                   {CLASSIFIED_CATEGORIES.map((c) => (
                                     <option key={c} value={c}>
@@ -999,7 +1001,7 @@ export default function CreatePostModal({
                                 </select>
                               </div>
                             </div>
-                          )}                          </div>
+                          )}
 
                           {classifiedType === "SELL" && (
                             <div className="flex flex-col gap-3 pt-1">
