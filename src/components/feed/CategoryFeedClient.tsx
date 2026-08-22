@@ -10,7 +10,6 @@ import CreatePostModal from "@/components/modals/CreatePostModal";
 import NeedCard from "@/components/cards/NeedCard";
 import ServiceCard from "@/components/cards/ServiceCard";
 import ShopCard from "@/components/cards/ShopCard";
-import { SELL_SAMPLES, NEED_SAMPLES, SERVICE_SAMPLES, SHOP_SAMPLES } from "@/lib/sampleData";
 
 // ─── Segment Config ──────────────────────────────────────────────────────────
 
@@ -122,18 +121,22 @@ export default function CategoryFeedClient({ segmentType }: CategoryFeedClientPr
     postType: segmentType === "sell" ? "sale" : segmentType === "need" ? "need" : null,
   });
 
-  // Seed samples based on type
-  const seedSamples: any[] = segmentType === "sell" ? SELL_SAMPLES
-    : segmentType === "need" ? NEED_SAMPLES
-    : segmentType === "services" ? SERVICE_SAMPLES
-    : SHOP_SAMPLES;
-
-  // Merge seed + Firestore, deduplicate
+  // Load local posts from localStorage + Firestore
   const allPosts = React.useMemo(() => {
+    let stored: any[] = [];
+    if (typeof window !== "undefined") {
+      try {
+        stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+        if (segmentType === "sell") stored = stored.filter((p: any) => p.type?.toUpperCase() === "SELL");
+        else if (segmentType === "need") stored = stored.filter((p: any) => p.type?.toUpperCase() === "NEED");
+        else if (segmentType === "services") stored = stored.filter((p: any) => p.name || p.skill_category || p.type === "SERVICE");
+        else if (segmentType === "shops") stored = stored.filter((p: any) => p.shop_name || p.offer_title || p.type === "OFFER" || p.type === "SHOP");
+      } catch (e) {}
+    }
     const firestoreIds = new Set((firestoreData || []).map((p: any) => p.id));
-    const nonDupSeeds = seedSamples.filter(s => !firestoreIds.has(s.id));
-    return [...nonDupSeeds, ...(firestoreData || [])];
-  }, [firestoreData, seedSamples]);
+    const uniqueLocal = stored.filter((s: any) => !firestoreIds.has(s.id));
+    return [...uniqueLocal, ...(firestoreData || [])];
+  }, [firestoreData, segmentType]);
 
   // Sub-category filter (client-side)
   const filteredBySub = React.useMemo(() => {

@@ -249,20 +249,6 @@ function ProfileContent() {
         } catch (e) {}
       }
 
-      // Automatically include sample listings connected to admin phone 9994837342
-      const adminSamples = [
-        { id: "s_plot", title: "2400 Sqft CMDA Plot — Vallam", category: "Plots & Real Estate", area_tag: "Vallam", price: "2450000", phone: "9994837342", type: "SELL", colName: "needs_and_sales", created_at: new Date() },
-        { id: "s_house", title: "2 BHK House for Rent", category: "Property Rental", area_tag: "Medical College Road", price: "12500", phone: "9994837342", type: "SELL", colName: "needs_and_sales", created_at: new Date() },
-        { id: "s_bike", title: "Hero Splendor 2022 — Single Owner", category: "Used Vehicles", area_tag: "New Bus Stand", price: "68000", phone: "9994837342", type: "SELL", colName: "needs_and_sales", created_at: new Date() },
-        { id: "sh_glen", shop_name: "GLEN Exclusive Gallery", title: "Up to 60% OFF — Grand Opening Sale", category: "Electronics & Mobiles", area_tag: "New Bus Stand", phone: "9994837342", colName: "shops", created_at: new Date() },
-        { id: "sv_elec", name: "Senthil Kumar — Home Electrician", title: "Home Electrician", skill_category: "Electrician", area_tag: "Tanjore Town (General)", phone: "9994837342", colName: "services", created_at: new Date() },
-      ];
-      adminSamples.forEach((s) => {
-        if (!allFetchedPosts.some((p) => p.id === s.id)) {
-          allFetchedPosts.push(s);
-        }
-      });
-
       setMyPosts(allFetchedPosts);
     } catch (error) {
       console.error("Error fetching my posts:", error);
@@ -816,7 +802,10 @@ function ProfileContent() {
                           <div className="flex items-center gap-2">
                             <button
                               type="button"
-                              onClick={() => setEditingPost(post)}
+                              onClick={() => {
+                                const targetSegment = post.type?.toUpperCase() === "NEED" ? "need" : post.type?.toUpperCase() === "SELL" ? "sell" : post.colName === "services" || post.skill_category ? "service" : "offer";
+                                router.push(`/post/${targetSegment}?edit=${post.id}&col=${post.colName || (targetSegment === "service" ? "services" : targetSegment === "offer" ? "shops" : "needs_and_sales")}`);
+                              }}
                               className="text-xs font-heading font-black text-slate-900 bg-white border border-slate-300 px-3 py-1.5 rounded-xl cursor-pointer flex items-center gap-1 hover:bg-slate-100 transition-colors shadow-2xs"
                             >
                               <Pencil className="w-3.5 h-3.5 text-slate-700" /> Edit Listing

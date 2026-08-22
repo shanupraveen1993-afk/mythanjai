@@ -379,7 +379,7 @@ export default function PostForm({ segment }: PostFormProps) {
     const timestamp = serverTimestamp();
     const uid = user?.uid || "guest_user";
     const cleanDesc = description.trim();
-    const newPostId = `user_post_${Date.now()}`;
+    const targetPostId = editId || `user_post_${Date.now()}`;
 
     // ── STEP 1: Build local record immediately ───────────────────────────────
     const safeFirestoreImageUrl =
@@ -390,7 +390,7 @@ export default function PostForm({ segment }: PostFormProps) {
         : "/thanjavur_temple_illustration.png";
 
     const localPostRecord: any = {
-      id: newPostId,
+      id: targetPostId,
       userId: uid,
       category,
       area_tag: area,
@@ -431,17 +431,21 @@ export default function PostForm({ segment }: PostFormProps) {
 
     // ── STEP 2: Persist locally & redirect IMMEDIATELY (optimistic) ──────────
     try {
-      const storedPosts = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-      storedPosts.unshift(localPostRecord);
+      let storedPosts = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+      if (editId) {
+        storedPosts = storedPosts.map((p: any) => (p.id === editId ? { ...p, ...localPostRecord } : p));
+      } else {
+        storedPosts.unshift(localPostRecord);
+      }
       localStorage.setItem("namma_thanjai_local_posts", JSON.stringify(storedPosts.slice(0, 50)));
     } catch (e) {}
 
     setSuccess(true);
     setLoading(false);
-    toast.success("Post published! Syncing in background...");
+    toast.success(editId ? "Post updated successfully!" : "Post published!");
     router.push(config.redirectPath);
 
-    // ── STEP 3: Upload images + Firestore write in background (non-blocking) ──
+    // ── STEP 3: Upload images + Firestore write/update in background (safe fallback if Firebase Storage disabled) ──
     (async () => {
       try {
         let imageUrl = safeFirestoreImageUrl;
@@ -451,10 +455,16 @@ export default function PostForm({ segment }: PostFormProps) {
         if (segment === "sell" && selectedImages.length > 0) {
           imageUrls = await Promise.all(
             selectedImages.map(async (img) => {
-              const compressed = await compressImage(img);
-              const storageRef = ref(storage, `postings/${Date.now()}_${img.name}`);
-              const snapshot = await uploadBytes(storageRef, compressed.blob);
-              return getDownloadURL(snapshot.ref);
+              try {
+                const compressed = await compressImage(img);
+                const storageRef = ref(storage, `postings/${Date.now()}_${img.name}`);
+                const snapshot = await uploadBytes(storageRef, compressed.blob);
+                return await getDownloadURL(snapshot.ref);
+              } catch {
+                // Safe Fallback if Firebase Storage is not activated: use compressed base64
+                const compressed = await compressImage(img);
+                return compressed.base64 || imagePreview || safeFirestoreImageUrl;
+              }
             })
           );
           imageUrl = imageUrls[0] || imageUrl;
@@ -466,12 +476,20 @@ export default function PostForm({ segment }: PostFormProps) {
             imageUrl = await getDownloadURL(snapshot.ref);
             imageUrls = [imageUrl];
           } catch {
-            imageUrl = safeFirestoreImageUrl;
+            // Safe Fallback if Firebase Storage is not activated: use base64 or preview URL
+            try {
+              const compressed = await compressImage(selectedImage);
+              imageUrl = compressed.base64 || imagePreview || safeFirestoreImageUrl;
+            } catch {
+              imageUrl = imagePreview || safeFirestoreImageUrl;
+            }
           }
         }
 
+        const targetCol = editCol || (segment === "service" ? "services" : segment === "offer" ? "shops" : "needs_and_sales");
+
         if (segment === "sell" || segment === "need") {
-          await addDoc(collection(db, "needs_and_sales"), {
+          const payload: any = {
             userId: uid,
             type: segment === "sell" ? "SELL" : "NEED",
             title: title.trim(),
@@ -487,11 +505,22 @@ export default function PostForm({ segment }: PostFormProps) {
             youtube_url: youtubeUrl.trim() || "",
             google_maps_url: googleMapsUrl.trim() || "",
             is_verified: true,
-            created_at: timestamp,
-            expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-          });
+          };
+          if (editId) {
+            try {
+              await updateDoc(doc(db, targetCol, editId), payload);
+            } catch {
+              await addDoc(collection(db, targetCol), { ...payload, created_at: timestamp });
+            }
+          } else {
+            await addDoc(collection(db, targetCol), {
+              ...payload,
+              created_at: timestamp,
+              expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+            });
+          }
         } else if (segment === "service") {
-          await addDoc(collection(db, "services"), {
+          const payload: any = {
             userId: uid,
             name: title.trim(),
             skill_category: category,
@@ -501,15 +530,26 @@ export default function PostForm({ segment }: PostFormProps) {
             area_tag: area,
             phone: phone || "9876543210",
             rating: 5.0,
-            negative_reports_count: 0,
-            status: "active",
             description: cleanDesc,
             image_url: imageUrl,
             is_verified: true,
-            created_at: timestamp,
-          });
+          };
+          if (editId) {
+            try {
+              await updateDoc(doc(db, targetCol, editId), payload);
+            } catch {
+              await addDoc(collection(db, targetCol), { ...payload, created_at: timestamp });
+            }
+          } else {
+            await addDoc(collection(db, targetCol), {
+              ...payload,
+              negative_reports_count: 0,
+              status: "active",
+              created_at: timestamp,
+            });
+          }
         } else if (segment === "offer") {
-          let uploadedVideoUrl = "";
+          let uploadedVideoUrl = videoPreview || "";
           if (selectedVideo) {
             try {
               const videoRef = ref(storage, `offer_reels/${Date.now()}_${selectedVideo.name}`);
@@ -519,7 +559,7 @@ export default function PostForm({ segment }: PostFormProps) {
               console.warn("Video reel upload fallback:", vErr);
             }
           }
-          await addDoc(collection(db, "shops"), {
+          const payload: any = {
             userId: uid,
             shop_name: title.trim(),
             category,
@@ -532,17 +572,25 @@ export default function PostForm({ segment }: PostFormProps) {
             address_text: area ? `${area}, Thanjavur` : "Thanjavur",
             hours: "Special Local Offer",
             is_claimed: true,
-            created_at: timestamp,
             offer_title: title.trim(),
             offer_description: cleanDesc,
             valid_from: validFrom || null,
             valid_to: validTo || null,
             show_phone: showPhone,
             video_url: uploadedVideoUrl || "",
-          });
+          };
+          if (editId) {
+            try {
+              await updateDoc(doc(db, targetCol, editId), payload);
+            } catch {
+              await addDoc(collection(db, targetCol), { ...payload, created_at: timestamp });
+            }
+          } else {
+            await addDoc(collection(db, targetCol), { ...payload, created_at: timestamp });
+          }
         }
       } catch (bgErr) {
-        console.warn("Background Firestore sync error (post already in local feed):", bgErr);
+        console.warn("Background Firestore sync note:", bgErr);
       }
     })();
   };
@@ -635,11 +683,11 @@ export default function PostForm({ segment }: PostFormProps) {
           <p className="text-xs text-emerald-700 font-medium">Redirecting to feed...</p>
         </div>
       ) : (
-        /* PURE HUMAN 2-COLUMN SPLIT LAYOUT (OLX STANDARD) */
+        /* PURE HUMAN 2-COLUMN SPLIT LAYOUT (FREE BORDERLESS DESIGN) */
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           
-          {/* LEFT COLUMN: Form Controls */}
-          <form onSubmit={handleSubmit} className="lg:col-span-7 flex flex-col gap-4 bg-white border border-slate-200 rounded-xl p-5 sm:p-6 shadow-2xs">
+          {/* LEFT COLUMN: Form Controls (Borderless Free Design) */}
+          <form onSubmit={handleSubmit} className="lg:col-span-7 flex flex-col gap-4 bg-transparent border-0 p-0 sm:p-1">
             {/* OFFER FORM INPUTS IN REVISED REQUESTED ORDER */}
             {segment === "offer" ? (
               <>
