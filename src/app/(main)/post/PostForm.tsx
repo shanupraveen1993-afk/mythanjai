@@ -333,16 +333,20 @@ export default function PostForm({ segment }: PostFormProps) {
       const toAdd = files.slice(0, remaining);
       const newFiles = [...selectedImages, ...toAdd].slice(0, 3);
       setSelectedImages(newFiles);
-      // Generate previews for new files
+      // Compress selected images into lightweight WebP previews (<30KB per image)
       const previews = await Promise.all(
-        newFiles.map(
-          (f) =>
-            new Promise<string>((resolve) => {
+        newFiles.map(async (f) => {
+          try {
+            const comp = await compressImage(f, 600, 600, 0.6);
+            return comp.base64;
+          } catch {
+            return new Promise<string>((resolve) => {
               const reader = new FileReader();
               reader.onloadend = () => resolve(reader.result as string);
               reader.readAsDataURL(f);
-            })
-        )
+            });
+          }
+        })
       );
       setImagePreviews(previews);
       return;
@@ -351,9 +355,14 @@ export default function PostForm({ segment }: PostFormProps) {
     const file = e.target.files?.[0];
     if (!file) return;
     setSelectedImage(file);
-    const reader = new FileReader();
-    reader.onloadend = () => setImagePreview(reader.result as string);
-    reader.readAsDataURL(file);
+    try {
+      const comp = await compressImage(file, 600, 600, 0.6);
+      setImagePreview(comp.base64);
+    } catch {
+      const reader = new FileReader();
+      reader.onloadend = () => setImagePreview(reader.result as string);
+      reader.readAsDataURL(file);
+    }
     if (segment === "offer") {
       setIsOcrScanning(true);
       try {
