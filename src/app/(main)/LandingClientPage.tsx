@@ -152,28 +152,28 @@ export default function LandingClientPage() {
           </div>
         </div>
 
-        {/* ── 2. 4 Segment Category Cards (Blue Theme Filled Button Cards) ── */}
+        {/* ── 2. 4 Segment Category Cards (Light Blue Secondary Theme Cards) ── */}
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 my-1">
           {/* Card 1: Need to Buy */}
           <div
             onClick={() => router.push("/sell")}
-            className="bg-[#1D4ED8] hover:bg-blue-700 text-white rounded-2xl p-4 flex flex-col justify-between gap-3 shadow-md border border-blue-600/80 cursor-pointer transition-all active:scale-[0.98]"
+            className="bg-[#EFF6FF] hover:bg-blue-100/80 text-slate-900 rounded-2xl p-4 flex flex-col justify-between gap-3 shadow-2xs border border-blue-200/90 cursor-pointer transition-all active:scale-[0.98]"
           >
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-white text-[#1D4ED8] flex items-center justify-center shrink-0 shadow-2xs">
+                <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-2xs">
                   <ShoppingBag className="w-5 h-5 stroke-[2.5]" />
                 </div>
                 <div className="flex flex-col min-w-0">
-                  <h3 className="font-heading font-black text-sm text-white truncate">
+                  <h3 className="font-heading font-black text-sm text-slate-950 truncate">
                     Need to Buy
                   </h3>
-                  <span className="text-xs font-bold text-blue-100 leading-tight">
+                  <span className="text-xs font-bold text-blue-900/80 leading-tight">
                     வாங்க வேண்டுமா
                   </span>
                 </div>
               </div>
-              <div className="w-8 h-8 rounded-xl bg-blue-900/60 text-white flex items-center justify-center shrink-0 shadow-2xs">
+              <div className="w-8 h-8 rounded-xl bg-blue-100 text-blue-800 border border-blue-200 flex items-center justify-center shrink-0 shadow-2xs">
                 <ChevronRight className="w-4 h-4 stroke-[3]" />
               </div>
             </div>
@@ -182,12 +182,12 @@ export default function LandingClientPage() {
               {["Plots", "Bikes"].map((cat, i) => (
                 <span
                   key={i}
-                  className="text-[10px] text-white font-bold bg-white/15 px-2 py-0.5 rounded-md border border-white/20 whitespace-nowrap shrink-0"
+                  className="text-[10px] text-slate-800 font-bold bg-white px-2 py-0.5 rounded-md border border-blue-200/80 whitespace-nowrap shrink-0"
                 >
                   {cat}
                 </span>
               ))}
-              <span className="text-[10px] font-black text-[#FBBF24] bg-amber-400/20 px-2 py-0.5 rounded-md border border-amber-400/30 whitespace-nowrap shrink-0">
+              <span className="text-[10px] font-black text-blue-800 bg-blue-100 px-2 py-0.5 rounded-md border border-blue-300/80 whitespace-nowrap shrink-0">
                 +12 More
               </span>
             </div>
@@ -198,33 +198,33 @@ export default function LandingClientPage() {
                 e.stopPropagation();
                 router.push("/sell");
               }}
-              className="w-full h-9 bg-white text-[#1D4ED8] hover:bg-blue-50 font-heading font-black text-xs px-3 rounded-xl flex items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap uppercase tracking-wider"
+              className="w-full h-9 bg-blue-600 hover:bg-blue-700 text-white font-heading font-black text-xs px-3 rounded-xl flex items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap uppercase tracking-wider"
             >
               <span>Explore Seller Post</span>
-              <ChevronRight className="w-3.5 h-3.5 text-[#1D4ED8] stroke-[3]" />
+              <ChevronRight className="w-3.5 h-3.5 text-white stroke-[3]" />
             </button>
           </div>
 
           {/* Card 2: Looking for */}
           <div
             onClick={() => router.push("/need")}
-            className="bg-[#1D4ED8] hover:bg-blue-700 text-white rounded-2xl p-4 flex flex-col justify-between gap-3 shadow-md border border-blue-600/80 cursor-pointer transition-all active:scale-[0.98]"
+            className="bg-[#EFF6FF] hover:bg-blue-100/80 text-slate-900 rounded-2xl p-4 flex flex-col justify-between gap-3 shadow-2xs border border-blue-200/90 cursor-pointer transition-all active:scale-[0.98]"
           >
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-white text-[#1D4ED8] flex items-center justify-center shrink-0 shadow-2xs">
+                <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-2xs">
                   <Search className="w-5 h-5 stroke-[2.5]" />
                 </div>
                 <div className="flex flex-col min-w-0">
-                  <h3 className="font-heading font-black text-sm text-white truncate">
+                  <h3 className="font-heading font-black text-sm text-slate-950 truncate">
                     Looking for
                   </h3>
-                  <span className="text-xs font-bold text-blue-100 leading-tight">
+                  <span className="text-xs font-bold text-blue-900/80 leading-tight">
                     என்ன தேவை
                   </span>
                 </div>
               </div>
-              <div className="w-8 h-8 rounded-xl bg-blue-900/60 text-white flex items-center justify-center shrink-0 shadow-2xs">
+              <div className="w-8 h-8 rounded-xl bg-blue-100 text-blue-800 border border-blue-200 flex items-center justify-center shrink-0 shadow-2xs">
                 <ChevronRight className="w-4 h-4 stroke-[3]" />
               </div>
             </div>
@@ -233,12 +233,12 @@ export default function LandingClientPage() {
               {["Rentals", "Cars"].map((cat, i) => (
                 <span
                   key={i}
-                  className="text-[10px] text-white font-bold bg-white/15 px-2 py-0.5 rounded-md border border-white/20 whitespace-nowrap shrink-0"
+                  className="text-[10px] text-slate-800 font-bold bg-white px-2 py-0.5 rounded-md border border-blue-200/80 whitespace-nowrap shrink-0"
                 >
                   {cat}
                 </span>
               ))}
-              <span className="text-[10px] font-black text-[#FBBF24] bg-amber-400/20 px-2 py-0.5 rounded-md border border-amber-400/30 whitespace-nowrap shrink-0">
+              <span className="text-[10px] font-black text-blue-800 bg-blue-100 px-2 py-0.5 rounded-md border border-blue-300/80 whitespace-nowrap shrink-0">
                 +14 More
               </span>
             </div>
@@ -249,33 +249,33 @@ export default function LandingClientPage() {
                 e.stopPropagation();
                 router.push("/need");
               }}
-              className="w-full h-9 bg-white text-[#1D4ED8] hover:bg-blue-50 font-heading font-black text-xs px-3 rounded-xl flex items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap uppercase tracking-wider"
+              className="w-full h-9 bg-blue-600 hover:bg-blue-700 text-white font-heading font-black text-xs px-3 rounded-xl flex items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap uppercase tracking-wider"
             >
               <span>Explore Need Post</span>
-              <ChevronRight className="w-3.5 h-3.5 text-[#1D4ED8] stroke-[3]" />
+              <ChevronRight className="w-3.5 h-3.5 text-white stroke-[3]" />
             </button>
           </div>
 
           {/* Card 3: Local Service */}
           <div
             onClick={() => router.push("/services")}
-            className="bg-[#1D4ED8] hover:bg-blue-700 text-white rounded-2xl p-4 flex flex-col justify-between gap-3 shadow-md border border-blue-600/80 cursor-pointer transition-all active:scale-[0.98]"
+            className="bg-[#EFF6FF] hover:bg-blue-100/80 text-slate-900 rounded-2xl p-4 flex flex-col justify-between gap-3 shadow-2xs border border-blue-200/90 cursor-pointer transition-all active:scale-[0.98]"
           >
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-white text-[#1D4ED8] flex items-center justify-center shrink-0 shadow-2xs">
+                <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-2xs">
                   <Wrench className="w-5 h-5 stroke-[2.5]" />
                 </div>
                 <div className="flex flex-col min-w-0">
-                  <h3 className="font-heading font-black text-sm text-white truncate">
+                  <h3 className="font-heading font-black text-sm text-slate-950 truncate">
                     Local Service
                   </h3>
-                  <span className="text-xs font-bold text-blue-100 leading-tight">
+                  <span className="text-xs font-bold text-blue-900/80 leading-tight">
                     உள்ளூர் சேவை
                   </span>
                 </div>
               </div>
-              <div className="w-8 h-8 rounded-xl bg-blue-900/60 text-white flex items-center justify-center shrink-0 shadow-2xs">
+              <div className="w-8 h-8 rounded-xl bg-blue-100 text-blue-800 border border-blue-200 flex items-center justify-center shrink-0 shadow-2xs">
                 <ChevronRight className="w-4 h-4 stroke-[3]" />
               </div>
             </div>
@@ -284,12 +284,12 @@ export default function LandingClientPage() {
               {["Electrician", "Plumber"].map((cat, i) => (
                 <span
                   key={i}
-                  className="text-[10px] text-white font-bold bg-white/15 px-2 py-0.5 rounded-md border border-white/20 whitespace-nowrap shrink-0"
+                  className="text-[10px] text-slate-800 font-bold bg-white px-2 py-0.5 rounded-md border border-blue-200/80 whitespace-nowrap shrink-0"
                 >
                   {cat}
                 </span>
               ))}
-              <span className="text-[10px] font-black text-[#FBBF24] bg-amber-400/20 px-2 py-0.5 rounded-md border border-amber-400/30 whitespace-nowrap shrink-0">
+              <span className="text-[10px] font-black text-blue-800 bg-blue-100 px-2 py-0.5 rounded-md border border-blue-300/80 whitespace-nowrap shrink-0">
                 +18 More
               </span>
             </div>
@@ -300,33 +300,33 @@ export default function LandingClientPage() {
                 e.stopPropagation();
                 router.push("/services");
               }}
-              className="w-full h-9 bg-white text-[#1D4ED8] hover:bg-blue-50 font-heading font-black text-xs px-3 rounded-xl flex items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap uppercase tracking-wider"
+              className="w-full h-9 bg-blue-600 hover:bg-blue-700 text-white font-heading font-black text-xs px-3 rounded-xl flex items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap uppercase tracking-wider"
             >
               <span>Explore Service Provider</span>
-              <ChevronRight className="w-3.5 h-3.5 text-[#1D4ED8] stroke-[3]" />
+              <ChevronRight className="w-3.5 h-3.5 text-white stroke-[3]" />
             </button>
           </div>
 
           {/* Card 4: Local Offer */}
           <div
             onClick={() => router.push("/shops")}
-            className="bg-[#1D4ED8] hover:bg-blue-700 text-white rounded-2xl p-4 flex flex-col justify-between gap-3 shadow-md border border-blue-600/80 cursor-pointer transition-all active:scale-[0.98]"
+            className="bg-[#EFF6FF] hover:bg-blue-100/80 text-slate-900 rounded-2xl p-4 flex flex-col justify-between gap-3 shadow-2xs border border-blue-200/90 cursor-pointer transition-all active:scale-[0.98]"
           >
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-white text-[#1D4ED8] flex items-center justify-center shrink-0 shadow-2xs">
+                <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-2xs">
                   <Store className="w-5 h-5 stroke-[2.5]" />
                 </div>
                 <div className="flex flex-col min-w-0">
-                  <h3 className="font-heading font-black text-sm text-white truncate">
+                  <h3 className="font-heading font-black text-sm text-slate-950 truncate">
                     Local Offer
                   </h3>
-                  <span className="text-xs font-bold text-blue-100 leading-tight">
+                  <span className="text-xs font-bold text-blue-900/80 leading-tight">
                     உள்ளூர் சலுகைகள்
                   </span>
                 </div>
               </div>
-              <div className="w-8 h-8 rounded-xl bg-blue-900/60 text-white flex items-center justify-center shrink-0 shadow-2xs">
+              <div className="w-8 h-8 rounded-xl bg-blue-100 text-blue-800 border border-blue-200 flex items-center justify-center shrink-0 shadow-2xs">
                 <ChevronRight className="w-4 h-4 stroke-[3]" />
               </div>
             </div>
@@ -335,12 +335,12 @@ export default function LandingClientPage() {
               {["Discounts", "Cafes"].map((cat, i) => (
                 <span
                   key={i}
-                  className="text-[10px] text-white font-bold bg-white/15 px-2 py-0.5 rounded-md border border-white/20 whitespace-nowrap shrink-0"
+                  className="text-[10px] text-slate-800 font-bold bg-white px-2 py-0.5 rounded-md border border-blue-200/80 whitespace-nowrap shrink-0"
                 >
                   {cat}
                 </span>
               ))}
-              <span className="text-[10px] font-black text-[#FBBF24] bg-amber-400/20 px-2 py-0.5 rounded-md border border-amber-400/30 whitespace-nowrap shrink-0">
+              <span className="text-[10px] font-black text-blue-800 bg-blue-100 px-2 py-0.5 rounded-md border border-blue-300/80 whitespace-nowrap shrink-0">
                 +15 More
               </span>
             </div>
@@ -351,10 +351,10 @@ export default function LandingClientPage() {
                 e.stopPropagation();
                 router.push("/shops");
               }}
-              className="w-full h-9 bg-white text-[#1D4ED8] hover:bg-blue-50 font-heading font-black text-xs px-3 rounded-xl flex items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap uppercase tracking-wider"
+              className="w-full h-9 bg-blue-600 hover:bg-blue-700 text-white font-heading font-black text-xs px-3 rounded-xl flex items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap uppercase tracking-wider"
             >
               <span>Explore Local Offer</span>
-              <ChevronRight className="w-3.5 h-3.5 text-[#1D4ED8] stroke-[3]" />
+              <ChevronRight className="w-3.5 h-3.5 text-white stroke-[3]" />
             </button>
           </div>
         </section>
