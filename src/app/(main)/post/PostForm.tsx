@@ -737,11 +737,24 @@ export default function PostForm({ segment }: PostFormProps) {
                   {imagePreview ? (
                     <div className="relative w-full max-h-48 rounded-xl overflow-hidden border border-slate-200 shadow-sm">
                       <img src={imagePreview} alt="Visiting card preview" className="w-full h-48 object-cover" />
-                      <label className="absolute bottom-2 right-2 bg-slate-950/85 hover:bg-slate-950 text-white text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer flex items-center gap-1 backdrop-blur-xs">
-                        <Camera className="w-3.5 h-3.5" />
-                        <span>Change Photo</span>
-                        <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
-                      </label>
+                      <div className="absolute bottom-2 right-2 flex items-center gap-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setImagePreview("");
+                            setSelectedImage(null);
+                          }}
+                          className="bg-red-600/90 hover:bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer flex items-center gap-1 backdrop-blur-xs shadow"
+                        >
+                          <X className="w-3.5 h-3.5" />
+                          <span>Remove</span>
+                        </button>
+                        <label className="bg-slate-950/85 hover:bg-slate-950 text-white text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer flex items-center gap-1 backdrop-blur-xs shadow">
+                          <Camera className="w-3.5 h-3.5" />
+                          <span>Change Photo</span>
+                          <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+                        </label>
+                      </div>
                     </div>
                   ) : (
                     <label className="w-full flex flex-col items-center justify-center gap-2 cursor-pointer py-2">
