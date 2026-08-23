@@ -442,9 +442,31 @@ export default function LandingClientPage() {
                     {item.sub}
                   </span>
                   <h3 className="font-heading font-bold text-xs text-slate-900 line-clamp-1">{item.title}</h3>
-                  <div className="flex items-center text-slate-600 text-[11px] gap-1 pt-1">
-                    <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
-                    <span>{item.area}</span>
+                  <div className="flex items-center justify-between text-slate-600 text-[11px] pt-1 border-t border-slate-100 mt-1">
+                    <div className="flex items-center gap-1">
+                      <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
+                      <span className="truncate max-w-[100px]">{item.area}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <a
+                        href={`https://wa.me/919994837342?text=${encodeURIComponent(`Hi, I saw your listing "${item.title}" on Namma Thanjai.`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="p-1 rounded-md bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors"
+                        title="Chat on WhatsApp"
+                      >
+                        <MessageSquare className="w-3 h-3 fill-emerald-600" />
+                      </a>
+                      <a
+                        href="tel:919994837342"
+                        onClick={(e) => e.stopPropagation()}
+                        className="p-1 rounded-md bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors"
+                        title="Call Seller"
+                      >
+                        <Phone className="w-3 h-3 text-blue-700" />
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -493,9 +515,31 @@ export default function LandingClientPage() {
                     {item.sub}
                   </span>
                   <h3 className="font-heading font-bold text-xs text-slate-900 line-clamp-1">{item.title}</h3>
-                  <div className="flex items-center text-slate-600 text-[11px] gap-1 pt-1">
-                    <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
-                    <span>{item.area}</span>
+                  <div className="flex items-center justify-between text-slate-600 text-[11px] pt-1 border-t border-slate-100 mt-1">
+                    <div className="flex items-center gap-1">
+                      <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
+                      <span className="truncate max-w-[100px]">{item.area}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <a
+                        href={`https://wa.me/919994837342?text=${encodeURIComponent(`Hi, I saw your requirement "${item.title}" on Namma Thanjai.`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="p-1 rounded-md bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors"
+                        title="Chat on WhatsApp"
+                      >
+                        <MessageSquare className="w-3 h-3 fill-emerald-600" />
+                      </a>
+                      <a
+                        href="tel:919994837342"
+                        onClick={(e) => e.stopPropagation()}
+                        className="p-1 rounded-md bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors"
+                        title="Call"
+                      >
+                        <Phone className="w-3 h-3 text-blue-700" />
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -544,9 +588,31 @@ export default function LandingClientPage() {
                     <span className="text-[10px] font-bold text-slate-600">{item.exp}</span>
                   </div>
                   <h3 className="font-heading font-bold text-xs text-slate-900 line-clamp-1">{item.name}</h3>
-                  <div className="flex items-center text-slate-600 text-[11px] gap-1 pt-1">
-                    <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
-                    <span>{item.area}</span>
+                  <div className="flex items-center justify-between text-slate-600 text-[11px] pt-1 border-t border-slate-100 mt-1">
+                    <div className="flex items-center gap-1">
+                      <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
+                      <span className="truncate max-w-[100px]">{item.area}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <a
+                        href={`https://wa.me/919994837342?text=${encodeURIComponent(`Hi, I saw your service "${item.name}" on Namma Thanjai.`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="p-1 rounded-md bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors"
+                        title="Chat on WhatsApp"
+                      >
+                        <MessageSquare className="w-3 h-3 fill-emerald-600" />
+                      </a>
+                      <a
+                        href="tel:919994837342"
+                        onClick={(e) => e.stopPropagation()}
+                        className="p-1 rounded-md bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors"
+                        title="Call Technician"
+                      >
+                        <Phone className="w-3 h-3 text-blue-700" />
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -593,9 +659,31 @@ export default function LandingClientPage() {
                 <div className="p-3.5 flex flex-col gap-1">
                   <h3 className="font-heading font-extrabold text-xs text-slate-900 line-clamp-1">{item.store}</h3>
                   <p className="text-[11px] text-slate-600 font-bold line-clamp-1">{item.title}</p>
-                  <div className="flex items-center text-slate-600 text-[10px] gap-1 mt-1">
-                    <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
-                    <span>{item.area}</span>
+                  <div className="flex items-center justify-between text-slate-600 text-[10px] pt-1 border-t border-slate-100 mt-1">
+                    <div className="flex items-center gap-1">
+                      <MapPin className="w-3 h-3 text-slate-400 shrink-0" />
+                      <span className="truncate max-w-[100px]">{item.area}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <a
+                        href={`https://wa.me/919994837342?text=${encodeURIComponent(`Hi, I saw your offer "${item.title}" at ${item.store} on Namma Thanjai.`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="p-1 rounded-md bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors"
+                        title="Chat on WhatsApp"
+                      >
+                        <MessageSquare className="w-3 h-3 fill-emerald-600" />
+                      </a>
+                      <a
+                        href="tel:919994837342"
+                        onClick={(e) => e.stopPropagation()}
+                        className="p-1 rounded-md bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors"
+                        title="Call Store"
+                      >
+                        <Phone className="w-3 h-3 text-blue-700" />
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>

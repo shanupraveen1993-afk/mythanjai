@@ -125,44 +125,18 @@ export default function UniversalSearchBar() {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           onFocus={() => searchTerm.trim().length >= 2 && setIsOpen(true)}
-          placeholder="Search Selling / Looking For, Local Service, Local Offer across Thanjavur..."
-          autoComplete="on"
-          autoCorrect="on"
-          spellCheck={true}
-          autoCapitalize="sentences"
+          placeholder="Search Selling, Looking For, Local Service, Local Offer across Thanjavur..."
+          autoComplete="off"
           className="w-full bg-transparent text-xs text-slate-900 placeholder-slate-400 focus:outline-none font-extrabold tracking-tight"
         />
-        {typeof window !== "undefined" && ("webkitSpeechRecognition" in window || "SpeechRecognition" in window) && (
-          <button
-            type="button"
-            onClick={() => {
-              try {
-                const SpeechRecognition = (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
-                const recognition = new SpeechRecognition();
-                recognition.lang = "en-IN";
-                recognition.start();
-                recognition.onresult = (event: any) => {
-                  const transcript = event.results[0][0].transcript;
-                  if (transcript) setSearchTerm(transcript);
-                };
-              } catch (e) {}
-            }}
-            className="p-1.5 text-amber-600 hover:text-amber-700 transition-colors cursor-pointer shrink-0"
-            title="Voice Search"
-          >
-            <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-              <path d="M12 14c1.66 0 3-1.34 3-3V5c0-1.66-1.34-3-3-3S9 3.34 9 5v6c0 1.66 1.34 3 3 3z" />
-              <path d="M17 11c0 2.76-2.24 5-5 5s-5-2.24-5-5H5c0 3.53 2.61 6.43 6 6.92V21h2v-3.08c3.39-.49 6-3.39 6-6.92h-2z" />
-            </svg>
-          </button>
-        )}
         {searchTerm && (
           <button
+            type="button"
             onClick={() => {
               setSearchTerm("");
               setIsOpen(false);
             }}
-            className="p-1 rounded-full text-slate-400 hover:text-slate-600 transition-colors"
+            className="p-1 rounded-full text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
           >
             <X className="w-3.5 h-3.5" />
           </button>
