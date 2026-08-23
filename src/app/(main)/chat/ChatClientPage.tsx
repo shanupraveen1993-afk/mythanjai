@@ -120,6 +120,9 @@ export default function ChatClientPage() {
       const generatedChatId = `${queryListingId || "post"}_${[currentUserId, sellerId].sort().join("_")}`;
       setActiveChatId(generatedChatId);
       setActiveListingTitle(queryTitle);
+        // Preset message offering interest in the ad
+        setInputText(`Hi, I saw your listing "${queryTitle}". I'm interested and would like more details.`);
+
       setActivePeerId(sellerId);
       setActivePeerName(queryTitle !== "Classified Item" ? queryTitle : "Seller / Contact");
       setShowMobileChat(true);

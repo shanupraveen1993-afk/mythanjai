@@ -29,11 +29,11 @@ export default function StaticApkCard({
 
   const handleDownloadApk = () => {
     setIsDownloading(true);
-    toast.success("Starting Namma Thanjai Official APK v5.9 Download...");
+    toast.success("Starting Namma Thanjai Official APK v12 Download...");
 
     const link = document.createElement("a");
-    link.href = "/NammaThanjai.apk";
-    link.download = "NammaThanjai-v5.9.apk";
+    link.href = "/NammaThanjai-v12.apk";
+    link.download = "NammaThanjai-v12.apk";
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -66,7 +66,7 @@ export default function StaticApkCard({
           <div className="flex flex-col gap-2 flex-1">
             <div className="flex items-center gap-2.5 flex-wrap">
               <span className="bg-amber-400 text-slate-900 font-heading font-bold text-xs uppercase tracking-wider px-3 py-1 rounded-full border border-amber-500">
-                Official Android App v5.9
+                Official Android App v12
               </span>
               <span className="text-xs font-semibold text-emerald-700 flex items-center gap-1">
                 <ShieldCheck className="w-4 h-4 text-emerald-600 stroke-[2.5]" />

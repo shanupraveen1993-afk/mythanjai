@@ -33,7 +33,7 @@ import {
 } from "lucide-react";
 import ListingCard from "@/components/cards/ListingCard";
 import ServiceCard from "@/components/cards/ServiceCard";
-import ShopCard from "@/components/cards/ShopCard";
+
 import ThanjavurLocationInput from "@/components/location/ThanjavurLocationInput";
 import { NeedOrSalePost, ServiceProviderPost, ShopPost, OfferPost } from "@/types";
 
@@ -186,7 +186,6 @@ export default function PostForm({ segment }: PostFormProps) {
         setDescription(desc);
         setPreviewDescription(desc);
       }
-      if (data.category || data.skill_category) setCategory(data.category || data.skill_category);
       if (data.area_tag) setArea(data.area_tag);
       if (data.price !== undefined && data.price !== null) setPrice(String(data.price));
       if (data.phone) setPhone(data.phone);
@@ -287,7 +286,6 @@ export default function PostForm({ segment }: PostFormProps) {
           if (extFrom) setValidFrom(extFrom);
           if (extTo) setValidTo(extTo);
           if (area_tag) setArea(area_tag);
-          if (extCategory && config.categories.includes(extCategory)) setCategory(extCategory);
           toast.success("AI extracted details & formatted description!");
         } else {
           toast.success("AI polished description!");
@@ -371,12 +369,11 @@ export default function PostForm({ segment }: PostFormProps) {
         const res = await fetch(apiEndpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ imageBase64: compressed.base64, mimeType: compressed.blob.type }) });
         const result = await res.json();
         if (result.success && result.data) {
-          const { shop_name, detected_area, category: ocrCat, phone: ocrPhone } = result.data;
+          const { shop_name, detected_area, phone: ocrPhone } = result.data;
           if (shop_name) setTitle(shop_name);
           if (detected_area) setArea(detected_area);
-          if (ocrCat && config.categories.includes(ocrCat)) setCategory(ocrCat);
           if (ocrPhone) setPhone(ocrPhone);
-          toast.success("AI extracted Company Name, Location, Category & Phone!");
+          toast.success("AI extracted Company Name, Location & Phone!");
         }
       } catch (err) {
         console.warn("OCR auto-extraction skipped:", err);
@@ -428,7 +425,6 @@ export default function PostForm({ segment }: PostFormProps) {
     const localPostRecord: any = {
       id: targetPostId,
       userId: uid,
-      category,
       area_tag: area,
       phone: phone || "9876543210",
       created_at: new Date().toISOString(),
@@ -447,7 +443,6 @@ export default function PostForm({ segment }: PostFormProps) {
       }
     } else if (segment === "service") {
       localPostRecord.name = title.trim();
-      localPostRecord.skill_category = category;
       localPostRecord.is_available_now = isAvailable;
       localPostRecord.experience = allWorkingDays === "Yes" ? "All Working Days" : "Flexible Days";
       localPostRecord.working_hours = sundayLeave === "Yes" ? "Sunday Off" : "Open 7 Days";
@@ -525,7 +520,6 @@ export default function PostForm({ segment }: PostFormProps) {
             title: title.trim(),
             description: cleanDesc,
             raw_text: cleanDesc,
-            category,
             area_tag: area,
             price: price || null,
             phone: phone || "9876543210",
@@ -553,7 +547,6 @@ export default function PostForm({ segment }: PostFormProps) {
           const payload: any = {
             userId: uid,
             name: title.trim(),
-            skill_category: category,
             is_available_now: isAvailable,
             experience: allWorkingDays === "Yes" ? "All Working Days" : "Flexible Days",
             working_hours: sundayLeave === "Yes" ? "Sunday Off" : "Open 7 Days",
@@ -592,7 +585,6 @@ export default function PostForm({ segment }: PostFormProps) {
           const payload: any = {
             userId: uid,
             shop_name: title.trim(),
-            category,
             area_tag: area,
             phone: phone || "9876543210",
             image_url: imageUrl,
@@ -635,7 +627,6 @@ export default function PostForm({ segment }: PostFormProps) {
       raw_text: description.trim(),
       title: title.trim() || (segment === "sell" ? "Sample Item Title" : "Sample Requirement Title"),
       description: previewDescription || description.trim() || "Live preview description will appear here after AI optimization...",
-      category: category || config.categories[0],
       area_tag: area || TANJORE_LOCALITIES[0],
       price: price || (segment === "sell" ? "2500000" : "10000"),
       phone: phone || profile?.phone || "+91 9994837342",
@@ -646,14 +637,13 @@ export default function PostForm({ segment }: PostFormProps) {
       created_at: new Date() as any,
       expires_at: new Date(Date.now() + 30 * 86400000) as any,
     };
-  }, [title, description, previewDescription, category, area, price, phone, profile, imagePreview, imagePreviews, segment, user, config.categories, showPhone]);
+  }, [title, description, previewDescription, area, price, phone, profile, imagePreview, imagePreviews, segment, user, showPhone]);
 
   const previewServicePost = useMemo<ServiceProviderPost>(() => {
     return {
       id: "preview_service",
       userId: user?.uid || "preview_user",
       name: title.trim() || "Senthil Kumar — Electrician",
-      skill_category: category || config.categories[0],
       experience: allWorkingDays === "Yes" ? "All Working Days" : "Flexible Days",
       working_hours: sundayLeave === "Yes" ? "Sunday Off" : "Open 7 Days",
       phone: phone || "9876543210",
@@ -664,14 +654,13 @@ export default function PostForm({ segment }: PostFormProps) {
       is_verified: true,
       created_at: new Date() as any,
     };
-  }, [title, description, previewDescription, category, area, allWorkingDays, sundayLeave, phone, imagePreview, user, config.categories]);
+  }, [title, description, previewDescription, area, allWorkingDays, sundayLeave, phone, imagePreview, user]);
 
   const previewShopPost = useMemo<ShopPost>(() => {
     return {
       id: "preview_shop",
       userId: user?.uid || "preview_user",
       shop_name: title.trim() || "GLEN Exclusive Store",
-      category: category || config.categories[0],
       address_text: area ? `${area}, Thanjavur` : "Thanjavur",
       landmark: "Near Main Road",
       hours: "Valid 30 Days",
@@ -688,7 +677,7 @@ export default function PostForm({ segment }: PostFormProps) {
       is_claimed: true,
       created_at: new Date() as any,
     };
-  }, [title, description, previewDescription, category, area, validFrom, validTo, showPhone, phone, imagePreview, user, config.categories]);
+  }, [title, description, previewDescription, area, validFrom, validTo, showPhone, phone, imagePreview, user]);
 
   const formattedPriceBadge = formatIndianCurrencyText(price);
 
@@ -759,36 +748,37 @@ export default function PostForm({ segment }: PostFormProps) {
                   )}
                 </div>
 
-                {/* OPTIONAL VIDEO FLYER UPLOAD (FOR STORE OFFER) — Styled identical to Card Photo Upload */}
-                <div className="flex flex-col gap-1 w-full">
-                  <label className="text-xs font-semibold text-slate-700 flex items-center justify-between">
-                    <span>Store Video Promo / Reel (Optional)</span>
-                    <span className="text-[10px] text-slate-400 font-medium">MP4/MOV &lt; 25MB</span>
-                  </label>
-                  {videoPreview ? (
-                    <div className="relative w-full h-32 rounded-xl overflow-hidden border border-slate-200 bg-slate-950 group flex items-center justify-center">
-                      <video src={videoPreview} className="w-full h-full object-cover" controls muted />
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setVideoPreview("");
-                          setSelectedVideo(null);
-                        }}
-                        className="absolute top-2 right-2 z-20 bg-slate-900/90 text-white p-1.5 rounded-full hover:bg-red-600 transition-colors shadow cursor-pointer"
-                        title="Remove Video"
-                      >
-                        <X className="w-4 h-4" />
-                      </button>
-                    </div>
-                  ) : (
-                    <label className="border-2 border-dashed border-slate-300 hover:border-amber-500 rounded-xl p-4 flex flex-col items-center justify-center text-center cursor-pointer transition-colors bg-slate-50 hover:bg-amber-500/5 group">
-                      <Video className="w-6 h-6 text-slate-400 group-hover:text-amber-500 transition-colors mb-1" />
-                      <span className="text-xs font-bold text-slate-800">Upload Store Video Promo / Reel</span>
-                      <span className="text-[10px] text-slate-500 font-medium">Click to attach video file</span>
-                      <input type="file" accept="video/*" onChange={handleVideoChange} className="hidden" />
+                {isAdminUser && (
+                  <div className="flex flex-col gap-1 w-full">
+                    <label className="text-xs font-semibold text-slate-700 flex items-center justify-between">
+                      <span>Store Video Promo / Reel (Optional)</span>
+                      <span className="text-[10px] text-slate-400 font-medium">MP4/MOV &lt; 25MB</span>
                     </label>
-                  )}
-                </div>
+                    {videoPreview ? (
+                      <div className="relative w-full h-32 rounded-xl overflow-hidden border border-slate-200 bg-slate-950 group flex items-center justify-center">
+                        <video src={videoPreview} className="w-full h-full object-cover" controls muted />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setVideoPreview("");
+                            setSelectedVideo(null);
+                          }}
+                          className="absolute top-2 right-2 z-20 bg-slate-900/90 text-white p-1.5 rounded-full hover:bg-red-600 transition-colors shadow cursor-pointer"
+                          title="Remove Video"
+                        >
+                          <X className="w-4 h-4" />
+                        </button>
+                      </div>
+                    ) : (
+                      <label className="border-2 border-dashed border-slate-300 hover:border-amber-500 rounded-xl p-4 flex flex-col items-center justify-center text-center cursor-pointer transition-colors bg-slate-50 hover:bg-amber-500/5 group">
+                        <Video className="w-6 h-6 text-slate-400 group-hover:text-amber-500 transition-colors mb-1" />
+                        <span className="text-xs font-bold text-slate-800">Upload Store Video Promo / Reel</span>
+                        <span className="text-[10px] text-slate-500 font-medium">Click to attach video file</span>
+                        <input type="file" accept="video/*" onChange={handleVideoChange} className="hidden" />
+                      </label>
+                    )}
+                  </div>
+                )}
 
                 {/* 2. EXPLICIT SHOP NAME INPUT */}
                 <div className="flex flex-col gap-1.5">
@@ -811,7 +801,7 @@ export default function PostForm({ segment }: PostFormProps) {
                   />
                 </div>
 
-                {/* 3. OFFER DESCRIPTION */}
+
                 <div className="flex flex-col gap-1.5">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -908,6 +898,22 @@ export default function PostForm({ segment }: PostFormProps) {
                   />
                 </div>
 
+                {/* 6. OFFER PHONE INPUT */}
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                    <Phone className="w-4 h-4 text-slate-400" />
+                    Contact phone number (Editable) *
+                  </label>
+                  <input
+                    type="tel"
+                    required
+                    placeholder="e.g. 9994837342"
+                    value={phone}
+                    onChange={(e) => { userEditedPhone.current = true; setPhone(e.target.value); }}
+                    className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900"
+                  />
+                </div>
+
                 {/* 7. PHONE NUMBER VISIBILITY TOGGLE (CLEAN WITHOUT SUBTEXT) */}
                 <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 flex items-center justify-between gap-3">
                   <span className="text-sm font-bold text-slate-800 flex items-center gap-2">
@@ -928,25 +934,6 @@ export default function PostForm({ segment }: PostFormProps) {
             ) : (
               /* NON-OFFER FORMS (SELL, NEED, SERVICE) */
               <>
-                {/* ROW 1: Category only */}
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
-                    <Tag className="w-4 h-4 text-slate-400" />
-                    Category *
-                  </label>
-                  <select
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 cursor-pointer transition-all"
-                  >
-                    {config.categories.map((cat) => (
-                      <option key={cat} value={cat}>
-                        {cat}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
                 {/* ROW 2: Title (for sell/need) or Name (for service) */}
                 <div className="flex flex-col gap-1.5">
                   <div className="flex items-center justify-between">
