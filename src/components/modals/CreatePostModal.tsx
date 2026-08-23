@@ -716,27 +716,7 @@ export default function CreatePostModal({
   const displayExperience = experience || getSamplePost().experience || "8 Years";
   const displayHours = hours || getSamplePost().hours || "9:00 AM - 9:00 PM";
 
-  const CATEGORY_STOCK_IMAGES: Record<string, string> = {
-    // Classifieds
-    "Plots & Real Estate": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?auto=format&fit=crop&w=400&q=80",
-    "Property Rental": "https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=400&q=80",
-    "Motor Vehicle": "https://images.unsplash.com/photo-1533473359331-0135ef1b58bf?auto=format&fit=crop&w=400&q=80",
-    "Electronics": "https://images.unsplash.com/photo-1498049794561-7780e7231661?auto=format&fit=crop&w=400&q=80",
-    "Others": "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=400&q=80",
-    
-    // Services
-    "Electrician": "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=400&q=80",
-    "Plumber": "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=400&q=80",
-    "AC & Refrigeration": "https://images.unsplash.com/photo-1581092921461-eab62e97a780?auto=format&fit=crop&w=400&q=80",
-    "Carpenter": "https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=400&q=80",
-    
-    // Shops
-    "Cafe & Restaurant": "https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&w=400&q=80",
-    "Supermarket & Grocery": "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=400&q=80",
-    "Textiles & Clothing": "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?auto=format&fit=crop&w=400&q=80",
-    "Jewelry Showroom": "https://images.unsplash.com/photo-1599643478518-a784e5dc4c8f?auto=format&fit=crop&w=400&q=80",
-    "General Shop": "https://images.unsplash.com/photo-1534723452862-4c874018d66d?auto=format&fit=crop&w=400&q=80",
-  };
+  const CATEGORY_STOCK_IMAGES: Record<string, string> = {};
 
   const activeCategory: string = (() => {
     if (type === "needs") return classifiedCategory;
@@ -746,7 +726,8 @@ export default function CreatePostModal({
     return "Others";
   })();
 
-  const previewImage = imagePreview || CATEGORY_STOCK_IMAGES[activeCategory] || "https://images.unsplash.com/photo-1513151233558-d860c5398176?auto=format&fit=crop&w=400&q=80";
+  const previewImage = imagePreview || "";
+
 
   const getPreviewIcon = () => {
     switch (activeCategory) {

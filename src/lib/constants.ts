@@ -102,42 +102,10 @@ export const OFFER_CATEGORIES = [
   "Weekend Deal",
 ] as const;
 
-// Unsplash high quality localized category cover fallbacks
-export const CATEGORY_IMAGE_MAP: Record<string, string> = {
-  // Classifieds
-  "Property Rental": "https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=600&auto=format&fit=crop",
-  "Plots & Real Estate": "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=600&auto=format&fit=crop",
-  "Used Vehicles": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600&auto=format&fit=crop",
-  "Electronics & Mobiles": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600&auto=format&fit=crop",
-  "Household Goods": "https://images.unsplash.com/photo-1583847268964-b28dc8f51f92?w=600&auto=format&fit=crop",
-  "Jobs & Opportunities": "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?w=600&auto=format&fit=crop",
-  "General Requirement": "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?w=600&auto=format&fit=crop",
-
-  // Services
-  "Electrician": "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=600&auto=format&fit=crop",
-  "Plumber": "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=600&auto=format&fit=crop",
-  "AC & Fridge Repair": "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=600&auto=format&fit=crop",
-  "Mechanic (Bike & Car)": "https://images.unsplash.com/photo-1617814076367-b759c7d7e738?w=600&auto=format&fit=crop",
-  "Carpenter": "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?w=600&auto=format&fit=crop",
-  "Painter": "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=600&auto=format&fit=crop",
-  "Cleaning & Housekeeping": "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600&auto=format&fit=crop",
-  "Catering & Cooking": "https://images.unsplash.com/photo-1555244162-803834f70033?w=600&auto=format&fit=crop",
-  "Driver": "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=600&auto=format&fit=crop",
-  "General Technician": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600&auto=format&fit=crop",
-
-  // Shops
-  "Cafe & Restaurant": "https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&auto=format&fit=crop",
-  "Grocery & Supermarket": "https://images.unsplash.com/photo-1542838132-92c53300491e?w=600&auto=format&fit=crop",
-  "Textiles & Readymades": "https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=600&auto=format&fit=crop",
-  "Gold & Jewelry": "https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?w=600&auto=format&fit=crop",
-  "Medical & Pharmacy": "https://images.unsplash.com/photo-1586015555751-63c2057d59b2?w=600&auto=format&fit=crop",
-  "Hardware & Electricals": "https://images.unsplash.com/photo-1581092160607-ee22621dd758?w=600&auto=format&fit=crop",
-  "Automobile Showroom": "https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600&auto=format&fit=crop",
-  "Education & Coaching": "https://images.unsplash.com/photo-1524995997946-a1c2e315a42f?w=600&auto=format&fit=crop",
-  "General Store": "https://images.unsplash.com/photo-1604719312566-8912e9227c6a?w=600&auto=format&fit=crop",
-};
+export const CATEGORY_IMAGE_MAP: Record<string, string> = {};
 
 export const CATEGORY_ILLUSTRATIONS = CATEGORY_IMAGE_MAP;
+
 
 /**
  * Format raw numbers into standard Indian Lakhs / Crores text (e.g. 25000000 -> ₹2.5 Crore)

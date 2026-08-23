@@ -17,7 +17,7 @@ import {
   PhoneCall,
   MoreVertical,
 } from "lucide-react";
-import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, getDoc } from "firebase/firestore";
+import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/hooks/use-auth";
 import { formatRelativeTime } from "@/lib/constants";
@@ -214,6 +214,29 @@ export default function ChatClientPage() {
         text: currentText,
         timestamp: serverTimestamp(),
       });
+
+      // Update thread document in Firestore and local storage
+      const threadRef = doc(db, "chats", activeChatId);
+      await setDoc(threadRef, {
+        chatId: activeChatId,
+        listingId: queryListingId || "post",
+        listingTitle: activeListingTitle,
+        peerId: activePeerId,
+        peerName: activePeerName,
+        lastMessage: currentText,
+        lastTimestamp: serverTimestamp(),
+        participants: [user?.uid || "guest_user", activePeerId].filter(Boolean),
+      }, { merge: true });
+
+      setThreads((prev) => {
+        const updated = prev.map((t) =>
+          t.chatId === activeChatId ? { ...t, lastMessage: currentText, lastTimestamp: new Date() } : t
+        );
+        if (typeof window !== "undefined") {
+          try { localStorage.setItem("namma_thanjai_chat_threads", JSON.stringify(updated)); } catch (e) {}
+        }
+        return updated;
+      });
     } catch (err) {
       console.warn("Failed to send message to Firestore (using local preview):", err);
       setMessages((prev) => [
@@ -234,6 +257,7 @@ export default function ChatClientPage() {
       }, 100);
     }
   };
+
 
   const highlightFlaggedText = (text: string) => {
     const textLower = text.toLowerCase();

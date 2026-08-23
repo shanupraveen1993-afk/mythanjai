@@ -193,24 +193,9 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
   };
 
   const getCategoryIllustrationSrc = (category: string) => {
-    const cat = (category || "").toLowerCase();
-    if (cat.includes("plumber") || cat.includes("water") || cat.includes("pipe")) {
-      return "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=600&auto=format&fit=crop";
-    }
-    if (cat.includes("electrician") || cat.includes("wire") || cat.includes("power")) {
-      return "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=600&auto=format&fit=crop";
-    }
-    if (cat.includes("carpenter") || cat.includes("wood") || cat.includes("furniture")) {
-      return "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?w=600&auto=format&fit=crop";
-    }
-    if (cat.includes("paint")) {
-      return "https://images.unsplash.com/photo-1589939705384-5185137a7f0f?w=600&auto=format&fit=crop";
-    }
-    if (cat.includes("ac") || cat.includes("cool")) {
-      return "https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=600&auto=format&fit=crop";
-    }
-    return "https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=600&auto=format&fit=crop";
+    return "";
   };
+
 
   const illustrationSrc = getCategoryIllustrationSrc(post.skill_category);
 
