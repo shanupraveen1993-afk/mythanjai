@@ -80,28 +80,10 @@ export default function UniversalSearchBar() {
           }
         });
 
-        // Add local fallback sample items if Firestore results are sparse
-        const sampleClassifieds = [
-          { id: "sample_1", title: "2 BHK Independent House for Rent", category: "Property Rental", area_tag: "Medical College Rd", price: 12000, phone: "919994837342" },
-          { id: "sample_2", title: "Hero Splendor 2022 Bike", category: "Motor Vehicle", area_tag: "Vallam", price: 65000, phone: "919994837342" },
-          { id: "sample_3", title: "iPhone 13 128GB Pristine Condition", category: "Electronics", area_tag: "New Bus Stand", price: 38000, phone: "919994837342" },
-        ].filter(i => `${i.title} ${i.category} ${i.area_tag}`.toLowerCase().includes(queryTerm));
-
-        const sampleServices = [
-          { id: "sample_s1", name: "Senthil Kumar Electrician", skill_category: "Electrician", area_tag: "Tanjore Town", phone: "919994837342" },
-          { id: "sample_s2", name: "Rajesh K Kaveri Plumber", skill_category: "Plumber", area_tag: "Medical College Rd", phone: "919994837342" },
-          { id: "sample_s3", name: "Venu Gopal Wood Architect", skill_category: "Carpenter", area_tag: "South Rampart Rd", phone: "919994837342" },
-        ].filter(i => `${i.name} ${i.skill_category} ${i.area_tag}`.toLowerCase().includes(queryTerm));
-
-        const sampleShops = [
-          { id: "sample_sh1", shop_name: "Tanjore Degree Coffee", offer_title: "Buy 1 Get 1 Free Degree Coffee", category: "Cafe & Restaurant", area_tag: "Near Big Temple", phone: "919994837342" },
-          { id: "sample_sh2", shop_name: "Thanjavur Silk Handlooms", offer_title: "Flat 20% Off Silk Sarees", category: "Clothing & Fashion", area_tag: "South Rampart Rd", phone: "919994837342" },
-        ].filter(i => `${i.shop_name} ${i.offer_title} ${i.area_tag}`.toLowerCase().includes(queryTerm));
-
         setResults({
-          classifieds: [...matchedClassifieds, ...sampleClassifieds].slice(0, 4),
-          services: [...matchedServices, ...sampleServices].slice(0, 4),
-          shops: [...matchedShops, ...sampleShops].slice(0, 4),
+          classifieds: matchedClassifieds.slice(0, 4),
+          services: matchedServices.slice(0, 4),
+          shops: matchedShops.slice(0, 4),
         });
       } catch (err) {
         console.error("Universal search failed:", err);
@@ -114,11 +96,19 @@ export default function UniversalSearchBar() {
     return () => clearTimeout(timer);
   }, [searchTerm]);
 
+  const handleFormSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      setIsOpen(false);
+      router.push(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
+    }
+  };
+
   const totalMatches = results.classifieds.length + results.services.length + results.shops.length;
 
   return (
     <div ref={containerRef} className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-3 pb-1">
-      <div className="relative flex items-center w-full bg-slate-50 hover:bg-white focus-within:bg-white border border-slate-250 focus-within:border-yellow-500 rounded-2xl px-3.5 py-2 shadow-2xs transition-all">
+      <form onSubmit={handleFormSubmit} className="relative flex items-center w-full bg-slate-50 hover:bg-white focus-within:bg-white border border-slate-250 focus-within:border-amber-400 rounded-2xl px-3.5 py-2 shadow-2xs transition-all">
         <Search className="w-4 h-4 text-slate-400 shrink-0 mr-2.5" />
         <input
           type="text"
@@ -141,7 +131,7 @@ export default function UniversalSearchBar() {
             <X className="w-3.5 h-3.5" />
           </button>
         )}
-      </div>
+      </form>
 
       {/* Universal Search Results Dropdown Overlay */}
       {isOpen && (
