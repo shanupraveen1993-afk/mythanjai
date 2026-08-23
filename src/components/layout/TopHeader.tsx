@@ -235,7 +235,7 @@ export default function TopHeader({
           {!pathname.includes("/profile") && !pathname.includes("/post") && (
             isHomePage && !isNativeApp ? (
               <a
-                href="https://raw.githubusercontent.com/shanupraveen1993-afk/mythanjai/main/public/NammaThanjai-v12.apk"
+                href="/api/apk-download"
                 download="NammaThanjai-v12.apk"
                 onClick={handleGetAppClick}
                 className="relative group overflow-hidden bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-sm px-4 py-2 rounded-xl font-heading font-black shrink-0 flex items-center gap-2 shadow-xs cursor-pointer select-none border border-amber-400/50 transition-all duration-300"
