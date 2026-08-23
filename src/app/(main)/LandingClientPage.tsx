@@ -152,27 +152,53 @@ export default function LandingClientPage() {
           </div>
         </div>
 
-        {/* ── 2. 4 Segment Category Cards (Uniform Yellow Buttons & Illustration Icons) ── */}
+        {/* ── 2. 4 Segment Category Cards (Responsive: Chevron on Mobile/APK, Button on Desktop) ── */}
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 my-1">
           {/* Card 1: Need to Buy */}
-          <div className="bg-white rounded-2xl border border-slate-250 p-4 flex flex-col justify-between gap-3 shadow-2xs hover:border-slate-350 transition-all">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 flex items-center justify-center shrink-0">
-                <ShoppingBag className="w-5 h-5 text-slate-900" />
+          <div
+            onClick={() => router.push("/sell")}
+            className="bg-white rounded-2xl border border-slate-250 p-4 flex flex-col justify-between gap-3 shadow-2xs hover:border-slate-350 cursor-pointer transition-all active:scale-[0.99]"
+          >
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 flex items-center justify-center shrink-0">
+                  <ShoppingBag className="w-5 h-5 text-slate-900" />
+                </div>
+                <div className="flex flex-col min-w-0">
+                  <h3 className="font-heading font-black text-xs sm:text-sm text-slate-900 truncate">
+                    Need to Buy
+                  </h3>
+                  <span className="text-[11px] font-bold text-slate-500 leading-tight">
+                    வாங்க வேண்டுமா
+                  </span>
+                </div>
               </div>
-              <div className="flex flex-col min-w-0">
-                <h3 className="font-heading font-black text-xs sm:text-sm text-slate-900 truncate">
-                  Need to Buy
-                </h3>
-                <span className="text-[11px] font-bold text-slate-500 leading-tight">
-                  வாங்க வேண்டுமா
-                </span>
+              <div className="lg:hidden w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-900 shrink-0">
+                <ChevronRight className="w-4 h-4 stroke-[3]" />
               </div>
             </div>
+
+            <div className="flex items-center gap-1.5 overflow-hidden">
+              {["Plots", "Bikes"].map((cat, i) => (
+                <span
+                  key={i}
+                  className="text-[10px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 whitespace-nowrap shrink-0 font-medium"
+                >
+                  {cat}
+                </span>
+              ))}
+              <span className="text-[10px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 whitespace-nowrap shrink-0">
+                +12 More
+              </span>
+            </div>
+
             <button
               type="button"
-              onClick={() => router.push("/sell")}
-              className="w-full h-9 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-3 rounded-xl flex items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap"
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push("/sell");
+              }}
+              className="hidden lg:flex w-full h-9 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-3 rounded-xl items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap"
             >
               <span>Explore Seller Post</span>
               <ChevronRight className="w-3.5 h-3.5 text-slate-950 stroke-[3]" />
@@ -180,24 +206,50 @@ export default function LandingClientPage() {
           </div>
 
           {/* Card 2: Looking for */}
-          <div className="bg-white rounded-2xl border border-slate-250 p-4 flex flex-col justify-between gap-3 shadow-2xs hover:border-slate-350 transition-all">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 flex items-center justify-center shrink-0">
-                <Search className="w-5 h-5 text-slate-900" />
+          <div
+            onClick={() => router.push("/need")}
+            className="bg-white rounded-2xl border border-slate-250 p-4 flex flex-col justify-between gap-3 shadow-2xs hover:border-slate-350 cursor-pointer transition-all active:scale-[0.99]"
+          >
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 flex items-center justify-center shrink-0">
+                  <Search className="w-5 h-5 text-slate-900" />
+                </div>
+                <div className="flex flex-col min-w-0">
+                  <h3 className="font-heading font-black text-xs sm:text-sm text-slate-900 truncate">
+                    Looking for
+                  </h3>
+                  <span className="text-[11px] font-bold text-slate-500 leading-tight">
+                    என்ன தேவை
+                  </span>
+                </div>
               </div>
-              <div className="flex flex-col min-w-0">
-                <h3 className="font-heading font-black text-xs sm:text-sm text-slate-900 truncate">
-                  Looking for
-                </h3>
-                <span className="text-[11px] font-bold text-slate-500 leading-tight">
-                  என்ன தேவை
-                </span>
+              <div className="lg:hidden w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-900 shrink-0">
+                <ChevronRight className="w-4 h-4 stroke-[3]" />
               </div>
             </div>
+
+            <div className="flex items-center gap-1.5 overflow-hidden">
+              {["Rentals", "Cars"].map((cat, i) => (
+                <span
+                  key={i}
+                  className="text-[10px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 whitespace-nowrap shrink-0 font-medium"
+                >
+                  {cat}
+                </span>
+              ))}
+              <span className="text-[10px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 whitespace-nowrap shrink-0">
+                +14 More
+              </span>
+            </div>
+
             <button
               type="button"
-              onClick={() => router.push("/need")}
-              className="w-full h-9 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-3 rounded-xl flex items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap"
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push("/need");
+              }}
+              className="hidden lg:flex w-full h-9 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-3 rounded-xl items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap"
             >
               <span>Explore Need Post</span>
               <ChevronRight className="w-3.5 h-3.5 text-slate-950 stroke-[3]" />
@@ -205,24 +257,50 @@ export default function LandingClientPage() {
           </div>
 
           {/* Card 3: Local Service */}
-          <div className="bg-white rounded-2xl border border-slate-250 p-4 flex flex-col justify-between gap-3 shadow-2xs hover:border-slate-350 transition-all">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 flex items-center justify-center shrink-0">
-                <Wrench className="w-5 h-5 text-slate-900" />
+          <div
+            onClick={() => router.push("/services")}
+            className="bg-white rounded-2xl border border-slate-250 p-4 flex flex-col justify-between gap-3 shadow-2xs hover:border-slate-350 cursor-pointer transition-all active:scale-[0.99]"
+          >
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 flex items-center justify-center shrink-0">
+                  <Wrench className="w-5 h-5 text-slate-900" />
+                </div>
+                <div className="flex flex-col min-w-0">
+                  <h3 className="font-heading font-black text-xs sm:text-sm text-slate-900 truncate">
+                    Local Service
+                  </h3>
+                  <span className="text-[11px] font-bold text-slate-500 leading-tight">
+                    உள்ளூர் சேவை
+                  </span>
+                </div>
               </div>
-              <div className="flex flex-col min-w-0">
-                <h3 className="font-heading font-black text-xs sm:text-sm text-slate-900 truncate">
-                  Local Service
-                </h3>
-                <span className="text-[11px] font-bold text-slate-500 leading-tight">
-                  உள்ளூர் சேவை
-                </span>
+              <div className="lg:hidden w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-900 shrink-0">
+                <ChevronRight className="w-4 h-4 stroke-[3]" />
               </div>
             </div>
+
+            <div className="flex items-center gap-1.5 overflow-hidden">
+              {["Electrician", "Plumber"].map((cat, i) => (
+                <span
+                  key={i}
+                  className="text-[10px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 whitespace-nowrap shrink-0 font-medium"
+                >
+                  {cat}
+                </span>
+              ))}
+              <span className="text-[10px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 whitespace-nowrap shrink-0">
+                +18 More
+              </span>
+            </div>
+
             <button
               type="button"
-              onClick={() => router.push("/services")}
-              className="w-full h-9 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-3 rounded-xl flex items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap"
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push("/services");
+              }}
+              className="hidden lg:flex w-full h-9 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-3 rounded-xl items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap"
             >
               <span>Explore Service Provider</span>
               <ChevronRight className="w-3.5 h-3.5 text-slate-950 stroke-[3]" />
@@ -230,24 +308,50 @@ export default function LandingClientPage() {
           </div>
 
           {/* Card 4: Local Offer */}
-          <div className="bg-white rounded-2xl border border-slate-250 p-4 flex flex-col justify-between gap-3 shadow-2xs hover:border-slate-350 transition-all">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 flex items-center justify-center shrink-0">
-                <Store className="w-5 h-5 text-slate-900" />
+          <div
+            onClick={() => router.push("/shops")}
+            className="bg-white rounded-2xl border border-slate-250 p-4 flex flex-col justify-between gap-3 shadow-2xs hover:border-slate-350 cursor-pointer transition-all active:scale-[0.99]"
+          >
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 flex items-center justify-center shrink-0">
+                  <Store className="w-5 h-5 text-slate-900" />
+                </div>
+                <div className="flex flex-col min-w-0">
+                  <h3 className="font-heading font-black text-xs sm:text-sm text-slate-900 truncate">
+                    Local Offer
+                  </h3>
+                  <span className="text-[11px] font-bold text-slate-500 leading-tight">
+                    உள்ளூர் சலுகைகள்
+                  </span>
+                </div>
               </div>
-              <div className="flex flex-col min-w-0">
-                <h3 className="font-heading font-black text-xs sm:text-sm text-slate-900 truncate">
-                  Local Offer
-                </h3>
-                <span className="text-[11px] font-bold text-slate-500 leading-tight">
-                  உள்ளூர் சலுகைகள்
-                </span>
+              <div className="lg:hidden w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-900 shrink-0">
+                <ChevronRight className="w-4 h-4 stroke-[3]" />
               </div>
             </div>
+
+            <div className="flex items-center gap-1.5 overflow-hidden">
+              {["Discounts", "Cafes"].map((cat, i) => (
+                <span
+                  key={i}
+                  className="text-[10px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 whitespace-nowrap shrink-0 font-medium"
+                >
+                  {cat}
+                </span>
+              ))}
+              <span className="text-[10px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 whitespace-nowrap shrink-0">
+                +15 More
+              </span>
+            </div>
+
             <button
               type="button"
-              onClick={() => router.push("/shops")}
-              className="w-full h-9 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-3 rounded-xl flex items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap"
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push("/shops");
+              }}
+              className="hidden lg:flex w-full h-9 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-3 rounded-xl items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap"
             >
               <span>Explore Local Offer</span>
               <ChevronRight className="w-3.5 h-3.5 text-slate-950 stroke-[3]" />
@@ -360,9 +464,9 @@ export default function LandingClientPage() {
               <p className="text-xs font-black text-slate-700">No live seller listings yet in Thanjavur</p>
               <button
                 onClick={() => router.push("/post/sell")}
-                className="mt-1 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-4 py-2 rounded-xl cursor-pointer transition-colors shadow-2xs"
+                className="mt-1 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-5 py-2.5 rounded-xl cursor-pointer transition-colors shadow-2xs"
               >
-                + Be the First to Sell
+                + Post Ad
               </button>
             </div>
           ) : (
@@ -448,9 +552,9 @@ export default function LandingClientPage() {
               <p className="text-xs font-black text-slate-700">No active buyer requirements posted yet</p>
               <button
                 onClick={() => router.push("/post/need")}
-                className="mt-1 bg-[#0F172A] hover:bg-slate-800 text-white font-heading font-black text-xs px-4 py-2 rounded-xl cursor-pointer transition-colors shadow-2xs"
+                className="mt-1 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-5 py-2.5 rounded-xl cursor-pointer transition-colors shadow-2xs"
               >
-                + Post Your Requirement
+                + Post Ad
               </button>
             </div>
           ) : (
@@ -536,9 +640,9 @@ export default function LandingClientPage() {
               <p className="text-xs font-black text-slate-700">No service providers registered yet in Thanjavur</p>
               <button
                 onClick={() => router.push("/post/service")}
-                className="mt-1 bg-[#0F172A] hover:bg-slate-800 text-white font-heading font-black text-xs px-4 py-2 rounded-xl cursor-pointer transition-colors shadow-2xs"
+                className="mt-1 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-5 py-2.5 rounded-xl cursor-pointer transition-colors shadow-2xs"
               >
-                + Register as Service Provider
+                + Post Ad
               </button>
             </div>
           ) : (
@@ -622,9 +726,9 @@ export default function LandingClientPage() {
               <p className="text-xs font-black text-slate-700">No active local store offers posted yet</p>
               <button
                 onClick={() => router.push("/post/offer")}
-                className="mt-1 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-4 py-2 rounded-xl cursor-pointer transition-colors shadow-2xs"
+                className="mt-1 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-5 py-2.5 rounded-xl cursor-pointer transition-colors shadow-2xs"
               >
-                + Post Store Offer
+                + Post Ad
               </button>
             </div>
           ) : (
