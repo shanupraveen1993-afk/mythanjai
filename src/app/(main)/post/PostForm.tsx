@@ -942,20 +942,21 @@ export default function PostForm({ segment }: PostFormProps) {
                   </label>
                 </div>
 
-                {/* 8. PHONE INPUT FOR OFFER */}
+                {/* 8. CATEGORY DROPDOWN FOR OFFER */}
                 <div className="flex flex-col gap-1.5">
                   <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
-                    <Phone className="w-4 h-4 text-slate-400" />
-                    Contact Phone Number *
+                    <Tag className="w-4 h-4 text-amber-500" />
+                    Store Category *
                   </label>
-                  <input
-                    type="tel"
-                    required
-                    placeholder="e.g. 9994837342"
-                    value={phone}
-                    onChange={(e) => { userEditedPhone.current = true; setPhone(e.target.value); }}
+                  <select
+                    value={category}
+                    onChange={(e) => setCategory(e.target.value)}
                     className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all"
-                  />
+                  >
+                    {config.categories.map((cat) => (
+                      <option key={cat} value={cat}>{cat}</option>
+                    ))}
+                  </select>
                 </div>
               </>
             ) : (
