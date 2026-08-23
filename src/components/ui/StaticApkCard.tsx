@@ -32,7 +32,7 @@ export default function StaticApkCard({
     toast.success("Starting Namma Thanjai Official APK v12 Download...");
 
     const link = document.createElement("a");
-    link.href = "/NammaThanjai-v12.apk";
+    link.href = "https://raw.githubusercontent.com/shanupraveen1993-afk/mythanjai/main/public/NammaThanjai-v12.apk";
     link.download = "NammaThanjai-v12.apk";
     document.body.appendChild(link);
     link.click();
