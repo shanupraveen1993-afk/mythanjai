@@ -1007,22 +1007,59 @@ export default function PostForm({ segment }: PostFormProps) {
                   />
                 </div>
 
-                {/* Service: Location below name */}
+                {/* Service: Location & Working Days Toggles */}
                 {segment === "service" && (
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
-                      <MapPin className="w-4 h-4 text-amber-500" />
-                      Service Location / Area *
-                    </label>
-                    <input
-                      type="text"
-                      value={area}
-                      onChange={(e) => setArea(e.target.value)}
-                      placeholder="e.g. Anna Nagar, Medical College Rd, Vallam"
-                      className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all"
-                    />
+                  <div className="flex flex-col gap-3">
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                        <MapPin className="w-4 h-4 text-amber-500" />
+                        Service Location / Area *
+                      </label>
+                      <input
+                        type="text"
+                        value={area}
+                        onChange={(e) => setArea(e.target.value)}
+                        placeholder="e.g. Anna Nagar, Medical College Rd, Vallam"
+                        className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all"
+                      />
+                    </div>
+
+                    {/* All Working Days Toggle */}
+                    <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 flex items-center justify-between gap-3">
+                      <span className="text-sm font-bold text-slate-800 flex items-center gap-2">
+                        <Clock className="w-4 h-4 text-amber-600" />
+                        <span>All Working Days (Available 7 Days)</span>
+                      </span>
+                      <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                        <input
+                          type="checkbox"
+                          checked={allWorkingDays === "Yes"}
+                          onChange={(e) => setAllWorkingDays(e.target.checked ? "Yes" : "No")}
+                          className="sr-only peer"
+                        />
+                        <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500" />
+                      </label>
+                    </div>
+
+                    {/* Sunday Leave Toggle */}
+                    <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 flex items-center justify-between gap-3">
+                      <span className="text-sm font-bold text-slate-800 flex items-center gap-2">
+                        <Calendar className="w-4 h-4 text-amber-600" />
+                        <span>Sunday Holiday / Leave</span>
+                      </span>
+                      <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                        <input
+                          type="checkbox"
+                          checked={sundayLeave === "Yes"}
+                          onChange={(e) => setSundayLeave(e.target.checked ? "Yes" : "No")}
+                          className="sr-only peer"
+                        />
+                        <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500" />
+                      </label>
+                    </div>
                   </div>
                 )}
+
 
                 {/* PRICE + LOCATION in 1 row (FOR SELL) — Text Mode for Custom Formats e.g. 5000rs / 5000/month */}
                 {segment === "sell" && (
@@ -1196,8 +1233,8 @@ export default function PostForm({ segment }: PostFormProps) {
               </div>
             )}
 
-            {/* Sell Specific Phone Toggle (CLEAN WITHOUT SUBTEXT) */}
-            {segment === "sell" && (
+            {/* Sell/Need Phone Toggle */}
+            {(segment === "sell" || segment === "need") && (
               <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 flex items-center justify-between gap-3 mt-1">
                 <span className="text-sm font-bold text-slate-800 flex items-center gap-2">
                   <Phone className="w-4 h-4 text-amber-600" />
