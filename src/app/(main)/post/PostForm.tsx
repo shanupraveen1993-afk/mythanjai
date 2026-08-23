@@ -33,6 +33,7 @@ import {
 } from "lucide-react";
 import ListingCard from "@/components/cards/ListingCard";
 import ServiceCard from "@/components/cards/ServiceCard";
+import ShopCard from "@/components/cards/ShopCard";
 
 import ThanjavurLocationInput from "@/components/location/ThanjavurLocationInput";
 import { NeedOrSalePost, ServiceProviderPost, ShopPost, OfferPost } from "@/types";
@@ -120,6 +121,13 @@ export default function PostForm({ segment }: PostFormProps) {
   const config = SEGMENT_CONFIG[segment];
   const { user, profile, isVerified, loading: authLoading } = useAuth();
   const isAuthVerified = isVerified;
+
+  // Admin check at render level (used to show/hide admin-only UI like video upload)
+  const isAdminUser = useMemo(() => {
+    const rawPhone = String(profile?.phone || user?.phoneNumber || "");
+    const cleanPhone = rawPhone.replace(/\D/g, "");
+    return cleanPhone.includes("9994837342") || Boolean(profile?.isAdmin);
+  }, [profile, user]);
 
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
@@ -634,6 +642,7 @@ export default function PostForm({ segment }: PostFormProps) {
       image_urls: imagePreviews,
       show_phone: showPhone,
       is_verified: true,
+      category: category || config.categories[0] || "General",
       created_at: new Date() as any,
       expires_at: new Date(Date.now() + 30 * 86400000) as any,
     };
@@ -651,6 +660,7 @@ export default function PostForm({ segment }: PostFormProps) {
       rating: 5.0,
       description: previewDescription || "Professional trade service details...",
       image_url: imagePreview || "",
+      skill_category: category || config.categories[0] || "General",
       is_verified: true,
       created_at: new Date() as any,
     };
@@ -675,6 +685,7 @@ export default function PostForm({ segment }: PostFormProps) {
       longitude: 79.1378,
       show_phone: showPhone,
       is_claimed: true,
+      category: category || config.categories[0] || "General",
       created_at: new Date() as any,
     };
   }, [title, description, previewDescription, area, validFrom, validTo, showPhone, phone, imagePreview, user]);
@@ -929,6 +940,22 @@ export default function PostForm({ segment }: PostFormProps) {
                     />
                     <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500" />
                   </label>
+                </div>
+
+                {/* 8. PHONE INPUT FOR OFFER */}
+                <div className="flex flex-col gap-1.5">
+                  <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                    <Phone className="w-4 h-4 text-slate-400" />
+                    Contact Phone Number *
+                  </label>
+                  <input
+                    type="tel"
+                    required
+                    placeholder="e.g. 9994837342"
+                    value={phone}
+                    onChange={(e) => { userEditedPhone.current = true; setPhone(e.target.value); }}
+                    className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all"
+                  />
                 </div>
               </>
             ) : (

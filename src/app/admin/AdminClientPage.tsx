@@ -295,6 +295,21 @@ export default function AdminClientPage() {
         </div>
 
         <div className="flex items-center gap-3">
+          {/* Admin Post Buttons for all 4 segments */}
+          <div className="hidden sm:flex items-center gap-2">
+            <Link href="/post?segment=offer" className="flex items-center gap-1 text-[10px] bg-amber-400/20 border border-amber-400/40 text-amber-300 hover:bg-amber-400/30 font-black px-3 py-1.5 rounded-lg transition-all cursor-pointer uppercase tracking-wider">
+              <Sparkles className="w-3 h-3" /> Post Offer
+            </Link>
+            <Link href="/post?segment=sell" className="flex items-center gap-1 text-[10px] bg-blue-400/20 border border-blue-400/40 text-blue-300 hover:bg-blue-400/30 font-black px-3 py-1.5 rounded-lg transition-all cursor-pointer uppercase tracking-wider">
+              + Post Sell
+            </Link>
+            <Link href="/post?segment=need" className="flex items-center gap-1 text-[10px] bg-purple-400/20 border border-purple-400/40 text-purple-300 hover:bg-purple-400/30 font-black px-3 py-1.5 rounded-lg transition-all cursor-pointer uppercase tracking-wider">
+              + Post Need
+            </Link>
+            <Link href="/post?segment=service" className="flex items-center gap-1 text-[10px] bg-emerald-400/20 border border-emerald-400/40 text-emerald-300 hover:bg-emerald-400/30 font-black px-3 py-1.5 rounded-lg transition-all cursor-pointer uppercase tracking-wider">
+              + Post Service
+            </Link>
+          </div>
           <Link
             href="/"
             className="flex items-center gap-1.5 text-xs bg-amber-400 hover:bg-amber-300 text-slate-950 font-heading font-black px-4 py-2 rounded-xl shadow-md transition-all cursor-pointer"
