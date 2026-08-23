@@ -7,7 +7,7 @@ import { Share2, Bookmark, Phone, MessageSquare, MapPin, Calendar, Flag, X, Chev
 import { doc, updateDoc, increment } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/hooks/use-auth";
-import { formatRelativeTime } from "@/lib/constants";
+import { formatRelativeTime, formatIndianCurrencyText } from "@/lib/constants";
 import InAppChatModal from "@/components/chat/InAppChatModal";
 import { reportListing } from "@/lib/moderation";
 import { useToast } from "@/context/ToastContext";
@@ -256,12 +256,17 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
   const isLookingFor = listing.type === "looking_for" || listing.expected_price_from;
 
   const formattedPrice = React.useMemo(() => {
-    if (isLookingFor) return `₹${listing.expected_price_from || "5k"} - ₹${listing.expected_price_to || "15k"}`;
-    if (!listing.price) return "₹2,50,000";
+    if (isLookingFor) {
+      if (listing.expected_price_from || listing.expected_price_to) {
+        return `₹${listing.expected_price_from || "0"} - ₹${listing.expected_price_to || "0"}`;
+      }
+      return listing.price ? (String(listing.price).startsWith("₹") ? listing.price : `₹${listing.price}`) : "";
+    }
+    if (!listing.price) return "";
     const str = String(listing.price).replace(/[^0-9.]/g, "");
-    const num = Number(str);
+    const num = parseFloat(str);
     if (isNaN(num) || num === 0) return String(listing.price).startsWith("₹") ? listing.price : `₹${listing.price}`;
-    return `₹${num.toLocaleString("en-IN")}`;
+    return formatIndianCurrencyText(num);
   }, [listing.price, listing.expected_price_from, listing.expected_price_to, isLookingFor]);
 
   const rawPhone = String(listing.phone || "");
@@ -313,7 +318,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
               {/* Top Row: Category Name on Left, Price on Right */}
               <div className="flex items-center justify-between gap-2 w-full">
                 <CategoryIcon category={listing.category || listing.type} />
-                <div className="font-heading font-black text-lg sm:text-xl text-[#0F172A] tracking-tight shrink-0">
+                <div className="font-heading font-black text-base sm:text-lg text-[#0F172A] tracking-tight shrink-0">
                   {formattedPrice}
                 </div>
               </div>

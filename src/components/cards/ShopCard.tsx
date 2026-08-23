@@ -543,7 +543,7 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
 
         {/* Discount Badge if available */}
         {(post as any).discount_percentage && (
-          <div className="inline-flex items-center gap-1 font-heading font-black text-xl text-amber-600">
+          <div className="inline-flex items-center gap-1 font-heading font-black text-base sm:text-lg text-amber-600">
             <span>{(post as any).discount_percentage}% OFF</span>
           </div>
         )}
