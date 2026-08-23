@@ -104,7 +104,7 @@ function SearchContent() {
     results.sell.length + results.need.length + results.services.length + results.offers.length;
 
   return (
-    <div className="w-full min-h-screen bg-[#f8fafc] text-slate-800 font-sans pb-24">
+    <div className="w-full min-h-screen bg-[#f8fafc] text-slate-900 font-sans pb-24">
       {/* Top Search Header */}
       <div className="bg-white border-b border-slate-200 sticky top-14 z-30 shadow-2xs py-3 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex flex-col gap-3">
@@ -148,8 +148,8 @@ function SearchContent() {
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-black shrink-0 transition-all cursor-pointer ${
                   activeTab === tab.id
-                    ? "bg-slate-950 text-white shadow-2xs"
-                    : "bg-slate-100 text-slate-600 hover:bg-slate-200"
+                    ? "bg-[#0F172A] text-white shadow-2xs"
+                    : "bg-slate-100 text-slate-700 hover:bg-slate-200"
                 }`}
               >
                 {tab.label}
@@ -163,7 +163,7 @@ function SearchContent() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 flex flex-col gap-6">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-16 gap-3 text-slate-500">
-            <Loader2 className="w-7 h-7 animate-spin text-amber-500" />
+            <Loader2 className="w-7 h-7 animate-spin text-slate-900" />
             <p className="text-xs font-black">Searching Thanjavur Directory...</p>
           </div>
         ) : !searchTerm.trim() ? (
@@ -196,7 +196,7 @@ function SearchContent() {
             {(activeTab === "all" || activeTab === "sell") && results.sell.length > 0 && (
               <section className="flex flex-col gap-3">
                 <div className="flex items-center gap-2 border-b border-slate-200 pb-2">
-                  <Building className="w-4 h-4 text-amber-500" />
+                  <Building className="w-4 h-4 text-slate-900" />
                   <h2 className="font-heading font-black text-sm text-slate-950 uppercase tracking-wider">
                     Sell Listings (விற்பனை) ({results.sell.length})
                   </h2>
@@ -210,7 +210,7 @@ function SearchContent() {
                     >
                       <div className="flex flex-col gap-1">
                         <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-bold bg-amber-50 text-amber-800 border border-amber-200 px-2 py-0.5 rounded">
+                          <span className="text-[10px] font-bold bg-slate-100 text-slate-800 border border-slate-200 px-2 py-0.5 rounded">
                             {item.category || "Sell"}
                           </span>
                           {item.price && (
@@ -236,18 +236,18 @@ function SearchContent() {
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
-                            className="p-1.5 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors"
+                            className="p-1.5 rounded-lg bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-250 transition-colors"
                             title="WhatsApp"
                           >
-                            <MessageSquare className="w-3.5 h-3.5 fill-emerald-600" />
+                            <MessageSquare className="w-3.5 h-3.5 text-slate-800" />
                           </a>
                           <a
                             href={`tel:${item.phone || "919994837342"}`}
                             onClick={(e) => e.stopPropagation()}
-                            className="p-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors"
+                            className="p-1.5 rounded-lg bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-250 transition-colors"
                             title="Call"
                           >
-                            <Phone className="w-3.5 h-3.5 text-blue-700" />
+                            <Phone className="w-3.5 h-3.5 text-slate-800" />
                           </a>
                         </div>
                       </div>
@@ -261,7 +261,7 @@ function SearchContent() {
             {(activeTab === "all" || activeTab === "need") && results.need.length > 0 && (
               <section className="flex flex-col gap-3">
                 <div className="flex items-center gap-2 border-b border-slate-200 pb-2">
-                  <Search className="w-4 h-4 text-blue-500" />
+                  <Search className="w-4 h-4 text-slate-900" />
                   <h2 className="font-heading font-black text-sm text-slate-950 uppercase tracking-wider">
                     Need Requirements (தேவைகள்) ({results.need.length})
                   </h2>
@@ -275,7 +275,7 @@ function SearchContent() {
                     >
                       <div className="flex flex-col gap-1">
                         <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-bold bg-blue-50 text-blue-800 border border-blue-200 px-2 py-0.5 rounded">
+                          <span className="text-[10px] font-bold bg-slate-100 text-slate-800 border border-slate-200 px-2 py-0.5 rounded">
                             {item.category || "Need"}
                           </span>
                           {item.price && (
@@ -301,18 +301,18 @@ function SearchContent() {
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
-                            className="p-1.5 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors"
+                            className="p-1.5 rounded-lg bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-250 transition-colors"
                             title="WhatsApp"
                           >
-                            <MessageSquare className="w-3.5 h-3.5 fill-emerald-600" />
+                            <MessageSquare className="w-3.5 h-3.5 text-slate-800" />
                           </a>
                           <a
                             href={`tel:${item.phone || "919994837342"}`}
                             onClick={(e) => e.stopPropagation()}
-                            className="p-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors"
+                            className="p-1.5 rounded-lg bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-250 transition-colors"
                             title="Call"
                           >
-                            <Phone className="w-3.5 h-3.5 text-blue-700" />
+                            <Phone className="w-3.5 h-3.5 text-slate-800" />
                           </a>
                         </div>
                       </div>
@@ -326,7 +326,7 @@ function SearchContent() {
             {(activeTab === "all" || activeTab === "services") && results.services.length > 0 && (
               <section className="flex flex-col gap-3">
                 <div className="flex items-center gap-2 border-b border-slate-200 pb-2">
-                  <Wrench className="w-4 h-4 text-emerald-500" />
+                  <Wrench className="w-4 h-4 text-slate-900" />
                   <h2 className="font-heading font-black text-sm text-slate-950 uppercase tracking-wider">
                     Service Providers (சேவைகள்) ({results.services.length})
                   </h2>
@@ -340,7 +340,7 @@ function SearchContent() {
                     >
                       <div className="flex flex-col gap-1">
                         <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-bold bg-emerald-50 text-emerald-800 border border-emerald-200 px-2 py-0.5 rounded">
+                          <span className="text-[10px] font-bold bg-slate-100 text-slate-800 border border-slate-200 px-2 py-0.5 rounded">
                             {item.skill_category || "Service"}
                           </span>
                           {item.experience && (
@@ -364,18 +364,18 @@ function SearchContent() {
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
-                            className="p-1.5 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors"
+                            className="p-1.5 rounded-lg bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-250 transition-colors"
                             title="WhatsApp"
                           >
-                            <MessageSquare className="w-3.5 h-3.5 fill-emerald-600" />
+                            <MessageSquare className="w-3.5 h-3.5 text-slate-800" />
                           </a>
                           <a
                             href={`tel:${item.phone || "919994837342"}`}
                             onClick={(e) => e.stopPropagation()}
-                            className="p-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors"
+                            className="p-1.5 rounded-lg bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-250 transition-colors"
                             title="Call"
                           >
-                            <Phone className="w-3.5 h-3.5 text-blue-700" />
+                            <Phone className="w-3.5 h-3.5 text-slate-800" />
                           </a>
                         </div>
                       </div>
@@ -389,7 +389,7 @@ function SearchContent() {
             {(activeTab === "all" || activeTab === "offers") && results.offers.length > 0 && (
               <section className="flex flex-col gap-3">
                 <div className="flex items-center gap-2 border-b border-slate-200 pb-2">
-                  <Store className="w-4 h-4 text-purple-500" />
+                  <Store className="w-4 h-4 text-slate-900" />
                   <h2 className="font-heading font-black text-sm text-slate-950 uppercase tracking-wider">
                     Local Offers (சலுகைகள்) ({results.offers.length})
                   </h2>
@@ -403,11 +403,11 @@ function SearchContent() {
                     >
                       <div className="flex flex-col gap-1">
                         <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-bold bg-purple-50 text-purple-800 border border-purple-200 px-2 py-0.5 rounded">
+                          <span className="text-[10px] font-bold bg-slate-100 text-slate-800 border border-slate-200 px-2 py-0.5 rounded">
                             {item.category || "Offer"}
                           </span>
                           {item.offer_title && (
-                            <span className="font-heading font-bold text-xs text-purple-700 line-clamp-1">
+                            <span className="font-heading font-bold text-xs text-slate-900 line-clamp-1">
                               {item.offer_title}
                             </span>
                           )}
@@ -429,18 +429,18 @@ function SearchContent() {
                             target="_blank"
                             rel="noopener noreferrer"
                             onClick={(e) => e.stopPropagation()}
-                            className="p-1.5 rounded-lg bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors"
+                            className="p-1.5 rounded-lg bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-250 transition-colors"
                             title="WhatsApp"
                           >
-                            <MessageSquare className="w-3.5 h-3.5 fill-emerald-600" />
+                            <MessageSquare className="w-3.5 h-3.5 text-slate-800" />
                           </a>
                           <a
                             href={`tel:${item.phone || "919994837342"}`}
                             onClick={(e) => e.stopPropagation()}
-                            className="p-1.5 rounded-lg bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors"
+                            className="p-1.5 rounded-lg bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-250 transition-colors"
                             title="Call"
                           >
-                            <Phone className="w-3.5 h-3.5 text-blue-700" />
+                            <Phone className="w-3.5 h-3.5 text-slate-800" />
                           </a>
                         </div>
                       </div>

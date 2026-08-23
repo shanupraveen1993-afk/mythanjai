@@ -16,10 +16,9 @@ import {
   Phone,
   Share2,
   Bookmark,
-  Plus,
   Loader2,
 } from "lucide-react";
-import { collection, query, getDocs, limit, orderBy } from "firebase/firestore";
+import { collection, query, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 export default function LandingClientPage() {
@@ -112,24 +111,24 @@ export default function LandingClientPage() {
   }, [activeSellOrNeedPost]);
 
   return (
-    <div className="w-full flex flex-col gap-6 text-slate-800 font-sans pb-24 bg-[#f8fafc] min-h-screen">
+    <div className="w-full flex flex-col gap-6 text-slate-900 font-sans pb-24 bg-[#f8fafc] min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col gap-6 pt-4">
         
         {/* ── 1. Hero Banner ── */}
-        <div className="relative w-full min-h-[160px] sm:min-h-[200px] rounded-2xl overflow-hidden bg-slate-950 text-white flex items-center px-6 sm:px-8 py-6 sm:py-8 shadow-md mt-1">
+        <div className="relative w-full min-h-[160px] sm:min-h-[200px] rounded-2xl overflow-hidden bg-[#0F172A] text-white flex items-center px-6 sm:px-8 py-6 sm:py-8 shadow-md mt-1 border border-slate-800">
           <img
             src="/thanjavur_temple_illustration.png"
             alt="Namma Thanjai"
-            className="absolute right-0 top-0 h-full w-3/5 object-cover opacity-35 pointer-events-none"
+            className="absolute right-0 top-0 h-full w-3/5 object-cover opacity-25 pointer-events-none"
           />
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/85 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-[#0F172A] via-[#0F172A]/90 to-transparent" />
           <div className="relative z-10 flex flex-col gap-2 max-w-xl">
             <span className="text-white font-extrabold text-xs sm:text-sm tracking-wider w-fit underline decoration-[#FBBF24] decoration-2 underline-offset-4 pb-0.5">
               Namma Thanjai • நம்ம தஞ்சை
             </span>
             <h1 className="font-heading font-black text-xl sm:text-2xl text-white tracking-tight leading-snug">
               Everything you need in our city, all in one place.{" "}
-              <span className="text-amber-400 block text-xs sm:text-base font-extrabold mt-1">
+              <span className="text-[#FBBF24] block text-xs sm:text-base font-extrabold mt-1">
                 நம்ம ஊரின் அனைத்து தேவைகளுக்கும் ஒரே இடம்.
               </span>
             </h1>
@@ -156,12 +155,12 @@ export default function LandingClientPage() {
         {/* ── 2. 4 Segment Category Cards (Single Line Filled Button Row Layout) ── */}
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 my-1">
           {/* Card 1: Need to Buy */}
-          <div className="bg-white rounded-2xl border border-slate-250 hover:border-slate-400 p-3.5 flex items-center justify-between gap-3 shadow-2xs transition-all">
+          <div className="bg-white rounded-2xl border border-slate-250 p-3.5 flex items-center justify-between gap-3 shadow-2xs">
             <div className="flex flex-col min-w-0">
-              <h3 className="font-heading font-black text-xs sm:text-sm text-slate-950 truncate">
+              <h3 className="font-heading font-black text-xs sm:text-sm text-slate-900 truncate">
                 Need to Buy
               </h3>
-              <span className="text-[11px] font-extrabold text-amber-700 leading-tight">
+              <span className="text-[11px] font-extrabold text-slate-600 leading-tight">
                 வாங்க வேண்டுமா
               </span>
             </div>
@@ -176,19 +175,19 @@ export default function LandingClientPage() {
           </div>
 
           {/* Card 2: Looking for */}
-          <div className="bg-white rounded-2xl border border-slate-250 hover:border-slate-400 p-3.5 flex items-center justify-between gap-3 shadow-2xs transition-all">
+          <div className="bg-white rounded-2xl border border-slate-250 p-3.5 flex items-center justify-between gap-3 shadow-2xs">
             <div className="flex flex-col min-w-0">
-              <h3 className="font-heading font-black text-xs sm:text-sm text-slate-950 truncate">
+              <h3 className="font-heading font-black text-xs sm:text-sm text-slate-900 truncate">
                 Looking for
               </h3>
-              <span className="text-[11px] font-extrabold text-blue-700 leading-tight">
+              <span className="text-[11px] font-extrabold text-slate-600 leading-tight">
                 என்ன தேவை
               </span>
             </div>
             <button
               type="button"
               onClick={() => router.push("/need")}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-heading font-black text-[11px] sm:text-xs px-3 py-2 rounded-xl shrink-0 flex items-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all whitespace-nowrap"
+              className="bg-[#0F172A] hover:bg-slate-800 text-white font-heading font-black text-[11px] sm:text-xs px-3 py-2 rounded-xl shrink-0 flex items-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all whitespace-nowrap"
             >
               <span>Explore Need Post</span>
               <ChevronRight className="w-3.5 h-3.5 text-white stroke-[3]" />
@@ -196,19 +195,19 @@ export default function LandingClientPage() {
           </div>
 
           {/* Card 3: Local Service */}
-          <div className="bg-white rounded-2xl border border-slate-250 hover:border-slate-400 p-3.5 flex items-center justify-between gap-3 shadow-2xs transition-all">
+          <div className="bg-white rounded-2xl border border-slate-250 p-3.5 flex items-center justify-between gap-3 shadow-2xs">
             <div className="flex flex-col min-w-0">
-              <h3 className="font-heading font-black text-xs sm:text-sm text-slate-950 truncate">
+              <h3 className="font-heading font-black text-xs sm:text-sm text-slate-900 truncate">
                 Local Service
               </h3>
-              <span className="text-[11px] font-extrabold text-emerald-700 leading-tight">
+              <span className="text-[11px] font-extrabold text-slate-600 leading-tight">
                 உள்ளூர் சேவை
               </span>
             </div>
             <button
               type="button"
               onClick={() => router.push("/services")}
-              className="bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-black text-[11px] sm:text-xs px-3 py-2 rounded-xl shrink-0 flex items-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all whitespace-nowrap"
+              className="bg-[#0F172A] hover:bg-slate-800 text-white font-heading font-black text-[11px] sm:text-xs px-3 py-2 rounded-xl shrink-0 flex items-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all whitespace-nowrap"
             >
               <span>Explore Service Provider</span>
               <ChevronRight className="w-3.5 h-3.5 text-white stroke-[3]" />
@@ -216,22 +215,22 @@ export default function LandingClientPage() {
           </div>
 
           {/* Card 4: Local Offer */}
-          <div className="bg-white rounded-2xl border border-slate-250 hover:border-slate-400 p-3.5 flex items-center justify-between gap-3 shadow-2xs transition-all">
+          <div className="bg-white rounded-2xl border border-slate-250 p-3.5 flex items-center justify-between gap-3 shadow-2xs">
             <div className="flex flex-col min-w-0">
-              <h3 className="font-heading font-black text-xs sm:text-sm text-slate-950 truncate">
+              <h3 className="font-heading font-black text-xs sm:text-sm text-slate-900 truncate">
                 Local Offer
               </h3>
-              <span className="text-[11px] font-extrabold text-purple-700 leading-tight">
+              <span className="text-[11px] font-extrabold text-slate-600 leading-tight">
                 உள்ளூர் சலுகைகள்
               </span>
             </div>
             <button
               type="button"
               onClick={() => router.push("/shops")}
-              className="bg-purple-600 hover:bg-purple-700 text-white font-heading font-black text-[11px] sm:text-xs px-3 py-2 rounded-xl shrink-0 flex items-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all whitespace-nowrap"
+              className="bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-[11px] sm:text-xs px-3 py-2 rounded-xl shrink-0 flex items-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all whitespace-nowrap"
             >
               <span>Explore Local Offer</span>
-              <ChevronRight className="w-3.5 h-3.5 text-white stroke-[3]" />
+              <ChevronRight className="w-3.5 h-3.5 text-slate-950 stroke-[3]" />
             </button>
           </div>
         </section>
@@ -239,10 +238,10 @@ export default function LandingClientPage() {
         {/* ── 3. Dynamic Category / Matchmaker / Insights Section (Positioned Below Segment Cards) ── */}
         {activeServiceOrOfferPost ? (
           /* Provider Performance Insights Card */
-          <div className="bg-[#0F172A] border border-amber-500/30 rounded-2xl p-5 text-white shadow-xl flex flex-col gap-4 my-1 font-sans">
+          <div className="bg-[#0F172A] border border-slate-800 rounded-2xl p-5 text-white shadow-xl flex flex-col gap-4 my-1 font-sans">
             <div className="flex items-center justify-between border-b border-slate-800 pb-3">
               <div className="flex items-center gap-2.5">
-                <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 font-bold">
+                <div className="w-10 h-10 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center text-amber-400 font-bold">
                   <BarChart3 className="w-5 h-5 stroke-[2.5]" />
                 </div>
                 <div>
@@ -250,43 +249,43 @@ export default function LandingClientPage() {
                   <p className="text-xs text-slate-400 font-semibold">{activeServiceOrOfferPost.title || activeServiceOrOfferPost.name || activeServiceOrOfferPost.shop_name}</p>
                 </div>
               </div>
-              <span className="text-[10px] uppercase font-black tracking-widest text-amber-400 bg-amber-500/10 px-2.5 py-1 rounded-lg border border-amber-500/30">Live Analytics</span>
+              <span className="text-[10px] uppercase font-black tracking-widest text-[#FBBF24] bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-700">Live Analytics</span>
             </div>
 
             <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-              <div className="bg-slate-900/80 border border-slate-800 p-3 rounded-xl flex flex-col gap-0.5">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1"><Eye className="w-3 h-3 text-blue-400" /> Seen</span>
+              <div className="bg-slate-900 border border-slate-800 p-3 rounded-xl flex flex-col gap-0.5">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1"><Eye className="w-3 h-3 text-slate-300" /> Seen</span>
                 <span className="font-heading font-black text-lg text-white">{activeServiceOrOfferPost.views_count || 1}</span>
               </div>
-              <div className="bg-slate-900/80 border border-slate-800 p-3 rounded-xl flex flex-col gap-0.5">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1"><MessageSquare className="w-3 h-3 text-emerald-400" /> Interacted</span>
+              <div className="bg-slate-900 border border-slate-800 p-3 rounded-xl flex flex-col gap-0.5">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1"><MessageSquare className="w-3 h-3 text-slate-300" /> Interacted</span>
                 <span className="font-heading font-black text-lg text-white">{activeServiceOrOfferPost.chats_count || 0}</span>
               </div>
-              <div className="bg-slate-900/80 border border-slate-800 p-3 rounded-xl flex flex-col gap-0.5">
+              <div className="bg-slate-900 border border-slate-800 p-3 rounded-xl flex flex-col gap-0.5">
                 <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1"><Phone className="w-3 h-3 text-amber-400" /> Calls / Requests</span>
                 <span className="font-heading font-black text-lg text-white">{activeServiceOrOfferPost.calls_count || 0}</span>
               </div>
-              <div className="bg-slate-900/80 border border-slate-800 p-3 rounded-xl flex flex-col gap-0.5">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1"><Share2 className="w-3 h-3 text-indigo-400" /> Shared</span>
+              <div className="bg-slate-900 border border-slate-800 p-3 rounded-xl flex flex-col gap-0.5">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1"><Share2 className="w-3 h-3 text-slate-300" /> Shared</span>
                 <span className="font-heading font-black text-lg text-white">{activeServiceOrOfferPost.shares_count || 0}</span>
               </div>
-              <div className="bg-slate-900/80 border border-slate-800 p-3 rounded-xl flex flex-col gap-0.5 col-span-2 sm:col-span-1">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1"><Bookmark className="w-3 h-3 text-rose-400" /> Saved</span>
+              <div className="bg-slate-900 border border-slate-800 p-3 rounded-xl flex flex-col gap-0.5 col-span-2 sm:col-span-1">
+                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1"><Bookmark className="w-3 h-3 text-slate-300" /> Saved</span>
                 <span className="font-heading font-black text-lg text-white">{activeServiceOrOfferPost.saved_count || 0}</span>
               </div>
             </div>
           </div>
         ) : activeSellOrNeedPost ? (
           /* Smart Matchmaker Grid */
-          <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm flex flex-col gap-3 my-1">
+          <div className="bg-white border border-slate-250 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 my-1">
             <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
               <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="w-2.5 h-2.5 rounded-full bg-slate-900" />
                 <h3 className="font-heading font-black text-sm text-slate-900">
                   Smart Matchmaker ({activeSellOrNeedPost.type === "SELL" ? "Buyers Looking For Your Item" : "Available Sellers"})
                 </h3>
               </div>
-              <span className="text-[10px] font-bold text-emerald-700 bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md">
+              <span className="text-[10px] font-bold text-slate-800 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-md">
                 Live Tanjore Matches
               </span>
             </div>
@@ -301,10 +300,10 @@ export default function LandingClientPage() {
                   <div
                     key={i}
                     onClick={() => router.push(m.type === "NEED" ? "/need" : "/sell")}
-                    className="bg-slate-50 border border-slate-200 hover:border-slate-400 rounded-xl p-3 flex flex-col justify-between gap-1 cursor-pointer transition-all active:scale-[0.98]"
+                    className="bg-slate-50 border border-slate-200 hover:border-slate-300 rounded-xl p-3 flex flex-col justify-between gap-1 cursor-pointer transition-all active:scale-[0.98]"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="text-[9px] uppercase font-black bg-blue-50 text-blue-700 border border-blue-200 px-1.5 py-0.5 rounded">Match</span>
+                      <span className="text-[9px] uppercase font-black bg-slate-200 text-slate-900 border border-slate-300 px-1.5 py-0.5 rounded">Match</span>
                       {m.price && <span className="text-[11px] font-black text-slate-900">₹{Number(m.price).toLocaleString("en-IN")}</span>}
                     </div>
                     <h5 className="font-heading font-black text-xs text-slate-900 truncate mt-1">{m.title}</h5>
@@ -324,9 +323,9 @@ export default function LandingClientPage() {
             </h2>
             <button
               onClick={() => router.push("/sell")}
-              className="text-xs font-bold text-[#1d4ed8] hover:underline flex items-center gap-1 cursor-pointer"
+              className="text-xs font-bold text-slate-900 hover:underline flex items-center gap-1 cursor-pointer"
             >
-              <span>View all</span> <ChevronRight className="w-3.5 h-3.5 text-[#1d4ed8]" />
+              <span>View all</span> <ChevronRight className="w-3.5 h-3.5 text-slate-900" />
             </button>
           </div>
 
@@ -367,7 +366,7 @@ export default function LandingClientPage() {
                     )}
                   </div>
                   <div className="p-3.5 flex flex-col gap-1.5">
-                    <span className="text-[10px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md w-fit">
+                    <span className="text-[10px] font-bold text-slate-800 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-md w-fit">
                       {item.category || "Sell"}
                     </span>
                     <h3 className="font-heading font-bold text-xs text-slate-900 line-clamp-1">{item.title}</h3>
@@ -382,18 +381,18 @@ export default function LandingClientPage() {
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={(e) => e.stopPropagation()}
-                          className="p-1 rounded-md bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors"
+                          className="p-1 rounded-md bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-250 transition-colors"
                           title="Chat on WhatsApp"
                         >
-                          <MessageSquare className="w-3 h-3 fill-emerald-600" />
+                          <MessageSquare className="w-3 h-3 text-slate-800" />
                         </a>
                         <a
                           href={`tel:${item.phone || "919994837342"}`}
                           onClick={(e) => e.stopPropagation()}
-                          className="p-1 rounded-md bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors"
+                          className="p-1 rounded-md bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-250 transition-colors"
                           title="Call Seller"
                         >
-                          <Phone className="w-3 h-3 text-blue-700" />
+                          <Phone className="w-3 h-3 text-slate-800" />
                         </a>
                       </div>
                     </div>
@@ -412,9 +411,9 @@ export default function LandingClientPage() {
             </h2>
             <button
               onClick={() => router.push("/need")}
-              className="text-xs font-bold text-[#1d4ed8] hover:underline flex items-center gap-1 cursor-pointer"
+              className="text-xs font-bold text-slate-900 hover:underline flex items-center gap-1 cursor-pointer"
             >
-              <span>View all</span> <ChevronRight className="w-3.5 h-3.5 text-[#1d4ed8]" />
+              <span>View all</span> <ChevronRight className="w-3.5 h-3.5 text-slate-900" />
             </button>
           </div>
 
@@ -429,7 +428,7 @@ export default function LandingClientPage() {
               <p className="text-xs font-black text-slate-700">No active buyer requirements posted yet</p>
               <button
                 onClick={() => router.push("/post/need")}
-                className="mt-1 bg-blue-600 hover:bg-blue-700 text-white font-heading font-black text-xs px-4 py-2 rounded-xl cursor-pointer transition-colors shadow-2xs"
+                className="mt-1 bg-[#0F172A] hover:bg-slate-800 text-white font-heading font-black text-xs px-4 py-2 rounded-xl cursor-pointer transition-colors shadow-2xs"
               >
                 + Post Your Requirement
               </button>
@@ -455,7 +454,7 @@ export default function LandingClientPage() {
                     )}
                   </div>
                   <div className="p-3.5 flex flex-col gap-1.5">
-                    <span className="text-[10px] font-bold text-slate-600 bg-slate-100 px-2 py-0.5 rounded-md w-fit">
+                    <span className="text-[10px] font-bold text-slate-800 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-md w-fit">
                       {item.category || "Need"}
                     </span>
                     <h3 className="font-heading font-bold text-xs text-slate-900 line-clamp-1">{item.title}</h3>
@@ -470,18 +469,18 @@ export default function LandingClientPage() {
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={(e) => e.stopPropagation()}
-                          className="p-1 rounded-md bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors"
+                          className="p-1 rounded-md bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-250 transition-colors"
                           title="Chat on WhatsApp"
                         >
-                          <MessageSquare className="w-3 h-3 fill-emerald-600" />
+                          <MessageSquare className="w-3 h-3 text-slate-800" />
                         </a>
                         <a
                           href={`tel:${item.phone || "919994837342"}`}
                           onClick={(e) => e.stopPropagation()}
-                          className="p-1 rounded-md bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors"
+                          className="p-1 rounded-md bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-250 transition-colors"
                           title="Call"
                         >
-                          <Phone className="w-3 h-3 text-blue-700" />
+                          <Phone className="w-3 h-3 text-slate-800" />
                         </a>
                       </div>
                     </div>
@@ -500,9 +499,9 @@ export default function LandingClientPage() {
             </h2>
             <button
               onClick={() => router.push("/services")}
-              className="text-xs font-bold text-[#1d4ed8] hover:underline flex items-center gap-1 cursor-pointer"
+              className="text-xs font-bold text-slate-900 hover:underline flex items-center gap-1 cursor-pointer"
             >
-              <span>View all</span> <ChevronRight className="w-3.5 h-3.5 text-[#1d4ed8]" />
+              <span>View all</span> <ChevronRight className="w-3.5 h-3.5 text-slate-900" />
             </button>
           </div>
 
@@ -517,7 +516,7 @@ export default function LandingClientPage() {
               <p className="text-xs font-black text-slate-700">No service providers registered yet in Thanjavur</p>
               <button
                 onClick={() => router.push("/post/service")}
-                className="mt-1 bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-black text-xs px-4 py-2 rounded-xl cursor-pointer transition-colors shadow-2xs"
+                className="mt-1 bg-[#0F172A] hover:bg-slate-800 text-white font-heading font-black text-xs px-4 py-2 rounded-xl cursor-pointer transition-colors shadow-2xs"
               >
                 + Register as Service Provider
               </button>
@@ -539,7 +538,7 @@ export default function LandingClientPage() {
                   </div>
                   <div className="p-3.5 flex flex-col gap-1.5">
                     <div className="flex items-center justify-between">
-                      <span className="text-[10px] font-bold text-amber-800 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200/70">
+                      <span className="text-[10px] font-bold text-slate-800 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-md">
                         {item.skill_category || "Service"}
                       </span>
                       {item.experience && <span className="text-[10px] font-bold text-slate-600">{item.experience}</span>}
@@ -556,18 +555,18 @@ export default function LandingClientPage() {
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={(e) => e.stopPropagation()}
-                          className="p-1 rounded-md bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors"
+                          className="p-1 rounded-md bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-250 transition-colors"
                           title="Chat on WhatsApp"
                         >
-                          <MessageSquare className="w-3 h-3 fill-emerald-600" />
+                          <MessageSquare className="w-3 h-3 text-slate-800" />
                         </a>
                         <a
                           href={`tel:${item.phone || "919994837342"}`}
                           onClick={(e) => e.stopPropagation()}
-                          className="p-1 rounded-md bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors"
+                          className="p-1 rounded-md bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-250 transition-colors"
                           title="Call Technician"
                         >
-                          <Phone className="w-3 h-3 text-blue-700" />
+                          <Phone className="w-3 h-3 text-slate-800" />
                         </a>
                       </div>
                     </div>
@@ -586,9 +585,9 @@ export default function LandingClientPage() {
             </h2>
             <button
               onClick={() => router.push("/shops")}
-              className="text-xs font-bold text-[#1d4ed8] hover:underline flex items-center gap-1 cursor-pointer"
+              className="text-xs font-bold text-slate-900 hover:underline flex items-center gap-1 cursor-pointer"
             >
-              <span>View all</span> <ChevronRight className="w-3.5 h-3.5 text-[#1d4ed8]" />
+              <span>View all</span> <ChevronRight className="w-3.5 h-3.5 text-slate-900" />
             </button>
           </div>
 
@@ -603,7 +602,7 @@ export default function LandingClientPage() {
               <p className="text-xs font-black text-slate-700">No active local store offers posted yet</p>
               <button
                 onClick={() => router.push("/post/offer")}
-                className="mt-1 bg-purple-600 hover:bg-purple-700 text-white font-heading font-black text-xs px-4 py-2 rounded-xl cursor-pointer transition-colors shadow-2xs"
+                className="mt-1 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-4 py-2 rounded-xl cursor-pointer transition-colors shadow-2xs"
               >
                 + Post Store Offer
               </button>
@@ -642,18 +641,18 @@ export default function LandingClientPage() {
                           target="_blank"
                           rel="noopener noreferrer"
                           onClick={(e) => e.stopPropagation()}
-                          className="p-1 rounded-md bg-emerald-50 text-emerald-700 hover:bg-emerald-100 border border-emerald-200 transition-colors"
+                          className="p-1 rounded-md bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-250 transition-colors"
                           title="Chat on WhatsApp"
                         >
-                          <MessageSquare className="w-3 h-3 fill-emerald-600" />
+                          <MessageSquare className="w-3 h-3 text-slate-800" />
                         </a>
                         <a
                           href={`tel:${item.phone || "919994837342"}`}
                           onClick={(e) => e.stopPropagation()}
-                          className="p-1 rounded-md bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 transition-colors"
+                          className="p-1 rounded-md bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-250 transition-colors"
                           title="Call Store"
                         >
-                          <Phone className="w-3 h-3 text-blue-700" />
+                          <Phone className="w-3 h-3 text-slate-800" />
                         </a>
                       </div>
                     </div>
@@ -664,71 +663,74 @@ export default function LandingClientPage() {
           )}
         </section>
 
-        {/* ── 8. 3-Step Visual Guide Section ── */}
-        <section className="bg-[#f59e0b] border border-[#d97706] text-slate-950 rounded-2xl p-5 sm:p-8 flex flex-col gap-5 shadow-md my-4 font-sans">
+        {/* ── 8. 3-Step Informational Process Timeline (Flat Non-Clickable Guide) ── */}
+        <section className="bg-white border border-slate-200 text-slate-900 rounded-2xl p-5 sm:p-8 flex flex-col gap-6 shadow-2xs my-4 font-sans select-none">
           <div className="flex flex-col gap-1 max-w-xl">
-            <span className="text-[10px] font-black uppercase tracking-wider text-white bg-slate-950 px-2.5 py-0.5 rounded-md w-fit border border-slate-900">
-              3 EASY STEPS • 3 எளிய படிகள்
+            <span className="text-[10px] font-black uppercase tracking-wider text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded-md w-fit border border-slate-200">
+              HOW IT WORKS • செயல்படும் முறை
             </span>
-            <h2 className="font-heading font-black text-lg sm:text-2xl text-slate-950 tracking-tight mt-1">
-              How Namma Thanjai Works
+            <h2 className="font-heading font-black text-lg sm:text-2xl text-slate-900 tracking-tight mt-1">
+              3 Simple Steps to Use Namma Thanjai
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-3 sm:gap-4">
-            <div className="bg-white/95 border border-amber-300 p-4 sm:p-5 rounded-xl flex flex-col justify-between gap-3 group hover:border-slate-900 transition-all shadow-2xs">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            {/* Step 1 */}
+            <div className="bg-slate-50 border border-slate-200 p-5 rounded-2xl flex flex-col gap-3">
               <div className="flex items-center justify-between">
-                <span className="w-8 h-8 rounded-lg bg-slate-950 text-white font-heading font-black text-sm flex items-center justify-center shadow-2xs">
+                <span className="w-9 h-9 rounded-xl bg-slate-900 text-white font-heading font-black text-sm flex items-center justify-center shadow-2xs">
                   01
                 </span>
-                <span className="text-[10px] font-extrabold text-amber-900 bg-amber-100/90 px-2 py-0.5 rounded-md border border-amber-300/80">
-                  STEP 1
+                <span className="text-[10px] font-black text-slate-600 bg-slate-200/80 px-2.5 py-0.5 rounded-md border border-slate-300">
+                  STEP 01
                 </span>
               </div>
               <div className="flex flex-col gap-1">
-                <h3 className="font-heading font-black text-sm text-slate-950">
-                  Pick Segment <span className="text-amber-800 font-extrabold text-xs block mt-0.5">பிரிவைத் தேர்ந்தெடு</span>
+                <h3 className="font-heading font-black text-sm text-slate-900">
+                  Pick Segment <span className="text-slate-600 font-bold text-xs block mt-0.5">பிரிவைத் தேர்ந்தெடு</span>
                 </h3>
-                <p className="text-[11px] text-slate-700 font-medium">
-                  Choose Sell, Need, Services, or Store Offers.
+                <p className="text-xs text-slate-600 font-normal leading-relaxed">
+                  Choose Sell, Need, Services, or Store Offers segment.
                 </p>
               </div>
             </div>
 
-            <div className="bg-white/95 border border-amber-300 p-4 sm:p-5 rounded-xl flex flex-col justify-between gap-3 group hover:border-slate-900 transition-all shadow-2xs">
+            {/* Step 2 */}
+            <div className="bg-slate-50 border border-slate-200 p-5 rounded-2xl flex flex-col gap-3">
               <div className="flex items-center justify-between">
-                <span className="w-8 h-8 rounded-lg bg-slate-950 text-white font-heading font-black text-sm flex items-center justify-center shadow-2xs">
+                <span className="w-9 h-9 rounded-xl bg-slate-900 text-white font-heading font-black text-sm flex items-center justify-center shadow-2xs">
                   02
                 </span>
-                <span className="text-[10px] font-extrabold text-amber-900 bg-amber-100/90 px-2 py-0.5 rounded-md border border-amber-300/80">
-                  STEP 2
+                <span className="text-[10px] font-black text-slate-600 bg-slate-200/80 px-2.5 py-0.5 rounded-md border border-slate-300">
+                  STEP 02
                 </span>
               </div>
               <div className="flex flex-col gap-1">
-                <h3 className="font-heading font-black text-sm text-slate-950">
-                  Post or Browse <span className="text-amber-800 font-extrabold text-xs block mt-0.5">பதிவிடு / தேடு</span>
+                <h3 className="font-heading font-black text-sm text-slate-900">
+                  Post or Browse <span className="text-slate-600 font-bold text-xs block mt-0.5">பதிவிடு / தேடு</span>
                 </h3>
-                <p className="text-[11px] text-slate-700 font-medium">
-                  Post in 30s or browse verified local Tanjore listings.
+                <p className="text-xs text-slate-600 font-normal leading-relaxed">
+                  Post your listing in 30 seconds or browse verified Thanjavur ads.
                 </p>
               </div>
             </div>
 
-            <div className="bg-white/95 border border-amber-300 p-4 sm:p-5 rounded-xl flex flex-col justify-between gap-3 group hover:border-slate-900 transition-all shadow-2xs">
+            {/* Step 3 */}
+            <div className="bg-slate-50 border border-slate-200 p-5 rounded-2xl flex flex-col gap-3">
               <div className="flex items-center justify-between">
-                <span className="w-8 h-8 rounded-lg bg-slate-950 text-white font-heading font-black text-sm flex items-center justify-center shadow-2xs">
+                <span className="w-9 h-9 rounded-xl bg-slate-900 text-white font-heading font-black text-sm flex items-center justify-center shadow-2xs">
                   03
                 </span>
-                <span className="text-[10px] font-extrabold text-amber-900 bg-amber-100/90 px-2 py-0.5 rounded-md border border-amber-300/80">
-                  STEP 3
+                <span className="text-[10px] font-black text-slate-600 bg-slate-200/80 px-2.5 py-0.5 rounded-md border border-slate-300">
+                  STEP 03
                 </span>
               </div>
               <div className="flex flex-col gap-1">
-                <h3 className="font-heading font-black text-sm text-slate-950">
-                  Direct Connect <span className="text-amber-800 font-extrabold text-xs block mt-0.5">நேரடி தொடர்பு</span>
+                <h3 className="font-heading font-black text-sm text-slate-900">
+                  Direct Connect <span className="text-slate-600 font-bold text-xs block mt-0.5">நேரடி தொடர்பு</span>
                 </h3>
-                <p className="text-[11px] text-slate-700 font-medium">
-                  Call or chat directly with Tanjore locals (0% brokerage).
+                <p className="text-xs text-slate-600 font-normal leading-relaxed">
+                  Call or chat directly with Tanjore locals with 0% brokerage.
                 </p>
               </div>
             </div>
