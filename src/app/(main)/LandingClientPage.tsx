@@ -152,22 +152,27 @@ export default function LandingClientPage() {
           </div>
         </div>
 
-        {/* ── 2. 4 Segment Category Cards (Single Line Filled Button Row Layout) ── */}
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 my-1">
+        {/* ── 2. 4 Segment Category Cards (Uniform Yellow Buttons & Illustration Icons) ── */}
+        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 my-1">
           {/* Card 1: Need to Buy */}
-          <div className="bg-white rounded-2xl border border-slate-250 p-3.5 flex items-center justify-between gap-3 shadow-2xs">
-            <div className="flex flex-col min-w-0">
-              <h3 className="font-heading font-black text-xs sm:text-sm text-slate-900 truncate">
-                Need to Buy
-              </h3>
-              <span className="text-[11px] font-extrabold text-slate-600 leading-tight">
-                வாங்க வேண்டுமா
-              </span>
+          <div className="bg-white rounded-2xl border border-slate-250 p-4 flex flex-col justify-between gap-3 shadow-2xs hover:border-slate-350 transition-all">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 flex items-center justify-center shrink-0">
+                <ShoppingBag className="w-5 h-5 text-slate-900" />
+              </div>
+              <div className="flex flex-col min-w-0">
+                <h3 className="font-heading font-black text-xs sm:text-sm text-slate-900 truncate">
+                  Need to Buy
+                </h3>
+                <span className="text-[11px] font-bold text-slate-500 leading-tight">
+                  வாங்க வேண்டுமா
+                </span>
+              </div>
             </div>
             <button
               type="button"
               onClick={() => router.push("/sell")}
-              className="bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-[11px] sm:text-xs px-3 py-2 rounded-xl shrink-0 flex items-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all whitespace-nowrap"
+              className="w-full h-9 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-3 rounded-xl flex items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap"
             >
               <span>Explore Seller Post</span>
               <ChevronRight className="w-3.5 h-3.5 text-slate-950 stroke-[3]" />
@@ -175,59 +180,74 @@ export default function LandingClientPage() {
           </div>
 
           {/* Card 2: Looking for */}
-          <div className="bg-white rounded-2xl border border-slate-250 p-3.5 flex items-center justify-between gap-3 shadow-2xs">
-            <div className="flex flex-col min-w-0">
-              <h3 className="font-heading font-black text-xs sm:text-sm text-slate-900 truncate">
-                Looking for
-              </h3>
-              <span className="text-[11px] font-extrabold text-slate-600 leading-tight">
-                என்ன தேவை
-              </span>
+          <div className="bg-white rounded-2xl border border-slate-250 p-4 flex flex-col justify-between gap-3 shadow-2xs hover:border-slate-350 transition-all">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 flex items-center justify-center shrink-0">
+                <Search className="w-5 h-5 text-slate-900" />
+              </div>
+              <div className="flex flex-col min-w-0">
+                <h3 className="font-heading font-black text-xs sm:text-sm text-slate-900 truncate">
+                  Looking for
+                </h3>
+                <span className="text-[11px] font-bold text-slate-500 leading-tight">
+                  என்ன தேவை
+                </span>
+              </div>
             </div>
             <button
               type="button"
               onClick={() => router.push("/need")}
-              className="bg-[#0F172A] hover:bg-slate-800 text-white font-heading font-black text-[11px] sm:text-xs px-3 py-2 rounded-xl shrink-0 flex items-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all whitespace-nowrap"
+              className="w-full h-9 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-3 rounded-xl flex items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap"
             >
               <span>Explore Need Post</span>
-              <ChevronRight className="w-3.5 h-3.5 text-white stroke-[3]" />
+              <ChevronRight className="w-3.5 h-3.5 text-slate-950 stroke-[3]" />
             </button>
           </div>
 
           {/* Card 3: Local Service */}
-          <div className="bg-white rounded-2xl border border-slate-250 p-3.5 flex items-center justify-between gap-3 shadow-2xs">
-            <div className="flex flex-col min-w-0">
-              <h3 className="font-heading font-black text-xs sm:text-sm text-slate-900 truncate">
-                Local Service
-              </h3>
-              <span className="text-[11px] font-extrabold text-slate-600 leading-tight">
-                உள்ளூர் சேவை
-              </span>
+          <div className="bg-white rounded-2xl border border-slate-250 p-4 flex flex-col justify-between gap-3 shadow-2xs hover:border-slate-350 transition-all">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 flex items-center justify-center shrink-0">
+                <Wrench className="w-5 h-5 text-slate-900" />
+              </div>
+              <div className="flex flex-col min-w-0">
+                <h3 className="font-heading font-black text-xs sm:text-sm text-slate-900 truncate">
+                  Local Service
+                </h3>
+                <span className="text-[11px] font-bold text-slate-500 leading-tight">
+                  உள்ளூர் சேவை
+                </span>
+              </div>
             </div>
             <button
               type="button"
               onClick={() => router.push("/services")}
-              className="bg-[#0F172A] hover:bg-slate-800 text-white font-heading font-black text-[11px] sm:text-xs px-3 py-2 rounded-xl shrink-0 flex items-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all whitespace-nowrap"
+              className="w-full h-9 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-3 rounded-xl flex items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap"
             >
               <span>Explore Service Provider</span>
-              <ChevronRight className="w-3.5 h-3.5 text-white stroke-[3]" />
+              <ChevronRight className="w-3.5 h-3.5 text-slate-950 stroke-[3]" />
             </button>
           </div>
 
           {/* Card 4: Local Offer */}
-          <div className="bg-white rounded-2xl border border-slate-250 p-3.5 flex items-center justify-between gap-3 shadow-2xs">
-            <div className="flex flex-col min-w-0">
-              <h3 className="font-heading font-black text-xs sm:text-sm text-slate-900 truncate">
-                Local Offer
-              </h3>
-              <span className="text-[11px] font-extrabold text-slate-600 leading-tight">
-                உள்ளூர் சலுகைகள்
-              </span>
+          <div className="bg-white rounded-2xl border border-slate-250 p-4 flex flex-col justify-between gap-3 shadow-2xs hover:border-slate-350 transition-all">
+            <div className="flex items-center gap-3">
+              <div className="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 flex items-center justify-center shrink-0">
+                <Store className="w-5 h-5 text-slate-900" />
+              </div>
+              <div className="flex flex-col min-w-0">
+                <h3 className="font-heading font-black text-xs sm:text-sm text-slate-900 truncate">
+                  Local Offer
+                </h3>
+                <span className="text-[11px] font-bold text-slate-500 leading-tight">
+                  உள்ளூர் சலுகைகள்
+                </span>
+              </div>
             </div>
             <button
               type="button"
               onClick={() => router.push("/shops")}
-              className="bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-[11px] sm:text-xs px-3 py-2 rounded-xl shrink-0 flex items-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all whitespace-nowrap"
+              className="w-full h-9 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-3 rounded-xl flex items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap"
             >
               <span>Explore Local Offer</span>
               <ChevronRight className="w-3.5 h-3.5 text-slate-950 stroke-[3]" />
@@ -663,73 +683,73 @@ export default function LandingClientPage() {
           )}
         </section>
 
-        {/* ── 8. 3-Step Informational Process Timeline (Flat Non-Clickable Guide) ── */}
-        <section className="bg-white border border-slate-200 text-slate-900 rounded-2xl p-5 sm:p-8 flex flex-col gap-6 shadow-2xs my-4 font-sans select-none">
+        {/* ── 8. 3-Step Informational Process Timeline (Royal Blue Theme) ── */}
+        <section className="bg-[#0F172A] border border-blue-900/60 text-white rounded-2xl p-5 sm:p-8 flex flex-col gap-6 shadow-md my-4 font-sans select-none relative overflow-hidden">
           <div className="flex flex-col gap-1 max-w-xl">
-            <span className="text-[10px] font-black uppercase tracking-wider text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded-md w-fit border border-slate-200">
+            <span className="text-[10px] font-black uppercase tracking-wider text-blue-300 bg-blue-950/90 px-2.5 py-0.5 rounded-md w-fit border border-blue-800/80">
               HOW IT WORKS • செயல்படும் முறை
             </span>
-            <h2 className="font-heading font-black text-lg sm:text-2xl text-slate-900 tracking-tight mt-1">
+            <h2 className="font-heading font-black text-lg sm:text-2xl text-white tracking-tight mt-1">
               3 Simple Steps to Use Namma Thanjai
             </h2>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
             {/* Step 1 */}
-            <div className="bg-slate-50 border border-slate-200 p-5 rounded-2xl flex flex-col gap-3">
+            <div className="bg-slate-900/90 border border-blue-800/50 p-5 rounded-2xl flex flex-col gap-3">
               <div className="flex items-center justify-between">
-                <span className="w-9 h-9 rounded-xl bg-slate-900 text-white font-heading font-black text-sm flex items-center justify-center shadow-2xs">
+                <span className="w-9 h-9 rounded-xl bg-blue-600 text-white font-heading font-black text-sm flex items-center justify-center shadow-2xs">
                   01
                 </span>
-                <span className="text-[10px] font-black text-slate-600 bg-slate-200/80 px-2.5 py-0.5 rounded-md border border-slate-300">
+                <span className="text-[10px] font-black text-blue-300 bg-blue-950 px-2.5 py-0.5 rounded-md border border-blue-800">
                   STEP 01
                 </span>
               </div>
               <div className="flex flex-col gap-1">
-                <h3 className="font-heading font-black text-sm text-slate-900">
-                  Pick Segment <span className="text-slate-600 font-bold text-xs block mt-0.5">பிரிவைத் தேர்ந்தெடு</span>
+                <h3 className="font-heading font-black text-sm text-white">
+                  Pick Segment <span className="text-blue-300 font-bold text-xs block mt-0.5">பிரிவைத் தேர்ந்தெடு</span>
                 </h3>
-                <p className="text-xs text-slate-600 font-normal leading-relaxed">
+                <p className="text-xs text-slate-300 font-normal leading-relaxed">
                   Choose Sell, Need, Services, or Store Offers segment.
                 </p>
               </div>
             </div>
 
             {/* Step 2 */}
-            <div className="bg-slate-50 border border-slate-200 p-5 rounded-2xl flex flex-col gap-3">
+            <div className="bg-slate-900/90 border border-blue-800/50 p-5 rounded-2xl flex flex-col gap-3">
               <div className="flex items-center justify-between">
-                <span className="w-9 h-9 rounded-xl bg-slate-900 text-white font-heading font-black text-sm flex items-center justify-center shadow-2xs">
+                <span className="w-9 h-9 rounded-xl bg-blue-600 text-white font-heading font-black text-sm flex items-center justify-center shadow-2xs">
                   02
                 </span>
-                <span className="text-[10px] font-black text-slate-600 bg-slate-200/80 px-2.5 py-0.5 rounded-md border border-slate-300">
+                <span className="text-[10px] font-black text-blue-300 bg-blue-950 px-2.5 py-0.5 rounded-md border border-blue-800">
                   STEP 02
                 </span>
               </div>
               <div className="flex flex-col gap-1">
-                <h3 className="font-heading font-black text-sm text-slate-900">
-                  Post or Browse <span className="text-slate-600 font-bold text-xs block mt-0.5">பதிவிடு / தேடு</span>
+                <h3 className="font-heading font-black text-sm text-white">
+                  Post or Browse <span className="text-blue-300 font-bold text-xs block mt-0.5">பதிவிடு / தேடு</span>
                 </h3>
-                <p className="text-xs text-slate-600 font-normal leading-relaxed">
+                <p className="text-xs text-slate-300 font-normal leading-relaxed">
                   Post your listing in 30 seconds or browse verified Thanjavur ads.
                 </p>
               </div>
             </div>
 
             {/* Step 3 */}
-            <div className="bg-slate-50 border border-slate-200 p-5 rounded-2xl flex flex-col gap-3">
+            <div className="bg-slate-900/90 border border-blue-800/50 p-5 rounded-2xl flex flex-col gap-3">
               <div className="flex items-center justify-between">
-                <span className="w-9 h-9 rounded-xl bg-slate-900 text-white font-heading font-black text-sm flex items-center justify-center shadow-2xs">
+                <span className="w-9 h-9 rounded-xl bg-blue-600 text-white font-heading font-black text-sm flex items-center justify-center shadow-2xs">
                   03
                 </span>
-                <span className="text-[10px] font-black text-slate-600 bg-slate-200/80 px-2.5 py-0.5 rounded-md border border-slate-300">
+                <span className="text-[10px] font-black text-blue-300 bg-blue-950 px-2.5 py-0.5 rounded-md border border-blue-800">
                   STEP 03
                 </span>
               </div>
               <div className="flex flex-col gap-1">
-                <h3 className="font-heading font-black text-sm text-slate-900">
-                  Direct Connect <span className="text-slate-600 font-bold text-xs block mt-0.5">நேரடி தொடர்பு</span>
+                <h3 className="font-heading font-black text-sm text-white">
+                  Direct Connect <span className="text-blue-300 font-bold text-xs block mt-0.5">நேரடி தொடர்பு</span>
                 </h3>
-                <p className="text-xs text-slate-600 font-normal leading-relaxed">
+                <p className="text-xs text-slate-300 font-normal leading-relaxed">
                   Call or chat directly with Tanjore locals with 0% brokerage.
                 </p>
               </div>
