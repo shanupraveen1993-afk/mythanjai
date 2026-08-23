@@ -152,28 +152,28 @@ export default function LandingClientPage() {
           </div>
         </div>
 
-        {/* ── 2. 4 Segment Category Cards (Responsive: Chevron on Mobile/APK, Button on Desktop) ── */}
+        {/* ── 2. 4 Segment Category Cards (Solid Filled Button Cards) ── */}
         <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 my-1">
           {/* Card 1: Need to Buy */}
           <div
             onClick={() => router.push("/sell")}
-            className="bg-white rounded-2xl border border-slate-250 p-4 flex flex-col justify-between gap-3 shadow-2xs hover:border-slate-350 cursor-pointer transition-all active:scale-[0.99]"
+            className="bg-[#FBBF24] hover:bg-amber-400 text-slate-950 rounded-2xl p-4 flex flex-col justify-between gap-3 shadow-sm border border-amber-400/90 cursor-pointer transition-all active:scale-[0.98]"
           >
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 flex items-center justify-center shrink-0">
-                  <ShoppingBag className="w-5 h-5 text-slate-900" />
+                <div className="w-10 h-10 rounded-xl bg-slate-950 text-[#FBBF24] flex items-center justify-center shrink-0 shadow-2xs">
+                  <ShoppingBag className="w-5 h-5 stroke-[2.5]" />
                 </div>
                 <div className="flex flex-col min-w-0">
-                  <h3 className="font-heading font-black text-xs sm:text-sm text-slate-900 truncate">
+                  <h3 className="font-heading font-black text-sm text-slate-950 truncate">
                     Need to Buy
                   </h3>
-                  <span className="text-[11px] font-bold text-slate-500 leading-tight">
+                  <span className="text-xs font-bold text-slate-900/90 leading-tight">
                     வாங்க வேண்டுமா
                   </span>
                 </div>
               </div>
-              <div className="lg:hidden w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-900 shrink-0">
+              <div className="w-8 h-8 rounded-xl bg-slate-950 text-white flex items-center justify-center shrink-0 shadow-2xs">
                 <ChevronRight className="w-4 h-4 stroke-[3]" />
               </div>
             </div>
@@ -182,12 +182,12 @@ export default function LandingClientPage() {
               {["Plots", "Bikes"].map((cat, i) => (
                 <span
                   key={i}
-                  className="text-[10px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 whitespace-nowrap shrink-0 font-medium"
+                  className="text-[10px] text-slate-950 font-bold bg-white/80 px-2 py-0.5 rounded-md border border-slate-950/10 whitespace-nowrap shrink-0"
                 >
                   {cat}
                 </span>
               ))}
-              <span className="text-[10px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 whitespace-nowrap shrink-0">
+              <span className="text-[10px] font-black text-slate-950 bg-slate-950/10 px-2 py-0.5 rounded-md border border-slate-950/10 whitespace-nowrap shrink-0">
                 +12 More
               </span>
             </div>
@@ -198,33 +198,33 @@ export default function LandingClientPage() {
                 e.stopPropagation();
                 router.push("/sell");
               }}
-              className="hidden lg:flex w-full h-9 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-3 rounded-xl items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap"
+              className="w-full h-9 bg-slate-950 hover:bg-slate-900 text-white font-heading font-black text-xs px-3 rounded-xl flex items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap uppercase tracking-wider"
             >
               <span>Explore Seller Post</span>
-              <ChevronRight className="w-3.5 h-3.5 text-slate-950 stroke-[3]" />
+              <ChevronRight className="w-3.5 h-3.5 text-amber-400 stroke-[3]" />
             </button>
           </div>
 
           {/* Card 2: Looking for */}
           <div
             onClick={() => router.push("/need")}
-            className="bg-white rounded-2xl border border-slate-250 p-4 flex flex-col justify-between gap-3 shadow-2xs hover:border-slate-350 cursor-pointer transition-all active:scale-[0.99]"
+            className="bg-[#0F172A] hover:bg-slate-800 text-white rounded-2xl p-4 flex flex-col justify-between gap-3 shadow-sm border border-slate-800 cursor-pointer transition-all active:scale-[0.98]"
           >
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 flex items-center justify-center shrink-0">
-                  <Search className="w-5 h-5 text-slate-900" />
+                <div className="w-10 h-10 rounded-xl bg-[#FBBF24] text-slate-950 flex items-center justify-center shrink-0 shadow-2xs">
+                  <Search className="w-5 h-5 stroke-[2.5]" />
                 </div>
                 <div className="flex flex-col min-w-0">
-                  <h3 className="font-heading font-black text-xs sm:text-sm text-slate-900 truncate">
+                  <h3 className="font-heading font-black text-sm text-white truncate">
                     Looking for
                   </h3>
-                  <span className="text-[11px] font-bold text-slate-500 leading-tight">
+                  <span className="text-xs font-bold text-slate-300 leading-tight">
                     என்ன தேவை
                   </span>
                 </div>
               </div>
-              <div className="lg:hidden w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-900 shrink-0">
+              <div className="w-8 h-8 rounded-xl bg-slate-800 text-white flex items-center justify-center shrink-0 shadow-2xs">
                 <ChevronRight className="w-4 h-4 stroke-[3]" />
               </div>
             </div>
@@ -233,12 +233,12 @@ export default function LandingClientPage() {
               {["Rentals", "Cars"].map((cat, i) => (
                 <span
                   key={i}
-                  className="text-[10px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 whitespace-nowrap shrink-0 font-medium"
+                  className="text-[10px] text-white font-bold bg-slate-800/80 px-2 py-0.5 rounded-md border border-slate-700 whitespace-nowrap shrink-0"
                 >
                   {cat}
                 </span>
               ))}
-              <span className="text-[10px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 whitespace-nowrap shrink-0">
+              <span className="text-[10px] font-black text-amber-300 bg-amber-400/10 px-2 py-0.5 rounded-md border border-amber-400/20 whitespace-nowrap shrink-0">
                 +14 More
               </span>
             </div>
@@ -249,7 +249,7 @@ export default function LandingClientPage() {
                 e.stopPropagation();
                 router.push("/need");
               }}
-              className="hidden lg:flex w-full h-9 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-3 rounded-xl items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap"
+              className="w-full h-9 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-3 rounded-xl flex items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap uppercase tracking-wider"
             >
               <span>Explore Need Post</span>
               <ChevronRight className="w-3.5 h-3.5 text-slate-950 stroke-[3]" />
@@ -259,23 +259,23 @@ export default function LandingClientPage() {
           {/* Card 3: Local Service */}
           <div
             onClick={() => router.push("/services")}
-            className="bg-white rounded-2xl border border-slate-250 p-4 flex flex-col justify-between gap-3 shadow-2xs hover:border-slate-350 cursor-pointer transition-all active:scale-[0.99]"
+            className="bg-[#0F172A] hover:bg-slate-800 text-white rounded-2xl p-4 flex flex-col justify-between gap-3 shadow-sm border border-slate-800 cursor-pointer transition-all active:scale-[0.98]"
           >
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 flex items-center justify-center shrink-0">
-                  <Wrench className="w-5 h-5 text-slate-900" />
+                <div className="w-10 h-10 rounded-xl bg-[#FBBF24] text-slate-950 flex items-center justify-center shrink-0 shadow-2xs">
+                  <Wrench className="w-5 h-5 stroke-[2.5]" />
                 </div>
                 <div className="flex flex-col min-w-0">
-                  <h3 className="font-heading font-black text-xs sm:text-sm text-slate-900 truncate">
+                  <h3 className="font-heading font-black text-sm text-white truncate">
                     Local Service
                   </h3>
-                  <span className="text-[11px] font-bold text-slate-500 leading-tight">
+                  <span className="text-xs font-bold text-slate-300 leading-tight">
                     உள்ளூர் சேவை
                   </span>
                 </div>
               </div>
-              <div className="lg:hidden w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-900 shrink-0">
+              <div className="w-8 h-8 rounded-xl bg-slate-800 text-white flex items-center justify-center shrink-0 shadow-2xs">
                 <ChevronRight className="w-4 h-4 stroke-[3]" />
               </div>
             </div>
@@ -284,12 +284,12 @@ export default function LandingClientPage() {
               {["Electrician", "Plumber"].map((cat, i) => (
                 <span
                   key={i}
-                  className="text-[10px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 whitespace-nowrap shrink-0 font-medium"
+                  className="text-[10px] text-white font-bold bg-slate-800/80 px-2 py-0.5 rounded-md border border-slate-700 whitespace-nowrap shrink-0"
                 >
                   {cat}
                 </span>
               ))}
-              <span className="text-[10px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 whitespace-nowrap shrink-0">
+              <span className="text-[10px] font-black text-amber-300 bg-amber-400/10 px-2 py-0.5 rounded-md border border-amber-400/20 whitespace-nowrap shrink-0">
                 +18 More
               </span>
             </div>
@@ -300,7 +300,7 @@ export default function LandingClientPage() {
                 e.stopPropagation();
                 router.push("/services");
               }}
-              className="hidden lg:flex w-full h-9 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-3 rounded-xl items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap"
+              className="w-full h-9 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-3 rounded-xl flex items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap uppercase tracking-wider"
             >
               <span>Explore Service Provider</span>
               <ChevronRight className="w-3.5 h-3.5 text-slate-950 stroke-[3]" />
@@ -310,23 +310,23 @@ export default function LandingClientPage() {
           {/* Card 4: Local Offer */}
           <div
             onClick={() => router.push("/shops")}
-            className="bg-white rounded-2xl border border-slate-250 p-4 flex flex-col justify-between gap-3 shadow-2xs hover:border-slate-350 cursor-pointer transition-all active:scale-[0.99]"
+            className="bg-[#FBBF24] hover:bg-amber-400 text-slate-950 rounded-2xl p-4 flex flex-col justify-between gap-3 shadow-sm border border-amber-400/90 cursor-pointer transition-all active:scale-[0.98]"
           >
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-slate-100 border border-slate-200 text-slate-900 flex items-center justify-center shrink-0">
-                  <Store className="w-5 h-5 text-slate-900" />
+                <div className="w-10 h-10 rounded-xl bg-slate-950 text-[#FBBF24] flex items-center justify-center shrink-0 shadow-2xs">
+                  <Store className="w-5 h-5 stroke-[2.5]" />
                 </div>
                 <div className="flex flex-col min-w-0">
-                  <h3 className="font-heading font-black text-xs sm:text-sm text-slate-900 truncate">
+                  <h3 className="font-heading font-black text-sm text-slate-950 truncate">
                     Local Offer
                   </h3>
-                  <span className="text-[11px] font-bold text-slate-500 leading-tight">
+                  <span className="text-xs font-bold text-slate-900/90 leading-tight">
                     உள்ளூர் சலுகைகள்
                   </span>
                 </div>
               </div>
-              <div className="lg:hidden w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-900 shrink-0">
+              <div className="w-8 h-8 rounded-xl bg-slate-950 text-white flex items-center justify-center shrink-0 shadow-2xs">
                 <ChevronRight className="w-4 h-4 stroke-[3]" />
               </div>
             </div>
@@ -335,12 +335,12 @@ export default function LandingClientPage() {
               {["Discounts", "Cafes"].map((cat, i) => (
                 <span
                   key={i}
-                  className="text-[10px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 whitespace-nowrap shrink-0 font-medium"
+                  className="text-[10px] text-slate-950 font-bold bg-white/80 px-2 py-0.5 rounded-md border border-slate-950/10 whitespace-nowrap shrink-0"
                 >
                   {cat}
                 </span>
               ))}
-              <span className="text-[10px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 whitespace-nowrap shrink-0">
+              <span className="text-[10px] font-black text-slate-950 bg-slate-950/10 px-2 py-0.5 rounded-md border border-slate-950/10 whitespace-nowrap shrink-0">
                 +15 More
               </span>
             </div>
@@ -351,10 +351,10 @@ export default function LandingClientPage() {
                 e.stopPropagation();
                 router.push("/shops");
               }}
-              className="hidden lg:flex w-full h-9 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-3 rounded-xl items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap"
+              className="w-full h-9 bg-slate-950 hover:bg-slate-900 text-white font-heading font-black text-xs px-3 rounded-xl flex items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap uppercase tracking-wider"
             >
               <span>Explore Local Offer</span>
-              <ChevronRight className="w-3.5 h-3.5 text-slate-950 stroke-[3]" />
+              <ChevronRight className="w-3.5 h-3.5 text-amber-400 stroke-[3]" />
             </button>
           </div>
         </section>
