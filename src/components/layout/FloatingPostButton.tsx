@@ -16,7 +16,9 @@ export default function FloatingPostButton() {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      if (currentScrollY > lastScrollY.current + 12 && currentScrollY > 60) {
+      if (currentScrollY <= 20) {
+        setIsVisible(true); // Always 100% visible at top of page
+      } else if (currentScrollY > lastScrollY.current + 10) {
         setIsVisible(false); // Hide on scroll down
       } else if (currentScrollY < lastScrollY.current - 10) {
         setIsVisible(true); // Show on scroll up
