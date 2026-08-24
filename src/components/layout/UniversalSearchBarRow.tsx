@@ -77,13 +77,7 @@ export default function UniversalSearchBarRow() {
   };
 
   return (
-    <div
-      className={`w-full sticky top-14 z-40 bg-slate-50/95 backdrop-blur-md border-b border-slate-200/60 py-2 sm:py-2.5 transition-all duration-300 ${
-        isVisible
-          ? "translate-y-0 opacity-100"
-          : "-translate-y-full opacity-0 pointer-events-none md:translate-y-0 md:opacity-100 md:pointer-events-auto"
-      }`}
-    >
+    <div className="w-full sticky top-14 z-40 bg-slate-50/98 backdrop-blur-md border-b border-slate-200/80 py-2 sm:py-2.5 shadow-2xs">
       <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 flex items-center justify-between gap-3">
         {/* Left-Aligned Full Width Search Input */}
         <div className="flex-1 min-w-0">
