@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
+import UniversalSearchBar from "@/components/layout/UniversalSearchBar";
 import {
   ChevronRight,
   MapPin,
@@ -10,8 +11,6 @@ import {
   Search,
   Wrench,
   Store,
-  BarChart3,
-  Eye,
   MessageSquare,
   Phone,
   Share2,
@@ -114,6 +113,39 @@ export default function LandingClientPage() {
     <div className="w-full flex flex-col gap-6 text-slate-900 font-sans pb-24 bg-[#f8fafc] min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col gap-6 pt-4">
         
+        {/* ── Prominent Home Universal Search Bar ── */}
+        <div className="w-full flex flex-col gap-3">
+          <UniversalSearchBar />
+
+          {/* ── 5 Segment Quick Filter Pills (Direct Home Feed Filtering) ── */}
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+            {[
+              { id: "all", label: "All Feeds", icon: "🌐", route: "/" },
+              { id: "sell", label: "Sell (விற்பனை)", icon: "📦", route: "/sell" },
+              { id: "need", label: "Need (தேவை)", icon: "🔍", route: "/need" },
+              { id: "service", label: "Service (சேவை)", icon: "🛠️", route: "/services" },
+              { id: "offer", label: "Offer (சலுகை)", icon: "🏪", route: "/shops" },
+            ].map((seg) => (
+              <button
+                key={seg.id}
+                type="button"
+                onClick={() => {
+                  if (typeof window !== "undefined") {
+                    localStorage.setItem("namma_thanjai_active_segment", seg.id);
+                  }
+                  if (seg.id !== "all") {
+                    router.push(seg.route);
+                  }
+                }}
+                className="py-2 px-3.5 rounded-xl font-heading font-black text-xs transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 shrink-0 bg-white text-slate-700 hover:bg-slate-100 border border-slate-200"
+              >
+                <span>{seg.icon}</span>
+                <span>{seg.label}</span>
+              </button>
+            ))}
+          </div>
+        </div>
+
         {/* ── 1. Hero Banner ── */}
         <div className="relative w-full min-h-[160px] sm:min-h-[200px] rounded-2xl overflow-hidden bg-[#0F172A] text-white flex items-center px-6 sm:px-8 py-6 sm:py-8 shadow-md mt-1 border border-slate-800">
           <img
@@ -151,293 +183,6 @@ export default function LandingClientPage() {
             )}
           </div>
         </div>
-
-        {/* ── 2. 4 Segment Category Cards (Light Blue Secondary Theme Cards) ── */}
-        <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5 my-1">
-          {/* Card 1: Need to Buy */}
-          <div
-            onClick={() => router.push("/sell")}
-            className="bg-[#EFF6FF] hover:bg-blue-100/80 text-slate-900 rounded-2xl p-4 flex flex-col justify-between gap-3 shadow-2xs border border-blue-200/90 cursor-pointer transition-all active:scale-[0.98]"
-          >
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-2xs">
-                  <ShoppingBag className="w-5 h-5 stroke-[2.5]" />
-                </div>
-                <div className="flex flex-col min-w-0">
-                  <h3 className="font-heading font-black text-sm text-slate-950 truncate">
-                    Need to Buy
-                  </h3>
-                  <span className="text-xs font-bold text-blue-900/80 leading-tight">
-                    வாங்க வேண்டுமா
-                  </span>
-                </div>
-              </div>
-              <div className="w-8 h-8 rounded-xl bg-blue-100 text-blue-800 border border-blue-200 flex items-center justify-center shrink-0 shadow-2xs">
-                <ChevronRight className="w-4 h-4 stroke-[3]" />
-              </div>
-            </div>
-
-            <div className="flex items-center gap-1.5 overflow-hidden">
-              {["Plots", "Bikes"].map((cat, i) => (
-                <span
-                  key={i}
-                  className="text-[10px] text-slate-800 font-bold bg-white px-2 py-0.5 rounded-md border border-blue-200/80 whitespace-nowrap shrink-0"
-                >
-                  {cat}
-                </span>
-              ))}
-              <span className="text-[10px] font-black text-blue-800 bg-blue-100 px-2 py-0.5 rounded-md border border-blue-300/80 whitespace-nowrap shrink-0">
-                +12 More
-              </span>
-            </div>
-
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                router.push("/sell");
-              }}
-              className="w-full h-9 bg-blue-600 hover:bg-blue-700 text-white font-heading font-black text-xs px-3 rounded-xl flex items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap uppercase tracking-wider"
-            >
-              <span>Explore Seller Post</span>
-              <ChevronRight className="w-3.5 h-3.5 text-white stroke-[3]" />
-            </button>
-          </div>
-
-          {/* Card 2: Looking for */}
-          <div
-            onClick={() => router.push("/need")}
-            className="bg-[#EFF6FF] hover:bg-blue-100/80 text-slate-900 rounded-2xl p-4 flex flex-col justify-between gap-3 shadow-2xs border border-blue-200/90 cursor-pointer transition-all active:scale-[0.98]"
-          >
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-2xs">
-                  <Search className="w-5 h-5 stroke-[2.5]" />
-                </div>
-                <div className="flex flex-col min-w-0">
-                  <h3 className="font-heading font-black text-sm text-slate-950 truncate">
-                    Looking for
-                  </h3>
-                  <span className="text-xs font-bold text-blue-900/80 leading-tight">
-                    என்ன தேவை
-                  </span>
-                </div>
-              </div>
-              <div className="w-8 h-8 rounded-xl bg-blue-100 text-blue-800 border border-blue-200 flex items-center justify-center shrink-0 shadow-2xs">
-                <ChevronRight className="w-4 h-4 stroke-[3]" />
-              </div>
-            </div>
-
-            <div className="flex items-center gap-1.5 overflow-hidden">
-              {["Rentals", "Cars"].map((cat, i) => (
-                <span
-                  key={i}
-                  className="text-[10px] text-slate-800 font-bold bg-white px-2 py-0.5 rounded-md border border-blue-200/80 whitespace-nowrap shrink-0"
-                >
-                  {cat}
-                </span>
-              ))}
-              <span className="text-[10px] font-black text-blue-800 bg-blue-100 px-2 py-0.5 rounded-md border border-blue-300/80 whitespace-nowrap shrink-0">
-                +14 More
-              </span>
-            </div>
-
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                router.push("/need");
-              }}
-              className="w-full h-9 bg-blue-600 hover:bg-blue-700 text-white font-heading font-black text-xs px-3 rounded-xl flex items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap uppercase tracking-wider"
-            >
-              <span>Explore Need Post</span>
-              <ChevronRight className="w-3.5 h-3.5 text-white stroke-[3]" />
-            </button>
-          </div>
-
-          {/* Card 3: Local Service */}
-          <div
-            onClick={() => router.push("/services")}
-            className="bg-[#EFF6FF] hover:bg-blue-100/80 text-slate-900 rounded-2xl p-4 flex flex-col justify-between gap-3 shadow-2xs border border-blue-200/90 cursor-pointer transition-all active:scale-[0.98]"
-          >
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-2xs">
-                  <Wrench className="w-5 h-5 stroke-[2.5]" />
-                </div>
-                <div className="flex flex-col min-w-0">
-                  <h3 className="font-heading font-black text-sm text-slate-950 truncate">
-                    Local Service
-                  </h3>
-                  <span className="text-xs font-bold text-blue-900/80 leading-tight">
-                    உள்ளூர் சேவை
-                  </span>
-                </div>
-              </div>
-              <div className="w-8 h-8 rounded-xl bg-blue-100 text-blue-800 border border-blue-200 flex items-center justify-center shrink-0 shadow-2xs">
-                <ChevronRight className="w-4 h-4 stroke-[3]" />
-              </div>
-            </div>
-
-            <div className="flex items-center gap-1.5 overflow-hidden">
-              {["Electrician", "Plumber"].map((cat, i) => (
-                <span
-                  key={i}
-                  className="text-[10px] text-slate-800 font-bold bg-white px-2 py-0.5 rounded-md border border-blue-200/80 whitespace-nowrap shrink-0"
-                >
-                  {cat}
-                </span>
-              ))}
-              <span className="text-[10px] font-black text-blue-800 bg-blue-100 px-2 py-0.5 rounded-md border border-blue-300/80 whitespace-nowrap shrink-0">
-                +18 More
-              </span>
-            </div>
-
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                router.push("/services");
-              }}
-              className="w-full h-9 bg-blue-600 hover:bg-blue-700 text-white font-heading font-black text-xs px-3 rounded-xl flex items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap uppercase tracking-wider"
-            >
-              <span>Explore Service Provider</span>
-              <ChevronRight className="w-3.5 h-3.5 text-white stroke-[3]" />
-            </button>
-          </div>
-
-          {/* Card 4: Local Offer */}
-          <div
-            onClick={() => router.push("/shops")}
-            className="bg-[#EFF6FF] hover:bg-blue-100/80 text-slate-900 rounded-2xl p-4 flex flex-col justify-between gap-3 shadow-2xs border border-blue-200/90 cursor-pointer transition-all active:scale-[0.98]"
-          >
-            <div className="flex items-center justify-between gap-2">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-2xs">
-                  <Store className="w-5 h-5 stroke-[2.5]" />
-                </div>
-                <div className="flex flex-col min-w-0">
-                  <h3 className="font-heading font-black text-sm text-slate-950 truncate">
-                    Local Offer
-                  </h3>
-                  <span className="text-xs font-bold text-blue-900/80 leading-tight">
-                    உள்ளூர் சலுகைகள்
-                  </span>
-                </div>
-              </div>
-              <div className="w-8 h-8 rounded-xl bg-blue-100 text-blue-800 border border-blue-200 flex items-center justify-center shrink-0 shadow-2xs">
-                <ChevronRight className="w-4 h-4 stroke-[3]" />
-              </div>
-            </div>
-
-            <div className="flex items-center gap-1.5 overflow-hidden">
-              {["Discounts", "Cafes"].map((cat, i) => (
-                <span
-                  key={i}
-                  className="text-[10px] text-slate-800 font-bold bg-white px-2 py-0.5 rounded-md border border-blue-200/80 whitespace-nowrap shrink-0"
-                >
-                  {cat}
-                </span>
-              ))}
-              <span className="text-[10px] font-black text-blue-800 bg-blue-100 px-2 py-0.5 rounded-md border border-blue-300/80 whitespace-nowrap shrink-0">
-                +15 More
-              </span>
-            </div>
-
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                router.push("/shops");
-              }}
-              className="w-full h-9 bg-blue-600 hover:bg-blue-700 text-white font-heading font-black text-xs px-3 rounded-xl flex items-center justify-center gap-1 shadow-2xs cursor-pointer active:scale-95 transition-all text-center whitespace-nowrap uppercase tracking-wider"
-            >
-              <span>Explore Local Offer</span>
-              <ChevronRight className="w-3.5 h-3.5 text-white stroke-[3]" />
-            </button>
-          </div>
-        </section>
-
-        {/* ── 3. Dynamic Category / Matchmaker / Insights Section (Positioned Below Segment Cards) ── */}
-        {activeServiceOrOfferPost ? (
-          /* Provider Performance Insights Card */
-          <div className="bg-[#0F172A] border border-slate-800 rounded-2xl p-5 text-white shadow-xl flex flex-col gap-4 my-1 font-sans">
-            <div className="flex items-center justify-between border-b border-slate-800 pb-3">
-              <div className="flex items-center gap-2.5">
-                <div className="w-10 h-10 rounded-2xl bg-slate-800 border border-slate-700 flex items-center justify-center text-amber-400 font-bold">
-                  <BarChart3 className="w-5 h-5 stroke-[2.5]" />
-                </div>
-                <div>
-                  <h3 className="font-heading font-black text-sm text-white">Provider Performance Insights</h3>
-                  <p className="text-xs text-slate-400 font-semibold">{activeServiceOrOfferPost.title || activeServiceOrOfferPost.name || activeServiceOrOfferPost.shop_name}</p>
-                </div>
-              </div>
-              <span className="text-[10px] uppercase font-black tracking-widest text-[#FBBF24] bg-slate-900 px-2.5 py-1 rounded-lg border border-slate-700">Live Analytics</span>
-            </div>
-
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-              <div className="bg-slate-900 border border-slate-800 p-3 rounded-xl flex flex-col gap-0.5">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1"><Eye className="w-3 h-3 text-slate-300" /> Seen</span>
-                <span className="font-heading font-black text-lg text-white">{activeServiceOrOfferPost.views_count || 1}</span>
-              </div>
-              <div className="bg-slate-900 border border-slate-800 p-3 rounded-xl flex flex-col gap-0.5">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1"><MessageSquare className="w-3 h-3 text-slate-300" /> Interacted</span>
-                <span className="font-heading font-black text-lg text-white">{activeServiceOrOfferPost.chats_count || 0}</span>
-              </div>
-              <div className="bg-slate-900 border border-slate-800 p-3 rounded-xl flex flex-col gap-0.5">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1"><Phone className="w-3 h-3 text-amber-400" /> Calls / Requests</span>
-                <span className="font-heading font-black text-lg text-white">{activeServiceOrOfferPost.calls_count || 0}</span>
-              </div>
-              <div className="bg-slate-900 border border-slate-800 p-3 rounded-xl flex flex-col gap-0.5">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1"><Share2 className="w-3 h-3 text-slate-300" /> Shared</span>
-                <span className="font-heading font-black text-lg text-white">{activeServiceOrOfferPost.shares_count || 0}</span>
-              </div>
-              <div className="bg-slate-900 border border-slate-800 p-3 rounded-xl flex flex-col gap-0.5 col-span-2 sm:col-span-1">
-                <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider flex items-center gap-1"><Bookmark className="w-3 h-3 text-slate-300" /> Saved</span>
-                <span className="font-heading font-black text-lg text-white">{activeServiceOrOfferPost.saved_count || 0}</span>
-              </div>
-            </div>
-          </div>
-        ) : activeSellOrNeedPost ? (
-          /* Smart Matchmaker Grid */
-          <div className="bg-white border border-slate-250 rounded-2xl p-4 shadow-2xs flex flex-col gap-3 my-1">
-            <div className="flex items-center justify-between border-b border-slate-100 pb-2.5">
-              <div className="flex items-center gap-2">
-                <span className="w-2.5 h-2.5 rounded-full bg-slate-900" />
-                <h3 className="font-heading font-black text-sm text-slate-900">
-                  Smart Matchmaker ({activeSellOrNeedPost.type === "SELL" ? "Buyers Looking For Your Item" : "Available Sellers"})
-                </h3>
-              </div>
-              <span className="text-[10px] font-bold text-slate-800 bg-slate-100 border border-slate-200 px-2 py-0.5 rounded-md">
-                Live Tanjore Matches
-              </span>
-            </div>
-
-            {matchedPosts.length === 0 ? (
-              <p className="text-xs text-slate-500 py-2">
-                Searching for matching {activeSellOrNeedPost.type === "SELL" ? "buyers" : "sellers"} in Thanjavur...
-              </p>
-            ) : (
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                {matchedPosts.map((m, i) => (
-                  <div
-                    key={i}
-                    onClick={() => router.push(m.type === "NEED" ? "/need" : "/sell")}
-                    className="bg-slate-50 border border-slate-200 hover:border-slate-300 rounded-xl p-3 flex flex-col justify-between gap-1 cursor-pointer transition-all active:scale-[0.98]"
-                  >
-                    <div className="flex items-center justify-between">
-                      <span className="text-[9px] uppercase font-black bg-slate-200 text-slate-900 border border-slate-300 px-1.5 py-0.5 rounded">Match</span>
-                      {m.price && <span className="text-[11px] font-black text-slate-900">₹{Number(m.price).toLocaleString("en-IN")}</span>}
-                    </div>
-                    <h5 className="font-heading font-black text-xs text-slate-900 truncate mt-1">{m.title}</h5>
-                    <p className="text-[11px] text-slate-500 font-semibold">📍 {m.area_tag || "Thanjavur"}</p>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        ) : null}
 
         {/* ── 4. SELL Preview ── */}
         <section className="flex flex-col gap-3 my-2">
