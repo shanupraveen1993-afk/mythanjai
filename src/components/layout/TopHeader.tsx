@@ -186,7 +186,7 @@ export default function TopHeader({
           ) : null
         )}
 
-        {/* Right Side Action Cluster: Royal Blue Get App button (mobile + desktop) & Desktop-only Chat/Profile/Listings icons */}
+        {/* Right Side Action Cluster: Royal Blue Get App button + Mobile +Post button & Desktop-only Chat/Profile/Listings icons */}
         <div className="flex items-center justify-end gap-2 shrink-0 ml-auto z-20">
           {!isNativeApp && (
             <a
@@ -200,7 +200,17 @@ export default function TopHeader({
             </a>
           )}
 
-          {/* Desktop Website Only: My Listings, Chat & Profile Buttons (Hidden on WebApp/Mobile as Bottom Bar handles them) */}
+          {/* Mobile Only: +Post Button */}
+          <button
+            type="button"
+            onClick={() => router.push("/post/sell")}
+            className="flex md:hidden bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs px-3 py-1.5 rounded-lg shadow-2xs transition-all items-center gap-1 shrink-0 active:scale-95 border border-amber-400 cursor-pointer"
+          >
+            <Plus className="w-3.5 h-3.5 stroke-[3]" />
+            <span>Post</span>
+          </button>
+
+          {/* Desktop Website Only: My Listings, Chat & Profile Buttons */}
           <div className="hidden md:flex items-center gap-2">
 
             {!pathname.includes("/post") && (

@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useFirestore } from "@/hooks/use-firestore";
 import ServiceCard from "@/components/cards/ServiceCard";
 import { ServiceProviderPost } from "@/types";
-import { Plus, Loader2, Wrench, ArrowUpDown, UserCheck } from "lucide-react";
+import { Plus, Loader2, Wrench, ArrowUpDown, UserCheck, MessageSquare } from "lucide-react";
 import { SERVICE_CATEGORIES } from "@/lib/constants";
 import CustomDropdown from "@/components/ui/CustomDropdown";
 import { Filter } from "lucide-react";
@@ -97,8 +97,43 @@ export default function ServicesClientPage() {
 
   return (
     <div className="flex flex-col gap-3 pb-24 w-full font-sans max-w-7xl mx-auto px-4 sm:px-6">
-      <UniversalSearchBarRow />
       <HomeCategorySegmentBar />
+      <UniversalSearchBarRow />
+
+      {/* Sleek Hero Banner for Service Segment with Conditional WhatsApp Login */}
+      <div className="relative w-full rounded-2xl overflow-hidden bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white p-5 sm:p-6 shadow-md border border-slate-800 my-1">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
+          <div className="flex flex-col gap-1 max-w-lg">
+            <div className="flex items-center gap-2">
+              <span className="bg-amber-400 text-slate-950 font-heading font-black text-[10px] uppercase px-2 py-0.5 rounded-md tracking-wider">
+                Services
+              </span>
+              <span className="text-xs text-amber-300 font-bold">Trusted Local Experts</span>
+            </div>
+            <h1 className="font-heading font-black text-xl sm:text-2xl text-white tracking-tight leading-tight mt-1">
+              Connect with Reliable Local Services
+            </h1>
+            <p className="text-xs sm:text-sm text-slate-300 font-medium">
+              தஞ்சாவூரின் சிறந்த சேவை வல்லுனர்களை தொடர்பு கொள்ளுங்கள்.
+            </p>
+          </div>
+
+          {!user && (
+            <button
+              type="button"
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+                }
+              }}
+              className="bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-4 rounded-xl shadow-md cursor-pointer transition-all active:scale-95 flex items-center gap-2 shrink-0 border border-emerald-500/50"
+            >
+              <MessageSquare className="w-4 h-4 fill-white stroke-[2.5]" />
+              <span>Login with WhatsApp</span>
+            </button>
+          )}
+        </div>
+      </div>
 
 
 

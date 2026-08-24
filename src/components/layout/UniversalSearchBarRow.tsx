@@ -60,7 +60,7 @@ export default function UniversalSearchBarRow() {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto flex items-center gap-2 py-1">
+    <div className="w-full max-w-2xl mx-auto flex items-center gap-2 py-1 sticky top-12 md:static z-30 bg-[#f8fafc]/95 backdrop-blur-md">
       {/* Shortened Width Compact Search Bar */}
       <div className="flex-1 min-w-0">
         <UniversalSearchBar />
