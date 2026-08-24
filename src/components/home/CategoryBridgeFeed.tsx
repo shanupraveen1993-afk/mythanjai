@@ -1,13 +1,9 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React from "react";
 import { useRouter } from "next/navigation";
 import { Handshake } from "lucide-react";
-import { NeedOrSalePost } from "@/types";
-import { useFirestore } from "@/hooks/use-firestore";
-import { PreviewSection, PreviewCard } from "@/app/(main)/HomeClientPage";
 import { useLanguage } from "@/context/LanguageContext";
-
 import { useAuth } from "@/hooks/use-auth";
 
 export default function CategoryBridgeFeed() {
@@ -18,138 +14,45 @@ export default function CategoryBridgeFeed() {
   const handlePostAction = (route: string) => {
     if (!user) {
       if (typeof window !== "undefined") {
-        localStorage.setItem("namma_thanjai_target_post_route", route);
+        sessionStorage.setItem("namma_thanjai_target_post_route", route);
         window.dispatchEvent(new Event("namma_thanjai_open_signin"));
       }
       return;
     }
     router.push(route);
   };
-  const { data: firestorePosts } = useFirestore<NeedOrSalePost>({
-    collectionName: "needs_and_sales",
-    areaTag: "All Areas",
-  });
-
-  // Read all user's real local posts from localStorage across all 4 category types
-  const { userPosts, allCombinedPosts } = useMemo(() => {
-    let localPosts: any[] = [];
-    if (typeof window !== "undefined") {
-      try {
-        const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-        localPosts = stored;
-      } catch (e) {}
-    }
-
-    const combined = [...localPosts, ...(firestorePosts || [])];
-    return { userPosts: localPosts, allCombinedPosts: combined };
-  }, [firestorePosts]);
-
-  // If user has 0 active listings, show high-converting Matchmaker Onboarding Banner
-  if (!userPosts || userPosts.length === 0) {
-    return (
-      <div className="w-full bg-slate-900 text-white rounded-2xl p-5 shadow-md font-sans my-3 flex flex-col sm:flex-row items-center justify-between gap-4 border border-slate-800">
-        <div className="flex items-center gap-3.5">
-          <div className="icon-box-dark shrink-0">
-            <Handshake className="w-6 h-6 text-[#FBBF24] stroke-[2.5]" />
-          </div>
-          <div className="flex flex-col gap-0.5">
-            <h4 className="font-heading font-extrabold text-sm text-white flex items-center gap-2">
-              <span>{t("matchmakerTitle")}</span>
-              <span className="text-xs bg-[#FBBF24] text-[#0F172A] px-2 py-0.5 rounded font-black uppercase border-b border-[#D97706]">Instant</span>
-            </h4>
-            <p className="text-xs text-slate-300 font-medium leading-relaxed">
-              {t("matchmakerDesc")}
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
-          <button
-            onClick={() => handlePostAction("/post/need")}
-            className="flex-1 sm:flex-none px-3.5 py-2 btn-primary text-xs uppercase tracking-wider text-center cursor-pointer"
-          >
-            {t("postRequirement")}
-          </button>
-          <button
-            onClick={() => handlePostAction("/post/sell")}
-            className="flex-1 sm:flex-none px-3.5 py-2 btn-secondary text-xs uppercase tracking-wider text-center cursor-pointer"
-          >
-            {t("sellItem")}
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div className="w-full flex flex-col gap-3 my-3">
-      {userPosts.slice(0, 4).map((post: any) => {
-        const postType = (post.type || post.category || "SELL").toUpperCase();
-        const isSellOrNeed = postType === "SELL" || postType === "NEED";
-        const isService = postType.includes("SERVICE") || post.skill_category;
-        const isShopOrOffer = postType.includes("SHOP") || postType.includes("OFFER") || post.shop_name || post.offer_title;
+    <div className="w-full bg-slate-950 text-white rounded-2xl p-5 shadow-md font-sans my-3 flex flex-col sm:flex-row items-center justify-between gap-4 border border-slate-800">
+      <div className="flex items-center gap-3.5">
+        <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center shrink-0">
+          <Handshake className="w-5 h-5 text-[#FBBF24] stroke-[2.5]" />
+        </div>
+        <div className="flex flex-col gap-0.5">
+          <h4 className="font-heading font-extrabold text-sm text-white flex items-center gap-2">
+            <span>{t("matchmakerTitle") || "Direct Local Buyers & Sellers"}</span>
+            <span className="text-xs bg-[#FBBF24] text-[#0F172A] px-2 py-0.5 rounded font-black uppercase border-b border-[#D97706]">Instant</span>
+          </h4>
+          <p className="text-xs text-slate-300 font-medium leading-relaxed">
+            {t("matchmakerDesc") || "Connect directly with buyers, sellers, and service providers in Thanjavur."}
+          </p>
+        </div>
+      </div>
 
-        if (isSellOrNeed) {
-          const activeCategory = post.category;
-          const activeType = postType === "NEED" ? "SELL" : "NEED";
-
-          const matches = allCombinedPosts.filter((p) => {
-            if (p.id === post.id) return false;
-            const typeMatch = p.type?.toUpperCase() === activeType;
-            const catMatch = !activeCategory || p.category === activeCategory;
-            return typeMatch && catMatch;
-          }).slice(0, 3);
-
-          const previewCards: PreviewCard[] = matches.map((m) => ({
-            id: m.id,
-            title: m.title || "Matched Item",
-            sub: m.category || "Classified",
-            area: m.area_tag || "Thanjavur",
-            price: m.price ? `₹${m.price.toLocaleString("en-IN")}` : "Best Offer",
-            img: m.image_url || "/thanjavur_temple_illustration.png",
-          }));
-
-          return (
-            <PreviewSection
-              key={post.id}
-              title={`Smart Matches for: "${post.title}"`}
-              subtitle={`Direct matches in ${post.area_tag || "Thanjavur"}`}
-              seeAllPath={postType === "NEED" ? "/sell" : "/need"}
-              accentColor="bg-[#1d4ed8]"
-              cards={previewCards}
-              onCardClick={() => router.push(postType === "NEED" ? "/sell" : "/need")}
-            />
-          );
-        }
-
-        // Insight Card for Services or Shop/Offer Posts
-        return (
-          <div key={post.id} className="w-full bg-slate-900 text-white rounded-2xl p-4 shadow-sm font-sans flex items-center justify-between gap-3 border border-slate-800">
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="w-10 h-10 rounded-xl bg-amber-500/20 border border-amber-400/30 flex items-center justify-center shrink-0">
-                <Handshake className="w-5 h-5 text-amber-400" />
-              </div>
-              <div className="flex flex-col min-w-0">
-                <span className="text-[10px] font-black text-amber-400 uppercase tracking-wider">
-                  {isService ? "Service Insight" : "Store Offer Insight"}
-                </span>
-                <h4 className="font-heading font-black text-sm text-white truncate">
-                  {post.title || post.name || post.shop_name || "Active Post"}
-                </h4>
-                <p className="text-xs text-slate-300 truncate">
-                  📍 {post.area_tag || "Thanjavur"} • Status: Active &amp; Discoverable
-                </p>
-              </div>
-            </div>
-            <button
-              onClick={() => router.push("/profile?tab=my_posts")}
-              className="px-3 py-1.5 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs rounded-xl shrink-0 cursor-pointer"
-            >
-              View Listing →
-            </button>
-          </div>
-        );
-      })}
+      <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
+        <button
+          onClick={() => handlePostAction("/post/need")}
+          className="flex-1 sm:flex-none px-4 py-2 bg-amber-500 hover:bg-amber-400 text-slate-950 font-heading font-black text-xs uppercase tracking-wider text-center rounded-xl cursor-pointer shadow-xs transition-all"
+        >
+          {t("postRequirement") || "+ Post Requirement"}
+        </button>
+        <button
+          onClick={() => handlePostAction("/post/sell")}
+          className="flex-1 sm:flex-none px-4 py-2 bg-white hover:bg-slate-100 text-slate-900 font-heading font-black text-xs uppercase tracking-wider text-center rounded-xl cursor-pointer shadow-xs transition-all border border-slate-200"
+        >
+          {t("sellItem") || "+ Sell Item"}
+        </button>
+      </div>
     </div>
   );
 }

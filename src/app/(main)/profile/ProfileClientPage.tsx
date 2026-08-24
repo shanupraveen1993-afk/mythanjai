@@ -439,36 +439,22 @@ function ProfileContent() {
         <button
           type="button"
           onClick={() => {
-            setActiveView("listings");
-            router.push("/profile?tab=listings");
+            router.push("/listings");
           }}
-          className={`flex-1 py-2.5 px-3 rounded-xl font-heading font-black text-xs sm:text-sm transition-all cursor-pointer text-center flex items-center justify-center gap-1.5 ${
-            activeView === "listings"
-              ? "bg-white text-slate-950 shadow-xs border border-slate-200"
-              : "text-slate-600 hover:text-slate-950"
-          }`}
+          className="flex-1 py-2.5 px-3 rounded-xl font-heading font-black text-xs sm:text-sm transition-all cursor-pointer text-center flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-950"
         >
-          <span>My Listings</span>
-          <span className="bg-slate-100 text-slate-800 px-2 py-0.5 rounded-full text-[10px] font-extrabold border border-slate-200">
-            {myPosts.length}
-          </span>
+          <Package className="w-4 h-4 text-amber-500" />
+          <span>My Listings →</span>
         </button>
         <button
           type="button"
           onClick={() => {
-            setActiveView("saved");
-            router.push("/profile?tab=saved");
+            router.push("/listings?tab=saved");
           }}
-          className={`flex-1 py-2.5 px-3 rounded-xl font-heading font-black text-xs sm:text-sm transition-all cursor-pointer text-center flex items-center justify-center gap-1.5 ${
-            activeView === "saved"
-              ? "bg-white text-slate-950 shadow-xs border border-slate-200"
-              : "text-slate-600 hover:text-slate-950"
-          }`}
+          className="flex-1 py-2.5 px-3 rounded-xl font-heading font-black text-xs sm:text-sm transition-all cursor-pointer text-center flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-950"
         >
-          <span>Saved Items</span>
-          <span className="bg-slate-100 text-slate-800 px-2 py-0.5 rounded-full text-[10px] font-extrabold border border-slate-200">
-            {savedPosts.length}
-          </span>
+          <Bookmark className="w-4 h-4 text-amber-500" />
+          <span>Saved Ads →</span>
         </button>
       </div>
 

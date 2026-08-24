@@ -199,16 +199,16 @@ export default function TopHeader({
             {!pathname.includes("/post") && (
               <button
                 type="button"
-                onClick={() => router.push("/profile?tab=listings")}
+                onClick={() => router.push("/listings")}
                 className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border shrink-0 ${
-                  pathname.includes("tab=listings") || pathname.includes("tab=my_posts")
+                  pathname.startsWith("/listings")
                     ? "bg-[#FBBF24] text-[#0F172A] border-amber-400 shadow-xs"
                     : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
                 }`}
-                title="My Listings & Postings"
+                title="My Listings & Saved Ads"
                 aria-label="View my listings"
               >
-                <Package className={`w-4 h-4 ${pathname.includes("tab=listings") || pathname.includes("tab=my_posts") ? "text-[#0F172A] stroke-[2.5]" : "text-slate-600"}`} />
+                <Package className={`w-4 h-4 ${pathname.startsWith("/listings") ? "text-[#0F172A] stroke-[2.5]" : "text-slate-600"}`} />
               </button>
             )}
 
