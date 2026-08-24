@@ -125,17 +125,22 @@ export default function TopHeader({
               <span>Back</span>
             </button>
           ) : (
-            <div
-              onClick={() => router.push("/")}
-              className="flex items-center gap-2 cursor-pointer select-none shrink-0 group"
-            >
-              <div className="w-8 h-8 sm:w-9 sm:h-9 shrink-0 group-hover:scale-[1.08] transition-transform duration-300 flex items-center justify-center">
-                <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="w-full h-full object-contain" />
-              </div>
-              <div className="flex items-center gap-1">
+            <div className="flex items-center gap-2 select-none shrink-0">
+              <div
+                onClick={() => router.push("/")}
+                className="flex items-center gap-1.5 cursor-pointer shrink-0 group"
+              >
+                <div className="w-8 h-8 sm:w-9 sm:h-9 shrink-0 group-hover:scale-[1.08] transition-transform duration-300 flex items-center justify-center">
+                  <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="w-full h-full object-contain" />
+                </div>
                 <span className="font-heading font-black tracking-tight text-sm sm:text-base md:text-lg leading-none">
                   <span className="text-[#1d4ed8] font-black">நம்ம</span> <span className="text-[#f59e0b] font-black">thanjai</span>
                 </span>
+              </div>
+
+              {/* Prominent Locality Indicator (📍 Thanjavur / Locality Selector) */}
+              <div className="ml-1 sm:ml-2 shrink-0">
+                <SearchableAreaDropdown selectedArea={selectedArea} onAreaChange={onAreaChange} />
               </div>
             </div>
           )}
