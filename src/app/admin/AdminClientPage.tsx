@@ -56,6 +56,7 @@ export default function AdminClientPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [passcode, setPasscode] = useState("");
   const [isAdmin, setIsAdmin] = useState(false);
+  const [deleteTarget, setDeleteTarget] = useState<{ id: string; colName: string } | null>(null);
 
   // Auto-verify Admin if user mobile is 9994837342 or user profile is admin
   useEffect(() => {
@@ -156,8 +157,11 @@ export default function AdminClientPage() {
     }
   };
 
-  const handleDelete = async (id: string, colName: string) => {
-    if (!confirm("Delete this live listing permanently from database?")) return;
+  const handleDelete = (id: string, colName: string) => {
+    setDeleteTarget({ id, colName });
+  };
+
+  const executeDelete = async (id: string, colName: string) => {
     try {
       await deleteDoc(doc(db, colName, id));
       setItems((prev) => prev.filter((item) => item.id !== id));
@@ -500,6 +504,41 @@ export default function AdminClientPage() {
           </div>
         )}
       </div>
+
+      {/* Custom Admin Delete Confirmation Modal */}
+      {deleteTarget && (
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 animate-fade-in">
+          <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 shadow-2xl flex flex-col gap-4 text-center">
+            <div className="w-14 h-14 rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/40 flex items-center justify-center mx-auto">
+              <Trash2 className="w-7 h-7 stroke-[2.5]" />
+            </div>
+            <div>
+              <h3 className="font-heading font-black text-lg text-white">Delete Live Listing?</h3>
+              <p className="text-xs text-slate-400 font-medium mt-1">This listing will be permanently purged from the database.</p>
+            </div>
+            <div className="flex items-center gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setDeleteTarget(null)}
+                className="flex-1 py-3 bg-slate-800 hover:bg-slate-700 text-slate-300 font-heading font-black text-xs rounded-2xl cursor-pointer transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const target = deleteTarget;
+                  setDeleteTarget(null);
+                  if (target) executeDelete(target.id, target.colName);
+                }}
+                className="flex-1 py-3 bg-rose-600 hover:bg-rose-500 text-white font-heading font-black text-xs rounded-2xl cursor-pointer shadow-md transition-all"
+              >
+                Delete Now
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

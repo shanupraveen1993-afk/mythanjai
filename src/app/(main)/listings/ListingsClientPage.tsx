@@ -51,6 +51,7 @@ function ListingsContent() {
   const [myPosts, setMyPosts] = useState<any[]>([]);
   const [savedPosts, setSavedPosts] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deleteConfirmTarget, setDeleteConfirmTarget] = useState<{ id: string; colName: string } | null>(null);
 
   // Load My Posts & Saved Posts
   useEffect(() => {
@@ -112,14 +113,16 @@ function ListingsContent() {
     fetchListingsData();
   }, [user, profile, isVerified]);
 
-  const handleDeletePost = async (postId: string, collectionName: string) => {
-    if (!confirm("Are you sure you want to delete this listing?")) return;
+  const handleDeletePost = (postId: string, collectionName: string) => {
+    setDeleteConfirmTarget({ id: postId, colName: collectionName });
+  };
+
+  const executeDeletePost = async (postId: string, collectionName: string) => {
     try {
       if (collectionName) {
         await deleteDoc(doc(db, collectionName, postId));
       }
       setMyPosts((prev) => prev.filter((p) => p.id !== postId));
-      // Remove from local storage if present
       try {
         let local = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
         local = local.filter((p: any) => p.id !== postId);
@@ -318,6 +321,41 @@ function ListingsContent() {
             ))}
           </div>
         )
+      )}
+
+      {/* Custom App Delete Confirmation Modal */}
+      {deleteConfirmTarget && (
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 animate-fade-in">
+          <div className="bg-white rounded-3xl max-w-sm w-full p-6 border border-slate-200 shadow-2xl flex flex-col gap-4 text-center">
+            <div className="w-14 h-14 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto border border-rose-200">
+              <Trash2 className="w-7 h-7 stroke-[2.5]" />
+            </div>
+            <div>
+              <h3 className="font-heading font-black text-lg text-slate-900">Delete Listing?</h3>
+              <p className="text-xs text-slate-500 font-medium mt-1">This listing will be deleted permanently. This action cannot be undone.</p>
+            </div>
+            <div className="flex items-center gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setDeleteConfirmTarget(null)}
+                className="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-heading font-black text-xs rounded-2xl cursor-pointer transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  const target = deleteConfirmTarget;
+                  setDeleteConfirmTarget(null);
+                  if (target) executeDeletePost(target.id, target.colName);
+                }}
+                className="flex-1 py-3 bg-rose-600 hover:bg-rose-700 text-white font-heading font-black text-xs rounded-2xl cursor-pointer shadow-md transition-all"
+              >
+                Delete Now
+              </button>
+            </div>
+          </div>
+        </div>
       )}
     </div>
   );

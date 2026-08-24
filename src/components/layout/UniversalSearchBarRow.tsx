@@ -84,17 +84,19 @@ export default function UniversalSearchBarRow() {
           <UniversalSearchBar />
         </div>
 
-        {/* Desktop & Website Right-Aligned Golden Yellow Post Ad Button */}
-        <button
-          type="button"
-          onClick={handlePostClick}
-          className="hidden md:flex h-9 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs px-3.5 rounded-xl shadow-2xs shrink-0 items-center gap-1.5 cursor-pointer transition-all active:scale-95 border border-amber-400/80 ml-auto whitespace-nowrap"
-          title="Post a Free Ad in Thanjavur"
-          aria-label="Post Ad"
-        >
-          <Plus className="w-4 h-4 stroke-[3]" />
-          <span>Post Ad</span>
-        </button>
+        {/* Desktop & Website Right-Aligned Golden Yellow Post Ad Button (ONLY on category pages) */}
+        {(pathname === "/" || pathname === "/home" || pathname === "/sell" || pathname === "/need" || pathname === "/services" || pathname === "/shops") && (
+          <button
+            type="button"
+            onClick={handlePostClick}
+            className="hidden md:flex h-9 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs px-3.5 rounded-xl shadow-2xs shrink-0 items-center gap-1.5 cursor-pointer transition-all active:scale-95 border border-amber-400/80 ml-auto whitespace-nowrap"
+            title="Post a Free Ad in Thanjavur"
+            aria-label="Post Ad"
+          >
+            <Plus className="w-4 h-4 stroke-[3]" />
+            <span>Post Ad</span>
+          </button>
+        )}
       </div>
     </div>
   );

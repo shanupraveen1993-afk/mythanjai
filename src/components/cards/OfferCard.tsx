@@ -5,6 +5,7 @@ import Image from "next/image";
 import { MapPin, ExternalLink, Sparkles, Video, Calendar, Clock, Flag } from "lucide-react";
 import { OfferPost } from "@/types";
 import { reportListing } from "@/lib/moderation";
+import { useToast } from "@/context/ToastContext";
 
 interface OfferCardProps {
   post: OfferPost & {
@@ -16,6 +17,7 @@ interface OfferCardProps {
 }
 
 export default function OfferCard({ post }: OfferCardProps) {
+  const { toast } = useToast();
   const [isPlayingVideo, setIsPlayingVideo] = useState(false);
 
   const handleReport = (e: React.MouseEvent) => {
@@ -23,9 +25,9 @@ export default function OfferCard({ post }: OfferCardProps) {
     e.stopPropagation();
     const result = reportListing(post.id, "Inappropriate offer content");
     if (result.isQuarantined) {
-      alert("This offer has been sent for moderation review.");
+      toast.success("This offer has been sent for moderation review.");
     } else {
-      alert("Thank you! Offer reported to admin for verification.");
+      toast.success("Thank you! Offer reported to admin for verification.");
     }
   };
 

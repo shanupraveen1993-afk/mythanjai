@@ -16,6 +16,7 @@ import {
   Lock,
   PhoneCall,
   MoreVertical,
+  Trash2,
 } from "lucide-react";
 import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -288,14 +289,19 @@ export default function ChatClientPage() {
   };
 
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [showDeleteChatConfirm, setShowDeleteChatConfirm] = useState(false);
 
   const handleDeleteChat = () => {
-    if (confirm("Are you sure you want to delete this conversation thread?")) {
-      setThreads((prev) => prev.filter((t) => t.chatId !== activeChatId));
-      setMessages([]);
-      setIsMenuOpen(false);
-      setShowMobileChat(false);
-    }
+    setShowDeleteChatConfirm(true);
+  };
+
+  const executeDeleteChat = () => {
+    setThreads((prev) => prev.filter((t) => t.chatId !== activeChatId));
+    setMessages([]);
+    setIsMenuOpen(false);
+    setShowMobileChat(false);
+    setShowDeleteChatConfirm(false);
+    toast.success("Conversation thread deleted.");
   };
 
   const handleShareChat = async () => {
@@ -640,6 +646,37 @@ export default function ChatClientPage() {
         </div>
 
       </div>
+
+      {/* Custom Delete Chat Confirmation Modal */}
+      {showDeleteChatConfirm && (
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 animate-fade-in">
+          <div className="bg-white rounded-3xl max-w-sm w-full p-6 border border-slate-200 shadow-2xl flex flex-col gap-4 text-center">
+            <div className="w-14 h-14 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto border border-rose-200">
+              <Trash2 className="w-7 h-7 stroke-[2.5]" />
+            </div>
+            <div>
+              <h3 className="font-heading font-black text-lg text-slate-900">Delete Conversation?</h3>
+              <p className="text-xs text-slate-500 font-medium mt-1">This chat thread and messages will be removed from your inbox.</p>
+            </div>
+            <div className="flex items-center gap-2 pt-2">
+              <button
+                type="button"
+                onClick={() => setShowDeleteChatConfirm(false)}
+                className="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-heading font-black text-xs rounded-2xl cursor-pointer transition-colors"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                onClick={executeDeleteChat}
+                className="flex-1 py-3 bg-rose-600 hover:bg-rose-700 text-white font-heading font-black text-xs rounded-2xl cursor-pointer shadow-md transition-all"
+              >
+                Delete Thread
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

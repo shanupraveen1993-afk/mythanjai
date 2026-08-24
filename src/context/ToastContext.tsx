@@ -93,9 +93,9 @@ export function useToast() {
     // Fallback if used outside provider
     return {
       toast: {
-        success: (msg: string) => alert(msg),
-        error: (msg: string) => alert(msg),
-        info: (msg: string) => alert(msg),
+        success: (msg: string) => console.log("[Toast Success]", msg),
+        error: (msg: string) => console.error("[Toast Error]", msg),
+        info: (msg: string) => console.info("[Toast Info]", msg),
       },
     };
   }
