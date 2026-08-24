@@ -1233,32 +1233,22 @@ export default function PostForm({ segment }: PostFormProps) {
 
           {/* RIGHT COLUMN: Instant 1:1 Live Preview Card (PROMINENT HIGHLIGHTED HEADER) */}
           <div className="lg:col-span-5 sticky top-20 flex flex-col gap-3">
-            <div className="flex items-center justify-between px-3 py-2 bg-gradient-to-r from-amber-500/15 via-amber-400/10 to-amber-500/5 border-l-4 border-amber-500 rounded-r-xl shadow-2xs">
+            <div className="flex items-center justify-between px-3 py-2 bg-slate-100 border-l-4 border-slate-800 rounded-r-xl shadow-2xs">
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
-                <h3 className="font-heading font-black text-sm text-slate-900 tracking-tight flex items-center gap-1.5">
-                  <Sparkles className="w-4 h-4 text-amber-600 fill-amber-400" />
+                <h3 className="font-heading font-black text-sm text-slate-900 tracking-tight">
                   LIVE CARD PREVIEW
                 </h3>
               </div>
-              <span className="text-[10px] font-black text-amber-800 bg-amber-200/80 border border-amber-400/60 px-2 py-0.5 rounded-md uppercase tracking-widest shadow-2xs">
+              <span className="text-[10px] font-black text-slate-800 bg-slate-200 border border-slate-300 px-2 py-0.5 rounded-md uppercase tracking-widest shadow-2xs">
                 Real-Time
               </span>
             </div>
 
-            {/* AI Refinement Status Badge */}
-            {aiRefining && (
-              <div className="text-xs font-black text-amber-800 bg-amber-100 border border-amber-300 px-3.5 py-2 rounded-xl animate-pulse flex items-center justify-center gap-2 max-w-sm mx-auto shadow-xs">
-                <Sparkles className="w-4 h-4 text-amber-600 animate-spin" />
-                <span>✨ AI is refining your description...</span>
-              </div>
-            )}
-
             <div className="w-full flex flex-col gap-3 relative">
               {isAiRewriting && (
-                <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-center justify-center gap-2 text-amber-800 font-bold text-xs animate-pulse shadow-2xs">
-                  <Sparkles className="w-4 h-4 text-amber-600 fill-amber-400 animate-spin" />
-                  <span>AI is rewriting & optimizing description...</span>
+                <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-center justify-center gap-2 text-amber-900 font-bold text-xs shadow-2xs">
+                  <span>Formatting description text...</span>
                 </div>
               )}
               {segment === "sell" || segment === "need" ? (

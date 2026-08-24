@@ -148,40 +148,40 @@ export default function UniversalSearchBar() {
           ) : (
             <div className="p-3 flex flex-col gap-4">
               
-              {/* Category 1: Selling / Looking For */}
-              {results.classifieds.length > 0 && (
+              {/* Category 1: Items for Sale */}
+              {results.classifieds.filter((i) => i.type === "SELL" || i.category !== "NEED").length > 0 && (
                 <div className="flex flex-col gap-1.5">
-                  <div className="flex items-center justify-between px-1 text-xs font-black uppercase text-yellow-750 tracking-wider">
+                  <div className="flex items-center justify-between px-1 text-xs font-black uppercase text-amber-700 tracking-wider">
                     <span className="flex items-center gap-1">
-                      <Building className="w-3 h-3 text-yellow-600" />
-                      Selling / Looking For ({results.classifieds.length})
+                      <Building className="w-3 h-3 text-amber-600" />
+                      Items for Sale (Sell)
                     </span>
                     <button 
                       onClick={() => {
                         setIsOpen(false);
-                        router.push("/classifieds");
+                        router.push(`/sell?q=${encodeURIComponent(searchTerm.trim())}`);
                       }} 
-                      className="text-yellow-600 hover:underline cursor-pointer"
+                      className="text-amber-600 hover:underline cursor-pointer font-bold"
                     >
                       View All →
                     </button>
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    {results.classifieds.map((item) => (
+                    {results.classifieds.filter((i) => i.type === "SELL" || i.category !== "NEED").map((item) => (
                       <div
                         key={item.id}
                         onClick={() => {
                           setIsOpen(false);
-                          router.push("/classifieds");
+                          router.push(`/sell?q=${encodeURIComponent(searchTerm.trim())}`);
                         }}
-                        className="bg-slate-50 hover:bg-yellow-50/50 p-2.5 rounded-xl border border-slate-200/80 cursor-pointer transition-all flex flex-col justify-between"
+                        className="bg-slate-50 hover:bg-amber-50/50 p-2.5 rounded-xl border border-slate-200/80 cursor-pointer transition-all flex flex-col justify-between"
                       >
                         <div className="flex justify-between items-start gap-2">
                           <h4 className="font-heading font-extrabold text-xs text-slate-800 line-clamp-1">
                             {item.title}
                           </h4>
                           {item.price && (
-                            <span className="text-yellow-600 font-black text-xs shrink-0">
+                            <span className="text-amber-600 font-black text-xs shrink-0">
                               ₹{item.price.toLocaleString("en-IN")}
                             </span>
                           )}
@@ -189,9 +189,9 @@ export default function UniversalSearchBar() {
                         <div className="flex items-center justify-between text-xs text-slate-500 font-bold mt-1">
                           <span className="flex items-center gap-1">
                             <MapPin className="w-3 h-3 text-slate-400" />
-                            {item.area_tag}
+                            {item.area_tag || "Thanjavur"}
                           </span>
-                          <span className="text-slate-400 capitalize">{item.category}</span>
+                          <span className="text-slate-400 capitalize">{item.category || "Sell"}</span>
                         </div>
                       </div>
                     ))}
@@ -199,20 +199,71 @@ export default function UniversalSearchBar() {
                 </div>
               )}
 
-              {/* Category 2: Local Service */}
-              {results.services.length > 0 && (
+              {/* Category 2: Requirements (Need) */}
+              {results.classifieds.filter((i) => i.type === "NEED" || i.category === "NEED").length > 0 && (
                 <div className="flex flex-col gap-1.5">
-                  <div className="flex items-center justify-between px-1 text-xs font-black uppercase text-yellow-750 tracking-wider">
+                  <div className="flex items-center justify-between px-1 text-xs font-black uppercase text-amber-700 tracking-wider">
                     <span className="flex items-center gap-1">
-                      <Wrench className="w-3 h-3 text-yellow-600" />
-                      Local Service ({results.services.length})
+                      <Building className="w-3 h-3 text-amber-600" />
+                      Requirements (Need)
                     </span>
                     <button 
                       onClick={() => {
                         setIsOpen(false);
-                        router.push("/services");
+                        router.push(`/need?q=${encodeURIComponent(searchTerm.trim())}`);
                       }} 
-                      className="text-yellow-600 hover:underline cursor-pointer"
+                      className="text-amber-600 hover:underline cursor-pointer font-bold"
+                    >
+                      View All →
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    {results.classifieds.filter((i) => i.type === "NEED" || i.category === "NEED").map((item) => (
+                      <div
+                        key={item.id}
+                        onClick={() => {
+                          setIsOpen(false);
+                          router.push(`/need?q=${encodeURIComponent(searchTerm.trim())}`);
+                        }}
+                        className="bg-slate-50 hover:bg-amber-50/50 p-2.5 rounded-xl border border-slate-200/80 cursor-pointer transition-all flex flex-col justify-between"
+                      >
+                        <div className="flex justify-between items-start gap-2">
+                          <h4 className="font-heading font-extrabold text-xs text-slate-800 line-clamp-1">
+                            {item.title}
+                          </h4>
+                          {item.price && (
+                            <span className="text-amber-600 font-black text-xs shrink-0">
+                              ₹{item.price.toLocaleString("en-IN")}
+                            </span>
+                          )}
+                        </div>
+                        <div className="flex items-center justify-between text-xs text-slate-500 font-bold mt-1">
+                          <span className="flex items-center gap-1">
+                            <MapPin className="w-3 h-3 text-slate-400" />
+                            {item.area_tag || "Thanjavur"}
+                          </span>
+                          <span className="text-slate-400 capitalize">Need</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Category 3: Local Services */}
+              {results.services.length > 0 && (
+                <div className="flex flex-col gap-1.5">
+                  <div className="flex items-center justify-between px-1 text-xs font-black uppercase text-amber-700 tracking-wider">
+                    <span className="flex items-center gap-1">
+                      <Wrench className="w-3 h-3 text-amber-600" />
+                      Local Services ({results.services.length})
+                    </span>
+                    <button 
+                      onClick={() => {
+                        setIsOpen(false);
+                        router.push(`/services?q=${encodeURIComponent(searchTerm.trim())}`);
+                      }} 
+                      className="text-amber-600 hover:underline cursor-pointer font-bold"
                     >
                       View All →
                     </button>
@@ -223,33 +274,24 @@ export default function UniversalSearchBar() {
                         key={item.id}
                         onClick={() => {
                           setIsOpen(false);
-                          router.push("/services");
+                          router.push(`/services?q=${encodeURIComponent(searchTerm.trim())}`);
                         }}
-                        className="bg-slate-50 hover:bg-yellow-50/50 p-2.5 rounded-xl border border-slate-200/80 cursor-pointer transition-all flex flex-col justify-between"
+                        className="bg-slate-50 hover:bg-amber-50/50 p-2.5 rounded-xl border border-slate-200/80 cursor-pointer transition-all flex flex-col justify-between"
                       >
                         <div className="flex justify-between items-start gap-2">
                           <h4 className="font-heading font-extrabold text-xs text-slate-800 line-clamp-1">
-                            {item.name}
+                            {item.name || item.title}
                           </h4>
-                          <span className="bg-yellow-50 border border-yellow-200 text-yellow-750 font-bold px-1.5 py-0.5 rounded text-xs uppercase shrink-0">
-                            {item.skill_category}
+                          <span className="text-amber-600 font-black text-xs shrink-0">
+                            Verified
                           </span>
                         </div>
                         <div className="flex items-center justify-between text-xs text-slate-500 font-bold mt-1">
                           <span className="flex items-center gap-1">
                             <MapPin className="w-3 h-3 text-slate-400" />
-                            {item.area_tag}
+                            {item.area_tag || "Thanjavur"}
                           </span>
-                          <a
-                            href={`https://wa.me/${item.phone?.replace(/\D/g, "")}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="text-emerald-600 font-black hover:underline flex items-center gap-0.5"
-                          >
-                            <MessageSquare className="w-3 h-3 fill-emerald-600" />
-                            Contact
-                          </a>
+                          <span className="text-slate-400 capitalize">{item.skill_category || "Service"}</span>
                         </div>
                       </div>
                     ))}
@@ -257,20 +299,20 @@ export default function UniversalSearchBar() {
                 </div>
               )}
 
-              {/* Category 3: Local Offer */}
+              {/* Category 4: Local Offers */}
               {results.shops.length > 0 && (
                 <div className="flex flex-col gap-1.5">
-                  <div className="flex items-center justify-between px-1 text-xs font-black uppercase text-yellow-750 tracking-wider">
+                  <div className="flex items-center justify-between px-1 text-xs font-black uppercase text-amber-700 tracking-wider">
                     <span className="flex items-center gap-1">
-                      <Store className="w-3 h-3 text-yellow-600" />
-                      Local Offer ({results.shops.length})
+                      <Store className="w-3 h-3 text-amber-600" />
+                      Local Offers ({results.shops.length})
                     </span>
                     <button 
                       onClick={() => {
                         setIsOpen(false);
-                        router.push("/shops");
+                        router.push(`/shops?q=${encodeURIComponent(searchTerm.trim())}`);
                       }} 
-                      className="text-yellow-600 hover:underline cursor-pointer"
+                      className="text-amber-600 hover:underline cursor-pointer font-bold"
                     >
                       View All →
                     </button>
@@ -281,24 +323,24 @@ export default function UniversalSearchBar() {
                         key={item.id}
                         onClick={() => {
                           setIsOpen(false);
-                          router.push("/shops");
+                          router.push(`/shops?q=${encodeURIComponent(searchTerm.trim())}`);
                         }}
-                        className="bg-slate-50 hover:bg-yellow-50/50 p-2.5 rounded-xl border border-slate-200/80 cursor-pointer transition-all flex flex-col justify-between"
+                        className="bg-slate-50 hover:bg-amber-50/50 p-2.5 rounded-xl border border-slate-200/80 cursor-pointer transition-all flex flex-col justify-between"
                       >
                         <div className="flex justify-between items-start gap-2">
                           <h4 className="font-heading font-extrabold text-xs text-slate-800 line-clamp-1">
                             {item.shop_name}
                           </h4>
                           <span className="text-amber-600 font-extrabold text-xs line-clamp-1">
-                            {item.offer_title}
+                            {item.offer_title || "Special Offer"}
                           </span>
                         </div>
                         <div className="flex items-center justify-between text-xs text-slate-500 font-bold mt-1">
                           <span className="flex items-center gap-1">
                             <MapPin className="w-3 h-3 text-slate-400" />
-                            {item.area_tag}
+                            {item.area_tag || "Thanjavur"}
                           </span>
-                          <span className="text-yellow-600 font-black">View Offer →</span>
+                          <span className="text-amber-600 font-black">View Offer →</span>
                         </div>
                       </div>
                     ))}

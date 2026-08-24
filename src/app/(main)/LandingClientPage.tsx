@@ -117,32 +117,33 @@ export default function LandingClientPage() {
         <div className="w-full flex flex-col gap-3">
           <UniversalSearchBar />
 
-          {/* ── 5 Segment Quick Filter Pills (Direct Home Feed Filtering) ── */}
-          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
-            {[
-              { id: "all", label: "All Feeds", icon: "🌐", route: "/" },
-              { id: "sell", label: "Sell (விற்பனை)", icon: "📦", route: "/sell" },
-              { id: "need", label: "Need (தேவை)", icon: "🔍", route: "/need" },
-              { id: "service", label: "Service (சேவை)", icon: "🛠️", route: "/services" },
-              { id: "offer", label: "Offer (சலுகை)", icon: "🏪", route: "/shops" },
-            ].map((seg) => (
-              <button
-                key={seg.id}
-                type="button"
-                onClick={() => {
-                  if (typeof window !== "undefined") {
-                    localStorage.setItem("namma_thanjai_active_segment", seg.id);
-                  }
-                  if (seg.id !== "all") {
-                    router.push(seg.route);
-                  }
-                }}
-                className="py-2 px-3.5 rounded-xl font-heading font-black text-xs transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 shrink-0 bg-white text-slate-700 hover:bg-slate-100 border border-slate-200"
-              >
-                <span>{seg.icon}</span>
-                <span>{seg.label}</span>
-              </button>
-            ))}
+          {/* ── 5 Segment Quick Filter Grid (Mobile WebApp/APK 100% Screen-Fit, ZERO Horizontal Scroll) ── */}
+          <div className="w-full md:hidden">
+            <div className="grid grid-cols-5 gap-1.5 w-full">
+              {[
+                { id: "all", label: "All", route: "/" },
+                { id: "sell", label: "Sell", route: "/sell" },
+                { id: "need", label: "Need", route: "/need" },
+                { id: "service", label: "Service", route: "/services" },
+                { id: "offer", label: "Offer", route: "/shops" },
+              ].map((seg) => (
+                <button
+                  key={seg.id}
+                  type="button"
+                  onClick={() => {
+                    if (typeof window !== "undefined") {
+                      localStorage.setItem("namma_thanjai_active_segment", seg.id);
+                    }
+                    if (seg.id !== "all") {
+                      router.push(seg.route);
+                    }
+                  }}
+                  className="py-2 px-1 rounded-xl font-heading font-black text-xs transition-all cursor-pointer flex items-center justify-center w-full text-center bg-white text-slate-700 hover:bg-slate-100 border border-slate-200"
+                >
+                  <span className="truncate w-full">{seg.label}</span>
+                </button>
+              ))}
+            </div>
           </div>
         </div>
 

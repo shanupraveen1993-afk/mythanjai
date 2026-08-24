@@ -176,11 +176,11 @@ export default function HomeClientPage() {
       <div className="w-full md:hidden">
         <div className="grid grid-cols-5 gap-1.5 w-full">
           {[
-            { id: "all", label: "All", icon: "🌐", route: "/" },
-            { id: "sell", label: "Sell", icon: "📦", route: "/sell" },
-            { id: "need", label: "Need", icon: "🔍", route: "/need" },
-            { id: "service", label: "Service", icon: "🛠️", route: "/services" },
-            { id: "offer", label: "Offer", icon: "🏪", route: "/shops" },
+            { id: "all", label: "All", route: "/" },
+            { id: "sell", label: "Sell", route: "/sell" },
+            { id: "need", label: "Need", route: "/need" },
+            { id: "service", label: "Service", route: "/services" },
+            { id: "offer", label: "Offer", route: "/shops" },
           ].map((seg) => {
             const isActive = activeSegment === seg.id;
             return (
@@ -196,22 +196,18 @@ export default function HomeClientPage() {
                     router.push(seg.route);
                   }
                 }}
-                className={`py-2 px-1 rounded-xl font-heading font-black text-[11px] sm:text-xs transition-all cursor-pointer flex flex-col items-center justify-center gap-0.5 w-full text-center ${
+                className={`py-2 px-1 rounded-xl font-heading font-black text-xs transition-all cursor-pointer flex items-center justify-center w-full text-center ${
                   isActive
                     ? "bg-amber-400 text-slate-950 shadow-xs border border-amber-500 scale-102"
                     : "bg-white text-slate-700 hover:bg-slate-100 border border-slate-200"
                 }`}
               >
-                <span className="text-xs sm:text-sm">{seg.icon}</span>
                 <span className="truncate w-full">{seg.label}</span>
               </button>
             );
           })}
         </div>
       </div>
-
-        {/* ── Static APK Download Banner Card for Web App Visitors ── */}
-        <StaticApkCard variant="dark" />
 
         {/* ── SELL Preview ───────────────────────── */}
         <PreviewSection
