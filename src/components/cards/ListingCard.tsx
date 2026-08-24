@@ -124,7 +124,7 @@ function GalleryModal({ images, startIndex, onClose }: { images: string[]; start
 // ── Sell Card Component (Figma Wireframe Exact Implementation) ──────────────
 export default function ListingCard({ listing }: { listing: ListingItem }) {
   const router = useRouter();
-  const { user, profile } = useAuth();
+  const { user, profile, isVerified } = useAuth();
   const { toast } = useToast();
   const [isChatOpen, setIsChatOpen] = useState(false);
   const [isSaved, setIsSaved] = useState<boolean>(() => {
@@ -401,7 +401,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
               type="button"
               onClick={(e) => {
                 e.stopPropagation();
-                if (!user && !profile) {
+                if (!isVerified) {
                   if (typeof window !== "undefined") {
                     window.dispatchEvent(new Event("namma_thanjai_open_signin"));
                   }

@@ -24,7 +24,7 @@ interface NeedCardProps {
 export default function NeedCard({ post, onShare, isPreview = false }: NeedCardProps) {
   const router = useRouter();
   const { toast } = useToast();
-  const { user, profile } = useAuth();
+  const { user, profile, isVerified } = useAuth();
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
@@ -267,7 +267,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              if (!user && !profile) {
+              if (!isVerified) {
                 if (typeof window !== "undefined") {
                   window.dispatchEvent(new Event("namma_thanjai_open_signin"));
                 }

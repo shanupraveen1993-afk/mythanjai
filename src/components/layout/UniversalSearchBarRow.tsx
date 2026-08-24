@@ -9,8 +9,7 @@ import { useAuth } from "@/hooks/use-auth";
 export default function UniversalSearchBarRow() {
   const router = useRouter();
   const pathname = usePathname();
-  const { user, profile } = useAuth();
-  const isAuthVerified = Boolean(profile?.isVerified);
+  const { user, profile, isVerified } = useAuth();
 
   const [isNativeApp, setIsNativeApp] = useState(false);
 
@@ -59,7 +58,7 @@ export default function UniversalSearchBarRow() {
 
   const handlePostClick = () => {
     const targetRoute = getDynamicPostRoute();
-    if (!isAuthVerified && !user) {
+    if (!isVerified) {
       if (typeof window !== "undefined") {
         sessionStorage.setItem("namma_thanjai_target_post_route", targetRoute);
         window.dispatchEvent(new Event("namma_thanjai_open_signin"));

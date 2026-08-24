@@ -8,8 +8,7 @@ import { useAuth } from "@/hooks/use-auth";
 export default function FloatingPostButton() {
   const router = useRouter();
   const pathname = usePathname() || "";
-  const { user, profile } = useAuth();
-  const isAuthVerified = Boolean(profile?.isVerified || user);
+  const { user, profile, isVerified } = useAuth();
 
   // FAB is ONLY visible on the 4 main category segment pages
   const isCategoryPage =
@@ -31,7 +30,7 @@ export default function FloatingPostButton() {
 
   const handlePostClick = () => {
     const targetRoute = buttonConfig.route;
-    if (!isAuthVerified && !user) {
+    if (!isVerified) {
       if (typeof window !== "undefined") {
         sessionStorage.setItem("namma_thanjai_target_post_route", targetRoute);
         window.dispatchEvent(new Event("namma_thanjai_open_signin"));

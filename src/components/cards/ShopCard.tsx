@@ -51,7 +51,7 @@ interface ShopCardProps {
 
 export default function ShopCard({ post, isPreview = false, index = 0, isGuest = false }: ShopCardProps) {
   const router = useRouter();
-  const { user, profile } = useAuth();
+  const { user, profile, isVerified } = useAuth();
   const { toast } = useToast();
   const { t } = useLanguage();
   const [saved, setSaved] = useState(false);
@@ -205,7 +205,7 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
 
   const handleToggleSave = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!profile?.isVerified && !user) {
+    if (!isVerified) {
       toast.info("Please verify your WhatsApp mobile number to save store offers to your profile.");
       if (typeof window !== "undefined") {
         window.dispatchEvent(new Event("namma_thanjai_open_signin"));

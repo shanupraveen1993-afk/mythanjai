@@ -23,7 +23,7 @@ interface ServiceCardProps {
 export default function ServiceCard({ post, isPreview = false }: ServiceCardProps) {
   const router = useRouter();
   const { toast } = useToast();
-  const { user, profile } = useAuth();
+  const { user, profile, isVerified } = useAuth();
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
@@ -125,7 +125,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
 
   const handleToggleSave = (e: React.MouseEvent) => {
     e.stopPropagation();
-    if (!profile?.isVerified && !user) {
+    if (!isVerified) {
       toast.info("Please verify your WhatsApp mobile number to save service providers to your profile.");
       if (typeof window !== "undefined") {
         window.dispatchEvent(new Event("namma_thanjai_open_signin"));
