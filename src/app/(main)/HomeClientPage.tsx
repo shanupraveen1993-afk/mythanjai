@@ -133,12 +133,46 @@ export default function HomeClientPage() {
   const router = useRouter();
   const { user, profile } = useAuth();
   const isAuthVerified = Boolean(profile?.isVerified);
+  const [activeSegment, setActiveSegment] = React.useState<"all" | "sell" | "need" | "service" | "offer">("all");
 
   return (
     <div className="w-full flex flex-col gap-6 text-slate-800 font-sans mt-2">
       {/* ── Prominent Home Universal Search Bar ── */}
-      <div className="w-full">
+      <div className="w-full flex flex-col gap-3">
         <UniversalSearchBar />
+
+        {/* ── 4 Segment Quick Filter Pills (Direct Home Feed Filtering) ── */}
+        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+          {[
+            { id: "all", label: "All Feeds", icon: "🌐", route: "/" },
+            { id: "sell", label: "Sell (விற்பனை)", icon: "📦", route: "/sell" },
+            { id: "need", label: "Need (தேவை)", icon: "🔍", route: "/need" },
+            { id: "service", label: "Service (சேவை)", icon: "🛠️", route: "/services" },
+            { id: "offer", label: "Offer (சலுகை)", icon: "🏪", route: "/shops" },
+          ].map((seg) => {
+            const isActive = activeSegment === seg.id;
+            return (
+              <button
+                key={seg.id}
+                type="button"
+                onClick={() => {
+                  setActiveSegment(seg.id as any);
+                  if (seg.id !== "all") {
+                    router.push(seg.route);
+                  }
+                }}
+                className={`py-2 px-3.5 rounded-xl font-heading font-black text-xs transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 shrink-0 ${
+                  isActive
+                    ? "bg-amber-400 text-slate-950 shadow-xs border border-amber-500 scale-102"
+                    : "bg-white text-slate-700 hover:bg-slate-100 border border-slate-200"
+                }`}
+              >
+                <span>{seg.icon}</span>
+                <span>{seg.label}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
 
         {/* ── 1. Hero Banner (Universal Home Banner - Prominent & Standout) ── */}

@@ -15,6 +15,7 @@ import {
   SHOP_CATEGORIES,
   formatIndianCurrencyText,
 } from "@/lib/constants";
+import GooglePlacesInput from "@/components/ui/GooglePlacesInput";
 import {
   Check,
   Loader2,
@@ -941,19 +942,12 @@ export default function PostForm({ segment }: PostFormProps) {
                 {/* Service: Location & Combined Availability Pill Toggle */}
                 {segment === "service" && (
                   <div className="flex flex-col gap-3">
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
-                        <MapPin className="w-4 h-4 text-amber-500" />
-                        Service Location / Area *
-                      </label>
-                      <input
-                        type="text"
-                        value={area}
-                        onChange={(e) => setArea(e.target.value)}
-                        placeholder="e.g. Anna Nagar, Medical College Rd, Vallam"
-                        className="w-full px-0 py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors"
-                      />
-                    </div>
+                    <GooglePlacesInput
+                      label="Service Location / Area *"
+                      value={area}
+                      onChange={(val) => setArea(val)}
+                      placeholder="Search area or street in Thanjavur..."
+                    />
 
                     {/* Combined Availability Single Pill Toggle */}
                     <div className="flex flex-col gap-1.5">
@@ -1020,19 +1014,12 @@ export default function PostForm({ segment }: PostFormProps) {
                       />
                     </div>
 
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
-                        <MapPin className="w-4 h-4 text-amber-500" />
-                        Address / Location *
-                      </label>
-                      <input
-                        type="text"
-                        value={area}
-                        onChange={(e) => setArea(e.target.value)}
-                        placeholder="Type your address or location..."
-                        className="w-full px-0 py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors"
-                      />
-                    </div>
+                    <GooglePlacesInput
+                      label="Address / Location *"
+                      value={area}
+                      onChange={(val) => setArea(val)}
+                      placeholder="Type street, area or landmark in Thanjavur..."
+                    />
                   </div>
                 )}
 
@@ -1053,19 +1040,12 @@ export default function PostForm({ segment }: PostFormProps) {
                       />
                     </div>
 
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
-                        <MapPin className="w-4 h-4 text-amber-500" />
-                        Preferred Locations (Up to 3, comma separated) *
-                      </label>
-                      <input
-                        type="text"
-                        value={area}
-                        onChange={(e) => setArea(e.target.value)}
-                        placeholder="e.g. Medical College Rd, Vallam, New Bus Stand"
-                        className="w-full px-0 py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors"
-                      />
-                    </div>
+                    <GooglePlacesInput
+                      label="Preferred Locations (Up to 3, comma separated) *"
+                      value={area}
+                      onChange={(val) => setArea(val)}
+                      placeholder="e.g. Medical College Rd, Vallam, New Bus Stand"
+                    />
                   </div>
                 )}
 

@@ -349,12 +349,15 @@ export default function AdminClientPage() {
             </div>
           </div>
 
-          <div className="bg-slate-900/80 border border-rose-500/30 rounded-2xl p-4 shadow-md flex flex-col gap-1.5 backdrop-blur-md">
-            <span className="text-[11px] font-black text-rose-400 uppercase tracking-wider">Reported Issues</span>
+          <div className="bg-slate-900/80 border border-purple-500/30 rounded-2xl p-4 shadow-md flex flex-col gap-1.5 backdrop-blur-md">
+            <span className="text-[11px] font-black text-purple-400 uppercase tracking-wider">Video Reels Quota</span>
             <div className="flex items-baseline justify-between mt-1">
-              <span className="text-3xl font-heading font-black text-rose-400">{statsSummary.reported}</span>
-              <AlertTriangle className="w-5 h-5 text-rose-400" />
+              <span className="text-3xl font-heading font-black text-purple-400">
+                {items.filter((i) => (i as any).video_url).length} / 30
+              </span>
+              <Sparkles className="w-5 h-5 text-purple-400" />
             </div>
+            <span className="text-[10px] text-slate-400 font-bold mt-0.5">Firebase Storage Limit</span>
           </div>
         </div>
 
