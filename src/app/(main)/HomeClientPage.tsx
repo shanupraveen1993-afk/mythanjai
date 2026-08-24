@@ -157,6 +157,9 @@ export default function HomeClientPage() {
                 type="button"
                 onClick={() => {
                   setActiveSegment(seg.id as any);
+                  if (typeof window !== "undefined") {
+                    localStorage.setItem("namma_thanjai_active_segment", seg.id);
+                  }
                   if (seg.id !== "all") {
                     router.push(seg.route);
                   }

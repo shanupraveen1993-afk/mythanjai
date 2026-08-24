@@ -21,9 +21,19 @@ export default function FloatingPostButton() {
     pathname === "/shops";
 
   const getButtonConfig = () => {
-    if (pathname === "/need") return { label: "Post Need", route: "/post/need" };
-    if (pathname === "/services") return { label: "Post Service", route: "/post/service" };
-    if (pathname === "/shops") return { label: "Post Offer", route: "/post/offer" };
+    if (pathname.includes("/need")) return { label: "Post Need", route: "/post/need" };
+    if (pathname.includes("/service")) return { label: "Post Service", route: "/post/service" };
+    if (pathname.includes("/shops") || pathname.includes("/offer")) return { label: "Post Offer", route: "/post/offer" };
+    if (pathname.includes("/sell")) return { label: "Post Item", route: "/post/sell" };
+
+    if (typeof window !== "undefined") {
+      const activePill = localStorage.getItem("namma_thanjai_active_segment");
+      if (activePill === "need") return { label: "Post Need", route: "/post/need" };
+      if (activePill === "service") return { label: "Post Service", route: "/post/service" };
+      if (activePill === "offer") return { label: "Post Offer", route: "/post/offer" };
+      if (activePill === "sell") return { label: "Post Item", route: "/post/sell" };
+    }
+
     return { label: "Post Item", route: "/post/sell" };
   };
 

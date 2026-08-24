@@ -26,6 +26,23 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
     } catch (e) {}
   }, [router]);
 
+  const getDynamicPostRoute = () => {
+    if (pathname.includes("/need")) return "/post/need";
+    if (pathname.includes("/service")) return "/post/service";
+    if (pathname.includes("/shops") || pathname.includes("/offer")) return "/post/offer";
+    if (pathname.includes("/sell")) return "/post/sell";
+
+    if (typeof window !== "undefined") {
+      const activePill = localStorage.getItem("namma_thanjai_active_segment");
+      if (activePill === "need") return "/post/need";
+      if (activePill === "service") return "/post/service";
+      if (activePill === "offer") return "/post/offer";
+      if (activePill === "sell") return "/post/sell";
+    }
+
+    return "/post/sell";
+  };
+
   const navItems = [
     {
       id: "home",
@@ -87,7 +104,7 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
             return (
               <button
                 key={item.id}
-                onClick={() => router.push(item.route)}
+                onClick={() => router.push(getDynamicPostRoute())}
                 className="flex flex-col items-center justify-center relative -mt-6 cursor-pointer group"
               >
                 <div className="w-13 h-13 rounded-full bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-slate-950 shadow-lg shadow-amber-500/30 border-3 border-white flex items-center justify-center group-hover:scale-105 active:scale-95 transition-all">
