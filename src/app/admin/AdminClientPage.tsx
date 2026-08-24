@@ -197,7 +197,8 @@ export default function AdminClientPage() {
     const verified = items.filter((i) => i.is_verified).length;
     const pending = items.filter((i) => !i.is_verified).length;
     const reported = items.filter((i) => i.is_reported).length;
-    return { total, verified, pending, reported };
+    const adminPosts = items.filter((i) => String(i.phone || "").replace(/\D/g, "").includes("9994837342")).length;
+    return { total, verified, pending, reported, adminPosts };
   }, [items]);
 
   const filteredItems = useMemo(() => {
@@ -205,6 +206,8 @@ export default function AdminClientPage() {
       let matchesTab = activeTab === "all" || item.colName === activeTab;
       if (activeTab === "reported") {
         matchesTab = Boolean(item.is_reported);
+      } else if (activeTab === "admin_posts") {
+        matchesTab = String(item.phone || "").replace(/\D/g, "").includes("9994837342");
       }
       const matchesSearch =
         !searchQuery.trim() ||
@@ -324,40 +327,47 @@ export default function AdminClientPage() {
       <div className="flex-1 px-4 sm:px-6 py-6 max-w-7xl mx-auto w-full flex flex-col gap-6">
         
         {/* Live Metric Cards Bar */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5">
-          <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-4 shadow-md flex flex-col gap-1.5 backdrop-blur-md">
-            <span className="text-[11px] font-black text-slate-400 uppercase tracking-wider">Total Live Listings</span>
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+          <div className="bg-slate-900/80 border border-slate-800 rounded-2xl p-3.5 shadow-md flex flex-col gap-1 backdrop-blur-md">
+            <span className="text-[10px] font-black text-slate-400 uppercase tracking-wider">Total Live Listings</span>
             <div className="flex items-baseline justify-between mt-1">
-              <span className="text-3xl font-heading font-black text-white">{statsSummary.total}</span>
-              <BarChart2 className="w-5 h-5 text-slate-400" />
+              <span className="text-2xl font-heading font-black text-white">{statsSummary.total}</span>
+              <BarChart2 className="w-4 h-4 text-slate-400" />
             </div>
           </div>
 
-          <div className="bg-slate-900/80 border border-emerald-500/30 rounded-2xl p-4 shadow-md flex flex-col gap-1.5 backdrop-blur-md">
-            <span className="text-[11px] font-black text-emerald-400 uppercase tracking-wider">Approved Posts</span>
+          <div className="bg-slate-900/80 border border-amber-400/50 rounded-2xl p-3.5 shadow-md flex flex-col gap-1 backdrop-blur-md">
+            <span className="text-[10px] font-black text-amber-300 uppercase tracking-wider">👑 Admin 9994837342</span>
             <div className="flex items-baseline justify-between mt-1">
-              <span className="text-3xl font-heading font-black text-emerald-400">{statsSummary.verified}</span>
-              <CheckCircle className="w-5 h-5 text-emerald-400" />
+              <span className="text-2xl font-heading font-black text-amber-300">{statsSummary.adminPosts}</span>
+              <Shield className="w-4 h-4 text-amber-300" />
             </div>
           </div>
 
-          <div className="bg-slate-900/80 border border-amber-500/30 rounded-2xl p-4 shadow-md flex flex-col gap-1.5 backdrop-blur-md">
-            <span className="text-[11px] font-black text-amber-400 uppercase tracking-wider">Pending Review</span>
+          <div className="bg-slate-900/80 border border-emerald-500/30 rounded-2xl p-3.5 shadow-md flex flex-col gap-1 backdrop-blur-md">
+            <span className="text-[10px] font-black text-emerald-400 uppercase tracking-wider">Approved Posts</span>
             <div className="flex items-baseline justify-between mt-1">
-              <span className="text-3xl font-heading font-black text-amber-400">{statsSummary.pending}</span>
-              <Clock className="w-5 h-5 text-amber-400" />
+              <span className="text-2xl font-heading font-black text-emerald-400">{statsSummary.verified}</span>
+              <CheckCircle className="w-4 h-4 text-emerald-400" />
             </div>
           </div>
 
-          <div className="bg-slate-900/80 border border-purple-500/30 rounded-2xl p-4 shadow-md flex flex-col gap-1.5 backdrop-blur-md">
-            <span className="text-[11px] font-black text-purple-400 uppercase tracking-wider">Video Reels Quota</span>
+          <div className="bg-slate-900/80 border border-amber-500/30 rounded-2xl p-3.5 shadow-md flex flex-col gap-1 backdrop-blur-md">
+            <span className="text-[10px] font-black text-amber-400 uppercase tracking-wider">Pending Review</span>
             <div className="flex items-baseline justify-between mt-1">
-              <span className="text-3xl font-heading font-black text-purple-400">
+              <span className="text-2xl font-heading font-black text-amber-400">{statsSummary.pending}</span>
+              <Clock className="w-4 h-4 text-amber-400" />
+            </div>
+          </div>
+
+          <div className="bg-slate-900/80 border border-purple-500/30 rounded-2xl p-3.5 shadow-md flex flex-col gap-1 backdrop-blur-md col-span-2 sm:col-span-1">
+            <span className="text-[10px] font-black text-purple-400 uppercase tracking-wider">Video Reels Quota</span>
+            <div className="flex items-baseline justify-between mt-1">
+              <span className="text-2xl font-heading font-black text-purple-400">
                 {items.filter((i) => (i as any).video_url).length} / 30
               </span>
-              <Sparkles className="w-5 h-5 text-purple-400" />
+              <Sparkles className="w-4 h-4 text-purple-400" />
             </div>
-            <span className="text-[10px] text-slate-400 font-bold mt-0.5">Firebase Storage Limit</span>
           </div>
         </div>
 
@@ -366,16 +376,17 @@ export default function AdminClientPage() {
           <div className="flex gap-2 overflow-x-auto no-scrollbar w-full sm:w-auto">
             {[
               { id: "all", label: "All Queue" },
+              { id: "admin_posts", label: "👑 Admin 9994837342" },
               { id: "needs_and_sales", label: "Sell / Need" },
               { id: "services", label: "Services" },
               { id: "shops", label: "Shops & Offers" },
-              { id: "reported", label: "🚩 Flagged Issues" },
+              { id: "reported", label: "🚩 Flagged" },
             ].map((tab) => (
               <button
                 key={tab.id}
                 type="button"
                 onClick={() => setActiveTab(tab.id)}
-                className={`px-4 py-2 rounded-xl text-xs font-heading font-black shrink-0 transition-all cursor-pointer ${
+                className={`px-3.5 py-2 rounded-xl text-xs font-heading font-black shrink-0 transition-all cursor-pointer ${
                   activeTab === tab.id
                     ? "bg-amber-400 text-slate-950 shadow-md"
                     : "text-slate-400 hover:text-white bg-slate-950/60 border border-slate-800"
