@@ -60,42 +60,23 @@ export default function UniversalSearchBarRow() {
   };
 
   return (
-    <div className="w-full flex items-center gap-2 sm:gap-3 py-1">
-      {/* Limited Width Compact Universal Search Bar */}
+    <div className="w-full max-w-4xl mx-auto flex items-center gap-2 py-1">
+      {/* Shortened Width Compact Search Bar */}
       <div className="flex-1 min-w-0">
         <UniversalSearchBar />
       </div>
 
-      {/* Right Side Buttons (Royal Blue Get App + Golden Yellow Post Ad) */}
-      <div className="flex items-center gap-2 shrink-0 select-none">
-        {/* Royal Blue Get App Button (Web & WebApp Only) */}
-        {!isNativeApp && (
-          <a
-            href="/api/apk-download"
-            download="NammaThanjai-v12.apk"
-            onClick={handleGetAppClick}
-            className="bg-[#1d4ed8] hover:bg-blue-800 text-white font-heading font-black text-xs sm:text-sm px-3 sm:px-4 py-2.5 rounded-xl shadow-2xs shrink-0 flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 border border-blue-600"
-            title="Download Namma Thanjai Android App"
-            aria-label="Download Android App"
-          >
-            <Download className="w-4 h-4 stroke-[2.5]" />
-            <span className="hidden sm:inline">Get App</span>
-            <span className="sm:hidden">App</span>
-          </a>
-        )}
-
-        {/* Golden Yellow Post Ad Button (Dynamic to Active Category) */}
-        <button
-          type="button"
-          onClick={handlePostClick}
-          className="bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs sm:text-sm px-3.5 sm:px-4 py-2.5 rounded-xl shadow-2xs shrink-0 flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 border border-amber-400/80"
-          title="Post a Free Ad in Thanjavur"
-          aria-label="Post Ad"
-        >
-          <Plus className="w-4 h-4 stroke-[3]" />
-          <span>Post</span>
-        </button>
-      </div>
+      {/* Free-Hand Golden Yellow Post Ad Button (Standard Normal Size) */}
+      <button
+        type="button"
+        onClick={handlePostClick}
+        className="h-10 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs px-4 rounded-xl shadow-2xs shrink-0 flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 border border-amber-400/80"
+        title="Post a Free Ad in Thanjavur"
+        aria-label="Post Ad"
+      >
+        <Plus className="w-3.5 h-3.5 stroke-[3]" />
+        <span>Post</span>
+      </button>
     </div>
   );
 }

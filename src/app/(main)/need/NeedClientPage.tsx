@@ -104,20 +104,11 @@ export default function NeedClientPage() {
 
 
 
-      {/* 2. TITLE BAR WITH ROYAL BLUE MY LISTINGS BUTTON */}
-      <div className="py-2.5 flex items-center justify-between gap-3 w-full border-b border-slate-200/80">
+      {/* 2. TITLE BAR */}
+      <div className="py-2 flex items-center justify-between gap-3 w-full border-b border-slate-200/80">
         <h2 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight">
           Items Looking For (தேவைகள்)
         </h2>
-
-        <button
-          type="button"
-          onClick={() => router.push("/profile?tab=my_posts")}
-          className="text-[#1d4ed8] hover:text-blue-800 font-heading font-black text-xs hover:underline flex items-center gap-1 cursor-pointer transition-all active:scale-95 shrink-0"
-        >
-          <UserCheck className="w-3.5 h-3.5" />
-          <span>My Listings →</span>
-        </button>
       </div>
 
       {/* LISTING CONTAINER */}

@@ -107,8 +107,8 @@ export default function UniversalSearchBar() {
   const totalMatches = results.classifieds.length + results.services.length + results.shops.length;
 
   return (
-    <div ref={containerRef} className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-3 pb-1">
-      <form onSubmit={handleFormSubmit} className="relative flex items-center w-full bg-slate-50 hover:bg-white focus-within:bg-white border border-slate-250 focus-within:border-amber-400 rounded-2xl px-3.5 py-2 shadow-2xs transition-all">
+    <div ref={containerRef} className="relative w-full">
+      <form onSubmit={handleFormSubmit} className="relative flex items-center w-full h-10 bg-white border border-slate-200 focus-within:border-amber-400 rounded-xl px-3.5 shadow-2xs transition-all">
         <Search className="w-4 h-4 text-slate-400 shrink-0 mr-2.5" />
         <input
           type="text"

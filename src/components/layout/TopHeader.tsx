@@ -194,8 +194,20 @@ export default function TopHeader({
             <span className="truncate max-w-[90px]">{selectedArea || "Thanjavur"}</span>
           </div>
 
-          {/* Desktop Website Only: My Listings, Chat & Profile Buttons */}
-          <div className="hidden md:flex items-center gap-2">
+          {/* Desktop & WebApp Action Cluster: Royal Blue Get App button, My Listings, Chat & Profile Buttons */}
+          <div className="flex items-center gap-2">
+            {!isNativeApp && (
+              <a
+                href="/api/apk-download"
+                download="NammaThanjai-v12.apk"
+                className="bg-[#1d4ed8] hover:bg-blue-800 text-white font-heading font-bold text-xs px-3 py-1.5 rounded-lg shadow-2xs transition-all flex items-center gap-1.5 shrink-0 active:scale-95 border border-blue-600 cursor-pointer"
+                title="Download Namma Thanjai Official Android App"
+              >
+                <Download className="w-3.5 h-3.5 text-white stroke-[2.5]" />
+                <span className="hidden sm:inline">Get App</span>
+              </a>
+            )}
+
             {!pathname.includes("/post") && (
               <button
                 type="button"
