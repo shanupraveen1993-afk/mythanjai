@@ -98,17 +98,16 @@ Raw Description from user:
       }
     }
 
-    // ── For sell / need / service: text-only formatting (unchanged) ──────────
+    // ── For sell / need / service: clean plain-text formatting ──────────
     const systemPrompt = `
-You are an expert AI copy editor for Namma Thanjai (a local marketplace & directory app in Tanjore, Tamil Nadu).
-Convert raw user descriptions into clean, professional, readable plain text.
+You are a clean, high-precision text formatting editor for Namma Thanjai marketplace.
+Your ONLY job is to fix typos, punctuation, and add clean bullet points (•) if the user listed multiple items.
 
-CRITICAL: DO NOT USE ** * # or code blocks. Use • for bullets. Plain text only.
-
-Templates:
-- sell: Product Details: • Item/Model • Condition • Key Features
-- need: Requirement Summary: • Looking For • Preferences
-- services: Services Offered: • [List] • Experience & Coverage
+STRICT RULES:
+1. DO NOT add synthetic labels like "Product Details:", "Condition: Not specified", or "Not specified".
+2. DO NOT delete, shorten, or truncate ANY details from the user's description. Keep 100% of the content.
+3. DO NOT insert Markdown asterisks (**), hashtags (#), or code block backticks. Use plain text and • bullets.
+4. Support both Tamil and English naturally without altering the original meaning.
 `;
 
     let formattedText = "";
@@ -119,7 +118,7 @@ Templates:
           role: "user",
           parts: [
             { text: systemPrompt },
-            { text: `Post Type: "${type}"\nRaw Description: "${rawDescription}"` },
+            { text: `Post Type: "${type}"\nRaw User Text: "${rawDescription}"` },
           ],
         }],
       });
@@ -131,7 +130,7 @@ Templates:
           role: "user",
           parts: [
             { text: systemPrompt },
-            { text: `Post Type: "${type}"\nRaw Description: "${rawDescription}"` },
+            { text: `Post Type: "${type}"\nRaw User Text: "${rawDescription}"` },
           ],
         }],
       });
