@@ -133,7 +133,7 @@ export default function HomeClientPage() {
   const router = useRouter();
   const { user, profile } = useAuth();
   const isAuthVerified = Boolean(profile?.isVerified);
-  const [activeSegment, setActiveSegment] = React.useState<"all" | "sell" | "need" | "service" | "offer">("all");
+  const [activeSegment, setActiveSegment] = React.useState<"sell" | "need" | "service" | "offer">("sell");
 
   return (
     <div className="w-full flex flex-col gap-5 text-slate-800 font-sans mt-1 px-3 sm:px-6 max-w-7xl mx-auto">
@@ -172,17 +172,16 @@ export default function HomeClientPage() {
         </div>
       </div>
 
-      {/* ── 3. 5 Segment Quick Filter Grid (Mobile WebApp/APK 100% Screen-Fit, ZERO Horizontal Scroll) ── */}
+      {/* ── 3. 4 Segment Quick Filter Grid (Mobile WebApp/APK 100% Screen-Fit, ZERO Horizontal Scroll) ── */}
       <div className="w-full md:hidden">
-        <div className="grid grid-cols-5 gap-1.5 w-full">
+        <div className="grid grid-cols-4 gap-1.5 w-full">
           {[
-            { id: "all", label: "All", route: "/" },
             { id: "sell", label: "Sell", route: "/sell" },
             { id: "need", label: "Need", route: "/need" },
             { id: "service", label: "Service", route: "/services" },
             { id: "offer", label: "Offer", route: "/shops" },
           ].map((seg) => {
-            const isActive = activeSegment === seg.id;
+            const isActive = activeSegment === seg.id || (seg.id === "sell" && activeSegment === "sell");
             return (
               <button
                 key={seg.id}
@@ -192,13 +191,13 @@ export default function HomeClientPage() {
                   if (typeof window !== "undefined") {
                     localStorage.setItem("namma_thanjai_active_segment", seg.id);
                   }
-                  if (seg.id !== "all") {
+                  if (seg.id !== "sell") {
                     router.push(seg.route);
                   }
                 }}
                 className={`py-2 px-1 rounded-xl font-heading font-black text-xs transition-all cursor-pointer flex items-center justify-center w-full text-center ${
                   isActive
-                    ? "bg-amber-400 text-slate-950 shadow-xs border border-amber-500 scale-102"
+                    ? "bg-[#FBBF24] text-[#0F172A] shadow-xs border border-amber-400 font-extrabold"
                     : "bg-white text-slate-700 hover:bg-slate-100 border border-slate-200"
                 }`}
               >

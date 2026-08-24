@@ -157,14 +157,7 @@ export default function TopHeader({
               <button
                 type="button"
                 onClick={() => router.push("/")}
-                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${pathname === "/" || pathname === "/home" ? "bg-[#FBBF24] text-[#0F172A] font-extrabold shadow-2xs rounded-lg" : "text-slate-600 hover:text-slate-900 font-bold transition-colors"}`}
-              >
-                All
-              </button>
-              <button
-                type="button"
-                onClick={() => router.push("/sell")}
-                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${pathname.includes("/sell") ? "bg-[#FBBF24] text-[#0F172A] font-extrabold shadow-2xs rounded-lg" : "text-slate-600 hover:text-slate-900 font-bold transition-colors"}`}
+                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${pathname === "/" || pathname === "/home" || pathname.includes("/sell") ? "bg-[#FBBF24] text-[#0F172A] font-extrabold shadow-2xs rounded-lg" : "text-slate-600 hover:text-slate-900 font-bold transition-colors"}`}
               >
                 Sell
               </button>

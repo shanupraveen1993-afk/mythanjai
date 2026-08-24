@@ -101,29 +101,18 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
               : pathname === "/profile";
 
           if (item.isCenter) {
-            const activePill = typeof window !== "undefined" ? localStorage.getItem("namma_thanjai_active_segment") : "all";
-            const isCategoryContext =
-              pathname.includes("/sell") ||
-              pathname.includes("/need") ||
-              pathname.includes("/service") ||
-              pathname.includes("/shops") ||
-              pathname.includes("/offer") ||
-              (pathname === "/" && activePill !== "all" && activePill !== null);
-
-            if (!isCategoryContext) {
-              return null;
-            }
-
             return (
               <button
                 key={item.id}
+                type="button"
                 onClick={() => router.push(getDynamicPostRoute())}
-                className="flex flex-col items-center justify-center relative -mt-6 cursor-pointer group"
+                className="flex flex-col items-center justify-center relative -mt-6 cursor-pointer group shrink-0 z-50"
+                aria-label="Post a Free Ad"
               >
-                <div className="w-13 h-13 rounded-full bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-slate-950 shadow-lg shadow-amber-500/30 border-3 border-white flex items-center justify-center group-hover:scale-105 active:scale-95 transition-all">
+                <div className="w-13 h-13 rounded-full bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] shadow-lg shadow-amber-500/25 border-3 border-white flex items-center justify-center group-hover:scale-105 active:scale-95 transition-all">
                   <Plus className="w-6 h-6 stroke-[3]" />
                 </div>
-                <span className="mt-0.5 text-[11px] font-heading font-black text-slate-900 uppercase tracking-wider">
+                <span className="mt-0.5 text-[11px] font-heading font-black text-[#0F172A] uppercase tracking-wider">
                   {item.label}
                 </span>
               </button>
