@@ -207,8 +207,8 @@ export default function HomeClientPage() {
         </div>
       </div>
 
-      {/* ── 3. 4 Segment Quick Filter Grid (Mobile WebApp/APK 100% Screen-Fit, ZERO Horizontal Scroll) ── */}
-      <div className="w-full md:hidden">
+      {/* ── 3. 4 Segment Quick Filter Grid (Mobile WebApp/APK STICKY TOP, 100% Screen-Fit, ZERO Horizontal Scroll) ── */}
+      <div className="w-full md:hidden sticky top-14 z-40 bg-[#f8fafc]/95 backdrop-blur-md py-2 border-b border-slate-200/80 shadow-2xs -mx-3 px-3 sm:-mx-6 sm:px-6">
         <div className="grid grid-cols-4 gap-1.5 w-full">
           {[
             { id: "sell", label: "Sell", route: "/sell" },
