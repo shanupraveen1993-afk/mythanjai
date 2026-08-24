@@ -262,6 +262,7 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
           poster={(post as any).cover_image_url || (post as any).cover_image || undefined}
           playsInline
           loop
+          muted={isExpired}
           preload="none"
           onClick={togglePlay}
           className="absolute inset-0 w-full h-full object-cover z-0 cursor-pointer"

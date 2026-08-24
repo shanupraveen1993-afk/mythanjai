@@ -418,6 +418,13 @@ export default function PostForm({ segment }: PostFormProps) {
       } catch (e) {}
     }
 
+    if (segment === "offer" && validFrom && validTo) {
+      if (new Date(validTo) < new Date(validFrom)) {
+        toast.error("Valid To date cannot be earlier than Valid From date!");
+        return;
+      }
+    }
+
     setLoading(true);
 
     const timestamp = serverTimestamp();

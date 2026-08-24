@@ -109,7 +109,7 @@ export default function GooglePlacesInput({
 
       {/* Autocomplete Suggestions Dropdown */}
       {isOpen && predictions.length > 0 && (
-        <div className="absolute top-full left-0 right-0 z-[9999] mt-1 bg-white border border-slate-200 rounded-xl shadow-xl overflow-hidden max-h-56 overflow-y-auto animate-fade-in">
+        <div className="absolute top-full left-0 right-0 z-[99999] mt-1 bg-white border border-slate-200 rounded-xl shadow-2xl overflow-hidden max-h-56 overflow-y-auto animate-fade-in">
           {predictions.map((p, idx) => (
             <button
               key={p.place_id || idx}
