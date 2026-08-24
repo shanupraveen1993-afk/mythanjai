@@ -389,6 +389,34 @@ function ProfileContent() {
     );
   }
 
+  if (!user) {
+    return (
+      <div className="w-full max-w-md mx-auto py-12 px-6 flex flex-col items-center justify-center text-center gap-4 bg-white rounded-3xl border border-slate-200 shadow-md my-8">
+        <div className="w-16 h-16 rounded-full bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-600">
+          <User className="w-8 h-8 stroke-[2.5]" />
+        </div>
+        <div className="flex flex-col gap-1 max-w-xs">
+          <h2 className="font-heading font-black text-xl text-slate-900">Sign In Required</h2>
+          <p className="text-amber-700 font-extrabold text-xs">சுயவிவரம் & கணக்கை அணுகவும்</p>
+          <p className="text-slate-600 text-xs mt-1 leading-relaxed">
+            Sign in to post free ads, manage your active listings, view saved bookmarks, and direct message sellers in Thanjavur.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            if (typeof window !== "undefined") {
+              window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+            }
+          }}
+          className="mt-2 w-full bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-sm py-3 px-6 rounded-2xl shadow-md cursor-pointer transition-all flex items-center justify-center gap-2 active:scale-[0.98]"
+        >
+          <span>Sign In / Register</span>
+        </button>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full max-w-4xl mx-auto flex flex-col gap-5 mt-2 pb-24 font-sans px-3 sm:px-4">
 
