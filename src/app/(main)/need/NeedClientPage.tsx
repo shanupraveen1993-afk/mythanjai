@@ -98,7 +98,7 @@ export default function NeedClientPage() {
   }, [filteredPosts, currentPage]);
 
   return (
-    <div className="flex flex-col gap-3 pb-24 w-full font-sans">
+    <div className="flex flex-col gap-3 pb-24 w-full font-sans max-w-7xl mx-auto px-4 sm:px-6">
       <UniversalSearchBarRow />
       <HomeCategorySegmentBar />
 

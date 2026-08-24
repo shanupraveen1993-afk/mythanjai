@@ -11,6 +11,7 @@ import { isListingQuarantined } from "@/lib/moderation";
 import CustomDropdown from "@/components/ui/CustomDropdown";
 import { useAuth } from "@/hooks/use-auth";
 import UniversalSearchBarRow from "@/components/layout/UniversalSearchBarRow";
+import HomeCategorySegmentBar from "@/components/layout/HomeCategorySegmentBar";
 
 export default function SellClientPage() {
   const router = useRouter();
@@ -118,8 +119,9 @@ export default function SellClientPage() {
   }, [filteredPosts, currentPage]);
 
   return (
-    <div className="flex flex-col gap-3 pb-24 w-full font-sans">
+    <div className="flex flex-col gap-3 pb-24 w-full font-sans max-w-7xl mx-auto px-4 sm:px-6">
       <UniversalSearchBarRow />
+      <HomeCategorySegmentBar />
 
 
 

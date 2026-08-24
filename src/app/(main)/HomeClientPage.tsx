@@ -54,18 +54,9 @@ export default function HomeClientPage() {
         }}
       />
 
-      <div className="w-full flex flex-col gap-5 text-slate-800 font-sans mt-1 px-3 sm:px-6 max-w-7xl mx-auto">
-
-
-
-      {/* ── 3. Universal Sticky 4-Category Segment Bar (Mobile WebApp/APK STICKY TOP) ── */}
-      <HomeCategorySegmentBar />
-
-      {/* ── 4. Live Sell Listings Stream (Direct Vertical Feed) ── */}
-      <div className="w-full mt-2">
+      <div className="w-full text-slate-800 font-sans mt-1 max-w-7xl mx-auto">
         <SellClientPage />
       </div>
-    </div>
   </>
 );
 }
