@@ -198,9 +198,9 @@ function MainLayoutContent({
   const isLandingMode = pathname === "/" || pathname === "/onboarding";
   const isChatRoute = pathname === "/chat";
   const isPostRoute = pathname.startsWith("/post");
-  const isStandaloneView = isChatRoute;
+  const isStandaloneView = false;
   const isOnboardingView = false;
-  const isFullWidthPage = isStandaloneView || isLandingMode;
+  const isFullWidthPage = isLandingMode;
   if (showSplash) {
     return (
       <div className="w-full min-h-screen bg-[#0f172a]">

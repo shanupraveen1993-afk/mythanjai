@@ -80,7 +80,7 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
               : item.id === "chat"
               ? pathname.startsWith("/chat")
               : item.id === "listings"
-              ? pathname.includes("tab=listings") || pathname.includes("tab=my_posts")
+              ? pathname.startsWith("/listings") || pathname.includes("tab=listings") || pathname.includes("tab=my_posts")
               : pathname === "/profile";
 
           if (item.isCenter) {

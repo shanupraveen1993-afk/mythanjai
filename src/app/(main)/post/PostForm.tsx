@@ -236,24 +236,7 @@ export default function PostForm({ segment }: PostFormProps) {
       .catch(() => {});
   }, [editId, editCol, segment]);
 
-  if (authLoading) {
-    return (
-      <div className="min-h-[60vh] flex flex-col items-center justify-center p-6 text-slate-500 font-heading font-bold text-xs gap-3">
-        <Loader2 className="w-7 h-7 animate-spin text-amber-500" />
-        <span>Loading details...</span>
-      </div>
-    );
-  }
 
-  if (!isAuthVerified) {
-    return (
-      <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6 text-slate-900 font-heading font-black text-center text-sm">
-        <p className="max-w-xs leading-relaxed text-slate-600 font-bold">
-          Please verify your WhatsApp mobile number to create and publish listings on Namma Thanjai.
-        </p>
-      </div>
-    );
-  }
 
   const getApiUrl = (endpoint: string) => {
     if (typeof window !== "undefined") {
@@ -704,6 +687,25 @@ export default function PostForm({ segment }: PostFormProps) {
 
 
   const formattedPriceBadge = formatIndianCurrencyText(price);
+
+  if (authLoading) {
+    return (
+      <div className="min-h-[60vh] flex flex-col items-center justify-center p-6 text-slate-500 font-heading font-bold text-xs gap-3">
+        <Loader2 className="w-7 h-7 animate-spin text-amber-500" />
+        <span>Loading details...</span>
+      </div>
+    );
+  }
+
+  if (!isAuthVerified) {
+    return (
+      <div className="min-h-screen bg-white flex flex-col items-center justify-center p-6 text-slate-900 font-heading font-black text-center text-sm">
+        <p className="max-w-xs leading-relaxed text-slate-600 font-bold">
+          Please verify your WhatsApp mobile number to create and publish listings on Namma Thanjai.
+        </p>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full max-w-6xl mx-auto px-4 py-6 pb-24 flex flex-col gap-6 font-sans">
