@@ -972,23 +972,6 @@ export default function PostForm({ segment }: PostFormProps) {
                     <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500" />
                   </label>
                 </div>
-
-                {/* 8. CATEGORY DROPDOWN FOR OFFER */}
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
-                    <Tag className="w-4 h-4 text-amber-500" />
-                    Store Category *
-                  </label>
-                  <select
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                    className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all"
-                  >
-                    {config.categories.map((cat) => (
-                      <option key={cat} value={cat}>{cat}</option>
-                    ))}
-                  </select>
-                </div>
               </>
             ) : (
               /* NON-OFFER FORMS (SELL, NEED, SERVICE) */
