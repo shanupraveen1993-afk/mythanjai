@@ -8,11 +8,11 @@ import { useAuth } from "@/hooks/use-auth";
 
 export default function CategoryBridgeFeed() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { isVerified } = useAuth();
   const { t } = useLanguage();
 
   const handlePostAction = (route: string) => {
-    if (!user) {
+    if (!isVerified) {
       if (typeof window !== "undefined") {
         sessionStorage.setItem("namma_thanjai_target_post_route", route);
         window.dispatchEvent(new Event("namma_thanjai_open_signin"));

@@ -41,7 +41,7 @@ export default function ListingsClientPage() {
 
 function ListingsContent() {
   const { toast } = useToast();
-  const { user, profile, loading: authLoading } = useAuth();
+  const { user, profile, isVerified, loading: authLoading } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const initialTab = searchParams?.get("tab") === "saved" ? "saved" : "my_posts";
@@ -54,32 +54,34 @@ function ListingsContent() {
   // Load My Posts & Saved Posts
   useEffect(() => {
     async function fetchListingsData() {
-      if (!user) {
+      if (!isVerified) {
         setLoading(false);
         return;
       }
       setLoading(true);
       try {
-        const userId = user.uid;
-        const userPhone = profile?.phone || user.phoneNumber;
+        const userId = user?.uid || "user";
+        const userPhone = profile?.phone || user?.phoneNumber || "";
 
         // Fetch My Posted Ads across collections
-        const [salesSnap, needsSnap, servicesSnap, shopsSnap] = await Promise.all([
-          getDocs(query(collection(db, "needs_and_sales"), where("userId", "==", userId))),
-          getDocs(query(collection(db, "needs_and_sales"), where("userId", "==", userId))),
-          getDocs(query(collection(db, "services"), where("userId", "==", userId))),
-          getDocs(query(collection(db, "shops"), where("userId", "==", userId))),
-        ]);
-
         let combinedMyPosts: any[] = [];
         const seenIds = new Set<string>();
 
-        [...salesSnap.docs, ...needsSnap.docs, ...servicesSnap.docs, ...shopsSnap.docs].forEach((docSnap) => {
-          if (!seenIds.has(docSnap.id)) {
-            seenIds.add(docSnap.id);
-            combinedMyPosts.push({ id: docSnap.id, ...docSnap.data() });
-          }
-        });
+        if (userId && userId !== "user") {
+          const [salesSnap, needsSnap, servicesSnap, shopsSnap] = await Promise.all([
+            getDocs(query(collection(db, "needs_and_sales"), where("userId", "==", userId))).catch(() => ({ docs: [] })),
+            getDocs(query(collection(db, "needs_and_sales"), where("userId", "==", userId))).catch(() => ({ docs: [] })),
+            getDocs(query(collection(db, "services"), where("userId", "==", userId))).catch(() => ({ docs: [] })),
+            getDocs(query(collection(db, "shops"), where("userId", "==", userId))).catch(() => ({ docs: [] })),
+          ]);
+
+          [...salesSnap.docs, ...needsSnap.docs, ...servicesSnap.docs, ...shopsSnap.docs].forEach((docSnap) => {
+            if (!seenIds.has(docSnap.id)) {
+              seenIds.add(docSnap.id);
+              combinedMyPosts.push({ id: docSnap.id, ...docSnap.data() });
+            }
+          });
+        }
 
         // Add Local Posts
         try {
@@ -96,11 +98,8 @@ function ListingsContent() {
 
         // Fetch Saved Posts IDs from localStorage
         try {
-          const savedIds: string[] = JSON.parse(localStorage.getItem("namma_thanjai_saved_posts") || "[]");
-          if (savedIds.length > 0) {
-            const allSaved = combinedMyPosts.filter((p) => savedIds.includes(p.id));
-            setSavedPosts(allSaved);
-          }
+          const savedList: any[] = JSON.parse(localStorage.getItem("namma_thanjai_saved_posts") || "[]");
+          setSavedPosts(savedList);
         } catch (e) {}
       } catch (err) {
         console.error("Error loading listings:", err);
@@ -110,7 +109,7 @@ function ListingsContent() {
     }
 
     fetchListingsData();
-  }, [user, profile]);
+  }, [user, profile, isVerified]);
 
   const handleDeletePost = async (postId: string, collectionName: string) => {
     if (!confirm("Are you sure you want to delete this listing?")) return;
@@ -133,7 +132,7 @@ function ListingsContent() {
   };
 
   // Guest State CTA
-  if (!user && !authLoading) {
+  if (!isVerified && !authLoading) {
     return (
       <div className="max-w-4xl mx-auto px-4 py-12 flex flex-col items-center text-center gap-4">
         <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 border border-amber-200">

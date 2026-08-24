@@ -175,7 +175,7 @@ export default function CategoryFeedClient({ segmentType }: CategoryFeedClientPr
     if (segmentType === "services") {
       return <ServiceCard post={post as ServiceProviderPost} />;
     } else if (segmentType === "shops") {
-      return <ShopCard post={post as ShopPost} index={index} isGuest={!user} />;
+      return <ShopCard post={post as ShopPost} index={index} isGuest={!isVerified} />;
     }
     return <NeedCard post={post as NeedOrSalePost} />;
   };
