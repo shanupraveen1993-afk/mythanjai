@@ -198,9 +198,47 @@ export default function TopHeader({
           ) : null
         )}
 
-        {/* Right Side: Clean header right side */}
+        {/* Right Side: Desktop-Only Chat & Profile + Mobile Header Action */}
         <div className="flex items-center justify-end gap-2 shrink-0 ml-auto z-20">
-          {/* Primary Yellow Button — ONLY on non-profile and non-post pages */}
+          {/* Desktop Website Only: Chat & Profile Buttons (Hidden on Mobile WebApp/APK) */}
+          <div className="hidden md:flex items-center gap-2">
+            {!pathname.includes("/profile") && !pathname.includes("/post") && (
+              <button
+                type="button"
+                onClick={() => router.push("/chat")}
+                className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border shrink-0 ${
+                  pathname === "/chat"
+                    ? "bg-[#FBBF24] text-[#0F172A] border-amber-400 shadow-xs"
+                    : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
+                }`}
+                title="In-App Direct Chat"
+                aria-label="View messages"
+              >
+                <MessageSquare className={`w-4 h-4 ${pathname === "/chat" ? "text-[#0F172A] stroke-[2.5]" : "text-slate-600"}`} />
+              </button>
+            )}
+
+            {!pathname.includes("/post") && (
+              <button
+                type="button"
+                onClick={() => {
+                  onTabChange?.("profile");
+                  router.push("/profile");
+                }}
+                className={`flex items-center justify-center w-9 h-9 rounded-full transition-all cursor-pointer border shrink-0 ${
+                  pathname === "/profile"
+                    ? "bg-[#FBBF24] text-[#0F172A] border-amber-400 shadow-xs"
+                    : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
+                }`}
+                title="Profile & Account"
+                aria-label="View profile"
+              >
+                <User className={`w-4 h-4 ${pathname === "/profile" ? "text-[#0F172A] stroke-[2.5]" : "text-slate-600"}`} />
+              </button>
+            )}
+          </div>
+
+          {/* Primary Action Button (Get App / Dynamic Post) */}
           {!pathname.includes("/profile") && !pathname.includes("/post") && (
             isHomePage && !isNativeApp ? (
               <a
