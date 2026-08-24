@@ -99,7 +99,7 @@ export default function UniversalSearchBarRow() {
         aria-label="Post Ad"
       >
         <Plus className="w-4 h-4 stroke-[3]" />
-        <span>+ Post Ad</span>
+        <span>Post Ad</span>
       </button>
     </div>
   );

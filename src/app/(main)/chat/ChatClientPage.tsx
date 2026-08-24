@@ -310,115 +310,59 @@ export default function ChatClientPage() {
   };
 
   return (
-    <div className="w-full flex-1 flex flex-col bg-slate-100 font-sans pb-20 min-h-[calc(100vh-8rem)]">
-      
-      {/* Contextual Scam Alert Modal Overlay */}
+    <div className="w-full flex-1 flex flex-col bg-slate-100 font-sans pb-20 md:pb-6 max-w-7xl mx-auto px-3 sm:px-6 min-h-[calc(100vh-5rem)]">
+      {/* SCAM WARNING MODAL */}
       {scamAlertTriggered && (
-        <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white border-2 border-red-500 rounded-2xl p-6 flex flex-col items-center text-center gap-3 max-w-xs shadow-2xl animate-bounce-short">
-            <div className="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center">
-              <ShieldAlert className="w-7 h-7" />
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 animate-fade-in">
+          <div className="bg-white rounded-2xl max-w-md w-full p-5 border-2 border-red-500 shadow-2xl flex flex-col gap-3">
+            <div className="flex items-center gap-3 text-red-600 border-b border-red-100 pb-3">
+              <ShieldAlert className="w-8 h-8 shrink-0" />
+              <div>
+                <h3 className="font-heading font-black text-base text-slate-900 leading-tight">
+                  High Risk Payment Warning
+                </h3>
+                <p className="text-xs text-red-600 font-bold">Thanjavur Safety Guard</p>
+              </div>
             </div>
-            <h4 className="font-heading font-bold text-base text-red-900 tracking-tight">
-              Scam Prevention Warning
-            </h4>
-            <p className="text-xs text-slate-700 font-semibold leading-relaxed">
-              Caution: Detected transaction term <span className="font-bold text-red-600 uppercase">"{detectedKeyword}"</span>.
+
+            <p className="text-xs font-semibold text-slate-700 leading-relaxed">
+              You or the seller mentioned potential payment terms (advance, GPay, token amount).
             </p>
-            <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-xs text-red-800 font-bold text-left leading-normal">
-              ⚠️ Never send advance payments, GPay token money, or UPI links before physically inspecting the item in person.
+
+            <div className="bg-red-50 border border-red-200 rounded-xl p-3 text-xs text-red-900 font-medium space-y-1">
+              <p className="font-bold">⚠️ Golden Rules for Safe Local Deals:</p>
+              <ul className="list-disc pl-4 space-y-0.5 text-[11px]">
+                <li>NEVER send advance money or token amounts before seeing the item.</li>
+                <li>Inspect item &amp; documents in person at a safe public location in Thanjavur.</li>
+                <li>Pay ONLY after taking physical possession of the product/vehicle.</li>
+              </ul>
             </div>
+
             <button
               onClick={() => setScamAlertTriggered(false)}
               aria-label="I Understand & Proceed Safely"
               className="mt-2 w-full py-2.5 bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase tracking-wider rounded-lg cursor-pointer border border-red-500 shadow-xs"
             >
-              I Understand & Proceed Safely
+              I Understand &amp; Proceed Safely
             </button>
           </div>
         </div>
       )}
 
-      {/* CHAT HEADER: Two-state — List view shows branding + back, Conversation view shows peer + back */}
-      <div
-        className="w-full bg-[#075e54] text-white px-4 py-2.5 flex items-center justify-between shadow-md shrink-0 border-b border-[#054c44] relative z-40"
-        style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 40px)" }}
-      >
-        {showMobileChat ? (
-          /* Inside a 1-on-1 conversation — show back to inbox + peer name */
-          <div className="flex items-center gap-3 flex-1 min-w-0">
-            <button
-              onClick={() => setShowMobileChat(false)}
-              className="p-1 text-white hover:bg-white/10 rounded-lg cursor-pointer flex items-center gap-1"
-              title="Back to All Conversations"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              <span className="text-xs font-bold hidden sm:inline">Inbox</span>
-            </button>
-            <div className="w-8 h-8 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-xs shrink-0">
-              <User className="w-4 h-4" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <h3 className="font-heading font-black text-sm leading-tight text-white truncate">{activePeerName}</h3>
-              <p className="text-[11px] text-emerald-100 font-semibold truncate max-w-[200px]">{activeListingTitle}</p>
-            </div>
-          </div>
-        ) : (
-          /* Chat Inbox list — show back + full branding */
-          <div className="flex items-center gap-3 flex-1 min-w-0">
-            <button
-              onClick={() => router.back()}
-              className="p-1 text-white hover:bg-white/10 rounded-lg cursor-pointer"
-              title="Back to Main Feed"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </button>
-            <div
-              onClick={() => router.push("/")}
-              className="flex items-center gap-2 cursor-pointer select-none"
-            >
-              <img src="/namma_thanjai_logo.png" alt="namma thanjai logo" className="w-8 h-8 sm:w-9 sm:h-9 object-contain shrink-0 filter brightness-0 invert drop-shadow-sm" />
-              <div className="flex flex-col">
-                <div className="flex items-center gap-1">
-                  <span className="font-heading font-bold tracking-tight text-white text-xs sm:text-sm uppercase">
-                    namma thanjai
-                  </span>
-                  <span className="bg-emerald-400 text-slate-950 font-black text-[10px] px-1.5 py-0.2 rounded-md uppercase">
-                    CHAT
-                  </span>
-                </div>
-                <span className="text-[11px] text-emerald-100 font-medium">All Conversations Inbox</span>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Close button — always visible */}
-        <button
-          onClick={() => router.back()}
-          aria-label="Close Chat"
-          className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer shrink-0 ml-2"
-        >
-          <X className="w-5 h-5" />
-        </button>
-      </div>
-
-      {/* WHATSAPP MAIN CONTAINER */}
-      <div className="flex-1 w-full flex bg-white overflow-hidden">
-        
-        {/* LEFT COLUMN: WhatsApp Threads List */}
+      {/* CHAT CONTAINER PANEL */}
+      <div className="flex-1 w-full flex bg-white rounded-2xl border border-slate-200/90 shadow-md overflow-hidden my-2 min-h-[520px]">
+        {/* LEFT COLUMN: Conversations List */}
         <div className={`w-full lg:w-80 border-r border-slate-200 flex-col bg-white ${showMobileChat ? "hidden lg:flex" : "flex"}`}>
-          
           {/* Threads List Header */}
           <div className="bg-slate-100 p-3.5 border-b border-slate-200 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-[#128c7e] text-white flex items-center justify-center font-bold text-xs">
                 <MessageSquare className="w-4 h-4" />
               </div>
-              <h2 className="font-heading font-bold text-sm text-slate-800">In-App Chats</h2>
+              <h2 className="font-heading font-bold text-sm text-slate-800">Direct Messages</h2>
             </div>
             <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
-              Scam Protected
+              Encrypted
             </span>
           </div>
 
@@ -475,10 +419,42 @@ export default function ChatClientPage() {
 
         {/* RIGHT COLUMN: WhatsApp Active Chat Window */}
         <div className={`flex-1 flex-col bg-[#efeae2] relative ${showMobileChat ? "flex" : "hidden lg:flex"}`}>
-          
+          {/* Thread Header Bar */}
+          <div className="bg-[#075e54] text-white px-4 py-2.5 flex items-center justify-between shadow-xs shrink-0 border-b border-[#054c44]">
+            <div className="flex items-center gap-3 min-w-0">
+              <button
+                type="button"
+                onClick={() => setShowMobileChat(false)}
+                className="lg:hidden p-1 text-white hover:bg-white/10 rounded-lg cursor-pointer flex items-center gap-1 shrink-0"
+                title="Back to Conversations"
+              >
+                <ArrowLeft className="w-5 h-5" />
+                <span className="text-xs font-bold sm:hidden">Inbox</span>
+              </button>
+              <div className="w-8 h-8 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-xs shrink-0">
+                <User className="w-4 h-4" />
+              </div>
+              <div className="min-w-0">
+                <h3 className="font-heading font-black text-xs sm:text-sm text-white truncate">{activePeerName}</h3>
+                <p className="text-[10px] sm:text-[11px] text-emerald-100 font-medium truncate">{activeListingTitle}</p>
+              </div>
+            </div>
+
+            {/* Direct WhatsApp Call CTA */}
+            <a
+              href={`https://wa.me/91${querySellerId || "9000000000"}?text=${encodeURIComponent(`Hi, inquiring about: ${activeListingTitle}`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-[#25D366] hover:bg-emerald-600 text-slate-950 font-heading font-black text-xs px-3 py-1.5 rounded-xl shadow-xs transition-all flex items-center gap-1.5 shrink-0 border border-emerald-400 cursor-pointer"
+            >
+              <PhoneCall className="w-3.5 h-3.5 fill-slate-950 stroke-[2]" />
+              <span>WhatsApp</span>
+            </a>
+          </div>
+
           {/* PERMANENT TOP SCAM SAFETY BANNER */}
-          <div className="bg-amber-500 text-slate-950 px-4 py-2 flex items-center gap-2 text-xs font-bold border-b border-amber-400">
-            <AlertTriangle className="w-4 h-4 shrink-0 stroke-[2.5]" />
+          <div className="bg-amber-500 text-slate-950 px-4 py-1.5 flex items-center gap-2 text-[11px] font-bold border-b border-amber-400">
+            <AlertTriangle className="w-3.5 h-3.5 shrink-0 stroke-[2.5]" />
             <span>
               Safety Alert: Never send advance payments or UPI transfers before physically inspecting the item in person.
             </span>

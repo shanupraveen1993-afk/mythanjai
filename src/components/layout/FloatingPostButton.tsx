@@ -44,14 +44,14 @@ export default function FloatingPostButton() {
   if (!isCategoryPage) return null;
 
   return (
-    <div className="fixed bottom-20 right-4 z-40 md:hidden animate-fade-in pointer-events-auto">
+    <div className="fixed bottom-[calc(4.2rem+env(safe-area-inset-bottom,0px))] left-4 right-4 z-40 max-w-lg mx-auto md:hidden animate-fade-in pointer-events-auto">
       <button
         type="button"
         onClick={handlePostClick}
-        className="bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs py-3 px-4 rounded-full shadow-[0_6px_20px_rgba(251,191,36,0.4)] border-2 border-amber-300 flex items-center gap-1.5 active:scale-95 transition-all cursor-pointer select-none"
+        className="w-full bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-sm py-3 px-5 rounded-2xl shadow-[0_8px_25px_rgba(251,191,36,0.45)] border-2 border-amber-300/90 flex items-center justify-center gap-2 active:scale-[0.98] transition-all cursor-pointer select-none uppercase tracking-wide"
         aria-label="Create Post"
       >
-        <Plus className="w-4 h-4 stroke-[3] text-[#0F172A]" />
+        <Plus className="w-5 h-5 stroke-[3] text-[#0F172A]" />
         <span>{buttonConfig.label}</span>
       </button>
     </div>
