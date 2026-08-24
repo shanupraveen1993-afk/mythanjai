@@ -192,7 +192,7 @@ export default function TopHeader({
           {!isNativeApp && (
             <a
               href="/api/apk-download"
-              download="NammaThanjai-v12.apk"
+              download="NammaThanjai-v13.apk"
               className="flex md:hidden bg-[#1d4ed8] hover:bg-blue-800 text-white font-heading font-bold text-xs px-3 py-1.5 rounded-lg shadow-2xs transition-all items-center gap-1.5 shrink-0 active:scale-95 border border-blue-600 cursor-pointer"
               title="Download Namma Thanjai Official Android App"
             >

@@ -79,22 +79,22 @@ export default function UniversalSearchBarRow() {
 
   return (
     <div
-      className={`w-full max-w-2xl mx-auto flex items-center gap-2 py-1 sticky top-12 z-30 bg-[#f8fafc]/95 backdrop-blur-md transition-all duration-300 ${
+      className={`w-full flex items-center justify-between gap-3 py-1 sticky top-12 z-30 bg-[#f8fafc]/95 backdrop-blur-md transition-all duration-300 ${
         isVisible
           ? "translate-y-0 opacity-100"
           : "-translate-y-full opacity-0 pointer-events-none md:translate-y-0 md:opacity-100 md:pointer-events-auto"
       }`}
     >
-      {/* Shortened Width Compact Search Bar */}
+      {/* Left-Aligned Full Width Search Input */}
       <div className="flex-1 min-w-0">
         <UniversalSearchBar />
       </div>
 
-      {/* Desktop Only: Free-Hand Golden Yellow Post Ad Button */}
+      {/* Desktop & Website Right-Aligned Golden Yellow Post Ad Button */}
       <button
         type="button"
         onClick={handlePostClick}
-        className="hidden md:flex h-10 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs px-4 rounded-xl shadow-2xs shrink-0 items-center gap-1.5 cursor-pointer transition-all active:scale-95 border border-amber-400/80"
+        className="hidden md:flex h-10 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs px-4 rounded-xl shadow-2xs shrink-0 items-center gap-1.5 cursor-pointer transition-all active:scale-95 border border-amber-400/80 ml-auto"
         title="Post a Free Ad in Thanjavur"
         aria-label="Post Ad"
       >

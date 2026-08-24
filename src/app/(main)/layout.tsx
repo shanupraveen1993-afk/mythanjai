@@ -277,7 +277,7 @@ function MainLayoutContent({
             : "bg-[#f1f5f9] max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-[calc(7.5rem+env(safe-area-inset-bottom,0px))] md:pb-8"
         }`}
         style={{
-          paddingTop: !isStandaloneView && !isOnboardingView ? "calc(3.6rem + env(safe-area-inset-top, 0px))" : undefined,
+          paddingTop: !isStandaloneView && !isOnboardingView ? "calc(3.8rem + env(safe-area-inset-top, 0px))" : undefined,
         }}
       >
         {/* Stable height wrapper — prevents page collapse and footer jump on route transitions */}
