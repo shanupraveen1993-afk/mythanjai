@@ -98,16 +98,33 @@ export default function NeedClientPage() {
   }, [filteredPosts, currentPage]);
 
   return (
-    <div className="flex flex-col gap-3 pb-24 w-full font-sans max-w-7xl mx-auto px-4 sm:px-6">
+    <div className="flex flex-col gap-3 pb-24 w-full font-sans max-w-7xl mx-auto px-3 sm:px-6">
       <HomeCategorySegmentBar />
-      <UniversalSearchBarRow />
 
-      {/* 2. TITLE BAR */}
-      <div className="py-2 flex items-center justify-between gap-3 w-full border-b border-slate-200/80">
+      {/* 1. TITLE BAR + CONDITIONAL GUEST WHATSAPP LOGIN */}
+      <div className="py-1.5 flex items-center justify-between gap-3 w-full border-b border-slate-200/80">
         <h2 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight">
           Items Looking For (தேவைகள்)
         </h2>
+
+        {!user && (
+          <button
+            type="button"
+            onClick={() => {
+              if (typeof window !== "undefined") {
+                window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+              }
+            }}
+            className="bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-bold text-xs py-1.5 px-3 rounded-lg shadow-2xs cursor-pointer transition-all active:scale-95 flex items-center gap-1.5 shrink-0 border border-emerald-500/40"
+          >
+            <MessageSquare className="w-3.5 h-3.5 fill-white stroke-[2]" />
+            <span>Login with WhatsApp</span>
+          </button>
+        )}
       </div>
+
+      {/* 2. CATEGORY-SCOPED SEARCH BAR */}
+      <UniversalSearchBarRow />
 
       {/* LISTING CONTAINER */}
       <div className="flex flex-col gap-3">
