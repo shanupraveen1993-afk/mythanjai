@@ -1,111 +1,128 @@
 "use client";
 
 import React, { useEffect } from "react";
-import { Home, MessageSquare, Wrench, Store, User, Tag, ClipboardList } from "lucide-react";
+import { Home, MessageSquare, Plus, Package, User } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
-
 import { useLanguage } from "@/context/LanguageContext";
 
-export type AppTab = "home" | "sell" | "need" | "services" | "shops" | "profile";
+export type AppTab = "home" | "sell" | "need" | "services" | "shops" | "profile" | "chat" | "post" | "listings";
 
 interface BottomTabBarProps {
   activeTab?: AppTab;
   onTabChange?: (tab: AppTab) => void;
 }
 
-export default function BottomTabBar({
-  activeTab,
-  onTabChange,
-}: BottomTabBarProps) {
+export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarProps = {}) {
   const router = useRouter();
   const pathname = usePathname() || "";
   const { t } = useLanguage();
 
-  const tabs = [
-    {
-      id: "home" as AppTab,
-      label: t("home"),
-      icon: Home,
-      route: "/",
-    },
-    {
-      id: "sell" as AppTab,
-      label: t("sell"),
-      icon: Tag,
-      route: "/sell",
-    },
-    {
-      id: "need" as AppTab,
-      label: t("need"),
-      icon: ClipboardList,
-      route: "/need",
-    },
-    {
-      id: "services" as AppTab,
-      label: t("services"),
-      icon: Wrench,
-      route: "/services",
-    },
-    {
-      id: "shops" as AppTab,
-      label: t("offers"),
-      icon: Store,
-      route: "/shops",
-    },
-  ];
-
   useEffect(() => {
-    // Prefetch all primary tab routes for 0ms instant tab transitions
-    tabs.forEach((t) => {
-      try {
-        router.prefetch(t.route);
-      } catch (e) {}
-    });
     try {
-      router.prefetch("/profile");
+      router.prefetch("/");
       router.prefetch("/chat");
-      router.prefetch("/post/sell");
+      router.prefetch("/post");
+      router.prefetch("/profile");
     } catch (e) {}
   }, [router]);
 
-  const handleTabClick = (tab: typeof tabs[0]) => {
-    if (onTabChange) onTabChange(tab.id);
-    router.push(tab.route);
-  };
+  const navItems = [
+    {
+      id: "home",
+      label: t("home") || "Home",
+      icon: Home,
+      route: "/",
+      isCenter: false,
+    },
+    {
+      id: "chat",
+      label: "Chat",
+      icon: MessageSquare,
+      route: "/chat",
+      isCenter: false,
+    },
+    {
+      id: "post",
+      label: "POST AD",
+      icon: Plus,
+      route: "/post",
+      isCenter: true,
+    },
+    {
+      id: "listings",
+      label: "My Listings",
+      icon: Package,
+      route: "/profile?tab=listings",
+      isCenter: false,
+    },
+    {
+      id: "profile",
+      label: "Profile",
+      icon: User,
+      route: "/profile",
+      isCenter: false,
+    },
+  ];
 
   return (
-    <nav 
-      className="md:hidden fixed bottom-0 left-0 right-0 z-[9999] w-full bg-white/97 backdrop-blur-2xl border-t border-slate-200/70 shadow-[0_-6px_30px_rgba(0,0,0,0.10)] pointer-events-auto select-none"
+    <nav
+      className="md:hidden fixed bottom-0 left-0 right-0 z-[9999] w-full bg-white/97 backdrop-blur-2xl border-t border-slate-200/80 shadow-[0_-6px_30px_rgba(0,0,0,0.10)] pointer-events-auto select-none"
       style={{ paddingBottom: "env(safe-area-inset-bottom, 0px)" }}
     >
-      <div className="flex justify-around items-center h-16 px-2">
-        {tabs.map((tab) => {
-          const Icon = tab.icon;
+      <div className="flex justify-around items-center h-16 px-1 relative">
+        {navItems.map((item) => {
+          const Icon = item.icon;
           const isActive =
-            (tab.id === "home" && (pathname === "/" || pathname === "/home" || activeTab === "home")) ||
-            (tab.id !== "home" && (pathname.startsWith(tab.route) || activeTab === tab.id));
+            item.id === "home"
+              ? pathname === "/"
+              : item.id === "post"
+              ? pathname.startsWith("/post")
+              : item.id === "chat"
+              ? pathname.startsWith("/chat")
+              : item.id === "listings"
+              ? pathname.includes("tab=listings") || pathname.includes("tab=my_posts")
+              : pathname === "/profile";
+
+          if (item.isCenter) {
+            return (
+              <button
+                key={item.id}
+                onClick={() => router.push(item.route)}
+                className="flex flex-col items-center justify-center relative -mt-6 cursor-pointer group"
+              >
+                <div className="w-13 h-13 rounded-full bg-gradient-to-r from-amber-400 via-amber-500 to-amber-600 text-slate-950 shadow-lg shadow-amber-500/30 border-3 border-white flex items-center justify-center group-hover:scale-105 active:scale-95 transition-all">
+                  <Plus className="w-6 h-6 stroke-[3]" />
+                </div>
+                <span className="mt-0.5 text-[11px] font-heading font-black text-slate-900 uppercase tracking-wider">
+                  {item.label}
+                </span>
+              </button>
+            );
+          }
 
           return (
             <button
-              key={tab.id}
-              onClick={() => handleTabClick(tab)}
+              key={item.id}
+              onClick={() => router.push(item.route)}
               className={`flex flex-col items-center justify-center flex-1 h-full py-1 text-xs transition-all duration-200 cursor-pointer ${
-                isActive
-                  ? "text-[#0F172A]"
-                  : "text-[#64748B] hover:text-[#0F172A]"
+                isActive ? "text-slate-900" : "text-slate-500 hover:text-slate-900"
               }`}
             >
               <div
                 className={`p-1.5 rounded-xl transition-all duration-200 relative ${
                   isActive
-                    ? "bg-[#0F172A] text-[#FBBF24] shadow-sm"
-                    : "bg-transparent text-[#64748B]"
+                    ? "bg-slate-900 text-amber-400 shadow-xs"
+                    : "bg-transparent text-slate-500"
                 }`}
               >
                 <Icon className="w-5 h-5 stroke-[2]" />
               </div>
-              <span className={`mt-1 text-[12px] tracking-wide font-heading ${isActive ? "font-black text-[#0F172A]" : "font-semibold text-[#64748B]"}`}>
-                {tab.label}
+              <span
+                className={`mt-1 text-[11px] tracking-tight font-heading ${
+                  isActive ? "font-black text-slate-950" : "font-semibold text-slate-500"
+                }`}
+              >
+                {item.label}
               </span>
             </button>
           );

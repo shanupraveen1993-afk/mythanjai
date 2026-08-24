@@ -336,21 +336,9 @@ export default function HomeClientPage() {
                 Discover exclusive store discounts &amp; deals from Tanjore shops
               </p>
 
-              <div className="pt-2 border-t border-slate-100 hidden sm:flex items-center gap-1 sm:gap-1.5 flex-nowrap overflow-hidden">
-                {["Discounts", "Cafes"].map((cat, i) => (
-                  <span
-                    key={i}
-                    onClick={() => router.push(`/shops?category=${encodeURIComponent(cat)}`)}
-                    className="text-[11px] text-slate-700 bg-slate-100 px-2 py-0.5 rounded border border-slate-200 hover:border-[#1d4ed8] hover:text-[#1d4ed8] cursor-pointer transition-colors whitespace-nowrap shrink-0"
-                  >
-                    {cat}
-                  </span>
-                ))}
-                <span
-                  onClick={() => router.push("/shops")}
-                  className="text-[11px] font-bold text-[#1d4ed8] bg-blue-50 px-2 py-0.5 rounded border border-blue-200 hover:bg-[#1d4ed8] hover:text-white cursor-pointer transition-colors whitespace-nowrap shrink-0"
-                >
-                  +10 More
+              <div className="pt-2 border-t border-slate-100 hidden sm:flex items-center gap-1.5 overflow-hidden">
+                <span className="text-[11px] font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded border border-amber-200">
+                  🔥 Unlimited Local Deals &amp; Discounts
                 </span>
               </div>
             </div>
