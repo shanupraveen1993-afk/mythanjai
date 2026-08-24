@@ -248,7 +248,7 @@ export default function AdminClientPage() {
         {/* ── QUICK ADMIN POST BAR ── */}
         <div className="bg-slate-900/80 border border-slate-800/80 rounded-2xl p-4 shadow-xl backdrop-blur-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-amber-400 shrink-0" />
+            <Plus className="w-5 h-5 text-amber-400 shrink-0 stroke-[2.5]" />
             <div>
               <h3 className="font-heading font-black text-sm text-white">Admin Posting Shortcuts</h3>
               <p className="text-xs text-slate-400">Post directly to any feed segment with full admin privileges</p>
@@ -297,13 +297,13 @@ export default function AdminClientPage() {
             </div>
           </div>
 
-          <div className="bg-slate-900/90 border border-purple-500/30 rounded-2xl p-4 shadow-xl flex flex-col justify-between backdrop-blur-xl">
-            <span className="text-[10px] font-black text-purple-400 uppercase tracking-wider">Reel Video Posts</span>
+          <div className="bg-slate-900/90 border border-amber-500/30 rounded-2xl p-4 shadow-xl flex flex-col justify-between backdrop-blur-xl">
+            <span className="text-[10px] font-black text-amber-400 uppercase tracking-wider">Reel Video Posts</span>
             <div className="flex items-baseline justify-between mt-2">
-              <span className="text-2xl sm:text-3xl font-heading font-black text-purple-400">
+              <span className="text-2xl sm:text-3xl font-heading font-black text-amber-400">
                 {statsSummary.reelVideos} <span className="text-xs text-slate-500 font-bold">/ 30</span>
               </span>
-              <Sparkles className="w-5 h-5 text-purple-400" />
+              <Tag className="w-5 h-5 text-amber-400" />
             </div>
           </div>
 

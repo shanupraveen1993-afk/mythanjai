@@ -1109,11 +1109,10 @@ export default function PostForm({ segment }: PostFormProps) {
                   </div>
                 )}
 
-                {/* Description + Gemini AI Smart Insights Helper */}
+                {/* Description Input */}
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center justify-between">
-                    <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
-                      <Sparkles className="w-4 h-4 text-amber-500 fill-amber-300" />
+                    <label className="text-sm font-bold text-slate-800">
                       {segment === "service" ? "Work Experience & Skill Details *" : "Description or details *"}
                     </label>
                     <span className={`text-xs font-medium ${description.length >= config.maxDescChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>
@@ -1131,25 +1130,8 @@ export default function PostForm({ segment }: PostFormProps) {
                     }
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    onBlur={handleBlurDescription}
                     className="w-full px-4 py-3 text-sm font-medium border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all resize-none leading-relaxed"
                   />
-
-                  {/* Gemini AI Smart Insight / Refinement Banner across ALL form segments */}
-                  <div className="bg-amber-50/90 border border-amber-200/80 rounded-xl p-2.5 flex items-center justify-between gap-2 text-xs font-semibold text-amber-900 shadow-2xs mt-1">
-                    <div className="flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-amber-600 fill-amber-400 shrink-0" />
-                      <span>✨ Gemini AI Polish: Auto-refines details into professional bullet points!</span>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={handleBlurDescription}
-                      disabled={isAiRewriting || !description.trim()}
-                      className="px-2.5 py-1 bg-amber-400 hover:bg-amber-300 text-slate-950 rounded-lg text-[11px] font-black uppercase tracking-wider shrink-0 cursor-pointer disabled:opacity-40 transition-all"
-                    >
-                      {isAiRewriting ? "Refining..." : "Refine Now"}
-                    </button>
-                  </div>
                 </div>
               </>
             )}
