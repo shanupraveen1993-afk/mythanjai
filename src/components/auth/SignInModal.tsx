@@ -64,13 +64,6 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
     }
   }, [isOpen, step]);
 
-  // Listen to profile verification state to auto-close modal if already verified
-  useEffect(() => {
-    if (isOpen && profile?.isVerified) {
-      onClose();
-    }
-  }, [isOpen, profile?.isVerified, onClose]);
-
   // OTP Countdown timer when step is OTP
   useEffect(() => {
     let interval: any = null;
@@ -92,6 +85,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
       if (interval) clearInterval(interval);
     };
   }, [isOpen, step]);
+
   const handleSendOtp = (e: React.FormEvent) => {
     e.preventDefault();
     if (!phoneNumber || phoneNumber.length !== 10) {
@@ -117,6 +111,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
         
         if (typeof window !== "undefined") {
           localStorage.setItem("namma_thanjai_user_verified", "true");
+          localStorage.setItem("namma_thanjai_phone", phoneNumber);
           window.dispatchEvent(new Event("namma_thanjai_auth_changed"));
         }
 
@@ -135,7 +130,6 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
         if (pendingTarget) {
           router.push(pendingTarget);
         } else {
-          // Stay on current page — no auto-redirection
           router.refresh();
         }
       } else {
@@ -172,21 +166,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
         </button>
 
         {/* Modal Body */}
-        {profile?.isVerified ? (
-          <div className="flex flex-col items-center justify-center text-center py-6 gap-3 animate-fade-in">
-            <div className="w-12 h-12 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center border border-emerald-200 shadow-2xs">
-              <CheckCircle className="w-6 h-6 stroke-[2.5]" />
-            </div>
-            <div>
-              <h3 className="font-heading font-extrabold text-base text-slate-900">
-                Verification Successful
-              </h3>
-              <p className="text-xs text-slate-500 mt-1 font-medium">
-                Your WhatsApp number is verified. Directing to target page...
-              </p>
-            </div>
-          </div>
-        ) : step === "phone" ? (
+        {step === "phone" ? (
           <div className="flex flex-col gap-4">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-2xl bg-emerald-50 border border-emerald-200 flex items-center justify-center text-[#128C7E] shrink-0">
