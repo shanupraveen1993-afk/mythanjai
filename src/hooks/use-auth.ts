@@ -26,9 +26,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const storedVerified = localStorage.getItem("my_thanjai_verified") === "true" ||
                              localStorage.getItem("namma_thanjai_verified") === "true" ||
                              localStorage.getItem("namma_thanjai_user_verified") === "true";
-      const storedPhone = localStorage.getItem("my_thanjai_phone") || localStorage.getItem("namma_thanjai_phone") || "9994837342";
+      const storedPhone = (localStorage.getItem("my_thanjai_phone") || localStorage.getItem("namma_thanjai_phone") || "").replace(/\D/g, "");
       const storedName = localStorage.getItem("my_thanjai_display_name") || "Namma Thanjai User";
-      if (storedVerified) {
+      if (storedVerified && storedPhone && storedPhone.length >= 10 && storedPhone !== "9876543210") {
         return {
           uid: "saved_session",
           phone: storedPhone,
@@ -52,6 +52,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         localStorage.removeItem("namma_thanjai_phone");
         localStorage.removeItem("my_thanjai_verified");
         localStorage.removeItem("namma_thanjai_verified");
+        localStorage.removeItem("namma_thanjai_user_verified");
       }
     }
 
@@ -63,7 +64,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const storedVerified = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_verified") === "true" || localStorage.getItem("namma_thanjai_verified") === "true" || localStorage.getItem("namma_thanjai_user_verified") === "true") : false;
       const storedDisplayName = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_display_name") || "") : "";
 
-      const activeVerifiedPhone = storedVerified && cleanStoredPhone.length >= 10 && cleanStoredPhone !== "9876543210" ? cleanStoredPhone : "9994837342";
+      const activeVerifiedPhone = storedVerified && cleanStoredPhone.length >= 10 && cleanStoredPhone !== "9876543210" ? cleanStoredPhone : "";
 
       if (currentUser) {
         // Fetch or create user profile document in Firestore (Syncing by phone across APK & Web)
@@ -260,12 +261,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const isVerified = Boolean(
-    profile?.isVerified ||
-    (typeof window !== "undefined" && (
-      localStorage.getItem("namma_thanjai_user_verified") === "true" ||
-      localStorage.getItem("namma_thanjai_verified") === "true" ||
-      localStorage.getItem("my_thanjai_verified") === "true"
-    ))
+    profile?.isVerified && profile?.phone && profile.phone.replace(/\D/g, "").length >= 10
   );
 
   return React.createElement(
