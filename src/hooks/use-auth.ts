@@ -152,8 +152,48 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setLoading(false);
     });
 
-    return () => unsubscribe();
-  }, []);
+    const handleAuthChanged = () => {
+      if (typeof window !== "undefined") {
+        const storedVerified =
+          localStorage.getItem("my_thanjai_verified") === "true" ||
+          localStorage.getItem("namma_thanjai_verified") === "true" ||
+          localStorage.getItem("namma_thanjai_user_verified") === "true";
+        const storedPhone = (
+          localStorage.getItem("my_thanjai_phone") ||
+          localStorage.getItem("namma_thanjai_phone") ||
+          ""
+        ).replace(/\D/g, "");
+        const storedName =
+          localStorage.getItem("my_thanjai_display_name") || "Namma Thanjai User";
+
+        if (storedVerified && storedPhone && storedPhone.length >= 10 && storedPhone !== "9876543210") {
+          setProfile((prev) => ({
+            uid: prev?.uid || user?.uid || "saved_session",
+            phone: storedPhone,
+            isVerified: true,
+            isAdmin: storedPhone.includes("9994837342"),
+            displayName: storedName,
+            createdAt: prev?.createdAt || new Date(),
+          }));
+        } else {
+          setProfile(null);
+        }
+      }
+    };
+
+    if (typeof window !== "undefined") {
+      window.addEventListener("namma_thanjai_auth_changed", handleAuthChanged);
+      window.addEventListener("storage", handleAuthChanged);
+    }
+
+    return () => {
+      unsubscribe();
+      if (typeof window !== "undefined") {
+        window.removeEventListener("namma_thanjai_auth_changed", handleAuthChanged);
+        window.removeEventListener("storage", handleAuthChanged);
+      }
+    };
+  }, [user]);
 
   const updateDisplayName = async (name: string) => {
     const trimmed = name.trim();
@@ -250,6 +290,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       localStorage.removeItem("namma_thanjai_user_verified");
       localStorage.removeItem("my_thanjai_phone");
       localStorage.removeItem("namma_thanjai_phone");
+      window.dispatchEvent(new Event("namma_thanjai_auth_changed"));
     }
     setProfile(null);
     try {

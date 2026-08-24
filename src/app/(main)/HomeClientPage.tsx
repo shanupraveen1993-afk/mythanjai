@@ -54,7 +54,7 @@ export default function HomeClientPage() {
         }}
       />
 
-      <div className="w-full text-slate-800 font-sans mt-1 max-w-7xl mx-auto">
+      <div className="w-full text-slate-800 font-sans">
         <SellClientPage />
       </div>
   </>

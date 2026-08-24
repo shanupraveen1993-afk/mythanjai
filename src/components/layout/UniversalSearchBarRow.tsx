@@ -78,7 +78,7 @@ export default function UniversalSearchBarRow() {
 
   return (
     <div
-      className={`w-full sticky top-24 md:top-16 z-30 bg-slate-50/95 backdrop-blur-md border-b border-slate-200/60 py-2 sm:py-2.5 transition-all duration-300 ${
+      className={`w-full sticky top-[98px] md:top-14 z-30 bg-slate-50/95 backdrop-blur-md border-b border-slate-200/60 py-2 sm:py-2.5 transition-all duration-300 ${
         isVisible
           ? "translate-y-0 opacity-100"
           : "-translate-y-full opacity-0 pointer-events-none md:translate-y-0 md:opacity-100 md:pointer-events-auto"
