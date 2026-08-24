@@ -111,7 +111,10 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
         
         if (typeof window !== "undefined") {
           localStorage.setItem("namma_thanjai_user_verified", "true");
+          localStorage.setItem("namma_thanjai_verified", "true");
+          localStorage.setItem("my_thanjai_verified", "true");
           localStorage.setItem("namma_thanjai_phone", phoneNumber);
+          localStorage.setItem("my_thanjai_phone", phoneNumber);
           window.dispatchEvent(new Event("namma_thanjai_auth_changed"));
         }
 

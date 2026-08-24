@@ -301,8 +301,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
+  const getStorageVerified = () => {
+    if (typeof window === "undefined") return { isVerified: false, phone: "" };
+    const storedVerified =
+      localStorage.getItem("my_thanjai_verified") === "true" ||
+      localStorage.getItem("namma_thanjai_verified") === "true" ||
+      localStorage.getItem("namma_thanjai_user_verified") === "true";
+    const storedPhone = (
+      localStorage.getItem("my_thanjai_phone") ||
+      localStorage.getItem("namma_thanjai_phone") ||
+      ""
+    ).replace(/\D/g, "");
+    if (storedVerified && storedPhone && storedPhone.length >= 10 && storedPhone !== "9876543210") {
+      return { isVerified: true, phone: storedPhone };
+    }
+    return { isVerified: false, phone: "" };
+  };
+
+  const storageInfo = getStorageVerified();
   const isVerified = Boolean(
-    profile?.isVerified && profile?.phone && profile.phone.replace(/\D/g, "").length >= 10
+    storageInfo.isVerified ||
+    (profile?.isVerified && profile?.phone && profile.phone.replace(/\D/g, "").length >= 10)
   );
 
   return React.createElement(
