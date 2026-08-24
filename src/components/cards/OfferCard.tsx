@@ -59,6 +59,12 @@ export default function OfferCard({ post }: OfferCardProps) {
             src={post.video_url}
             controls
             playsInline
+            preload="metadata"
+            crossOrigin="anonymous"
+            onError={(e) => {
+              const videoEl = e.currentTarget;
+              videoEl.style.display = "none";
+            }}
             className="w-full h-full object-cover"
             poster={post.thumbnail_url || "/placeholder.webp"}
           />
