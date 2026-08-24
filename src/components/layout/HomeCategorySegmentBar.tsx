@@ -35,7 +35,7 @@ export default function HomeCategorySegmentBar() {
   ];
 
   return (
-    <div className="w-full sticky top-14 z-40 bg-[#f8fafc]/95 backdrop-blur-md py-2 border-b border-slate-200/80 shadow-2xs transition-all">
+    <div className="w-full md:hidden sticky top-14 z-40 bg-[#f8fafc]/95 backdrop-blur-md py-2 border-b border-slate-200/80 shadow-2xs transition-all">
       <div className="grid grid-cols-4 gap-1.5 sm:gap-2.5 w-full max-w-2xl mx-auto">
         {segments.map((seg) => {
           const isActive = activeTab === seg.id;
