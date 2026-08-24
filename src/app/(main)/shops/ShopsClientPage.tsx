@@ -58,7 +58,9 @@ export default function ShopsClientPage() {
 
     let list = [...localPosts, ...(firestorePosts || [])].filter((p) => {
       if ((p as any).status === "moderation_review") return false;
-      return !isListingQuarantined(p.id);
+      if (isListingQuarantined(p.id)) return false;
+      if (!p.shop_name || p.shop_name.trim() === "" || p.offer_description === "No detailed description provided.") return false;
+      return true;
     });
 
     if (selectedCategory !== "All") {

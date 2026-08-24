@@ -55,10 +55,6 @@ export default function HomeClientPage() {
       />
 
       <div className="w-full flex flex-col gap-5 text-slate-800 font-sans mt-1 px-3 sm:px-6 max-w-7xl mx-auto">
-      {/* ── 1. Universal Search Bar Row (Search Bar + Royal Blue Get App + Golden Yellow Post) ── */}
-      <div className="w-full">
-        <UniversalSearchBarRow />
-      </div>
 
 
 

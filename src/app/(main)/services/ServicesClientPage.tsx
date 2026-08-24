@@ -63,7 +63,9 @@ export default function ServicesClientPage() {
   const filteredPosts = React.useMemo(() => {
     let list = [...localPosts, ...(firestorePosts || [])].filter((p) => {
       if ((p as any).status === "moderation_review") return false;
-      return !isListingQuarantined(p.id);
+      if (isListingQuarantined(p.id)) return false;
+      if (!p.name || p.name.trim() === "" || p.experience === "No detailed description provided.") return false;
+      return true;
     });
 
     if (selectedCategory !== "All") {

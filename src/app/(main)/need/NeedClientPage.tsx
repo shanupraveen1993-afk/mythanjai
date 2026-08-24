@@ -66,6 +66,7 @@ export default function NeedClientPage() {
     list = list.filter((p) => {
       if ((p as any).status === "moderation_review") return false;
       if (isListingQuarantined(p.id)) return false;
+      if (!p.title || p.title.trim() === "" || p.description === "No detailed description provided.") return false;
       return p.type?.toUpperCase() === "NEED";
     });
 
