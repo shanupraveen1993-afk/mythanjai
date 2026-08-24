@@ -142,6 +142,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
     }
   }, [listing.id]);
   const [galleryIndex, setGalleryIndex] = useState<number | null>(null);
+  const [imgError, setImgError] = useState(false);
 
   const isOwnPost = React.useMemo(() => {
     if (user?.uid && listing.seller_id === user.uid) return true;
@@ -297,9 +298,10 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
             >
               {allImages.length > 0 ? (
                 <Image
-                  src={imageSrc}
+                  src={imgError ? "/placeholder.webp" : imageSrc}
                   alt={listing.title}
                   fill
+                  onError={() => setImgError(true)}
                   className="object-cover transition-transform duration-300 group-hover/img:scale-105"
                 />
               ) : (
