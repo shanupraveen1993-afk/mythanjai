@@ -58,7 +58,7 @@ export default function ProfileClientPage() {
 
 function ProfileContent() {
   const { toast } = useToast();
-  const { user, profile, loading: authLoading, updatePhone, updateDisplayName, signOutUser } = useAuth();
+  const { user, profile, isVerified, loading: authLoading, updatePhone, updateDisplayName, signOutUser } = useAuth();
   const router = useRouter();
   const searchParams = useSearchParams();
   const tabParam = searchParams ? searchParams.get("tab") : null;
@@ -389,7 +389,7 @@ function ProfileContent() {
     );
   }
 
-  if (!user) {
+  if (!isVerified) {
     return (
       <div className="w-full max-w-md mx-auto py-12 px-6 flex flex-col items-center justify-center text-center gap-4 bg-white rounded-3xl border border-slate-200 shadow-md my-8">
         <div className="w-16 h-16 rounded-full bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-600">

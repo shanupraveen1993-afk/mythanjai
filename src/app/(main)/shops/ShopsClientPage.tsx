@@ -77,8 +77,8 @@ export default function ShopsClientPage() {
 
   return (
     <div className="flex flex-col gap-0 pb-24 w-full font-sans">
-      <HomeCategorySegmentBar />
       <UniversalSearchBarRow />
+      <HomeCategorySegmentBar />
 
       <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 flex flex-col gap-3 mt-2">
         {/* 1. TITLE BAR */}

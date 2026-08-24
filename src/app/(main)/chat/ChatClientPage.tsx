@@ -59,7 +59,7 @@ const SCAM_KEYWORDS = [
 export default function ChatClientPage() {
   const { toast } = useToast();
   const router = useRouter();
-  const { user, profile } = useAuth();
+  const { user, profile, isVerified } = useAuth();
 
   const [queryListingId, setQueryListingId] = useState<string>("");
   const [querySellerId, setQuerySellerId] = useState<string>("");
@@ -308,6 +308,35 @@ export default function ChatClientPage() {
     } catch (err) {}
     setIsMenuOpen(false);
   };
+
+  if (!isVerified) {
+    return (
+      <div className="w-full max-w-md mx-auto py-12 px-6 flex flex-col items-center justify-center text-center gap-4 bg-white rounded-3xl border border-slate-200 shadow-md my-8">
+        <div className="w-16 h-16 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
+          <MessageSquare className="w-8 h-8 stroke-[2.5]" />
+        </div>
+        <div className="flex flex-col gap-1 max-w-xs">
+          <h2 className="font-heading font-black text-xl text-slate-900">Direct Messages</h2>
+          <p className="text-blue-700 font-extrabold text-xs">செய்திகளை அணுக உள்நுழையவும்</p>
+          <p className="text-slate-600 text-xs mt-1 leading-relaxed">
+            Verify your WhatsApp mobile number to chat directly with buyers and sellers across Thanjavur.
+          </p>
+        </div>
+        <button
+          type="button"
+          onClick={() => {
+            if (typeof window !== "undefined") {
+              window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+            }
+          }}
+          className="mt-2 w-full bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-sm py-3 px-6 rounded-2xl shadow-md cursor-pointer transition-all flex items-center justify-center gap-2 active:scale-[0.98]"
+        >
+          <MessageSquare className="w-5 h-5 fill-white stroke-[2.5]" />
+          <span>Sign In / Verify</span>
+        </button>
+      </div>
+    );
+  }
 
   return (
     <div className="w-full flex-1 flex flex-col bg-slate-100 font-sans pb-20 md:pb-6 max-w-7xl mx-auto px-3 sm:px-6 min-h-[calc(100vh-5rem)]">
