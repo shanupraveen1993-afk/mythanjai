@@ -94,7 +94,7 @@ export default function UniversalSearchBarRow() {
         <button
           type="button"
           onClick={handlePostClick}
-          className="hidden md:flex h-10 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs px-4 rounded-xl shadow-2xs shrink-0 items-center gap-1.5 cursor-pointer transition-all active:scale-95 border border-amber-400/80 ml-auto whitespace-nowrap"
+          className="hidden md:flex h-9 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs px-3.5 rounded-xl shadow-2xs shrink-0 items-center gap-1.5 cursor-pointer transition-all active:scale-95 border border-amber-400/80 ml-auto whitespace-nowrap"
           title="Post a Free Ad in Thanjavur"
           aria-label="Post Ad"
         >

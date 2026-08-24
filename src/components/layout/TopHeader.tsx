@@ -229,58 +229,76 @@ export default function TopHeader({
             </button>
           )}
 
-          {/* Desktop Website Only: My Listings, Chat & Profile Buttons */}
+          {/* Desktop Website Only: Chat, My Listings & Profile Buttons */}
           <div className="hidden md:flex items-center gap-2">
 
+            {/* 1. Chat Button (First) */}
             {!pathname.includes("/post") && (
-              <button
-                type="button"
-                onClick={() => router.push("/listings")}
-                className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border shrink-0 ${
-                  pathname.startsWith("/listings")
-                    ? "bg-[#FBBF24] text-[#0F172A] border-amber-400 shadow-xs"
-                    : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
-                }`}
-                title="My Listings & Saved Ads"
-                aria-label="View my listings"
-              >
-                <Package className={`w-4 h-4 ${pathname.startsWith("/listings") ? "text-[#0F172A] stroke-[2.5]" : "text-slate-600"}`} />
-              </button>
+              <div className="relative group flex items-center justify-center">
+                <button
+                  type="button"
+                  onClick={() => router.push("/chat")}
+                  className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border shrink-0 ${
+                    pathname === "/chat"
+                      ? "bg-[#FBBF24] text-[#0F172A] border-amber-400 shadow-xs"
+                      : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
+                  }`}
+                  title="Chat"
+                  aria-label="View messages"
+                >
+                  <MessageSquare className={`w-4 h-4 ${pathname === "/chat" ? "text-[#0F172A] stroke-[2.5]" : "text-slate-600"}`} />
+                </button>
+                <div className="absolute top-full mt-1.5 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 bg-slate-900 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow-md whitespace-nowrap z-50">
+                  Chat
+                </div>
+              </div>
             )}
 
+            {/* 2. My Listings Button (Second) */}
             {!pathname.includes("/post") && (
-              <button
-                type="button"
-                onClick={() => router.push("/chat")}
-                className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border shrink-0 ${
-                  pathname === "/chat"
-                    ? "bg-[#FBBF24] text-[#0F172A] border-amber-400 shadow-xs"
-                    : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
-                }`}
-                title="In-App Direct Chat"
-                aria-label="View messages"
-              >
-                <MessageSquare className={`w-4 h-4 ${pathname === "/chat" ? "text-[#0F172A] stroke-[2.5]" : "text-slate-600"}`} />
-              </button>
+              <div className="relative group flex items-center justify-center">
+                <button
+                  type="button"
+                  onClick={() => router.push("/listings")}
+                  className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border shrink-0 ${
+                    pathname.startsWith("/listings")
+                      ? "bg-[#FBBF24] text-[#0F172A] border-amber-400 shadow-xs"
+                      : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
+                  }`}
+                  title="My Listings"
+                  aria-label="View my listings"
+                >
+                  <Package className={`w-4 h-4 ${pathname.startsWith("/listings") ? "text-[#0F172A] stroke-[2.5]" : "text-slate-600"}`} />
+                </button>
+                <div className="absolute top-full mt-1.5 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 bg-slate-900 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow-md whitespace-nowrap z-50">
+                  My Listings
+                </div>
+              </div>
             )}
 
+            {/* 3. Profile Button (Third) */}
             {!pathname.includes("/post") && (
-              <button
-                type="button"
-                onClick={() => {
-                  onTabChange?.("profile");
-                  router.push("/profile");
-                }}
-                className={`flex items-center justify-center w-9 h-9 rounded-full transition-all cursor-pointer border shrink-0 ${
-                  pathname === "/profile" && !pathname.includes("tab=")
-                    ? "bg-[#FBBF24] text-[#0F172A] border-amber-400 shadow-xs"
-                    : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
-                }`}
-                title="Profile & Account"
-                aria-label="View profile"
-              >
-                <User className={`w-4 h-4 ${pathname === "/profile" && !pathname.includes("tab=") ? "text-[#0F172A] stroke-[2.5]" : "text-slate-600"}`} />
-              </button>
+              <div className="relative group flex items-center justify-center">
+                <button
+                  type="button"
+                  onClick={() => {
+                    onTabChange?.("profile");
+                    router.push("/profile");
+                  }}
+                  className={`flex items-center justify-center w-9 h-9 rounded-full transition-all cursor-pointer border shrink-0 ${
+                    pathname === "/profile" && !pathname.includes("tab=")
+                      ? "bg-[#FBBF24] text-[#0F172A] border-amber-400 shadow-xs"
+                      : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
+                  }`}
+                  title="Profile"
+                  aria-label="View profile"
+                >
+                  <User className={`w-4 h-4 ${pathname === "/profile" && !pathname.includes("tab=") ? "text-[#0F172A] stroke-[2.5]" : "text-slate-600"}`} />
+                </button>
+                <div className="absolute top-full mt-1.5 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 bg-slate-900 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow-md whitespace-nowrap z-50">
+                  Profile
+                </div>
+              </div>
             )}
           </div>
 

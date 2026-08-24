@@ -40,7 +40,7 @@ export default function HomeCategorySegmentBar() {
   ];
 
   return (
-    <div className="w-full md:hidden sticky top-[108px] z-30 bg-slate-50/95 backdrop-blur-md py-2 border-b border-slate-200/80 shadow-2xs transition-all">
+    <div className="w-full md:hidden sticky top-[98px] z-30 bg-slate-50/95 backdrop-blur-md py-1 border-b border-slate-200/80 shadow-2xs transition-all">
       <div className="w-full max-w-7xl mx-auto px-3 sm:px-6">
         <div className="grid grid-cols-4 gap-1.5 sm:gap-2.5 w-full max-w-2xl mx-auto">
         {segments.map((seg) => {
@@ -55,7 +55,7 @@ export default function HomeCategorySegmentBar() {
                 }
                 router.push(seg.route);
               }}
-              className={`py-2 px-2.5 rounded-xl font-heading font-black text-xs sm:text-sm transition-all cursor-pointer flex items-center justify-center w-full text-center ${
+              className={`py-1.5 px-2 rounded-xl font-heading font-black text-xs transition-all cursor-pointer flex items-center justify-center w-full text-center ${
                 isActive
                   ? "bg-[#FBBF24] text-[#0F172A] shadow-md border border-amber-400 font-black scale-[1.02]"
                   : "bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 font-bold"
