@@ -186,15 +186,8 @@ export default function TopHeader({
           ) : null
         )}
 
-        {/* Right Side: Desktop Chat/Profile & Mobile Right-Side Thanjavur Location Tag */}
+        {/* Right Side Action Cluster: Royal Blue Get App button, My Listings, Chat & Profile Buttons */}
         <div className="flex items-center justify-end gap-2 shrink-0 ml-auto z-20">
-          {/* Mobile WebApp/APK Right-Side Location Tag */}
-          <div className="flex md:hidden items-center gap-1 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-lg text-xs font-extrabold text-slate-900 shadow-2xs">
-            <MapPin className="w-3.5 h-3.5 text-amber-500 shrink-0" />
-            <span className="truncate max-w-[90px]">{selectedArea || "Thanjavur"}</span>
-          </div>
-
-          {/* Desktop & WebApp Action Cluster: Royal Blue Get App button, My Listings, Chat & Profile Buttons */}
           <div className="flex items-center gap-2">
             {!isNativeApp && (
               <a

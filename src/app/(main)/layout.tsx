@@ -180,6 +180,12 @@ function MainLayoutContent({
     router.push(`${pathname}${queryString ? `?${queryString}` : ""}`);
   };
 
+  useEffect(() => {
+    const handleOpenSignIn = () => setIsSignInOpen(true);
+    window.addEventListener("namma_thanjai_open_signin", handleOpenSignIn);
+    return () => window.removeEventListener("namma_thanjai_open_signin", handleOpenSignIn);
+  }, []);
+
   // Synchronous scroll-to-top BEFORE browser paint on route change
   const useIsomorphicLayoutEffect = typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
 

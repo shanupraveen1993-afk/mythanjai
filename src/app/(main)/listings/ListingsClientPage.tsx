@@ -152,16 +152,17 @@ function ListingsContent() {
               window.dispatchEvent(new Event("namma_thanjai_open_signin"));
             }
           }}
-          className="bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-sm px-6 py-3 rounded-xl shadow-md cursor-pointer transition-all active:scale-95 border border-amber-400/80"
+          className="bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-sm px-6 py-3 rounded-xl shadow-md cursor-pointer transition-all active:scale-95 flex items-center gap-2"
         >
-          <span>Sign In / Register</span>
+          <MessageSquare className="w-4 h-4 fill-white stroke-[2.5]" />
+          <span>Login with WhatsApp</span>
         </button>
       </div>
     );
   }
 
   return (
-    <div className="max-w-5xl mx-auto px-4 sm:px-6 py-6 flex flex-col gap-6 font-sans pb-24">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-2 pb-24 flex flex-col gap-6 font-sans">
       {/* Header Bar */}
       <div className="flex items-center justify-between border-b border-slate-200/80 pb-4">
         <div>

@@ -188,7 +188,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
               </div>
               <div>
                 <h3 className="font-heading font-black text-base text-slate-900 leading-tight">
-                  WhatsApp Verification
+                  Login with WhatsApp
                 </h3>
                 <p className="text-xs text-slate-500 font-medium">
                   Enter your 10-digit mobile number for WhatsApp OTP

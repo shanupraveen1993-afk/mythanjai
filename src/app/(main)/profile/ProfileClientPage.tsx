@@ -409,16 +409,17 @@ function ProfileContent() {
               window.dispatchEvent(new Event("namma_thanjai_open_signin"));
             }
           }}
-          className="mt-2 w-full bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-sm py-3 px-6 rounded-2xl shadow-md cursor-pointer transition-all flex items-center justify-center gap-2 active:scale-[0.98]"
+          className="mt-2 w-full bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-sm py-3 px-6 rounded-2xl shadow-md cursor-pointer transition-all flex items-center justify-center gap-2 active:scale-[0.98]"
         >
-          <span>Sign In / Register</span>
+          <MessageSquare className="w-5 h-5 fill-white stroke-[2.5]" />
+          <span>Login with WhatsApp</span>
         </button>
       </div>
     );
   }
 
   return (
-    <div className="w-full max-w-4xl mx-auto flex flex-col gap-5 mt-2 pb-24 font-sans px-3 sm:px-4">
+    <div className="w-full max-w-7xl mx-auto flex flex-col gap-5 pt-2 pb-24 font-sans px-4 sm:px-6">
 
       {/* Profile Segmented Tab Control */}
       <div className="flex items-center gap-1.5 p-1 bg-slate-200/80 rounded-2xl w-full shadow-2xs">
