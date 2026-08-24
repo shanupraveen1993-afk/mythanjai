@@ -186,29 +186,32 @@ export default function TopHeader({
           ) : null
         )}
 
-        {/* Right Side Action Cluster: Royal Blue Get App button + Mobile +Post button & Desktop-only Chat/Profile/Listings icons */}
+        {/* Right Side Action Cluster: WebApp Get App button (Mobile WebApp only), APK +Post button (APK only), Desktop Chat/Profile/Listings icons (Desktop only) */}
         <div className="flex items-center justify-end gap-2 shrink-0 ml-auto z-20">
+          {/* Mobile WebApp Only: 🔵 Get App Button */}
           {!isNativeApp && (
             <a
               href="/api/apk-download"
               download="NammaThanjai-v12.apk"
-              className="bg-[#1d4ed8] hover:bg-blue-800 text-white font-heading font-bold text-xs px-3 py-1.5 rounded-lg shadow-2xs transition-all flex items-center gap-1.5 shrink-0 active:scale-95 border border-blue-600 cursor-pointer"
+              className="flex md:hidden bg-[#1d4ed8] hover:bg-blue-800 text-white font-heading font-bold text-xs px-3 py-1.5 rounded-lg shadow-2xs transition-all items-center gap-1.5 shrink-0 active:scale-95 border border-blue-600 cursor-pointer"
               title="Download Namma Thanjai Official Android App"
             >
               <Download className="w-3.5 h-3.5 text-white stroke-[2.5]" />
-              <span className="hidden sm:inline">Get App</span>
+              <span>Get App</span>
             </a>
           )}
 
-          {/* Mobile Only: +Post Button */}
-          <button
-            type="button"
-            onClick={() => router.push("/post/sell")}
-            className="flex md:hidden bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs px-3 py-1.5 rounded-lg shadow-2xs transition-all items-center gap-1 shrink-0 active:scale-95 border border-amber-400 cursor-pointer"
-          >
-            <Plus className="w-3.5 h-3.5 stroke-[3]" />
-            <span>Post</span>
-          </button>
+          {/* Mobile APK Only: 🟡 +Post Button */}
+          {isNativeApp && (
+            <button
+              type="button"
+              onClick={() => router.push("/post/sell")}
+              className="flex md:hidden bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs px-3 py-1.5 rounded-lg shadow-2xs transition-all items-center gap-1 shrink-0 active:scale-95 border border-amber-400 cursor-pointer"
+            >
+              <Plus className="w-3.5 h-3.5 stroke-[3]" />
+              <span>Post</span>
+            </button>
+          )}
 
           {/* Desktop Website Only: My Listings, Chat & Profile Buttons */}
           <div className="hidden md:flex items-center gap-2">

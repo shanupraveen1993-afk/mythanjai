@@ -80,39 +80,11 @@ export default function ShopsClientPage() {
       <HomeCategorySegmentBar />
       <UniversalSearchBarRow />
 
-      {/* Sleek Hero Banner for Offer Segment with Conditional WhatsApp Login */}
-      <div className="relative w-full rounded-2xl overflow-hidden bg-gradient-to-r from-slate-900 via-rose-950 to-slate-900 text-white p-5 sm:p-6 shadow-md border border-slate-800 my-1">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 relative z-10">
-          <div className="flex flex-col gap-1 max-w-lg">
-            <div className="flex items-center gap-2">
-              <span className="bg-amber-400 text-slate-950 font-heading font-black text-[10px] uppercase px-2 py-0.5 rounded-md tracking-wider">
-                Local Offers
-              </span>
-              <span className="text-xs text-amber-300 font-bold">Exclusive Thanjavur Deals</span>
-            </div>
-            <h1 className="font-heading font-black text-xl sm:text-2xl text-white tracking-tight leading-tight mt-1">
-              Explore Exclusive Store Discounts & Offers
-            </h1>
-            <p className="text-xs sm:text-sm text-slate-300 font-medium">
-              தஞ்சாவூர் கடைக்காரர்களின் சிறப்பு சலுகைகள்.
-            </p>
-          </div>
-
-          {!user && (
-            <button
-              type="button"
-              onClick={() => {
-                if (typeof window !== "undefined") {
-                  window.dispatchEvent(new Event("namma_thanjai_open_signin"));
-                }
-              }}
-              className="bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-4 rounded-xl shadow-md cursor-pointer transition-all active:scale-95 flex items-center gap-2 shrink-0 border border-emerald-500/50"
-            >
-              <MessageSquare className="w-4 h-4 fill-white stroke-[2.5]" />
-              <span>Login with WhatsApp</span>
-            </button>
-          )}
-        </div>
+      {/* 2. TITLE BAR */}
+      <div className="py-2 flex items-center justify-between gap-3 w-full border-b border-slate-200/80">
+        <h2 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight">
+          Local Offer (சலுகைகள்)
+        </h2>
       </div>
 
 

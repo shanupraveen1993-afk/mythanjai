@@ -23,6 +23,24 @@ export default function UniversalSearchBarRow() {
     }
   }, []);
 
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+      if (currentScrollY > 120 && currentScrollY > lastScrollY) {
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
+      }
+      setLastScrollY(currentScrollY);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [lastScrollY]);
+
   // Hide Search Bar Row on Profile, Chat, Post, Admin, and Listings sub-pages
   const isHiddenPage =
     pathname.includes("/profile") ||
@@ -60,22 +78,28 @@ export default function UniversalSearchBarRow() {
   };
 
   return (
-    <div className="w-full max-w-2xl mx-auto flex items-center gap-2 py-1 sticky top-12 md:static z-30 bg-[#f8fafc]/95 backdrop-blur-md">
+    <div
+      className={`w-full max-w-2xl mx-auto flex items-center gap-2 py-1 sticky top-12 z-30 bg-[#f8fafc]/95 backdrop-blur-md transition-all duration-300 ${
+        isVisible
+          ? "translate-y-0 opacity-100"
+          : "-translate-y-full opacity-0 pointer-events-none md:translate-y-0 md:opacity-100 md:pointer-events-auto"
+      }`}
+    >
       {/* Shortened Width Compact Search Bar */}
       <div className="flex-1 min-w-0">
         <UniversalSearchBar />
       </div>
 
-      {/* Free-Hand Golden Yellow Post Ad Button (Standard Normal Size) */}
+      {/* Desktop Only: Free-Hand Golden Yellow Post Ad Button */}
       <button
         type="button"
         onClick={handlePostClick}
-        className="h-10 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs px-4 rounded-xl shadow-2xs shrink-0 flex items-center gap-1.5 cursor-pointer transition-all active:scale-95 border border-amber-400/80"
+        className="hidden md:flex h-10 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs px-4 rounded-xl shadow-2xs shrink-0 items-center gap-1.5 cursor-pointer transition-all active:scale-95 border border-amber-400/80"
         title="Post a Free Ad in Thanjavur"
         aria-label="Post Ad"
       >
-        <Plus className="w-3.5 h-3.5 stroke-[3]" />
-        <span>Post</span>
+        <Plus className="w-4 h-4 stroke-[3]" />
+        <span>+ Post Ad</span>
       </button>
     </div>
   );
