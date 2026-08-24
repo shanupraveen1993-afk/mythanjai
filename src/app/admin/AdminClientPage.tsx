@@ -69,8 +69,6 @@ export default function AdminClientPage() {
 
   // Live Real-Time Snapshot Stream from All Live Firestore Collections
   useEffect(() => {
-    if (!isAdmin) return;
-
     setLoading(true);
     const collectionsToQuery = ["needs_and_sales", "services", "shops", "offers"];
     const collectionDataMap: Record<string, ModerationItem[]> = {};
@@ -235,52 +233,7 @@ export default function AdminClientPage() {
     }
   };
 
-  // Security Login Screen
-  if (!isAdmin) {
-    return (
-      <div className="flex-1 flex flex-col items-center justify-center p-6 bg-[#0f172a] text-white min-h-screen font-sans">
-        <div className="w-full max-w-sm flex flex-col gap-6 bg-slate-900/90 border border-slate-800 p-8 rounded-3xl shadow-2xl backdrop-blur-2xl">
-          <div className="flex flex-col items-center text-center gap-3">
-            <div className="w-16 h-16 rounded-2xl bg-amber-400 text-slate-950 flex items-center justify-center shadow-lg shadow-amber-400/20">
-              <Shield className="w-8 h-8 stroke-[2.5]" />
-            </div>
-            <h2 className="font-heading font-black text-2xl text-white tracking-tight">Admin Console</h2>
-            <p className="text-xs text-slate-400 font-medium">Master moderation portal for Namma Thanjai</p>
-          </div>
 
-          <form onSubmit={handleVerifyPasscode} className="flex flex-col gap-4">
-            <div>
-              <label className="block text-xs font-black text-slate-400 uppercase tracking-wider mb-2">
-                Security Passcode
-              </label>
-              <input
-                type="password"
-                required
-                value={passcode}
-                onChange={(e) => setPasscode(e.target.value)}
-                placeholder="Enter admin passcode"
-                className="w-full bg-slate-950 border border-slate-800 text-white rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-amber-400 focus:outline-none font-bold"
-              />
-            </div>
-            <button
-              type="submit"
-              className="w-full py-3.5 bg-amber-400 hover:bg-amber-300 text-slate-950 font-heading font-black text-xs uppercase tracking-wider cursor-pointer rounded-2xl shadow-md transition-all"
-            >
-              Verify Passcode & Launch Console →
-            </button>
-          </form>
-
-          <Link
-            href="/"
-            className="flex items-center justify-center gap-2 text-xs text-slate-400 hover:text-white transition-colors cursor-pointer font-bold"
-          >
-            <ArrowLeft className="w-4 h-4" />
-            <span>Return to Namma Thanjai App</span>
-          </Link>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="flex-1 bg-[#0b1329] text-slate-100 flex flex-col min-h-screen font-sans pb-16">
