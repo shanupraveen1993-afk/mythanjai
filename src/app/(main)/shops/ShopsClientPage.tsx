@@ -76,18 +76,17 @@ export default function ShopsClientPage() {
   }, [firestorePosts, selectedCategory, sortBy]);
 
   return (
-    <div className="flex flex-col gap-3 pb-24 w-full font-sans max-w-7xl mx-auto px-3 sm:px-6">
+    <div className="flex flex-col gap-0 pb-24 w-full font-sans">
       <HomeCategorySegmentBar />
-
-      {/* 1. TITLE BAR */}
-      <div className="py-1.5 flex items-center justify-between gap-3 w-full border-b border-slate-200/80">
-        <h2 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight">
-          Local Offer (சலுகைகள்)
-        </h2>
-      </div>
-
-      {/* 2. CATEGORY-SCOPED SEARCH BAR */}
       <UniversalSearchBarRow />
+
+      <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 flex flex-col gap-3 mt-2">
+        {/* 1. TITLE BAR */}
+        <div className="py-1.5 flex items-center justify-between gap-3 w-full border-b border-slate-200/80">
+          <h2 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight">
+            Local Offer (சலுகைகள்)
+          </h2>
+        </div>
 
       {/* LISTING CONTAINER */}
       <div className="flex flex-col gap-3">
@@ -109,7 +108,7 @@ export default function ShopsClientPage() {
         </div>
       )}
       </div>
-
+      </div>
     </div>
   );
 }

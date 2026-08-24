@@ -109,13 +109,6 @@ function SearchContent() {
       <div className="bg-white border-b border-slate-200 sticky top-14 z-30 shadow-2xs py-3 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex flex-col gap-3">
           <div className="flex items-center gap-3">
-            <button
-              onClick={() => router.back()}
-              className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors cursor-pointer"
-              title="Back"
-            >
-              <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
-            </button>
             <form onSubmit={handleSearchSubmit} className="flex-1 relative flex items-center">
               <Search className="w-4 h-4 text-slate-400 absolute left-3.5" />
               <input
