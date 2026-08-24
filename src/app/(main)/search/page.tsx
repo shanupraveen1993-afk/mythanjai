@@ -76,6 +76,27 @@ function SearchContent() {
           }
         });
 
+        // Merge local posts stored in localStorage so local listings are ALWAYS searched on /search!
+        if (typeof window !== "undefined") {
+          try {
+            const localPosts = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+            localPosts.forEach((lp: any) => {
+              const text = `${lp.title || lp.name || lp.shop_name || lp.offer_title || ""} ${lp.description || ""} ${lp.category || lp.skill_category || ""} ${lp.area_tag || ""}`.toLowerCase();
+              if (text.includes(qTerm)) {
+                if (lp.type === "NEED" || lp.category === "NEED") {
+                  if (!needMatches.some((n) => n.id === lp.id)) needMatches.push(lp);
+                } else if (lp.skill_category || lp.type === "SERVICE") {
+                  if (!serviceMatches.some((s) => s.id === lp.id)) serviceMatches.push(lp);
+                } else if (lp.type === "OFFER" || lp.type === "SHOP") {
+                  if (!offerMatches.some((o) => o.id === lp.id)) offerMatches.push(lp);
+                } else {
+                  if (!sellMatches.some((s) => s.id === lp.id)) sellMatches.push(lp);
+                }
+              }
+            });
+          } catch (e) {}
+        }
+
         setResults({
           sell: sellMatches,
           need: needMatches,
