@@ -16,7 +16,12 @@ export default function HomeCategorySegmentBar() {
         window.location.search.includes("apk=true");
       setIsNativeApp(isApk);
     }
-  }, []);
+    // Prefetch all 4 category segment routes on mount for instant 0-delay switching
+    router.prefetch("/sell");
+    router.prefetch("/need");
+    router.prefetch("/services");
+    router.prefetch("/shops");
+  }, [router]);
 
   const getActiveTab = () => {
     if (pathname.includes("/need")) return "need";
@@ -51,8 +56,8 @@ export default function HomeCategorySegmentBar() {
               }}
               className={`py-2 px-2.5 rounded-xl font-heading font-black text-xs sm:text-sm transition-all cursor-pointer flex items-center justify-center w-full text-center ${
                 isActive
-                  ? "bg-[#0F172A] text-white shadow-md border border-slate-800 font-extrabold scale-[1.02]"
-                  : "bg-white text-slate-700 hover:bg-slate-100 border border-slate-200"
+                  ? "bg-[#FBBF24] text-[#0F172A] shadow-md border border-amber-400 font-black scale-[1.02]"
+                  : "bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 font-bold"
               }`}
             >
               <span className="truncate w-full">{seg.label}</span>

@@ -59,13 +59,6 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
       isCenter: false,
     },
     {
-      id: "post",
-      label: "POST AD",
-      icon: Plus,
-      route: "/post",
-      isCenter: true,
-    },
-    {
       id: "listings",
       label: "My Listings",
       icon: Package,

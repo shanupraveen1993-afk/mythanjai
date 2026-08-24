@@ -107,9 +107,9 @@ export default function TopHeader({
     >
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-3 relative">
 
-        {/* Left Side: Native Back Button ONLY for true sub-screens vs Home Logo */}
+        {/* Left Side: Native Back Button ONLY for true sub-screens (/post, /admin, /item, etc.) vs Home Logo for main tabs */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0 z-20">
-          {pathname.includes("/profile") || pathname.includes("/post") || pathname.includes("/chat") || pathname.includes("/admin") ? (
+          {pathname.includes("/post") || pathname.includes("/admin") || pathname.includes("/item/") || pathname.includes("/service/") || pathname.includes("/offer/") ? (
             <button
               type="button"
               onClick={() => {
@@ -153,32 +153,48 @@ export default function TopHeader({
           </div>
         ) : (
           showCenterNav ? (
-            <div className="absolute left-1/2 -translate-x-1/2 hidden md:flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl border border-slate-200/80 font-heading backdrop-blur-sm z-10">
+            <div className="absolute left-1/2 -translate-x-1/2 hidden md:flex items-center gap-1.5 bg-slate-100/90 p-1.5 rounded-2xl border border-slate-200/80 font-heading backdrop-blur-sm z-10">
               <button
                 type="button"
                 onClick={() => router.push("/")}
-                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${pathname === "/" || pathname === "/home" || pathname.includes("/sell") ? "bg-[#FBBF24] text-[#0F172A] font-extrabold shadow-2xs rounded-lg" : "text-slate-600 hover:text-slate-900 font-bold transition-colors"}`}
+                className={`px-5 py-2 rounded-xl text-sm transition-all cursor-pointer ${
+                  pathname === "/" || pathname === "/home" || pathname.includes("/sell")
+                    ? "bg-[#FBBF24] text-[#0F172A] font-black shadow-xs rounded-xl"
+                    : "text-slate-700 hover:text-slate-950 font-bold transition-colors"
+                }`}
               >
                 Sell
               </button>
               <button
                 type="button"
                 onClick={() => router.push("/need")}
-                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${pathname.includes("/need") ? "bg-[#FBBF24] text-[#0F172A] font-extrabold shadow-2xs rounded-lg" : "text-slate-600 hover:text-slate-900 font-bold transition-colors"}`}
+                className={`px-5 py-2 rounded-xl text-sm transition-all cursor-pointer ${
+                  pathname.includes("/need")
+                    ? "bg-[#FBBF24] text-[#0F172A] font-black shadow-xs rounded-xl"
+                    : "text-slate-700 hover:text-slate-950 font-bold transition-colors"
+                }`}
               >
                 Need
               </button>
               <button
                 type="button"
                 onClick={() => router.push("/services")}
-                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${pathname.includes("/services") ? "bg-[#FBBF24] text-[#0F172A] font-extrabold shadow-2xs rounded-lg" : "text-slate-600 hover:text-slate-900 font-bold transition-colors"}`}
+                className={`px-5 py-2 rounded-xl text-sm transition-all cursor-pointer ${
+                  pathname.includes("/services")
+                    ? "bg-[#FBBF24] text-[#0F172A] font-black shadow-xs rounded-xl"
+                    : "text-slate-700 hover:text-slate-950 font-bold transition-colors"
+                }`}
               >
                 Services
               </button>
               <button
                 type="button"
                 onClick={() => router.push("/shops")}
-                className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${pathname.includes("/shops") || pathname.includes("/offers") ? "bg-[#FBBF24] text-[#0F172A] font-extrabold shadow-2xs rounded-lg" : "text-slate-600 hover:text-slate-900 font-bold transition-colors"}`}
+                className={`px-5 py-2 rounded-xl text-sm transition-all cursor-pointer ${
+                  pathname.includes("/shops") || pathname.includes("/offers")
+                    ? "bg-[#FBBF24] text-[#0F172A] font-black shadow-xs rounded-xl"
+                    : "text-slate-700 hover:text-slate-950 font-bold transition-colors"
+                }`}
               >
                 Offers
               </button>
@@ -192,7 +208,7 @@ export default function TopHeader({
           {!isNativeApp && (
             <a
               href="/api/apk-download"
-              download="NammaThanjai-v13.apk"
+              download="NammaThanjai-v14.apk"
               className="flex md:hidden bg-[#1d4ed8] hover:bg-blue-800 text-white font-heading font-bold text-xs px-3 py-1.5 rounded-lg shadow-2xs transition-all items-center gap-1.5 shrink-0 active:scale-95 border border-blue-600 cursor-pointer"
               title="Download Namma Thanjai Official Android App"
             >

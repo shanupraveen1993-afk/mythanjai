@@ -114,6 +114,12 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
       const result = await updatePhone(phoneNumber);
       if (result?.success) {
         toast.success("WhatsApp Number Verified Successfully!");
+        
+        if (typeof window !== "undefined") {
+          localStorage.setItem("namma_thanjai_user_verified", "true");
+          window.dispatchEvent(new Event("namma_thanjai_auth_changed"));
+        }
+
         onClose();
 
         const isHeaderLogin = isHeaderLoginRef.current;
