@@ -725,6 +725,29 @@ export default function PostForm({ segment }: PostFormProps) {
           
           {/* LEFT COLUMN: Form Controls (Borderless Free Design) */}
           <form onSubmit={handleSubmit} className="lg:col-span-7 flex flex-col gap-4 bg-transparent border-0 p-0 sm:p-1">
+            {/* 1st INPUT: Primary Category Selection (Mandatory 1st Input across Sell, Need, Service & Offer) */}
+            <div className="flex flex-col gap-1.5 bg-amber-50/70 border border-amber-200/90 p-3.5 rounded-xl">
+              <label className="text-sm font-bold text-slate-800 flex items-center justify-between">
+                <span className="flex items-center gap-1.5">
+                  <Tag className="w-4 h-4 text-amber-600" />
+                  <span>Select Category *</span>
+                </span>
+                <span className="text-xs text-amber-700 font-extrabold uppercase tracking-wider bg-amber-100 px-2 py-0.5 rounded-md border border-amber-300">Primary Field 1</span>
+              </label>
+              <select
+                required
+                value={category}
+                onChange={(e) => setCategory(e.target.value)}
+                className="w-full px-3.5 py-2.5 text-sm font-black border border-amber-300 rounded-xl bg-white focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-400/30 text-slate-900 shadow-2xs cursor-pointer"
+              >
+                {config.categories.map((cat) => (
+                  <option key={cat} value={cat}>
+                    {cat}
+                  </option>
+                ))}
+              </select>
+            </div>
+
             {/* OFFER FORM INPUTS IN REVISED REQUESTED ORDER */}
             {segment === "offer" ? (
               <>
