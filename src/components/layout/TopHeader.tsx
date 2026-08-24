@@ -137,11 +137,6 @@ export default function TopHeader({
                   <span className="text-[#1d4ed8] font-black">நம்ம</span> <span className="text-[#f59e0b] font-black">thanjai</span>
                 </span>
               </div>
-
-              {/* Prominent Locality Indicator (📍 Thanjavur / Locality Selector) */}
-              <div className="ml-1 sm:ml-2 shrink-0">
-                <SearchableAreaDropdown selectedArea={selectedArea} onAreaChange={onAreaChange} />
-              </div>
             </div>
           )}
         </div>
@@ -164,7 +159,7 @@ export default function TopHeader({
                 onClick={() => router.push("/")}
                 className={`px-3.5 py-1.5 rounded-lg text-xs transition-all cursor-pointer ${pathname === "/" || pathname === "/home" ? "bg-[#FBBF24] text-[#0F172A] font-extrabold shadow-2xs rounded-lg" : "text-slate-600 hover:text-slate-900 font-bold transition-colors"}`}
               >
-                Home
+                All
               </button>
               <button
                 type="button"
@@ -198,9 +193,15 @@ export default function TopHeader({
           ) : null
         )}
 
-        {/* Right Side: Desktop-Only Chat & Profile + Mobile Header Action */}
+        {/* Right Side: Desktop Chat/Profile & Mobile Right-Side Thanjavur Location Tag */}
         <div className="flex items-center justify-end gap-2 shrink-0 ml-auto z-20">
-          {/* Desktop Website Only: Chat & Profile Buttons (Hidden on Mobile WebApp/APK) */}
+          {/* Mobile WebApp/APK Right-Side Location Tag */}
+          <div className="flex md:hidden items-center gap-1 bg-amber-50 border border-amber-200 px-2.5 py-1 rounded-lg text-xs font-extrabold text-slate-900 shadow-2xs">
+            <MapPin className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+            <span className="truncate max-w-[90px]">{selectedArea || "Thanjavur"}</span>
+          </div>
+
+          {/* Desktop Website Only: Chat & Profile Buttons */}
           <div className="hidden md:flex items-center gap-2">
             {!pathname.includes("/profile") && !pathname.includes("/post") && (
               <button

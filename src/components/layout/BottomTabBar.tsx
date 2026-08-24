@@ -101,6 +101,19 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
               : pathname === "/profile";
 
           if (item.isCenter) {
+            const activePill = typeof window !== "undefined" ? localStorage.getItem("namma_thanjai_active_segment") : "all";
+            const isCategoryContext =
+              pathname.includes("/sell") ||
+              pathname.includes("/need") ||
+              pathname.includes("/service") ||
+              pathname.includes("/shops") ||
+              pathname.includes("/offer") ||
+              (pathname === "/" && activePill !== "all" && activePill !== null);
+
+            if (!isCategoryContext) {
+              return null;
+            }
+
             return (
               <button
                 key={item.id}

@@ -136,19 +136,51 @@ export default function HomeClientPage() {
   const [activeSegment, setActiveSegment] = React.useState<"all" | "sell" | "need" | "service" | "offer">("all");
 
   return (
-    <div className="w-full flex flex-col gap-6 text-slate-800 font-sans mt-2">
-      {/* ── Prominent Home Universal Search Bar ── */}
-      <div className="w-full flex flex-col gap-3">
+    <div className="w-full flex flex-col gap-5 text-slate-800 font-sans mt-1 px-3 sm:px-6 max-w-7xl mx-auto">
+      {/* ── 1. Universal Search Bar (Anchored at Top) ── */}
+      <div className="w-full">
         <UniversalSearchBar />
+      </div>
 
-        {/* ── 4 Segment Quick Filter Pills (Direct Home Feed Filtering) ── */}
-        <div className="flex items-center gap-2 overflow-x-auto no-scrollbar py-1">
+      {/* ── 2. Hero Banner (Positioned Directly Below Search Bar) ── */}
+      <div className="relative w-full min-h-[160px] sm:min-h-[200px] rounded-2xl overflow-hidden bg-slate-950 text-white flex items-center px-6 sm:px-8 py-6 sm:py-8 shadow-md border border-slate-800">
+        <img src="/thanjavur_temple_illustration.png" alt="Namma Thanjai" className="absolute right-0 top-0 h-full w-3/5 object-cover opacity-30 pointer-events-none" />
+        <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/85 to-transparent" />
+        <div className="relative z-10 flex flex-col gap-2 max-w-xl">
+          <span className="text-white font-extrabold text-xs sm:text-sm tracking-wider w-fit underline decoration-[#FBBF24] decoration-2 underline-offset-4 pb-0.5">
+            Namma Thanjai • நம்ம தஞ்சை
+          </span>
+          <h1 className="font-heading font-black text-xl sm:text-2xl text-white tracking-tight leading-snug">
+            Everything you need in our city, all in one place. <span className="text-amber-400 block text-xs sm:text-base font-extrabold mt-1">நம்ம ஊரின் அனைத்து தேவைகளுக்கும் ஒரே இடம்.</span>
+          </h1>
+
+          {!isAuthVerified && (
+            <div className="mt-2.5 flex items-center justify-start w-fit">
+              <button
+                type="button"
+                onClick={() => {
+                  if (typeof window !== "undefined") {
+                    window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+                  }
+                }}
+                className="shrink-0 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs sm:text-sm px-5 py-2.5 rounded-xl shadow-md cursor-pointer transition-all flex items-center justify-center gap-1.5 select-none"
+              >
+                <span>Register to Post Ad</span>
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* ── 3. 5 Segment Quick Filter Grid (Mobile WebApp/APK 100% Screen-Fit, ZERO Horizontal Scroll) ── */}
+      <div className="w-full md:hidden">
+        <div className="grid grid-cols-5 gap-1.5 w-full">
           {[
-            { id: "all", label: "All Feeds", icon: "🌐", route: "/" },
-            { id: "sell", label: "Sell (விற்பனை)", icon: "📦", route: "/sell" },
-            { id: "need", label: "Need (தேவை)", icon: "🔍", route: "/need" },
-            { id: "service", label: "Service (சேவை)", icon: "🛠️", route: "/services" },
-            { id: "offer", label: "Offer (சலுகை)", icon: "🏪", route: "/shops" },
+            { id: "all", label: "All", icon: "🌐", route: "/" },
+            { id: "sell", label: "Sell", icon: "📦", route: "/sell" },
+            { id: "need", label: "Need", icon: "🔍", route: "/need" },
+            { id: "service", label: "Service", icon: "🛠️", route: "/services" },
+            { id: "offer", label: "Offer", icon: "🏪", route: "/shops" },
           ].map((seg) => {
             const isActive = activeSegment === seg.id;
             return (
@@ -164,50 +196,19 @@ export default function HomeClientPage() {
                     router.push(seg.route);
                   }
                 }}
-                className={`py-2 px-3.5 rounded-xl font-heading font-black text-xs transition-all cursor-pointer whitespace-nowrap flex items-center gap-1.5 shrink-0 ${
+                className={`py-2 px-1 rounded-xl font-heading font-black text-[11px] sm:text-xs transition-all cursor-pointer flex flex-col items-center justify-center gap-0.5 w-full text-center ${
                   isActive
                     ? "bg-amber-400 text-slate-950 shadow-xs border border-amber-500 scale-102"
                     : "bg-white text-slate-700 hover:bg-slate-100 border border-slate-200"
                 }`}
               >
-                <span>{seg.icon}</span>
-                <span>{seg.label}</span>
+                <span className="text-xs sm:text-sm">{seg.icon}</span>
+                <span className="truncate w-full">{seg.label}</span>
               </button>
             );
           })}
         </div>
       </div>
-
-        {/* ── 1. Hero Banner (Universal Home Banner - Prominent & Standout) ── */}
-        <div className="relative w-full min-h-[160px] sm:min-h-[200px] rounded-xl overflow-hidden bg-slate-950 text-white flex items-center px-6 sm:px-8 py-6 sm:py-8 shadow-md mt-1">
-          <img src="/thanjavur_temple_illustration.png" alt="Namma Thanjai" className="absolute right-0 top-0 h-full w-3/5 object-cover opacity-35 pointer-events-none" />
-          <div className="absolute inset-0 bg-gradient-to-r from-slate-950 via-slate-950/85 to-transparent" />
-          <div className="relative z-10 flex flex-col gap-2 max-w-xl">
-            <span className="text-white font-extrabold text-xs sm:text-sm tracking-wider w-fit underline decoration-[#FBBF24] decoration-2 underline-offset-4 pb-0.5">
-              Namma Thanjai • நம்ம தஞ்சை
-            </span>
-            <h1 className="font-heading font-black text-xl sm:text-2xl text-white tracking-tight leading-snug">
-              Everything you need in our city, all in one place. <span className="text-amber-400 block text-xs sm:text-base font-extrabold mt-1">நம்ம ஊரின் அனைத்து தேவைகளுக்கும் ஒரே இடம்.</span>
-            </h1>
-
-            {/* Register to Post Button (Input field removed. Hidden when verified to fill space) */}
-            {!isAuthVerified && (
-              <div className="mt-2.5 flex items-center justify-start w-fit">
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (typeof window !== "undefined") {
-                      window.dispatchEvent(new Event("namma_thanjai_open_signin"));
-                    }
-                  }}
-                  className="shrink-0 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs sm:text-sm px-5 py-2.5 rounded-lg shadow-md cursor-pointer transition-all flex items-center justify-center gap-1.5 select-none"
-                >
-                  <span>Register to Post Ad</span>
-                </button>
-              </div>
-            )}
-          </div>
-        </div>
 
         {/* ── Static APK Download Banner Card for Web App Visitors ── */}
         <StaticApkCard variant="dark" />
