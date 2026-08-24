@@ -179,14 +179,8 @@ export default function PostForm({ segment }: PostFormProps) {
     return () => clearTimeout(timer);
   }, [description]);
 
-  // Unauthenticated Guest Protection: Wait for auth to finish loading before checking guest status
-  useEffect(() => {
-    if (!authLoading && !isAuthVerified) {
-      if (typeof window !== "undefined") {
-        window.dispatchEvent(new Event("namma_thanjai_open_signin"));
-      }
-    }
-  }, [authLoading, isAuthVerified]);
+  // Form submission handler
+  // Unauthenticated Guest Protection: Handled on submit so guests can draft their post freely
 
   // Comprehensive Edit Mode Data Loader (Firestore + LocalStorage Fallback)
   useEffect(() => {
@@ -381,6 +375,13 @@ export default function PostForm({ segment }: PostFormProps) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!isAuthVerified) {
+      toast.info("Please verify your WhatsApp mobile number to publish your ad.");
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+      }
+      return;
+    }
     if (!title.trim()) {
       toast.error("Please enter a title for your posting.");
       return;
