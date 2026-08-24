@@ -494,9 +494,9 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
               <a
                 href={callUrl}
                 onClick={(e) => e.stopPropagation()}
-                className="w-[128px] shrink-0 bg-amber-500 hover:bg-amber-600 text-slate-950 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
+                className="w-[128px] shrink-0 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
               >
-                <Phone className="w-4 h-4 text-slate-950 shrink-0" />
+                <Phone className="w-4 h-4 text-white shrink-0" />
                 <span>Call Shop</span>
               </a>
             )}

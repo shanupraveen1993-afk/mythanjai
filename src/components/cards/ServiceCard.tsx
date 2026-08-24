@@ -304,24 +304,18 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
             type="button"
             onClick={(e) => {
               e.stopPropagation();
-              if (typeof window !== "undefined") {
-                try {
-                  const callbacks = JSON.parse(localStorage.getItem("namma_thanjai_callback_requests") || "[]");
-                  callbacks.push({
-                    id: post.id,
-                    providerName: post.name,
-                    phone: post.phone,
-                    timestamp: Date.now()
-                  });
-                  localStorage.setItem("namma_thanjai_callback_requests", JSON.stringify(callbacks));
-                } catch (err) {}
+              if (!isVerified) {
+                if (typeof window !== "undefined") {
+                  window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+                }
+                return;
               }
-              toast.success(`Call Back Requested! ${post.name} has been notified to call you.`);
+              router.push(`/chat?listingId=${post.id}&sellerId=${post.userId || ""}&title=${encodeURIComponent(post.name)}`);
             }}
             className="w-[128px] shrink-0 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
           >
-            <Phone className="w-4 h-4 text-[#0F172A] shrink-0 stroke-[2.5]" />
-            <span>Call Back</span>
+            <MessageSquare className="w-4 h-4 text-[#0F172A] shrink-0 stroke-[2.5]" />
+            <span>Chat</span>
           </button>
 
           <button

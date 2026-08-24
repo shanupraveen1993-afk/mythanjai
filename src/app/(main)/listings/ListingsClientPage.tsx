@@ -27,6 +27,7 @@ import {
   MapPin,
   Clock,
   ArrowRight,
+  Pencil,
 } from "lucide-react";
 import { useToast } from "@/context/ToastContext";
 import ListingCard, { ListingItem } from "@/components/cards/ListingCard";
@@ -131,6 +132,20 @@ function ListingsContent() {
     }
   };
 
+  const handleToggleSoldState = (postId: string, currentSold: boolean) => {
+    setMyPosts((prev) =>
+      prev.map((p) => (p.id === postId ? { ...p, is_sold: !currentSold } : p))
+    );
+    if (typeof window !== "undefined") {
+      try {
+        const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+        const updated = stored.map((p: any) => (p.id === postId ? { ...p, is_sold: !currentSold } : p));
+        localStorage.setItem("namma_thanjai_local_posts", JSON.stringify(updated));
+      } catch (e) {}
+    }
+    toast.success(currentSold ? "Listing marked as active." : "Listing marked as sold.");
+  };
+
   // Guest State CTA
   if (!isVerified && !authLoading) {
     return (
@@ -232,18 +247,53 @@ function ListingsContent() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {myPosts.map((post) => (
-              <div key={post.id} className="relative group">
+              <div key={post.id} className="flex flex-col bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-2xs hover:shadow-md transition-all">
                 <ListingCard listing={post as unknown as ListingItem} />
-                <button
-                  type="button"
-                  onClick={() => handleDeletePost(post.id, post.type === "SERVICE" ? "services" : post.type === "SHOP" ? "shops" : "needs_and_sales")}
-                  className="absolute top-3 right-3 bg-red-600 hover:bg-red-700 text-white p-2 rounded-xl shadow-md cursor-pointer transition-all z-20"
-                  title="Delete Listing"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
+
+                {/* Dedicated Listing Management Action Bar */}
+                <div className="p-3 bg-slate-50 border-t border-slate-200/80 flex items-center justify-between gap-2">
+                  <div className="flex items-center gap-1.5">
+                    {/* 1. Edit Ad Button */}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const seg = post.type === "SERVICE" ? "service" : post.type === "OFFER" || post.type === "SHOP" ? "offer" : post.type === "NEED" ? "need" : "sell";
+                        router.push(`/post/${seg}?editId=${post.id}`);
+                      }}
+                      className="bg-white hover:bg-slate-100 text-slate-900 border border-slate-300 font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center gap-1.5 cursor-pointer shadow-2xs transition-all"
+                    >
+                      <Pencil className="w-3.5 h-3.5 text-amber-600" />
+                      <span>Edit Ad</span>
+                    </button>
+
+                    {/* 2. Mark Sold / Active Toggle */}
+                    <button
+                      type="button"
+                      onClick={() => handleToggleSoldState(post.id, Boolean(post.is_sold))}
+                      className={`font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center gap-1.5 cursor-pointer shadow-2xs transition-all border ${
+                        post.is_sold
+                          ? "bg-slate-200 text-slate-700 border-slate-300"
+                          : "bg-emerald-50 text-emerald-800 border-emerald-300 hover:bg-emerald-100"
+                      }`}
+                    >
+                      <Tag className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>{post.is_sold ? "Mark Active" : "Mark Sold"}</span>
+                    </button>
+                  </div>
+
+                  {/* 3. Delete Action Button */}
+                  <button
+                    type="button"
+                    onClick={() => handleDeletePost(post.id, post.type === "SERVICE" ? "services" : post.type === "SHOP" ? "shops" : "needs_and_sales")}
+                    className="bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center gap-1.5 cursor-pointer shadow-2xs transition-all ml-auto"
+                    title="Delete Listing"
+                  >
+                    <Trash2 className="w-3.5 h-3.5 text-rose-600" />
+                    <span>Delete</span>
+                  </button>
+                </div>
               </div>
             ))}
           </div>
