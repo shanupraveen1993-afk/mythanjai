@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { Plus } from "lucide-react";
+import { Plus, ArrowUp, ArrowDown } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 
@@ -11,13 +11,18 @@ export default function FloatingPostButton() {
   const { isVerified } = useAuth();
 
   const [isVisible, setIsVisible] = useState(true);
+  const [scrollTop, setScrollTop] = useState(0);
+  const [hasScrolled, setHasScrolled] = useState(false);
   const lastScrollY = useRef(0);
 
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
+      setScrollTop(currentScrollY);
+      setHasScrolled(currentScrollY > 120);
+
       if (currentScrollY <= 20) {
-        setIsVisible(true); // Always 100% visible at top of page
+        setIsVisible(true);
       } else if (currentScrollY > lastScrollY.current + 10) {
         setIsVisible(false); // Hide on scroll down
       } else if (currentScrollY < lastScrollY.current - 10) {
@@ -30,7 +35,6 @@ export default function FloatingPostButton() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
-  // FAB is ONLY visible on the 4 main category segment pages
   const isCategoryPage =
     pathname === "/" ||
     pathname === "/home" ||
@@ -60,25 +64,62 @@ export default function FloatingPostButton() {
     router.push(targetRoute);
   };
 
-  if (!isCategoryPage) return null;
+  const handleScrollAction = () => {
+    if (scrollTop > 120) {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    } else {
+      window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+    }
+  };
+
+  // If not a category page and at top, hide post pill on sub-pages
+  if (!isCategoryPage && !hasScrolled) return null;
 
   return (
     <div
-      className={`fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom,0px))] left-4 right-4 max-w-md mx-auto z-[10000] md:hidden transition-all duration-300 ease-out ${
+      className={`fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom,0px))] left-1/2 -translate-x-1/2 w-[calc(100%-32px)] max-w-[500px] h-[50px] z-[10000] md:hidden transition-all duration-300 ease-out flex items-center justify-between gap-2 p-1.5 rounded-2xl bg-[#0F172A]/95 text-white backdrop-blur-xl border border-slate-700/80 shadow-[0_12px_36px_rgba(0,0,0,0.35)] ${
         isVisible
           ? "translate-y-0 opacity-100 pointer-events-auto"
           : "translate-y-24 opacity-0 pointer-events-none"
       }`}
     >
-      <button
-        type="button"
-        onClick={handlePostClick}
-        className="w-full bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-sm py-3 px-5 rounded-2xl shadow-[0_10px_30px_rgba(251,191,36,0.55)] border-2 border-amber-300/90 flex items-center justify-center gap-2 active:scale-95 transition-all cursor-pointer select-none uppercase tracking-wider"
-        aria-label="Create Post"
-      >
-        <Plus className="w-5 h-5 stroke-[3] text-[#0F172A]" />
-        <span>{buttonConfig.label}</span>
-      </button>
+      {/* Primary Action: Post Ad (on Category Pages) */}
+      {isCategoryPage ? (
+        <button
+          type="button"
+          onClick={handlePostClick}
+          className="flex-1 h-full bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs sm:text-sm rounded-xl shadow-md flex items-center justify-center gap-1.5 active:scale-95 transition-all cursor-pointer select-none uppercase tracking-wider"
+          aria-label="Create Post"
+        >
+          <Plus className="w-4 h-4 stroke-[3] text-[#0F172A]" />
+          <span>{buttonConfig.label}</span>
+        </button>
+      ) : null}
+
+      {/* Universal Scroll Shortcut Pill (Scroll Up / Scroll Down) */}
+      {hasScrolled ? (
+        <button
+          type="button"
+          onClick={handleScrollAction}
+          className={`h-full px-3.5 bg-slate-800 hover:bg-slate-700 text-amber-300 font-heading font-black text-xs rounded-xl flex items-center justify-center gap-1 cursor-pointer transition-all active:scale-95 border border-slate-700 ${
+            !isCategoryPage ? "w-full text-sm" : "shrink-0"
+          }`}
+          aria-label="Scroll Action"
+        >
+          <ArrowUp className="w-4 h-4 stroke-[2.5]" />
+          <span>Top</span>
+        </button>
+      ) : !isCategoryPage ? (
+        <button
+          type="button"
+          onClick={handleScrollAction}
+          className="w-full h-full bg-slate-800 hover:bg-slate-700 text-amber-300 font-heading font-black text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition-all active:scale-95 border border-slate-700"
+          aria-label="Scroll to Bottom"
+        >
+          <ArrowDown className="w-4 h-4 stroke-[2.5]" />
+          <span>Go to Bottom</span>
+        </button>
+      ) : null}
     </div>
   );
 }
