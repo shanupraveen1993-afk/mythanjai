@@ -209,7 +209,7 @@ export default function TopHeader({
             <a
               href="/api/apk-download"
               download="NammaThanjai-v14.apk"
-              className="flex md:hidden bg-[#1d4ed8] hover:bg-blue-800 text-white font-heading font-bold text-xs px-3 py-1.5 rounded-lg shadow-2xs transition-all items-center gap-1.5 shrink-0 active:scale-95 border border-blue-600 cursor-pointer"
+              className="flex md:hidden bg-[#1d4ed8] hover:bg-blue-800 text-white font-heading font-bold text-xs px-3 py-1.5 rounded-lg shadow-2xs transition-all items-center gap-1.5 shrink-0 active:scale-95 border border-blue-600 cursor-pointer whitespace-nowrap"
               title="Download Namma Thanjai Official Android App"
             >
               <Download className="w-3.5 h-3.5 text-white stroke-[2.5]" />
@@ -222,7 +222,7 @@ export default function TopHeader({
             <button
               type="button"
               onClick={() => router.push("/post/sell")}
-              className="flex md:hidden bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs px-3 py-1.5 rounded-lg shadow-2xs transition-all items-center gap-1 shrink-0 active:scale-95 border border-amber-400 cursor-pointer"
+              className="flex md:hidden bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs px-3 py-1.5 rounded-lg shadow-2xs transition-all items-center gap-1 shrink-0 active:scale-95 border border-amber-400 cursor-pointer whitespace-nowrap"
             >
               <Plus className="w-3.5 h-3.5 stroke-[3]" />
               <span>Post</span>

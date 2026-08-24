@@ -79,7 +79,7 @@ export default function UniversalSearchBarRow() {
 
   return (
     <div
-      className={`w-full flex items-center justify-between gap-3 py-1 sticky top-12 z-30 bg-[#f8fafc]/95 backdrop-blur-md transition-all duration-300 ${
+      className={`w-full flex items-center justify-between gap-3 py-1 mt-2 sm:mt-3 sticky top-14 sm:top-16 z-30 bg-[#f8fafc]/95 backdrop-blur-md transition-all duration-300 ${
         isVisible
           ? "translate-y-0 opacity-100"
           : "-translate-y-full opacity-0 pointer-events-none md:translate-y-0 md:opacity-100 md:pointer-events-auto"
@@ -94,7 +94,7 @@ export default function UniversalSearchBarRow() {
       <button
         type="button"
         onClick={handlePostClick}
-        className="hidden md:flex h-10 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs px-4 rounded-xl shadow-2xs shrink-0 items-center gap-1.5 cursor-pointer transition-all active:scale-95 border border-amber-400/80 ml-auto"
+        className="hidden md:flex h-10 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs px-4 rounded-xl shadow-2xs shrink-0 items-center gap-1.5 cursor-pointer transition-all active:scale-95 border border-amber-400/80 ml-auto whitespace-nowrap"
         title="Post a Free Ad in Thanjavur"
         aria-label="Post Ad"
       >

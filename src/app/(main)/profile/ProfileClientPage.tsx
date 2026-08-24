@@ -412,7 +412,7 @@ function ProfileContent() {
           className="mt-2 w-full bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-sm py-3 px-6 rounded-2xl shadow-md cursor-pointer transition-all flex items-center justify-center gap-2 active:scale-[0.98]"
         >
           <MessageSquare className="w-5 h-5 fill-white stroke-[2.5]" />
-          <span>Login with WhatsApp</span>
+          <span>Sign In / Verify</span>
         </button>
       </div>
     );
