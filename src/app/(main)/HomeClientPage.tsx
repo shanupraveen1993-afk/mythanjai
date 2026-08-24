@@ -9,6 +9,7 @@ import CategoryBridgeFeed from "@/components/home/CategoryBridgeFeed";
 import SplashScreen from "@/components/onboarding/SplashScreen";
 import WalkthroughModal from "@/components/onboarding/WalkthroughModal";
 import HomeCategorySegmentBar from "@/components/layout/HomeCategorySegmentBar";
+import SellClientPage from "./sell/SellClientPage";
 
 // ── Shared Preview Card ───────────────────────────────────────────────────────
 
@@ -211,72 +212,11 @@ export default function HomeClientPage() {
       {/* ── 3. Universal Sticky 4-Category Segment Bar (Mobile WebApp/APK STICKY TOP) ── */}
       <HomeCategorySegmentBar />
 
-      {/* ── SELL Preview ───────────────────────── */}
-        <PreviewSection
-          title="Items for Sale (விற்பனை)"
-          subtitle="Items for sale by local residents"
-          seeAllPath="/sell"
-          accentColor="bg-[#1d4ed8]"
-          isGuest={false}
-          onCardClick={() => router.push("/sell")}
-          cards={[
-            { title: "2400 Sqft CMDA Plot", sub: "Plots & Real Estate", price: "₹24,50,000", area: "Vallam", img: "" },
-            { title: "Hero Splendor 2022 — Single Owner", sub: "Used Vehicles", price: "₹68,000", area: "New Bus Stand", img: "" },
-            { title: "iPhone 13 128GB Blue", sub: "Electronics & Mobiles", price: "₹42,000", area: "Old Bus Stand", img: "" },
-          ]}
-        />
-
-        {/* ── NEED Preview ───────────────────────── */}
-        <PreviewSection
-          title="Items Looking For (தேவைகள்)"
-          subtitle="Requirements from local buyers"
-          seeAllPath="/need"
-          accentColor="bg-[#1d4ed8]"
-          isGuest={false}
-          onCardClick={() => router.push("/need")}
-          cards={[
-            { title: "Need 1-2 Acres Commercial Land", sub: "Plots & Real Estate", price: "Budget ₹50L+", area: "Vallam", img: "" },
-            { title: "Need 2 BHK near Medical College", sub: "Property Rental", price: "₹10,000/mo", area: "Medical College Rd", img: "" },
-            { title: "Need Used Laptop under ₹25,000", sub: "Electronics & Mobiles", price: "₹25,000", area: "Tanjore Town", img: "" },
-          ]}
-        />
-
-        {/* ── SERVICES Preview ───────────────────── */}
-        <PreviewSection
-          title="Local Service (சேவைகள்)"
-          subtitle="Verified skilled tradespeople near you"
-          seeAllPath="/services"
-          accentColor="bg-[#1d4ed8]"
-          isGuest={false}
-          onCardClick={() => router.push("/services")}
-          cards={[
-            { title: "Senthil Kumar — Electrician", sub: "Electrician", price: "14 Contacted", area: "Tanjore Town", img: "" },
-            { title: "Rajesh K — Expert Plumber", sub: "Plumber", price: "18 Contacted", area: "Medical College Rd", img: "" },
-            { title: "Venu Gopal — Wood Architect", sub: "Carpenter", price: "22 Contacted", area: "South Rampart", img: "" },
-          ]}
-        />
-
-        {/* ── OFFERS Preview ─────────────────────── */}
-        <PreviewSection
-          title="Local Offer (சலுகைகள்)"
-          subtitle="Store discounts & deals from Thanjavur shops"
-          seeAllPath="/shops"
-          accentColor="bg-[#1d4ed8]"
-          isGuest={!isAuthVerified}
-          onAuthRequired={() => {
-            if (typeof window !== "undefined") {
-              localStorage.setItem("namma_thanjai_target_post_route", "/shops");
-              window.dispatchEvent(new Event("namma_thanjai_open_signin"));
-            }
-          }}
-          onCardClick={() => router.push("/shops")}
-          cards={[
-            { title: "GLEN Gallery — Up to 60% OFF", sub: "Electronics & Mobiles", price: "Grand Sale", area: "New Bus Stand", img: "" },
-            { title: "Silk Handloom — 25% OFF Zari", sub: "Textiles & Readymades", price: "Wedding Offer", area: "Karanthai", img: "" },
-            { title: "Degree Coffee + Free Halwa", sub: "Cafe & Restaurant", price: "Today Only", area: "South Rampart", img: "" },
-          ]}
-        />
+      {/* ── 4. Live Sell Listings Stream (Direct Vertical Feed) ── */}
+      <div className="w-full mt-2">
+        <SellClientPage />
       </div>
-    </>
-  );
+    </div>
+  </>
+);
 }
