@@ -8,12 +8,9 @@ import { NeedOrSalePost } from "@/types";
 import { Plus, ShoppingBag, Loader2, Filter, ArrowUpDown, UserCheck } from "lucide-react";
 import { CLASSIFIED_CATEGORIES } from "@/lib/constants";
 import { isListingQuarantined } from "@/lib/moderation";
-import WebAppScrollFAB from "@/components/common/WebAppScrollFAB";
 import CustomDropdown from "@/components/ui/CustomDropdown";
-
-const SAMPLE_POSTS: NeedOrSalePost[] = [];
-
 import { useAuth } from "@/hooks/use-auth";
+import UniversalSearchBarRow from "@/components/layout/UniversalSearchBarRow";
 
 export default function SellClientPage() {
   const router = useRouter();
@@ -115,23 +112,9 @@ export default function SellClientPage() {
 
   return (
     <div className="flex flex-col gap-3 pb-24 w-full font-sans">
+      <UniversalSearchBarRow />
 
-      {/* 1. Hero Banner — Clean Commercial Design (16px radius) */}
-      <div className="relative w-full rounded-2xl overflow-hidden bg-[#0F172A] text-white flex items-center px-6 sm:px-8 py-7 sm:py-8 shadow-sm mt-2">
-        <img src="/thanjavur_temple_illustration.png" alt="Sell" className="absolute right-0 top-0 h-full w-1/2 object-cover opacity-15 pointer-events-none" />
-        <div className="absolute inset-0 bg-gradient-to-r from-[#0F172A] via-[#0F172A]/90 to-transparent" />
-        <div className="relative z-10 flex flex-col gap-2 max-w-2xl">
-          <div className="inline-flex items-center gap-2 bg-amber-500/10 border border-amber-400/20 text-amber-300 font-bold text-xs px-3 py-1 rounded-md w-fit">
-            <span>LOCAL MARKETPLACE</span>
-            <span className="text-amber-400">•</span>
-            <span>உள்ளூர் சந்தை</span>
-          </div>
-          <h1 className="font-heading font-black text-xl sm:text-2xl text-white tracking-tight leading-snug">
-            Items &amp; Property for Sale
-            <span className="text-amber-400 block text-xs sm:text-base font-bold mt-1">நம்ம ஊர் மக்களிடமிருந்து நேரடியாக வாங்குங்கள்.</span>
-          </h1>
-        </div>
-      </div>
+
 
       {/* 2. TITLE BAR WITH ROYAL BLUE MY LISTINGS BUTTON */}
       <div className="py-2.5 flex items-center justify-between gap-3 w-full border-b border-slate-200/80">

@@ -156,14 +156,6 @@ export default function ChatClientPage() {
   useEffect(() => {
     if (!activeChatId) return;
 
-    if (SAMPLE_MESSAGES_MAP[activeChatId]) {
-      setMessages(SAMPLE_MESSAGES_MAP[activeChatId]);
-      setTimeout(() => {
-        chatBottomRef.current?.scrollIntoView({ behavior: "smooth" });
-      }, 100);
-      return;
-    }
-
     const messagesRef = collection(db, "chats", activeChatId, "messages");
     const q = query(messagesRef, orderBy("timestamp", "asc"));
 
