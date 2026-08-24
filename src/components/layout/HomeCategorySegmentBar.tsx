@@ -36,7 +36,7 @@ export default function HomeCategorySegmentBar() {
 
   return (
     <div className={`w-full md:hidden sticky z-40 bg-[#f8fafc]/95 backdrop-blur-md py-2 border-b border-slate-200/80 shadow-2xs transition-all ${isNativeApp ? "top-0" : "top-14"}`}>
-      <div className="grid grid-cols-4 gap-1.5 sm:gap-2.5 w-full max-w-4xl mx-auto">
+      <div className="grid grid-cols-4 gap-1.5 sm:gap-2.5 w-full max-w-2xl mx-auto">
         {segments.map((seg) => {
           const isActive = activeTab === seg.id;
           return (
@@ -51,7 +51,7 @@ export default function HomeCategorySegmentBar() {
               }}
               className={`py-2 px-2.5 rounded-xl font-heading font-black text-xs sm:text-sm transition-all cursor-pointer flex items-center justify-center w-full text-center ${
                 isActive
-                  ? "bg-[#FBBF24] text-[#0F172A] shadow-xs border border-amber-400 font-extrabold scale-102"
+                  ? "bg-[#0F172A] text-white shadow-md border border-slate-800 font-extrabold scale-[1.02]"
                   : "bg-white text-slate-700 hover:bg-slate-100 border border-slate-200"
               }`}
             >
