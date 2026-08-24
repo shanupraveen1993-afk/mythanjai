@@ -39,7 +39,19 @@ export interface ListingItem {
 }
 
 // ── Fullscreen Image Gallery Modal ─────────────────────────────────────────
-function GalleryModal({ images, startIndex, onClose }: { images: string[]; startIndex: number; onClose: () => void }) {
+function GalleryModal({
+  images,
+  startIndex,
+  onClose,
+  onChat,
+  onCall,
+}: {
+  images: string[];
+  startIndex: number;
+  onClose: () => void;
+  onChat?: () => void;
+  onCall?: () => void;
+}) {
   const [current, setCurrent] = useState(startIndex);
 
   useEffect(() => {
@@ -71,13 +83,13 @@ function GalleryModal({ images, startIndex, onClose }: { images: string[]; start
       </span>
 
       <div
-        className="relative w-full max-w-2xl max-h-[80vh] mx-4 flex items-center justify-center"
+        className="relative w-full max-w-2xl max-h-[75vh] mx-4 flex items-center justify-center"
         onClick={(e) => e.stopPropagation()}
       >
         <img
           src={images[current]}
           alt={`Photo ${current + 1}`}
-          className="max-w-full max-h-[80vh] object-contain rounded-2xl shadow-2xl"
+          className="max-w-full max-h-[75vh] object-contain rounded-2xl shadow-2xl"
         />
       </div>
 
@@ -104,8 +116,44 @@ function GalleryModal({ images, startIndex, onClose }: { images: string[]; start
         </>
       )}
 
+      {/* Lightbox Bottom Action Bar (Chat & Call CTAs Overlay) */}
+      {(onChat || onCall) && (
+        <div
+          className="absolute bottom-6 left-1/2 -translate-x-1/2 flex items-center gap-3 z-30 bg-slate-900/90 border border-slate-800 p-2.5 rounded-2xl backdrop-blur-xl shadow-2xl"
+          onClick={(e) => e.stopPropagation()}
+        >
+          {onChat && (
+            <button
+              type="button"
+              onClick={() => {
+                onClose();
+                onChat();
+              }}
+              className="w-[128px] border-2 border-white text-white bg-white/10 hover:bg-white/20 font-heading font-black text-xs sm:text-sm py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+            >
+              <MessageSquare className="w-4 h-4 text-white stroke-[2.5]" />
+              <span>Chat</span>
+            </button>
+          )}
+
+          {onCall && (
+            <button
+              type="button"
+              onClick={() => {
+                onClose();
+                onCall();
+              }}
+              className="w-[128px] bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition-colors shadow-md"
+            >
+              <Phone className="w-4 h-4 text-white shrink-0" />
+              <span>Call</span>
+            </button>
+          )}
+        </div>
+      )}
+
       {images.length > 1 && (
-        <div className="absolute bottom-6 flex gap-2">
+        <div className="absolute bottom-20 flex gap-2">
           {images.map((_, i) => (
             <button
               key={i}
@@ -441,12 +489,22 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
         sellerName={listing.seller_name || "Seller"}
       />
 
-      {/* Fullscreen Gallery Modal for multi-images */}
+      {/* Fullscreen Gallery Modal for multi-images with Chat & Call CTAs Overlay */}
       {galleryIndex !== null && allImages.length > 0 && (
         <GalleryModal
           images={allImages}
           startIndex={galleryIndex}
           onClose={() => setGalleryIndex(null)}
+          onChat={() => {
+            if (!isVerified) {
+              if (typeof window !== "undefined") window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+              return;
+            }
+            router.push(`/chat?listingId=${listing.id}&sellerId=${listing.seller_id || ""}&title=${encodeURIComponent(listing.title)}`);
+          }}
+          onCall={() => {
+            if (typeof window !== "undefined") window.location.href = callUrl;
+          }}
         />
       )}
     </>

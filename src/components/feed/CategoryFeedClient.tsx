@@ -147,17 +147,28 @@ export default function CategoryFeedClient({ segmentType }: CategoryFeedClientPr
     });
   }, [allPosts, selectedSub]);
 
-  // Search filter
+  // Search & Own Post Filter
   const filteredBySearch = React.useMemo(() => {
-    if (!searchQuery.trim()) return filteredBySub;
+    const userPhone = (profile?.phone || user?.phoneNumber || "").replace(/\D/g, "");
+    const userUid = user?.uid || "";
+
+    let list = filteredBySub.filter((p: any) => {
+      if (p.is_sold || p.is_inactive || p.is_expired || p.is_offline) return false;
+      // Filter out user's own published posts from public feeds
+      if (userUid && p.userId === userUid) return false;
+      if (userPhone && p.phone && String(p.phone).replace(/\D/g, "").includes(userPhone)) return false;
+      return true;
+    });
+
+    if (!searchQuery.trim()) return list;
     const q = searchQuery.toLowerCase();
-    return filteredBySub.filter((p: any) =>
+    return list.filter((p: any) =>
       (p.title || p.name || p.shop_name || "").toLowerCase().includes(q) ||
       (p.description || p.offer_title || "").toLowerCase().includes(q) ||
       (p.category || p.skill_category || "").toLowerCase().includes(q) ||
       (p.area_tag || "").toLowerCase().includes(q)
     );
-  }, [filteredBySub, searchQuery]);
+  }, [filteredBySub, searchQuery, profile, user]);
 
   // Sort
   const sortedPosts = React.useMemo(() => {

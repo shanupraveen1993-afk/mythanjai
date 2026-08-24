@@ -349,7 +349,7 @@ export default function ChatClientPage() {
   }
 
   return (
-    <div className="w-full flex-1 flex flex-col bg-slate-100 font-sans pb-20 md:pb-6 max-w-7xl mx-auto px-3 sm:px-6 min-h-[calc(100vh-5rem)]">
+    <div className="w-full flex-1 flex flex-col bg-slate-100 font-sans pb-16 md:pb-6 max-w-7xl mx-auto px-0 sm:px-6 h-[calc(100dvh-4rem)] md:h-[calc(100vh-5rem)] overflow-hidden">
       {/* SCAM WARNING MODAL */}
       {scamAlertTriggered && (
         <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 animate-fade-in">

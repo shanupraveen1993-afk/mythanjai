@@ -81,6 +81,9 @@ export default function SellClientPage() {
       }
     }
 
+    const userPhone = (profile?.phone || user?.phoneNumber || "").replace(/\D/g, "");
+    const userUid = user?.uid || "";
+
     list = list.filter((p: any) => {
       if (p.status === "moderation_review") return false;
       if (isListingQuarantined(p.id)) return false;
@@ -88,6 +91,12 @@ export default function SellClientPage() {
       const pType = (p.type || "SELL").toUpperCase();
       if (pType === "NEED" || pType === "SERVICE" || pType === "OFFER" || pType === "SHOP") return false;
       if (p.skill_category || p.shop_name) return false;
+      if (p.is_sold) return false;
+
+      // Filter out user's own published posts from public feed
+      if (userUid && p.userId === userUid) return false;
+      if (userPhone && p.phone && String(p.phone).replace(/\D/g, "").includes(userPhone)) return false;
+
       return true;
     });
 

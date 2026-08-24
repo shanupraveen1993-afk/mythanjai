@@ -135,18 +135,43 @@ function ListingsContent() {
     }
   };
 
-  const handleToggleSoldState = (postId: string, currentSold: boolean) => {
+  const handleToggleSegmentStatus = (post: any) => {
+    const isCurrentlyInactive = Boolean(post.is_sold || post.is_contacted || post.is_offline || post.is_expired);
+    const postType = (post.type || "SELL").toUpperCase();
+    
+    let keyToToggle = "is_sold";
+    let activeMsg = "Listing marked as Active.";
+    let inactiveMsg = "Listing marked as Sold.";
+
+    if (postType === "NEED") {
+      keyToToggle = "is_contacted";
+      activeMsg = "Requirement marked as Active.";
+      inactiveMsg = "Requirement marked as Contacted.";
+    } else if (postType === "SERVICE" || post.skill_category) {
+      keyToToggle = "is_offline";
+      activeMsg = "Service marked as Online.";
+      inactiveMsg = "Service marked as Offline.";
+    } else if (postType === "OFFER" || postType === "SHOP" || post.shop_name) {
+      keyToToggle = "is_expired";
+      activeMsg = "Offer marked as Active.";
+      inactiveMsg = "Offer marked as Expired.";
+    }
+
+    const nextState = !isCurrentlyInactive;
+
     setMyPosts((prev) =>
-      prev.map((p) => (p.id === postId ? { ...p, is_sold: !currentSold } : p))
+      prev.map((p) => (p.id === post.id ? { ...p, [keyToToggle]: nextState, is_sold: nextState, is_inactive: nextState } : p))
     );
+
     if (typeof window !== "undefined") {
       try {
         const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-        const updated = stored.map((p: any) => (p.id === postId ? { ...p, is_sold: !currentSold } : p));
+        const updated = stored.map((p: any) => (p.id === post.id ? { ...p, [keyToToggle]: nextState, is_sold: nextState, is_inactive: nextState } : p));
         localStorage.setItem("namma_thanjai_local_posts", JSON.stringify(updated));
       } catch (e) {}
     }
-    toast.success(currentSold ? "Listing marked as active." : "Listing marked as sold.");
+
+    toast.success(isCurrentlyInactive ? activeMsg : inactiveMsg);
   };
 
   // Guest State CTA
@@ -271,19 +296,30 @@ function ListingsContent() {
                       <span>Edit Ad</span>
                     </button>
 
-                    {/* 2. Mark Sold / Active Toggle */}
-                    <button
-                      type="button"
-                      onClick={() => handleToggleSoldState(post.id, Boolean(post.is_sold))}
-                      className={`font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center gap-1.5 cursor-pointer shadow-2xs transition-all border ${
-                        post.is_sold
-                          ? "bg-slate-200 text-slate-700 border-slate-300"
-                          : "bg-emerald-50 text-emerald-800 border-emerald-300 hover:bg-emerald-100"
-                      }`}
-                    >
-                      <Tag className="w-3.5 h-3.5 text-emerald-600" />
-                      <span>{post.is_sold ? "Mark Active" : "Mark Sold"}</span>
-                    </button>
+                    {/* 2. Segment-Specific Inactive Toggle */}
+                    {(() => {
+                      const isInactive = Boolean(post.is_sold || post.is_contacted || post.is_offline || post.is_expired);
+                      const pType = (post.type || "SELL").toUpperCase();
+                      let label = isInactive ? "Mark Active" : "Mark Sold";
+                      if (pType === "NEED") label = isInactive ? "Mark Active" : "Mark Contacted";
+                      else if (pType === "SERVICE" || post.skill_category) label = isInactive ? "Mark Online" : "Mark Offline";
+                      else if (pType === "OFFER" || pType === "SHOP" || post.shop_name) label = isInactive ? "Mark Active" : "Mark Expired";
+
+                      return (
+                        <button
+                          type="button"
+                          onClick={() => handleToggleSegmentStatus(post)}
+                          className={`font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center gap-1.5 cursor-pointer shadow-2xs transition-all border ${
+                            isInactive
+                              ? "bg-slate-200 text-slate-700 border-slate-300"
+                              : "bg-emerald-50 text-emerald-800 border-emerald-300 hover:bg-emerald-100"
+                          }`}
+                        >
+                          <Tag className="w-3.5 h-3.5 text-emerald-600" />
+                          <span>{label}</span>
+                        </button>
+                      );
+                    })()}
                   </div>
 
                   {/* 3. Delete Action Button */}
