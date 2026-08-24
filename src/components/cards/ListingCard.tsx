@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Share2, Bookmark, Phone, MessageSquare, MapPin, Calendar, Flag, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Share2, Bookmark, Phone, MessageSquare, MapPin, Calendar, Flag, X, ChevronLeft, ChevronRight, Camera } from "lucide-react";
 import { doc, updateDoc, increment } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/hooks/use-auth";
@@ -303,7 +303,10 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
                   className="object-cover transition-transform duration-300 group-hover/img:scale-105"
                 />
               ) : (
-                <CategoryVectorIllustration category={listing.category || listing.type} type="sell" variant="tile" />
+                <div className="w-full h-full bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 text-amber-400 p-2 flex flex-col items-center justify-center text-center select-none">
+                  <Camera className="w-5 h-5 text-amber-400 mb-1 opacity-80" />
+                  <span className="text-[10px] font-black uppercase tracking-wider text-amber-300">Request Photo</span>
+                </div>
               )}
               {/* +N Badge overlay on bottom-right of image */}
               {extraCount > 0 && (

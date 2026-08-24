@@ -999,11 +999,11 @@ export default function PostForm({ segment }: PostFormProps) {
                     }
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all"
+                    className="w-full px-0 py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors"
                   />
                 </div>
 
-                {/* Service: Location & Working Days Toggles */}
+                {/* Service: Location & Combined Availability Pill Toggle */}
                 {segment === "service" && (
                   <div className="flex flex-col gap-3">
                     <div className="flex flex-col gap-1.5">
@@ -1016,42 +1016,46 @@ export default function PostForm({ segment }: PostFormProps) {
                         value={area}
                         onChange={(e) => setArea(e.target.value)}
                         placeholder="e.g. Anna Nagar, Medical College Rd, Vallam"
-                        className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all"
+                        className="w-full px-0 py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors"
                       />
                     </div>
 
-                    {/* All Working Days Toggle */}
-                    <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 flex items-center justify-between gap-3">
-                      <span className="text-sm font-bold text-slate-800 flex items-center gap-2">
+                    {/* Combined Availability Single Pill Toggle */}
+                    <div className="flex flex-col gap-1.5">
+                      <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
                         <Clock className="w-4 h-4 text-amber-600" />
-                        <span>All Working Days (Available 7 Days)</span>
-                      </span>
-                      <label className="relative inline-flex items-center cursor-pointer shrink-0">
-                        <input
-                          type="checkbox"
-                          checked={allWorkingDays === "Yes"}
-                          onChange={(e) => setAllWorkingDays(e.target.checked ? "Yes" : "No")}
-                          className="sr-only peer"
-                        />
-                        <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500" />
+                        Working Availability *
                       </label>
-                    </div>
-
-                    {/* Sunday Leave Toggle */}
-                    <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 flex items-center justify-between gap-3">
-                      <span className="text-sm font-bold text-slate-800 flex items-center gap-2">
-                        <Calendar className="w-4 h-4 text-amber-600" />
-                        <span>Sunday Holiday / Leave</span>
-                      </span>
-                      <label className="relative inline-flex items-center cursor-pointer shrink-0">
-                        <input
-                          type="checkbox"
-                          checked={sundayLeave === "Yes"}
-                          onChange={(e) => setSundayLeave(e.target.checked ? "Yes" : "No")}
-                          className="sr-only peer"
-                        />
-                        <div className="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-amber-500" />
-                      </label>
+                      <div className="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-xl border border-slate-200">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setAllWorkingDays("Yes");
+                            setSundayLeave("No");
+                          }}
+                          className={`py-2 px-3 rounded-lg text-xs font-bold transition-all cursor-pointer text-center ${
+                            allWorkingDays === "Yes"
+                              ? "bg-amber-500 text-slate-950 shadow-xs font-black"
+                              : "text-slate-600 hover:text-slate-900"
+                          }`}
+                        >
+                          Available 7 Days
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setAllWorkingDays("No");
+                            setSundayLeave("Yes");
+                          }}
+                          className={`py-2 px-3 rounded-lg text-xs font-bold transition-all cursor-pointer text-center ${
+                            sundayLeave === "Yes"
+                              ? "bg-slate-900 text-white shadow-xs font-black"
+                              : "text-slate-600 hover:text-slate-900"
+                          }`}
+                        >
+                          Sunday Holiday
+                        </button>
+                      </div>
                     </div>
                   </div>
                 )}
@@ -1077,7 +1081,7 @@ export default function PostForm({ segment }: PostFormProps) {
                         placeholder="e.g. 5000, 5000rs, or 5000/month"
                         value={price}
                         onChange={(e) => setPrice(e.target.value)}
-                        className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all"
+                        className="w-full px-0 py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors"
                       />
                     </div>
 
@@ -1091,7 +1095,7 @@ export default function PostForm({ segment }: PostFormProps) {
                         value={area}
                         onChange={(e) => setArea(e.target.value)}
                         placeholder="Type your address or location..."
-                        className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all"
+                        className="w-full px-0 py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors"
                       />
                     </div>
                   </div>
@@ -1110,7 +1114,7 @@ export default function PostForm({ segment }: PostFormProps) {
                         placeholder="e.g. 5000, 5000rs (Optional)"
                         value={price}
                         onChange={(e) => setPrice(e.target.value)}
-                        className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all"
+                        className="w-full px-0 py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors"
                       />
                     </div>
 
@@ -1124,7 +1128,7 @@ export default function PostForm({ segment }: PostFormProps) {
                         value={area}
                         onChange={(e) => setArea(e.target.value)}
                         placeholder="e.g. Medical College Rd, Vallam"
-                        className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all"
+                        className="w-full px-0 py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors"
                       />
                     </div>
                   </div>
