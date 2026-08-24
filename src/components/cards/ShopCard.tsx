@@ -323,9 +323,14 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
           </div>
           <h3 className="font-heading font-black text-white text-sm leading-snug line-clamp-1">{post.shop_name}</h3>
 
-          {/* Offer title */}
+          {/* Offer title & description */}
           {post.offer_title && (
             <p className="text-amber-300 text-xs font-bold truncate line-clamp-1 whitespace-nowrap leading-relaxed">{post.offer_title}</p>
+          )}
+          {(post.offer_description || (post as any).description) && (
+            <p className="text-slate-200 text-xs font-normal leading-relaxed line-clamp-2 bg-slate-950/60 p-2 rounded-lg border border-white/10 backdrop-blur-md mt-0.5">
+              {post.offer_description || (post as any).description}
+            </p>
           )}
 
           {/* Validity + location row */}

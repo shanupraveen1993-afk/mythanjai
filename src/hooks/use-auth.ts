@@ -64,29 +64,44 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const activeVerifiedPhone = storedVerified && cleanStoredPhone.length >= 10 && cleanStoredPhone !== "9876543210" ? cleanStoredPhone : "";
 
       if (currentUser) {
-        // Fetch or create user profile document in Firestore
-        const userRef = doc(db, "users", currentUser.uid);
+        // Fetch or create user profile document in Firestore (Syncing by phone across APK & Web)
         try {
-          const userDoc = await getDoc(userRef);
+          let userProfileData: UserProfile | null = null;
+          
+          if (activeVerifiedPhone) {
+            try {
+              const { collection, query, where, getDocs } = await import("firebase/firestore");
+              const q = query(collection(db, "users"), where("phone", "==", activeVerifiedPhone));
+              const querySnap = await getDocs(q);
+              if (!querySnap.empty) {
+                userProfileData = querySnap.docs[0].data() as UserProfile;
+              }
+            } catch (e) {}
+          }
 
-          if (userDoc.exists()) {
-            const data = userDoc.data() as UserProfile;
+          if (!userProfileData) {
+            const userRef = doc(db, "users", currentUser.uid);
+            const userDoc = await getDoc(userRef);
+            if (userDoc.exists()) {
+              userProfileData = userDoc.data() as UserProfile;
+            }
+          }
 
-            // Preserve verified phone session if active locally
+          if (userProfileData) {
             if (activeVerifiedPhone) {
-              data.phone = activeVerifiedPhone;
-              data.isVerified = true;
+              userProfileData.phone = activeVerifiedPhone;
+              userProfileData.isVerified = true;
             }
-
             const adminPhone = process.env.NEXT_PUBLIC_ADMIN_PHONE?.replace(/\D/g, "");
-            const hasAdminPhone = data.phone && (data.phone.replace(/\D/g, "") === adminPhone || data.phone.includes("9994837342"));
-            if (hasAdminPhone && !data.isAdmin) {
+            const hasAdminPhone = userProfileData.phone && (userProfileData.phone.replace(/\D/g, "") === adminPhone || userProfileData.phone.includes("9994837342"));
+            if (hasAdminPhone && !userProfileData.isAdmin) {
+              const userRef = doc(db, "users", currentUser.uid);
               await updateDoc(userRef, { isAdmin: true });
-              data.isAdmin = true;
+              userProfileData.isAdmin = true;
             }
-            if (storedDisplayName) data.displayName = storedDisplayName;
+            if (storedDisplayName) userProfileData.displayName = storedDisplayName;
 
-            setProfile(data);
+            setProfile(userProfileData);
           } else {
             const newProfile: UserProfile = {
               uid: currentUser.uid,
@@ -96,6 +111,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               displayName: storedDisplayName || currentUser.displayName || "Namma Thanjai User",
               createdAt: new Date(),
             };
+            const userRef = doc(db, "users", currentUser.uid);
             await setDoc(userRef, newProfile, { merge: true });
             setProfile(newProfile);
           }

@@ -89,13 +89,19 @@ export function PreviewSection({
                 </div>
               )}
 
-              <div className={`w-full h-28 overflow-hidden bg-slate-100 relative ${isLocked ? "filter blur-xs" : ""}`}>
-                <img
-                  src={card.img}
-                  alt={card.title}
-                  className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
-                />
-                <span className="absolute top-2 left-2 text-xs font-black bg-white/95 text-slate-700 border border-slate-200 px-2 py-0.5 rounded-md shadow-sm">
+              <div className={`w-full h-28 overflow-hidden bg-slate-900 text-white relative flex flex-col justify-between p-3 ${isLocked ? "filter blur-xs" : ""}`}>
+                {card.img ? (
+                  <img
+                    src={card.img}
+                    alt={card.title}
+                    className="absolute inset-0 w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+                  />
+                ) : (
+                  <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-slate-800 to-slate-950 flex flex-col items-center justify-center p-2 text-center">
+                    <span className="text-amber-400 font-heading font-black text-xs uppercase tracking-wider">{card.sub}</span>
+                  </div>
+                )}
+                <span className="relative z-10 text-[10px] font-black bg-white/95 text-slate-800 border border-slate-200 px-2 py-0.5 rounded-md shadow-xs self-start">
                   {card.sub}
                 </span>
               </div>
@@ -367,13 +373,13 @@ export default function HomeClientPage() {
           title="Items for Sale (விற்பனை)"
           subtitle="Items for sale by local residents"
           seeAllPath="/sell"
-          accentColor="bg-yellow-500"
+          accentColor="bg-[#1d4ed8]"
           isGuest={false}
           onCardClick={() => router.push("/sell")}
           cards={[
-            { title: "2400 Sqft CMDA Plot", sub: "Plots & Real Estate", price: "₹24,50,000", area: "Vallam", img: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&auto=format&fit=crop" },
-            { title: "Hero Splendor 2022 — Single Owner", sub: "Used Vehicles", price: "₹68,000", area: "New Bus Stand", img: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=400&auto=format&fit=crop" },
-            { title: "iPhone 13 128GB Blue", sub: "Electronics & Mobiles", price: "₹42,000", area: "Old Bus Stand", img: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&auto=format&fit=crop" },
+            { title: "2400 Sqft CMDA Plot", sub: "Plots & Real Estate", price: "₹24,50,000", area: "Vallam", img: "" },
+            { title: "Hero Splendor 2022 — Single Owner", sub: "Used Vehicles", price: "₹68,000", area: "New Bus Stand", img: "" },
+            { title: "iPhone 13 128GB Blue", sub: "Electronics & Mobiles", price: "₹42,000", area: "Old Bus Stand", img: "" },
           ]}
         />
 
@@ -382,13 +388,13 @@ export default function HomeClientPage() {
           title="Items Looking For (தேவைகள்)"
           subtitle="Requirements from local buyers"
           seeAllPath="/need"
-          accentColor="bg-yellow-500"
+          accentColor="bg-[#1d4ed8]"
           isGuest={false}
           onCardClick={() => router.push("/need")}
           cards={[
-            { title: "Need 1-2 Acres Commercial Land", sub: "Plots & Real Estate", price: "Budget ₹50L+", area: "Vallam", img: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=400&auto=format&fit=crop" },
-            { title: "Need 2 BHK near Medical College", sub: "Property Rental", price: "₹10,000/mo", area: "Medical College Rd", img: "https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=400&auto=format&fit=crop" },
-            { title: "Need Used Laptop under ₹25,000", sub: "Electronics & Mobiles", price: "₹25,000", area: "Tanjore Town", img: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&auto=format&fit=crop" },
+            { title: "Need 1-2 Acres Commercial Land", sub: "Plots & Real Estate", price: "Budget ₹50L+", area: "Vallam", img: "" },
+            { title: "Need 2 BHK near Medical College", sub: "Property Rental", price: "₹10,000/mo", area: "Medical College Rd", img: "" },
+            { title: "Need Used Laptop under ₹25,000", sub: "Electronics & Mobiles", price: "₹25,000", area: "Tanjore Town", img: "" },
           ]}
         />
 
@@ -397,13 +403,13 @@ export default function HomeClientPage() {
           title="Local Service (சேவைகள்)"
           subtitle="Verified skilled tradespeople near you"
           seeAllPath="/services"
-          accentColor="bg-yellow-500"
+          accentColor="bg-[#1d4ed8]"
           isGuest={false}
           onCardClick={() => router.push("/services")}
           cards={[
-            { title: "Senthil Kumar — Electrician", sub: "Electrician", price: "14 Contacted", area: "Tanjore Town", img: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=400&auto=format&fit=crop" },
-            { title: "Rajesh K — Expert Plumber", sub: "Plumber", price: "18 Contacted", area: "Medical College Rd", img: "https://images.unsplash.com/photo-1585704032915-c3400ca199e7?w=400&auto=format&fit=crop" },
-            { title: "Venu Gopal — Wood Architect", sub: "Carpenter", price: "22 Contacted", area: "South Rampart", img: "https://images.unsplash.com/photo-1538688525198-9b88f6f53126?w=400&auto=format&fit=crop" },
+            { title: "Senthil Kumar — Electrician", sub: "Electrician", price: "14 Contacted", area: "Tanjore Town", img: "" },
+            { title: "Rajesh K — Expert Plumber", sub: "Plumber", price: "18 Contacted", area: "Medical College Rd", img: "" },
+            { title: "Venu Gopal — Wood Architect", sub: "Carpenter", price: "22 Contacted", area: "South Rampart", img: "" },
           ]}
         />
 
@@ -412,7 +418,7 @@ export default function HomeClientPage() {
           title="Local Offer (சலுகைகள்)"
           subtitle="Store discounts & deals from Thanjavur shops"
           seeAllPath="/shops"
-          accentColor="bg-yellow-500"
+          accentColor="bg-[#1d4ed8]"
           isGuest={!isAuthVerified}
           onAuthRequired={() => {
             if (typeof window !== "undefined") {
@@ -422,9 +428,9 @@ export default function HomeClientPage() {
           }}
           onCardClick={() => router.push("/shops")}
           cards={[
-            { title: "GLEN Gallery — Up to 60% OFF", sub: "Electronics & Mobiles", price: "Grand Sale", area: "New Bus Stand", img: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=400&auto=format&fit=crop" },
-            { title: "Silk Handloom — 25% OFF Zari", sub: "Textiles & Readymades", price: "Wedding Offer", area: "Karanthai", img: "https://images.unsplash.com/photo-1610030469983-98e550d6193c?w=400&auto=format&fit=crop" },
-            { title: "Degree Coffee + Free Halwa", sub: "Cafe & Restaurant", price: "Today Only", area: "South Rampart", img: "https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?w=400&auto=format&fit=crop" },
+            { title: "GLEN Gallery — Up to 60% OFF", sub: "Electronics & Mobiles", price: "Grand Sale", area: "New Bus Stand", img: "" },
+            { title: "Silk Handloom — 25% OFF Zari", sub: "Textiles & Readymades", price: "Wedding Offer", area: "Karanthai", img: "" },
+            { title: "Degree Coffee + Free Halwa", sub: "Cafe & Restaurant", price: "Today Only", area: "South Rampart", img: "" },
           ]}
         />
 

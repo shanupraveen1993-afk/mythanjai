@@ -720,11 +720,11 @@ function ProfileContent() {
                     <div key={post.id} className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col gap-3.5 shadow-2xs hover:border-slate-300 transition-all">
                       <div className="flex items-start gap-3 w-full">
                         {/* Post Image preview if available */}
-                        {(post.image_url || (post.image_urls && post.image_urls.length > 0) || post.images) && (
+                        {(post.image_url || (post.image_urls && post.image_urls.length > 0) || post.images || post.thumbnail_url || post.cover_image) && (
                           <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl bg-slate-200 relative overflow-hidden shrink-0 border border-slate-200">
                             <img
-                              src={post.image_url || (post.image_urls && post.image_urls[0]) || (post.images && post.images[0]) || "/thanjavur_temple_illustration.png"}
-                              alt={post.title || "Post thumbnail"}
+                              src={post.image_url || (post.image_urls && post.image_urls[0]) || (post.images && post.images[0]) || post.thumbnail_url || post.cover_image}
+                              alt={post.title || post.name || post.shop_name || "Post thumbnail"}
                               className="w-full h-full object-cover"
                             />
                           </div>
