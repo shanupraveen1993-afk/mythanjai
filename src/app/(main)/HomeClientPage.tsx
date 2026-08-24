@@ -9,6 +9,7 @@ import CategoryBridgeFeed from "@/components/home/CategoryBridgeFeed";
 import SplashScreen from "@/components/onboarding/SplashScreen";
 import WalkthroughModal from "@/components/onboarding/WalkthroughModal";
 import HomeCategorySegmentBar from "@/components/layout/HomeCategorySegmentBar";
+import UniversalSearchBarRow from "@/components/layout/UniversalSearchBarRow";
 import SellClientPage from "./sell/SellClientPage";
 
 // ── Shared Preview Card ───────────────────────────────────────────────────────
@@ -174,9 +175,9 @@ export default function HomeClientPage() {
       />
 
       <div className="w-full flex flex-col gap-5 text-slate-800 font-sans mt-1 px-3 sm:px-6 max-w-7xl mx-auto">
-      {/* ── 1. Universal Search Bar (Anchored at Top) ── */}
+      {/* ── 1. Universal Search Bar Row (Search Bar + Royal Blue Get App + Golden Yellow Post) ── */}
       <div className="w-full">
-        <UniversalSearchBar />
+        <UniversalSearchBarRow />
       </div>
 
       {/* ── 2. Hero Banner (Positioned Directly Below Search Bar) ── */}

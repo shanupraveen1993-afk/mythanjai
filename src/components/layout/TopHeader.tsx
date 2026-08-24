@@ -248,33 +248,17 @@ export default function TopHeader({
             )}
           </div>
 
-          {/* Primary Action Button (Get App / Dynamic Post) */}
-          {!pathname.includes("/profile") && !pathname.includes("/post") && (
-            isHomePage && !isNativeApp ? (
-              <a
-                href="/api/apk-download"
-                download="NammaThanjai-v12.apk"
-                onClick={handleGetAppClick}
-                className="relative group overflow-hidden bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-sm px-4 py-2 rounded-xl font-heading font-black shrink-0 flex items-center gap-2 shadow-xs cursor-pointer select-none border border-amber-400/50 transition-all duration-300"
-                title="Download Namma Thanjai Android App"
-                aria-label="Download Namma Thanjai Android App"
-              >
-                <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-amber-100/70 to-transparent -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out pointer-events-none" />
-                <Download className="w-4 h-4 shrink-0 text-[#0F172A] stroke-[2.5] relative z-10" />
-                <span className="relative z-10">Get App</span>
-              </a>
-            ) : !isHomePage ? (
-              <button
-                type="button"
-                onClick={handleDynamicPostClick}
-                className="bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-sm px-3.5 sm:px-4 py-2 rounded-xl font-heading font-black shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none touch-manipulation active:scale-[0.97] transition-all"
-                title={postInfo.label}
-              >
-                <Plus className="w-4 h-4 stroke-[3] text-[#0F172A]" />
-                <span className="hidden md:inline">{postInfo.label}</span>
-                <span className="md:hidden">Post</span>
-              </button>
-            ) : null
+          {/* APK Native App Only: Header Post Button */}
+          {isNativeApp && !pathname.includes("/profile") && !pathname.includes("/post") && (
+            <button
+              type="button"
+              onClick={handleDynamicPostClick}
+              className="bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-xs sm:text-sm px-3.5 sm:px-4 py-2 rounded-xl font-heading font-black shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none touch-manipulation active:scale-[0.97] transition-all"
+              title={postInfo.label}
+            >
+              <Plus className="w-4 h-4 stroke-[3] text-[#0F172A]" />
+              <span>Post</span>
+            </button>
           )}
         </div>
       </div>

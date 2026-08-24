@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import UniversalSearchBar from "@/components/layout/UniversalSearchBar";
+import UniversalSearchBarRow from "@/components/layout/UniversalSearchBarRow";
 import {
   ChevronRight,
   MapPin,
@@ -115,13 +116,13 @@ export default function LandingClientPage() {
     <div className="w-full flex flex-col gap-6 text-slate-900 font-sans pb-24 bg-[#f8fafc] min-h-screen">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 w-full flex flex-col gap-6 pt-4">
         
-        {/* ── Prominent Home Universal Search Bar ── */}
-        <div className="w-full flex flex-col gap-3">
-          <UniversalSearchBar />
-
-          {/* ── Universal Sticky 4-Category Segment Bar (Mobile WebApp/APK STICKY TOP) ── */}
-          <HomeCategorySegmentBar />
+        {/* ── Prominent Home Universal Search Bar Row (Search Bar + Royal Blue Get App + Golden Yellow Post) ── */}
+        <div className="w-full">
+          <UniversalSearchBarRow />
         </div>
+
+        {/* ── Universal Sticky 4-Category Segment Bar (Mobile WebApp/APK STICKY TOP) ── */}
+        <HomeCategorySegmentBar />
 
         {/* ── 1. Hero Banner ── */}
         <div className="relative w-full min-h-[160px] sm:min-h-[200px] rounded-2xl overflow-hidden bg-[#0F172A] text-white flex items-center px-6 sm:px-8 py-6 sm:py-8 shadow-md mt-1 border border-slate-800">
