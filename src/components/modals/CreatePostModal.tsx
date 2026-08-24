@@ -686,35 +686,28 @@ export default function CreatePostModal({
     }
   };
 
-  const getSamplePost = () => {
-    return CATEGORY_SAMPLE_POSTS[activeCategory] || CATEGORY_SAMPLE_POSTS["Others"] || {
-      title: "Sample Noticeboard Post Title",
-      description: "Sample post description details will render here. Formatted neatly."
-    };
-  };
-
   const displayTitle = (() => {
-    if (type === "needs") return title || getSamplePost().title;
-    if (type === "services") return serviceName || getSamplePost().title;
-    if (type === "shops") return shopName || getSamplePost().title;
-    return offerTitle || getSamplePost().title;
+    if (type === "needs") return title || "New Requirement";
+    if (type === "services") return serviceName || "Local Service Provider";
+    if (type === "shops") return shopName || "Local Store";
+    return offerTitle || "Special Offer";
   })();
 
   const displayDescription = (() => {
-    if (type === "needs") return description || getSamplePost().description;
-    if (type === "services") return description || getSamplePost().description;
+    if (type === "needs") return description || "";
+    if (type === "services") return description || "";
     if (type === "shops") {
-      const addr = address || getSamplePost().address || "";
-      const land = landmark || getSamplePost().landmark || "";
-      const off = offerTitle || getSamplePost().offerTitle || "";
+      const addr = address || "";
+      const land = landmark || "";
+      const off = offerTitle || "";
       return `${addr}${land ? ` (Near ${land})` : ""}${off ? `\n\nPromo Offer: ${off}` : ""}`;
     }
-    return offerDesc || getSamplePost().description;
+    return offerDesc || "";
   })();
 
-  const displayPrice = price || getSamplePost().price;
-  const displayExperience = experience || getSamplePost().experience || "8 Years";
-  const displayHours = hours || getSamplePost().hours || "9:00 AM - 9:00 PM";
+  const displayPrice = price || "";
+  const displayExperience = experience || "Verified Expert";
+  const displayHours = hours || "9:00 AM - 9:00 PM";
 
   const CATEGORY_STOCK_IMAGES: Record<string, string> = {};
 

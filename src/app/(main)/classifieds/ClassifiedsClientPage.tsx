@@ -48,57 +48,8 @@ export default function ClassifiedsClientPage() {
   const [uploading, setUploading] = useState(false);
   const [sortBy, setSortBy] = useState<"recent" | "price_low" | "price_high">("recent");
 
-  // Seed initial sample posts in local state
-  const [localPosts, setLocalPosts] = useState<NeedOrSalePost[]>([
-    {
-      id: "cmda_plot",
-      userId: "sample_user_1",
-      type: "SELL",
-      title: "2400 Sqft CMDA Plot for Sale",
-      raw_text: "2400 Sqft CMDA Plot for Sale",
-      description: "DTCP approved residential plot with 30ft tar road frontage and Kaveri water line connection ready near Vallam.",
-      category: "Plots & Real Estate",
-      area_tag: "Vallam",
-      price: "2450000",
-      phone: "9876543210",
-      image_url: "/thanjavur_temple_illustration.png",
-      is_verified: true,
-      created_at: new Date() as any,
-      expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) as any,
-    },
-    {
-      id: "house_rental",
-      userId: "sample_user_2",
-      type: "SELL",
-      title: "2 BHK Independent House for Rent",
-      raw_text: "2 BHK Independent House for Rent",
-      description: "Modular kitchen, 2 bathrooms, 24/7 Kaveri water supply, dedicated car parking. Close to Medical College Rd.",
-      category: "Property Rental",
-      area_tag: "Medical College Rd",
-      price: "12500",
-      phone: "9876543211",
-      image_url: "/hero_building_visual.png",
-      is_verified: true,
-      created_at: new Date() as any,
-      expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) as any,
-    },
-    {
-      id: "hero_bike",
-      userId: "sample_user_3",
-      type: "SELL",
-      title: "Hero Splendor 2022 Model",
-      raw_text: "Hero Splendor 2022 Model",
-      description: "Single owner, 65+ kmpl mileage, clean papers.",
-      category: "Used Vehicles",
-      area_tag: "New Bus Stand",
-      price: "68000",
-      phone: "9876543212",
-      image_url: "/namma_thanjai_logo.png",
-      is_verified: true,
-      created_at: new Date() as any,
-      expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) as any,
-    }
-  ]);
+  // Initial sample posts purged for clean 100% live user testing
+  const [localPosts, setLocalPosts] = useState<NeedOrSalePost[]>([]);
 
   // Real-time Firestore Query subscription
   const { data: posts, loading: postsLoading } = useFirestore<NeedOrSalePost>({

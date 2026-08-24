@@ -52,7 +52,10 @@ export default function SellClientPage() {
   const loadLocalPosts = React.useCallback(() => {
     try {
       let stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-      let sellPosts = stored.filter((p: any) => !p.type || p.type.toUpperCase() !== "NEED");
+      let sellPosts = stored.filter((p: any) => {
+        const t = (p.type || "SELL").toUpperCase();
+        return t === "SELL" && !p.skill_category && !p.shop_name;
+      });
       setLocalPosts(sellPosts);
     } catch (e) {}
   }, []);
@@ -77,11 +80,14 @@ export default function SellClientPage() {
       }
     }
 
-    list = list.filter((p) => {
-      if ((p as any).status === "moderation_review") return false;
+    list = list.filter((p: any) => {
+      if (p.status === "moderation_review") return false;
       if (isListingQuarantined(p.id)) return false;
       if (!p.title || p.title.trim() === "" || p.description === "No detailed description provided.") return false;
-      return !p.type || p.type?.toUpperCase() !== "NEED";
+      const pType = (p.type || "SELL").toUpperCase();
+      if (pType === "NEED" || pType === "SERVICE" || pType === "OFFER" || pType === "SHOP") return false;
+      if (p.skill_category || p.shop_name) return false;
+      return true;
     });
 
     if (selectedCategory !== "All") {
