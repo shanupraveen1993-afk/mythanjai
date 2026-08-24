@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { MapPin, Plus, User, ShieldCheck, Check, MessageSquare, Globe, Download, Menu, X, ArrowLeft } from "lucide-react";
+import { MapPin, Plus, User, ShieldCheck, Check, MessageSquare, Globe, Download, Menu, X, ArrowLeft, Package } from "lucide-react";
 import { TANJORE_LOCALITIES, TanjoreLocality } from "@/lib/constants";
 import SearchableAreaDropdown from "./SearchableAreaDropdown";
 import { AppTab } from "./BottomTabBar";
@@ -194,8 +194,24 @@ export default function TopHeader({
             <span className="truncate max-w-[90px]">{selectedArea || "Thanjavur"}</span>
           </div>
 
-          {/* Desktop Website Only: Chat & Profile Buttons */}
+          {/* Desktop Website Only: My Listings, Chat & Profile Buttons */}
           <div className="hidden md:flex items-center gap-2">
+            {!pathname.includes("/post") && (
+              <button
+                type="button"
+                onClick={() => router.push("/profile?tab=listings")}
+                className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border shrink-0 ${
+                  pathname.includes("tab=listings") || pathname.includes("tab=my_posts")
+                    ? "bg-[#FBBF24] text-[#0F172A] border-amber-400 shadow-xs"
+                    : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
+                }`}
+                title="My Listings & Postings"
+                aria-label="View my listings"
+              >
+                <Package className={`w-4 h-4 ${pathname.includes("tab=listings") || pathname.includes("tab=my_posts") ? "text-[#0F172A] stroke-[2.5]" : "text-slate-600"}`} />
+              </button>
+            )}
+
             {!pathname.includes("/profile") && !pathname.includes("/post") && (
               <button
                 type="button"
@@ -220,14 +236,14 @@ export default function TopHeader({
                   router.push("/profile");
                 }}
                 className={`flex items-center justify-center w-9 h-9 rounded-full transition-all cursor-pointer border shrink-0 ${
-                  pathname === "/profile"
+                  pathname === "/profile" && !pathname.includes("tab=")
                     ? "bg-[#FBBF24] text-[#0F172A] border-amber-400 shadow-xs"
                     : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
                 }`}
                 title="Profile & Account"
                 aria-label="View profile"
               >
-                <User className={`w-4 h-4 ${pathname === "/profile" ? "text-[#0F172A] stroke-[2.5]" : "text-slate-600"}`} />
+                <User className={`w-4 h-4 ${pathname === "/profile" && !pathname.includes("tab=") ? "text-[#0F172A] stroke-[2.5]" : "text-slate-600"}`} />
               </button>
             )}
           </div>
