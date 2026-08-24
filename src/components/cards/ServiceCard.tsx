@@ -56,20 +56,20 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
       return { label: "Expert", cls: "bg-emerald-50 text-emerald-700 border-emerald-200" };
     }
     if (text.includes("proficient") || text.includes("master") || text.includes("quality")) {
-      return { label: "Proficient", cls: "bg-amber-50 text-amber-700 border-amber-200" };
+      return { label: "Proficient", cls: "bg-amber-50 text-amber-900 border-amber-300 font-bold" };
     }
     if (text.includes("talent") || text.includes("creative") || text.includes("repair")) {
-      return { label: "Talented", cls: "bg-purple-50 text-purple-700 border-purple-200" };
+      return { label: "Top Rated", cls: "bg-amber-50 text-amber-900 border-amber-300 font-bold" };
     }
     if (text.includes("skill") || text.includes("service") || text.includes("wiring")) {
-      return { label: "Skilled", cls: "bg-blue-50 text-blue-700 border-blue-200" };
+      return { label: "Verified Trade", cls: "bg-emerald-50 text-emerald-800 border-emerald-300" };
     }
 
     const fallbacks = [
-      { label: "Skilled", cls: "bg-blue-50 text-blue-700 border-blue-200" },
-      { label: "Talented", cls: "bg-purple-50 text-purple-700 border-purple-200" },
-      { label: "Expert", cls: "bg-emerald-50 text-emerald-700 border-emerald-200" },
-      { label: "Proficient", cls: "bg-amber-50 text-amber-700 border-amber-200" },
+      { label: "Verified Trade", cls: "bg-emerald-50 text-emerald-800 border-emerald-300" },
+      { label: "Top Rated", cls: "bg-amber-50 text-amber-900 border-amber-300 font-bold" },
+      { label: "Expert Trade", cls: "bg-emerald-50 text-emerald-800 border-emerald-300" },
+      { label: "Proficient", cls: "bg-amber-50 text-amber-900 border-amber-300 font-bold" },
     ];
     return fallbacks[idx];
   }, [post.description, post.name]);

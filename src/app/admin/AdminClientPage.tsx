@@ -205,7 +205,7 @@ export default function AdminClientPage() {
       case "needs_and_sales":
         return <span className="bg-blue-500/20 text-blue-300 border border-blue-400/40 px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-wider">Sell / Need</span>;
       case "services":
-        return <span className="bg-purple-500/20 text-purple-300 border border-purple-400/40 px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-wider">Service</span>;
+        return <span className="bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-wider">Service</span>;
       case "shops":
         return <span className="bg-amber-500/20 text-amber-300 border border-amber-400/40 px-2.5 py-0.5 rounded-lg text-[10px] font-black uppercase tracking-wider">Store Offer</span>;
       default:
@@ -262,7 +262,7 @@ export default function AdminClientPage() {
             <Link href="/post?segment=sell&admin=true" className="flex items-center gap-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-blue-300 border border-blue-400/40 font-heading font-black px-3.5 py-2 rounded-xl transition-all cursor-pointer uppercase tracking-wider shrink-0">
               + Post Sell
             </Link>
-            <Link href="/post?segment=need&admin=true" className="flex items-center gap-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-purple-300 border border-purple-400/40 font-heading font-black px-3.5 py-2 rounded-xl transition-all cursor-pointer uppercase tracking-wider shrink-0">
+            <Link href="/post?segment=need&admin=true" className="flex items-center gap-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-400/40 font-heading font-black px-3.5 py-2 rounded-xl transition-all cursor-pointer uppercase tracking-wider shrink-0">
               + Post Need
             </Link>
             <Link href="/post?segment=service&admin=true" className="flex items-center gap-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-emerald-400/40 font-heading font-black px-3.5 py-2 rounded-xl transition-all cursor-pointer uppercase tracking-wider shrink-0">
