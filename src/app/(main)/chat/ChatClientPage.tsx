@@ -72,7 +72,8 @@ export default function ChatClientPage() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
-      setQueryListingId(params.get("listingId") || "");
+      const listingId = params.get("listingId") || "";
+      setQueryListingId(listingId);
       const sellerId = params.get("sellerId") || "";
       setQuerySellerId(sellerId);
       if (sellerId) setActivePeerId(sellerId);
@@ -81,6 +82,9 @@ export default function ChatClientPage() {
         const decoded = decodeURIComponent(title);
         setQueryTitle(decoded);
         setActiveListingTitle(decoded);
+      }
+      if (listingId || sellerId) {
+        setShowMobileChat(true);
       }
     }
   }, []);
@@ -469,16 +473,19 @@ export default function ChatClientPage() {
               </div>
             </div>
 
-            {/* Direct WhatsApp Call CTA */}
-            <a
-              href={`https://wa.me/91${querySellerId || "9000000000"}?text=${encodeURIComponent(`Hi, inquiring about: ${activeListingTitle}`)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-[#25D366] hover:bg-emerald-600 text-slate-950 font-heading font-black text-xs px-3 py-1.5 rounded-xl shadow-xs transition-all flex items-center gap-1.5 shrink-0 border border-emerald-400 cursor-pointer"
+            {/* Right Side: Clean Close (X) Button */}
+            <button
+              type="button"
+              onClick={() => {
+                setShowMobileChat(false);
+                setActiveChatId("");
+              }}
+              className="p-1.5 text-white/80 hover:text-white hover:bg-white/10 rounded-full cursor-pointer transition-colors shrink-0 ml-auto"
+              title="Close Conversation"
+              aria-label="Close Chat"
             >
-              <PhoneCall className="w-3.5 h-3.5 fill-slate-950 stroke-[2]" />
-              <span>WhatsApp</span>
-            </a>
+              <X className="w-5 h-5 stroke-[2.5]" />
+            </button>
           </div>
 
           {/* PERMANENT TOP SCAM SAFETY BANNER */}
