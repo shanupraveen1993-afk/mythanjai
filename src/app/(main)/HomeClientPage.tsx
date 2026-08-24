@@ -8,6 +8,7 @@ import RobotHero from "@/components/ui/robot-hero";
 import CategoryBridgeFeed from "@/components/home/CategoryBridgeFeed";
 import SplashScreen from "@/components/onboarding/SplashScreen";
 import WalkthroughModal from "@/components/onboarding/WalkthroughModal";
+import HomeCategorySegmentBar from "@/components/layout/HomeCategorySegmentBar";
 
 // ── Shared Preview Card ───────────────────────────────────────────────────────
 
@@ -207,43 +208,10 @@ export default function HomeClientPage() {
         </div>
       </div>
 
-      {/* ── 3. 4 Segment Quick Filter Grid (Mobile WebApp/APK STICKY TOP, 100% Screen-Fit, ZERO Horizontal Scroll) ── */}
-      <div className="w-full md:hidden sticky top-14 z-40 bg-[#f8fafc]/95 backdrop-blur-md py-2 border-b border-slate-200/80 shadow-2xs -mx-3 px-3 sm:-mx-6 sm:px-6">
-        <div className="grid grid-cols-4 gap-1.5 w-full">
-          {[
-            { id: "sell", label: "Sell", route: "/sell" },
-            { id: "need", label: "Need", route: "/need" },
-            { id: "service", label: "Service", route: "/services" },
-            { id: "offer", label: "Offer", route: "/shops" },
-          ].map((seg) => {
-            const isActive = activeSegment === seg.id || (seg.id === "sell" && activeSegment === "sell");
-            return (
-              <button
-                key={seg.id}
-                type="button"
-                onClick={() => {
-                  setActiveSegment(seg.id as any);
-                  if (typeof window !== "undefined") {
-                    localStorage.setItem("namma_thanjai_active_segment", seg.id);
-                  }
-                  if (seg.id !== "sell") {
-                    router.push(seg.route);
-                  }
-                }}
-                className={`py-2 px-1 rounded-xl font-heading font-black text-xs transition-all cursor-pointer flex items-center justify-center w-full text-center ${
-                  isActive
-                    ? "bg-[#FBBF24] text-[#0F172A] shadow-xs border border-amber-400 font-extrabold"
-                    : "bg-white text-slate-700 hover:bg-slate-100 border border-slate-200"
-                }`}
-              >
-                <span className="truncate w-full">{seg.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
+      {/* ── 3. Universal Sticky 4-Category Segment Bar (Mobile WebApp/APK STICKY TOP) ── */}
+      <HomeCategorySegmentBar />
 
-        {/* ── SELL Preview ───────────────────────── */}
+      {/* ── SELL Preview ───────────────────────── */}
         <PreviewSection
           title="Items for Sale (விற்பனை)"
           subtitle="Items for sale by local residents"

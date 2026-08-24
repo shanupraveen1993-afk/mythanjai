@@ -91,7 +91,12 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
           const Icon = item.icon;
           const isActive =
             item.id === "home"
-              ? pathname === "/"
+              ? pathname === "/" ||
+                pathname.includes("/sell") ||
+                pathname.includes("/need") ||
+                pathname.includes("/service") ||
+                pathname.includes("/shops") ||
+                pathname.includes("/offer")
               : item.id === "post"
               ? pathname.startsWith("/post")
               : item.id === "chat"

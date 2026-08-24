@@ -9,12 +9,9 @@ import { Plus, Loader2, Store, ArrowUpDown, UserCheck } from "lucide-react";
 import { SHOP_CATEGORIES } from "@/lib/constants";
 import CustomDropdown from "@/components/ui/CustomDropdown";
 import { Filter } from "lucide-react";
-import WebAppScrollFAB from "@/components/common/WebAppScrollFAB";
 import { isListingQuarantined } from "@/lib/moderation";
-
-const SAMPLE_POSTS: ShopPost[] = [];
-
 import { useAuth } from "@/hooks/use-auth";
+import HomeCategorySegmentBar from "@/components/layout/HomeCategorySegmentBar";
 
 export default function ShopsClientPage() {
   const router = useRouter();
@@ -77,6 +74,7 @@ export default function ShopsClientPage() {
 
   return (
     <div className="flex flex-col gap-3 pb-24 w-full font-sans">
+      <HomeCategorySegmentBar />
 
       {/* 1. Hero Banner — Clean Commercial Design (16px radius) */}
       <div className="relative w-full rounded-2xl overflow-hidden bg-[#0F172A] text-white flex items-center px-6 sm:px-8 py-7 sm:py-8 shadow-sm mt-2">
