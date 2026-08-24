@@ -114,8 +114,8 @@ export default function PostForm({ segment }: PostFormProps) {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
-      setEditId(params.get("edit"));
-      setEditCol(params.get("col"));
+      setEditId(params.get("editId") || params.get("edit"));
+      setEditCol(params.get("editCol") || params.get("col"));
     }
   }, []);
 
