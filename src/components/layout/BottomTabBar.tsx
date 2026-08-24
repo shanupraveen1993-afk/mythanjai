@@ -52,7 +52,7 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
       id: "listings",
       label: "My Listings",
       icon: Package,
-      route: "/profile?tab=listings",
+      route: "/listings",
       isCenter: false,
     },
     {

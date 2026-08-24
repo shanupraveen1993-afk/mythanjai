@@ -127,13 +127,19 @@ export function PreviewSection({
 
 // ── Main Component ────────────────────────────────────────────────────────────
 
+import UniversalSearchBar from "@/components/layout/UniversalSearchBar";
+
 export default function HomeClientPage() {
   const router = useRouter();
   const { user, profile } = useAuth();
   const isAuthVerified = Boolean(profile?.isVerified);
 
   return (
-    <div className="w-full flex flex-col gap-8 text-slate-800 font-sans mt-3">
+    <div className="w-full flex flex-col gap-6 text-slate-800 font-sans mt-2">
+      {/* ── Prominent Home Universal Search Bar ── */}
+      <div className="w-full">
+        <UniversalSearchBar />
+      </div>
 
         {/* ── 1. Hero Banner (Universal Home Banner - Prominent & Standout) ── */}
         <div className="relative w-full min-h-[160px] sm:min-h-[200px] rounded-xl overflow-hidden bg-slate-950 text-white flex items-center px-6 sm:px-8 py-6 sm:py-8 shadow-md mt-1">

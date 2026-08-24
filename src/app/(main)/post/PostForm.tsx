@@ -777,37 +777,7 @@ export default function PostForm({ segment }: PostFormProps) {
                   )}
                 </div>
 
-                {isAdminUser && (
-                  <div className="flex flex-col gap-1 w-full">
-                    <label className="text-xs font-semibold text-slate-700 flex items-center justify-between">
-                      <span>Store Video Promo / Reel (Optional)</span>
-                      <span className="text-[10px] text-slate-400 font-medium">MP4/MOV &lt; 25MB</span>
-                    </label>
-                    {videoPreview ? (
-                      <div className="relative w-full h-32 rounded-xl overflow-hidden border border-slate-200 bg-slate-950 group flex items-center justify-center">
-                        <video src={videoPreview} className="w-full h-full object-cover" controls muted />
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setVideoPreview("");
-                            setSelectedVideo(null);
-                          }}
-                          className="absolute top-2 right-2 z-20 bg-slate-900/90 text-white p-1.5 rounded-full hover:bg-red-600 transition-colors shadow cursor-pointer"
-                          title="Remove Video"
-                        >
-                          <X className="w-4 h-4" />
-                        </button>
-                      </div>
-                    ) : (
-                      <label className="border-2 border-dashed border-slate-300 hover:border-amber-500 rounded-xl p-4 flex flex-col items-center justify-center text-center cursor-pointer transition-colors bg-slate-50 hover:bg-amber-500/5 group">
-                        <Video className="w-6 h-6 text-slate-400 group-hover:text-amber-500 transition-colors mb-1" />
-                        <span className="text-xs font-bold text-slate-800">Upload Store Video Promo / Reel</span>
-                        <span className="text-[10px] text-slate-500 font-medium">Click to attach video file</span>
-                        <input type="file" accept="video/*" onChange={handleVideoChange} className="hidden" />
-                      </label>
-                    )}
-                  </div>
-                )}
+
 
                 {/* 2. EXPLICIT SHOP NAME INPUT */}
                 <div className="flex flex-col gap-1.5">
@@ -837,27 +807,7 @@ export default function PostForm({ segment }: PostFormProps) {
 
                 <div className="flex flex-col gap-1.5">
                   <div className="flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <label className="text-sm font-bold text-slate-800">Offer Description *</label>
-                      <button
-                        type="button"
-                        onClick={handleBlurDescription}
-                        disabled={isAiRewriting || !description.trim()}
-                        className="text-xs font-bold text-amber-700 hover:text-amber-800 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 px-2.5 py-1 rounded-lg flex items-center gap-1 transition-all cursor-pointer disabled:opacity-50"
-                      >
-                        {isAiRewriting ? (
-                          <>
-                            <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                            <span>AI Formatting...</span>
-                          </>
-                        ) : (
-                          <>
-                            <Sparkles className="w-3.5 h-3.5 text-amber-600 fill-amber-500" />
-                            <span>✨ AI Auto-Format</span>
-                          </>
-                        )}
-                      </button>
-                    </div>
+                    <label className="text-sm font-bold text-slate-800">Offer Description *</label>
                     <span className={`text-xs font-medium ${description.length >= config.maxDescChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>
                       {description.length}/{config.maxDescChars}
                     </span>
@@ -873,23 +823,8 @@ export default function PostForm({ segment }: PostFormProps) {
                     placeholder="Describe discount, terms, packages, or specific items..."
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="w-full px-4 py-3 text-sm font-medium border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all leading-relaxed"
+                    className="w-full px-0 py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors leading-relaxed"
                   />
-                  {/* Gemini AI Smart Insight Banner for Offer */}
-                  <div className="bg-amber-50/90 border border-amber-200/80 rounded-xl p-2.5 flex items-center justify-between gap-2 text-xs font-semibold text-amber-900 shadow-2xs mt-1.5">
-                    <div className="flex items-center gap-2">
-                      <Sparkles className="w-4 h-4 text-amber-600 fill-amber-400 shrink-0" />
-                      <span>✨ Gemini AI Insight: Auto-extracts store name, location & valid dates from offer text!</span>
-                    </div>
-                    <button
-                      type="button"
-                      onClick={handleBlurDescription}
-                      disabled={isAiRewriting || !description.trim()}
-                      className="px-2.5 py-1 bg-amber-400 hover:bg-amber-300 text-slate-950 rounded-lg text-[11px] font-black uppercase tracking-wider shrink-0 cursor-pointer disabled:opacity-40 transition-all"
-                    >
-                      {isAiRewriting ? "Refining..." : "Format Now"}
-                    </button>
-                  </div>
                 </div>
 
                 {/* 4. OFFER VALIDITY RANGE (VALID FROM TO VALID TO DATES) */}
@@ -1035,7 +970,7 @@ export default function PostForm({ segment }: PostFormProps) {
                           }}
                           className={`py-2 px-3 rounded-lg text-xs font-bold transition-all cursor-pointer text-center ${
                             allWorkingDays === "Yes"
-                              ? "bg-amber-500 text-slate-950 shadow-xs font-black"
+                              ? "bg-amber-400 text-slate-950 font-black border border-amber-500 shadow-xs"
                               : "text-slate-600 hover:text-slate-900"
                           }`}
                         >
@@ -1049,7 +984,7 @@ export default function PostForm({ segment }: PostFormProps) {
                           }}
                           className={`py-2 px-3 rounded-lg text-xs font-bold transition-all cursor-pointer text-center ${
                             sundayLeave === "Yes"
-                              ? "bg-slate-900 text-white shadow-xs font-black"
+                              ? "bg-amber-400 text-slate-950 font-black border border-amber-500 shadow-xs"
                               : "text-slate-600 hover:text-slate-900"
                           }`}
                         >
@@ -1121,13 +1056,13 @@ export default function PostForm({ segment }: PostFormProps) {
                     <div className="flex flex-col gap-1.5">
                       <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
                         <MapPin className="w-4 h-4 text-amber-500" />
-                        Preferred Locations *
+                        Preferred Locations (Up to 3, comma separated) *
                       </label>
                       <input
                         type="text"
                         value={area}
                         onChange={(e) => setArea(e.target.value)}
-                        placeholder="e.g. Medical College Rd, Vallam"
+                        placeholder="e.g. Medical College Rd, Vallam, New Bus Stand"
                         className="w-full px-0 py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors"
                       />
                     </div>
