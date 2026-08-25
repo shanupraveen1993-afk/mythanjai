@@ -136,7 +136,7 @@ export default function OfferCard({ post }: OfferCardProps) {
             rel="noopener noreferrer"
             className="border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs py-1.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[34px] cursor-pointer transition-colors shadow-2xs"
           >
-            <span>View Deal</span>
+            <span>Visit Store</span>
             <ExternalLink className="w-3.5 h-3.5 text-[#0F172A] stroke-[2.5]" />
           </a>
         </div>

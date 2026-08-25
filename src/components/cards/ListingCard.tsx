@@ -328,7 +328,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
 
   return (
     <>
-      <div className="bg-white rounded-2xl p-4 flex flex-col justify-between shadow-2xs hover:shadow-md transition-all duration-200 border border-slate-200/90 relative font-sans h-full">
+      <div className="bg-white rounded-2xl p-4 flex flex-col justify-between shadow-2xs border border-slate-200/90 relative font-sans h-full">
         <div className="flex flex-col gap-3 flex-1">
 
           {/* ── TOP HEADER BLOCK: Left Image Box + Right Details Column ── */}

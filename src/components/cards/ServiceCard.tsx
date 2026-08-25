@@ -286,7 +286,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
         </div>
       </div>
 
-      {/* Footer Action Row: Plain Text Date Ago (Left) + 2 Fixed 128px CTA Buttons (Right) */}
+      {/* Footer Action Row: Plain Text Date Ago (Left) + 2 Fixed CTA Buttons (Right) */}
       <div className="pt-3 flex items-center justify-between gap-4 sm:gap-6 mt-auto w-full border-t border-slate-100">
         <span className="text-xs font-semibold text-slate-600 shrink-0 select-none">
           {(() => {
@@ -298,7 +298,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
           })()}
         </span>
 
-        {/* 2. Secondary CTA & 3. Primary CTA Buttons (Exact w-[128px] each) */}
+        {/* 2. Secondary CTA: Request Call Back & 3. Primary CTA: Call Buttons */}
         <div className="flex items-center gap-2 shrink-0 justify-end">
           <button
             type="button"
@@ -310,12 +310,13 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
                 }
                 return;
               }
-              router.push(`/chat?listingId=${post.id}&sellerId=${post.userId || ""}&title=${encodeURIComponent(post.name)}`);
+              const callMsg = `📞 Call Back Request: A customer requested a call back regarding your service "${post.name}".`;
+              router.push(`/chat?listingId=${post.id}&sellerId=${post.userId || ""}&title=${encodeURIComponent(post.name)}&autoMsg=${encodeURIComponent(callMsg)}`);
             }}
-            className="w-[128px] shrink-0 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
+            className="w-[128px] shrink-0 border-2 border-amber-500 text-amber-900 bg-amber-50 hover:bg-amber-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
           >
-            <MessageSquare className="w-4 h-4 text-[#0F172A] shrink-0 stroke-[2.5]" />
-            <span>Chat</span>
+            <Phone className="w-4 h-4 text-amber-700 shrink-0 stroke-[2.5]" />
+            <span>Call Back</span>
           </button>
 
           <button
