@@ -32,6 +32,22 @@ import {
 import { useToast } from "@/context/ToastContext";
 import ListingCard, { ListingItem } from "@/components/cards/ListingCard";
 
+function formatRelativeTime(dateStr?: string) {
+  if (!dateStr) return "Recently";
+  try {
+    const date = new Date(dateStr);
+    const now = new Date();
+    const diffMs = now.getTime() - date.getTime();
+    const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+    if (diffHours < 24) return `${diffHours || 1}h ago`;
+    const diffDays = Math.floor(diffHours / 24);
+    if (diffDays < 30) return `${diffDays}d ago`;
+    return date.toLocaleDateString("en-IN", { month: "short", day: "numeric" });
+  } catch {
+    return "Recently";
+  }
+}
+
 export default function ListingsClientPage() {
   return (
     <React.Suspense fallback={<div className="p-8 text-center"><Loader2 className="w-6 h-6 animate-spin mx-auto text-amber-500" /></div>}>
@@ -275,66 +291,120 @@ function ListingsContent() {
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {myPosts.map((post) => (
-              <div key={post.id} className="flex flex-col bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-2xs relative">
-                <ListingCard listing={post as unknown as ListingItem} />
+          <div className="flex flex-col gap-4">
+            {myPosts.map((post) => {
+              const isInactive = Boolean(post.is_sold || post.is_contacted || post.is_offline || post.is_expired);
+              const pType = (post.type || "SELL").toUpperCase();
+              let statusLabel = isInactive ? "INACTIVE" : "ACTIVE";
+              let toggleBtnText = isInactive ? "Mark Active" : "Mark Sold";
+              if (pType === "NEED") toggleBtnText = isInactive ? "Mark Active" : "Mark Fulfilled";
+              else if (pType === "SERVICE" || post.skill_category) toggleBtnText = isInactive ? "Mark Online" : "Mark Offline";
+              else if (pType === "OFFER" || pType === "SHOP" || post.shop_name) toggleBtnText = isInactive ? "Mark Active" : "Mark Expired";
 
-                {/* Dedicated Listing Management Action Bar */}
-                <div className="p-3 bg-slate-50 border-t border-slate-200/80 flex items-center justify-between gap-2">
-                  <div className="flex items-center gap-1.5">
-                    {/* 1. Edit Ad Button */}
+              const itemTitle = post.title || post.name || post.shop_name || "Untitled Listing";
+              const itemImage = post.image_url || post.thumbnail_url || (Array.isArray(post.images) && post.images[0]) || "/placeholder.webp";
+              const itemPrice = post.price || post.rate || (post.budget ? `Budget: ₹${post.budget}` : "");
+              const itemLocation = post.location || post.area || post.locality || "Thanjavur";
+
+              return (
+                <div
+                  key={post.id}
+                  className="bg-white rounded-2xl border border-slate-200 p-4 shadow-2xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-sans relative"
+                >
+                  {/* Left Column: Image Thumbnail + Details */}
+                  <div className="flex items-start gap-4 flex-1 min-w-0 w-full sm:w-auto">
+                    <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-slate-100 border border-slate-200 overflow-hidden relative shrink-0">
+                      <img
+                        src={itemImage}
+                        alt={itemTitle}
+                        className="w-full h-full object-cover"
+                      />
+                      {post.category && (
+                        <span className="absolute bottom-1 left-1 right-1 bg-slate-950/80 backdrop-blur-xs text-white text-[10px] font-bold px-1.5 py-0.5 rounded text-center truncate">
+                          {post.category}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="flex flex-col gap-1.5 flex-1 min-w-0">
+                      {/* Category & Status Pill Row */}
+                      <div className="flex items-center gap-2">
+                        <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md border ${
+                          isInactive
+                            ? "bg-slate-100 text-slate-600 border-slate-300"
+                            : "bg-emerald-50 text-emerald-800 border-emerald-300"
+                        }`}>
+                          {isInactive ? `● ${statusLabel}` : "● ACTIVE"}
+                        </span>
+                        <span className="text-xs font-semibold text-slate-500">• {pType}</span>
+                      </div>
+
+                      {/* Title */}
+                      <h3 className="font-sans font-bold text-base sm:text-lg text-slate-900 line-clamp-1 truncate">
+                        {itemTitle}
+                      </h3>
+
+                      {/* Golden Amber Price */}
+                      {itemPrice && (
+                        <div className="text-amber-600 font-heading font-black text-lg sm:text-xl tracking-tight">
+                          {itemPrice.toString().startsWith("₹") ? itemPrice : `₹${itemPrice}`}
+                        </div>
+                      )}
+
+                      {/* Locality & Posted Date */}
+                      <div className="flex items-center gap-3 text-xs text-slate-500 font-medium mt-0.5">
+                        <span className="flex items-center gap-1 truncate">
+                          <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                          <span className="truncate">{itemLocation}</span>
+                        </span>
+                        <span className="flex items-center gap-1 shrink-0">
+                          <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                          <span>{formatRelativeTime(post.created_at || new Date().toISOString())}</span>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Right Column: 3 Clean Management Buttons Only (NO Chat/Call) */}
+                  <div className="flex sm:flex-col items-center sm:items-end gap-2 shrink-0 w-full sm:w-auto pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100">
                     <button
                       type="button"
                       onClick={() => {
                         const seg = post.type === "SERVICE" ? "service" : post.type === "OFFER" || post.type === "SHOP" ? "offer" : post.type === "NEED" ? "need" : "sell";
                         router.push(`/post/${seg}?editId=${post.id}`);
                       }}
-                      className="bg-white hover:bg-slate-100 text-slate-900 border border-slate-300 font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center gap-1.5 cursor-pointer shadow-2xs transition-all"
+                      className="flex-1 sm:flex-initial w-full sm:w-36 bg-white hover:bg-slate-100 text-slate-900 border border-slate-300 font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs transition-all"
                     >
                       <Pencil className="w-3.5 h-3.5 text-amber-600" />
                       <span>Edit Ad</span>
                     </button>
 
-                    {/* 2. Segment-Specific Inactive Toggle */}
-                    {(() => {
-                      const isInactive = Boolean(post.is_sold || post.is_contacted || post.is_offline || post.is_expired);
-                      const pType = (post.type || "SELL").toUpperCase();
-                      let label = isInactive ? "Mark Active" : "Mark Sold";
-                      if (pType === "NEED") label = isInactive ? "Mark Active" : "Mark Fulfilled";
-                      else if (pType === "SERVICE" || post.skill_category) label = isInactive ? "Mark Online" : "Mark Offline";
-                      else if (pType === "OFFER" || pType === "SHOP" || post.shop_name) label = isInactive ? "Mark Active" : "Mark Expired";
+                    <button
+                      type="button"
+                      onClick={() => handleToggleSegmentStatus(post)}
+                      className={`flex-1 sm:flex-initial w-full sm:w-36 font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs transition-all border ${
+                        isInactive
+                          ? "bg-slate-200 text-slate-700 border-slate-300"
+                          : "bg-emerald-50 text-emerald-800 border-emerald-300 hover:bg-emerald-100"
+                      }`}
+                    >
+                      <Tag className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>{toggleBtnText}</span>
+                    </button>
 
-                      return (
-                        <button
-                          type="button"
-                          onClick={() => handleToggleSegmentStatus(post)}
-                          className={`font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center gap-1.5 cursor-pointer shadow-2xs transition-all border ${
-                            isInactive
-                              ? "bg-slate-200 text-slate-700 border-slate-300"
-                              : "bg-emerald-50 text-emerald-800 border-emerald-300 hover:bg-emerald-100"
-                          }`}
-                        >
-                          <Tag className="w-3.5 h-3.5 text-emerald-600" />
-                          <span>{label}</span>
-                        </button>
-                      );
-                    })()}
+                    <button
+                      type="button"
+                      onClick={() => handleDeletePost(post.id, post.type === "SERVICE" ? "services" : post.type === "SHOP" ? "shops" : "needs_and_sales")}
+                      className="flex-1 sm:flex-initial w-full sm:w-36 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs transition-all"
+                      title="Delete Listing"
+                    >
+                      <Trash2 className="w-3.5 h-3.5 text-rose-600" />
+                      <span>Delete</span>
+                    </button>
                   </div>
-
-                  {/* 3. Delete Action Button */}
-                  <button
-                    type="button"
-                    onClick={() => handleDeletePost(post.id, post.type === "SERVICE" ? "services" : post.type === "SHOP" ? "shops" : "needs_and_sales")}
-                    className="bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center gap-1.5 cursor-pointer shadow-2xs transition-all ml-auto"
-                    title="Delete Listing"
-                  >
-                    <Trash2 className="w-3.5 h-3.5 text-rose-600" />
-                    <span>Delete</span>
-                  </button>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )
       ) : (
