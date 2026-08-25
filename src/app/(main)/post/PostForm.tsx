@@ -1011,9 +1011,9 @@ export default function PostForm({ segment }: PostFormProps) {
                 )}
 
 
-                {/* PRICE + LOCATION in 1 row (FOR SELL) — Text Mode for Custom Formats e.g. 5000rs / 5000/month */}
+                {/* PRICE & SEPARATE LOCATION ROW (FOR SELL) */}
                 {segment === "sell" && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <>
                     <div className="flex flex-col gap-1.5">
                       <div className="flex items-center justify-between">
                         <label className="text-sm font-bold text-slate-800 flex items-center gap-1">
@@ -1035,18 +1035,20 @@ export default function PostForm({ segment }: PostFormProps) {
                       />
                     </div>
 
-                    <GooglePlacesInput
-                      label="Address / Location *"
-                      value={area}
-                      onChange={(val) => setArea(val)}
-                      placeholder="Type street, area or landmark in Thanjavur..."
-                    />
-                  </div>
+                    <div className="flex flex-col gap-1.5">
+                      <GooglePlacesInput
+                        label="Address / Location *"
+                        value={area}
+                        onChange={(val) => setArea(val)}
+                        placeholder="Type street, area or landmark in Thanjavur..."
+                      />
+                    </div>
+                  </>
                 )}
 
-                {/* BUDGET + LOCATION in 1 row (FOR NEED) */}
+                {/* BUDGET & SEPARATE LOCATION ROW (FOR NEED) */}
                 {segment === "need" && (
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <>
                     <div className="flex flex-col gap-1.5">
                       <label className="text-sm font-bold text-slate-800 flex items-center gap-1">
                         <IndianRupee className="w-4 h-4 text-emerald-600" />
@@ -1061,13 +1063,15 @@ export default function PostForm({ segment }: PostFormProps) {
                       />
                     </div>
 
-                    <GooglePlacesInput
-                      label="Preferred Locations (Up to 3, comma separated) *"
-                      value={area}
-                      onChange={(val) => setArea(val)}
-                      placeholder="e.g. Medical College Rd, Vallam, New Bus Stand"
-                    />
-                  </div>
+                    <div className="flex flex-col gap-1.5">
+                      <GooglePlacesInput
+                        label="Preferred Locations (Up to 3, comma separated) *"
+                        value={area}
+                        onChange={(val) => setArea(val)}
+                        placeholder="e.g. Medical College Rd, Vallam, New Bus Stand"
+                      />
+                    </div>
+                  </>
                 )}
 
                 {/* SERVICE SPECIFIC FIELDS: Phone */}
