@@ -220,7 +220,7 @@ function ListingsContent() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-2 pb-24 flex flex-col gap-6 font-sans">
+    <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-8 sm:pt-10 pb-24 flex flex-col gap-6 font-sans">
       {/* Header Bar */}
       <div className="flex flex-col gap-1 border-b border-slate-200/80 pb-4">
         <h1 className="font-heading font-black text-xl sm:text-2xl text-slate-900 tracking-tight flex items-center gap-2 text-left">
@@ -236,11 +236,6 @@ function ListingsContent() {
             </>
           )}
         </h1>
-        <p className="text-xs sm:text-sm font-medium text-slate-500 text-left">
-          {activeTab === "saved"
-            ? "Your bookmarked listings saved for quick access"
-            : "Manage your live posted ads across Thanjavur"}
-        </p>
       </div>
 
       {/* 2 Tabs: My Posted Ads | Saved Ads */}
@@ -291,15 +286,11 @@ function ListingsContent() {
             </button>
           </div>
         ) : (
-          <div className="flex flex-col gap-4">
+          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden divide-y divide-slate-200">
             {myPosts.map((post) => {
               const isInactive = Boolean(post.is_sold || post.is_contacted || post.is_offline || post.is_expired);
               const pType = (post.type || "SELL").toUpperCase();
               let statusLabel = isInactive ? "INACTIVE" : "ACTIVE";
-              let toggleBtnText = isInactive ? "Mark Active" : "Mark Sold";
-              if (pType === "NEED") toggleBtnText = isInactive ? "Mark Active" : "Mark Fulfilled";
-              else if (pType === "SERVICE" || post.skill_category) toggleBtnText = isInactive ? "Mark Online" : "Mark Offline";
-              else if (pType === "OFFER" || pType === "SHOP" || post.shop_name) toggleBtnText = isInactive ? "Mark Active" : "Mark Expired";
 
               const itemTitle = post.title || post.name || post.shop_name || "Untitled Listing";
               const itemImage = post.image_url || post.thumbnail_url || (Array.isArray(post.images) && post.images[0]) || "/placeholder.webp";
@@ -309,11 +300,11 @@ function ListingsContent() {
               return (
                 <div
                   key={post.id}
-                  className="bg-white rounded-2xl border border-slate-200 p-4 shadow-2xs flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-sans relative"
+                  className="p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-sans hover:bg-slate-50/60 transition-colors"
                 >
                   {/* Left Column: Image Thumbnail + Details */}
                   <div className="flex items-start gap-4 flex-1 min-w-0 w-full sm:w-auto">
-                    <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl bg-slate-100 border border-slate-200 overflow-hidden relative shrink-0">
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg bg-slate-100 border border-slate-200 overflow-hidden shrink-0">
                       <img
                         src={itemImage}
                         alt={itemTitle}
@@ -321,28 +312,24 @@ function ListingsContent() {
                       />
                     </div>
 
-                    <div className="flex flex-col gap-1.5 flex-1 min-w-0">
-                      {/* Category & Status Row */}
+                    <div className="flex flex-col gap-1 flex-1 min-w-0">
+                      {/* Status & Category Row */}
                       <div className="flex items-center gap-2">
-                        <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md border ${
-                          isInactive
-                            ? "bg-slate-100 text-slate-600 border-slate-300"
-                            : "bg-emerald-50 text-emerald-800 border-emerald-300"
-                        }`}>
-                          {isInactive ? `● ${statusLabel}` : "● ACTIVE"}
+                        <span className={`text-[11px] font-bold ${isInactive ? "text-slate-500" : "text-emerald-700"}`}>
+                          ● {isInactive ? statusLabel : "ACTIVE"}
                         </span>
                         {post.category && <span className="text-xs font-semibold text-slate-700">• {post.category}</span>}
-                        <span className="text-xs font-semibold text-slate-400">• {pType}</span>
+                        <span className="text-xs font-medium text-slate-400">• {pType}</span>
                       </div>
 
                       {/* Title */}
-                      <h3 className="font-sans font-bold text-base sm:text-lg text-slate-900 line-clamp-1 truncate">
+                      <h3 className="font-sans font-bold text-base text-slate-900 line-clamp-1 truncate">
                         {itemTitle}
                       </h3>
 
                       {/* Golden Amber Price */}
                       {itemPrice && (
-                        <div className="text-amber-600 font-heading font-black text-lg sm:text-xl tracking-tight">
+                        <div className="text-amber-600 font-heading font-black text-base sm:text-lg tracking-tight">
                           {itemPrice.toString().startsWith("₹") ? itemPrice : `₹${itemPrice}`}
                         </div>
                       )}
@@ -361,15 +348,15 @@ function ListingsContent() {
                     </div>
                   </div>
 
-                  {/* Right Column: 2 Clean Management Buttons Only (Edit & Delete) */}
-                  <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100 justify-start">
+                  {/* Right Column: 2 Clean Management Buttons (Edit & Delete) */}
+                  <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto pt-2 sm:pt-0 justify-start">
                     <button
                       type="button"
                       onClick={() => {
                         const seg = post.type === "SERVICE" ? "service" : post.type === "OFFER" || post.type === "SHOP" ? "offer" : post.type === "NEED" ? "need" : "sell";
                         router.push(`/post/${seg}?editId=${post.id}`);
                       }}
-                      className="px-3.5 py-2 bg-white hover:bg-slate-100 text-slate-900 border border-slate-300 font-heading font-black text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+                      className="px-3.5 py-1.5 bg-white hover:bg-slate-100 text-slate-900 border border-slate-300 font-heading font-bold text-xs rounded-lg flex items-center gap-1.5 cursor-pointer transition-colors"
                     >
                       <Pencil className="w-3.5 h-3.5 text-amber-600" />
                       <span>Edit Ad</span>
@@ -378,7 +365,7 @@ function ListingsContent() {
                     <button
                       type="button"
                       onClick={() => handleDeletePost(post.id, post.type === "SERVICE" ? "services" : post.type === "SHOP" ? "shops" : "needs_and_sales")}
-                      className="px-3.5 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-heading font-black text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
+                      className="px-3.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-heading font-bold text-xs rounded-lg flex items-center gap-1.5 cursor-pointer transition-colors"
                       title="Delete Listing"
                     >
                       <Trash2 className="w-3.5 h-3.5 text-rose-600" />
