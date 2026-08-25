@@ -79,6 +79,10 @@ body {
   font-family: var(--font-heading), 'Red Hat Display', system-ui, sans-serif;
 }
 
+.font-tamil {
+  font-family: var(--font-tamil), var(--font-sans), 'Noto Sans Tamil', system-ui, sans-serif;
+}
+
 /* ── Design System Typographic Scale Hierarchy ───────────────── */
 .text-display {
   font-family: var(--font-heading), 'Red Hat Display', system-ui, sans-serif;

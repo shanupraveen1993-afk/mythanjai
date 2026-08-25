@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Red_Hat_Display, Red_Hat_Text } from "next/font/google";
+import { Red_Hat_Display, Red_Hat_Text, Noto_Sans_Tamil } from "next/font/google";
 import "./globals.css";
 import { ToastProvider } from "@/context/ToastContext";
 import { LanguageProvider } from "@/context/LanguageContext";
@@ -15,6 +15,13 @@ const redHatDisplay = Red_Hat_Display({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800", "900"],
   variable: "--font-heading",
+  display: "swap",
+});
+
+const notoSansTamil = Noto_Sans_Tamil({
+  subsets: ["tamil"],
+  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-tamil",
   display: "swap",
 });
 
@@ -54,7 +61,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${redHatText.variable} ${redHatDisplay.variable} h-full bg-[#fff8eb]`}>
+    <html lang="en" className={`${redHatText.variable} ${redHatDisplay.variable} ${notoSansTamil.variable} h-full bg-[#fff8eb]`}>
       <head>
         <script
           dangerouslySetInnerHTML={{
