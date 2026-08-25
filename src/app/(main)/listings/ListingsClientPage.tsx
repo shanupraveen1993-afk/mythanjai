@@ -220,7 +220,7 @@ function ListingsContent() {
   }
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-8 sm:pt-10 pb-24 flex flex-col gap-6 font-sans">
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-24 flex flex-col gap-6 font-sans">
       {/* Header Bar */}
       <div className="flex flex-col gap-1 border-b border-slate-200/80 pb-4">
         <h1 className="font-heading font-black text-xl sm:text-2xl text-slate-900 tracking-tight flex items-center gap-2 text-left">
@@ -243,7 +243,7 @@ function ListingsContent() {
         <button
           type="button"
           onClick={() => setActiveTab("my_posts")}
-          className={`py-3 font-heading font-bold text-xs sm:text-sm transition-all border-b-2 cursor-pointer flex items-center gap-2 ${
+          className={`py-3 font-heading font-bold text-xs sm:text-sm transition-all border-b-2 cursor-pointer flex items-center gap-2 focus:outline-none outline-none select-none ${
             activeTab === "my_posts"
               ? "border-amber-500 text-slate-900 font-bold"
               : "border-transparent text-slate-500 hover:text-slate-900"
@@ -256,7 +256,7 @@ function ListingsContent() {
         <button
           type="button"
           onClick={() => setActiveTab("saved")}
-          className={`py-3 font-heading font-bold text-xs sm:text-sm transition-all border-b-2 cursor-pointer flex items-center gap-2 ${
+          className={`py-3 font-heading font-bold text-xs sm:text-sm transition-all border-b-2 cursor-pointer flex items-center gap-2 focus:outline-none outline-none select-none ${
             activeTab === "saved"
               ? "border-amber-500 text-slate-900 font-bold"
               : "border-transparent text-slate-500 hover:text-slate-900"
