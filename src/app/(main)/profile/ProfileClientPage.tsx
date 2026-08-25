@@ -393,29 +393,31 @@ function ProfileContent() {
 
   if (!isVerified) {
     return (
-      <div className="w-full max-w-md mx-auto py-12 px-6 flex flex-col items-center justify-center text-center gap-4 bg-white rounded-2xl border border-slate-200 shadow-2xs my-8">
-        <div className="w-16 h-16 rounded-full bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-600">
-          <User className="w-8 h-8 stroke-[2.5]" />
+      <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 pt-6 pb-24 font-sans">
+        <div className="w-full bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-10 shadow-sm flex flex-col items-center justify-center text-center gap-4">
+          <div className="w-16 h-16 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 shadow-2xs">
+            <User className="w-8 h-8 stroke-[2.5]" />
+          </div>
+          <div className="flex flex-col gap-1.5 max-w-md">
+            <h2 className="font-heading font-black text-xl sm:text-2xl text-slate-900 tracking-tight">Sign In Required</h2>
+            <p className="text-amber-700 font-extrabold text-xs">சுயவிவரம் &amp; கணக்கை அணுகவும்</p>
+            <p className="text-slate-600 text-xs sm:text-sm font-medium leading-relaxed">
+              Sign in to post free ads, manage your active listings, view saved bookmarks, and direct message sellers in Thanjavur.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              if (typeof window !== "undefined") {
+                window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+              }
+            }}
+            className="mt-2 w-full max-w-xs bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-sm py-3.5 px-6 rounded-2xl shadow-md cursor-pointer transition-all flex items-center justify-center gap-2 active:scale-[0.98]"
+          >
+            <MessageSquare className="w-5 h-5 fill-white stroke-[2.5]" />
+            <span>Sign In / Verify</span>
+          </button>
         </div>
-        <div className="flex flex-col gap-1 max-w-xs">
-          <h2 className="font-heading font-black text-xl text-slate-900">Sign In Required</h2>
-          <p className="text-amber-700 font-extrabold text-xs">சுயவிவரம் & கணக்கை அணுகவும்</p>
-          <p className="text-slate-600 text-xs mt-1 leading-relaxed">
-            Sign in to post free ads, manage your active listings, view saved bookmarks, and direct message sellers in Thanjavur.
-          </p>
-        </div>
-        <button
-          type="button"
-          onClick={() => {
-            if (typeof window !== "undefined") {
-              window.dispatchEvent(new Event("namma_thanjai_open_signin"));
-            }
-          }}
-          className="mt-2 w-full bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-sm py-3 px-6 rounded-2xl shadow-md cursor-pointer transition-all flex items-center justify-center gap-2 active:scale-[0.98]"
-        >
-          <MessageSquare className="w-5 h-5 fill-white stroke-[2.5]" />
-          <span>Sign In / Verify</span>
-        </button>
       </div>
     );
   }

@@ -73,6 +73,8 @@ function ListingsContent() {
   useEffect(() => {
     async function fetchListingsData() {
       if (!isVerified) {
+        setMyPosts([]);
+        setSavedPosts([]);
         setLoading(false);
         return;
       }
@@ -101,16 +103,18 @@ function ListingsContent() {
           });
         }
 
-        // Add Local Posts
-        try {
-          const localStored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-          localStored.forEach((p: any) => {
-            if (p.id && !seenIds.has(p.id)) {
-              seenIds.add(p.id);
-              combinedMyPosts.push(p);
-            }
-          });
-        } catch (e) {}
+        // Add Local Posts ONLY if user is authenticated
+        if (isVerified) {
+          try {
+            const localStored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+            localStored.forEach((p: any) => {
+              if (p.id && !seenIds.has(p.id)) {
+                seenIds.add(p.id);
+                combinedMyPosts.push(p);
+              }
+            });
+          } catch (e) {}
+        }
 
         setMyPosts(combinedMyPosts);
 
@@ -190,31 +194,36 @@ function ListingsContent() {
     toast.success(isCurrentlyInactive ? activeMsg : inactiveMsg);
   };
 
-  // Guest State CTA
+  // Unauthenticated Guest State CTA (Full Width Layout matching Home Screen)
   if (!isVerified && !authLoading) {
     return (
-      <div className="max-w-4xl mx-auto px-4 py-12 flex flex-col items-center text-center gap-4">
-        <div className="w-16 h-16 rounded-full bg-amber-100 flex items-center justify-center text-amber-600 border border-amber-200">
-          <Lock className="w-8 h-8 stroke-[2.5]" />
+      <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 pt-6 pb-24 font-sans">
+        <div className="w-full bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-10 shadow-sm flex flex-col items-center justify-center text-center gap-4">
+          <div className="w-16 h-16 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 shadow-2xs">
+            <Lock className="w-8 h-8 stroke-[2.5]" />
+          </div>
+          <div className="flex flex-col gap-1.5 max-w-md">
+            <h1 className="font-heading font-black text-xl sm:text-2xl text-slate-900 tracking-tight">
+              Sign In Required
+            </h1>
+            <p className="text-amber-700 font-extrabold text-xs">விளம்பரங்களை நிர்வகிக்க உள்நுழையவும்</p>
+            <p className="text-slate-600 text-xs sm:text-sm font-medium leading-relaxed">
+              Sign in to manage your active listings, view buyer inquiries, track saved items, and post ads in Thanjavur.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => {
+              if (typeof window !== "undefined") {
+                window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+              }
+            }}
+            className="mt-2 w-full max-w-xs bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-sm py-3.5 px-6 rounded-2xl shadow-md cursor-pointer transition-all flex items-center justify-center gap-2 active:scale-95"
+          >
+            <MessageSquare className="w-5 h-5 fill-white stroke-[2.5]" />
+            <span>Sign In / Verify</span>
+          </button>
         </div>
-        <h1 className="font-heading font-black text-xl sm:text-2xl text-slate-900">
-          Sign In to Manage Your Listings &amp; Saved Ads
-        </h1>
-        <p className="text-sm font-bold text-slate-600 max-w-md">
-          Track your posted ads, view buyer inquiries, and bookmark your favorite local deals in Thanjavur.
-        </p>
-        <button
-          type="button"
-          onClick={() => {
-            if (typeof window !== "undefined") {
-              window.dispatchEvent(new Event("namma_thanjai_open_signin"));
-            }
-          }}
-          className="bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-sm px-6 py-3 rounded-xl shadow-md cursor-pointer transition-all active:scale-95 flex items-center gap-2"
-        >
-          <MessageSquare className="w-4 h-4 fill-white stroke-[2.5]" />
-          <span>Sign In / Verify</span>
-        </button>
       </div>
     );
   }
