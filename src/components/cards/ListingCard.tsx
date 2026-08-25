@@ -334,37 +334,39 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
           {/* ── TOP HEADER BLOCK: Left Image Box + Right Details Column ── */}
           <div className="flex items-start gap-3 w-full">
             
-            {/* LEFT: Compact Square Image Container with +N Badge (w-20 h-20 sm:w-24 sm:h-24) */}
-            <div
-              className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl bg-slate-100 relative overflow-hidden shrink-0 border border-slate-200/80 shadow-2xs group/img cursor-pointer"
-              onClick={(e) => {
-                if (allImages.length > 0) {
-                  e.stopPropagation();
-                  setGalleryIndex(0);
-                }
-              }}
-            >
-              {allImages.length > 0 ? (
-                <Image
-                  src={imgError ? "/placeholder.webp" : imageSrc}
-                  alt={listing.title}
-                  fill
-                  onError={() => setImgError(true)}
-                  className="object-cover transition-transform duration-300 group-hover/img:scale-105"
-                />
-              ) : (
-                <div className="w-full h-full bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 text-amber-400 p-2 flex flex-col items-center justify-center text-center select-none">
-                  <Camera className="w-5 h-5 text-amber-400 mb-1 opacity-80" />
-                  <span className="text-[10px] font-black uppercase tracking-wider text-amber-300">Request Photo</span>
-                </div>
-              )}
-              {/* +N Badge overlay on bottom-right of image */}
-              {extraCount > 0 && (
-                <div className="absolute bottom-1.5 right-1.5 bg-slate-950/85 backdrop-blur-md text-amber-400 text-[10px] font-black px-1.5 py-0.5 rounded-md border border-amber-400/40 shadow-md">
-                  +{extraCount}
-                </div>
-              )}
-            </div>
+            {/* LEFT: Compact Square Image Container — ONLY render if not a NEED/looking_for requirement card */}
+            {!isLookingFor && (
+              <div
+                className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl bg-slate-100 relative overflow-hidden shrink-0 border border-slate-200/80 shadow-2xs group/img cursor-pointer"
+                onClick={(e) => {
+                  if (allImages.length > 0) {
+                    e.stopPropagation();
+                    setGalleryIndex(0);
+                  }
+                }}
+              >
+                {allImages.length > 0 ? (
+                  <Image
+                    src={imgError ? "/placeholder.webp" : imageSrc}
+                    alt={listing.title}
+                    fill
+                    onError={() => setImgError(true)}
+                    className="object-cover transition-transform duration-300 group-hover/img:scale-105"
+                  />
+                ) : (
+                  <div className="w-full h-full bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 text-amber-400 p-2 flex flex-col items-center justify-center text-center select-none">
+                    <Camera className="w-5 h-5 text-amber-400 mb-1 opacity-80" />
+                    <span className="text-[10px] font-black uppercase tracking-wider text-amber-300">Request Photo</span>
+                  </div>
+                )}
+                {/* +N Badge overlay on bottom-right of image */}
+                {extraCount > 0 && (
+                  <div className="absolute bottom-1.5 right-1.5 bg-slate-950/85 backdrop-blur-md text-amber-400 text-[10px] font-black px-1.5 py-0.5 rounded-md border border-amber-400/40 shadow-md">
+                    +{extraCount}
+                  </div>
+                )}
+              </div>
+            )}
 
             {/* RIGHT COLUMN: Category Badge (left) + Price (right) + Title (left) */}
             <div className="flex-1 min-w-0 flex flex-col justify-between self-stretch">

@@ -156,7 +156,7 @@ export default function PostForm({ segment }: PostFormProps) {
   const [youtubeUrl, setYoutubeUrl] = useState("");
   const [googleMapsUrl, setGoogleMapsUrl] = useState("");
   const [allWorkingDays, setAllWorkingDays] = useState("Yes");
-  const [sundayLeave, setSundayLeave] = useState("Yes");
+  const [sundayLeave, setSundayLeave] = useState("No");
   const [validFrom, setValidFrom] = useState("");
   const [validTo, setValidTo] = useState("");
   const [showPhone, setShowPhone] = useState(false);
@@ -856,13 +856,15 @@ export default function PostForm({ segment }: PostFormProps) {
                   </div>
                 </div>
 
-                {/* 5. ADDRESS LINE — GooglePlaces autocomplete */}
+                {/* 5. ADDRESS LINE — Freeform Location Input */}
                 <div className="w-full">
-                  <GooglePlacesInput
-                    value={area}
-                    onChange={(val) => setArea(val)}
+                  <input
+                    type="text"
+                    required
                     placeholder="📍 Shop Address & Locality in Thanjavur *"
-                    label="Shop Address & Area"
+                    value={area}
+                    onChange={(e) => setArea(e.target.value)}
+                    className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium"
                   />
                 </div>
 
@@ -923,10 +925,13 @@ export default function PostForm({ segment }: PostFormProps) {
                 {/* SERVICE LOCATION & AVAILABILITY */}
                 {segment === "service" && (
                   <div className="flex flex-col gap-3">
-                    <GooglePlacesInput
-                      value={area}
-                      onChange={(val) => setArea(val)}
+                    <input
+                      type="text"
+                      required
                       placeholder="📍 Service Location / Area in Thanjavur *"
+                      value={area}
+                      onChange={(e) => setArea(e.target.value)}
+                      className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium"
                     />
 
                     {/* Combined Availability Single Pill Toggle */}
@@ -984,10 +989,13 @@ export default function PostForm({ segment }: PostFormProps) {
                     </div>
 
                     <div className="w-full">
-                      <GooglePlacesInput
-                        value={area}
-                        onChange={(val) => setArea(val)}
+                      <input
+                        type="text"
+                        required
                         placeholder="📍 Address / Location in Thanjavur *"
+                        value={area}
+                        onChange={(e) => setArea(e.target.value)}
+                        className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium"
                       />
                     </div>
                   </>
@@ -1007,10 +1015,13 @@ export default function PostForm({ segment }: PostFormProps) {
                     </div>
 
                     <div className="w-full">
-                      <GooglePlacesInput
-                        value={area}
-                        onChange={(val) => setArea(val)}
+                      <input
+                        type="text"
+                        required
                         placeholder="📍 Preferred Locations in Thanjavur * (e.g. Medical College Rd, Vallam)"
+                        value={area}
+                        onChange={(e) => setArea(e.target.value)}
+                        className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium"
                       />
                     </div>
                   </>
