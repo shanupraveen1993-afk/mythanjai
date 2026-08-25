@@ -1,11 +1,28 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
-import { Sparkles, ShoppingBag, Search, Wrench, Store } from "lucide-react";
+import { Sparkles, ShoppingBag, Search, Wrench, Store, X } from "lucide-react";
 
 export default function TamilSloganBanner() {
   const pathname = usePathname() || "";
+  const [isDismissed, setIsDismissed] = useState<boolean>(true); // default true until client check
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const dismissed = localStorage.getItem("namma_thanjai_banner_dismissed") === "true";
+      setIsDismissed(dismissed);
+    }
+  }, []);
+
+  const handleDismiss = () => {
+    setIsDismissed(true);
+    if (typeof window !== "undefined") {
+      localStorage.setItem("namma_thanjai_banner_dismissed", "true");
+    }
+  };
+
+  if (isDismissed) return null;
 
   // English Titles + Exact Tamil Text with Underlined Titles
   const getBannerContent = () => {
@@ -42,12 +59,12 @@ export default function TamilSloganBanner() {
 
   return (
     <div 
-      className="w-full bg-slate-950 border-b border-amber-500/40 py-2.5 px-3 sm:px-6 flex items-center justify-center text-center font-sans shadow-md select-none relative overflow-hidden bg-cover bg-center"
+      className="w-full bg-slate-950 border-b border-amber-500/40 py-2.5 px-8 sm:px-12 flex items-center justify-center text-center font-sans shadow-md select-none relative overflow-hidden bg-cover bg-center transition-all"
       style={{ backgroundImage: "linear-gradient(to right, rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.82)), url('/banner_abstract_bg.png')" }}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-center gap-2 py-0.5 relative z-10">
         <span className="inline-flex items-center shrink-0">{content.icon}</span>
-        <p className="font-heading text-xs sm:text-[13px] tracking-normal leading-relaxed flex items-center flex-wrap justify-center gap-1.5 sm:gap-2">
+        <p className="font-heading text-xs sm:text-[13px] tracking-normal leading-relaxed flex items-center flex-wrap justify-center gap-1.5 sm:gap-2 pr-4 sm:pr-0">
           <span className="font-heading font-black text-amber-400 tracking-tight shrink-0 underline decoration-amber-400 decoration-2 underline-offset-4">
             {content.title}
           </span>
@@ -58,6 +75,16 @@ export default function TamilSloganBanner() {
         </p>
         <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0 hidden sm:inline-block opacity-90 animate-pulse" />
       </div>
+
+      {/* Top-Right Dismiss 'X' Close Button */}
+      <button
+        type="button"
+        onClick={handleDismiss}
+        className="absolute top-2 right-2.5 sm:right-4 z-20 text-slate-400 hover:text-white p-1 rounded-full bg-slate-900/70 hover:bg-slate-900 transition-colors cursor-pointer border border-slate-700/60 shadow-2xs"
+        title="Close Banner for all pages"
+      >
+        <X className="w-3.5 h-3.5 stroke-[2.5]" />
+      </button>
     </div>
   );
 }
