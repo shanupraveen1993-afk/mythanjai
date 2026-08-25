@@ -222,26 +222,24 @@ function ListingsContent() {
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 pt-2 pb-24 flex flex-col gap-6 font-sans">
       {/* Header Bar */}
-      <div className="flex items-center justify-between border-b border-slate-200/80 pb-4">
-        <div>
-          <h1 className="font-heading font-black text-xl sm:text-2xl text-slate-900 tracking-tight flex items-center gap-2">
-            <Package className="w-6 h-6 text-amber-500" />
-            <span>My Listings &amp; Saved Ads</span>
-          </h1>
-          <p className="text-xs font-bold text-slate-500 mt-0.5">
-            Manage your live posted ads and bookmarked items in Thanjavur
-          </p>
-        </div>
+      <div className="flex flex-col gap-1 border-b border-slate-200/80 pb-4">
+        <h1 className="font-heading font-black text-xl sm:text-2xl text-slate-900 tracking-tight flex items-center gap-2 text-left">
+          <Package className="w-6 h-6 text-amber-500 shrink-0" />
+          <span>My Listings &amp; Saved Ads</span>
+        </h1>
+        <p className="text-xs sm:text-sm font-medium text-slate-500 text-left">
+          Manage your live posted ads and bookmarked items in Thanjavur
+        </p>
       </div>
 
       {/* 2 Tabs: My Posted Ads | Saved Ads */}
-      <div className="flex items-center gap-2 border-b border-slate-200">
+      <div className="flex items-center gap-6 border-b border-slate-200">
         <button
           type="button"
           onClick={() => setActiveTab("my_posts")}
-          className={`py-2.5 px-4 font-heading font-black text-xs sm:text-sm transition-all border-b-2 cursor-pointer flex items-center gap-2 ${
+          className={`py-3 font-heading font-bold text-xs sm:text-sm transition-all border-b-2 cursor-pointer flex items-center gap-2 ${
             activeTab === "my_posts"
-              ? "border-[#FBBF24] text-[#0F172A] bg-amber-50/50 rounded-t-xl"
+              ? "border-amber-500 text-slate-900 font-bold"
               : "border-transparent text-slate-500 hover:text-slate-900"
           }`}
         >
@@ -252,14 +250,14 @@ function ListingsContent() {
         <button
           type="button"
           onClick={() => setActiveTab("saved")}
-          className={`py-2.5 px-4 font-heading font-black text-xs sm:text-sm transition-all border-b-2 cursor-pointer flex items-center gap-2 ${
+          className={`py-3 font-heading font-bold text-xs sm:text-sm transition-all border-b-2 cursor-pointer flex items-center gap-2 ${
             activeTab === "saved"
-              ? "border-[#FBBF24] text-[#0F172A] bg-amber-50/50 rounded-t-xl"
+              ? "border-amber-500 text-slate-900 font-bold"
               : "border-transparent text-slate-500 hover:text-slate-900"
           }`}
         >
           <Bookmark className="w-4 h-4" />
-          <span>Saved Ads ({savedPosts.length})</span>
+          <span>Saved Items ({savedPosts.length})</span>
         </button>
       </div>
 

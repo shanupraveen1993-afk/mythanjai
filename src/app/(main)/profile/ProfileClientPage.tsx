@@ -421,18 +421,28 @@ function ProfileContent() {
   return (
     <div className="w-full max-w-7xl mx-auto flex flex-col gap-5 pt-2 pb-24 font-sans px-4 sm:px-6">
 
-      {/* Profile Segmented Tab Control */}
-      <div className="flex items-center gap-1.5 p-1 bg-slate-200/80 rounded-2xl w-full shadow-2xs">
+      {/* Header Bar */}
+      <div className="flex flex-col gap-1 border-b border-slate-200/80 pb-3">
+        <h1 className="font-heading font-black text-xl sm:text-2xl text-slate-900 tracking-tight text-left">
+          My Profile
+        </h1>
+        <p className="text-xs sm:text-sm font-medium text-slate-500 text-left">
+          Manage your account settings, phone verification, and posted ads
+        </p>
+      </div>
+
+      {/* Profile Segmented Tab Control — Clean Borderless Tabs */}
+      <div className="flex items-center gap-6 border-b border-slate-200">
         <button
           type="button"
           onClick={() => {
             setActiveView("dashboard");
             router.push("/profile");
           }}
-          className={`flex-1 py-2.5 px-3 rounded-xl font-heading font-black text-xs sm:text-sm transition-all cursor-pointer text-center ${
+          className={`py-3 font-heading font-bold text-xs sm:text-sm transition-all border-b-2 cursor-pointer ${
             activeView === "dashboard"
-              ? "bg-white text-slate-950 shadow-xs border border-slate-200"
-              : "text-slate-600 hover:text-slate-950"
+              ? "border-amber-500 text-slate-900 font-bold"
+              : "border-transparent text-slate-500 hover:text-slate-900"
           }`}
         >
           Profile
@@ -442,9 +452,9 @@ function ProfileContent() {
           onClick={() => {
             router.push("/listings");
           }}
-          className="flex-1 py-2.5 px-3 rounded-xl font-heading font-black text-xs sm:text-sm transition-all cursor-pointer text-center flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-950"
+          className="py-3 font-heading font-bold text-xs sm:text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-900 transition-all cursor-pointer flex items-center gap-1.5"
         >
-          <Package className="w-4 h-4 text-amber-500" />
+          <Package className="w-4 h-4 text-slate-500" />
           <span>My Listings</span>
         </button>
         <button
@@ -452,9 +462,9 @@ function ProfileContent() {
           onClick={() => {
             router.push("/listings?tab=saved");
           }}
-          className="flex-1 py-2.5 px-3 rounded-xl font-heading font-black text-xs sm:text-sm transition-all cursor-pointer text-center flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-950"
+          className="py-3 font-heading font-bold text-xs sm:text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-900 transition-all cursor-pointer flex items-center gap-1.5"
         >
-          <Bookmark className="w-4 h-4 text-amber-500" />
+          <Bookmark className="w-4 h-4 text-slate-500" />
           <span>Saved Items</span>
         </button>
       </div>
