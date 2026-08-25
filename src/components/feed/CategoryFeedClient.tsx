@@ -127,10 +127,21 @@ export default function CategoryFeedClient({ segmentType }: CategoryFeedClientPr
     if (typeof window !== "undefined") {
       try {
         stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-        if (segmentType === "sell") stored = stored.filter((p: any) => p.type?.toUpperCase() === "SELL");
-        else if (segmentType === "need") stored = stored.filter((p: any) => p.type?.toUpperCase() === "NEED");
-        else if (segmentType === "services") stored = stored.filter((p: any) => p.name || p.skill_category || p.type === "SERVICE");
-        else if (segmentType === "shops") stored = stored.filter((p: any) => p.shop_name || p.offer_title || p.type === "OFFER" || p.type === "SHOP");
+        if (segmentType === "sell") {
+          stored = stored.filter((p: any) => {
+            const t = (p.type || p.category || "").toString().toUpperCase();
+            return !t.includes("NEED") && !p.name && !p.shop_name;
+          });
+        } else if (segmentType === "need") {
+          stored = stored.filter((p: any) => {
+            const t = (p.type || p.category || "").toString().toUpperCase();
+            return t.includes("NEED") || t.includes("BUY") || t.includes("LOOKING");
+          });
+        } else if (segmentType === "services") {
+          stored = stored.filter((p: any) => p.name || p.skill_category || p.type === "SERVICE");
+        } else if (segmentType === "shops") {
+          stored = stored.filter((p: any) => p.shop_name || p.offer_title || p.type === "OFFER" || p.type === "SHOP");
+        }
       } catch (e) {}
     }
     const firestoreIds = new Set((firestoreData || []).map((p: any) => p.id));

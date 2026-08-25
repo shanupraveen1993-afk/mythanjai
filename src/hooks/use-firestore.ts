@@ -89,30 +89,29 @@ export function useFirestore<T = any>({
           }
 
           if (postType && collectionName === "needs_and_sales") {
-            const pType = docData.type?.toLowerCase();
+            const pType = (docData.type || docData.category || "").toString().toLowerCase();
             const targetType = postType.toLowerCase();
-            const isSaleTarget = targetType === "sale" || targetType === "sell";
-            const isSaleDoc = !pType || pType === "sale" || pType === "sell";
-            const isNeedTarget = targetType === "need" || targetType === "buy";
-            const isNeedDoc = pType === "need" || pType === "buy";
+            const isNeedDoc = pType.includes("need") || pType.includes("buy") || pType.includes("looking");
 
-            if (isSaleTarget && !isSaleDoc) return;
-            if (isNeedTarget && !isNeedDoc) return;
+            if (targetType === "need" || targetType === "buy") {
+              if (!isNeedDoc) return;
+            } else {
+              // Target is SELL/SALE: Show ALL posts except those explicitly marked as NEED
+              if (isNeedDoc) return;
+            }
           }
 
-          // 7-day auto-expiry check: filter out expired posts
+          // 60-day validity check (safely ignore invalid or missing dates)
           if (docData.expires_at) {
             try {
               const expiryDate = typeof docData.expires_at?.toDate === "function"
                 ? docData.expires_at.toDate()
                 : new Date(docData.expires_at);
 
-              if (expiryDate instanceof Date && !isNaN(expiryDate.getTime()) && expiryDate <= now) {
+              if (expiryDate instanceof Date && !isNaN(expiryDate.getTime()) && expiryDate.getTime() < Date.now() - 60 * 24 * 60 * 60 * 1000) {
                 return;
               }
-            } catch (e) {
-              console.warn("Expiry date parse warning:", e);
-            }
+            } catch (e) {}
           }
 
           items.push({
