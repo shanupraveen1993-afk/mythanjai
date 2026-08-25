@@ -188,6 +188,19 @@ function MainLayoutContent({
     return () => window.removeEventListener("namma_thanjai_open_signin", handleOpenSignIn);
   }, []);
 
+  // Automatic clean purge of legacy development test posts from browser storage
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const isClean = localStorage.getItem("namma_thanjai_clean_v2");
+      if (!isClean) {
+        localStorage.removeItem("namma_thanjai_local_posts");
+        localStorage.removeItem("namma_thanjai_saved_posts");
+        localStorage.removeItem("my_thanjai_saved_posts");
+        localStorage.setItem("namma_thanjai_clean_v2", "true");
+      }
+    }
+  }, []);
+
   // Synchronous scroll-to-top BEFORE browser paint on route change
   const useIsomorphicLayoutEffect = typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect;
 
