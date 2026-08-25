@@ -122,20 +122,33 @@ export default function TopHeader({
             );
             if (isDetailScreen) {
               return (
-                <button
-                  type="button"
-                  onClick={() => {
-                    if (typeof window !== "undefined" && window.history.length > 1) {
-                      router.back();
-                    } else {
-                      router.push("/");
-                    }
-                  }}
-                  className="flex items-center gap-1.5 text-xs font-black text-slate-800 hover:text-slate-950 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-xl border border-slate-200 cursor-pointer shrink-0 transition-colors shadow-2xs"
-                >
-                  <ArrowLeft className="w-4 h-4 text-slate-800" />
-                  <span>Back</span>
-                </button>
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      if (typeof window !== "undefined" && window.history.length > 1) {
+                        router.back();
+                      } else {
+                        router.push("/");
+                      }
+                    }}
+                    className="flex md:hidden items-center gap-1.5 text-xs font-black text-slate-800 hover:text-slate-950 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-xl border border-slate-200 cursor-pointer shrink-0 transition-colors shadow-2xs"
+                  >
+                    <ArrowLeft className="w-4 h-4 text-slate-800" />
+                    <span>Back</span>
+                  </button>
+                  <div
+                    onClick={() => router.push("/")}
+                    className="hidden md:flex items-center gap-1.5 cursor-pointer shrink-0 group"
+                  >
+                    <div className="w-8 h-8 sm:w-9 sm:h-9 shrink-0 group-hover:scale-[1.08] transition-transform duration-300 flex items-center justify-center">
+                      <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="w-full h-full object-contain" />
+                    </div>
+                    <span className="inline-block font-heading font-black tracking-tight text-xs sm:text-base md:text-lg leading-none">
+                      <span className="text-[#1d4ed8] font-black">நம்ம</span> <span className="text-[#f59e0b] font-black">thanjai</span>
+                    </span>
+                  </div>
+                </div>
               );
             }
             return (

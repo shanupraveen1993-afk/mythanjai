@@ -224,11 +224,22 @@ function ListingsContent() {
       {/* Header Bar */}
       <div className="flex flex-col gap-1 border-b border-slate-200/80 pb-4">
         <h1 className="font-heading font-black text-xl sm:text-2xl text-slate-900 tracking-tight flex items-center gap-2 text-left">
-          <Package className="w-6 h-6 text-amber-500 shrink-0" />
-          <span>My Listings &amp; Saved Ads</span>
+          {activeTab === "saved" ? (
+            <>
+              <Bookmark className="w-6 h-6 text-amber-500 shrink-0" />
+              <span>Saved Items</span>
+            </>
+          ) : (
+            <>
+              <Package className="w-6 h-6 text-amber-500 shrink-0" />
+              <span>My Posted Ads</span>
+            </>
+          )}
         </h1>
         <p className="text-xs sm:text-sm font-medium text-slate-500 text-left">
-          Manage your live posted ads and bookmarked items in Thanjavur
+          {activeTab === "saved"
+            ? "Your bookmarked listings saved for quick access"
+            : "Manage your live posted ads across Thanjavur"}
         </p>
       </div>
 

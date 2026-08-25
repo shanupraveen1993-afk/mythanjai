@@ -43,6 +43,7 @@ import {
   XCircle,
   ArrowLeft,
   RotateCcw,
+  Crown,
 } from "lucide-react";
 import Link from "next/link";
 import { useToast } from "@/context/ToastContext";
@@ -85,6 +86,7 @@ function ProfileContent() {
   // WhatsApp verification state variables
   const [verificationPending, setVerificationPending] = useState(false);
   const [isDbVerified, setIsDbVerified] = useState(false);
+  const [showPricingModal, setShowPricingModal] = useState(false);
 
   const isSuperAdmin = React.useMemo(() => {
     const rawPhone = String(profile?.phone || phoneNumber || user?.phoneNumber || "");
@@ -596,6 +598,32 @@ function ProfileContent() {
             </button>
           </div>
 
+          {/* Pro Membership Card (Bounded, NO full-width stretched bar) */}
+          <div className="bg-white border border-amber-300/80 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 shadow-2xs">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 border border-amber-200">
+                <Crown className="w-5 h-5 text-amber-600" />
+              </div>
+              <div className="flex flex-col">
+                <div className="flex items-center gap-2">
+                  <span className="text-sm font-bold text-slate-900">Pro Membership</span>
+                  <span className="bg-emerald-50 text-emerald-700 border border-emerald-200 text-[10px] font-extrabold px-2 py-0.5 rounded-md">Free Limited Offer</span>
+                </div>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <span className="line-through text-slate-400 text-xs font-semibold">₹199</span>
+                  <span className="text-amber-600 font-heading font-black text-sm">₹0 / Free</span>
+                </div>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setShowPricingModal(true)}
+              className="bg-slate-900 hover:bg-slate-800 text-amber-400 font-heading font-bold text-xs px-3.5 py-2 rounded-xl cursor-pointer transition-colors shrink-0 border border-slate-800"
+            >
+              View Pricing Plan
+            </button>
+          </div>
+
           {/* Settings & Links Card List */}
           <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden flex flex-col divide-y divide-slate-100">
             
@@ -844,6 +872,90 @@ function ProfileContent() {
           onClose={() => setEditingPost(null)}
           editPost={editingPost}
         />
+      )}
+
+      {/* Pricing Plan Comparison Popup Modal */}
+      {showPricingModal && (
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-slate-950/80 backdrop-blur-xs p-4 animate-fade-in">
+          <div className="bg-white rounded-2xl max-w-lg w-full p-6 border border-slate-200 shadow-xl flex flex-col gap-5 relative font-sans">
+            <button
+              type="button"
+              onClick={() => setShowPricingModal(false)}
+              className="absolute top-4 right-4 p-1.5 rounded-xl text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors cursor-pointer"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <div>
+              <h3 className="font-heading font-black text-xl text-slate-900 flex items-center gap-2">
+                <Crown className="w-5 h-5 text-amber-500" />
+                <span>Membership Plans &amp; Pricing</span>
+              </h3>
+              <p className="text-xs text-slate-500 font-medium mt-1">Compare Free Plan vs Pro Membership features in Thanjavur</p>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Free Plan */}
+              <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex flex-col gap-3">
+                <div className="flex items-center justify-between border-b border-slate-200 pb-2">
+                  <span className="font-heading font-black text-sm text-slate-900">Free Plan</span>
+                  <span className="font-heading font-black text-base text-slate-900">₹0</span>
+                </div>
+                <ul className="text-xs text-slate-600 flex flex-col gap-2 font-medium">
+                  <li className="flex items-center gap-2 text-slate-700">
+                    <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>30 Days Listing Validity</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-slate-500">
+                    <XCircle className="w-4 h-4 text-slate-400 shrink-0" />
+                    <span>No Edit within first 7 Days</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-slate-700">
+                    <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>3 Callbacks / Month</span>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Pro Membership Plan */}
+              <div className="bg-amber-50/70 border-2 border-amber-400 rounded-xl p-4 flex flex-col gap-3 relative">
+                <span className="absolute -top-2.5 right-3 bg-amber-500 text-slate-950 text-[10px] font-black uppercase px-2 py-0.5 rounded shadow-2xs">Free Limited Offer</span>
+                <div className="flex items-center justify-between border-b border-amber-200 pb-2">
+                  <span className="font-heading font-black text-sm text-slate-900">Pro Membership</span>
+                  <div className="flex items-center gap-1.5">
+                    <span className="line-through text-slate-400 text-xs font-semibold">₹199</span>
+                    <span className="font-heading font-black text-base text-amber-600">₹0</span>
+                  </div>
+                </div>
+                <ul className="text-xs text-slate-900 flex flex-col gap-2 font-bold">
+                  <li className="flex items-center gap-2 text-slate-900">
+                    <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>60 Days Listing Validity</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-slate-900">
+                    <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>Unlimited Edits Anytime</span>
+                  </li>
+                  <li className="flex items-center gap-2 text-slate-900">
+                    <CheckCircle className="w-4 h-4 text-emerald-600 shrink-0" />
+                    <span>Unlimited Provider Callbacks</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                setShowPricingModal(false);
+                toast.success("Pro Membership Active! Enjoy 60 days listing & unlimited edits.");
+              }}
+              className="w-full bg-amber-500 hover:bg-amber-600 text-slate-950 font-heading font-black text-sm py-2.5 rounded-xl cursor-pointer transition-colors text-center border border-amber-400 shadow-2xs"
+            >
+              Activate Free Pro Membership
+            </button>
+          </div>
+        </div>
       )}
 
     </div>
