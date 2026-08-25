@@ -20,6 +20,8 @@ import PendingFeedbackPrompt from "@/components/modals/PendingFeedbackPrompt";
 import NativePermissionsModal from "@/components/native/NativePermissionsModal";
 
 
+import TamilSloganBanner from "@/components/layout/TamilSloganBanner";
+
 export default function MainLayout({
   children,
 }: {
@@ -276,6 +278,11 @@ function MainLayoutContent({
           paddingTop: !isStandaloneView && !isOnboardingView ? "calc(3.8rem + env(safe-area-inset-top, 0px))" : undefined,
         }}
       >
+        {/* Sleek Tamil Welcome Banner below Top Header — scrolls up naturally on scroll so it never disturbs browsing */}
+        {!isChatRoute && !isPostRoute && !pathname.includes("/admin") && (
+          <TamilSloganBanner />
+        )}
+
         {/* Stable height wrapper — prevents page collapse and footer jump on route transitions */}
         <div className="w-full flex-1 flex flex-col min-h-0">
           {children}
