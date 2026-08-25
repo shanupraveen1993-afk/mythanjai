@@ -79,6 +79,61 @@ body {
   font-family: var(--font-heading), 'Red Hat Display', system-ui, sans-serif;
 }
 
+/* ── Design System Typographic Scale Hierarchy ───────────────── */
+.text-display {
+  font-family: var(--font-heading), 'Red Hat Display', system-ui, sans-serif;
+  font-size: 2rem;       /* 32px */
+  line-height: 1.2;      /* 38.4px */
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.text-h1 {
+  font-family: var(--font-heading), 'Red Hat Display', system-ui, sans-serif;
+  font-size: 1.5rem;     /* 24px */
+  line-height: 1.25;     /* 30px */
+  font-weight: 800;
+  letter-spacing: -0.015em;
+}
+
+.text-h2 {
+  font-family: var(--font-heading), 'Red Hat Display', system-ui, sans-serif;
+  font-size: 1.25rem;    /* 20px */
+  line-height: 1.3;      /* 26px */
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.text-subhead {
+  font-family: var(--font-heading), 'Red Hat Display', system-ui, sans-serif;
+  font-size: 1rem;       /* 16px */
+  line-height: 1.375;    /* 22px */
+  font-weight: 600;
+}
+
+.text-body {
+  font-family: var(--font-sans), 'Red Hat Text', system-ui, sans-serif;
+  font-size: 0.875rem;   /* 14px */
+  line-height: 1.428;    /* 20px */
+  font-weight: 500;
+}
+
+.text-caption {
+  font-family: var(--font-sans), 'Red Hat Text', system-ui, sans-serif;
+  font-size: 0.75rem;    /* 12px */
+  line-height: 1.333;    /* 16px */
+  font-weight: 600;
+}
+
+.text-micro {
+  font-family: var(--font-sans), 'Red Hat Text', system-ui, sans-serif;
+  font-size: 0.6875rem;  /* 11px */
+  line-height: 1.272;    /* 14px */
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
 /* ── Master Button Architecture (Primary Yellow/Amber Brand Color System) ── */
 button, a, .btn {
   touch-action: manipulation;
