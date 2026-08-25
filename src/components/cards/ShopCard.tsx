@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { Phone, MessageSquare, MapPin, Store, Sparkles, Calendar, Navigation, Share2, Bookmark, Lock, Flag, Camera, Clock, Video, Play, Pause } from "lucide-react";
+import { Phone, MessageSquare, MapPin, Store, Sparkles, Calendar, Navigation, Share2, Bookmark, Lock, Flag, Camera, Clock, Video, Play, Pause, Pencil } from "lucide-react";
 import { ShopPost } from "@/types";
 import { useToast } from "@/context/ToastContext";
 import { useLanguage } from "@/context/LanguageContext";
@@ -57,6 +57,18 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
   const [saved, setSaved] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const videoRef = useRef<HTMLVideoElement>(null);
+
+  const isOwnPost = React.useMemo(() => {
+    if (user?.uid && post.userId === user.uid) return true;
+    if (profile?.phone && post.phone && profile.phone === post.phone) return true;
+    if (typeof window !== "undefined") {
+      try {
+        const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+        if (stored.some((p: any) => p.id === post.id)) return true;
+      } catch (e) {}
+    }
+    return false;
+  }, [user, profile, post]);
 
   const togglePlay = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -485,28 +497,53 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
               }
             })()}
           </span>
-          <div className="flex items-center gap-2 shrink-0 justify-end">
-            <a
-              href={directionUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="w-[128px] shrink-0 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
-            >
-              <Navigation className="w-4 h-4 text-[#0F172A] shrink-0" />
-              <span>Visit Store</span>
-            </a>
-            {(post as any).is_available_now !== false && post.show_phone !== false && (
-              <a
-                href={callUrl}
-                onClick={(e) => e.stopPropagation()}
-                className="w-[128px] shrink-0 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
-              >
-                <Phone className="w-4 h-4 text-white shrink-0" />
-                <span>Call Shop</span>
-              </a>
-            )}
+            <span className="text-xs font-semibold text-slate-600 shrink-0 select-none">
+              {(() => {
+                try {
+                  return formatRelativeTime(post.created_at || new Date().toISOString());
+                } catch {
+                  return "Aug 2026";
+                }
+              })()}
+            </span>
+            <div className="flex items-center gap-2 shrink-0 justify-end">
+              {isOwnPost ? (
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    router.push("/listings");
+                  }}
+                  className="bg-blue-600 hover:bg-blue-700 text-white font-heading font-black text-xs sm:text-sm py-2.5 px-4.5 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] cursor-pointer transition-colors shadow-2xs whitespace-nowrap"
+                >
+                  <Pencil className="w-4 h-4 text-white shrink-0" />
+                  <span>Manage</span>
+                </button>
+              ) : (
+                <>
+                  <a
+                    href={directionUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-[128px] shrink-0 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
+                  >
+                    <Navigation className="w-4 h-4 text-[#0F172A] shrink-0" />
+                    <span>Visit Store</span>
+                  </a>
+                  {(post as any).is_available_now !== false && post.show_phone !== false && (
+                    <a
+                      href={callUrl}
+                      onClick={(e) => e.stopPropagation()}
+                      className="w-[128px] shrink-0 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
+                    >
+                      <Phone className="w-4 h-4 text-white shrink-0" />
+                      <span>Call Shop</span>
+                    </a>
+                  )}
+                </>
+              )}
+            </div>
           </div>
-        </div>
         </div>
       </div>
     );
@@ -515,7 +552,7 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
   // ── STATE C: CORPORATE SHOP INFO CARD (No Media Provided Fallback) ───────
   return (
     <div className={`bg-white rounded-xl p-4 flex flex-col justify-between shadow-2xs hover:shadow-md transition-all duration-200 border border-slate-200/90 relative font-sans h-full ${isExpired ? "opacity-60 grayscale filter pointer-events-none select-none" : ""}`}>
-      {/* EXPIRED CENTER OVERLAY BADGE — Light transparent overlay (can see content, but cannot interact) */}
+      {/* EXPIRED CENTER OVERLAY BADGE */}
       {isExpired && (
         <div className="absolute inset-0 bg-slate-950/30 backdrop-blur-[1px] z-30 flex flex-col items-center justify-center p-4 text-center pointer-events-none select-none rounded-xl">
           <div className="bg-rose-600/90 text-white border-2 border-rose-400 px-5 py-2 rounded-2xl shadow-2xl flex flex-col items-center gap-0.5 backdrop-blur-xs">
@@ -581,7 +618,7 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
         </div>
       </div>
 
-      {/* Footer CTAs — Plain Text Posted Month+Year (Left) + Distinct Buttons (Right) */}
+      {/* Footer CTAs */}
       <div className="pt-3 flex items-center justify-between gap-4 sm:gap-6 mt-auto w-full border-t border-slate-100">
         <span className="text-xs font-semibold text-slate-600 shrink-0 select-none">
           {(() => {
@@ -593,24 +630,40 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
           })()}
         </span>
         <div className="flex items-center gap-2 shrink-0 justify-end">
-          <a
-            href={directionUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-[128px] shrink-0 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
-          >
-            <Navigation className="w-4 h-4 text-[#0F172A] shrink-0" />
-            <span>Visit Store</span>
-          </a>
-          {(post as any).is_available_now !== false && post.show_phone !== false && (
-            <a
-              href={callUrl}
-              onClick={(e) => e.stopPropagation()}
-              className="w-[128px] shrink-0 bg-amber-500 hover:bg-amber-600 text-slate-950 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
+          {isOwnPost ? (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push("/listings");
+              }}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-heading font-black text-xs sm:text-sm py-2.5 px-4.5 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] cursor-pointer transition-colors shadow-2xs whitespace-nowrap"
             >
-              <Phone className="w-4 h-4 text-slate-950 shrink-0" />
-              <span>Call Shop</span>
-            </a>
+              <Pencil className="w-4 h-4 text-white shrink-0" />
+              <span>Manage</span>
+            </button>
+          ) : (
+            <>
+              <a
+                href={directionUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-[128px] shrink-0 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
+              >
+                <Navigation className="w-4 h-4 text-[#0F172A] shrink-0" />
+                <span>Visit Store</span>
+              </a>
+              {(post as any).is_available_now !== false && post.show_phone !== false && (
+                <a
+                  href={callUrl}
+                  onClick={(e) => e.stopPropagation()}
+                  className="w-[128px] shrink-0 bg-amber-500 hover:bg-amber-600 text-slate-950 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
+                >
+                  <Phone className="w-4 h-4 text-slate-950 shrink-0" />
+                  <span>Call Shop</span>
+                </a>
+              )}
+            </>
           )}
         </div>
       </div>

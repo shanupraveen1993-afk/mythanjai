@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Share2, Bookmark, Phone, MessageSquare, MapPin, Calendar, Flag, X, ChevronLeft, ChevronRight, Camera } from "lucide-react";
+import { Share2, Bookmark, Phone, MessageSquare, MapPin, Calendar, Flag, X, ChevronLeft, ChevronRight, Camera, Pencil, Eye } from "lucide-react";
 import { doc, updateDoc, increment } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/hooks/use-auth";
@@ -444,7 +444,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
           </div>
         </div>
 
-        {/* ── FOOTER ROW: Date Ago (Left) + 2 Rectangular Buttons (Right) ── */}
+        {/* ── FOOTER ROW: Date Ago (Left) + Buttons (Right) ── */}
         <div className="pt-2 flex items-center justify-between gap-2 mt-auto border-t border-slate-100">
           {/* Left: Date Ago */}
           <span className="text-[11px] font-medium text-slate-400 flex items-center gap-1 shrink-0">
@@ -454,33 +454,49 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
 
           {/* Right: 2 Rectangular CTA Buttons (Exact w-[128px] each matching other segments) */}
           <div className="flex items-center gap-2 shrink-0 justify-end">
-            <button
-              type="button"
-              onClick={(e) => {
-                e.stopPropagation();
-                if (!isVerified) {
-                  if (typeof window !== "undefined") {
-                    window.dispatchEvent(new Event("namma_thanjai_open_signin"));
-                  }
-                  return;
-                }
-                router.push(`/chat?listingId=${listing.id}&sellerId=${listing.seller_id || ""}&title=${encodeURIComponent(listing.title)}`);
-              }}
-              className="w-[128px] shrink-0 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors whitespace-nowrap"
-            >
-              <MessageSquare className="w-4 h-4 text-[#0F172A] shrink-0 stroke-[2.5]" />
-              <span>Chat</span>
-            </button>
-
-            {(listing.show_phone !== false) && (
-              <a
-                href={callUrl}
-                onClick={(e) => e.stopPropagation()}
-                className="w-[128px] shrink-0 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors whitespace-nowrap"
+            {isOwnPost ? (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  router.push("/listings");
+                }}
+                className="bg-blue-600 hover:bg-blue-700 text-white font-heading font-black text-xs sm:text-sm py-2.5 px-4.5 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] cursor-pointer transition-colors shadow-2xs whitespace-nowrap"
               >
-                <Phone className="w-4 h-4 text-white shrink-0" />
-                <span>Call</span>
-              </a>
+                <Pencil className="w-4 h-4 text-white shrink-0" />
+                <span>Manage</span>
+              </button>
+            ) : (
+              <>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (!isVerified) {
+                      if (typeof window !== "undefined") {
+                        window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+                      }
+                      return;
+                    }
+                    router.push(`/chat?listingId=${listing.id}&sellerId=${listing.seller_id || ""}&title=${encodeURIComponent(listing.title)}`);
+                  }}
+                  className="w-[128px] shrink-0 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors whitespace-nowrap"
+                >
+                  <MessageSquare className="w-4 h-4 text-[#0F172A] shrink-0 stroke-[2.5]" />
+                  <span>Chat</span>
+                </button>
+
+                {(listing.show_phone !== false) && (
+                  <a
+                    href={callUrl}
+                    onClick={(e) => e.stopPropagation()}
+                    className="w-[128px] shrink-0 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors whitespace-nowrap"
+                  >
+                    <Phone className="w-4 h-4 text-white shrink-0" />
+                    <span>Call</span>
+                  </a>
+                )}
+              </>
             )}
           </div>
         </div>

@@ -270,10 +270,10 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
                 e.stopPropagation();
                 router.push("/listings");
               }}
-              className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-heading font-black text-xs sm:text-sm py-2.5 px-4 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow-sm cursor-pointer transition-colors"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-heading font-black text-xs sm:text-sm py-2.5 px-4.5 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] cursor-pointer transition-colors shadow-2xs whitespace-nowrap"
             >
-              <Pencil className="w-4 h-4 text-slate-950 shrink-0" />
-              <span>Your Listing</span>
+              <Pencil className="w-4 h-4 text-white shrink-0" />
+              <span>Manage</span>
             </button>
           ) : (
             <>

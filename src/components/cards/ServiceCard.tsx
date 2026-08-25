@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Phone, MessageSquare, MapPin, Share2, Bookmark, Calendar, Star, Flag } from "lucide-react";
+import { Phone, MessageSquare, MapPin, Share2, Bookmark, Calendar, Star, Flag, Pencil } from "lucide-react";
 import { ServiceProviderPost } from "@/types";
 import ServiceFeedbackModal from "@/components/modals/ServiceFeedbackModal";
 import { useToast } from "@/context/ToastContext";
@@ -208,6 +208,18 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
     }
   }, [post.created_at]);
 
+  const isOwnPost = React.useMemo(() => {
+    if (user?.uid && post.userId === user.uid) return true;
+    if (profile?.phone && post.phone && profile.phone === post.phone) return true;
+    if (typeof window !== "undefined") {
+      try {
+        const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+        if (stored.some((p: any) => p.id === post.id)) return true;
+      } catch (e) {}
+    }
+    return false;
+  }, [user, profile, post]);
+
   return (
     <div className="bg-white rounded-2xl p-3.5 flex flex-col justify-between shadow-2xs hover:shadow-md transition-all duration-200 font-sans border border-slate-200/90 relative h-full">
       <div className="flex flex-col gap-2.5 flex-1">
@@ -286,7 +298,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
         </div>
       </div>
 
-      {/* Footer Action Row: Plain Text Date Ago (Left) + 2 Fixed CTA Buttons (Right) */}
+      {/* Footer Action Row: Plain Text Date Ago (Left) + Buttons (Right) */}
       <div className="pt-3 flex items-center justify-between gap-4 sm:gap-6 mt-auto w-full border-t border-slate-100">
         <span className="text-xs font-semibold text-slate-600 shrink-0 select-none">
           {(() => {
@@ -298,35 +310,51 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
           })()}
         </span>
 
-        {/* 2. Secondary CTA: Request Call Back & 3. Primary CTA: Call Buttons */}
+        {/* Buttons */}
         <div className="flex items-center gap-2 shrink-0 justify-end">
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              if (!isVerified) {
-                if (typeof window !== "undefined") {
-                  window.dispatchEvent(new Event("namma_thanjai_open_signin"));
-                }
-                return;
-              }
-              const callMsg = `📞 Call Back Request: A customer requested a call back regarding your service "${post.name}".`;
-              router.push(`/chat?listingId=${post.id}&sellerId=${post.userId || ""}&title=${encodeURIComponent(post.name)}&autoMsg=${encodeURIComponent(callMsg)}`);
-            }}
-            className="w-[128px] shrink-0 border-2 border-amber-500 text-amber-900 bg-amber-50 hover:bg-amber-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
-          >
-            <Phone className="w-4 h-4 text-amber-700 shrink-0 stroke-[2.5]" />
-            <span>Call Back</span>
-          </button>
+          {isOwnPost ? (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push("/listings");
+              }}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-heading font-black text-xs sm:text-sm py-2.5 px-4.5 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] cursor-pointer transition-colors shadow-2xs whitespace-nowrap"
+            >
+              <Pencil className="w-4 h-4 text-white shrink-0" />
+              <span>Manage</span>
+            </button>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (!isVerified) {
+                    if (typeof window !== "undefined") {
+                      window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+                    }
+                    return;
+                  }
+                  const callMsg = `📞 Call Back Request: A customer requested a call back regarding your service "${post.name}".`;
+                  router.push(`/chat?listingId=${post.id}&sellerId=${post.userId || ""}&title=${encodeURIComponent(post.name)}&autoMsg=${encodeURIComponent(callMsg)}`);
+                }}
+                className="w-[128px] shrink-0 border-2 border-amber-500 text-amber-900 bg-amber-50 hover:bg-amber-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
+              >
+                <Phone className="w-4 h-4 text-amber-700 shrink-0 stroke-[2.5]" />
+                <span>Call Back</span>
+              </button>
 
-          <button
-            type="button"
-            onClick={(e) => handleOpenPreContactModal(e, "call")}
-            className="w-[128px] shrink-0 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
-          >
-            <Phone className="w-4 h-4 text-white shrink-0" />
-            <span>Call</span>
-          </button>
+              <button
+                type="button"
+                onClick={(e) => handleOpenPreContactModal(e, "call")}
+                className="w-[128px] shrink-0 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
+              >
+                <Phone className="w-4 h-4 text-white shrink-0" />
+                <span>Call</span>
+              </button>
+            </>
+          )}
         </div>
       </div>
 
