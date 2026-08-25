@@ -8,6 +8,7 @@ const BANNED_KEYWORDS = [
 ];
 
 export interface SpamCheckInput {
+  uid?: string;
   phone: string;
   title: string;
   description: string;
