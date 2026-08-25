@@ -231,44 +231,32 @@ function ListingsContent() {
 
   return (
     <div className="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 pt-4 sm:pt-8 pb-24 flex flex-col gap-4 font-sans">
-      {/* 2 Navigation Tabs: My Posted Ads | Saved Items + Home Button */}
-      <div className="flex items-center justify-between border-b border-slate-200">
-        <div className="flex items-center gap-6">
-          <button
-            type="button"
-            onClick={() => setActiveTab("my_posts")}
-            className={`py-3 font-heading font-bold text-sm sm:text-base transition-all border-b-2 cursor-pointer flex items-center gap-2 focus:outline-none outline-none select-none ${
-              activeTab === "my_posts"
-                ? "border-amber-500 text-slate-900 font-extrabold"
-                : "border-transparent text-slate-500 hover:text-slate-900"
-            }`}
-          >
-            <Package className="w-4.5 h-4.5 text-amber-500" />
-            <span>My Posted Ads ({myPosts.length})</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setActiveTab("saved")}
-            className={`py-3 font-heading font-bold text-sm sm:text-base transition-all border-b-2 cursor-pointer flex items-center gap-2 focus:outline-none outline-none select-none ${
-              activeTab === "saved"
-                ? "border-amber-500 text-slate-900 font-extrabold"
-                : "border-transparent text-slate-500 hover:text-slate-900"
-            }`}
-          >
-            <Bookmark className="w-4.5 h-4.5 text-amber-500" />
-            <span>Saved Items ({savedPosts.length})</span>
-          </button>
-        </div>
+      {/* 2 Navigation Tabs: My Posted Ads | Saved Items */}
+      <div className="flex items-center gap-6 border-b border-slate-200">
+        <button
+          type="button"
+          onClick={() => setActiveTab("my_posts")}
+          className={`py-3 font-heading font-bold text-sm sm:text-base transition-all border-b-2 cursor-pointer flex items-center gap-2 focus:outline-none outline-none select-none ${
+            activeTab === "my_posts"
+              ? "border-amber-500 text-slate-900 font-extrabold"
+              : "border-transparent text-slate-500 hover:text-slate-900"
+          }`}
+        >
+          <Package className="w-4.5 h-4.5 text-amber-500" />
+          <span>My Posted Ads ({myPosts.length})</span>
+        </button>
 
         <button
           type="button"
-          onClick={() => router.push("/")}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl font-heading font-black text-xs transition-all cursor-pointer border border-slate-200 shrink-0 mb-1"
-          title="Go to Home"
+          onClick={() => setActiveTab("saved")}
+          className={`py-3 font-heading font-bold text-sm sm:text-base transition-all border-b-2 cursor-pointer flex items-center gap-2 focus:outline-none outline-none select-none ${
+            activeTab === "saved"
+              ? "border-amber-500 text-slate-900 font-extrabold"
+              : "border-transparent text-slate-500 hover:text-slate-900"
+          }`}
         >
-          <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
-          <span>Home</span>
+          <Bookmark className="w-4.5 h-4.5 text-amber-500" />
+          <span>Saved Items ({savedPosts.length})</span>
         </button>
       </div>
 

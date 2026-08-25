@@ -426,25 +426,13 @@ function ProfileContent() {
     <div className="w-full max-w-7xl mx-auto flex flex-col gap-4 pt-4 sm:pt-8 pb-24 font-sans px-2.5 sm:px-6 lg:px-8">
 
       {/* Header Bar */}
-      <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
-        <div className="flex flex-col gap-1">
-          <h1 className="font-heading font-black text-xl sm:text-2xl text-slate-900 tracking-tight text-left">
-            My Profile
-          </h1>
-          <p className="text-xs sm:text-sm font-medium text-slate-500 text-left">
-            Manage your account settings, phone verification, and posted ads
-          </p>
-        </div>
-
-        <button
-          type="button"
-          onClick={() => router.push("/")}
-          className="flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-800 rounded-xl font-heading font-black text-xs transition-all cursor-pointer border border-slate-200 shrink-0"
-          title="Go to Home"
-        >
-          <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
-          <span>Home</span>
-        </button>
+      <div className="flex flex-col gap-1 border-b border-slate-200/80 pb-3">
+        <h1 className="font-heading font-black text-xl sm:text-2xl text-slate-900 tracking-tight text-left">
+          My Profile
+        </h1>
+        <p className="text-xs sm:text-sm font-medium text-slate-500 text-left">
+          Manage your account settings, phone verification, and posted ads
+        </p>
       </div>
 
 

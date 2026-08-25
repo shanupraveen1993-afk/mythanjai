@@ -87,8 +87,7 @@ export default function AdminClientPage() {
     return () => unsub();
   }, [isAdmin]);
 
-  // ── Live Real-Time Snapshot from ALL 3 correct Firestore collections ────────
-  // NOTE: Offers/Store deals are stored in "shops" — there is NO "offers" collection.
+  // ── Live Real-Time Snapshot + getDocs Fallback from ALL 3 Firestore collections ──
   useEffect(() => {
     if (!isAdmin) return;
     setLoading(true);
@@ -96,6 +95,85 @@ export default function AdminClientPage() {
     const correctCollections = ["needs_and_sales", "services", "shops"];
     const collectionDataMap: Record<string, ModerationItem[]> = {};
 
+    // Initial manual fetch via getDocs to guarantee immediate data on refresh
+    async function loadInitialDocs() {
+      try {
+        await Promise.all(
+          correctCollections.map(async (colName) => {
+            const colRef = collection(db, colName);
+            const snap = await getDocs(colRef).catch(() => null);
+            if (snap && !snap.empty) {
+              const colItems: ModerationItem[] = [];
+              snap.forEach((docSnap) => {
+                const data = docSnap.data();
+                colItems.push({
+                  id: docSnap.id,
+                  colName,
+                  title: data.title || data.name || data.shop_name || data.offer_title || "Untitled Listing",
+                  phone: data.phone || "",
+                  area_tag: data.area_tag || "Thanjavur",
+                  is_verified: data.is_verified !== false,
+                  is_reported: Boolean(data.is_reported || data.flagged || (data.negative_reports_count || 0) > 0),
+                  price: data.price !== undefined ? data.price : null,
+                  category: data.category || data.skill_category || "General",
+                  created_at: data.created_at,
+                  image_url: data.image_url || data.image_urls?.[0],
+                  video_url: data.video_url,
+                });
+              });
+              collectionDataMap[colName] = colItems;
+            }
+          })
+        );
+
+        // Also merge local posts from localStorage
+        if (typeof window !== "undefined") {
+          try {
+            const localPosts = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+            localPosts.forEach((lp: any) => {
+              const targetCol = lp.skill_category ? "services" : (lp.type === "SELL" || lp.type === "NEED") ? "needs_and_sales" : "shops";
+              if (!collectionDataMap[targetCol]) collectionDataMap[targetCol] = [];
+              if (!collectionDataMap[targetCol].some((m) => m.id === lp.id)) {
+                collectionDataMap[targetCol].push({
+                  id: lp.id,
+                  colName: targetCol,
+                  title: lp.title || lp.name || lp.shop_name || lp.offer_title || "Local Post",
+                  phone: lp.phone || "",
+                  area_tag: lp.area_tag || "Thanjavur",
+                  is_verified: lp.is_verified !== false,
+                  is_reported: Boolean(lp.is_reported),
+                  price: lp.price || null,
+                  category: lp.category || lp.skill_category || "General",
+                  created_at: lp.created_at,
+                  image_url: lp.image_url || lp.image_urls?.[0],
+                  video_url: lp.video_url,
+                });
+              }
+            });
+          } catch (e) {}
+        }
+
+        const merged: ModerationItem[] = Object.values(collectionDataMap)
+          .flat()
+          .sort((a, b) => {
+            const timeA = a.created_at?.seconds ? a.created_at.seconds * 1000 : new Date(a.created_at || 0).getTime();
+            const timeB = b.created_at?.seconds ? b.created_at.seconds * 1000 : new Date(b.created_at || 0).getTime();
+            return timeB - timeA;
+          });
+
+        if (merged.length > 0) {
+          setItems(merged);
+        }
+      } catch (e) {
+        console.warn("getDocs initial load error:", e);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadInitialDocs();
+
+    // Subscribe to real-time updates
     const unsubscribes = correctCollections.map((colName) => {
       const colRef = collection(db, colName);
       return onSnapshot(
@@ -124,12 +202,8 @@ export default function AdminClientPage() {
           const merged: ModerationItem[] = Object.values(collectionDataMap)
             .flat()
             .sort((a, b) => {
-              const timeA = a.created_at?.seconds
-                ? a.created_at.seconds * 1000
-                : new Date(a.created_at || 0).getTime();
-              const timeB = b.created_at?.seconds
-                ? b.created_at.seconds * 1000
-                : new Date(b.created_at || 0).getTime();
+              const timeA = a.created_at?.seconds ? a.created_at.seconds * 1000 : new Date(a.created_at || 0).getTime();
+              const timeB = b.created_at?.seconds ? b.created_at.seconds * 1000 : new Date(b.created_at || 0).getTime();
               return timeB - timeA;
             });
 
