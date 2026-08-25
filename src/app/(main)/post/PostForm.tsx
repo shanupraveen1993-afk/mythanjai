@@ -746,27 +746,45 @@ export default function PostForm({ segment }: PostFormProps) {
                 }}
                 className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 cursor-pointer"
               >
-                {config.categories.map((cat) => (
-                  <option key={cat} value={cat}>
-                    {cat}
-                  </option>
-                ))}
+                {config.categories.map((cat) => {
+                  let labelText = cat;
+                  if (segment === "service") {
+                    if (cat === "Home Services") labelText = "🛠️ Home Services (Plumber, Electrician, Carpenter, Painter, Mason...)";
+                    else if (cat === "Repair & Technicians") labelText = "🔧 Repair & Technicians (AC Repair, Fridge, TV, Mobile, Laptop...)";
+                    else if (cat === "Vehicle Services") labelText = "🚗 Vehicle Services (Car & Bike Mechanic, Tyre Puncture, Auto...)";
+                    else if (cat === "Health & Personal Care") labelText = "🩺 Health & Care (Home Nurse, Caretaker, Beautician, Fitness...)";
+                    else if (cat === "Event & Media Services") labelText = "📸 Event & Media (Photographer, Catering Cooking, DJ, Decor...)";
+                    else if (cat === "Education & Tutors") labelText = "📚 Education & Tutors (Home Tuition, Music/Dance Teacher...)";
+                    else if (cat === "Business & Professional") labelText = "💼 Business & Legal (Tax Auditor, Stamp Paper, Flex Printing...)";
+                    else if (cat === "General Service") labelText = "🌟 General Service (Helper, Laborer, Other Trade)";
+                  }
+                  return (
+                    <option key={cat} value={cat}>
+                      {labelText}
+                    </option>
+                  );
+                })}
               </select>
 
               {/* Dynamic Subcategory Dropdown for Services */}
               {segment === "service" && (
-                <select
-                  required
-                  value={subCategory}
-                  onChange={(e) => setSubCategory(e.target.value)}
-                  className="w-full py-2 text-xs font-bold border-b border-amber-400 bg-amber-50/50 focus:border-amber-500 rounded-none focus:outline-none text-slate-800 cursor-pointer"
-                >
-                  {(SERVICE_SUBCATEGORIES_MAP[category] || ["General Helper"]).map((sub) => (
-                    <option key={sub} value={sub}>
-                      ↳ Subcategory: {sub}
-                    </option>
-                  ))}
-                </select>
+                <div className="flex flex-col gap-1.5 mt-1">
+                  <label className="text-[11px] font-black text-amber-800 uppercase tracking-wider">
+                    Select Your Specific Trade / Profession *
+                  </label>
+                  <select
+                    required
+                    value={subCategory}
+                    onChange={(e) => setSubCategory(e.target.value)}
+                    className="w-full py-2.5 px-3 text-xs font-bold border border-amber-400 bg-amber-50 focus:border-amber-600 rounded-xl focus:outline-none text-slate-900 cursor-pointer shadow-2xs"
+                  >
+                    {(SERVICE_SUBCATEGORIES_MAP[category] || ["General Helper"]).map((sub) => (
+                      <option key={sub} value={sub}>
+                        ↳ Trade: {sub}
+                      </option>
+                    ))}
+                  </select>
+                </div>
               )}
             </div>
 
