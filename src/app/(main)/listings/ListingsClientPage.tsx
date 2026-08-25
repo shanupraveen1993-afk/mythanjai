@@ -350,15 +350,15 @@ function ListingsContent() {
                     </div>
                   </div>
 
-                  {/* Right Column: 3 Clean Management Buttons Only (NO Chat/Call) — Strictly Left-Aligned */}
-                  <div className="flex sm:flex-col items-center sm:items-start gap-2 shrink-0 w-full sm:w-auto pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+                  {/* Right Column: 2 Clean Management Buttons Only (Edit & Delete) */}
+                  <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100 justify-start">
                     <button
                       type="button"
                       onClick={() => {
                         const seg = post.type === "SERVICE" ? "service" : post.type === "OFFER" || post.type === "SHOP" ? "offer" : post.type === "NEED" ? "need" : "sell";
                         router.push(`/post/${seg}?editId=${post.id}`);
                       }}
-                      className="flex-1 sm:flex-initial w-full sm:w-36 bg-white hover:bg-slate-100 text-slate-900 border border-slate-300 font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs transition-all"
+                      className="px-3.5 py-2 bg-white hover:bg-slate-100 text-slate-900 border border-slate-300 font-heading font-black text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
                     >
                       <Pencil className="w-3.5 h-3.5 text-amber-600" />
                       <span>Edit Ad</span>
@@ -366,21 +366,8 @@ function ListingsContent() {
 
                     <button
                       type="button"
-                      onClick={() => handleToggleSegmentStatus(post)}
-                      className={`flex-1 sm:flex-initial w-full sm:w-36 font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs transition-all border ${
-                        isInactive
-                          ? "bg-slate-200 text-slate-700 border-slate-300"
-                          : "bg-emerald-50 text-emerald-800 border-emerald-300 hover:bg-emerald-100"
-                      }`}
-                    >
-                      <Tag className="w-3.5 h-3.5 text-emerald-600" />
-                      <span>{toggleBtnText}</span>
-                    </button>
-
-                    <button
-                      type="button"
                       onClick={() => handleDeletePost(post.id, post.type === "SERVICE" ? "services" : post.type === "SHOP" ? "shops" : "needs_and_sales")}
-                      className="flex-1 sm:flex-initial w-full sm:w-36 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-2xs transition-all"
+                      className="px-3.5 py-2 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-heading font-black text-xs rounded-xl flex items-center justify-center gap-1.5 cursor-pointer transition-colors"
                       title="Delete Listing"
                     >
                       <Trash2 className="w-3.5 h-3.5 text-rose-600" />
