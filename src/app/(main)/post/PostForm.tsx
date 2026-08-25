@@ -1222,7 +1222,7 @@ export default function PostForm({ segment }: PostFormProps) {
               </span>
             </div>
 
-            <div className="w-full flex flex-col gap-3 relative">
+            <div className="w-full flex flex-col gap-3 relative pointer-events-none select-none opacity-95">
               {isAiRewriting && (
                 <div className="bg-amber-50 border border-amber-200 rounded-xl p-3 flex items-center justify-center gap-2 text-amber-900 font-bold text-xs shadow-2xs">
                   <span>Formatting description text...</span>
