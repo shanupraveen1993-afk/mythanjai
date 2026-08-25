@@ -184,8 +184,14 @@ export default function InAppChatModal({
             </div>
           </div>
           <button
-            onClick={onClose}
-            className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onClose();
+            }}
+            className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer z-30"
+            aria-label="Close Chat"
           >
             <X className="w-5 h-5" />
           </button>

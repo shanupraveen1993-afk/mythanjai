@@ -301,7 +301,7 @@ function ListingsContent() {
                       const isInactive = Boolean(post.is_sold || post.is_contacted || post.is_offline || post.is_expired);
                       const pType = (post.type || "SELL").toUpperCase();
                       let label = isInactive ? "Mark Active" : "Mark Sold";
-                      if (pType === "NEED") label = isInactive ? "Mark Active" : "Mark Contacted";
+                      if (pType === "NEED") label = isInactive ? "Mark Active" : "Mark Fulfilled";
                       else if (pType === "SERVICE" || post.skill_category) label = isInactive ? "Mark Online" : "Mark Offline";
                       else if (pType === "OFFER" || pType === "SHOP" || post.shop_name) label = isInactive ? "Mark Active" : "Mark Expired";
 
