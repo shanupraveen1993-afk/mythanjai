@@ -221,48 +221,31 @@ function ListingsContent() {
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-24 flex flex-col gap-6 font-sans">
-      {/* Header Bar */}
-      <div className="flex flex-col gap-1 border-b border-slate-200/80 pb-4">
-        <h1 className="font-heading font-black text-xl sm:text-2xl text-slate-900 tracking-tight flex items-center gap-2 text-left">
-          {activeTab === "saved" ? (
-            <>
-              <Bookmark className="w-6 h-6 text-amber-500 shrink-0" />
-              <span>Saved Items</span>
-            </>
-          ) : (
-            <>
-              <Package className="w-6 h-6 text-amber-500 shrink-0" />
-              <span>My Posted Ads</span>
-            </>
-          )}
-        </h1>
-      </div>
-
-      {/* 2 Tabs: My Posted Ads | Saved Ads */}
+      {/* 2 Navigation Tabs: My Posted Ads | Saved Items */}
       <div className="flex items-center gap-6 border-b border-slate-200">
         <button
           type="button"
           onClick={() => setActiveTab("my_posts")}
-          className={`py-3 font-heading font-bold text-xs sm:text-sm transition-all border-b-2 cursor-pointer flex items-center gap-2 focus:outline-none outline-none select-none ${
+          className={`py-3 font-heading font-bold text-sm sm:text-base transition-all border-b-2 cursor-pointer flex items-center gap-2 focus:outline-none outline-none select-none ${
             activeTab === "my_posts"
-              ? "border-amber-500 text-slate-900 font-bold"
+              ? "border-amber-500 text-slate-900 font-extrabold"
               : "border-transparent text-slate-500 hover:text-slate-900"
           }`}
         >
-          <Package className="w-4 h-4" />
+          <Package className="w-4.5 h-4.5 text-amber-500" />
           <span>My Posted Ads ({myPosts.length})</span>
         </button>
 
         <button
           type="button"
           onClick={() => setActiveTab("saved")}
-          className={`py-3 font-heading font-bold text-xs sm:text-sm transition-all border-b-2 cursor-pointer flex items-center gap-2 focus:outline-none outline-none select-none ${
+          className={`py-3 font-heading font-bold text-sm sm:text-base transition-all border-b-2 cursor-pointer flex items-center gap-2 focus:outline-none outline-none select-none ${
             activeTab === "saved"
-              ? "border-amber-500 text-slate-900 font-bold"
+              ? "border-amber-500 text-slate-900 font-extrabold"
               : "border-transparent text-slate-500 hover:text-slate-900"
           }`}
         >
-          <Bookmark className="w-4 h-4" />
+          <Bookmark className="w-4.5 h-4.5 text-amber-500" />
           <span>Saved Items ({savedPosts.length})</span>
         </button>
       </div>
@@ -300,12 +283,13 @@ function ListingsContent() {
               return (
                 <div
                   key={post.id}
-                  className={`p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-sans transition-all ${
-                    isInactive ? "bg-slate-100/60 opacity-80" : "bg-white hover:bg-slate-50/60"
+                  className={`p-4 sm:p-5 flex flex-col gap-3 font-sans transition-all ${
+                    isInactive ? "bg-slate-100/60 opacity-85" : "bg-white hover:bg-slate-50/60"
                   }`}
                 >
-                  {/* Left Column: Image Thumbnail + Details */}
-                  <div className="flex items-start gap-4 flex-1 min-w-0 w-full sm:w-auto">
+                  {/* Top Row: Details + Image */}
+                  <div className="flex items-start gap-3.5 w-full">
+                    {/* Image Thumbnail */}
                     <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl bg-slate-100 border border-slate-200 overflow-hidden shrink-0 relative">
                       <img
                         src={itemImage}
@@ -321,14 +305,17 @@ function ListingsContent() {
                       )}
                     </div>
 
+                    {/* Content */}
                     <div className="flex flex-col gap-1 flex-1 min-w-0">
                       {/* Status Badge & Type */}
-                      <div className="flex items-center gap-2">
-                        <span className={`text-[11px] font-bold ${isInactive ? "text-slate-500" : "text-emerald-700"}`}>
-                          ● {isInactive ? statusLabel : "ACTIVE"}
-                        </span>
-                        {post.category && <span className="text-xs font-semibold text-slate-600">• {post.category}</span>}
-                        <span className="text-xs font-medium text-slate-400">• {pType}</span>
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-1.5">
+                          <span className={`text-[11px] font-extrabold ${isInactive ? "text-slate-500" : "text-emerald-700"}`}>
+                            ● {isInactive ? statusLabel : "ACTIVE"}
+                          </span>
+                          {post.category && <span className="text-xs font-semibold text-slate-600 truncate">• {post.category}</span>}
+                        </div>
+                        <span className="text-[11px] font-bold text-slate-400 uppercase bg-slate-100 px-1.5 py-0.5 rounded">{pType}</span>
                       </div>
 
                       {/* Title */}
@@ -338,7 +325,7 @@ function ListingsContent() {
 
                       {/* Golden Amber Price */}
                       {itemPrice && (
-                        <div className="text-amber-600 font-heading font-black text-base sm:text-lg tracking-tight">
+                        <div className="text-amber-600 font-heading font-black text-base tracking-tight">
                           {itemPrice.toString().startsWith("₹") ? itemPrice : `₹${itemPrice}`}
                         </div>
                       )}
@@ -357,10 +344,10 @@ function ListingsContent() {
                     </div>
                   </div>
 
-                  {/* Right Column: Active/Inactive Toggle Switch + Management Buttons */}
-                  <div className="flex items-center gap-3 shrink-0 w-full sm:w-auto pt-2 sm:pt-0 justify-between sm:justify-end border-t sm:border-t-0 border-slate-200/80">
+                  {/* Bottom Action Control Bar: Active Toggle Left + Edit/Delete Right */}
+                  <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-100 w-full">
                     {/* Active / Inactive Toggle Switch */}
-                    <div className="flex items-center gap-2 bg-slate-100 p-1.5 rounded-xl border border-slate-200">
+                    <div className="flex items-center gap-2 bg-slate-100 px-2.5 py-1 rounded-xl border border-slate-200">
                       <span className={`text-[11px] font-bold transition-colors ${!isInactive ? "text-emerald-700 font-extrabold" : "text-slate-500"}`}>
                         {!isInactive ? "Active" : "Inactive"}
                       </span>
@@ -371,7 +358,7 @@ function ListingsContent() {
                           onChange={() => handleToggleSegmentStatus(post)}
                           className="sr-only peer"
                         />
-                        <div className="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600" />
+                        <div className="w-8 h-4.5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-emerald-600" />
                       </label>
                     </div>
 
@@ -382,7 +369,7 @@ function ListingsContent() {
                           const seg = post.type === "SERVICE" ? "service" : post.type === "OFFER" || post.type === "SHOP" ? "offer" : post.type === "NEED" ? "need" : "sell";
                           router.push(`/post/${seg}?editId=${post.id}`);
                         }}
-                        className="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-900 border border-slate-300 font-heading font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer transition-colors shadow-2xs"
+                        className="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-900 border border-slate-300 font-heading font-bold text-xs rounded-xl flex items-center gap-1 cursor-pointer transition-colors shadow-2xs"
                       >
                         <Pencil className="w-3.5 h-3.5 text-amber-600" />
                         <span>Edit</span>
@@ -391,7 +378,7 @@ function ListingsContent() {
                       <button
                         type="button"
                         onClick={() => handleDeletePost(post.id, post.type === "SERVICE" ? "services" : post.type === "SHOP" ? "shops" : "needs_and_sales")}
-                        className="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-heading font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer transition-colors"
+                        className="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-heading font-bold text-xs rounded-xl flex items-center gap-1 cursor-pointer transition-colors"
                         title="Delete Listing"
                       >
                         <Trash2 className="w-3.5 h-3.5 text-rose-600" />
