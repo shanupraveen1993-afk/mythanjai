@@ -55,10 +55,10 @@ export default function HomeCategorySegmentBar() {
                 }
                 router.push(seg.route);
               }}
-              className={`py-1.5 px-2 rounded-xl font-heading font-black text-xs transition-all cursor-pointer flex items-center justify-center w-full text-center ${
+              className={`py-2 px-3 rounded-xl text-xs sm:text-sm transition-all cursor-pointer flex items-center justify-center w-full text-center ${
                 isActive
-                  ? "bg-[#FBBF24] text-[#0F172A] shadow-md border border-amber-400 font-black scale-[1.02]"
-                  : "bg-white text-slate-700 hover:bg-slate-100 border border-slate-200 font-bold"
+                  ? "bg-[#FBBF24] text-slate-950 font-bold border border-amber-400/90 shadow-2xs"
+                  : "bg-white text-slate-700 hover:text-slate-950 border border-slate-200/90 font-semibold"
               }`}
             >
               <span className="truncate w-full">{seg.label}</span>

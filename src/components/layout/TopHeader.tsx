@@ -185,10 +185,10 @@ export default function TopHeader({
               <button
                 type="button"
                 onClick={() => router.push("/")}
-                className={`px-5 py-2 rounded-xl text-sm transition-all cursor-pointer ${
+                className={`px-4 py-1.5 rounded-xl text-xs sm:text-sm transition-all cursor-pointer ${
                   pathname === "/" || pathname === "/home" || pathname.includes("/sell")
-                    ? "bg-[#FBBF24] text-[#0F172A] font-black shadow-xs rounded-xl"
-                    : "text-slate-700 hover:text-slate-950 font-bold transition-colors"
+                    ? "bg-[#FBBF24] text-slate-950 font-bold border border-amber-400/90 shadow-2xs"
+                    : "text-slate-700 hover:text-slate-950 font-semibold transition-colors"
                 }`}
               >
                 Sell
@@ -196,10 +196,10 @@ export default function TopHeader({
               <button
                 type="button"
                 onClick={() => router.push("/need")}
-                className={`px-5 py-2 rounded-xl text-sm transition-all cursor-pointer ${
+                className={`px-4 py-1.5 rounded-xl text-xs sm:text-sm transition-all cursor-pointer ${
                   pathname.includes("/need")
-                    ? "bg-[#FBBF24] text-[#0F172A] font-black shadow-xs rounded-xl"
-                    : "text-slate-700 hover:text-slate-950 font-bold transition-colors"
+                    ? "bg-[#FBBF24] text-slate-950 font-bold border border-amber-400/90 shadow-2xs"
+                    : "text-slate-700 hover:text-slate-950 font-semibold transition-colors"
                 }`}
               >
                 Need
@@ -207,10 +207,10 @@ export default function TopHeader({
               <button
                 type="button"
                 onClick={() => router.push("/services")}
-                className={`px-5 py-2 rounded-xl text-sm transition-all cursor-pointer ${
+                className={`px-4 py-1.5 rounded-xl text-xs sm:text-sm transition-all cursor-pointer ${
                   pathname.includes("/services")
-                    ? "bg-[#FBBF24] text-[#0F172A] font-black shadow-xs rounded-xl"
-                    : "text-slate-700 hover:text-slate-950 font-bold transition-colors"
+                    ? "bg-[#FBBF24] text-slate-950 font-bold border border-amber-400/90 shadow-2xs"
+                    : "text-slate-700 hover:text-slate-950 font-semibold transition-colors"
                 }`}
               >
                 Services
@@ -218,10 +218,10 @@ export default function TopHeader({
               <button
                 type="button"
                 onClick={() => router.push("/shops")}
-                className={`px-5 py-2 rounded-xl text-sm transition-all cursor-pointer ${
+                className={`px-4 py-1.5 rounded-xl text-xs sm:text-sm transition-all cursor-pointer ${
                   pathname.includes("/shops") || pathname.includes("/offers")
-                    ? "bg-[#FBBF24] text-[#0F172A] font-black shadow-xs rounded-xl"
-                    : "text-slate-700 hover:text-slate-950 font-bold transition-colors"
+                    ? "bg-[#FBBF24] text-slate-950 font-bold border border-amber-400/90 shadow-2xs"
+                    : "text-slate-700 hover:text-slate-950 font-semibold transition-colors"
                 }`}
               >
                 Offers
