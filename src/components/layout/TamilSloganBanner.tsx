@@ -7,7 +7,7 @@ import { Sparkles, ShoppingBag, Search, Wrench, Store } from "lucide-react";
 export default function TamilSloganBanner() {
   const pathname = usePathname() || "";
 
-  // English Titles + Exact Requested Tamil Texts
+  // English Titles + Exact Tamil Text with Underlined Titles
   const getBannerContent = () => {
     if (pathname.includes("/need")) {
       return {
@@ -41,19 +41,17 @@ export default function TamilSloganBanner() {
   const content = getBannerContent();
 
   return (
-    <div className="w-full bg-slate-950 border-b border-amber-500/30 py-2.5 px-3 sm:px-6 flex items-center justify-center text-center font-sans shadow-md select-none relative overflow-hidden bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-amber-950/60 via-slate-950 to-slate-900">
-      {/* Background Subtle Thanjavur Sketch Accent */}
-      <div 
-        className="absolute inset-0 opacity-15 pointer-events-none bg-repeat-x bg-center"
-        style={{ backgroundImage: "url('/thanjavur_temple_illustration.png')", backgroundSize: "contain" }}
-      />
-
+    <div 
+      className="w-full bg-slate-950 border-b border-amber-500/40 py-2.5 px-3 sm:px-6 flex items-center justify-center text-center font-sans shadow-md select-none relative overflow-hidden bg-cover bg-center"
+      style={{ backgroundImage: "linear-gradient(to right, rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.82)), url('/banner_abstract_bg.png')" }}
+    >
       <div className="max-w-7xl mx-auto flex items-center justify-center gap-2 py-0.5 relative z-10">
         <span className="inline-flex items-center shrink-0">{content.icon}</span>
         <p className="font-heading text-xs sm:text-[13px] tracking-normal leading-relaxed flex items-center flex-wrap justify-center gap-1.5 sm:gap-2">
-          <span className="font-heading font-black text-amber-400 tracking-tight shrink-0">
-            {content.title} —
+          <span className="font-heading font-black text-amber-400 tracking-tight shrink-0 underline decoration-amber-400 decoration-2 underline-offset-4">
+            {content.title}
           </span>
+          <span className="text-amber-400 font-black">—</span>
           <span className="text-slate-100 font-bold font-tamil leading-snug">
             {content.text}
           </span>
