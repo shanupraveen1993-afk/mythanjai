@@ -855,15 +855,13 @@ export default function PostForm({ segment }: PostFormProps) {
                   </div>
                 </div>
 
-                {/* 5. ADDRESS LINE */}
+                {/* 5. ADDRESS LINE — GooglePlaces autocomplete */}
                 <div className="w-full">
-                  <input
-                    type="text"
-                    required
+                  <GooglePlacesInput
                     value={area}
-                    onChange={(e) => setArea(e.target.value)}
-                    placeholder="📍 Shop Address & Locality in Thanjavur * (e.g. Medical College Rd)"
-                    className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium"
+                    onChange={(val) => setArea(val)}
+                    placeholder="📍 Shop Address & Locality in Thanjavur *"
+                    label="Shop Address & Area"
                   />
                 </div>
 
