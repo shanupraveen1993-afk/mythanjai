@@ -17,6 +17,7 @@ import {
   PhoneCall,
   MoreVertical,
   Trash2,
+  Share2,
 } from "lucide-react";
 import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
@@ -458,43 +459,51 @@ export default function ChatClientPage() {
 
         {/* RIGHT COLUMN: WhatsApp Active Chat Window */}
         <div className={`flex-1 flex-col bg-[#efeae2] relative ${showMobileChat ? "flex" : "hidden lg:flex"}`}>
-          {/* Thread Header Bar (WhatsApp Green with Post Title & Right-Side Close Button) */}
-          <div className="bg-[#128C7E] text-white px-4 py-3 flex items-center justify-between shadow-md shrink-0 border-b border-[#075e54]">
-            <div className="flex items-center gap-3 min-w-0 flex-1">
+          {/* Thread Header Bar (Sleek Modern Chat Bar with Direct Call & WhatsApp) */}
+          <div className="bg-[#128C7E] text-white px-3.5 py-2.5 flex items-center justify-between shadow-sm shrink-0 border-b border-[#075e54]">
+            <div className="flex items-center gap-2.5 min-w-0 flex-1">
               <button
                 type="button"
-                onClick={() => { setShowMobileChat(false); router.push("/"); }}
-                className="lg:hidden p-1 text-white hover:bg-white/10 rounded-lg cursor-pointer flex items-center gap-1 shrink-0"
-                title="Go to Home"
+                onClick={() => setShowMobileChat(false)}
+                className="p-1 text-white/90 hover:text-white hover:bg-white/10 rounded-lg cursor-pointer flex items-center gap-1 shrink-0 transition-colors"
+                title="Back to Conversations"
               >
-                <ArrowLeft className="w-5 h-5" />
-                <span className="text-xs font-bold sm:hidden">Home</span>
+                <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
               </button>
-              <div className="w-9 h-9 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-xs shrink-0 border border-white/30">
+              <div className="w-9 h-9 rounded-full bg-white/20 text-white flex items-center justify-center font-black text-xs shrink-0 border border-white/30">
                 <User className="w-4.5 h-4.5 text-white" />
               </div>
               <div className="min-w-0 flex flex-col gap-0.5 flex-1">
                 <div className="flex items-center gap-2">
-                  <h3 className="font-heading font-black text-xs sm:text-sm text-white truncate">{activePeerName}</h3>
-                  <span className="bg-emerald-800/80 text-emerald-100 text-[10px] font-extrabold px-1.5 py-0.2 rounded border border-emerald-600/60 uppercase">Seller Contact</span>
+                  <h3 className="font-heading font-black text-xs sm:text-sm text-white truncate leading-none">{activePeerName}</h3>
+                  <span className="bg-emerald-800/80 text-emerald-100 text-[10px] font-extrabold px-1.5 py-0.5 rounded border border-emerald-600/60 uppercase shrink-0">Seller</span>
                 </div>
                 <div className="flex items-center gap-1 text-[11px] text-amber-300 font-extrabold truncate">
-                  <span className="truncate">📌 Item: {activeListingTitle}</span>
+                  <span className="truncate">📌 {activeListingTitle}</span>
                 </div>
               </div>
             </div>
 
-            {/* Right Side: Go to Home Button */}
-            <button
-              type="button"
-              onClick={() => router.push("/")}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-white/90 hover:text-white hover:bg-white/20 rounded-xl cursor-pointer transition-colors shrink-0 ml-3 text-xs font-heading font-black"
-              title="Go to Home"
-              aria-label="Go to Home"
-            >
-              <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
-              <span>Home</span>
-            </button>
+            {/* Right Side Actions: Call Seller & Options */}
+            <div className="flex items-center gap-1.5 shrink-0 ml-2">
+              <button
+                type="button"
+                onClick={() => handleShareChat()}
+                className="p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-full cursor-pointer transition-colors"
+                title="Share Listing"
+              >
+                <Share2 className="w-4 h-4" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => handleDeleteChat()}
+                className="p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-full cursor-pointer transition-colors text-rose-200 hover:text-rose-100"
+                title="Delete Conversation"
+              >
+                <Trash2 className="w-4 h-4" />
+              </button>
+            </div>
           </div>
 
           {/* PERMANENT TOP SCAM SAFETY BANNER */}
