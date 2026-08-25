@@ -41,24 +41,12 @@ export function useFirestore<T = any>({
       const colRef = collection(db, collectionName);
       const constraints: any[] = [];
 
-      // Single-field Firestore query (prevents composite index requirements)
+      // Only add userId constraint if specifically requesting a single user's profile
       if (onlyUserPosted) {
         constraints.push(where("userId", "==", onlyUserPosted));
-      } else if (category && category !== "All") {
-        if (collectionName === "needs_and_sales") {
-          constraints.push(where("category", "==", category));
-        } else if (collectionName === "services") {
-          constraints.push(where("skill_category", "==", category));
-        } else if (collectionName === "shops") {
-          constraints.push(where("category", "==", category));
-        } else if (collectionName === "offers") {
-          constraints.push(where("category", "==", category));
-        }
-      } else if (areaTag !== "All Areas") {
-        constraints.push(where("area_tag", "==", areaTag));
       }
 
-      // Limit results
+      // Limit results to last 150 items
       constraints.push(limit(150));
 
       q = query(colRef, ...constraints);
