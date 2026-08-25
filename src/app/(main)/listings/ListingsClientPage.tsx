@@ -82,12 +82,18 @@ function ListingsContent() {
         let combinedMyPosts: any[] = [];
         const seenIds = new Set<string>();
 
-        // 1. Always load ALL local posts created on this device from localStorage
+        // 1. Load local posts created by this user on this device from localStorage
         if (typeof window !== "undefined") {
           try {
             const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
             stored.forEach((localP: any) => {
-              if (!seenIds.has(localP.id)) {
+              const pPhone = String(localP.phone || "").replace(/\D/g, "");
+              const pPhone10 = pPhone.length >= 10 ? pPhone.slice(-10) : "";
+              const matchesUid = Boolean(userId && localP.userId === userId);
+              const matchesPhone = Boolean(userPhone10 && pPhone10 && pPhone10 === userPhone10);
+              const isAuthor = !userPhone10 || matchesUid || matchesPhone;
+
+              if (isAuthor && !seenIds.has(localP.id)) {
                 seenIds.add(localP.id);
                 const determinedCol = localP.skill_category
                   ? "services"
