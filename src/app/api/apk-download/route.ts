@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 
 export async function GET() {
-  const cdnUrl = "https://raw.githubusercontent.com/shanupraveen1993-afk/mythanjai/main/public/NammaThanjai-v20.apk";
+  const cdnUrl = "https://raw.githubusercontent.com/shanupraveen1993-afk/mythanjai/main/public/NammaThanjai-v21.apk";
   
   try {
     const res = await fetch(cdnUrl, {
@@ -16,7 +16,7 @@ export async function GET() {
 
     const headers = new Headers();
     headers.set("Content-Type", "application/vnd.android.package-archive");
-    headers.set("Content-Disposition", 'attachment; filename="NammaThanjai-v20.apk"');
+    headers.set("Content-Disposition", 'attachment; filename="NammaThanjai-v21.apk"');
     headers.set("Cache-Control", "public, max-age=86400, s-maxage=86400");
     if (res.headers.get("content-length")) {
       headers.set("Content-Length", res.headers.get("content-length")!);

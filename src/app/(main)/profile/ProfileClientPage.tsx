@@ -239,9 +239,17 @@ function ProfileContent() {
 
       if (typeof window !== "undefined") {
         try {
+          const rawPhone = (profile?.phone || user?.phoneNumber || localStorage.getItem("namma_thanjai_phone") || localStorage.getItem("my_thanjai_phone") || "").replace(/\D/g, "");
+          const userPhone10 = rawPhone.length >= 10 ? rawPhone.slice(-10) : "";
           const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+
           stored.forEach((localP: any) => {
-            if (!allFetchedPosts.some((p) => p.id === localP.id)) {
+            const pPhone = String(localP.phone || "").replace(/\D/g, "");
+            const pPhone10 = pPhone.length >= 10 ? pPhone.slice(-10) : "";
+            const matchesUid = Boolean(user?.uid && localP.userId === user.uid);
+            const matchesPhone = Boolean(userPhone10 && pPhone10 && pPhone10 === userPhone10);
+
+            if ((matchesUid || matchesPhone) && !allFetchedPosts.some((p) => p.id === localP.id)) {
               const determinedCol = localP.skill_category ? "services" : (localP.type === "SELL" || localP.type === "NEED") ? "needs_and_sales" : "shops";
               allFetchedPosts.unshift({
                 ...localP,

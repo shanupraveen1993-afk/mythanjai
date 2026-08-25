@@ -70,7 +70,7 @@ function ListingsContent() {
   const [loading, setLoading] = useState(true);
   const [deleteConfirmTarget, setDeleteConfirmTarget] = useState<{ id: string; colName: string } | null>(null);
 
-  // Load My Posts & Saved Posts
+  // Load My Posts strictly filtered by current user's UID or Phone Number
   useEffect(() => {
     async function fetchListingsData() {
       if (!isVerified) {
@@ -81,34 +81,60 @@ function ListingsContent() {
       }
       setLoading(true);
       try {
-        const userId = user?.uid || "user";
-        const userPhone = String(profile?.phone || user?.phoneNumber || "").replace(/\D/g, "");
+        const userId = user?.uid || "";
+        const rawPhone = (profile?.phone || user?.phoneNumber || typeof window !== "undefined" ? (localStorage.getItem("namma_thanjai_phone") || localStorage.getItem("my_thanjai_phone") || "") : "").replace(/\D/g, "");
+        const userPhone10 = rawPhone.length >= 10 ? rawPhone.slice(-10) : "";
 
         let combinedMyPosts: any[] = [];
         const seenIds = new Set<string>();
 
-        if (userId && userId !== "user") {
-          const [salesSnap, needsSnap, servicesSnap, shopsSnap] = await Promise.all([
-            getDocs(query(collection(db, "needs_and_sales"), where("userId", "==", userId))).catch(() => ({ docs: [] })),
-            getDocs(query(collection(db, "needs_and_sales"), where("userId", "==", userId))).catch(() => ({ docs: [] })),
-            getDocs(query(collection(db, "services"), where("userId", "==", userId))).catch(() => ({ docs: [] })),
-            getDocs(query(collection(db, "shops"), where("userId", "==", userId))).catch(() => ({ docs: [] })),
-          ]);
+        const targetCollections = ["needs_and_sales", "services", "shops"];
 
-          [...salesSnap.docs, ...needsSnap.docs, ...servicesSnap.docs, ...shopsSnap.docs].forEach((docSnap) => {
-            if (!seenIds.has(docSnap.id)) {
-              seenIds.add(docSnap.id);
-              combinedMyPosts.push({ id: docSnap.id, colName: docSnap.ref.parent.id, ...docSnap.data() });
+        // 1. Fetch from Firestore strictly for this user (by userId or phone)
+        await Promise.all(
+          targetCollections.map(async (colName) => {
+            const colRef = collection(db, colName);
+            
+            // Query by userId
+            if (userId) {
+              const snapUid = await getDocs(query(colRef, where("userId", "==", userId))).catch(() => null);
+              if (snapUid && !snapUid.empty) {
+                snapUid.forEach((docSnap) => {
+                  if (!seenIds.has(docSnap.id)) {
+                    seenIds.add(docSnap.id);
+                    combinedMyPosts.push({ id: docSnap.id, colName, ...docSnap.data() });
+                  }
+                });
+              }
             }
-          });
-        }
 
-        // Merge local posts from localStorage
+            // Query by Phone number if 10 digits available
+            if (userPhone10) {
+              const snapPhone = await getDocs(query(colRef, where("phone", "==", userPhone10))).catch(() => null);
+              if (snapPhone && !snapPhone.empty) {
+                snapPhone.forEach((docSnap) => {
+                  if (!seenIds.has(docSnap.id)) {
+                    seenIds.add(docSnap.id);
+                    combinedMyPosts.push({ id: docSnap.id, colName, ...docSnap.data() });
+                  }
+                });
+              }
+            }
+          })
+        );
+
+        // 2. Merge local posts from localStorage — STRICTLY FILTERED BY LOGGED-IN PHONE / UID ONLY
         if (typeof window !== "undefined") {
           try {
             const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
             stored.forEach((localP: any) => {
-              if (!seenIds.has(localP.id)) {
+              const pPhone = String(localP.phone || "").replace(/\D/g, "");
+              const pPhone10 = pPhone.length >= 10 ? pPhone.slice(-10) : "";
+              const matchesUid = Boolean(userId && localP.userId === userId);
+              const matchesPhone = Boolean(userPhone10 && pPhone10 && pPhone10 === userPhone10);
+
+              // ONLY include if post belongs to logged-in user's UID or phone number
+              if ((matchesUid || matchesPhone) && !seenIds.has(localP.id)) {
                 seenIds.add(localP.id);
                 const determinedCol = localP.skill_category
                   ? "services"
@@ -143,7 +169,7 @@ function ListingsContent() {
     }
 
     fetchListingsData();
-  }, [user, profile, isVerified]);
+  }, [user, profile?.phone, isVerified]);
 
   // Complete & Permanent Delete
   const executeDeletePost = async (postId: string, collectionName?: string) => {
@@ -221,7 +247,7 @@ function ListingsContent() {
     toast.success(nextState ? "Listing marked as INACTIVE." : "Listing reactivated as ACTIVE!");
   };
 
-  // Handle Clear & Edit
+  // Handle Edit
   const handleEditPost = (post: any) => {
     const pType = (post.type || (post.skill_category ? "SERVICE" : post.shop_name ? "OFFER" : "SELL")).toLowerCase();
     const route = pType === "need" ? "/post/need" : pType === "service" ? "/post/service" : pType === "offer" || pType === "shop" ? "/post/offer" : "/post/sell";
@@ -412,7 +438,7 @@ function ListingsContent() {
                         type="button"
                         onClick={() => handleEditPost(post)}
                         className="px-3.5 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-xl font-heading font-black text-xs transition-colors cursor-pointer flex items-center gap-1.5"
-                        title="Edit & Resubmit Listing"
+                        title="Edit Listing"
                       >
                         <Pencil className="w-3.5 h-3.5 text-amber-700" />
                         <span>Edit</span>
