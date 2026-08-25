@@ -431,43 +431,7 @@ function ProfileContent() {
         </p>
       </div>
 
-      {/* Profile Segmented Tab Control — Clean Borderless Tabs */}
-      <div className="flex items-center gap-6 border-b border-slate-200">
-        <button
-          type="button"
-          onClick={() => {
-            setActiveView("dashboard");
-            router.push("/profile");
-          }}
-          className={`py-3 font-heading font-bold text-xs sm:text-sm transition-all border-b-2 cursor-pointer ${
-            activeView === "dashboard"
-              ? "border-amber-500 text-slate-900 font-bold"
-              : "border-transparent text-slate-500 hover:text-slate-900"
-          }`}
-        >
-          Profile
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            router.push("/listings");
-          }}
-          className="py-3 font-heading font-bold text-xs sm:text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-900 transition-all cursor-pointer flex items-center gap-1.5"
-        >
-          <Package className="w-4 h-4 text-slate-500" />
-          <span>My Listings</span>
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            router.push("/listings?tab=saved");
-          }}
-          className="py-3 font-heading font-bold text-xs sm:text-sm border-b-2 border-transparent text-slate-500 hover:text-slate-900 transition-all cursor-pointer flex items-center gap-1.5"
-        >
-          <Bookmark className="w-4 h-4 text-slate-500" />
-          <span>Saved Items</span>
-        </button>
-      </div>
+
 
       {/* WhatsApp OTP Verification Modal */}
       {verificationPending && (
@@ -635,43 +599,7 @@ function ProfileContent() {
           {/* Settings & Links Card List */}
           <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden flex flex-col divide-y divide-slate-100">
             
-            {/* My Listings Row — Unboxed Number */}
-            <div
-              onClick={() => router.push("/profile?tab=listings")}
-              className="flex items-center justify-between p-4 hover:bg-slate-50 cursor-pointer transition-colors group"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0">
-                  <Package className="w-4 h-4" />
-                </div>
-                <span className="font-heading font-black text-sm text-slate-900">My Listings</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-slate-500 font-bold text-sm">
-                  {myPosts.length}
-                </span>
-                <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-slate-700 transition-colors" />
-              </div>
-            </div>
 
-            {/* Saved Items Row — Unboxed Number & Removed Tamil text */}
-            <div
-              onClick={() => router.push("/profile?tab=saved")}
-              className="flex items-center justify-between p-4 hover:bg-slate-50 cursor-pointer transition-colors group"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0">
-                  <Bookmark className="w-4 h-4 text-slate-700" />
-                </div>
-                <span className="font-heading font-black text-sm text-slate-900">Saved Items</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className="text-slate-500 font-bold text-sm">
-                  {savedPosts.length}
-                </span>
-                <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-slate-700 transition-colors" />
-              </div>
-            </div>
 
             {/* Admin Console Row (if Admin) */}
             {isSuperAdmin && (

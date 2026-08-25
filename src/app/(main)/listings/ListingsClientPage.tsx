@@ -350,8 +350,8 @@ function ListingsContent() {
                     </div>
                   </div>
 
-                  {/* Right Column: 3 Clean Management Buttons Only (NO Chat/Call) */}
-                  <div className="flex sm:flex-col items-center sm:items-end gap-2 shrink-0 w-full sm:w-auto pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+                  {/* Right Column: 3 Clean Management Buttons Only (NO Chat/Call) — Strictly Left-Aligned */}
+                  <div className="flex sm:flex-col items-center sm:items-start gap-2 shrink-0 w-full sm:w-auto pt-3 sm:pt-0 border-t sm:border-t-0 border-slate-100">
                     <button
                       type="button"
                       onClick={() => {
