@@ -256,16 +256,16 @@ export default function AdminClientPage() {
           </div>
 
           <div className="flex items-center gap-2 overflow-x-auto no-scrollbar w-full sm:w-auto pt-2 sm:pt-0">
-            <Link href="/post?segment=offer&admin=true" className="flex items-center gap-1.5 text-xs bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 font-heading font-black px-3.5 py-2 rounded-xl shadow-md transition-all hover:scale-105 cursor-pointer uppercase tracking-wider shrink-0">
+            <Link href="/post/offer?admin=true" className="flex items-center gap-1.5 text-xs bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 font-heading font-black px-3.5 py-2 rounded-xl shadow-md transition-all hover:scale-105 cursor-pointer uppercase tracking-wider shrink-0">
               <Plus className="w-3.5 h-3.5 stroke-[3]" /> Post Offer / Reel
             </Link>
-            <Link href="/post?segment=sell&admin=true" className="flex items-center gap-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-blue-300 border border-blue-400/40 font-heading font-black px-3.5 py-2 rounded-xl transition-all cursor-pointer uppercase tracking-wider shrink-0">
+            <Link href="/post/sell?admin=true" className="flex items-center gap-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-blue-300 border border-blue-400/40 font-heading font-black px-3.5 py-2 rounded-xl transition-all cursor-pointer uppercase tracking-wider shrink-0">
               + Post Sell
             </Link>
-            <Link href="/post?segment=need&admin=true" className="flex items-center gap-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-400/40 font-heading font-black px-3.5 py-2 rounded-xl transition-all cursor-pointer uppercase tracking-wider shrink-0">
+            <Link href="/post/need?admin=true" className="flex items-center gap-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-amber-300 border border-amber-400/40 font-heading font-black px-3.5 py-2 rounded-xl transition-all cursor-pointer uppercase tracking-wider shrink-0">
               + Post Need
             </Link>
-            <Link href="/post?segment=service&admin=true" className="flex items-center gap-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-emerald-400/40 font-heading font-black px-3.5 py-2 rounded-xl transition-all cursor-pointer uppercase tracking-wider shrink-0">
+            <Link href="/post/service?admin=true" className="flex items-center gap-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-emerald-300 border border-emerald-400/40 font-heading font-black px-3.5 py-2 rounded-xl transition-all cursor-pointer uppercase tracking-wider shrink-0">
               + Post Service
             </Link>
           </div>
