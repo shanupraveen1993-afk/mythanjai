@@ -204,7 +204,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
                     value={phoneNumber}
                     onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, "").slice(0, 10))}
                     placeholder="9994837342"
-                    className="w-full pl-22 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-black text-slate-900 focus:outline-none focus:border-[#128C7E] focus:bg-white transition-colors"
+                    className="w-full pl-22 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-medium placeholder:font-normal text-slate-900 focus:outline-none focus:border-[#128C7E] focus:bg-white transition-colors"
                   />
                 </div>
               </div>
