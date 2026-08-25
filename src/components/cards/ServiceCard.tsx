@@ -230,14 +230,14 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
           </div>
 
           {/* Provider / Business Name Title */}
-          <h3 className="font-sans font-extrabold text-sm sm:text-base text-slate-900 truncate line-clamp-1 whitespace-nowrap leading-snug">
+          <h3 className="font-sans font-bold text-base sm:text-lg text-slate-900 truncate line-clamp-1 whitespace-nowrap leading-snug">
             {post.name}
           </h3>
         </div>
 
         {/* ── MIDDLE SECTION: Fixed Height Description Box ── */}
         <div className="min-h-[4.25rem] bg-slate-50/80 border border-slate-200/60 p-2.5 rounded-xl flex items-center">
-          <p className="text-xs text-slate-700 font-normal leading-relaxed line-clamp-3">
+          <p className="text-sm text-slate-700 font-medium leading-relaxed line-clamp-3">
             {post.description || "Verified trade professional serving Thanjavur region."}
           </p>
         </div>

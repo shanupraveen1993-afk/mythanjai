@@ -377,7 +377,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
               </div>
 
               {/* Title: Single-line bold text */}
-              <h3 className="font-sans font-extrabold text-sm sm:text-base text-slate-900 truncate line-clamp-1 whitespace-nowrap leading-snug text-left mt-0.5">
+              <h3 className="font-sans font-bold text-base sm:text-lg text-slate-900 truncate line-clamp-1 whitespace-nowrap leading-snug text-left mt-0.5">
                 {listing.title}
               </h3>
             </div>
@@ -385,7 +385,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
 
           {/* ── MIDDLE SECTION: Fixed Height Description Box ── */}
           <div className="min-h-[4.5rem] bg-slate-50/80 border border-slate-200/60 p-2.5 rounded-xl flex items-center">
-            <p className="text-xs text-slate-700 font-normal leading-relaxed line-clamp-3">
+            <p className="text-sm text-slate-700 font-medium leading-relaxed line-clamp-3">
               {listing.description || "No detailed description provided."}
             </p>
           </div>
@@ -393,7 +393,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
           {/* ── ROW 3: Location on Left + 3 Icon Buttons on Right ── */}
           <div className="flex items-center justify-between text-xs text-slate-600 border-t border-b border-slate-100 py-2 my-0.5 gap-2">
             {/* Location Tag */}
-            <div className="flex items-center gap-1 text-[11px] text-slate-600 font-semibold truncate">
+            <div className="flex items-center gap-1 text-xs text-slate-600 font-semibold truncate">
               <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
               <span className="truncate">{listing.location || "Medical College Rd, Thanjavur"}</span>
             </div>

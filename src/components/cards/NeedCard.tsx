@@ -195,14 +195,14 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
           </div>
 
           {/* Title: Single-line bold text */}
-          <h3 className="font-sans font-extrabold text-sm sm:text-base text-slate-700 truncate line-clamp-1 whitespace-nowrap leading-snug">
+          <h3 className="font-sans font-bold text-base sm:text-lg text-slate-900 truncate line-clamp-1 whitespace-nowrap leading-snug">
             {post.title}
           </h3>
         </div>
 
         {/* ── MIDDLE SECTION: Description Box ── */}
         <div className="min-h-[4.25rem] bg-slate-50/80 border border-slate-200/60 p-2.5 rounded-xl flex items-center">
-          <p className="text-xs sm:text-sm text-slate-600 font-medium leading-relaxed line-clamp-3">
+          <p className="text-sm text-slate-700 font-medium leading-relaxed line-clamp-3">
             {post.description || "No specific requirement details provided."}
           </p>
         </div>
