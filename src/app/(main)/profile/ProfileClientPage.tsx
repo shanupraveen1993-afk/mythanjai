@@ -628,50 +628,6 @@ function ProfileContent() {
 
           {/* Settings & Troubleshooting Card List */}
           <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden flex flex-col divide-y divide-slate-100">
-            {/* Clear App Cache & Recover Row */}
-            <button
-              type="button"
-              onClick={async () => {
-                try {
-                  if (typeof window !== "undefined") {
-                    localStorage.removeItem("namma_thanjai_local_posts");
-                    localStorage.removeItem("namma_thanjai_saved_posts");
-                    localStorage.removeItem("my_thanjai_saved_posts");
-                    sessionStorage.clear();
-
-                    if ("caches" in window) {
-                      const cacheNames = await caches.keys();
-                      await Promise.all(cacheNames.map((name) => caches.delete(name)));
-                    }
-                    if ("serviceWorker" in navigator) {
-                      const registrations = await navigator.serviceWorker.getRegistrations();
-                      for (const registration of registrations) {
-                        await registration.unregister();
-                      }
-                    }
-                  }
-                  toast.success("App cache & storage cleared! Reloading fresh data...");
-                  setTimeout(() => {
-                    window.location.href = "/";
-                  }, 600);
-                } catch (e) {
-                  toast.error("Error clearing cache. Please reload the page.");
-                }
-              }}
-              className="flex items-center justify-between p-4 hover:bg-slate-50 cursor-pointer transition-colors text-left group"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 border border-amber-200 flex items-center justify-center shrink-0">
-                  <RefreshCw className="w-4 h-4" />
-                </div>
-                <div className="flex flex-col">
-                  <span className="font-heading font-black text-sm text-slate-900">Clear App Cache & Recover</span>
-                  <span className="text-xs text-slate-500 font-medium">Fixes slow loading, clears old cached data & resets state</span>
-                </div>
-              </div>
-              <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-amber-600 transition-colors shrink-0" />
-            </button>
-
             {/* Admin Console Row (if Admin) */}
             {isSuperAdmin && (
               <Link href="/admin" className="flex items-center justify-between p-4 hover:bg-slate-50 cursor-pointer transition-colors group">

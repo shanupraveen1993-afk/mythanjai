@@ -112,13 +112,13 @@ export default function TopHeader({
         {/* Left Side: Native Back Button ONLY for true sub-screens (/post/*, /admin/*, /item/*, etc.) vs Home Logo for main tabs */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0 z-20">
           {(() => {
-            const cleanPath = (pathname || "").toLowerCase().replace(/\/$/, "");
+            const purePath = (pathname || "").split("?")[0].toLowerCase().replace(/\/$/, "");
             const mainTabs = ["", "/", "/home", "/sell", "/need", "/services", "/shops", "/search", "/listings", "/profile", "/chat"];
-            const isDetailScreen = !mainTabs.includes(cleanPath) && (
-              cleanPath.startsWith("/post") ||
-              cleanPath.startsWith("/admin") ||
-              cleanPath.startsWith("/item") ||
-              cleanPath.startsWith("/detail")
+            const isDetailScreen = !mainTabs.includes(purePath) && (
+              purePath.startsWith("/post") ||
+              purePath.startsWith("/admin") ||
+              purePath.startsWith("/item") ||
+              purePath.startsWith("/detail")
             );
             if (isDetailScreen) {
               return (
