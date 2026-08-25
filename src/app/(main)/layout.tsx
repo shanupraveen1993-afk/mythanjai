@@ -291,10 +291,12 @@ function MainLayoutContent({
           paddingTop: !isStandaloneView && !isOnboardingView ? "calc(3.8rem + env(safe-area-inset-top, 0px))" : undefined,
         }}
       >
-        {/* Sleek Tamil Welcome Banner — ONLY on the 4 feed segments: /sell /need /services /shops */}
-        {(pathname === "/sell" || pathname === "/need" || pathname === "/services" || pathname === "/shops") && (
-          <TamilSloganBanner />
-        )}
+        {/* Sleek Tamil Welcome Banner — ALWAYS visible on main feed segments */}
+        {(() => {
+          const purePath = (pathname || "").split("?")[0].toLowerCase().replace(/\/$/, "");
+          const showBanner = purePath === "" || purePath === "/" || purePath === "/home" || purePath === "/sell" || purePath === "/need" || purePath === "/services" || purePath === "/shops";
+          return showBanner ? <TamilSloganBanner /> : null;
+        })()}
 
         {/* Stable height wrapper — prevents page collapse and footer jump on route transitions */}
         <div className="w-full flex-1 flex flex-col min-h-0">
