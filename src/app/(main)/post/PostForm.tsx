@@ -432,6 +432,20 @@ export default function PostForm({ segment }: PostFormProps) {
         ? "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&auto=format&fit=crop"
         : "/thanjavur_temple_illustration.png";
 
+    // ── STEP 0: Check Rate Limit & Banned Keywords ──
+    const { checkPostSpamAndRateLimit } = await import("@/lib/spam-filter");
+    const spamCheck = await checkPostSpamAndRateLimit({
+      phone: phone || "9876543210",
+      title: title.trim(),
+      description: cleanDesc,
+    });
+
+    if (!spamCheck.isAllowed) {
+      setLoading(false);
+      toast.error(spamCheck.reason || "Post rejected by spam filter.");
+      return;
+    }
+
     // ── STEP 1: Build & Persist Local Record IMMEDIATELY (0ms Delay) ─────────
     const localPostRecord: any = {
       id: targetPostId,
