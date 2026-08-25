@@ -1260,7 +1260,7 @@ export default function PostForm({ segment }: PostFormProps) {
               type="submit"
               onClick={handleSubmit}
               disabled={loading}
-              className="w-full py-3.5 sm:py-4 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer rounded-xl shadow-md transition-all select-none mt-2 mb-28 md:mb-6"
+              className="w-full sm:w-auto sm:min-w-[240px] px-8 py-3.5 sm:py-4 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer rounded-xl shadow-md transition-all select-none mt-2 mb-28 md:mb-6 active:scale-95 sm:self-end"
             >
               {loading ? (
                 <>
