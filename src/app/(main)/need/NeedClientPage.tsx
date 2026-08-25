@@ -50,20 +50,11 @@ export default function NeedClientPage() {
     category: "All",
   });
 
-  const [localPosts, setLocalPosts] = useState<NeedOrSalePost[]>([]);
-
-  useEffect(() => {
-    try {
-      let stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-      let needPosts = stored.filter((p: any) => p.type?.toUpperCase() === "NEED");
-      setLocalPosts(needPosts);
-    } catch (e) {}
-  }, []);
+  // NOTE: localStorage posts are ONLY for My Listings page.
+  // Public need feed always shows only Firestore data.
 
   const filteredPosts = React.useMemo(() => {
-    let list = [...localPosts, ...(firestorePosts || [])];
-
-    list = list.filter((p) => {
+    let list = (firestorePosts || []).filter((p) => {
       if ((p as any).status === "moderation_review") return false;
       if (isListingQuarantined(p.id)) return false;
       if (!p.title || p.title.trim() === "" || p.description === "No detailed description provided.") return false;
@@ -82,7 +73,7 @@ export default function NeedClientPage() {
       list.sort((a, b) => (Number(b.price) || 0) - (Number(a.price) || 0));
     }
     return list;
-  }, [firestorePosts, localPosts, selectedCategory, sortBy]);
+  }, [firestorePosts, selectedCategory, sortBy]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 15; // 5 rows for 1 page (3 cols x 5 rows)

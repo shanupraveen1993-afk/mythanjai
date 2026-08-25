@@ -50,18 +50,11 @@ export default function ServicesClientPage() {
     category: "All",
   });
 
-  const [localPosts, setLocalPosts] = useState<ServiceProviderPost[]>([]);
-
-  useEffect(() => {
-    try {
-      let stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-      let servicePosts = stored.filter((p: any) => p.name || p.skill_category || p.type === "SERVICE");
-      setLocalPosts(servicePosts);
-    } catch (e) {}
-  }, []);
+  // NOTE: localStorage posts are ONLY for My Listings page.
+  // Public services feed always shows only Firestore data.
 
   const filteredPosts = React.useMemo(() => {
-    let list = [...localPosts, ...(firestorePosts || [])].filter((p) => {
+    let list = (firestorePosts || []).filter((p) => {
       if ((p as any).status === "moderation_review") return false;
       if (isListingQuarantined(p.id)) return false;
       if (!p.name || p.name.trim() === "" || p.experience === "No detailed description provided.") return false;

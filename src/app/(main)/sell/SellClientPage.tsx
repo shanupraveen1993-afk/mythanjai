@@ -18,7 +18,8 @@ export default function SellClientPage() {
   const { user, profile, isVerified } = useAuth();
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [sortBy, setSortBy] = useState<"recent" | "price_low" | "price_high">("recent");
-  const [localPosts, setLocalPosts] = useState<NeedOrSalePost[]>([]);
+  // NOTE: localStorage posts are ONLY for My Listings page.
+  // Public feed always shows only Firestore data — never own posts.
 
   const categoryOptions = React.useMemo(() => [
     { label: "All Categories", value: "All" },
@@ -50,41 +51,10 @@ export default function SellClientPage() {
     category: "All",
   });
 
-  const loadLocalPosts = React.useCallback(() => {
-    try {
-      let stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-      let sellPosts = stored.filter((p: any) => {
-        const t = (p.type || "SELL").toUpperCase();
-        return t === "SELL" && !p.skill_category && !p.shop_name;
-      });
-      setLocalPosts(sellPosts);
-    } catch (e) {}
-  }, []);
 
-  useEffect(() => {
-    loadLocalPosts();
-    window.addEventListener("focus", loadLocalPosts);
-    return () => window.removeEventListener("focus", loadLocalPosts);
-  }, [loadLocalPosts]);
 
   const filteredPosts = React.useMemo(() => {
-    let rawList = [...localPosts, ...(firestorePosts || [])];
-
-    // Deduplicate by ID
-    const seenIds = new Set<string>();
-    let list: NeedOrSalePost[] = [];
-    for (const p of rawList) {
-      const pid = p.id || `post_${Math.random()}`;
-      if (!seenIds.has(pid)) {
-        seenIds.add(pid);
-        list.push(p);
-      }
-    }
-
-    const userPhone = (profile?.phone || user?.phoneNumber || "").replace(/\D/g, "");
-    const userUid = user?.uid || "";
-
-    list = list.filter((p: any) => {
+    let list: NeedOrSalePost[] = (firestorePosts || []).filter((p: any) => {
       if (p.status === "moderation_review") return false;
       if (isListingQuarantined(p.id)) return false;
       if (!p.title || p.title.trim() === "" || p.description === "No detailed description provided.") return false;
@@ -92,11 +62,6 @@ export default function SellClientPage() {
       if (pType === "NEED" || pType === "SERVICE" || pType === "OFFER" || pType === "SHOP") return false;
       if (p.skill_category || p.shop_name) return false;
       if (p.is_sold) return false;
-
-      // Filter out user's own published posts from public feed
-      if (userUid && p.userId === userUid) return false;
-      if (userPhone && p.phone && String(p.phone).replace(/\D/g, "").includes(userPhone)) return false;
-
       return true;
     });
 
@@ -112,7 +77,7 @@ export default function SellClientPage() {
       list.sort((a, b) => (Number(b.price) || 0) - (Number(a.price) || 0));
     }
     return list;
-  }, [firestorePosts, localPosts, selectedCategory, sortBy]);
+  }, [firestorePosts, selectedCategory, sortBy]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 15; // 5 rows for 1 page (3 cols x 5 rows)

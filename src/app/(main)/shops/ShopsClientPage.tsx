@@ -44,19 +44,11 @@ export default function ShopsClientPage() {
     category: "All",
   });
 
-  const [localPosts, setLocalPosts] = useState<ShopPost[]>([]);
-
-  useEffect(() => {
-    try {
-      let stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-      let shopPosts = stored.filter((p: any) => p.shop_name || p.offer_title || p.type === "OFFER" || p.type === "SHOP");
-      setLocalPosts(shopPosts);
-    } catch (e) {}
-  }, []);
+  // NOTE: localStorage posts are ONLY for My Listings page.
+  // Public shops feed always shows only Firestore data.
 
   const filteredPosts = React.useMemo(() => {
-
-    let list = [...localPosts, ...(firestorePosts || [])].filter((p) => {
+    let list = (firestorePosts || []).filter((p) => {
       if ((p as any).status === "moderation_review") return false;
       if (isListingQuarantined(p.id)) return false;
       if (!p.shop_name || p.shop_name.trim() === "" || p.offer_description === "No detailed description provided.") return false;
