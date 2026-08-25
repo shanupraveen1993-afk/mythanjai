@@ -588,103 +588,7 @@ export default function CreatePostModal({
     setGoogleMapsUrl("");
   };
 
-  const CATEGORY_SAMPLE_POSTS: Record<string, { title: string; price?: string; description?: string; experience?: string; hours?: string; address?: string; landmark?: string; offerTitle?: string; offerDesc?: string }> = {
-    // Classifieds
-    "Plots & Real Estate": {
-      title: "1200 Sq.Ft Premium Corner Plot for Sale in Srinivasapuram",
-      price: "1850000",
-      description: "Excellent DTCP approved residential corner plot available for sale in a fast-developing neighborhood. North-facing, 30 feet wide road access. Located just 1.5 km from the main road, with excellent groundwater source and compound wall. Clear titles ready for registration. Price negotiable for immediate buyers."
-    },
-    "Property Rental": {
-      title: "Premium 2 BHK House for Rent near South Rampart",
-      price: "12500",
-      description: "Beautiful 2 BHK spacious house available for rent immediately. Features modular kitchen, built-in wardrobes, 2 bathrooms, 24/7 Kaveri water supply, and dedicated covered car parking. Located in a peaceful residential street close to schools, supermarkets, and temples. Family preferred."
-    },
-    "Motor Vehicle": {
-      title: "First-Owner Honda Activa 6G (2022 Model) for Sale",
-      price: "64000",
-      description: "Well-maintained Honda Activa 6G in matte grey colour. Driven only 8,500 kms, single owner, insurance active till December. Serviced regularly at authorized centers, brand new rear tyre, excellent fuel mileage of 50 km/l. Selling due to relocation."
-    },
-    "Electronics": {
-      title: "iPhone 13 (128GB, Blue) - Excellent Condition with Bill",
-      price: "38500",
-      description: "Selling iPhone 13 in excellent condition with 88% battery health. No scratches or dents, always used with screen protector and protective case. Comes with original box, Apple charging cable, and purchase bill. Fully functional face ID and original display."
-    },
-    "Others": {
-      title: "Looking for Experienced Full-Time Accountant for Showroom",
-      price: "18000",
-      description: "We are hiring a full-time accountant for our retail showroom in Gandhiji Road. Must have minimum 2 years experience in Tally Prime, daily ledger maintenance, and GST filing. Working hours: 10 AM to 8 PM. Good communication skills in Tamil required."
-    },
-    
-    // Services
-    "Electrician": {
-      title: "Senthil Kumar - Certified Home Electrician",
-      experience: "8 Years",
-      description: "All residential electrical wiring, DB box installations, inverter assembly, and appliance repair services. Specialise in water heater fittings, LED lighting layouts, and identifying short circuits. Available 24/7 for emergency repair calls across Tanjore Town."
-    },
-    "Plumber": {
-      title: "Karthik - Professional Plumbing Works",
-      experience: "6 Years",
-      description: "Complete house plumbing services, pipe blockages clearance, water tank cleanings, and sanitary ware fittings. Experts in bathroom renovation pipeline work and leakage detection. Prompt response and neat workmanship guaranteed."
-    },
-    "AC & Refrigeration": {
-      title: "Ramesh AC & Fridge Service Center",
-      experience: "10 Years",
-      description: "Split and Window AC installations, gas filling, general wet servicing, and refrigerator motherboard troubleshooting. Repairing all leading brands with genuine spare parts. 30-day service warranty provided."
-    },
-    "Carpenter": {
-      title: "Thangaraj - Fine Woodworking & Carpentry",
-      experience: "12 Years",
-      description: "Modular kitchen woodwork, custom wardrobe fittings, door assembly, and antique furniture restoration. Specialists in wooden partitions, safety locks installations, and general wood repairs. High-quality work at fair pricing."
-    },
-    "General Technician": {
-      title: "General Home Repair & Painting Services",
-      experience: "5 Years",
-      description: "Professional interior and exterior house painting, wall crack filling, and damp-proof coatings. Also offering general repair help, door hinges adjustment, and screen mesh fittings. Contact for free quote estimate."
-    },
-    
-    // Shops
-    "Cafe & Restaurant": {
-      title: "Famous Tanjore Degree Coffee & Tiffin House",
-      hours: "6:00 AM - 10:00 PM",
-      address: "12, East Car Street, Tanjore",
-      landmark: "Opposite Brihadeeswarar Temple Main Entrance",
-      offerTitle: "Get 1 Free Degree Coffee on billing above ₹200!",
-      offerDesc: "Valid on all weekdays. Show this card at the counter."
-    },
-    "Supermarket & Grocery": {
-      title: "Sri Meenakshi Supermarket & Provision Stores",
-      hours: "8:00 AM - 9:30 PM",
-      address: "45, Gandhiji Road, Srinivasapuram, Tanjore",
-      landmark: "Near Government Hospital Junction",
-      offerTitle: "Flat 5% OFF on monthly grocery packages!",
-      offerDesc: "Free home delivery for orders above ₹1,000."
-    },
-    "Textiles & Clothing": {
-      title: "Tanjore Silks & Readymade Showroom",
-      hours: "9:30 AM - 10:00 PM",
-      address: "102, South Rampart Street, Tanjore",
-      landmark: "Next to Old Bus Stand Clock Tower",
-      offerTitle: "Flat 30% OFF on Wedding Silk collection!",
-      offerDesc: "Offer valid till Sunday. Free silk threads with purchase."
-    },
-    "Jewelry Showroom": {
-      title: "Golden Palace Jewelry & Heritage Showroom",
-      hours: "10:00 AM - 8:30 PM",
-      address: "88, West Main Street, Tanjore",
-      landmark: "Opposite Royal Palace Entry Arch",
-      offerTitle: "Zero making charges on silver items!",
-      offerDesc: "Offer valid on pure silver ornaments and vessels."
-    },
-    "General Shop": {
-      title: "Thanjai Organic Herbals & General Store",
-      hours: "9:00 AM - 9:00 PM",
-      address: "14, Medical College Road, Tanjore",
-      landmark: "Opposite Raja Mirasudar Hospital",
-      offerTitle: "10% OFF on all natural organic cosmetic items!",
-      offerDesc: "Present this digital noticeboard card to redeem."
-    }
-  };
+  const CATEGORY_SAMPLE_POSTS: Record<string, { title: string; price?: string; description?: string; experience?: string; hours?: string; address?: string; landmark?: string; offerTitle?: string; offerDesc?: string }> = {};
 
   const displayTitle = (() => {
     if (type === "needs") return title || "New Requirement";
@@ -905,7 +809,6 @@ export default function CreatePostModal({
                           </div>
 
                           <div>
-                            <label className="block text-[11px] font-bold text-slate-500 mb-1">Item Title</label>
                             <input
                               type="text"
                               value={title}
@@ -914,13 +817,12 @@ export default function CreatePostModal({
                               autoCorrect="on"
                               autoCapitalize="sentences"
                               spellCheck={true}
-                              placeholder="e.g. 2BHK House for rent, Used Splendor Bike"
-                              className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none font-bold"
+                              placeholder={classifiedType === "SELL" ? "Posting title or item name * (e.g. 2 BHK House, Hero Splendor)" : "Requirement title or item name * (e.g. Need 2 BHK House)"}
+                              className="w-full py-2.5 text-xs font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium"
                             />
                           </div>
 
                           <div>
-                            <label className="block text-[11px] font-bold text-slate-500 mb-1">Description</label>
                             <textarea
                               value={description}
                               onChange={(e) => setDescription(e.target.value)}
@@ -928,53 +830,49 @@ export default function CreatePostModal({
                               autoCorrect="on"
                               autoCapitalize="sentences"
                               spellCheck={true}
-                              placeholder="Describe item details, condition, size, features..."
+                              placeholder="Description or details * (Describe item condition, size, features, or details...)"
                               rows={3}
-                              className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none"
+                              className="w-full py-2.5 text-xs font-medium border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors leading-relaxed placeholder:text-slate-400"
                             />
                           </div>
 
                           {classifiedType === "NEED" ? (
                             <div className="grid grid-cols-2 gap-3">
                               <div>
-                                <label className="block text-[11px] font-bold text-slate-500 mb-1">Budget From (₹)</label>
                                 <input
                                   type="number"
                                   value={priceFrom}
                                   onChange={(e) => setPriceFrom(e.target.value)}
-                                  placeholder="e.g. 8000"
-                                  className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none font-bold"
+                                  placeholder="Budget From (₹)"
+                                  className="w-full py-2 text-xs font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium"
                                 />
                               </div>
                               <div>
-                                <label className="block text-[11px] font-bold text-slate-500 mb-1">Budget To (₹)</label>
                                 <input
                                   type="number"
                                   value={priceTo}
                                   onChange={(e) => setPriceTo(e.target.value)}
-                                  placeholder="e.g. 15000"
-                                  className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none font-bold"
+                                  placeholder="Budget To (₹)"
+                                  className="w-full py-2 text-xs font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium"
                                 />
                               </div>
                             </div>
                           ) : (
                             <div className="grid grid-cols-2 gap-3">
                               <div>
-                                <label className="block text-[11px] font-bold text-slate-500 mb-1">Price (₹)</label>
                                 <input
                                   type="text"
                                   value={price}
                                   onChange={(e) => setPrice(e.target.value)}
-                                  placeholder="e.g. ₹2 Lakhs"
-                                  className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none font-bold"
+                                  placeholder="Price or Rate (₹)"
+                                  className="w-full py-2 text-xs font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium"
                                 />
                               </div>
                               <div>
-                                <label className="block text-[11px] font-bold text-slate-500 mb-1">Category</label>
                                 <select
                                   value={classifiedCategory}
                                   onChange={(e) => setClassifiedCategory(e.target.value as any)}
-                                  className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none font-bold"
+                                  className="w-full py-2 text-xs font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 cursor-pointer"
                                 >
                                   {CLASSIFIED_CATEGORIES.map((c) => (
                                     <option key={c} value={c}>
@@ -989,23 +887,21 @@ export default function CreatePostModal({
                           {classifiedType === "SELL" && (
                             <div className="flex flex-col gap-3 pt-1">
                               <div>
-                                <label className="block text-[11px] font-bold text-slate-500 mb-1">YouTube Video Link (Optional)</label>
                                 <input
                                   type="url"
                                   value={youtubeUrl}
                                   onChange={(e) => setYoutubeUrl(e.target.value)}
-                                  placeholder="e.g. https://www.youtube.com/watch?v=..."
-                                  className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none"
+                                  placeholder="YouTube Video Link (Optional)"
+                                  className="w-full py-2 text-xs font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium"
                                 />
                               </div>
                               <div>
-                                <label className="block text-[11px] font-bold text-slate-500 mb-1">Google Maps Location Link (Optional)</label>
                                 <input
                                   type="url"
                                   value={googleMapsUrl}
                                   onChange={(e) => setGoogleMapsUrl(e.target.value)}
-                                  placeholder="e.g. https://maps.google.com/..."
-                                  className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none"
+                                  placeholder="Google Maps Location Link (Optional)"
+                                  className="w-full py-2 text-xs font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium"
                                 />
                               </div>
                             </div>
@@ -1016,33 +912,30 @@ export default function CreatePostModal({
                       {type === "services" && (
                         <div className="flex flex-col gap-3">
                           <div>
-                            <label className="block text-[11px] font-bold text-slate-500 mb-1">Provider/Technician Name</label>
                             <input
                               type="text"
                               value={serviceName}
                               onChange={(e) => setServiceName(e.target.value)}
-                              placeholder="e.g. Senthil Kumar"
-                              className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none font-bold"
+                              placeholder="Your Full Name * (e.g. Senthil Kumar)"
+                              className="w-full py-2.5 text-xs font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium"
                             />
                           </div>
 
                           <div>
-                            <label className="block text-[11px] font-bold text-slate-500 mb-1">What Services Do You Offer? (Description)</label>
                             <textarea
                               value={description}
                               onChange={(e) => setDescription(e.target.value)}
-                              placeholder="Describe specific jobs you perform, price guides, or consultation terms. e.g. Specialise in water heater repairs and house plumbing."
+                              placeholder="Services Offered * (Describe jobs you perform, price guides, or consultation terms...)"
                               rows={3}
-                              className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none"
+                              className="w-full py-2.5 text-xs font-medium border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors leading-relaxed placeholder:text-slate-400"
                             />
                           </div>
 
                           <div>
-                            <label className="block text-[11px] font-bold text-slate-500 mb-1">Category Skill</label>
                             <select
                               value={serviceCategory}
                               onChange={(e) => setServiceCategory(e.target.value as any)}
-                              className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none font-bold"
+                              className="w-full py-2.5 text-xs font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 cursor-pointer"
                             >
                               {SERVICE_CATEGORIES.map((c) => (
                                 <option key={c} value={c}>
@@ -1057,23 +950,21 @@ export default function CreatePostModal({
                       {type === "shops" && (
                         <div className="flex flex-col gap-3">
                           <div>
-                            <label className="block text-[11px] font-bold text-slate-500 mb-1">Shop / Business Name</label>
                             <input
                               type="text"
                               value={shopName}
                               onChange={(e) => setShopName(e.target.value)}
-                              placeholder="e.g. Famous Tanjore Degree Coffee"
-                              className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none"
+                              placeholder="Shop / Business Name * (e.g. Famous Tanjore Degree Coffee)"
+                              className="w-full py-2.5 text-xs font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium"
                             />
                           </div>
 
                           <div className="grid grid-cols-2 gap-3">
                             <div>
-                              <label className="block text-[11px] font-bold text-slate-500 mb-1">Category</label>
                               <select
                                 value={shopCategory}
                                 onChange={(e) => setShopCategory(e.target.value as any)}
-                                className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none"
+                                className="w-full py-2 text-xs font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 cursor-pointer"
                               >
                                 {SHOP_CATEGORIES.map((c) => (
                                   <option key={c} value={c}>
@@ -1084,25 +975,23 @@ export default function CreatePostModal({
                             </div>
 
                             <div>
-                              <label className="block text-[11px] font-bold text-slate-500 mb-1">Hours</label>
                               <input
                                 type="text"
                                 value={hours}
                                 onChange={(e) => setHours(e.target.value)}
-                                placeholder="e.g. 9 AM - 9 PM"
-                                className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none"
+                                placeholder="Hours (e.g. 9 AM - 9 PM)"
+                                className="w-full py-2 text-xs font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium"
                               />
                             </div>
                           </div>
 
                           <div>
-                            <label className="block text-[11px] font-bold text-slate-500 mb-1">Full Address</label>
                             <input
                               type="text"
                               value={address}
                               onChange={(e) => setAddress(e.target.value)}
-                              placeholder="Shop address text"
-                              className="w-full bg-slate-50 border border-slate-200 text-slate-800 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-yellow-500 focus:outline-none"
+                              placeholder="📍 Full Shop Address & Locality in Thanjavur *"
+                              className="w-full py-2.5 text-xs font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium"
                             />
                           </div>
 
