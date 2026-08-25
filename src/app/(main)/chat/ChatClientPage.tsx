@@ -458,9 +458,9 @@ export default function ChatClientPage() {
 
         {/* RIGHT COLUMN: WhatsApp Active Chat Window */}
         <div className={`flex-1 flex-col bg-[#efeae2] relative ${showMobileChat ? "flex" : "hidden lg:flex"}`}>
-          {/* Thread Header Bar */}
-          <div className="bg-[#075e54] text-white px-4 py-2.5 flex items-center justify-between shadow-xs shrink-0 border-b border-[#054c44]">
-            <div className="flex items-center gap-3 min-w-0">
+          {/* Thread Header Bar (WhatsApp Green with Post Title & Right-Side Close Button) */}
+          <div className="bg-[#128C7E] text-white px-4 py-3 flex items-center justify-between shadow-md shrink-0 border-b border-[#075e54]">
+            <div className="flex items-center gap-3 min-w-0 flex-1">
               <button
                 type="button"
                 onClick={() => setShowMobileChat(false)}
@@ -470,12 +470,17 @@ export default function ChatClientPage() {
                 <ArrowLeft className="w-5 h-5" />
                 <span className="text-xs font-bold sm:hidden">Inbox</span>
               </button>
-              <div className="w-8 h-8 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-xs shrink-0">
-                <User className="w-4 h-4" />
+              <div className="w-9 h-9 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-xs shrink-0 border border-white/30">
+                <User className="w-4.5 h-4.5 text-white" />
               </div>
-              <div className="min-w-0">
-                <h3 className="font-heading font-black text-xs sm:text-sm text-white truncate">{activePeerName}</h3>
-                <p className="text-[10px] sm:text-[11px] text-emerald-100 font-medium truncate">{activeListingTitle}</p>
+              <div className="min-w-0 flex flex-col gap-0.5 flex-1">
+                <div className="flex items-center gap-2">
+                  <h3 className="font-heading font-black text-xs sm:text-sm text-white truncate">{activePeerName}</h3>
+                  <span className="bg-emerald-800/80 text-emerald-100 text-[10px] font-extrabold px-1.5 py-0.2 rounded border border-emerald-600/60 uppercase">Seller Contact</span>
+                </div>
+                <div className="flex items-center gap-1 text-[11px] text-amber-300 font-extrabold truncate">
+                  <span className="truncate">📌 Item: {activeListingTitle}</span>
+                </div>
               </div>
             </div>
 
@@ -486,7 +491,7 @@ export default function ChatClientPage() {
                 setShowMobileChat(false);
                 setActiveChatId("");
               }}
-              className="p-1.5 text-white/80 hover:text-white hover:bg-white/10 rounded-full cursor-pointer transition-colors shrink-0 ml-auto"
+              className="p-1.5 text-white/90 hover:text-white hover:bg-white/20 rounded-full cursor-pointer transition-colors shrink-0 ml-3"
               title="Close Conversation"
               aria-label="Close Chat"
             >

@@ -172,14 +172,19 @@ export default function InAppChatModal({
           </div>
         )}
 
-        {/* Chat Header */}
-        <div className="bg-slate-950 text-white p-4 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <img src="/namma_thanjai_logo.png" alt="logo" className="w-8 h-8 object-contain shrink-0 filter brightness-0 invert" />
-            <div>
-              <h3 className="font-heading font-black text-sm text-slate-100">{sellerName}</h3>
-              <p className="text-xs text-slate-400 font-semibold truncate max-w-[200px]">
-                {listingTitle}
+        {/* Chat Header (WhatsApp Green with Post Title & Right-Side Close Button) */}
+        <div className="bg-[#128C7E] text-white p-3.5 flex items-center justify-between border-b border-[#075e54] shadow-md">
+          <div className="flex items-center gap-3 min-w-0 flex-1">
+            <div className="w-9 h-9 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-xs shrink-0 border border-white/30">
+              <User className="w-4.5 h-4.5 text-white" />
+            </div>
+            <div className="min-w-0 flex flex-col gap-0.5 flex-1">
+              <div className="flex items-center gap-2">
+                <h3 className="font-heading font-black text-sm text-white truncate">{sellerName}</h3>
+                <span className="bg-emerald-800/80 text-emerald-100 text-[10px] font-extrabold px-1.5 py-0.2 rounded border border-emerald-600/60 uppercase">Seller</span>
+              </div>
+              <p className="text-[11px] text-amber-300 font-extrabold truncate">
+                📌 Item: {listingTitle}
               </p>
             </div>
           </div>
@@ -190,10 +195,10 @@ export default function InAppChatModal({
               e.stopPropagation();
               onClose();
             }}
-            className="p-1.5 rounded-xl text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer z-30"
+            className="p-1.5 rounded-full text-white/90 hover:text-white hover:bg-white/20 transition-colors cursor-pointer shrink-0 ml-2"
             aria-label="Close Chat"
           >
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5 stroke-[2.5]" />
           </button>
         </div>
 
