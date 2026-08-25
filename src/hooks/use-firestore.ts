@@ -77,15 +77,12 @@ export function useFirestore<T = any>({
           }
 
           if (postType && collectionName === "needs_and_sales") {
-            const pType = (docData.type || docData.category || "").toString().toLowerCase();
-            const targetType = postType.toLowerCase();
-            const isNeedDoc = pType.includes("need") || pType.includes("buy") || pType.includes("looking");
-
-            if (targetType === "need" || targetType === "buy") {
-              if (!isNeedDoc) return;
+            const docType = (docData.type || "").toString().toUpperCase();
+            if (postType.toLowerCase() === "need" || postType.toLowerCase() === "buy") {
+              if (docType !== "NEED") return;
             } else {
-              // Target is SELL/SALE: Show ALL posts except those explicitly marked as NEED
-              if (isNeedDoc) return;
+              // Target is SELL/SALE: Only exclude if explicitly type == "NEED"
+              if (docType === "NEED") return;
             }
           }
 

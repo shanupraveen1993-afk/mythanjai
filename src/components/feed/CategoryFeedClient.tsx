@@ -129,13 +129,13 @@ export default function CategoryFeedClient({ segmentType }: CategoryFeedClientPr
         stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
         if (segmentType === "sell") {
           stored = stored.filter((p: any) => {
-            const t = (p.type || p.category || "").toString().toUpperCase();
-            return !t.includes("NEED") && !p.name && !p.shop_name;
+            const pType = (p.type || "").toString().toUpperCase();
+            return pType !== "NEED" && !p.name && !p.shop_name;
           });
         } else if (segmentType === "need") {
           stored = stored.filter((p: any) => {
-            const t = (p.type || p.category || "").toString().toUpperCase();
-            return t.includes("NEED") || t.includes("BUY") || t.includes("LOOKING");
+            const pType = (p.type || "").toString().toUpperCase();
+            return pType === "NEED";
           });
         } else if (segmentType === "services") {
           stored = stored.filter((p: any) => p.name || p.skill_category || p.type === "SERVICE");

@@ -261,34 +261,50 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
           {formatRelativeTime(post.created_at)}
         </span>
 
-        {/* 2. Secondary CTA & 3. Primary CTA Buttons (Exact w-[128px] each) */}
+        {/* 2. Action Buttons */}
         <div className="flex items-center gap-2 shrink-0 justify-end">
-          <button
-            type="button"
-            onClick={(e) => {
-              e.stopPropagation();
-              if (!isVerified) {
-                if (typeof window !== "undefined") {
-                  window.dispatchEvent(new Event("namma_thanjai_open_signin"));
-                }
-                return;
-              }
-              router.push(`/chat?listingId=${post.id}&sellerId=${post.userId || ""}&title=${encodeURIComponent(post.title)}`);
-            }}
-            className="w-[128px] shrink-0 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
-          >
-            <MessageSquare className="w-4 h-4 text-[#0F172A] shrink-0" />
-            <span>Chat</span>
-          </button>
+          {isOwnPost ? (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push("/listings");
+              }}
+              className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-heading font-black text-xs sm:text-sm py-2.5 px-4 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] shadow-sm cursor-pointer transition-colors"
+            >
+              <Pencil className="w-4 h-4 text-slate-950 shrink-0" />
+              <span>Your Listing</span>
+            </button>
+          ) : (
+            <>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  if (!isVerified) {
+                    if (typeof window !== "undefined") {
+                      window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+                    }
+                    return;
+                  }
+                  router.push(`/chat?listingId=${post.id}&sellerId=${post.userId || ""}&title=${encodeURIComponent(post.title)}`);
+                }}
+                className="w-[128px] shrink-0 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
+              >
+                <MessageSquare className="w-4 h-4 text-[#0F172A] shrink-0" />
+                <span>Chat</span>
+              </button>
 
-          <a
-            href={callUrl}
-            onClick={(e) => e.stopPropagation()}
-            className="w-[128px] shrink-0 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
-          >
-            <Phone className="w-4 h-4 text-white shrink-0" />
-            <span>Call</span>
-          </a>
+              <a
+                href={callUrl}
+                onClick={(e) => e.stopPropagation()}
+                className="w-[128px] shrink-0 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
+              >
+                <Phone className="w-4 h-4 text-white shrink-0" />
+                <span>Call</span>
+              </a>
+            </>
+          )}
         </div>
       </div>
 
