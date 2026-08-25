@@ -33,10 +33,10 @@ export default function HomeCategorySegmentBar() {
   const activeTab = getActiveTab();
 
   const segments = [
-    { id: "sell", label: "Sell", route: "/sell" },
-    { id: "need", label: "Need", route: "/need" },
-    { id: "service", label: "Service", route: "/services" },
-    { id: "offer", label: "Offer", route: "/shops" },
+    { id: "sell", label: "For Sale", route: "/sell" },
+    { id: "need", label: "Looking For", route: "/need" },
+    { id: "service", label: "Services", route: "/services" },
+    { id: "offer", label: "Offers", route: "/shops" },
   ];
 
   return (

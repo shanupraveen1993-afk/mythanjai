@@ -84,7 +84,7 @@ export default function ShopsClientPage() {
         {/* 1. TITLE BAR */}
         <div className="py-1.5 flex items-center justify-between gap-3 w-full border-b border-slate-200/80">
           <h2 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight">
-            Local Offer (சலுகைகள்)
+            Local Offers (சலுகைகள்)
           </h2>
         </div>
 

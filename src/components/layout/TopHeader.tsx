@@ -191,7 +191,7 @@ export default function TopHeader({
                     : "text-slate-700 hover:text-slate-950 font-semibold transition-colors"
                 }`}
               >
-                Sell
+                For Sale
               </button>
               <button
                 type="button"
@@ -202,7 +202,7 @@ export default function TopHeader({
                     : "text-slate-700 hover:text-slate-950 font-semibold transition-colors"
                 }`}
               >
-                Need
+                Looking For
               </button>
               <button
                 type="button"
