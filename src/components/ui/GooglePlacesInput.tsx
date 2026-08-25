@@ -154,6 +154,33 @@ export default function GooglePlacesInput({
     setIsOpen(false);
   };
 
+  const handleFocus = () => {
+    if (query.trim().length > 0) {
+      handleInputChange({ target: { value: query } } as any);
+    } else {
+      // Show default Tanjore popular localities on empty click
+      const defaultList = [
+        "Medical College Road, Thanjavur",
+        "Old Bus Stand, Thanjavur",
+        "New Bus Stand, Thanjavur",
+        "Thillai Nagar, Thanjavur",
+        "Vallam, Thanjavur",
+        "Pillayarpatti, Thanjavur",
+        "Karanthai, Thanjavur",
+        "Srinivasapuram, Thanjavur",
+        "South Rampart, Thanjavur",
+        "MC Road, Thanjavur",
+      ].map((loc) => ({
+        place_id: loc,
+        main_text: loc.split(",")[0],
+        secondary_text: "Thanjavur, Tamil Nadu",
+        description: loc,
+      }));
+      setPredictions(defaultList);
+      setIsOpen(true);
+    }
+  };
+
   return (
     <div ref={containerRef} className="relative w-full flex flex-col gap-1.5">
       {label && (
@@ -168,9 +195,7 @@ export default function GooglePlacesInput({
           required={required}
           value={query}
           onChange={handleInputChange}
-          onFocus={() => {
-            if (predictions.length > 0) setIsOpen(true);
-          }}
+          onFocus={handleFocus}
           placeholder={placeholder}
           className={
             className ||

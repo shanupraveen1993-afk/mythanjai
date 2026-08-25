@@ -278,8 +278,8 @@ function MainLayoutContent({
           paddingTop: !isStandaloneView && !isOnboardingView ? "calc(3.8rem + env(safe-area-inset-top, 0px))" : undefined,
         }}
       >
-        {/* Sleek Tamil Welcome Banner below Top Header — scrolls up naturally on scroll so it never disturbs browsing */}
-        {!isChatRoute && !isPostRoute && !pathname.includes("/admin") && (
+        {/* Sleek Tamil Welcome Banner — ONLY on the 4 feed segments: /sell /need /services /shops */}
+        {(pathname === "/sell" || pathname === "/need" || pathname === "/services" || pathname === "/shops") && (
           <TamilSloganBanner />
         )}
 

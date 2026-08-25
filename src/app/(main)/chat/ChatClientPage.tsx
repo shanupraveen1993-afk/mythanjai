@@ -463,12 +463,12 @@ export default function ChatClientPage() {
             <div className="flex items-center gap-3 min-w-0 flex-1">
               <button
                 type="button"
-                onClick={() => setShowMobileChat(false)}
+                onClick={() => { setShowMobileChat(false); router.push("/"); }}
                 className="lg:hidden p-1 text-white hover:bg-white/10 rounded-lg cursor-pointer flex items-center gap-1 shrink-0"
-                title="Back to Conversations"
+                title="Go to Home"
               >
                 <ArrowLeft className="w-5 h-5" />
-                <span className="text-xs font-bold sm:hidden">Inbox</span>
+                <span className="text-xs font-bold sm:hidden">Home</span>
               </button>
               <div className="w-9 h-9 rounded-full bg-white/20 text-white flex items-center justify-center font-bold text-xs shrink-0 border border-white/30">
                 <User className="w-4.5 h-4.5 text-white" />
@@ -484,18 +484,16 @@ export default function ChatClientPage() {
               </div>
             </div>
 
-            {/* Right Side: Clean Close (X) Button */}
+            {/* Right Side: Go to Home Button */}
             <button
               type="button"
-              onClick={() => {
-                setShowMobileChat(false);
-                setActiveChatId("");
-              }}
-              className="p-1.5 text-white/90 hover:text-white hover:bg-white/20 rounded-full cursor-pointer transition-colors shrink-0 ml-3"
-              title="Close Conversation"
-              aria-label="Close Chat"
+              onClick={() => router.push("/")}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-white/90 hover:text-white hover:bg-white/20 rounded-xl cursor-pointer transition-colors shrink-0 ml-3 text-xs font-heading font-black"
+              title="Go to Home"
+              aria-label="Go to Home"
             >
-              <X className="w-5 h-5 stroke-[2.5]" />
+              <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
+              <span>Home</span>
             </button>
           </div>
 

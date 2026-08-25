@@ -255,50 +255,51 @@ export default function PostForm({ segment }: PostFormProps) {
     }
   };
 
-  const handleBlurDescription = async () => {
-    if (!description.trim()) return;
+  const [isAiRefined, setIsAiRefined] = useState(false);
+
+  const handleBlurDescription = async (textToFormat: string) => {
+    if (!textToFormat.trim()) return;
     setIsAiRewriting(true);
     try {
       const res = await fetch(getApiUrl("/api/gemini-format"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          rawDescription: description,
+          rawDescription: textToFormat,
           type: segment,
         }),
       });
       const data = await res.json();
       if (data.success && data.formattedText) {
         setPreviewDescription(data.formattedText);
+        setIsAiRefined(true);
         if (data.extractedFields && segment === "offer") {
           const { shop_name, valid_from: extFrom, valid_to: extTo, area_tag, category: extCategory } = data.extractedFields;
           if (shop_name && !title) setTitle(shop_name);
           if (extFrom) setValidFrom(extFrom);
           if (extTo) setValidTo(extTo);
           if (area_tag) setArea(area_tag);
-          toast.success("AI extracted details & formatted description!");
-        } else {
-          toast.success("AI polished description!");
         }
       }
     } catch (err) {
       console.warn("AI format failed:", err);
-      setPreviewDescription(description.trim());
     } finally {
       setIsAiRewriting(false);
     }
   };
 
-  // Zero-Click Live AI Auto-Refining Effect (Debounced)
+  // Zero-Click Live AI Auto-Refining Effect (Debounced 600ms)
   useEffect(() => {
     if (!description.trim()) {
       setPreviewDescription("");
+      setIsAiRefined(false);
       return;
     }
     setPreviewDescription(description.trim());
+    setIsAiRefined(false);
     const timer = setTimeout(() => {
-      handleBlurDescription();
-    }, 650);
+      handleBlurDescription(description);
+    }, 600);
     return () => clearTimeout(timer);
   }, [description, segment]);
 
