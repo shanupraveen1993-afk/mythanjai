@@ -25,6 +25,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
 
   useEffect(() => {
     if (isOpen) {
+      setPhoneNumber("");
       if (typeof window !== "undefined") {
         localStorage.removeItem("namma_thanjai_target_post_route");
         isHeaderLoginRef.current = sessionStorage.getItem("namma_thanjai_header_login_active") === "true";

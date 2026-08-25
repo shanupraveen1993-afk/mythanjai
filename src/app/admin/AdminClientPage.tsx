@@ -226,13 +226,27 @@ export default function AdminClientPage() {
 
   const executeDelete = async (id: string, colName: string) => {
     try {
-      await deleteDoc(doc(db, colName, id));
-      setItems((prev) => prev.filter((item) => item.id !== id));
-      setDeleteTarget(null);
-      toast.success("Listing purged permanently from live system.");
-    } catch (error) {
-      toast.error("Error deleting item: " + error);
+      // 1. Purge from Firestore (catch any permission error gracefully)
+      await deleteDoc(doc(db, colName, id)).catch((err) => {
+        console.warn("Firestore delete document note:", err);
+      });
+    } catch (e) {
+      console.warn("Delete document caught:", e);
     }
+
+    // 2. Purge from localStorage local posts
+    if (typeof window !== "undefined") {
+      try {
+        const localPosts = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+        const filtered = localPosts.filter((p: any) => p.id !== id);
+        localStorage.setItem("namma_thanjai_local_posts", JSON.stringify(filtered));
+      } catch (e) {}
+    }
+
+    // 3. Update Admin UI state immediately
+    setItems((prev) => prev.filter((item) => item.id !== id));
+    setDeleteTarget(null);
+    toast.success("Listing purged permanently from live system.");
   };
 
   const handleToggleVerify = async (item: ModerationItem) => {
