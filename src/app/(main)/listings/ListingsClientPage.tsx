@@ -180,6 +180,20 @@ function ListingsContent() {
         targetCols.map((col) => deleteDoc(doc(db, col, postId)).catch(() => {}))
       );
 
+      // Audit Log Trigger
+      try {
+        const { logAuditEvent } = await import("@/lib/audit-logger");
+        await logAuditEvent({
+          action: "POST_DELETED",
+          actorUid: user?.uid || "user",
+          actorPhone: profile?.phone || "User",
+          actorName: profile?.displayName || "Namma Thanjai User",
+          targetPostId: postId,
+          details: `User deleted post ID "${postId}"`,
+          visibilityState: "deleted",
+        });
+      } catch (e) {}
+
       setDeleteConfirmTarget(null);
       toast.success("Listing permanently deleted!");
     } catch (err) {

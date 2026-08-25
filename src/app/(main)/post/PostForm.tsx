@@ -482,7 +482,7 @@ export default function PostForm({ segment }: PostFormProps) {
     localPostRecord.image_url = imageUrl;
     if (imageUrls.length > 0) localPostRecord.image_urls = imageUrls;
 
-    // ── STEP 2: Save to LocalStorage Backup (<5ms) ──
+    // ── STEP 2: Save to LocalStorage Backup ──
     try {
       let storedPosts = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
       if (editId) {
@@ -493,20 +493,13 @@ export default function PostForm({ segment }: PostFormProps) {
       localStorage.setItem("namma_thanjai_local_posts", JSON.stringify(storedPosts.slice(0, 50)));
     } catch (e) {}
 
-    // ── STEP 3: Fast POST to /api/public-posts (<100ms) ──
-    fetch("/api/public-posts", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(localPostRecord),
-    }).catch(() => {});
-
-    // ── STEP 4: Instant UI Success Response & Navigation (0.2s Total!) ──
+    // ── STEP 3: Instant UI Success Response & Navigation ──
     setSuccess(true);
     setLoading(false);
     toast.success(editId ? "Post updated successfully!" : "Post published successfully!");
     router.push(config.redirectPath);
 
-    // ── STEP 5: Non-blocking Background Storage Upload & Firestore Cloud Sync ──
+    // ── STEP 4: Background Cloud Storage Upload & Firestore Canonical Write + Audit Logging ──
     (async () => {
       try {
         let cloudImageUrl = imageUrl;
@@ -541,6 +534,7 @@ export default function PostForm({ segment }: PostFormProps) {
         }
 
         const targetCol = editCol || (segment === "service" ? "services" : segment === "offer" ? "shops" : "needs_and_sales");
+        let createdDocId = editId || "";
 
         if (segment === "sell" || segment === "need") {
           const payload: any = {
@@ -558,20 +552,23 @@ export default function PostForm({ segment }: PostFormProps) {
             youtube_url: youtubeUrl.trim() || "",
             google_maps_url: googleMapsUrl.trim() || "",
             is_verified: true,
+            status: "active",
           };
           if (editId) {
             await updateDoc(doc(db, targetCol, editId), payload).catch(() => {});
           } else {
-            await addDoc(collection(db, targetCol), {
+            const docRef = await addDoc(collection(db, targetCol), {
               ...payload,
               created_at: timestamp,
               expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-            }).catch(() => {});
+            }).catch(() => null);
+            if (docRef) createdDocId = docRef.id;
           }
         } else if (segment === "service") {
           const payload: any = {
             userId: uid,
             name: title.trim(),
+            title: title.trim(),
             is_available_now: isAvailable,
             experience: allWorkingDays === "Yes" ? "All Working Days" : "Flexible Days",
             working_hours: sundayLeave === "Yes" ? "Sunday Off" : "Open 7 Days",
@@ -581,16 +578,17 @@ export default function PostForm({ segment }: PostFormProps) {
             description: cleanDesc,
             image_url: cloudImageUrl,
             is_verified: true,
+            status: "active",
           };
           if (editId) {
             await updateDoc(doc(db, targetCol, editId), payload).catch(() => {});
           } else {
-            await addDoc(collection(db, targetCol), {
+            const docRef = await addDoc(collection(db, targetCol), {
               ...payload,
               negative_reports_count: 0,
-              status: "active",
               created_at: timestamp,
-            }).catch(() => {});
+            }).catch(() => null);
+            if (docRef) createdDocId = docRef.id;
           }
         } else if (segment === "offer") {
           let uploadedVideoUrl = videoPreview || "";
@@ -604,23 +602,41 @@ export default function PostForm({ segment }: PostFormProps) {
           const payload: any = {
             userId: uid,
             shop_name: title.trim(),
+            offer_title: title.trim(),
             area_tag: area,
             phone: phone || "9876543210",
             image_url: cloudImageUrl,
-            offer_title: title.trim(),
             offer_description: cleanDesc,
             address_text: area ? `${area}, Thanjavur` : "Thanjavur",
             video_url: uploadedVideoUrl || youtubeUrl || "",
             show_phone: showPhone,
             is_verified: true,
-            created_at: timestamp,
+            status: "active",
           };
           if (editId) {
             await updateDoc(doc(db, targetCol, editId), payload).catch(() => {});
           } else {
-            await addDoc(collection(db, targetCol), payload).catch(() => {});
+            const docRef = await addDoc(collection(db, targetCol), {
+              ...payload,
+              created_at: timestamp,
+            }).catch(() => null);
+            if (docRef) createdDocId = docRef.id;
           }
         }
+
+        // ── STEP 5: Log Audit Event for Activity Trail ──
+        const { logAuditEvent } = await import("@/lib/audit-logger");
+        await logAuditEvent({
+          action: editId ? "POST_UPDATED" : "POST_CREATED",
+          actorUid: uid,
+          actorPhone: phone || "Unknown",
+          actorName: profile?.displayName || "Namma Thanjai User",
+          targetPostId: createdDocId || "post_" + Date.now(),
+          targetPostTitle: title.trim(),
+          category: segment.toUpperCase(),
+          details: `${editId ? "Updated" : "Created"} post "${title.trim()}" in category ${segment.toUpperCase()} at ${area}`,
+          visibilityState: "public",
+        });
       } catch (err) {
         console.warn("Background Firestore cloud sync note:", err);
       }

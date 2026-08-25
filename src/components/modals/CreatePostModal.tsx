@@ -438,8 +438,10 @@ export default function CreatePostModal({
           toast.success("Listing updated successfully!");
         } else {
           // ── CREATE NEW POST FLOW ──
+          let newDocId = "";
+          let postTitle = title || serviceName || shopName || offerTitle || "New Listing";
           if (type === "needs") {
-            await addDoc(collection(db, "needs_and_sales"), {
+            const docRef = await addDoc(collection(db, "needs_and_sales"), {
               userId: uid,
               type: classifiedType,
               title,
@@ -451,11 +453,13 @@ export default function CreatePostModal({
               phone,
               image_url: imageUrl || "",
               is_verified: true,
+              status: "active",
               created_at: timestamp,
               expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000), // 30-day auto-expiry per PRD
             });
+            newDocId = docRef.id;
           } else if (type === "services") {
-            await addDoc(collection(db, "services"), {
+            const docRef = await addDoc(collection(db, "services"), {
               userId: uid,
               name: serviceName.includes("—") ? serviceName : `${serviceName} — ${serviceCategory}`,
               title: serviceName.includes("—") ? serviceName : `${serviceName} — ${serviceCategory}`,
@@ -466,14 +470,17 @@ export default function CreatePostModal({
               rating: 4.8,
               description: finalDescription,
               image_url: imageUrl || "",
-              is_verified: false, // Moderated verification
+              is_verified: true,
+              status: "active",
               created_at: timestamp,
             });
+            newDocId = docRef.id;
           } else if (type === "shops") {
             const coords = AREA_COORDINATES[area] || AREA_COORDINATES["Tanjore Town (General)"];
-            await addDoc(collection(db, "shops"), {
+            const docRef = await addDoc(collection(db, "shops"), {
               userId: uid,
               shop_name: shopName,
+              title: shopName,
               category: shopCategory,
               area_tag: area,
               phone,
@@ -484,19 +491,22 @@ export default function CreatePostModal({
               landmark: landmark || "",
               hours: hours || "9 AM - 9 PM",
               is_claimed: true,
+              is_verified: true,
+              status: "active",
               created_at: timestamp,
               offer_title: offerTitle || "",
               offer_description: finalOfferDesc || "",
               offer_social_link: socialLink || "",
               show_phone: showPhone,
             });
+            newDocId = docRef.id;
           } else if (type === "offers") {
             let platform: "instagram" | "facebook" | "whatsapp" | "other" = "other";
             if (socialLink.includes("instagram.com")) platform = "instagram";
             else if (socialLink.includes("facebook.com")) platform = "facebook";
             else if (socialLink.includes("wa.me") || socialLink.includes("whatsapp.com")) platform = "whatsapp";
 
-            await addDoc(collection(db, "offers"), {
+            const docRef = await addDoc(collection(db, "offers"), {
               userId: uid,
               title: offerTitle,
               description: finalOfferDesc,
@@ -505,45 +515,62 @@ export default function CreatePostModal({
               thumbnail_url: imageUrl || "/placeholder.webp",
               social_link: socialLink || "https://instagram.com",
               platform,
+              is_verified: true,
+              status: "active",
               created_at: timestamp,
             });
-            // Save new post to local storage for immediate 0ms UI update
-            const newLocalPost = {
-              id: "local_" + Date.now(),
-              userId: uid,
-              type: "OFFER",
-              title: title || serviceName || shopName || offerTitle || "New Listing",
-              description: finalDescription || finalOfferDesc || "",
-              category: classifiedCategory || serviceCategory || shopCategory || offerCategory || "General",
-              area_tag: area,
-              price: price ? parseFloat(price) : (priceTo ? parseFloat(priceTo) : null),
-              price_from: priceFrom ? parseFloat(priceFrom) : null,
-              price_to: priceTo ? parseFloat(priceTo) : null,
-              phone,
-              image_url: imageUrl || "",
-              created_at: new Date().toISOString(),
-            };
-
-            if (typeof window !== "undefined") {
-              try {
-                const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-                localStorage.setItem("namma_thanjai_local_posts", JSON.stringify([newLocalPost, ...stored]));
-              } catch (e) {}
-            }
-
-            toast.success("AI refined success! Post published to Tanjore hub.");
-
-            const targetRoute = "/shops";
-
-            setTimeout(() => {
-              if (typeof window !== "undefined") {
-                window.location.href = targetRoute;
-              }
-            }, 300);
+            newDocId = docRef.id;
           }
+
+          // ── Audit Log Trigger ──
+          const { logAuditEvent } = await import("@/lib/audit-logger");
+          await logAuditEvent({
+            action: editPost ? "POST_UPDATED" : "POST_CREATED",
+            actorUid: uid,
+            actorPhone: phone,
+            actorName: profile?.displayName || "Namma Thanjai User",
+            targetPostId: newDocId || "post_" + Date.now(),
+            targetPostTitle: postTitle,
+            category: type.toUpperCase(),
+            details: `Created post "${postTitle}" in ${type.toUpperCase()} at ${area}`,
+            visibilityState: "public",
+          });
+          // Save new post to local storage for immediate 0ms UI update
+          const newLocalPost = {
+            id: "local_" + Date.now(),
+            userId: uid,
+            type: "OFFER",
+            title: title || serviceName || shopName || offerTitle || "New Listing",
+            description: finalDescription || finalOfferDesc || "",
+            category: classifiedCategory || serviceCategory || shopCategory || offerCategory || "General",
+            area_tag: area,
+            price: price ? parseFloat(price) : (priceTo ? parseFloat(priceTo) : null),
+            price_from: priceFrom ? parseFloat(priceFrom) : null,
+            price_to: priceTo ? parseFloat(priceTo) : null,
+            phone,
+            image_url: imageUrl || "",
+            created_at: new Date().toISOString(),
+          };
+
+          if (typeof window !== "undefined") {
+            try {
+              const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+              localStorage.setItem("namma_thanjai_local_posts", JSON.stringify([newLocalPost, ...stored]));
+            } catch (e) {}
+          }
+
+          toast.success("AI refined success! Post published to Tanjore hub.");
+
+          const targetRoute = "/shops";
+
+          setTimeout(() => {
+            if (typeof window !== "undefined") {
+              window.location.href = targetRoute;
+            }
+          }, 300);
         }
       } catch (firestoreErr) {
-        console.warn("Firestore document creation skipped or fallback applied:", firestoreErr);
+        console.warn("Firestore document creation note:", firestoreErr);
       }
 
       // Success Celebratory feedback

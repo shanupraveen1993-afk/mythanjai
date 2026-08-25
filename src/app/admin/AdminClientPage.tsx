@@ -31,6 +31,7 @@ import {
   MessageSquare,
   Video,
   Lock,
+  User,
 } from "lucide-react";
 import Link from "next/link";
 import { useAuth } from "@/hooks/use-auth";
@@ -244,24 +245,91 @@ export default function AdminClientPage() {
     return () => unsubscribes.forEach((unsub) => unsub());
   }, [isAdmin]);
 
+  // ── Extended Admin Tabs & States ──────────────────────────────────────────
+  const [usersList, setUsersList] = useState<any[]>([]);
+  const [reportsList, setReportsList] = useState<any[]>([]);
+  const [auditLogs, setAuditLogs] = useState<any[]>([]);
+  const [selectedUser, setSelectedUser] = useState<any | null>(null);
+  const [deleteUserTarget, setDeleteUserTarget] = useState<any | null>(null);
+  const [auditFilterAction, setAuditFilterAction] = useState<string>("ALL");
+
+  // ── Fetch Users Collection & Post Counts ──────────────────────────────────
+  useEffect(() => {
+    if (!isAdmin) return;
+    const usersRef = collection(db, "users");
+    const unsub = onSnapshot(
+      usersRef,
+      (snap) => {
+        const uList: any[] = [];
+        snap.forEach((docSnap) => {
+          uList.push({ uid: docSnap.id, ...docSnap.data() });
+        });
+        setUsersList(uList);
+      },
+      () => {}
+    );
+    return () => unsub();
+  }, [isAdmin]);
+
+  // ── Fetch Reports Collection ──────────────────────────────────────────────
+  useEffect(() => {
+    if (!isAdmin) return;
+    const reportsRef = collection(db, "reports");
+    const unsub = onSnapshot(
+      reportsRef,
+      (snap) => {
+        const rList: any[] = [];
+        snap.forEach((docSnap) => {
+          rList.push({ id: docSnap.id, ...docSnap.data() });
+        });
+        rList.sort((a, b) => {
+          const timeA = a.created_at?.seconds ? a.created_at.seconds * 1000 : new Date(a.created_at || 0).getTime();
+          const timeB = b.created_at?.seconds ? b.created_at.seconds * 1000 : new Date(b.created_at || 0).getTime();
+          return timeB - timeA;
+        });
+        setReportsList(rList);
+      },
+      () => {}
+    );
+    return () => unsub();
+  }, [isAdmin]);
+
+  // ── Fetch Audit Logs Collection ───────────────────────────────────────────
+  useEffect(() => {
+    if (!isAdmin) return;
+    const logsRef = collection(db, "audit_logs");
+    const unsub = onSnapshot(
+      logsRef,
+      (snap) => {
+        const lList: any[] = [];
+        snap.forEach((docSnap) => {
+          lList.push({ id: docSnap.id, ...docSnap.data() });
+        });
+        lList.sort((a, b) => {
+          const timeA = a.timestamp?.seconds ? a.timestamp.seconds * 1000 : new Date(a.created_at_iso || 0).getTime();
+          const timeB = b.timestamp?.seconds ? b.timestamp.seconds * 1000 : new Date(b.created_at_iso || 0).getTime();
+          return timeB - timeA;
+        });
+        setAuditLogs(lList);
+      },
+      () => {}
+    );
+    return () => unsub();
+  }, [isAdmin]);
+
   const handleDelete = (id: string, colName: string) => {
     setDeleteTarget({ id, colName });
   };
 
   const executeDelete = async (id: string, colName: string) => {
+    const targetItem = items.find((i) => i.id === id);
     try {
-      // 1. Purge from Firestore (catch any permission error gracefully)
       await deleteDoc(doc(db, colName, id)).catch((err) => {
         console.warn("Firestore delete document note:", err);
       });
     } catch (e) {
       console.warn("Delete document caught:", e);
     }
-
-    // 2. Purge from /api/public-posts API & localStorage local posts
-    try {
-      await fetch(`/api/public-posts?id=${id}`, { method: "DELETE" }).catch(() => {});
-    } catch (e) {}
 
     if (typeof window !== "undefined") {
       try {
@@ -271,7 +339,21 @@ export default function AdminClientPage() {
       } catch (e) {}
     }
 
-    // 3. Update Admin UI state immediately
+    // Write Audit Log for Admin Deletion
+    try {
+      const { logAuditEvent } = await import("@/lib/audit-logger");
+      await logAuditEvent({
+        action: "ADMIN_ACTION",
+        actorUid: user?.uid || "admin",
+        actorPhone: ADMIN_PHONE,
+        actorName: "Super Admin",
+        targetPostId: id,
+        targetPostTitle: targetItem?.title || "Listing",
+        details: `Admin deleted listing "${targetItem?.title || id}" from collection ${colName}`,
+        visibilityState: "deleted",
+      });
+    } catch (e) {}
+
     setItems((prev) => prev.filter((item) => item.id !== id));
     setDeleteTarget(null);
     toast.success("Listing purged permanently from live system.");
@@ -290,6 +372,66 @@ export default function AdminClientPage() {
     }
   };
 
+  // Safe User Deletion Action
+  const executeDeleteUser = async (targetUser: any) => {
+    try {
+      // 1. Delete user doc from users collection
+      await deleteDoc(doc(db, "users", targetUser.uid)).catch(() => {});
+
+      // 2. Disassociate user's posts
+      const userPhone10 = String(targetUser.phone || "").slice(-10);
+      const userPosts = items.filter(
+        (i) => i.phone.slice(-10) === userPhone10 || (i as any).userId === targetUser.uid
+      );
+
+      await Promise.all(
+        userPosts.map((p) => deleteDoc(doc(db, p.colName, p.id)).catch(() => {}))
+      );
+
+      // 3. Log Audit Event
+      const { logAuditEvent } = await import("@/lib/audit-logger");
+      await logAuditEvent({
+        action: "USER_DELETED",
+        actorUid: user?.uid || "admin",
+        actorPhone: ADMIN_PHONE,
+        actorName: "Super Admin",
+        targetUserId: targetUser.uid,
+        targetUserPhone: targetUser.phone,
+        details: `Admin deleted user profile and ${userPosts.length} associated posts for phone +${targetUser.phone}`,
+        visibilityState: "deleted",
+      });
+
+      setDeleteUserTarget(null);
+      toast.success(`User +${targetUser.phone} and ${userPosts.length} posts deleted safely.`);
+    } catch (err) {
+      toast.error("Could not delete user.");
+    }
+  };
+
+  // Report Handling Action
+  const handleDismissReport = async (reportId: string) => {
+    try {
+      await deleteDoc(doc(db, "reports", reportId));
+      setReportsList((prev) => prev.filter((r) => r.id !== reportId));
+      toast.success("Report dismissed.");
+    } catch (e) {
+      toast.error("Failed to dismiss report.");
+    }
+  };
+
+  const handleRemoveReportedPost = async (report: any) => {
+    try {
+      if (report.postId) {
+        await executeDelete(report.postId, report.colName || "needs_and_sales");
+      }
+      await deleteDoc(doc(db, "reports", report.id));
+      setReportsList((prev) => prev.filter((r) => r.id !== report.id));
+      toast.success("Reported post purged successfully.");
+    } catch (e) {
+      toast.error("Failed to remove reported post.");
+    }
+  };
+
   const statsSummary = useMemo(() => {
     const total = items.length;
     const verified = items.filter((i) => i.is_verified).length;
@@ -302,8 +444,9 @@ export default function AdminClientPage() {
     const sellNeeds = items.filter((i) => i.colName === "needs_and_sales").length;
     const services = items.filter((i) => i.colName === "services").length;
     const shops = items.filter((i) => i.colName === "shops").length;
-    return { total, verified, pending, reported, adminPosts, reelVideos, sellNeeds, services, shops };
-  }, [items]);
+    const totalUsersCount = usersList.length;
+    return { total, verified, pending, reported, adminPosts, reelVideos, sellNeeds, services, shops, totalUsersCount };
+  }, [items, usersList]);
 
   const filteredItems = useMemo(() => {
     return items.filter((item) => {
@@ -321,6 +464,19 @@ export default function AdminClientPage() {
       return matchesTab && matchesSearch;
     });
   }, [items, activeTab, searchQuery]);
+
+  const filteredAuditLogs = useMemo(() => {
+    return auditLogs.filter((log) => {
+      const matchesAction = auditFilterAction === "ALL" || log.action === auditFilterAction;
+      const q = searchQuery.toLowerCase().trim();
+      const matchesSearch =
+        !q ||
+        (log.details || "").toLowerCase().includes(q) ||
+        (log.actorPhone || "").includes(q) ||
+        (log.targetPostTitle || "").toLowerCase().includes(q);
+      return matchesAction && matchesSearch;
+    });
+  }, [auditLogs, auditFilterAction, searchQuery]);
 
   const getColBadge = (colName: string) => {
     switch (colName) {
@@ -370,7 +526,7 @@ export default function AdminClientPage() {
         <div className="flex flex-col gap-2 max-w-xs">
           <h1 className="font-heading font-black text-2xl text-white">Access Denied</h1>
           <p className="text-sm text-slate-400 font-medium leading-relaxed">
-            This console is restricted to admin accounts only. Please sign in with your admin number.
+            This console is restricted to admin accounts only (`9994837342`).
           </p>
         </div>
         <Link
@@ -402,7 +558,7 @@ export default function AdminClientPage() {
               </span>
             </div>
             <p className="text-xs text-slate-400 font-medium hidden sm:block">
-              நம்ம thanjai • Master Live Feed • {statsSummary.total} Active Listings
+              நம்ம thanjai • Master Feed & Audit Console • {statsSummary.total} Live Posts • {statsSummary.totalUsersCount} Registered Users
             </p>
           </div>
         </div>
@@ -422,13 +578,13 @@ export default function AdminClientPage() {
           <div className="flex items-center gap-2">
             <Plus className="w-5 h-5 text-amber-400 shrink-0 stroke-[2.5]" />
             <div>
-              <h3 className="font-heading font-black text-sm text-white">Admin Posting Shortcuts</h3>
-              <p className="text-xs text-slate-400">Post directly to any feed segment with full admin privileges</p>
+              <h3 className="font-heading font-black text-sm text-white">Admin Quick Controls</h3>
+              <p className="text-xs text-slate-400">Post ads, audit live system events, manage users & reports</p>
             </div>
           </div>
           <div className="flex items-center gap-2 overflow-x-auto no-scrollbar w-full sm:w-auto pt-2 sm:pt-0">
             <Link href="/post/offer?admin=true" className="flex items-center gap-1.5 text-xs bg-gradient-to-r from-amber-500 to-amber-400 text-slate-950 font-heading font-black px-3.5 py-2 rounded-xl shadow-md transition-all hover:scale-105 cursor-pointer uppercase tracking-wider shrink-0">
-              <Plus className="w-3.5 h-3.5 stroke-[3]" /> Post Offer / Reel
+              <Plus className="w-3.5 h-3.5 stroke-[3]" /> Post Offer
             </Link>
             <Link href="/post/sell?admin=true" className="flex items-center gap-1.5 text-xs bg-slate-800 hover:bg-slate-700 text-blue-300 border border-blue-400/40 font-heading font-black px-3.5 py-2 rounded-xl transition-all cursor-pointer uppercase tracking-wider shrink-0">
               + Post Sell
@@ -446,12 +602,12 @@ export default function AdminClientPage() {
         <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
           {[
             { label: "Total Live Ads", value: statsSummary.total, color: "text-white", border: "border-slate-800", icon: <BarChart2 className="w-4 h-4 text-slate-400" /> },
+            { label: "Total Users", value: statsSummary.totalUsersCount, color: "text-sky-400", border: "border-sky-400/30", icon: <User className="w-4 h-4 text-sky-400" /> },
             { label: "Sell / Need", value: statsSummary.sellNeeds, color: "text-blue-400", border: "border-blue-400/30", icon: <Tag className="w-4 h-4 text-blue-400" /> },
             { label: "Services", value: statsSummary.services, color: "text-emerald-400", border: "border-emerald-400/30", icon: <Sparkles className="w-4 h-4 text-emerald-400" /> },
             { label: "Store Offers", value: statsSummary.shops, color: "text-amber-400", border: "border-amber-400/30", icon: <Tag className="w-4 h-4 text-amber-400" /> },
-            { label: "Video Reels", value: statsSummary.reelVideos, color: "text-purple-400", border: "border-purple-400/30", icon: <Video className="w-4 h-4 text-purple-400" /> },
-            { label: "Live Chats", value: chatCount, color: "text-sky-400", border: "border-sky-400/30", icon: <MessageSquare className="w-4 h-4 text-sky-400" /> },
-            { label: "Flagged", value: statsSummary.reported, color: "text-rose-400", border: "border-rose-400/30", icon: <AlertTriangle className="w-4 h-4 text-rose-400" /> },
+            { label: "Reports", value: reportsList.length, color: "text-rose-400", border: "border-rose-400/30", icon: <AlertTriangle className="w-4 h-4 text-rose-400" /> },
+            { label: "Audit Logs", value: auditLogs.length, color: "text-purple-400", border: "border-purple-400/30", icon: <Shield className="w-4 h-4 text-purple-400" /> },
             { label: `Admin Posts`, value: statsSummary.adminPosts, color: "text-amber-300", border: "border-amber-400/40", icon: <Shield className="w-4 h-4 text-amber-400" /> },
           ].map((stat) => (
             <div key={stat.label} className={`bg-slate-900/90 border ${stat.border} rounded-2xl p-3.5 shadow-xl backdrop-blur-xl flex flex-col gap-1`}>
@@ -464,16 +620,17 @@ export default function AdminClientPage() {
           ))}
         </div>
 
-        {/* ── CATEGORY FILTER TABS + SEARCH ── */}
+        {/* ── CATEGORY & MODULE FILTER TABS + SEARCH ── */}
         <div className="bg-slate-900/90 border border-slate-800/90 rounded-2xl p-3.5 shadow-xl flex flex-col sm:flex-row items-center justify-between gap-3 backdrop-blur-xl">
           <div className="flex gap-2 overflow-x-auto no-scrollbar w-full sm:w-auto">
             {[
-              { id: "all", label: `All (${statsSummary.total})` },
+              { id: "all", label: `All Ads (${statsSummary.total})` },
+              { id: "users_manage", label: `👥 Users (${statsSummary.totalUsersCount})` },
+              { id: "reports_manage", label: `🚩 Reports (${reportsList.length})` },
+              { id: "audit_logs_tab", label: `📜 Audit Trail (${auditLogs.length})` },
               { id: "needs_and_sales", label: `Sell/Need (${statsSummary.sellNeeds})` },
               { id: "services", label: `Services (${statsSummary.services})` },
               { id: "shops", label: `Stores (${statsSummary.shops})` },
-              { id: "reported", label: `🚩 Flagged (${statsSummary.reported})` },
-              { id: "admin_posts", label: `👑 Admin (${statsSummary.adminPosts})` },
             ].map((tab) => (
               <button
                 key={tab.id}
@@ -493,7 +650,7 @@ export default function AdminClientPage() {
             <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search title, phone, or locality..."
+              placeholder="Search title, phone, user, action..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full bg-slate-950 border border-slate-800 text-white rounded-xl pl-10 pr-4 py-2.5 text-xs font-medium focus:outline-none focus:border-amber-400 transition-colors"
@@ -501,115 +658,330 @@ export default function AdminClientPage() {
           </div>
         </div>
 
-        {/* ── LIVE MODERATION GRID ── */}
-        {loading ? (
-          <div className="flex flex-col items-center justify-center py-24 gap-3 bg-slate-900/40 rounded-2xl border border-slate-800">
-            <Loader2 className="w-9 h-9 animate-spin text-amber-400" />
-            <span className="text-xs font-black text-slate-400 uppercase tracking-wider">
-              Streaming Live Listings from Firestore...
-            </span>
-          </div>
-        ) : filteredItems.length === 0 ? (
-          <div className="text-center py-20 text-xs font-bold text-slate-400 border border-dashed border-slate-800 rounded-2xl bg-slate-900/60 p-6">
-            No listings matching filter.
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {filteredItems.map((item) => (
-              <div
-                key={item.id}
-                className={`bg-slate-900/90 border rounded-2xl p-4 flex flex-col justify-between gap-4 shadow-xl backdrop-blur-xl transition-all hover:border-slate-700 ${
-                  item.is_reported ? "border-rose-500/50 bg-rose-950/20" : "border-slate-800/90"
-                }`}
-              >
-                <div className="flex flex-col gap-3">
-                  {/* Badge Row */}
-                  <div className="flex justify-between items-center gap-2">
-                    <div className="flex items-center gap-2">
-                      {getColBadge(item.colName)}
-                      {item.video_url && (
-                        <span className="bg-purple-500/20 text-purple-300 border border-purple-400/40 px-2 py-0.5 rounded-lg text-[10px] font-black uppercase flex items-center gap-1">
-                          <Video className="w-3 h-3" /> Reel
-                        </span>
-                      )}
-                      {item.is_reported && (
-                        <span className="bg-rose-500/20 text-rose-300 border border-rose-500/40 px-2 py-0.5 rounded-lg text-[10px] font-black uppercase flex items-center gap-1">
-                          <AlertTriangle className="w-3 h-3" /> Flagged
-                        </span>
-                      )}
+        {/* ── VIEW 1: USER MANAGEMENT TAB ── */}
+        {activeTab === "users_manage" && (
+          <div className="flex flex-col gap-4">
+            <h3 className="font-heading font-black text-base text-white flex items-center gap-2">
+              <User className="w-5 h-5 text-sky-400" />
+              Registered User Directory ({usersList.length})
+            </h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {usersList.map((u) => {
+                const uPhone10 = String(u.phone || "").slice(-10);
+                const userOwnedPosts = items.filter(
+                  (i) => i.phone.slice(-10) === uPhone10 || (i as any).userId === u.uid
+                );
+                return (
+                  <div key={u.uid} className="bg-slate-900 border border-slate-800 rounded-2xl p-4 flex flex-col justify-between gap-3 shadow-xl">
+                    <div className="flex items-start justify-between gap-2">
+                      <div>
+                        <h4 className="font-heading font-black text-sm text-white">{u.displayName || "Namma Thanjai User"}</h4>
+                        <span className="text-xs text-amber-400 font-bold block mt-0.5">+{u.phone || "No Phone"}</span>
+                        <span className="text-[10px] text-slate-500 block mt-1 font-mono">UID: {u.uid}</span>
+                      </div>
+                      <span className="bg-sky-500/20 text-sky-300 border border-sky-500/40 px-2.5 py-1 rounded-xl text-xs font-black">
+                        {userOwnedPosts.length} Posts
+                      </span>
                     </div>
-                    <span className={`text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider ${
-                      item.is_verified
-                        ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
-                        : "bg-amber-400/20 text-amber-300 border border-amber-400/30"
-                    }`}>
-                      {item.is_verified ? "Live ✓" : "Pending"}
-                    </span>
-                  </div>
 
-                  {/* Media + Details */}
-                  <div className="flex gap-3 items-center">
-                    {item.image_url ? (
-                      <div className="w-14 h-14 rounded-xl overflow-hidden bg-slate-950 shrink-0 border border-slate-800 shadow-md">
-                        <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
-                      </div>
-                    ) : (
-                      <div className="w-14 h-14 rounded-xl bg-slate-950 border border-slate-800 shrink-0 flex items-center justify-center text-amber-400">
-                        <Tag className="w-6 h-6" />
-                      </div>
-                    )}
-                    <div className="min-w-0 flex-1">
-                      <h4 className="font-heading font-black text-sm text-white leading-snug line-clamp-2">{item.title}</h4>
-                      {item.price !== null && item.price !== undefined && (
-                        <span className="text-xs text-amber-400 font-heading font-black block">
-                          ₹{typeof item.price === "number" ? item.price.toLocaleString("en-IN") : item.price}
-                        </span>
-                      )}
-                      <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-slate-400 font-medium mt-1">
-                        <span className="flex items-center gap-1"><MapPin className="w-3 h-3 text-amber-400" />{item.area_tag}</span>
-                        <span className="flex items-center gap-1"><Phone className="w-3 h-3 text-amber-400" />+{item.phone}</span>
-                      </div>
-                      {item.created_at && (
-                        <span className="text-[10px] text-slate-500 mt-0.5 block">
-                          {item.created_at?.seconds
-                            ? new Date(item.created_at.seconds * 1000).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })
-                            : new Date(item.created_at).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
-                        </span>
-                      )}
+                    <div className="flex items-center gap-2 pt-2 border-t border-slate-800">
+                      <button
+                        type="button"
+                        onClick={() => setSelectedUser({ ...u, posts: userOwnedPosts })}
+                        className="flex-1 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-heading font-black rounded-xl border border-slate-700 transition-all"
+                      >
+                        Inspect Posts ({userOwnedPosts.length})
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setDeleteUserTarget(u)}
+                        className="px-3 py-2 bg-rose-500/20 hover:bg-rose-500/30 text-rose-300 text-xs font-heading font-black rounded-xl border border-rose-500/40 transition-all flex items-center gap-1"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" /> Delete User
+                      </button>
                     </div>
                   </div>
-                </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
 
-                {/* Moderation Controls */}
-                <div className="flex items-center gap-2 pt-3 border-t border-slate-800/80">
+        {/* ── VIEW 2: REPORT MANAGEMENT TAB ── */}
+        {activeTab === "reports_manage" && (
+          <div className="flex flex-col gap-4">
+            <h3 className="font-heading font-black text-base text-white flex items-center gap-2">
+              <AlertTriangle className="w-5 h-5 text-rose-400" />
+              Post Flagged Reports ({reportsList.length})
+            </h3>
+            {reportsList.length === 0 ? (
+              <div className="text-center py-16 text-xs text-slate-400 border border-dashed border-slate-800 rounded-2xl bg-slate-900/40">
+                No active flagged reports.
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {reportsList.map((rep) => (
+                  <div key={rep.id} className="bg-slate-900 border border-rose-500/40 rounded-2xl p-4 flex flex-col gap-3 shadow-xl">
+                    <div className="flex justify-between items-start">
+                      <div>
+                        <span className="text-[10px] font-black uppercase text-rose-400 bg-rose-500/10 px-2 py-0.5 rounded-md border border-rose-500/30">
+                          Report Reason: {rep.reason || "Inappropriate Content"}
+                        </span>
+                        <h4 className="font-heading font-black text-sm text-white mt-1.5">Target Post ID: {rep.postId}</h4>
+                      </div>
+                      <span className="text-[10px] text-slate-500">
+                        {rep.created_at?.seconds ? new Date(rep.created_at.seconds * 1000).toLocaleString("en-IN") : "Recent"}
+                      </span>
+                    </div>
+                    <div className="text-xs text-slate-400 font-medium">
+                      Reporter Phone: <span className="text-amber-400 font-bold">+{rep.reporterPhone || "Anonymous"}</span>
+                    </div>
+                    <div className="flex gap-2 pt-2 border-t border-slate-800">
+                      <button
+                        type="button"
+                        onClick={() => handleDismissReport(rep.id)}
+                        className="flex-1 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-black rounded-xl border border-slate-700"
+                      >
+                        Dismiss Report
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleRemoveReportedPost(rep)}
+                        className="flex-1 py-2 bg-rose-600 hover:bg-rose-500 text-white text-xs font-black rounded-xl shadow-md"
+                      >
+                        Remove Reported Post
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ── VIEW 3: AUDIT TRAIL / ACTIVITY LOG TAB ── */}
+        {activeTab === "audit_logs_tab" && (
+          <div className="flex flex-col gap-4">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-slate-900 border border-slate-800 rounded-2xl p-4">
+              <h3 className="font-heading font-black text-base text-white flex items-center gap-2">
+                <Shield className="w-5 h-5 text-purple-400" />
+                Real-Time System Audit Trail ({filteredAuditLogs.length})
+              </h3>
+              <div className="flex items-center gap-2 overflow-x-auto no-scrollbar w-full sm:w-auto">
+                {["ALL", "POST_CREATED", "POST_UPDATED", "POST_DELETED", "USER_DELETED", "ADMIN_ACTION"].map((act) => (
                   <button
+                    key={act}
                     type="button"
-                    onClick={() => handleToggleVerify(item)}
-                    className={`flex items-center justify-center gap-1.5 flex-1 py-2.5 rounded-xl text-xs font-heading font-black uppercase transition-all cursor-pointer active:scale-95 ${
-                      item.is_verified
-                        ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30"
-                        : "bg-amber-400 hover:bg-amber-300 text-slate-950 font-black shadow-md shadow-amber-400/20"
+                    onClick={() => setAuditFilterAction(act)}
+                    className={`px-3 py-1.5 rounded-lg text-[10px] font-black uppercase cursor-pointer transition-all ${
+                      auditFilterAction === act
+                        ? "bg-purple-500 text-white"
+                        : "bg-slate-950 text-slate-400 border border-slate-800"
                     }`}
                   >
-                    <CheckCircle className="w-4 h-4 stroke-[2.5]" />
-                    <span>{item.is_verified ? "Live ✓" : "Approve"}</span>
+                    {act.replace("_", " ")}
                   </button>
-                  <button
-                    type="button"
-                    onClick={() => handleDelete(item.id, item.colName)}
-                    className="px-4 py-2.5 rounded-xl bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 border border-rose-500/40 transition-all shrink-0 cursor-pointer font-heading font-black text-xs flex items-center gap-1.5 active:scale-95"
-                  >
-                    <Trash2 className="w-4 h-4 stroke-[2.5]" />
-                    Purge
-                  </button>
-                </div>
+                ))}
               </div>
-            ))}
+            </div>
+
+            <div className="flex flex-col gap-2">
+              {filteredAuditLogs.length === 0 ? (
+                <div className="text-center py-16 text-xs text-slate-400 border border-dashed border-slate-800 rounded-2xl bg-slate-900/40">
+                  No audit log entries matching criteria.
+                </div>
+              ) : (
+                filteredAuditLogs.map((log) => {
+                  const logDate = log.timestamp?.seconds
+                    ? new Date(log.timestamp.seconds * 1000).toLocaleString("en-IN")
+                    : new Date(log.created_at_iso || Date.now()).toLocaleString("en-IN");
+                  return (
+                    <div key={log.id} className="bg-slate-900/90 border border-slate-800/90 rounded-xl p-3.5 flex flex-col sm:flex-row sm:items-center justify-between gap-2 shadow-md">
+                      <div className="flex items-start sm:items-center gap-3">
+                        <span className={`text-[10px] font-black px-2.5 py-1 rounded-lg uppercase shrink-0 ${
+                          log.action === "POST_CREATED"
+                            ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                            : log.action === "POST_DELETED" || log.action === "USER_DELETED"
+                            ? "bg-rose-500/20 text-rose-300 border border-rose-500/30"
+                            : log.action === "ADMIN_ACTION"
+                            ? "bg-amber-400/20 text-amber-300 border border-amber-400/30"
+                            : "bg-blue-500/20 text-blue-300 border border-blue-500/30"
+                        }`}>
+                          {log.action}
+                        </span>
+                        <div className="min-w-0">
+                          <p className="text-xs font-semibold text-slate-200">{log.details}</p>
+                          <div className="flex items-center gap-3 text-[10px] text-slate-400 mt-0.5">
+                            <span>Actor: <strong className="text-amber-400">+{log.actorPhone}</strong> ({log.actorName})</span>
+                            {log.targetPostTitle && <span>Target: "{log.targetPostTitle}"</span>}
+                          </div>
+                        </div>
+                      </div>
+                      <span className="text-[10px] font-mono text-slate-500 shrink-0 self-end sm:self-center">{logDate}</span>
+                    </div>
+                  );
+                })
+              )}
+            </div>
           </div>
+        )}
+
+        {/* ── VIEW 4: LIVE MODERATION GRID (DEFAULT ADS TAB) ── */}
+        {activeTab !== "users_manage" && activeTab !== "reports_manage" && activeTab !== "audit_logs_tab" && (
+          <>
+            {loading ? (
+              <div className="flex flex-col items-center justify-center py-24 gap-3 bg-slate-900/40 rounded-2xl border border-slate-800">
+                <Loader2 className="w-9 h-9 animate-spin text-amber-400" />
+                <span className="text-xs font-black text-slate-400 uppercase tracking-wider">
+                  Streaming Live Listings from Firestore...
+                </span>
+              </div>
+            ) : filteredItems.length === 0 ? (
+              <div className="text-center py-20 text-xs font-bold text-slate-400 border border-dashed border-slate-800 rounded-2xl bg-slate-900/60 p-6">
+                No listings matching filter.
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {filteredItems.map((item) => (
+                  <div
+                    key={item.id}
+                    className={`bg-slate-900/90 border rounded-2xl p-4 flex flex-col justify-between gap-4 shadow-xl backdrop-blur-xl transition-all hover:border-slate-700 ${
+                      item.is_reported ? "border-rose-500/50 bg-rose-950/20" : "border-slate-800/90"
+                    }`}
+                  >
+                    <div className="flex flex-col gap-3">
+                      <div className="flex justify-between items-center gap-2">
+                        <div className="flex items-center gap-2">
+                          {getColBadge(item.colName)}
+                          {item.video_url && (
+                            <span className="bg-purple-500/20 text-purple-300 border border-purple-400/40 px-2 py-0.5 rounded-lg text-[10px] font-black uppercase flex items-center gap-1">
+                              <Video className="w-3 h-3" /> Reel
+                            </span>
+                          )}
+                          {item.is_reported && (
+                            <span className="bg-rose-500/20 text-rose-300 border border-rose-500/40 px-2 py-0.5 rounded-lg text-[10px] font-black uppercase flex items-center gap-1">
+                              <AlertTriangle className="w-3 h-3" /> Flagged
+                            </span>
+                          )}
+                        </div>
+                        <span className={`text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase tracking-wider ${
+                          item.is_verified
+                            ? "bg-emerald-500/20 text-emerald-400 border border-emerald-500/30"
+                            : "bg-amber-400/20 text-amber-300 border border-amber-400/30"
+                        }`}>
+                          {item.is_verified ? "Live ✓" : "Pending"}
+                        </span>
+                      </div>
+
+                      <div className="flex gap-3 items-center">
+                        {item.image_url ? (
+                          <div className="w-14 h-14 rounded-xl overflow-hidden bg-slate-950 shrink-0 border border-slate-800 shadow-md">
+                            <img src={item.image_url} alt={item.title} className="w-full h-full object-cover" />
+                          </div>
+                        ) : (
+                          <div className="w-14 h-14 rounded-xl bg-slate-950 border border-slate-800 shrink-0 flex items-center justify-center text-amber-400">
+                            <Tag className="w-6 h-6" />
+                          </div>
+                        )}
+                        <div className="min-w-0 flex-1">
+                          <h4 className="font-heading font-black text-sm text-white leading-snug line-clamp-2">{item.title}</h4>
+                          {item.price !== null && item.price !== undefined && (
+                            <span className="text-xs text-amber-400 font-heading font-black block">
+                              ₹{typeof item.price === "number" ? item.price.toLocaleString("en-IN") : item.price}
+                            </span>
+                          )}
+                          <div className="flex flex-wrap items-center gap-x-2 gap-y-0.5 text-[11px] text-slate-400 font-medium mt-1">
+                            <span className="flex items-center gap-1"><MapPin className="w-3 h-3 text-amber-400" />{item.area_tag}</span>
+                            <span className="flex items-center gap-1"><Phone className="w-3 h-3 text-amber-400" />+{item.phone}</span>
+                          </div>
+                          {item.created_at && (
+                            <span className="text-[10px] text-slate-500 mt-0.5 block">
+                              {item.created_at?.seconds
+                                ? new Date(item.created_at.seconds * 1000).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })
+                                : new Date(item.created_at).toLocaleString("en-IN", { day: "numeric", month: "short", hour: "2-digit", minute: "2-digit" })}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2 pt-3 border-t border-slate-800/80">
+                      <button
+                        type="button"
+                        onClick={() => handleToggleVerify(item)}
+                        className={`flex items-center justify-center gap-1.5 flex-1 py-2.5 rounded-xl text-xs font-heading font-black uppercase transition-all cursor-pointer active:scale-95 ${
+                          item.is_verified
+                            ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40 hover:bg-emerald-500/30"
+                            : "bg-amber-400 hover:bg-amber-300 text-slate-950 font-black shadow-md shadow-amber-400/20"
+                        }`}
+                      >
+                        <CheckCircle className="w-4 h-4 stroke-[2.5]" />
+                        <span>{item.is_verified ? "Live ✓" : "Approve"}</span>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(item.id, item.colName)}
+                        className="px-4 py-2.5 rounded-xl bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 border border-rose-500/40 transition-all shrink-0 cursor-pointer font-heading font-black text-xs flex items-center gap-1.5 active:scale-95"
+                      >
+                        <Trash2 className="w-4 h-4 stroke-[2.5]" />
+                        Purge
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </>
         )}
       </div>
 
-      {/* ── DELETE CONFIRM MODAL ── */}
+      {/* ── MODAL 1: INSPECT USER POSTS ── */}
+      {selectedUser && (
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-lg w-full p-6 shadow-xl flex flex-col gap-4">
+            <div className="flex justify-between items-center">
+              <h3 className="font-heading font-black text-base text-white">
+                Posts Owned by +{selectedUser.phone} ({selectedUser.posts?.length || 0})
+              </h3>
+              <button onClick={() => setSelectedUser(null)} className="text-slate-400 text-xs font-bold px-2 py-1 bg-slate-800 rounded-lg">Close</button>
+            </div>
+            <div className="max-h-80 overflow-y-auto flex flex-col gap-2">
+              {selectedUser.posts?.map((p: any) => (
+                <div key={p.id} className="bg-slate-950 p-3 rounded-xl border border-slate-800 flex justify-between items-center">
+                  <div>
+                    <h5 className="text-xs font-black text-white">{p.title}</h5>
+                    <span className="text-[10px] text-slate-400">{p.area_tag} • {p.colName}</span>
+                  </div>
+                  <button onClick={() => { executeDelete(p.id, p.colName); setSelectedUser(null); }} className="text-[10px] text-rose-400 font-bold bg-rose-500/20 px-2.5 py-1 rounded-lg">Purge</button>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── MODAL 2: DELETE USER CONFIRMATION ── */}
+      {deleteUserTarget && (
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-sm w-full p-6 shadow-xl flex flex-col gap-4 text-center">
+            <div className="w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/40 flex items-center justify-center mx-auto">
+              <Trash2 className="w-6 h-6 stroke-[2.5]" />
+            </div>
+            <div>
+              <h3 className="font-heading font-black text-base text-white">Delete User +{deleteUserTarget.phone}?</h3>
+              <p className="text-xs text-slate-400 font-medium mt-1">
+                This will delete the user profile and disassociate/purge all associated listings safely.
+              </p>
+            </div>
+            <div className="flex gap-2">
+              <button onClick={() => setDeleteUserTarget(null)} className="flex-1 py-2.5 bg-slate-800 text-slate-300 font-black text-xs rounded-xl">Cancel</button>
+              <button onClick={() => executeDeleteUser(deleteUserTarget)} className="flex-1 py-2.5 bg-rose-600 text-white font-black text-xs rounded-xl">Delete User</button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* ── MODAL 3: DELETE POST CONFIRM ── */}
       {deleteTarget && (
         <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4 animate-fade-in">
           <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-sm w-full p-6 shadow-lg flex flex-col gap-4 text-center">
