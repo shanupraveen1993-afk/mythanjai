@@ -370,9 +370,9 @@ function ProfileContent() {
 
     try {
       const docRef = doc(db, colName || "needs_and_sales", id);
-      await deleteDoc(docRef);
+      await deleteDoc(docRef).catch((err) => console.warn("Firestore delete note:", err));
     } catch (error) {
-      console.warn("Firestore delete note:", error);
+      console.warn("Firestore delete error note:", error);
     }
 
     setConfirmDeleteId(null);
