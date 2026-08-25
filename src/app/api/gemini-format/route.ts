@@ -3,12 +3,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
 import { TANJORE_LOCALITIES, SHOP_CATEGORIES } from "@/lib/constants";
 
-const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY || "" });
-
 const today = new Date().toISOString().split("T")[0];
 
 export async function POST(request: NextRequest) {
   try {
+    const apiKey = process.env.GEMINI_API_KEY || "";
+    const ai = new GoogleGenAI({ apiKey });
     const body = await request.json();
     const rawDescription = body.rawDescription || body.raw_text || "";
     const type = body.type || "sell";

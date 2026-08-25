@@ -3,13 +3,10 @@ import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenAI } from "@google/genai";
 import { TANJORE_LOCALITIES, SHOP_CATEGORIES } from "@/lib/constants";
 
-// Initialize Gemini Client using the official SDK
-const ai = new GoogleGenAI({
-  apiKey: process.env.GEMINI_API_KEY || "",
-});
-
 export async function POST(request: NextRequest) {
   try {
+    const apiKey = process.env.GEMINI_API_KEY || "";
+    const ai = new GoogleGenAI({ apiKey });
     const body = await request.json();
     const { imageBase64, mimeType } = body;
 
