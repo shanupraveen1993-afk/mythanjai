@@ -25,7 +25,7 @@ export interface ListingItem {
   images?: string[];
   image_url?: string;
   category?: string;
-  type?: "sell" | "looking_for" | "service" | "offer";
+  type?: "sell" | "looking_for" | "service" | "offer" | "NEED" | "need" | "SELL" | "buy" | string;
   views_count?: number;
   shares_count?: number;
   saved_by?: string[];
@@ -302,7 +302,12 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
   const imageSrc = allImages[0] || categoryFallback;
   const extraCount = allImages.length - 1;
 
-  const isLookingFor = listing.type === "looking_for" || listing.expected_price_from;
+  const isLookingFor =
+    listing.type === "looking_for" ||
+    listing.type === "NEED" ||
+    listing.type === "need" ||
+    listing.type === "buy" ||
+    Boolean(listing.expected_price_from);
 
   const formattedPrice = React.useMemo(() => {
     if (isLookingFor) {
