@@ -107,7 +107,7 @@ export default function TopHeader({
       }`}
       style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
     >
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center justify-between gap-3 relative">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-12 flex items-center justify-between gap-3 relative">
 
         {/* Left Side: Native Back Button ONLY for true sub-screens (/post/*, /admin/*, /item/*, etc.) vs Home Logo for main tabs */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0 z-20">

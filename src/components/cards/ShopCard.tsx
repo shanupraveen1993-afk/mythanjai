@@ -371,7 +371,7 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
                 className="border-2 border-white/80 text-white bg-slate-950/80 hover:bg-slate-900 font-heading font-black text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[40px] shrink-0 w-auto shadow-2xs backdrop-blur-md cursor-pointer transition-colors"
               >
                 <Navigation className="w-3.5 h-3.5 text-white shrink-0" />
-                <span>{t("getDirection")}</span>
+                <span>Visit Store</span>
               </a>
               {post.show_phone !== false && (
                 <a
@@ -493,7 +493,7 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
               className="w-[128px] shrink-0 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
             >
               <Navigation className="w-4 h-4 text-[#0F172A] shrink-0" />
-              <span>{t("getDirection")}</span>
+              <span>Visit Store</span>
             </a>
             {(post as any).is_available_now !== false && post.show_phone !== false && (
               <a
@@ -600,7 +600,7 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
             className="w-[128px] shrink-0 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
           >
             <Navigation className="w-4 h-4 text-[#0F172A] shrink-0" />
-            <span>{t("getDirection")}</span>
+            <span>Visit Store</span>
           </a>
           {(post as any).is_available_now !== false && post.show_phone !== false && (
             <a

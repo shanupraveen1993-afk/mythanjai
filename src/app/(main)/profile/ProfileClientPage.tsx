@@ -435,7 +435,7 @@ function ProfileContent() {
               : "text-slate-600 hover:text-slate-950"
           }`}
         >
-          Profile Overview
+          Profile
         </button>
         <button
           type="button"
@@ -445,7 +445,7 @@ function ProfileContent() {
           className="flex-1 py-2.5 px-3 rounded-xl font-heading font-black text-xs sm:text-sm transition-all cursor-pointer text-center flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-950"
         >
           <Package className="w-4 h-4 text-amber-500" />
-          <span>My Listings →</span>
+          <span>My Listings</span>
         </button>
         <button
           type="button"
@@ -455,7 +455,7 @@ function ProfileContent() {
           className="flex-1 py-2.5 px-3 rounded-xl font-heading font-black text-xs sm:text-sm transition-all cursor-pointer text-center flex items-center justify-center gap-1.5 text-slate-600 hover:text-slate-950"
         >
           <Bookmark className="w-4 h-4 text-amber-500" />
-          <span>Saved Ads →</span>
+          <span>Saved Items</span>
         </button>
       </div>
 
