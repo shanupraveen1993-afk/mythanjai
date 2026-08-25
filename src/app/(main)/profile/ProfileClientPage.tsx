@@ -391,7 +391,7 @@ function ProfileContent() {
 
   if (!isVerified) {
     return (
-      <div className="w-full max-w-md mx-auto py-12 px-6 flex flex-col items-center justify-center text-center gap-4 bg-white rounded-3xl border border-slate-200 shadow-md my-8">
+      <div className="w-full max-w-md mx-auto py-12 px-6 flex flex-col items-center justify-center text-center gap-4 bg-white rounded-2xl border border-slate-200 shadow-2xs my-8">
         <div className="w-16 h-16 rounded-full bg-amber-100 border border-amber-300 flex items-center justify-center text-amber-600">
           <User className="w-8 h-8 stroke-[2.5]" />
         </div>
@@ -462,7 +462,7 @@ function ProfileContent() {
       {/* WhatsApp OTP Verification Modal */}
       {verificationPending && (
         <div className="fixed inset-0 z-[99999] bg-slate-950/75 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white border border-slate-200 w-full max-w-sm rounded-2xl p-5 shadow-2xl flex flex-col gap-4">
+          <div className="bg-white border border-slate-200 w-full max-w-sm rounded-2xl p-5 shadow-lg flex flex-col gap-4">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
@@ -526,10 +526,10 @@ function ProfileContent() {
           
           {/* Profile Card Header */}
           <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden">
-            <div className="h-1.5 w-full bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500" />
+            <div className="h-1.5 w-full bg-amber-400" />
             <div className="p-5 flex flex-col gap-4">
               <div className="flex items-center gap-4">
-                <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-slate-950 text-amber-400 flex items-center justify-center font-heading font-black text-xl sm:text-2xl shrink-0 select-none shadow-md ring-2 ring-amber-400/30">
+                <div className="w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-slate-950 text-amber-400 flex items-center justify-center font-heading font-black text-xl sm:text-2xl shrink-0 select-none shadow-sm border-2 border-amber-400">
                   {initials}
                 </div>
 
