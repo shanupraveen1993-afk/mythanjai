@@ -596,20 +596,7 @@ function ProfileContent() {
                     )}
                   </div>
                 </div>
-              </div>
-
-              {/* Highlighted Free Plan Card */}
-              <div className="bg-amber-400 text-slate-950 font-heading font-black text-sm p-3.5 rounded-2xl flex items-center justify-between shadow-xs">
-                <span className="flex items-center gap-1.5">
-                  <Zap className="w-4.5 h-4.5 text-slate-950 fill-slate-950 shrink-0" />
-                  <span>Free Plan</span>
-                </span>
-                <div className="flex items-center gap-1.5 bg-slate-950 text-amber-400 px-3 py-1 rounded-xl text-xs">
-                  <span className="line-through opacity-70 text-[11px] text-slate-300 font-medium">₹100</span>
-                  <span className="font-black text-sm text-amber-300">₹0</span>
-                </div>
-              </div>
-            </div>
+              </div>            </div>
           </div>
 
           {/* Registered Mobile Card */}
@@ -663,8 +650,8 @@ function ProfileContent() {
               className="flex items-center justify-between p-4 hover:bg-slate-50 cursor-pointer transition-colors group"
             >
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
-                  <Bookmark className="w-4 h-4 fill-amber-600" />
+                <div className="w-9 h-9 rounded-xl bg-slate-100 text-slate-700 flex items-center justify-center shrink-0">
+                  <Bookmark className="w-4 h-4 text-slate-700" />
                 </div>
                 <span className="font-heading font-black text-sm text-slate-900">Saved Items</span>
               </div>
@@ -678,9 +665,9 @@ function ProfileContent() {
 
             {/* Admin Console Row (if Admin) */}
             {isSuperAdmin && (
-              <Link href="/admin" className="flex items-center justify-between p-4 hover:bg-amber-50 cursor-pointer transition-colors group">
+              <Link href="/admin" className="flex items-center justify-between p-4 hover:bg-slate-50 cursor-pointer transition-colors group">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center shrink-0">
+                  <div className="w-9 h-9 rounded-xl bg-slate-900 text-amber-400 flex items-center justify-center shrink-0">
                     <Shield className="w-4 h-4 stroke-[2.5]" />
                   </div>
                   <span className="font-heading font-black text-sm text-slate-900">Admin Console</span>

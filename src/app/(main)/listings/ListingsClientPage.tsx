@@ -310,15 +310,10 @@ function ListingsContent() {
                         alt={itemTitle}
                         className="w-full h-full object-cover"
                       />
-                      {post.category && (
-                        <span className="absolute bottom-1 left-1 right-1 bg-slate-950/80 backdrop-blur-xs text-white text-[10px] font-bold px-1.5 py-0.5 rounded text-center truncate">
-                          {post.category}
-                        </span>
-                      )}
                     </div>
 
                     <div className="flex flex-col gap-1.5 flex-1 min-w-0">
-                      {/* Category & Status Pill Row */}
+                      {/* Category & Status Row */}
                       <div className="flex items-center gap-2">
                         <span className={`text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-md border ${
                           isInactive
@@ -327,7 +322,8 @@ function ListingsContent() {
                         }`}>
                           {isInactive ? `● ${statusLabel}` : "● ACTIVE"}
                         </span>
-                        <span className="text-xs font-semibold text-slate-500">• {pType}</span>
+                        {post.category && <span className="text-xs font-semibold text-slate-700">• {post.category}</span>}
+                        <span className="text-xs font-semibold text-slate-400">• {pType}</span>
                       </div>
 
                       {/* Title */}
