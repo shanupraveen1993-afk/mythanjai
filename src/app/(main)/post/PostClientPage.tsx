@@ -298,18 +298,10 @@ export default function PostClientPage() {
   return (
     <div className="w-full max-w-2xl mx-auto px-4 py-6 pb-24 flex flex-col gap-6 font-sans">
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-slate-200 pb-4">
-        <button
-          onClick={() => router.back()}
-          className="flex items-center gap-1.5 text-xs font-black text-slate-600 hover:text-slate-900 transition-colors"
-        >
-          <ArrowLeft className="w-4 h-4" />
-          <span>Back</span>
-        </button>
-        <h1 className="font-heading font-black text-lg text-slate-900 uppercase tracking-tight">
+      <div className="flex items-center justify-center border-b border-slate-200 pb-4">
+        <h1 className="font-heading font-black text-lg text-slate-900 uppercase tracking-tight text-center">
           Create New Post
         </h1>
-        <div className="w-12" />
       </div>
 
       {success ? (

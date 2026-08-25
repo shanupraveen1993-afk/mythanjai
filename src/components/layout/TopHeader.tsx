@@ -109,64 +109,19 @@ export default function TopHeader({
     >
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 py-2 flex items-center justify-between gap-3 relative">
 
-        {/* Left Side: Native Back Button ONLY for true sub-screens (/post/*, /admin/*, /item/*, etc.) vs Home Logo for main tabs */}
+        {/* Left Side: Always Namma Thanjai Logo + Brand Name across all screens */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0 z-20">
-          {(() => {
-            const purePath = (pathname || "").split("?")[0].toLowerCase().replace(/\/$/, "");
-            const mainTabs = ["", "/", "/home", "/sell", "/need", "/services", "/shops", "/search", "/listings", "/profile", "/chat"];
-            const isDetailScreen = !mainTabs.includes(purePath) && (
-              purePath.startsWith("/post") ||
-              purePath.startsWith("/admin") ||
-              purePath.startsWith("/item") ||
-              purePath.startsWith("/detail")
-            );
-            if (isDetailScreen) {
-              return (
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (typeof window !== "undefined" && window.history.length > 1) {
-                        router.back();
-                      } else {
-                        router.push("/");
-                      }
-                    }}
-                    className="flex md:hidden items-center gap-1.5 text-xs font-black text-slate-800 hover:text-slate-950 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-xl border border-slate-200 cursor-pointer shrink-0 transition-colors shadow-2xs"
-                  >
-                    <ArrowLeft className="w-4 h-4 text-slate-800" />
-                    <span>Back</span>
-                  </button>
-                  <div
-                    onClick={() => router.push("/")}
-                    className="hidden md:flex items-center gap-1.5 cursor-pointer shrink-0 group"
-                  >
-                    <div className="w-8 h-8 sm:w-9 sm:h-9 shrink-0 group-hover:scale-[1.08] transition-transform duration-300 flex items-center justify-center">
-                      <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="w-full h-full object-contain" />
-                    </div>
-                    <span className="inline-block font-heading font-black tracking-tight text-sm sm:text-lg md:text-xl leading-none">
-                      <span className="text-[#1d4ed8] font-black">நம்ம</span> <span className="text-[#f59e0b] font-black">thanjai</span>
-                    </span>
-                  </div>
-                </div>
-              );
-            }
-            return (
-              <div className="flex items-center gap-2 select-none shrink-0">
-                <div
-                  onClick={() => router.push("/")}
-                  className="flex items-center gap-1.5 cursor-pointer shrink-0 group"
-                >
-                  <div className="w-8 h-8 sm:w-9 sm:h-9 shrink-0 group-hover:scale-[1.08] transition-transform duration-300 flex items-center justify-center">
-                    <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="w-full h-full object-contain" />
-                  </div>
-                  <span className="inline-block font-heading font-black tracking-tight text-sm sm:text-lg md:text-xl leading-none">
-                    <span className="text-[#1d4ed8] font-black">நம்ம</span> <span className="text-[#f59e0b] font-black">thanjai</span>
-                  </span>
-                </div>
-              </div>
-            );
-          })()}
+          <div
+            onClick={() => router.push("/")}
+            className="flex items-center gap-1.5 cursor-pointer shrink-0 group select-none"
+          >
+            <div className="w-8 h-8 sm:w-9 sm:h-9 shrink-0 group-hover:scale-[1.08] transition-transform duration-300 flex items-center justify-center">
+              <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="w-full h-full object-contain" />
+            </div>
+            <span className="inline-block font-heading font-black tracking-tight text-sm sm:text-lg md:text-xl leading-none">
+              <span className="text-[#1d4ed8] font-black">நம்ம</span> <span className="text-[#f59e0b] font-black">thanjai</span>
+            </span>
+          </div>
         </div>
 
         {/* Center: Sub-Screen Title or 5 Category Tabs */}
