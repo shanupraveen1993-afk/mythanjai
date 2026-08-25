@@ -725,17 +725,13 @@ export default function PostForm({ segment }: PostFormProps) {
           
           {/* LEFT COLUMN: Form Controls (Borderless Free Design) */}
           <form onSubmit={handleSubmit} className="lg:col-span-7 flex flex-col gap-4 bg-transparent border-0 p-0 sm:p-1">
-            {/* Primary Category Selection */}
-            <div className="flex flex-col gap-1.5">
-              <label className="text-sm font-bold text-slate-900 flex items-center gap-1.5">
-                <Tag className="w-4 h-4 text-slate-500" />
-                <span>Select Category *</span>
-              </label>
+            {/* Primary Category Selection Line */}
+            <div className="w-full relative">
               <select
                 required
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-full px-3.5 py-2.5 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:bg-white text-slate-900 shadow-2xs cursor-pointer"
+                className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 cursor-pointer"
               >
                 {config.categories.map((cat) => (
                   <option key={cat} value={cat}>
@@ -745,7 +741,7 @@ export default function PostForm({ segment }: PostFormProps) {
               </select>
             </div>
 
-            {/* OFFER FORM INPUTS IN REVISED REQUESTED ORDER */}
+            {/* OFFER FORM INPUTS IN OLX CLEAN LINE STYLE */}
             {segment === "offer" ? (
               <>
                 {/* 1. UPLOAD VISITING CARD / FLYER PHOTO (TOP) */}
@@ -799,123 +795,93 @@ export default function PostForm({ segment }: PostFormProps) {
                   )}
                 </div>
 
-
-
-                {/* 2. EXPLICIT SHOP NAME INPUT */}
-                <div className="flex flex-col gap-1.5">
-                  <div className="flex items-center justify-between">
-                    <label className="text-sm font-bold text-slate-800">
-                      Shop Name *
-                    </label>
-                    <span className={`text-xs font-medium ${title.length >= config.maxTitleChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>
-                      {title.length}/{config.maxTitleChars}
-                    </span>
-                  </div>
+                {/* 2. SHOP NAME LINE */}
+                <div className="relative w-full">
                   <input
                     type="text"
                     required
-                    autoComplete="on"
-                    autoCorrect="on"
-                    autoCapitalize="sentences"
-                    spellCheck={true}
                     maxLength={config.maxTitleChars}
-                    placeholder="e.g. GLEN Exclusive Gallery / Sri Kumaran Silks"
+                    placeholder="Shop Name * (e.g. GLEN Exclusive Gallery / Sri Kumaran Silks)"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all"
+                    className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium pr-12"
                   />
+                  <span className="absolute right-0 top-3 text-[11px] font-medium text-slate-400">
+                    {title.length}/{config.maxTitleChars}
+                  </span>
                 </div>
 
-
-                <div className="flex flex-col gap-1.5">
-                  <div className="flex items-center justify-between">
-                    <label className="text-sm font-bold text-slate-800">Offer Description *</label>
-                    <span className={`text-xs font-medium ${description.length >= config.maxDescChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>
-                      {description.length}/{config.maxDescChars}
-                    </span>
-                  </div>
+                {/* 3. OFFER DESCRIPTION LINE */}
+                <div className="relative w-full">
                   <textarea
                     required
                     rows={3}
-                    autoComplete="on"
-                    autoCorrect="on"
-                    autoCapitalize="sentences"
-                    spellCheck={true}
                     maxLength={config.maxDescChars}
-                    placeholder="Describe discount, terms, packages, or specific items..."
+                    placeholder="Offer Description * (Describe discount, terms, packages, or specific items...)"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="w-full px-0 py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors leading-relaxed"
+                    className="w-full py-2.5 text-sm font-medium border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors leading-relaxed placeholder:text-slate-400"
                   />
+                  <span className="absolute right-0 bottom-3 text-[11px] font-medium text-slate-400">
+                    {description.length}/{config.maxDescChars}
+                  </span>
                 </div>
 
-                {/* 4. OFFER VALIDITY RANGE (VALID FROM TO VALID TO DATES) */}
+                {/* 4. OFFER VALIDITY DATES */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50 border border-slate-200/80 p-3.5 rounded-xl">
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
-                      <Calendar className="w-4 h-4 text-amber-600" /> Valid From Date *
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                      <Calendar className="w-3.5 h-3.5 text-amber-600" /> Valid From Date *
                     </label>
                     <input
                       type="date"
                       required
                       value={validFrom}
                       onChange={(e) => setValidFrom(e.target.value)}
-                      className="w-full px-4 py-2.5 text-sm font-medium border border-slate-200 rounded-xl bg-white focus:outline-none focus:border-amber-500"
+                      className="w-full py-1.5 text-xs font-bold border-b border-slate-300 bg-transparent focus:outline-none focus:border-amber-500 text-slate-900"
                     />
                   </div>
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
-                      <Calendar className="w-4 h-4 text-amber-600" /> Valid To Date *
+                  <div className="flex flex-col gap-1">
+                    <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
+                      <Calendar className="w-3.5 h-3.5 text-amber-600" /> Valid To Date *
                     </label>
                     <input
                       type="date"
                       required
                       value={validTo}
                       onChange={(e) => setValidTo(e.target.value)}
-                      className="w-full px-4 py-2.5 text-sm font-medium border border-slate-200 rounded-xl bg-white focus:outline-none focus:border-amber-500"
+                      className="w-full py-1.5 text-xs font-bold border-b border-slate-300 bg-transparent focus:outline-none focus:border-amber-500 text-slate-900"
                     />
                   </div>
                 </div>
 
-                {/* 5. ADDRESS */}
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
-                    <MapPin className="w-4 h-4 text-amber-500" />
-                    <span>Shop Address & Locality *</span>
-                  </label>
+                {/* 5. ADDRESS LINE */}
+                <div className="w-full">
                   <input
                     type="text"
-                    autoComplete="on"
-                    autoCorrect="on"
-                    autoCapitalize="sentences"
-                    spellCheck={true}
+                    required
                     value={area}
                     onChange={(e) => setArea(e.target.value)}
-                    placeholder="Type your shop address or location..."
-                    className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all"
+                    placeholder="📍 Shop Address & Locality in Thanjavur * (e.g. Medical College Rd)"
+                    className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium"
                   />
                 </div>
 
-
-                {/* 6. OFFER PHONE INPUT */}
-                <div className="flex flex-col gap-1.5">
-                  <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
-                    <Phone className="w-4 h-4 text-slate-400" />
-                    Contact phone number (Editable) *
-                  </label>
+                {/* 6. OFFER PHONE INPUT LINE */}
+                <div className="w-full">
                   <input
                     type="tel"
                     required
-                    placeholder="e.g. 9994837342"
+                    placeholder="📞 Contact phone number * (e.g. 9994837342)"
                     value={phone}
                     onChange={(e) => { userEditedPhone.current = true; setPhone(e.target.value); }}
-                    className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900"
+                    className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium"
                   />
                 </div>
 
-                {/* 7. PHONE NUMBER VISIBILITY TOGGLE (CLEAN WITHOUT SUBTEXT) */}
+                {/* 7. PHONE NUMBER VISIBILITY TOGGLE */}
                 <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 flex items-center justify-between gap-3">
-                  <span className="text-sm font-bold text-slate-800 flex items-center gap-2">
+                  <span className="text-xs font-bold text-slate-800 flex items-center gap-2">
                     <Phone className="w-4 h-4 text-amber-600" />
                     <span>Show Phone Number on Card</span>
                   </span>
@@ -933,49 +899,39 @@ export default function PostForm({ segment }: PostFormProps) {
             ) : (
               /* NON-OFFER FORMS (SELL, NEED, SERVICE) */
               <>
-                {/* ROW 2: Title (for sell/need) or Name (for service) */}
-                <div className="flex flex-col gap-1.5">
-                  <div className="flex items-center justify-between">
-                    <label className="text-sm font-bold text-slate-800">
-                      {segment === "service" ? "Your Full Name *" : "Posting title or item name *"}
-                    </label>
-                    <span className={`text-xs font-medium ${title.length >= config.maxTitleChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>
-                      {title.length}/{config.maxTitleChars}
-                    </span>
-                  </div>
+                {/* TITLE OR NAME INPUT LINE */}
+                <div className="relative w-full">
                   <input
                     type="text"
                     required
                     maxLength={config.maxTitleChars}
                     placeholder={
                       segment === "sell"
-                        ? "e.g. 2 BHK House / Hero Splendor / Commercial Land"
+                        ? "Posting title or item name * (e.g. 2 BHK House, Hero Splendor)"
                         : segment === "need"
-                        ? "e.g. Need 2 BHK House near Medical College"
-                        : "e.g. Senthil Kumar"
+                        ? "Posting title or requirement name * (e.g. Need 2 BHK House)"
+                        : "Your Full Name * (e.g. Senthil Kumar)"
                     }
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-full px-0 py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors"
+                    className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium pr-12"
                   />
+                  <span className="absolute right-0 top-3 text-[11px] font-medium text-slate-400">
+                    {title.length}/{config.maxTitleChars}
+                  </span>
                 </div>
 
-                {/* Service: Location & Combined Availability Pill Toggle */}
+                {/* SERVICE LOCATION & AVAILABILITY */}
                 {segment === "service" && (
                   <div className="flex flex-col gap-3">
                     <GooglePlacesInput
-                      label="Service Location / Area *"
                       value={area}
                       onChange={(val) => setArea(val)}
-                      placeholder="Search area or street in Thanjavur..."
+                      placeholder="📍 Service Location / Area in Thanjavur *"
                     />
 
                     {/* Combined Availability Single Pill Toggle */}
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
-                        <Clock className="w-4 h-4 text-amber-600" />
-                        Working Availability *
-                      </label>
                       <div className="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-xl border border-slate-200">
                         <button
                           type="button"
@@ -1010,105 +966,68 @@ export default function PostForm({ segment }: PostFormProps) {
                   </div>
                 )}
 
-
-                {/* PRICE & SEPARATE LOCATION ROW (FOR SELL) */}
+                {/* PRICE & SEPARATE LOCATION LINE (FOR SELL) */}
                 {segment === "sell" && (
                   <>
-                    <div className="flex flex-col gap-1.5">
-                      <div className="flex items-center justify-between">
-                        <label className="text-sm font-bold text-slate-800 flex items-center gap-1">
-                          <IndianRupee className="w-4 h-4 text-emerald-600" />
-                          Price / Rate
-                        </label>
-                        {formattedPriceBadge && (
-                          <span className="text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                            {formattedPriceBadge}
-                          </span>
-                        )}
-                      </div>
+                    <div className="relative w-full">
                       <input
                         type="text"
-                        placeholder="e.g. 5000, 5000rs, or 5000/month"
+                        placeholder="Price or Rate (e.g. 5000, 5000rs, or 5000/month)"
                         value={price}
                         onChange={(e) => setPrice(e.target.value)}
-                        className="w-full px-0 py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors"
+                        className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium pr-20"
                       />
+                      {formattedPriceBadge && (
+                        <span className="absolute right-0 top-2.5 text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                          {formattedPriceBadge}
+                        </span>
+                      )}
                     </div>
 
-                    <div className="flex flex-col gap-1.5">
+                    <div className="w-full">
                       <GooglePlacesInput
-                        label="Address / Location *"
                         value={area}
                         onChange={(val) => setArea(val)}
-                        placeholder="Type street, area or landmark in Thanjavur..."
+                        placeholder="📍 Address / Location in Thanjavur *"
                       />
                     </div>
                   </>
                 )}
 
-                {/* BUDGET & SEPARATE LOCATION ROW (FOR NEED) */}
+                {/* BUDGET & SEPARATE LOCATION LINE (FOR NEED) */}
                 {segment === "need" && (
                   <>
-                    <div className="flex flex-col gap-1.5">
-                      <label className="text-sm font-bold text-slate-800 flex items-center gap-1">
-                        <IndianRupee className="w-4 h-4 text-emerald-600" />
-                        Budget From
-                      </label>
+                    <div className="w-full">
                       <input
                         type="text"
-                        placeholder="e.g. 5000, 5000rs (Optional)"
+                        placeholder="Budget From (e.g. 5000, 5000rs - Optional)"
                         value={price}
                         onChange={(e) => setPrice(e.target.value)}
-                        className="w-full px-0 py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors"
+                        className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium"
                       />
                     </div>
 
-                    <div className="flex flex-col gap-1.5">
+                    <div className="w-full">
                       <GooglePlacesInput
-                        label="Preferred Locations (Up to 3, comma separated) *"
                         value={area}
                         onChange={(val) => setArea(val)}
-                        placeholder="e.g. Medical College Rd, Vallam, New Bus Stand"
+                        placeholder="📍 Preferred Locations in Thanjavur * (e.g. Medical College Rd, Vallam)"
                       />
                     </div>
                   </>
                 )}
 
-                {/* SERVICE SPECIFIC FIELDS: Phone */}
-                {segment === "service" && (
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
-                      <Phone className="w-4 h-4 text-slate-400" />
-                      Contact phone number (Editable) *
-                    </label>
-                    <input
-                      type="tel"
-                      required
-                      placeholder="e.g. 9994837342"
-                      value={phone}
-                      onChange={(e) => { userEditedPhone.current = true; setPhone(e.target.value); }}
-                      className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all"
-                    />
-                  </div>
-                )}
-
-                {/* SELL/NEED: Phone field */}
-                {(segment === "sell" || segment === "need") && (
-                  <div className="flex flex-col gap-1.5">
-                    <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
-                      <Phone className="w-4 h-4 text-slate-400" />
-                      Contact phone number (Editable) *
-                    </label>
-                    <input
-                      type="tel"
-                      required
-                      placeholder="e.g. 9994837342"
-                      value={phone}
-                      onChange={(e) => { userEditedPhone.current = true; setPhone(e.target.value); }}
-                      className="w-full px-4 py-3 text-sm font-semibold border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all"
-                    />
-                  </div>
-                )}
+                {/* CONTACT PHONE INPUT LINE */}
+                <div className="w-full">
+                  <input
+                    type="tel"
+                    required
+                    placeholder="📞 Contact phone number * (e.g. 9994837342)"
+                    value={phone}
+                    onChange={(e) => { userEditedPhone.current = true; setPhone(e.target.value); }}
+                    className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium"
+                  />
+                </div>
 
                 {/* Description Input */}
                 <div className="flex flex-col gap-2">
