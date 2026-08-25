@@ -56,7 +56,7 @@ html, body, button, a, input, select, textarea, [role="button"] {
 }
 
 @theme {
-  --color-background: #f8fafc;
+  --color-background: #f1f5f9;
   --color-foreground: #0f172a;
   --color-card: #ffffff;
   --color-border: #e2e8f0;
@@ -67,7 +67,7 @@ html, body, button, a, input, select, textarea, [role="button"] {
 
 /* ── Base Body Setup ─────────────────────────────────────── */
 body {
-  background-color: #f8fafc;
+  background-color: #f1f5f9;
   color: var(--text-main);
   font-family: var(--font-sans), 'Red Hat Text', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;

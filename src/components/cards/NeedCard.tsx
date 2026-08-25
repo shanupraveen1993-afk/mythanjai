@@ -174,7 +174,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
   if (isDeleted) return null;
 
   return (
-    <div className={`bg-white rounded-xl p-4 flex flex-col justify-between shadow-2xs hover:shadow-md transition-all duration-200 border border-slate-200/90 relative font-sans h-full ${isSold ? "opacity-80" : ""}`}>
+    <div className={`bg-white rounded-2xl p-4 flex flex-col justify-between shadow-2xs hover:shadow-md transition-all duration-200 border border-slate-200/90 relative font-sans h-full ${isSold ? "opacity-80" : ""}`}>
       <div className="flex flex-col gap-3 flex-1">
 
         {/* ── TOP HEADER BLOCK: Full-Width Title + Inline Category Badge + Budget ── */}
@@ -189,7 +189,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
                 </span>
               )}
             </div>
-            <div className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight shrink-0">
+            <div className="font-heading font-black text-lg sm:text-xl text-amber-600 tracking-tight shrink-0">
               {displayPriceText}
             </div>
           </div>

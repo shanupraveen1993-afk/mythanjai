@@ -328,7 +328,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
 
   return (
     <>
-      <div className="bg-white rounded-xl p-4 flex flex-col justify-between shadow-2xs hover:shadow-md transition-all duration-200 border border-slate-200/90 relative font-sans h-full">
+      <div className="bg-white rounded-2xl p-4 flex flex-col justify-between shadow-2xs hover:shadow-md transition-all duration-200 border border-slate-200/90 relative font-sans h-full">
         <div className="flex flex-col gap-3 flex-1">
 
           {/* ── TOP HEADER BLOCK: Left Image Box + Right Details Column ── */}
@@ -371,7 +371,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
               {/* Top Row: Category Name on Left, Price on Right */}
               <div className="flex items-center justify-between gap-2 w-full">
                 <CategoryIcon category={listing.category || listing.type} />
-                <div className="font-heading font-black text-base sm:text-lg text-[#0F172A] tracking-tight shrink-0">
+                <div className="font-heading font-black text-lg sm:text-xl text-amber-600 tracking-tight shrink-0">
                   {formattedPrice}
                 </div>
               </div>

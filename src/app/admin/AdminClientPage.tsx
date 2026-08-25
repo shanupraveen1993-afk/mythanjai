@@ -357,12 +357,12 @@ export default function AdminClientPage() {
 
         {/* ── LIVE MODERATION CARDS GRID ── */}
         {loading ? (
-          <div className="flex flex-col items-center justify-center py-24 gap-3 bg-slate-900/40 rounded-3xl border border-slate-800">
+          <div className="flex flex-col items-center justify-center py-24 gap-3 bg-slate-900/40 rounded-2xl border border-slate-800">
             <Loader2 className="w-9 h-9 animate-spin text-amber-400" />
             <span className="text-xs font-black text-slate-400 uppercase tracking-wider">Streaming Live Online Listings...</span>
           </div>
         ) : filteredItems.length === 0 ? (
-          <div className="text-center py-20 text-xs font-bold text-slate-400 border border-dashed border-slate-800 rounded-3xl bg-slate-900/60 p-6">
+          <div className="text-center py-20 text-xs font-bold text-slate-400 border border-dashed border-slate-800 rounded-2xl bg-slate-900/60 p-6">
             No live community listings matching filter criteria.
           </div>
         ) : (
@@ -370,7 +370,7 @@ export default function AdminClientPage() {
             {filteredItems.map((item) => (
               <div
                 key={item.id}
-                className={`bg-slate-900/90 border rounded-3xl p-4.5 flex flex-col justify-between gap-4 shadow-xl backdrop-blur-xl font-sans transition-all hover:border-slate-700 ${
+                className={`bg-slate-900/90 border rounded-2xl p-4.5 flex flex-col justify-between gap-4 shadow-xl backdrop-blur-xl font-sans transition-all hover:border-slate-700 ${
                   item.is_reported ? "border-rose-500/50 bg-rose-950/20" : "border-slate-800/90"
                 }`}
               >

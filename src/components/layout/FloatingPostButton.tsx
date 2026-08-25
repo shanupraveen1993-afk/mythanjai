@@ -77,7 +77,7 @@ export default function FloatingPostButton() {
 
   return (
     <div
-      className={`fixed bottom-[calc(4.5rem+env(safe-area-inset-bottom,0px))] left-1/2 -translate-x-1/2 w-[calc(100%-32px)] max-w-[500px] h-[50px] z-[10000] md:hidden transition-all duration-300 ease-out flex items-center justify-between gap-2 p-1.5 rounded-2xl bg-[#0F172A]/95 text-white backdrop-blur-xl border border-slate-700/80 shadow-[0_12px_36px_rgba(0,0,0,0.35)] ${
+      className={`fixed bottom-[calc(4.25rem+env(safe-area-inset-bottom,0px))] left-1/2 -translate-x-1/2 w-[calc(100%-32px)] max-w-[440px] h-[44px] z-[10000] md:hidden transition-all duration-300 ease-out flex items-center justify-between gap-2 p-1 rounded-xl bg-[#0F172A]/95 text-white backdrop-blur-xl border border-slate-700/80 shadow-[0_8px_24px_rgba(0,0,0,0.25)] ${
         isVisible
           ? "translate-y-0 opacity-100 pointer-events-auto"
           : "translate-y-24 opacity-0 pointer-events-none"
