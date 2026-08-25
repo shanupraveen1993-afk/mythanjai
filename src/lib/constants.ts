@@ -71,15 +71,19 @@ export const THANJAVUR_TOWNS = [
 
 export type TanjoreLocality = typeof TANJORE_LOCALITIES[number];
 
-// Categories for Tab 1: Needs & Buy/Sell
+// OLX-Style Categories for Sell & Need (General as #1 First Category)
 export const CLASSIFIED_CATEGORIES = [
-  "Property Rental",
-  "Plots & Real Estate",
-  "Used Vehicles",
-  "Electronics & Mobiles",
-  "Household Goods",
-  "Jobs & Opportunities",
-  "General Requirement",
+  "General",
+  "Mobiles & Accessories",
+  "Electronics & Appliances",
+  "Vehicles (Cars & Bikes)",
+  "Real Estate & Properties",
+  "Home & Furniture",
+  "Fashion & Beauty",
+  "Books, Sports & Hobbies",
+  "Pets & Animals",
+  "Jobs & Services",
+  "Agriculture & Commercial",
 ] as const;
 
 export type ClassifiedCategory = typeof CLASSIFIED_CATEGORIES[number];
