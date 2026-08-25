@@ -128,10 +128,12 @@ export default function PostForm({ segment }: PostFormProps) {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
       if (params.get("admin") === "true") return true;
+      const storedPhone = localStorage.getItem("namma_thanjai_phone") || localStorage.getItem("my_thanjai_phone") || "";
+      if (storedPhone.replace(/\D/g, "").includes("9994837342")) return true;
     }
     const rawPhone = String(profile?.phone || user?.phoneNumber || "");
     const cleanPhone = rawPhone.replace(/\D/g, "");
-    return Boolean(profile?.isAdmin) && cleanPhone.includes("9994837342");
+    return cleanPhone.includes("9994837342") || Boolean(profile?.isAdmin);
   }, [profile, user]);
 
   const [loading, setLoading] = useState(false);

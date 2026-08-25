@@ -147,16 +147,10 @@ export default function CategoryFeedClient({ segmentType }: CategoryFeedClientPr
     });
   }, [allPosts, selectedSub]);
 
-  // Search & Own Post Filter
+  // Search Filter & Active Status
   const filteredBySearch = React.useMemo(() => {
-    const userPhone = (profile?.phone || user?.phoneNumber || "").replace(/\D/g, "");
-    const userUid = user?.uid || "";
-
     let list = filteredBySub.filter((p: any) => {
       if (p.is_sold || p.is_inactive || p.is_expired || p.is_offline) return false;
-      // Filter out user's own published posts from public feeds
-      if (userUid && p.userId === userUid) return false;
-      if (userPhone && p.phone && String(p.phone).replace(/\D/g, "").includes(userPhone)) return false;
       return true;
     });
 
