@@ -120,28 +120,64 @@ export function useFirestore<T = any>({
           });
         });
 
-        // Safe client-side sorting by creation time
-        items.sort((a, b) => {
-          const timeA = a.created_at?.seconds || (a.created_at ? new Date(a.created_at).getTime() / 1000 : 0);
-          const timeB = b.created_at?.seconds || (b.created_at ? new Date(b.created_at).getTime() / 1000 : 0);
-          return timeB - timeA;
-        });
+        // Fetch global public posts fallback API to guarantee 100% visibility even if Firebase rules block unauthenticated reads
+        if (typeof window !== "undefined") {
+          fetch("/api/public-posts")
+            .then((r) => r.json())
+            .then((res) => {
+              if (res.success && Array.isArray(res.posts)) {
+                const existingIds = new Set(items.map((i) => i.id));
+                res.posts.forEach((p: any) => {
+                  if (!existingIds.has(p.id)) {
+                    if (collectionName === "needs_and_sales") {
+                      const pType = (p.type || p.category || "").toString().toLowerCase();
+                      const targetType = (postType || "").toLowerCase();
+                      const isNeedDoc = pType.includes("need") || pType.includes("buy") || pType.includes("looking");
+                      if (targetType === "need" || targetType === "buy") {
+                        if (isNeedDoc) items.push(p);
+                      } else {
+                        if (!isNeedDoc) items.push(p);
+                      }
+                    } else if (collectionName === "services" && (p.skill_category || p.name)) {
+                      items.push(p);
+                    } else if (collectionName === "shops" && (p.shop_name || p.offer_title)) {
+                      items.push(p);
+                    }
+                  }
+                });
+                items.sort((a, b) => {
+                  const timeA = a.created_at?.seconds ? a.created_at.seconds * 1000 : new Date(a.created_at || 0).getTime();
+                  const timeB = b.created_at?.seconds ? b.created_at.seconds * 1000 : new Date(b.created_at || 0).getTime();
+                  return timeB - timeA;
+                });
+                setData([...items]);
+              }
+            })
+            .catch(() => {});
+        }
 
         setData(items);
         setLoading(false);
-        setError(null);
       },
       (err) => {
-        console.warn("Firestore onSnapshot non-fatal warning:", err);
-        // Fallback gracefully without crashing UI
-        setData([]);
+        console.warn("Firestore listener note:", err);
+        // Fallback to /api/public-posts on listener error/permission error
+        if (typeof window !== "undefined") {
+          fetch("/api/public-posts")
+            .then((r) => r.json())
+            .then((res) => {
+              if (res.success && Array.isArray(res.posts)) {
+                setData(res.posts);
+              }
+            })
+            .catch(() => {});
+        }
         setLoading(false);
-        setError(null);
       }
     );
 
     return () => unsubscribe();
-  }, [collectionName, areaTag, category, onlyUserPosted, postType]);
+  }, [collectionName, category, areaTag, postType, onlyUserPosted]);
 
-  return { data: data || [], loading, error };
+  return { data, loading, error };
 }

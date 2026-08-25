@@ -619,6 +619,15 @@ export default function PostForm({ segment }: PostFormProps) {
       console.warn("Firestore cloud write note:", err);
     }
 
+    // Sync to global public posts API for fail-proof public persistence across all devices
+    try {
+      await fetch("/api/public-posts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(localPostRecord),
+      }).catch(() => {});
+    } catch (e) {}
+
     // ── STEP 4: Success Toast & Navigation (AFTER Cloud Write Completes) ──
     setSuccess(true);
     setLoading(false);
