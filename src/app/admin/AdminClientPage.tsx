@@ -455,7 +455,7 @@ export default function AdminClientPage() {
       {/* ── CUSTOM IN-APP ADMIN DELETE MODAL ── */}
       {deleteTarget && (
         <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4 animate-fade-in">
-          <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-sm w-full p-6 shadow-2xl flex flex-col gap-4 text-center">
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl max-w-sm w-full p-6 shadow-lg flex flex-col gap-4 text-center">
             <div className="w-14 h-14 rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/40 flex items-center justify-center mx-auto shadow-lg shadow-rose-500/10">
               <Trash2 className="w-7 h-7 stroke-[2.5]" />
             </div>

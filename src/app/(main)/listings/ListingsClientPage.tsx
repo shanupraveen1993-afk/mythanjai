@@ -423,7 +423,7 @@ function ListingsContent() {
       {/* Custom App Delete Confirmation Modal */}
       {deleteConfirmTarget && (
         <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 animate-fade-in">
-          <div className="bg-white rounded-3xl max-w-sm w-full p-6 border border-slate-200 shadow-2xl flex flex-col gap-4 text-center">
+          <div className="bg-white rounded-2xl max-w-sm w-full p-6 border border-slate-200 shadow-lg flex flex-col gap-4 text-center">
             <div className="w-14 h-14 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto border border-rose-200">
               <Trash2 className="w-7 h-7 stroke-[2.5]" />
             </div>
