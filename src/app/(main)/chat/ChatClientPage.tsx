@@ -459,33 +459,38 @@ export default function ChatClientPage() {
 
         {/* RIGHT COLUMN: WhatsApp Active Chat Window */}
         <div className={`flex-1 flex-col bg-[#efeae2] relative ${showMobileChat ? "flex" : "hidden lg:flex"}`}>
-          {/* Thread Header Bar (Sleek Modern Chat Bar with Direct Call & WhatsApp) */}
-          <div className="bg-[#128C7E] text-white px-3.5 py-2.5 flex items-center justify-between shadow-sm shrink-0 border-b border-[#075e54]">
+          {/* WhatsApp Header Bar (Deep Teal #075E54) */}
+          <div className="bg-[#075E54] text-white px-3.5 py-2.5 flex items-center justify-between shadow-md shrink-0 border-b border-[#054c44]">
             <div className="flex items-center gap-2.5 min-w-0 flex-1">
               <button
                 type="button"
                 onClick={() => setShowMobileChat(false)}
-                className="p-1 text-white/90 hover:text-white hover:bg-white/10 rounded-lg cursor-pointer flex items-center gap-1 shrink-0 transition-colors"
+                className="lg:hidden p-1 text-white/90 hover:text-white hover:bg-white/10 rounded-lg cursor-pointer flex items-center gap-1 shrink-0 transition-colors"
                 title="Back to Conversations"
               >
                 <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
               </button>
-              <div className="w-9 h-9 rounded-full bg-white/20 text-white flex items-center justify-center font-black text-xs shrink-0 border border-white/30">
-                <User className="w-4.5 h-4.5 text-white" />
+              
+              <div className="w-10 h-10 rounded-full bg-white/20 text-white flex items-center justify-center font-black text-xs shrink-0 border-2 border-emerald-400/40 relative">
+                <User className="w-5 h-5 text-white" />
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-[#075E54] absolute bottom-0 right-0" />
               </div>
-              <div className="min-w-0 flex flex-col gap-0.5 flex-1">
+              
+              <div className="min-w-0 flex flex-col justify-center flex-1">
                 <div className="flex items-center gap-2">
-                  <h3 className="font-heading font-black text-xs sm:text-sm text-white truncate leading-none">{activePeerName}</h3>
-                  <span className="bg-emerald-800/80 text-emerald-100 text-[10px] font-extrabold px-1.5 py-0.5 rounded border border-emerald-600/60 uppercase shrink-0">Seller</span>
+                  <h3 className="font-heading font-black text-xs sm:text-sm text-white truncate leading-tight">{activePeerName}</h3>
+                  <span className="bg-emerald-700/90 text-emerald-100 text-[10px] font-black px-1.5 py-0.5 rounded border border-emerald-500/50 uppercase shrink-0 tracking-wider">
+                    Seller
+                  </span>
                 </div>
-                <div className="flex items-center gap-1 text-[11px] text-amber-300 font-extrabold truncate">
+                <div className="flex items-center gap-1 text-[11px] text-[#ffeeb3] font-bold truncate mt-0.5">
                   <span className="truncate">📌 {activeListingTitle}</span>
                 </div>
               </div>
             </div>
 
-            {/* Right Side Actions: Call Seller & Options */}
-            <div className="flex items-center gap-1.5 shrink-0 ml-2">
+            {/* Right Side Actions: Call Seller, Share & Delete */}
+            <div className="flex items-center gap-1 shrink-0 ml-2">
               <button
                 type="button"
                 onClick={() => handleShareChat()}
@@ -506,25 +511,27 @@ export default function ChatClientPage() {
             </div>
           </div>
 
-          {/* PERMANENT TOP SCAM SAFETY BANNER */}
-          <div className="bg-amber-500 text-slate-950 px-4 py-1.5 flex items-center gap-2 text-[11px] font-bold border-b border-amber-400">
-            <AlertTriangle className="w-3.5 h-3.5 shrink-0 stroke-[2.5]" />
+          {/* PERMANENT TOP SCAM SAFETY BANNER (WhatsApp Styled Amber Alert) */}
+          <div className="bg-[#fff3c4] text-[#856404] px-3.5 py-2 flex items-center gap-2 text-[11px] font-bold border-b border-[#ffeeba] shadow-2xs">
+            <AlertTriangle className="w-4 h-4 text-[#856404] shrink-0 stroke-[2.5]" />
             <span>
-              Safety Alert: Never send advance payments or UPI transfers before physically inspecting the item in person.
+              Safety Warning: Never send advance payments or UPI transfers before physically inspecting the item in Thanjavur.
             </span>
           </div>
 
-          {/* Messages Feed */}
+          {/* Messages Feed (WhatsApp #efeae2 Wallpaper background) */}
           <div
-            className="flex-1 p-4 overflow-y-auto flex flex-col gap-2.5 bg-[#efeae2] bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:16px_16px]"
+            className="flex-1 p-3.5 sm:p-5 overflow-y-auto flex flex-col gap-2.5 bg-[#efeae2] bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:16px_16px]"
             style={{ paddingBottom: "calc(max(env(safe-area-inset-bottom, 0px), 16px) + 24px)" }}
           >
             {messages.length === 0 ? (
-              <div className="my-auto text-center flex flex-col items-center gap-2 text-slate-500 bg-white/80 p-4 rounded-xl border border-slate-200/80 max-w-xs mx-auto">
-                <ShieldCheck className="w-8 h-8 text-[#00a884]" />
-                <h4 className="font-bold text-xs text-slate-800">Scam-Protected Chat</h4>
-                <p className="text-xs font-medium text-slate-600">
-                  Type below to message the seller safely without revealing your personal phone number.
+              <div className="my-auto text-center flex flex-col items-center gap-2 text-slate-600 bg-white/90 p-4 sm:p-5 rounded-2xl border border-slate-200/80 max-w-xs mx-auto shadow-sm">
+                <div className="w-10 h-10 rounded-full bg-emerald-100 text-[#128c7e] flex items-center justify-center font-bold">
+                  <ShieldCheck className="w-6 h-6 stroke-[2.5]" />
+                </div>
+                <h4 className="font-heading font-black text-xs sm:text-sm text-slate-900">Direct Encrypted Chat</h4>
+                <p className="text-xs font-medium text-slate-600 leading-relaxed">
+                  Type your message below to connect safely with the seller in Thanjavur.
                 </p>
               </div>
             ) : (
@@ -541,16 +548,16 @@ export default function ChatClientPage() {
                         e.preventDefault();
                         setActiveMsgAction(msg);
                       }}
-                      className={`px-3.5 py-2.5 rounded-xl max-w-[85%] sm:max-w-[70%] text-xs font-medium shadow-2xs select-none cursor-pointer transition-transform active:scale-[0.98] ${
+                      className={`px-3.5 py-2.5 rounded-2xl max-w-[85%] sm:max-w-[70%] text-xs font-medium shadow-2xs select-none cursor-pointer transition-transform active:scale-[0.98] ${
                         isMe
-                          ? "bg-[#d9fdd3] text-slate-900 rounded-tr-none border border-emerald-200/70"
-                          : "bg-white text-slate-900 rounded-tl-none border border-slate-200/70"
+                          ? "bg-[#d9fdd3] text-slate-900 rounded-tr-none border border-[#c2f0b7]"
+                          : "bg-white text-slate-900 rounded-tl-none border border-slate-200/80"
                       }`}
                     >
                       {highlightFlaggedText(msg.text)}
                       <div className="flex items-center justify-end gap-1 mt-1 text-[10px] text-slate-500 font-bold">
                         <span>{formatTime(msg.timestamp)}</span>
-                        {isMe && <CheckCheck className="w-3.5 h-3.5 text-emerald-600" />}
+                        {isMe && <CheckCheck className="w-3.5 h-3.5 text-[#34b7f1] stroke-[2.5]" />}
                       </div>
                     </div>
                   </div>
@@ -571,7 +578,7 @@ export default function ChatClientPage() {
                 className="bg-white border border-slate-200 rounded-2xl p-4 shadow-2xl w-full max-w-xs flex flex-col gap-3"
               >
                 <div className="border-b border-slate-100 pb-2 flex items-center justify-between">
-                  <span className="font-heading font-black text-xs text-slate-900">Message Actions</span>
+                  <span className="font-heading font-black text-xs text-slate-900">Message Options</span>
                   <button onClick={() => setActiveMsgAction(null)} className="text-slate-400 hover:text-slate-700">
                     <X className="w-4 h-4" />
                   </button>
@@ -628,10 +635,10 @@ export default function ChatClientPage() {
             </div>
           )}
 
-          {/* WhatsApp Message Input Form — Elevated above mobile bottom tab bar and gesture bar */}
+          {/* WhatsApp Message Input Form (#f0f2f5 Footer Bar) */}
           <form
             onSubmit={handleSendMessage}
-            className="p-3 sm:p-4 bg-slate-100 border-t border-slate-200 flex items-center gap-2"
+            className="p-2.5 sm:p-3.5 bg-[#f0f2f5] border-t border-[#e9edef] flex items-center gap-2 shadow-xs"
             style={{ paddingBottom: "max(calc(env(safe-area-inset-bottom, 0px) + 72px), 84px)" }}
           >
             <input
@@ -643,15 +650,15 @@ export default function ChatClientPage() {
               autoCorrect="on"
               spellCheck={true}
               autoCapitalize="sentences"
-              className="flex-1 bg-white border border-slate-300 text-slate-900 rounded-xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:border-[#00a884]"
+              className="flex-1 bg-white border border-slate-200/90 text-slate-900 rounded-full px-4 py-2.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-[#128c7e] shadow-2xs placeholder:text-slate-400"
             />
             <button
               type="submit"
               disabled={loading || !inputText.trim()}
               aria-label="Send message"
-              className="bg-[#00a884] hover:bg-[#008f6f] active:scale-95 disabled:opacity-50 text-white font-bold p-2.5 rounded-xl transition-all shadow-xs cursor-pointer flex items-center justify-center shrink-0"
+              className="w-10 h-10 rounded-full bg-[#128c7e] hover:bg-[#075e54] active:scale-95 disabled:opacity-50 text-white font-bold transition-all shadow-md cursor-pointer flex items-center justify-center shrink-0"
             >
-              <Send className="w-4 h-4 text-white" />
+              <Send className="w-4 h-4 text-white fill-white ml-0.5" />
             </button>
           </form>
 
