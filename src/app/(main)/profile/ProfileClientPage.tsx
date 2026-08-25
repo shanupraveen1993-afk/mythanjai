@@ -725,23 +725,7 @@ function ProfileContent() {
                         </p>
                       </div>
 
-                      {/* 30-Day Expiry Bar & Repost CTA */}
-                      <div className="flex items-center justify-between bg-white border border-slate-200 rounded-xl px-3 py-2 text-xs">
-                        <span className="flex items-center gap-1.5 font-bold text-slate-700">
-                          <Clock className="w-3.5 h-3.5 text-amber-600" />
-                          <span>{daysLeft > 0 ? `${daysLeft} days active remaining` : "Expired"}</span>
-                        </span>
-                        <button
-                          type="button"
-                          onClick={() => handleRenewListing(post.id, post.colName)}
-                          className="text-xs font-heading font-black text-white bg-emerald-600 hover:bg-emerald-700 px-3 py-1.5 rounded-xl cursor-pointer flex items-center gap-1.5 shadow-2xs transition-colors"
-                          title="Reset 30-day window"
-                        >
-                          <RotateCcw className="w-3.5 h-3.5 text-white" />
-                          <span>Repost (Reset 30 Days)</span>
-                        </button>
-                      </div>
-
+                      {/* Active/Inactive Toggle + Actions Row */}
                       {isConfirmingDelete ? (
                         <div className="flex items-center gap-2 bg-red-50 border border-red-200 rounded-xl p-2.5">
                           <span className="text-xs font-bold text-red-700 flex-1">Delete this listing permanently?</span>
@@ -753,21 +737,21 @@ function ProfileContent() {
                           </button>
                         </div>
                       ) : (
-                        <div className="flex items-center justify-between gap-2 pt-1 border-t border-slate-200/60">
-                          {/* Engagement Metrics */}
-                          <div className="flex items-center gap-3 text-xs font-bold text-slate-600 flex-wrap">
-                            <span className="flex items-center gap-1" title="Views">
-                              <Eye className="w-3.5 h-3.5 text-blue-600" />
-                              <span>{post.views_count || 24}</span>
+                        <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-200">
+                          {/* Active / Inactive Toggle Switch */}
+                          <div className="flex items-center gap-2 bg-white px-2.5 py-1 rounded-xl border border-slate-200 shadow-2xs">
+                            <span className={`text-[11px] font-bold ${!post.is_sold ? "text-emerald-700 font-extrabold" : "text-slate-500"}`}>
+                              {!post.is_sold ? "Active" : "Inactive"}
                             </span>
-                            <span className="flex items-center gap-1" title="Shares">
-                              <Share2 className="w-3.5 h-3.5 text-emerald-600" />
-                              <span>{post.shares_count || 12}</span>
-                            </span>
-                            <span className="flex items-center gap-1" title="Saved">
-                              <Bookmark className="w-3.5 h-3.5 text-amber-600 fill-amber-500" />
-                              <span>{post.saves_count || 8}</span>
-                            </span>
+                            <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                              <input
+                                type="checkbox"
+                                checked={!post.is_sold}
+                                onChange={() => handleToggleSoldState(post.id, Boolean(post.is_sold))}
+                                className="sr-only peer"
+                              />
+                              <div className="w-8 h-4.5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-emerald-600" />
+                            </label>
                           </div>
 
                           <div className="flex items-center gap-2">
@@ -775,16 +759,16 @@ function ProfileContent() {
                               type="button"
                               onClick={() => {
                                 const targetSegment = post.type?.toUpperCase() === "NEED" ? "need" : post.type?.toUpperCase() === "SELL" ? "sell" : post.colName === "services" || post.skill_category ? "service" : "offer";
-                                router.push(`/post/${targetSegment}?edit=${post.id}&col=${post.colName || (targetSegment === "service" ? "services" : targetSegment === "offer" ? "shops" : "needs_and_sales")}`);
+                                router.push(`/post/${targetSegment}?editId=${post.id}`);
                               }}
-                              className="text-xs font-heading font-black text-slate-900 bg-white border border-slate-300 px-3 py-1.5 rounded-xl cursor-pointer flex items-center gap-1 hover:bg-slate-100 transition-colors shadow-2xs"
+                              className="text-xs font-heading font-bold text-slate-900 bg-white border border-slate-300 px-3 py-1.5 rounded-xl cursor-pointer flex items-center gap-1 hover:bg-slate-100 transition-colors shadow-2xs"
                             >
-                              <Pencil className="w-3.5 h-3.5 text-slate-700" /> Edit Listing
+                              <Pencil className="w-3.5 h-3.5 text-amber-600" /> Edit
                             </button>
                             <button
                               type="button"
                               onClick={() => setConfirmDeleteId(post.id)}
-                              className="w-8 h-8 rounded-xl bg-red-50 text-red-600 border border-red-200 flex items-center justify-center cursor-pointer hover:bg-red-100 transition-colors"
+                              className="w-8 h-8 rounded-xl bg-rose-50 text-rose-600 border border-rose-200 flex items-center justify-center cursor-pointer hover:bg-rose-100 transition-colors"
                               title="Delete Listing"
                             >
                               <Trash2 className="w-3.5 h-3.5" />

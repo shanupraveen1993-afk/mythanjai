@@ -300,25 +300,34 @@ function ListingsContent() {
               return (
                 <div
                   key={post.id}
-                  className="p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-sans hover:bg-slate-50/60 transition-colors"
+                  className={`p-4 sm:p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 font-sans transition-all ${
+                    isInactive ? "bg-slate-100/60 opacity-80" : "bg-white hover:bg-slate-50/60"
+                  }`}
                 >
                   {/* Left Column: Image Thumbnail + Details */}
                   <div className="flex items-start gap-4 flex-1 min-w-0 w-full sm:w-auto">
-                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-lg bg-slate-100 border border-slate-200 overflow-hidden shrink-0">
+                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl bg-slate-100 border border-slate-200 overflow-hidden shrink-0 relative">
                       <img
                         src={itemImage}
                         alt={itemTitle}
                         className="w-full h-full object-cover"
                       />
+                      {isInactive && (
+                        <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center">
+                          <span className="text-[10px] font-black uppercase tracking-wider text-white bg-slate-800 px-2 py-0.5 rounded">
+                            {pType === "NEED" ? "CONTACTED" : pType === "SERVICE" ? "OFFLINE" : pType === "OFFER" ? "EXPIRED" : "SOLD"}
+                          </span>
+                        </div>
+                      )}
                     </div>
 
                     <div className="flex flex-col gap-1 flex-1 min-w-0">
-                      {/* Status & Category Row */}
+                      {/* Status Badge & Type */}
                       <div className="flex items-center gap-2">
                         <span className={`text-[11px] font-bold ${isInactive ? "text-slate-500" : "text-emerald-700"}`}>
                           ● {isInactive ? statusLabel : "ACTIVE"}
                         </span>
-                        {post.category && <span className="text-xs font-semibold text-slate-700">• {post.category}</span>}
+                        {post.category && <span className="text-xs font-semibold text-slate-600">• {post.category}</span>}
                         <span className="text-xs font-medium text-slate-400">• {pType}</span>
                       </div>
 
@@ -348,29 +357,47 @@ function ListingsContent() {
                     </div>
                   </div>
 
-                  {/* Right Column: 2 Clean Management Buttons (Edit & Delete) */}
-                  <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto pt-2 sm:pt-0 justify-start">
-                    <button
-                      type="button"
-                      onClick={() => {
-                        const seg = post.type === "SERVICE" ? "service" : post.type === "OFFER" || post.type === "SHOP" ? "offer" : post.type === "NEED" ? "need" : "sell";
-                        router.push(`/post/${seg}?editId=${post.id}`);
-                      }}
-                      className="px-3.5 py-1.5 bg-white hover:bg-slate-100 text-slate-900 border border-slate-300 font-heading font-bold text-xs rounded-lg flex items-center gap-1.5 cursor-pointer transition-colors"
-                    >
-                      <Pencil className="w-3.5 h-3.5 text-amber-600" />
-                      <span>Edit Ad</span>
-                    </button>
+                  {/* Right Column: Active/Inactive Toggle Switch + Management Buttons */}
+                  <div className="flex items-center gap-3 shrink-0 w-full sm:w-auto pt-2 sm:pt-0 justify-between sm:justify-end border-t sm:border-t-0 border-slate-200/80">
+                    {/* Active / Inactive Toggle Switch */}
+                    <div className="flex items-center gap-2 bg-slate-100 p-1.5 rounded-xl border border-slate-200">
+                      <span className={`text-[11px] font-bold transition-colors ${!isInactive ? "text-emerald-700 font-extrabold" : "text-slate-500"}`}>
+                        {!isInactive ? "Active" : "Inactive"}
+                      </span>
+                      <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                        <input
+                          type="checkbox"
+                          checked={!isInactive}
+                          onChange={() => handleToggleSegmentStatus(post)}
+                          className="sr-only peer"
+                        />
+                        <div className="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600" />
+                      </label>
+                    </div>
 
-                    <button
-                      type="button"
-                      onClick={() => handleDeletePost(post.id, post.type === "SERVICE" ? "services" : post.type === "SHOP" ? "shops" : "needs_and_sales")}
-                      className="px-3.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-heading font-bold text-xs rounded-lg flex items-center gap-1.5 cursor-pointer transition-colors"
-                      title="Delete Listing"
-                    >
-                      <Trash2 className="w-3.5 h-3.5 text-rose-600" />
-                      <span>Delete</span>
-                    </button>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const seg = post.type === "SERVICE" ? "service" : post.type === "OFFER" || post.type === "SHOP" ? "offer" : post.type === "NEED" ? "need" : "sell";
+                          router.push(`/post/${seg}?editId=${post.id}`);
+                        }}
+                        className="px-3 py-1.5 bg-white hover:bg-slate-100 text-slate-900 border border-slate-300 font-heading font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer transition-colors shadow-2xs"
+                      >
+                        <Pencil className="w-3.5 h-3.5 text-amber-600" />
+                        <span>Edit</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => handleDeletePost(post.id, post.type === "SERVICE" ? "services" : post.type === "SHOP" ? "shops" : "needs_and_sales")}
+                        className="px-3 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 font-heading font-bold text-xs rounded-xl flex items-center gap-1.5 cursor-pointer transition-colors"
+                        title="Delete Listing"
+                      >
+                        <Trash2 className="w-3.5 h-3.5 text-rose-600" />
+                        <span>Delete</span>
+                      </button>
+                    </div>
                   </div>
                 </div>
               );
