@@ -200,17 +200,7 @@ export default function TopHeader({
             </a>
           )}
 
-          {/* Mobile APK Only: 🟡 +Post Button (Hidden on chat, profile, listings pages per user rule) */}
-          {isNativeApp && !pathname.includes("/chat") && !pathname.includes("/profile") && !pathname.includes("/listings") && !pathname.includes("/post") && (
-            <button
-              type="button"
-              onClick={() => router.push("/post/sell")}
-              className="flex md:hidden bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs px-3 py-1.5 rounded-lg shadow-2xs transition-all items-center gap-1 shrink-0 active:scale-95 border border-amber-400 cursor-pointer whitespace-nowrap"
-            >
-              <Plus className="w-3.5 h-3.5 stroke-[3]" />
-              <span>Post</span>
-            </button>
-          )}
+
 
           {/* Desktop Website Only: Chat, My Listings & Profile Buttons */}
           <div className="hidden md:flex items-center gap-2">
@@ -285,16 +275,16 @@ export default function TopHeader({
             )}
           </div>
 
-          {/* APK Native App Only: Header Post Button (Strictly Hidden on chat, profile, listings pages) */}
-          {isNativeApp && !pathname.includes("/chat") && !pathname.includes("/profile") && !pathname.includes("/listings") && !pathname.includes("/post") && (
+          {/* Header Golden Yellow Post Ad Button (Single unified button for Web & APK) */}
+          {!pathname.includes("/chat") && !pathname.includes("/profile") && !pathname.includes("/listings") && !pathname.includes("/post") && (
             <button
               type="button"
               onClick={handleDynamicPostClick}
-              className="bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-xs sm:text-sm px-3.5 sm:px-4 py-2 rounded-xl font-heading font-black shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none touch-manipulation active:scale-[0.97] transition-all"
+              className="bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl font-heading font-black shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none touch-manipulation active:scale-[0.97] transition-all border border-amber-400 ml-1"
               title={postInfo.label}
             >
               <Plus className="w-4 h-4 stroke-[3] text-[#0F172A]" />
-              <span>Post</span>
+              <span>{postInfo.label}</span>
             </button>
           )}
         </div>
