@@ -407,7 +407,7 @@ export default function CreatePostModal({
       }
 
       // 2. Prep structured collections
-      const timestamp = serverTimestamp();
+      const timestamp = new Date().toISOString();
       
       try {
         if (editPost && editPost.id) {

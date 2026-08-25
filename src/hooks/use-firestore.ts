@@ -105,12 +105,16 @@ export function useFirestore<T = any>({
           });
         });
 
-        // Client-side sorting by creation time (descending)
-        items.sort((a, b) => {
-          const timeA = a.created_at?.seconds ? a.created_at.seconds * 1000 : new Date(a.created_at || 0).getTime();
-          const timeB = b.created_at?.seconds ? b.created_at.seconds * 1000 : new Date(b.created_at || 0).getTime();
-          return timeB - timeA;
-        });
+        // Client-side sorting by creation time (descending - newest first)
+        const parseTimestamp = (val: any) => {
+          if (!val) return Date.now();
+          if (typeof val.seconds === "number") return val.seconds * 1000;
+          if (typeof val.toDate === "function") return val.toDate().getTime();
+          const parsed = new Date(val).getTime();
+          return isNaN(parsed) || parsed === 0 ? Date.now() : parsed;
+        };
+
+        items.sort((a, b) => parseTimestamp(b.created_at) - parseTimestamp(a.created_at));
 
         setData(items);
         setLoading(false);
