@@ -40,12 +40,25 @@ export default function GooglePlacesInput({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  const getApiUrl = (endpoint: string) => {
+    if (typeof window !== "undefined") {
+      const isNative =
+        (window as any).Capacitor?.isNativePlatform() ||
+        window.location.protocol === "file:" ||
+        window.location.origin.includes("localhost");
+      if (isNative) {
+        return `https://mythanjai.vercel.app${endpoint}`;
+      }
+    }
+    return endpoint;
+  };
+
   const handleInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = e.target.value;
     setQuery(val);
     onChange(val);
 
-    if (val.trim().length < 2) {
+    if (val.trim().length < 1) {
       setPredictions([]);
       setIsOpen(false);
       return;
@@ -53,18 +66,82 @@ export default function GooglePlacesInput({
 
     setLoading(true);
     try {
-      const res = await fetch(`/api/places-autocomplete?input=${encodeURIComponent(val)}`);
+      const apiUrl = getApiUrl(`/api/places-autocomplete?input=${encodeURIComponent(val)}`);
+      const res = await fetch(apiUrl);
       const data = await res.json();
       if (data.predictions && data.predictions.length > 0) {
         setPredictions(data.predictions);
         setIsOpen(true);
       } else {
-        setPredictions([]);
-        setIsOpen(false);
+        // Fallback: match Tanjore localities
+        const fallbackList = [
+          "Medical College Road",
+          "Old Bus Stand",
+          "New Bus Stand",
+          "Thillai Nagar",
+          "Vallam",
+          "Pillayarpatti",
+          "Karanthai",
+          "Sakkottai",
+          "Punnainallur Mariamman Kovil",
+          "Raja Serfoji College",
+          "South Rampart",
+          "North Rampart",
+          "East Gate",
+          "West Gate",
+          "Villar Road",
+          "MC Road",
+          "Yagappa Nagar",
+          "LIC Colony",
+          "EB Colony",
+          "SR Mahal",
+          "Nanjikottai Road",
+          "Reddypalayam",
+        ].filter((loc) => loc.toLowerCase().includes(val.toLowerCase()));
+
+        if (fallbackList.length > 0) {
+          setPredictions(
+            fallbackList.map((loc) => ({
+              place_id: loc,
+              main_text: loc,
+              secondary_text: "Thanjavur, Tamil Nadu",
+              description: `${loc}, Thanjavur, Tamil Nadu`,
+            }))
+          );
+          setIsOpen(true);
+        } else {
+          setPredictions([]);
+          setIsOpen(false);
+        }
       }
     } catch (err) {
       console.error("Places fetch error:", err);
-      setPredictions([]);
+      // Fallback on error
+      const fallbackList = [
+        "Medical College Road",
+        "Old Bus Stand",
+        "New Bus Stand",
+        "Thillai Nagar",
+        "Vallam",
+        "Pillayarpatti",
+        "Karanthai",
+        "Villar Road",
+        "MC Road",
+      ].filter((loc) => loc.toLowerCase().includes(val.toLowerCase()));
+
+      if (fallbackList.length > 0) {
+        setPredictions(
+          fallbackList.map((loc) => ({
+            place_id: loc,
+            main_text: loc,
+            secondary_text: "Thanjavur, Tamil Nadu",
+            description: `${loc}, Thanjavur, Tamil Nadu`,
+          }))
+        );
+        setIsOpen(true);
+      } else {
+        setPredictions([]);
+      }
     } finally {
       setLoading(false);
     }
