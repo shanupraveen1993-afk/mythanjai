@@ -29,9 +29,9 @@ export async function GET() {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    if (body && body.title) {
+    if (body && (body.title || body.name || body.shop_name)) {
       const newPost = {
-        id: "pub_" + Date.now(),
+        id: body.id || "pub_" + Date.now(),
         created_at: new Date().toISOString(),
         is_verified: true,
         ...body,
@@ -41,6 +41,20 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: true, post: newPost });
     }
     return NextResponse.json({ success: false, error: "Invalid post payload" }, { status: 400 });
+  } catch (err: any) {
+    return NextResponse.json({ success: false, error: err.message }, { status: 500 });
+  }
+}
+
+export async function DELETE(req: Request) {
+  try {
+    const { searchParams } = new URL(req.url);
+    const id = searchParams.get("id");
+    if (id) {
+      globalPublicPosts = globalPublicPosts.filter((p) => p.id !== id);
+      return NextResponse.json({ success: true, deletedId: id });
+    }
+    return NextResponse.json({ success: false, error: "Missing id" }, { status: 400 });
   } catch (err: any) {
     return NextResponse.json({ success: false, error: err.message }, { status: 500 });
   }
