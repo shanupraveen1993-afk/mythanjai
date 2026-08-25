@@ -277,7 +277,7 @@ function ListingsContent() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
             {myPosts.map((post) => (
-              <div key={post.id} className="flex flex-col bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-2xs hover:shadow-md transition-all">
+              <div key={post.id} className="flex flex-col bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-2xs relative">
                 <ListingCard listing={post as unknown as ListingItem} />
 
                 {/* Dedicated Listing Management Action Bar */}
