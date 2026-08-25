@@ -53,12 +53,12 @@ export default function WalkthroughModal({ isOpen, onComplete }: WalkthroughModa
 
   return (
     <div className="fixed inset-0 z-[99999] flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md animate-in fade-in duration-300">
-      <div className="bg-white w-full max-w-md rounded-3xl overflow-hidden shadow-2xl border border-slate-200 flex flex-col justify-between p-6 sm:p-8 relative min-h-[460px]">
+      <div className="bg-white w-full max-w-md rounded-2xl overflow-hidden shadow-xl border border-slate-200 flex flex-col justify-between p-6 sm:p-8 relative min-h-[460px]">
         {/* Skip Button */}
         <button
           type="button"
           onClick={onComplete}
-          className="absolute top-4 right-4 text-xs font-black text-slate-500 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-full transition-all cursor-pointer"
+          className="absolute top-4 right-4 text-xs font-bold text-slate-600 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 px-3 py-1.5 rounded-xl transition-all cursor-pointer"
         >
           Skip
         </button>
@@ -73,7 +73,7 @@ export default function WalkthroughModal({ isOpen, onComplete }: WalkthroughModa
 
         {/* Slide Visual Box */}
         <div className="my-auto flex flex-col items-center text-center gap-4 py-4">
-          <div className={`w-20 h-20 rounded-3xl bg-gradient-to-tr ${current.color} flex items-center justify-center text-white shadow-xl shadow-amber-500/20 transform hover:scale-105 transition-transform duration-300`}>
+          <div className="w-20 h-20 rounded-2xl bg-amber-500 text-slate-950 flex items-center justify-center shadow-md border border-amber-400">
             <Icon className="w-10 h-10 stroke-[2.2]" />
           </div>
 
@@ -81,7 +81,7 @@ export default function WalkthroughModal({ isOpen, onComplete }: WalkthroughModa
             <h2 className="font-heading font-black text-xl text-slate-900 tracking-tight">
               {current.title}
             </h2>
-            <p className="text-amber-700 font-extrabold text-xs">
+            <p className="text-amber-700 font-bold text-xs">
               {current.titleTa}
             </p>
             <p className="text-slate-600 text-xs mt-2 leading-relaxed font-medium">
@@ -108,7 +108,7 @@ export default function WalkthroughModal({ isOpen, onComplete }: WalkthroughModa
           <button
             type="button"
             onClick={handleNext}
-            className="w-full bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-sm py-3.5 rounded-2xl shadow-md cursor-pointer transition-all flex items-center justify-center gap-2 active:scale-[0.98]"
+            className="w-full bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-sm py-3 rounded-xl shadow-xs cursor-pointer transition-all flex items-center justify-center gap-2 border border-amber-400"
           >
             <span>{currentSlide === slides.length - 1 ? "Get Started" : "Continue"}</span>
             <ArrowRight className="w-4 h-4 stroke-[3]" />

@@ -28,7 +28,7 @@ export default function SplashScreen({ onFinished }: SplashScreenProps) {
       }`}
     >
       <div className="flex flex-col items-center gap-4 animate-in zoom-in-95 duration-700">
-        <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-white p-3 shadow-2xl shadow-amber-500/20 border border-slate-800 flex items-center justify-center animate-pulse">
+        <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-white p-3 shadow-lg border border-slate-800 flex items-center justify-center animate-pulse">
           <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="w-full h-full object-contain" />
         </div>
 

@@ -53,7 +53,7 @@ export default function NativePermissionsModal({ isOpen: propIsOpen, onComplete 
 
   return (
     <div className="fixed inset-0 z-[99999] bg-slate-950/80 backdrop-blur-md flex items-end sm:items-center justify-center p-4 font-sans select-none animate-in fade-in duration-300">
-      <div className="w-full max-w-md bg-white border border-slate-200 rounded-3xl p-6 shadow-2xl flex flex-col gap-5 relative animate-in slide-in-from-bottom-6 duration-300">
+      <div className="w-full max-w-md bg-white border border-slate-200 rounded-2xl p-6 shadow-xl flex flex-col gap-5 relative animate-in slide-in-from-bottom-6 duration-300">
         
         {/* Header Branding */}
         <div className="flex items-center justify-between">
