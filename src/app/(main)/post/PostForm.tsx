@@ -277,6 +277,7 @@ export default function PostForm({ segment }: PostFormProps) {
       const data = await res.json();
       if (data.success && data.formattedText) {
         setPreviewDescription(data.formattedText);
+        setDescription(data.formattedText);
         setIsAiRefined(true);
         if (data.extractedFields && segment === "offer") {
           const { shop_name, valid_from: extFrom, valid_to: extTo, area_tag, category: extCategory } = data.extractedFields;
@@ -1093,13 +1094,25 @@ export default function PostForm({ segment }: PostFormProps) {
 
                 {/* Description Input */}
                 <div className="flex flex-col gap-2">
-                  <div className="flex items-center justify-between">
+                  <div className="flex items-center justify-between gap-2 flex-wrap">
                     <label className="text-sm font-bold text-slate-800">
                       {segment === "service" ? "Work Experience & Skill Details *" : "Description or details *"}
                     </label>
-                    <span className={`text-xs font-medium ${description.length >= config.maxDescChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>
-                      {description.length}/{config.maxDescChars}
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => handleBlurDescription(description)}
+                        disabled={isAiRewriting || !description.trim()}
+                        className="px-2.5 py-1 rounded-lg bg-amber-400 hover:bg-amber-500 text-slate-950 font-heading font-black text-[11px] flex items-center gap-1.5 transition-all shadow-2xs cursor-pointer border border-amber-300 disabled:opacity-50"
+                        title="Refine description with AI (fixes typos, capitalizes, formats professionally)"
+                      >
+                        <Sparkles className={`w-3.5 h-3.5 text-slate-950 ${isAiRewriting ? "animate-spin" : ""}`} />
+                        <span>{isAiRewriting ? "Refining..." : "✨ Auto-Refine with AI"}</span>
+                      </button>
+                      <span className={`text-xs font-medium ${description.length >= config.maxDescChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>
+                        {description.length}/{config.maxDescChars}
+                      </span>
+                    </div>
                   </div>
                   <textarea
                     required
