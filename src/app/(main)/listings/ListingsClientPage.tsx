@@ -220,7 +220,7 @@ function ListingsContent() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 sm:pt-8 pb-24 flex flex-col gap-6 font-sans">
+    <div className="max-w-7xl mx-auto px-2.5 sm:px-6 lg:px-8 pt-4 sm:pt-8 pb-24 flex flex-col gap-4 font-sans">
       {/* 2 Navigation Tabs: My Posted Ads | Saved Items */}
       <div className="flex items-center gap-6 border-b border-slate-200">
         <button
@@ -269,7 +269,7 @@ function ListingsContent() {
             </button>
           </div>
         ) : (
-          <div className="bg-white rounded-2xl border border-slate-200 overflow-hidden divide-y divide-slate-200">
+          <div className="bg-white rounded-xl sm:rounded-2xl border border-slate-200 overflow-hidden divide-y divide-slate-200">
             {myPosts.map((post) => {
               const isInactive = Boolean(post.is_sold || post.is_contacted || post.is_offline || post.is_expired);
               const pType = (post.type || "SELL").toUpperCase();
@@ -283,7 +283,7 @@ function ListingsContent() {
               return (
                 <div
                   key={post.id}
-                  className={`p-4 sm:p-5 flex flex-col gap-3 font-sans transition-all ${
+                  className={`p-3.5 sm:p-5 flex flex-col gap-3 font-sans transition-all ${
                     isInactive ? "bg-slate-100/60 opacity-85" : "bg-white hover:bg-slate-50/60"
                   }`}
                 >

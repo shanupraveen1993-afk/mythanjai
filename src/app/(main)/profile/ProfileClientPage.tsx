@@ -421,7 +421,7 @@ function ProfileContent() {
   }
 
   return (
-    <div className="w-full max-w-7xl mx-auto flex flex-col gap-5 pt-6 sm:pt-8 pb-24 font-sans px-4 sm:px-6 lg:px-8">
+    <div className="w-full max-w-7xl mx-auto flex flex-col gap-4 pt-4 sm:pt-8 pb-24 font-sans px-2.5 sm:px-6 lg:px-8">
 
       {/* Header Bar */}
       <div className="flex flex-col gap-1 border-b border-slate-200/80 pb-3">
