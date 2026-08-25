@@ -40,6 +40,35 @@ export const TANJORE_LOCALITIES = [
   "Nataraj Nagar",
 ] as const;
 
+// Official 26 Thanjavur District Towns & Taluks
+export const THANJAVUR_TOWNS = [
+  "Thanjavur",
+  "Kumbakonam",
+  "Pattukottai",
+  "Athirampattinam",
+  "Aduthurai",
+  "Ammapettai",
+  "Ayyampettai",
+  "Sozhapuram",
+  "Tharasuram",
+  "Madhukkur",
+  "Melathirupanthuruthi",
+  "Meladoor",
+  "Orathanadu",
+  "Papanasam",
+  "Peravurani",
+  "Perumahaloor",
+  "Suvamimalai",
+  "Thirukkattupalli",
+  "Thirunageswaram",
+  "Thirupanandhal",
+  "Thirupuvanam",
+  "Thiruvaiyaru",
+  "Thiruvidaimaruthur",
+  "Vallam",
+  "Veppathur",
+] as const;
+
 export type TanjoreLocality = typeof TANJORE_LOCALITIES[number];
 
 // Categories for Tab 1: Needs & Buy/Sell

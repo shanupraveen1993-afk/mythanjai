@@ -10,6 +10,7 @@ import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/context/ToastContext";
 import {
   TANJORE_LOCALITIES,
+  THANJAVUR_TOWNS,
   CLASSIFIED_CATEGORIES,
   SERVICE_CATEGORIES,
   SHOP_CATEGORIES,
@@ -927,14 +928,17 @@ export default function PostForm({ segment }: PostFormProps) {
                 {/* SERVICE LOCATION & AVAILABILITY */}
                 {segment === "service" && (
                   <div className="flex flex-col gap-3">
-                    <input
-                      type="text"
+                    <select
                       required
-                      placeholder="📍 Service Location / Area in Thanjavur *"
                       value={area}
                       onChange={(e) => setArea(e.target.value)}
-                      className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium"
-                    />
+                      className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors cursor-pointer"
+                    >
+                      <option value="" disabled>📍 Select Thanjavur Town / Taluk Location *</option>
+                      {THANJAVUR_TOWNS.map((town) => (
+                        <option key={town} value={town}>{town}</option>
+                      ))}
+                    </select>
 
                     {/* Combined Availability Single Pill Toggle */}
                     <div className="flex flex-col gap-1.5">
@@ -972,7 +976,7 @@ export default function PostForm({ segment }: PostFormProps) {
                   </div>
                 )}
 
-                {/* PRICE & SEPARATE LOCATION LINE (FOR SELL) */}
+                {/* PRICE & DEDICATED FREEFORM TYPING LOCATION (FOR SELL) */}
                 {segment === "sell" && (
                   <>
                     <div className="relative w-full">
@@ -994,7 +998,7 @@ export default function PostForm({ segment }: PostFormProps) {
                       <input
                         type="text"
                         required
-                        placeholder="📍 Address / Location in Thanjavur *"
+                        placeholder="📍 Address / Dedicated Typing Location in Thanjavur *"
                         value={area}
                         onChange={(e) => setArea(e.target.value)}
                         className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium"
@@ -1003,7 +1007,7 @@ export default function PostForm({ segment }: PostFormProps) {
                   </>
                 )}
 
-                {/* BUDGET & SEPARATE LOCATION LINE (FOR NEED) */}
+                {/* BUDGET & THANJAVUR TOWN DROPDOWN (FOR NEED) */}
                 {segment === "need" && (
                   <>
                     <div className="w-full">
@@ -1017,14 +1021,17 @@ export default function PostForm({ segment }: PostFormProps) {
                     </div>
 
                     <div className="w-full">
-                      <input
-                        type="text"
+                      <select
                         required
-                        placeholder="📍 Preferred Locations in Thanjavur * (e.g. Medical College Rd, Vallam)"
                         value={area}
                         onChange={(e) => setArea(e.target.value)}
-                        className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium"
-                      />
+                        className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors cursor-pointer"
+                      >
+                        <option value="" disabled>📍 Select Preferred Thanjavur Town / Taluk *</option>
+                        {THANJAVUR_TOWNS.map((town) => (
+                          <option key={town} value={town}>{town}</option>
+                        ))}
+                      </select>
                     </div>
                   </>
                 )}
