@@ -13,6 +13,7 @@ import {
   THANJAVUR_TOWNS,
   CLASSIFIED_CATEGORIES,
   SERVICE_CATEGORIES,
+  SERVICE_SUBCATEGORIES_MAP,
   SHOP_CATEGORIES,
   formatIndianCurrencyText,
 } from "@/lib/constants";
@@ -144,6 +145,7 @@ export default function PostForm({ segment }: PostFormProps) {
   const [phone, setPhone] = useState("");
   const [area, setArea] = useState<string>("");
   const [category, setCategory] = useState<string>(config.categories[0]);
+  const [subCategory, setSubCategory] = useState<string>("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [isAvailable, setIsAvailable] = useState<boolean>(true);
@@ -730,11 +732,18 @@ export default function PostForm({ segment }: PostFormProps) {
           {/* LEFT COLUMN: Form Controls (Borderless Free Design) */}
           <form onSubmit={handleSubmit} className="lg:col-span-7 flex flex-col gap-4 bg-transparent border-0 p-0 sm:p-1">
             {/* Primary Category Selection Line */}
-            <div className="w-full relative">
+            <div className="w-full flex flex-col gap-3">
               <select
                 required
                 value={category}
-                onChange={(e) => setCategory(e.target.value)}
+                onChange={(e) => {
+                  const newCat = e.target.value;
+                  setCategory(newCat);
+                  if (segment === "service") {
+                    const subs = SERVICE_SUBCATEGORIES_MAP[newCat] || [];
+                    setSubCategory(subs[0] || "");
+                  }
+                }}
                 className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 cursor-pointer"
               >
                 {config.categories.map((cat) => (
@@ -743,6 +752,22 @@ export default function PostForm({ segment }: PostFormProps) {
                   </option>
                 ))}
               </select>
+
+              {/* Dynamic Subcategory Dropdown for Services */}
+              {segment === "service" && (
+                <select
+                  required
+                  value={subCategory}
+                  onChange={(e) => setSubCategory(e.target.value)}
+                  className="w-full py-2 text-xs font-bold border-b border-amber-400 bg-amber-50/50 focus:border-amber-500 rounded-none focus:outline-none text-slate-800 cursor-pointer"
+                >
+                  {(SERVICE_SUBCATEGORIES_MAP[category] || ["General Helper"]).map((sub) => (
+                    <option key={sub} value={sub}>
+                      ↳ Subcategory: {sub}
+                    </option>
+                  ))}
+                </select>
+              )}
             </div>
 
             {/* OFFER FORM INPUTS IN OLX CLEAN LINE STYLE */}

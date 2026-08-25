@@ -88,27 +88,81 @@ export const CLASSIFIED_CATEGORIES = [
 
 export type ClassifiedCategory = typeof CLASSIFIED_CATEGORIES[number];
 
-// Categories for Tab 2: Service Providers
-export const SERVICE_CATEGORIES = [
-  "Electrician",
-  "Plumber",
-  "AC & Fridge Repair",
-  "Mechanic (Bike & Car)",
-  "Carpenter",
-  "Painter & Waterproofing",
-  "Cleaning & Housekeeping",
-  "Catering & Cooking",
-  "Driver on Call",
-  "RO Water Repair",
-  "Appliance Repair",
-  "Computer & Laptop Repair",
-  "CCTV & Security Tech",
-  "Mason & Construction",
-  "Tile & Marble Work",
-  "General Technician",
+// Main Categories for Tab 2: Service Providers
+export const SERVICE_MAIN_CATEGORIES = [
+  "General Service",
+  "Home Services",
+  "Repair & Technicians",
+  "Vehicle Services",
+  "Health & Personal Care",
+  "Event & Media Services",
+  "Education & Tutors",
+  "Business & Professional",
 ] as const;
 
-export type ServiceCategory = typeof SERVICE_CATEGORIES[number];
+export const SERVICE_CATEGORIES = SERVICE_MAIN_CATEGORIES;
+
+export const SERVICE_SUBCATEGORIES_MAP: Record<string, string[]> = {
+  "General Service": ["General Helper", "Other Service"],
+  "Home Services": [
+    "Plumbing",
+    "Electrical",
+    "Carpentry & Furniture",
+    "Painting & Wall Work",
+    "Masonry & Civil Work",
+    "Flooring & Tiles",
+    "Roofing & Waterproofing",
+    "Welding & Fabrication",
+    "Aluminium, UPVC & Glass",
+    "False Ceiling & Interior Work",
+  ],
+  "Repair & Technicians": [
+    "AC & Refrigeration",
+    "Home Appliance Repair",
+    "TV & Electronics",
+    "Mobile & Computer Repair",
+    "CCTV & Security",
+    "Internet & Network",
+    "Inverter, UPS & Solar",
+    "Water Purifier & Pump",
+    "Generator & Machinery",
+  ],
+  "Vehicle Services": [
+    "Car Repair",
+    "Bike & Scooter Repair",
+    "Auto Repair",
+    "Auto Electrical",
+    "Tyre & Puncture",
+    "Battery Service",
+    "Washing & Detailing",
+    "Towing & Breakdown",
+    "Vehicle Pickup / Drop",
+  ],
+  "Health & Personal Care": [
+    "Home Nursing & Caretaker",
+    "Physiotherapy & Fitness",
+    "Beautician & Makeup",
+    "Barber & Grooming",
+  ],
+  "Event & Media Services": [
+    "Photography & Videography",
+    "Event Management & Decor",
+    "Catering & Cooking",
+    "Sound, DJ & Lighting",
+  ],
+  "Education & Tutors": [
+    "Home Tuition (School / College)",
+    "Music & Dance Classes",
+    "Language & Skill Training",
+  ],
+  "Business & Professional": [
+    "Accounting & Tax Services",
+    "Legal & Stamp Paper Services",
+    "Printing, Flex & Designing",
+  ],
+};
+
+export type ServiceCategory = typeof SERVICE_MAIN_CATEGORIES[number];
 
 // Categories for Tab 3: Shops & Offers
 export const SHOP_CATEGORIES = [
