@@ -56,8 +56,6 @@ export function useFirestore<T = any>({
         }
       } else if (areaTag !== "All Areas") {
         constraints.push(where("area_tag", "==", areaTag));
-      } else if (postType && collectionName === "needs_and_sales") {
-        constraints.push(where("type", "==", postType));
       }
 
       // Limit results
