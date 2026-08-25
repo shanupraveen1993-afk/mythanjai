@@ -73,29 +73,38 @@ function ListingsContent() {
   // Load My Posts strictly filtered by current user's UID or Phone Number
   useEffect(() => {
     async function fetchListingsData() {
-      if (!isVerified) {
-        setMyPosts([]);
-        setSavedPosts([]);
-        setLoading(false);
-        return;
-      }
       setLoading(true);
       try {
         const userId = user?.uid || "";
-        const rawPhone = (profile?.phone || user?.phoneNumber || typeof window !== "undefined" ? (localStorage.getItem("namma_thanjai_phone") || localStorage.getItem("my_thanjai_phone") || "") : "").replace(/\D/g, "");
+        const rawPhone = (profile?.phone || user?.phoneNumber || (typeof window !== "undefined" ? (localStorage.getItem("namma_thanjai_phone") || localStorage.getItem("my_thanjai_phone") || "") : "")).replace(/\D/g, "");
         const userPhone10 = rawPhone.length >= 10 ? rawPhone.slice(-10) : "";
 
         let combinedMyPosts: any[] = [];
         const seenIds = new Set<string>();
 
-        const targetCollections = ["needs_and_sales", "services", "shops"];
+        // 1. Always load ALL local posts created on this device from localStorage
+        if (typeof window !== "undefined") {
+          try {
+            const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+            stored.forEach((localP: any) => {
+              if (!seenIds.has(localP.id)) {
+                seenIds.add(localP.id);
+                const determinedCol = localP.skill_category
+                  ? "services"
+                  : localP.type === "SELL" || localP.type === "NEED"
+                  ? "needs_and_sales"
+                  : "shops";
+                combinedMyPosts.push({ ...localP, colName: determinedCol });
+              }
+            });
+          } catch (e) {}
+        }
 
-        // 1. Fetch from Firestore strictly for this user (by userId or phone)
+        // 2. Fetch from Firestore for this user (by userId or phone number)
+        const targetCollections = ["needs_and_sales", "services", "shops"];
         await Promise.all(
           targetCollections.map(async (colName) => {
             const colRef = collection(db, colName);
-            
-            // Query by userId
             if (userId) {
               const snapUid = await getDocs(query(colRef, where("userId", "==", userId))).catch(() => null);
               if (snapUid && !snapUid.empty) {
@@ -108,7 +117,6 @@ function ListingsContent() {
               }
             }
 
-            // Query by Phone number if 10 digits available
             if (userPhone10) {
               const snapPhone = await getDocs(query(colRef, where("phone", "==", userPhone10))).catch(() => null);
               if (snapPhone && !snapPhone.empty) {
@@ -122,30 +130,6 @@ function ListingsContent() {
             }
           })
         );
-
-        // 2. Merge local posts from localStorage — STRICTLY FILTERED BY LOGGED-IN PHONE / UID ONLY
-        if (typeof window !== "undefined") {
-          try {
-            const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-            stored.forEach((localP: any) => {
-              const pPhone = String(localP.phone || "").replace(/\D/g, "");
-              const pPhone10 = pPhone.length >= 10 ? pPhone.slice(-10) : "";
-              const matchesUid = Boolean(userId && localP.userId === userId);
-              const matchesPhone = Boolean(userPhone10 && pPhone10 && pPhone10 === userPhone10);
-
-              // ONLY include if post belongs to logged-in user's UID or phone number
-              if ((matchesUid || matchesPhone) && !seenIds.has(localP.id)) {
-                seenIds.add(localP.id);
-                const determinedCol = localP.skill_category
-                  ? "services"
-                  : localP.type === "SELL" || localP.type === "NEED"
-                  ? "needs_and_sales"
-                  : "shops";
-                combinedMyPosts.unshift({ ...localP, colName: determinedCol });
-              }
-            });
-          } catch (e) {}
-        }
 
         setMyPosts(combinedMyPosts);
 
