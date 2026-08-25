@@ -232,8 +232,8 @@ export default function TopHeader({
             </a>
           )}
 
-          {/* Mobile APK Only: 🟡 +Post Button */}
-          {isNativeApp && (
+          {/* Mobile APK Only: 🟡 +Post Button (Hidden on chat, profile, listings pages per user rule) */}
+          {isNativeApp && !pathname.includes("/chat") && !pathname.includes("/profile") && !pathname.includes("/listings") && !pathname.includes("/post") && (
             <button
               type="button"
               onClick={() => router.push("/post/sell")}
@@ -317,8 +317,8 @@ export default function TopHeader({
             )}
           </div>
 
-          {/* APK Native App Only: Header Post Button */}
-          {isNativeApp && !pathname.includes("/profile") && !pathname.includes("/post") && (
+          {/* APK Native App Only: Header Post Button (Strictly Hidden on chat, profile, listings pages) */}
+          {isNativeApp && !pathname.includes("/chat") && !pathname.includes("/profile") && !pathname.includes("/listings") && !pathname.includes("/post") && (
             <button
               type="button"
               onClick={handleDynamicPostClick}

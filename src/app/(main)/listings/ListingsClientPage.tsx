@@ -232,15 +232,6 @@ function ListingsContent() {
             Manage your live posted ads and bookmarked items in Thanjavur
           </p>
         </div>
-
-        <button
-          type="button"
-          onClick={() => router.push("/post/sell")}
-          className="bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs sm:text-sm px-4 py-2 rounded-xl shadow-xs shrink-0 flex items-center gap-1.5 cursor-pointer transition-all border border-amber-400/80"
-        >
-          <Plus className="w-4 h-4 stroke-[3]" />
-          <span>+ Post Ad</span>
-        </button>
       </div>
 
       {/* 2 Tabs: My Posted Ads | Saved Ads */}

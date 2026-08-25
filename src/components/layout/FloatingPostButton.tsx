@@ -10,6 +10,17 @@ export default function FloatingPostButton() {
   const pathname = usePathname() || "";
   const { isVerified } = useAuth();
 
+  // Completely hide FAB on Chat, Profile, My Listings & Post pages per user directive
+  if (
+    pathname.startsWith("/chat") ||
+    pathname.startsWith("/profile") ||
+    pathname.startsWith("/listings") ||
+    pathname.startsWith("/post") ||
+    pathname.startsWith("/admin")
+  ) {
+    return null;
+  }
+
   const [isVisible, setIsVisible] = useState(true);
   const [scrollTop, setScrollTop] = useState(0);
   const [hasScrolled, setHasScrolled] = useState(false);
