@@ -53,14 +53,29 @@ export default function SellClientPage() {
 
 
 
+  const allPosts = React.useMemo(() => {
+    let stored: NeedOrSalePost[] = [];
+    if (typeof window !== "undefined") {
+      try {
+        const raw = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+        stored = raw.filter((p: any) => {
+          const pType = (p.type || "").toString().toUpperCase();
+          return pType !== "NEED" && !p.name && !p.shop_name;
+        });
+      } catch (e) {}
+    }
+    const firestoreIds = new Set((firestorePosts || []).map((p: any) => p.id));
+    const uniqueLocal = stored.filter((s: any) => !firestoreIds.has(s.id));
+    return [...uniqueLocal, ...(firestorePosts || [])];
+  }, [firestorePosts]);
+
   const filteredPosts = React.useMemo(() => {
-    let list: NeedOrSalePost[] = (firestorePosts || []).filter((p: any) => {
+    let list: NeedOrSalePost[] = allPosts.filter((p: any) => {
       if (p.status === "moderation_review") return false;
       if (isListingQuarantined(p.id)) return false;
-      if (!p.title || p.title.trim() === "" || p.description === "No detailed description provided.") return false;
+      if (!p.title || p.title.trim() === "") return false;
       const pType = (p.type || "SELL").toUpperCase();
-      if (pType === "NEED" || pType === "SERVICE" || pType === "OFFER" || pType === "SHOP") return false;
-      if (p.skill_category || p.shop_name) return false;
+      if (pType === "NEED") return false;
       if (p.is_sold) return false;
       return true;
     });
@@ -77,7 +92,7 @@ export default function SellClientPage() {
       list.sort((a, b) => (Number(b.price) || 0) - (Number(a.price) || 0));
     }
     return list;
-  }, [firestorePosts, selectedCategory, sortBy]);
+  }, [allPosts, selectedCategory, sortBy]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 15; // 5 rows for 1 page (3 cols x 5 rows)

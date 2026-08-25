@@ -47,11 +47,24 @@ export default function ShopsClientPage() {
   // NOTE: localStorage posts are ONLY for My Listings page.
   // Public shops feed always shows only Firestore data.
 
+  const allPosts = React.useMemo(() => {
+    let stored: ShopPost[] = [];
+    if (typeof window !== "undefined") {
+      try {
+        const raw = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+        stored = raw.filter((p: any) => p.shop_name || p.offer_title || p.type === "OFFER" || p.type === "SHOP");
+      } catch (e) {}
+    }
+    const firestoreIds = new Set((firestorePosts || []).map((p: any) => p.id));
+    const uniqueLocal = stored.filter((s: any) => !firestoreIds.has(s.id));
+    return [...uniqueLocal, ...(firestorePosts || [])];
+  }, [firestorePosts]);
+
   const filteredPosts = React.useMemo(() => {
-    let list = (firestorePosts || []).filter((p) => {
+    let list = allPosts.filter((p) => {
       if ((p as any).status === "moderation_review") return false;
       if (isListingQuarantined(p.id)) return false;
-      if (!p.shop_name || p.shop_name.trim() === "" || p.offer_description === "No detailed description provided.") return false;
+      if (!p.shop_name || p.shop_name.trim() === "") return false;
       return true;
     });
 
@@ -65,7 +78,7 @@ export default function ShopsClientPage() {
       list.sort((a, b) => (a.shop_name || "").localeCompare(b.shop_name || ""));
     }
     return list;
-  }, [firestorePosts, selectedCategory, sortBy]);
+  }, [allPosts, selectedCategory, sortBy]);
 
   return (
     <div className="flex flex-col gap-0 pb-24 w-full font-sans">

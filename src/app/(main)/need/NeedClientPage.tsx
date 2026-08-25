@@ -53,11 +53,27 @@ export default function NeedClientPage() {
   // NOTE: localStorage posts are ONLY for My Listings page.
   // Public need feed always shows only Firestore data.
 
+  const allPosts = React.useMemo(() => {
+    let stored: NeedOrSalePost[] = [];
+    if (typeof window !== "undefined") {
+      try {
+        const raw = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
+        stored = raw.filter((p: any) => {
+          const pType = (p.type || "").toString().toUpperCase();
+          return pType === "NEED";
+        });
+      } catch (e) {}
+    }
+    const firestoreIds = new Set((firestorePosts || []).map((p: any) => p.id));
+    const uniqueLocal = stored.filter((s: any) => !firestoreIds.has(s.id));
+    return [...uniqueLocal, ...(firestorePosts || [])];
+  }, [firestorePosts]);
+
   const filteredPosts = React.useMemo(() => {
-    let list = (firestorePosts || []).filter((p) => {
+    let list = allPosts.filter((p) => {
       if ((p as any).status === "moderation_review") return false;
       if (isListingQuarantined(p.id)) return false;
-      if (!p.title || p.title.trim() === "" || p.description === "No detailed description provided.") return false;
+      if (!p.title || p.title.trim() === "") return false;
       return p.type?.toUpperCase() === "NEED";
     });
 
@@ -73,7 +89,7 @@ export default function NeedClientPage() {
       list.sort((a, b) => (Number(b.price) || 0) - (Number(a.price) || 0));
     }
     return list;
-  }, [firestorePosts, selectedCategory, sortBy]);
+  }, [allPosts, selectedCategory, sortBy]);
 
   const [currentPage, setCurrentPage] = useState(1);
   const ITEMS_PER_PAGE = 15; // 5 rows for 1 page (3 cols x 5 rows)
