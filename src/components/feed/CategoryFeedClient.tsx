@@ -121,25 +121,7 @@ export default function CategoryFeedClient({ segmentType }: CategoryFeedClientPr
     postType: segmentType === "sell" ? "sale" : segmentType === "need" ? "need" : null,
   });
 
-  // One-time database purge to clean out old posts from Firestore Cloud
-  React.useEffect(() => {
-    const autoWipe = async () => {
-      try {
-        const { collection, getDocs, deleteDoc } = await import("firebase/firestore");
-        const { db } = await import("@/lib/firebase");
-        const cols = ["needs_and_sales", "services", "shops", "offers", "reports"];
-        for (const colName of cols) {
-          const snap = await getDocs(collection(db, colName)).catch(() => null);
-          if (snap && !snap.empty) {
-            snap.forEach((docSnap) => {
-              deleteDoc(docSnap.ref).catch(() => {});
-            });
-          }
-        }
-      } catch (e) {}
-    };
-    autoWipe();
-  }, []);
+
 
   // Pure Firestore live data feed
   const allPosts = React.useMemo(() => {

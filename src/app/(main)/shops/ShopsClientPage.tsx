@@ -54,7 +54,7 @@ export default function ShopsClientPage() {
     let list = allPosts.filter((p) => {
       if ((p as any).status === "moderation_review") return false;
       if (isListingQuarantined(p.id)) return false;
-      if (!p.shop_name || p.shop_name.trim() === "") return false;
+      if (!p.shop_name && !(p as any).title && !p.offer_title) return false;
       return true;
     });
 

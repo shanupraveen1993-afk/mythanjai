@@ -510,8 +510,10 @@ export default function PostForm({ segment }: PostFormProps) {
     const finalImageUrls = cloudImageUrls && cloudImageUrls.length > 0 ? cloudImageUrls : [cloudImageUrl || ""];
 
     try {
+      let payloadToSave: any = null;
+
       if (segment === "sell" || segment === "need") {
-        const payload: any = {
+        payloadToSave = {
           userId: uid,
           seller_id: uid,
           type: segment === "sell" ? "SELL" : "NEED",
@@ -530,46 +532,81 @@ export default function PostForm({ segment }: PostFormProps) {
           is_verified: true,
           status: "active",
         };
-
-        const saveOrUpdateDocument = async (col: string, id: string | null, dataPayload: any) => {
-          if (id) {
-            try {
-              await updateDoc(doc(db, col, id), dataPayload);
-            } catch (clientErr: any) {
-              console.warn("Client updateDoc note, trying privileged server API:", clientErr?.message);
-              const idToken = (await auth.currentUser?.getIdToken().catch(() => "")) || "";
-              const apiRes = await fetch(getApiUrl("/api/post/update"), {
-                method: "POST",
-                headers: {
-                  "Content-Type": "application/json",
-                  Authorization: idToken ? `Bearer ${idToken}` : "",
-                },
-                body: JSON.stringify({ postId: id, colName: col, payload: dataPayload }),
-              }).then((r) => r.json());
-
-              if (!apiRes || !apiRes.success) {
-                throw new Error(apiRes?.error || clientErr?.message || "Missing or insufficient permissions");
-              }
-            }
-          } else {
-            const docRef = await addDoc(collection(db, col), {
-              ...dataPayload,
-              created_at: timestamp,
-              ...((segment as string) === "sell" || (segment as string) === "need" ? { expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) } : {}),
-              ...((segment as string) === "service" ? { negative_reports_count: 0 } : {}),
-            });
-            if (docRef) createdDocId = docRef.id;
-          }
+      } else if (segment === "service") {
+        payloadToSave = {
+          userId: uid,
+          seller_id: uid,
+          name: title.trim(),
+          skill_category: category || "General Service",
+          sub_category: subCategory || "",
+          description: cleanDesc,
+          area_tag: finalArea,
+          phone: phone || "9876543210",
+          show_phone: Boolean(showPhone),
+          all_working_days: allWorkingDays,
+          sunday_leave: sundayLeave,
+          experience: "Verified Provider",
+          rating: 5.0,
+          rating_count: 1,
+          badge: "VERIFIED TRADE",
+          image_url: cloudImageUrl || "",
+          is_verified: true,
+          status: "active",
         };
-
-        if (segment === "sell" || segment === "need") {
-          await saveOrUpdateDocument(targetCol, editId, payload);
-        } else if (segment === "service") {
-          await saveOrUpdateDocument(targetCol, editId, payload);
-        } else if (segment === "offer") {
-          await saveOrUpdateDocument(targetCol, editId, payload);
-        }
+      } else if (segment === "offer") {
+        payloadToSave = {
+          userId: uid,
+          seller_id: uid,
+          shop_name: title.trim(),
+          category: category || "Retail Deals",
+          address_text: finalArea,
+          area_tag: finalArea,
+          phone: phone || "9876543210",
+          show_phone: Boolean(showPhone),
+          offer_title: title.trim(),
+          offer_description: cleanDesc,
+          valid_from: validFrom || null,
+          valid_to: validTo || null,
+          youtube_url: youtubeUrl.trim() || "",
+          image_url: cloudImageUrl || "",
+          image_urls: finalImageUrls,
+          is_verified: true,
+          status: "active",
+        };
       }
+
+      const saveOrUpdateDocument = async (col: string, id: string | null, dataPayload: any) => {
+        if (id) {
+          try {
+            await updateDoc(doc(db, col, id), dataPayload);
+          } catch (clientErr: any) {
+            console.warn("Client updateDoc note, trying privileged server API:", clientErr?.message);
+            const idToken = (await auth.currentUser?.getIdToken().catch(() => "")) || "";
+            const apiRes = await fetch(getApiUrl("/api/post/update"), {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: idToken ? `Bearer ${idToken}` : "",
+              },
+              body: JSON.stringify({ postId: id, colName: col, payload: dataPayload }),
+            }).then((r) => r.json());
+
+            if (!apiRes || !apiRes.success) {
+              throw new Error(apiRes?.error || clientErr?.message || "Missing or insufficient permissions");
+            }
+          }
+        } else {
+          const docRef = await addDoc(collection(db, col), {
+            ...dataPayload,
+            created_at: timestamp,
+            ...((segment as string) === "sell" || (segment as string) === "need" ? { expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) } : {}),
+            ...((segment as string) === "service" ? { negative_reports_count: 0 } : {}),
+          });
+          if (docRef) createdDocId = docRef.id;
+        }
+      };
+
+      await saveOrUpdateDocument(targetCol, editId, payloadToSave);
 
       // Log Audit Event
       try {
