@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { db, storage } from "@/lib/firebase";
+import { db, auth, storage } from "@/lib/firebase";
 import { collection, addDoc, doc, getDoc, updateDoc, serverTimestamp } from "firebase/firestore";
 import { ref, uploadBytes, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { compressImage } from "@/lib/image-compressor";
@@ -548,10 +548,14 @@ export default function PostForm({ segment }: PostFormProps) {
             try {
               await updateDoc(doc(db, col, id), dataPayload);
             } catch (clientErr: any) {
-              console.warn("Client updateDoc failed, invoking server API fallback:", clientErr?.message);
+              console.warn("Client updateDoc note, trying privileged server API:", clientErr?.message);
+              const idToken = (await auth.currentUser?.getIdToken().catch(() => "")) || "";
               const apiRes = await fetch(getApiUrl("/api/post/update"), {
                 method: "POST",
-                headers: { "Content-Type": "application/json" },
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: idToken ? `Bearer ${idToken}` : "",
+                },
                 body: JSON.stringify({ postId: id, colName: col, payload: dataPayload }),
               }).then((r) => r.json());
 

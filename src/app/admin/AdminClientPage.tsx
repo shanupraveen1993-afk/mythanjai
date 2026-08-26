@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useMemo } from "react";
-import { db } from "@/lib/firebase";
+import { db, auth } from "@/lib/firebase";
 import {
   collection,
   onSnapshot,
@@ -279,41 +279,35 @@ export default function AdminClientPage() {
   const executeDelete = async (id: string, colName: string) => {
     const targetItem = items.find((i) => i.id === id);
     let deleteSuccess = false;
-
-    // Target the primary collection first via client SDK
     const primaryCol = colName || (targetItem?.colName || "needs_and_sales");
+
+    // 1. Try Client SDK delete
     try {
       await deleteDoc(doc(db, primaryCol, id));
       deleteSuccess = true;
     } catch (err: any) {
-      console.warn(`Client delete attempt on ${primaryCol}/${id} failed, trying server API:`, err?.message);
+      console.warn(`Client delete on ${primaryCol}/${id} note:`, err?.message);
     }
 
-    // Try secondary candidate collections
-    if (!deleteSuccess) {
-      const secondaryCols = ["needs_and_sales", "services", "shops", "offers"].filter((c) => c !== primaryCol);
-      for (const secCol of secondaryCols) {
-        try {
-          await deleteDoc(doc(db, secCol, id));
-          deleteSuccess = true;
-        } catch (e) {}
-      }
-    }
-
-    // Server-side API Fallback (Guarantees deletion even if Firebase Security Rules block client SDK)
+    // 2. Privileged Server API (Firebase Admin SDK)
     if (!deleteSuccess) {
       try {
+        const idToken = (await auth.currentUser?.getIdToken().catch(() => "")) || "";
         const apiRes = await fetch("/api/admin/delete-post", {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ postId: id, colName: primaryCol }),
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: idToken ? `Bearer ${idToken}` : "",
+            "x-admin-secret": ADMIN_PHONE,
+          },
+          body: JSON.stringify({ postId: id, colName: primaryCol, adminSecret: ADMIN_PHONE }),
         }).then((r) => r.json());
 
-        if (apiRes && apiRes.success) {
+        if (apiRes && apiRes.success && (apiRes.deletedCount > 0 || apiRes.deletedAny)) {
           deleteSuccess = true;
         }
       } catch (apiErr) {
-        console.error("Server API delete fallback error:", apiErr);
+        console.error("Server API delete exception:", apiErr);
       }
     }
 
