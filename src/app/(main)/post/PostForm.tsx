@@ -508,6 +508,18 @@ export default function PostForm({ segment }: PostFormProps) {
       console.warn("Storage upload warning, using preview fallback:", storageErr);
     }
 
+    // ── STEP 2b: Upload Video Reel to Firebase Storage (if selected) ──
+    let cloudVideoUrl = "";
+    if (selectedVideo) {
+      try {
+        const videoRef = ref(storage, `videos/${Date.now()}_${selectedVideo.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`);
+        const videoSnapshot = await uploadBytes(videoRef, selectedVideo);
+        cloudVideoUrl = await getDownloadURL(videoSnapshot.ref);
+      } catch (videoErr) {
+        console.warn("Video storage upload warning:", videoErr);
+      }
+    }
+
     // ── STEP 3: Write Directly to Firestore (NO LOCALSTORAGE) ──
     if (editId && !editCol) {
       setLoading(false);
@@ -539,7 +551,6 @@ export default function PostForm({ segment }: PostFormProps) {
           show_phone: Boolean(showPhone),
           image_url: cloudImageUrl || "",
           image_urls: finalImageUrls,
-          youtube_url: youtubeUrl.trim() || "",
           google_maps_url: googleMapsUrl.trim() || "",
           is_verified: true,
           status: "active",
@@ -579,7 +590,9 @@ export default function PostForm({ segment }: PostFormProps) {
           offer_description: cleanDesc,
           valid_from: validFrom || null,
           valid_to: validTo || null,
-          youtube_url: youtubeUrl.trim() || "",
+          video_url: cloudVideoUrl || videoPreview || "",
+          video_reel_url: cloudVideoUrl || videoPreview || "",
+          videoUrl: cloudVideoUrl || videoPreview || "",
           image_url: cloudImageUrl || "",
           image_urls: finalImageUrls,
           is_verified: true,
@@ -708,6 +721,9 @@ export default function PostForm({ segment }: PostFormProps) {
       offer_title: title.trim() || "Store Offer",
       offer_description: previewDescription || description.trim() || "Special offer details...",
       image_url: imagePreview || "",
+      video_url: videoPreview || "",
+      video_reel_url: videoPreview || "",
+      videoUrl: videoPreview || "",
       latitude: 10.7870,
       longitude: 79.1378,
       show_phone: showPhone,
@@ -715,7 +731,7 @@ export default function PostForm({ segment }: PostFormProps) {
       category: category || config.categories[0] || "General",
       created_at: new Date() as any,
     };
-  }, [title, description, previewDescription, area, validFrom, validTo, showPhone, phone, imagePreview, user]);
+  }, [title, description, previewDescription, area, validFrom, validTo, showPhone, phone, imagePreview, videoPreview, user]);
 
 
   const formattedPriceBadge = formatIndianCurrencyText(price);
@@ -1008,16 +1024,7 @@ export default function PostForm({ segment }: PostFormProps) {
                   )}
                 </div>
 
-                {/* 1c. YOUTUBE / REEL LINK (OPTIONAL) */}
-                <div className="w-full">
-                  <input
-                    type="url"
-                    placeholder="🎥 Or paste YouTube / Instagram Reel Video Link (Optional)"
-                    value={youtubeUrl}
-                    onChange={(e) => setYoutubeUrl(e.target.value)}
-                    className="w-full py-2.5 text-xs font-medium border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400"
-                  />
-                </div>
+
 
                 {/* 2. SHOP NAME LINE */}
                 <div className="relative w-full">

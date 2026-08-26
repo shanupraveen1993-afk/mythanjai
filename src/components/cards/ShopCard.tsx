@@ -120,9 +120,8 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
     `${post.shop_name} ${post.address_text || post.area_tag || "Thanjavur"}`
   )}`;
 
-  // Check if a video reel is provided
-  const hasVideo = !!(post as any).video_url || !!(post as any).offer_social_link || !!(post as any).youtube_url;
-  const videoSrc = (post as any).video_url || (post as any).offer_social_link || (post as any).youtube_url || "";
+  const hasVideo = !!(post as any).video_url || !!(post as any).video_reel_url || !!(post as any).videoUrl;
+  const videoSrc = (post as any).video_url || (post as any).video_reel_url || (post as any).videoUrl || "";
 
   const images = React.useMemo(() => {
     const rawList = (post as any).image_urls || [];
