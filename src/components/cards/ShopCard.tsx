@@ -256,7 +256,7 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
   // ── REEL MODE: Video was uploaded ─────────────────────────────────────────
   if (hasVideo) {
     return (
-      <div className={`relative rounded-xl overflow-hidden shadow-md bg-slate-950 font-sans flex flex-col ${isExpired ? "opacity-60 grayscale filter pointer-events-none select-none" : ""}`} style={{ minHeight: 420 }}>
+      <div className={`relative aspect-[9/16] w-full max-w-sm sm:max-w-md mx-auto rounded-2xl overflow-hidden shadow-lg bg-slate-950 font-sans flex flex-col ${isExpired ? "opacity-60 grayscale filter pointer-events-none select-none" : ""}`}>
         {/* EXPIRED CENTER OVERLAY BADGE */}
         {/* EXPIRED CENTER OVERLAY BADGE — Light transparent overlay (can see content, but cannot interact) */}
         {isExpired && (

@@ -1044,8 +1044,8 @@ export default function PostForm({ segment }: PostFormProps) {
                 {/* 1b. UPLOAD OFFER VIDEO REEL (OPTIONAL) */}
                 <div className="w-full bg-slate-50 border-2 border-dashed border-amber-400 hover:border-amber-500 p-4 rounded-xl flex flex-col items-center justify-center text-center gap-2 transition-all group relative">
                   {videoPreview ? (
-                    <div className="relative w-full max-h-56 rounded-xl overflow-hidden border border-slate-200 shadow-sm bg-slate-950 flex justify-center items-center">
-                      <video src={videoPreview} controls className="max-h-56 max-w-full object-contain" />
+                    <div className="relative w-full max-w-xs aspect-[9/16] rounded-2xl overflow-hidden border border-slate-800 shadow-md bg-slate-950 flex justify-center items-center">
+                      <video src={videoPreview} controls className="w-full h-full object-cover" />
                       <button
                         type="button"
                         onClick={() => {
