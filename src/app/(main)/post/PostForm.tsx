@@ -719,34 +719,34 @@ export default function PostForm({ segment }: PostFormProps) {
 
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-4 py-6 pb-24 flex flex-col gap-6 font-sans">
+    <div className="w-full max-w-6xl mx-auto px-3 sm:px-6 py-4 sm:py-6 pb-24 flex flex-col gap-4 font-sans">
       {/* Page Header */}
-      <div className="flex flex-col items-center border-b border-slate-200 pb-3">
-        <span className="text-xs font-bold uppercase tracking-widest text-slate-400">
+      <div className="flex flex-col items-center border-b border-slate-200/80 pb-3">
+        <span className="text-[11px] font-black uppercase tracking-widest text-slate-400">
           {config.badge}
         </span>
-        <h1 className="font-heading font-bold text-lg sm:text-xl text-slate-900 tracking-tight mt-0.5">
+        <h1 className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight mt-0.5">
           {config.title}
         </h1>
       </div>
 
       {success ? (
-        <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-8 flex flex-col items-center text-center gap-3 animate-fade-in my-8 max-w-xl mx-auto">
+        <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-8 flex flex-col items-center text-center gap-3 animate-fade-in my-8 max-w-xl mx-auto shadow-xs">
           <div className="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-xs">
             <Check className="w-7 h-7 stroke-[2.5]" />
           </div>
-          <h2 className="font-heading font-bold text-lg text-emerald-900">Post Published Successfully!</h2>
+          <h2 className="font-heading font-black text-lg text-emerald-900">Post Published Successfully!</h2>
           <p className="text-xs text-emerald-700 font-medium">Redirecting to feed...</p>
         </div>
       ) : (
-        /* PURE HUMAN 2-COLUMN SPLIT LAYOUT (FREE BORDERLESS DESIGN) */
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        /* CLEAN 2-COLUMN SPLIT LAYOUT */
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           
-          {/* LEFT COLUMN: Form Controls (Borderless Free Design) */}
-          <form onSubmit={handleSubmit} className="lg:col-span-7 flex flex-col gap-4 bg-transparent border-0 p-0 sm:p-1">
+          {/* LEFT COLUMN: Form Controls */}
+          <form onSubmit={handleSubmit} className="lg:col-span-7 flex flex-col gap-4 bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-6 shadow-xs">
             {/* Red Alert Box for Missing Required Fields */}
             {validationError && (
-              <div className="w-full p-4 bg-rose-50 border-2 border-rose-500 rounded-xl text-rose-800 text-xs sm:text-sm font-bold flex items-center justify-between gap-3 shadow-md animate-shake">
+              <div className="w-full p-3.5 bg-rose-50 border border-rose-300 rounded-xl text-rose-800 text-xs sm:text-sm font-bold flex items-center justify-between gap-3 shadow-2xs animate-shake">
                 <div className="flex items-center gap-2">
                   <span className="text-base">⚠️</span>
                   <span>{validationError}</span>
@@ -763,19 +763,19 @@ export default function PostForm({ segment }: PostFormProps) {
 
             {/* CATEGORY & SUBCATEGORY SELECTION */}
             {segment === "service" ? (
-              <div className="w-full flex flex-col gap-4 bg-slate-50 border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-2xs">
+              <div className="w-full flex flex-col gap-3.5 bg-slate-50 border border-slate-200/90 rounded-xl p-4 shadow-2xs">
                 {/* Header */}
-                <div className="flex flex-col gap-1">
+                <div className="flex flex-col gap-0.5">
                   <div className="flex items-center justify-between">
                     <label className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
                       <Wrench className="w-4 h-4 text-amber-500" />
-                      <span>Select Service Category & Trade *</span>
+                      <span>Select Service Category &amp; Trade *</span>
                     </label>
-                    <span className="text-[11px] font-bold text-slate-700 bg-white border border-slate-250 px-2.5 py-0.5 rounded-full shadow-2xs">
+                    <span className="text-[11px] font-bold text-slate-700 bg-white border border-slate-200 px-2.5 py-0.5 rounded-full shadow-2xs">
                       {category}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-500 font-medium">Select your service category and exact trade below</p>
+                  <p className="text-xs text-slate-500 font-medium">Select your service category and trade below</p>
                 </div>
 
                 {/* Neat Category Grid Cards */}
@@ -801,7 +801,7 @@ export default function PostForm({ segment }: PostFormProps) {
                           const subs = SERVICE_SUBCATEGORIES_MAP[catItem.id] || [];
                           setSubCategory(subs[0] || "");
                         }}
-                        className={`flex flex-col items-start p-3 rounded-xl border text-left transition-all cursor-pointer relative overflow-hidden ${
+                        className={`flex flex-col items-start p-2.5 rounded-xl border text-left transition-all cursor-pointer relative overflow-hidden ${
                           isSelected
                             ? "bg-amber-500/10 border-amber-500 ring-2 ring-amber-400/30 shadow-2xs"
                             : "bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50"
@@ -812,13 +812,13 @@ export default function PostForm({ segment }: PostFormProps) {
                             <Check className="w-2.5 h-2.5 stroke-[3]" />
                           </span>
                         )}
-                        <div className={`p-2 rounded-lg mb-2 ${isSelected ? "bg-amber-500 text-slate-950 font-bold" : "bg-slate-100 text-slate-700"}`}>
+                        <div className={`p-1.5 rounded-lg mb-1.5 ${isSelected ? "bg-amber-500 text-slate-950 font-bold" : "bg-slate-100 text-slate-700"}`}>
                           <IconComponent className="w-4 h-4 stroke-[2.2]" />
                         </div>
                         <span className={`text-xs font-black line-clamp-1 ${isSelected ? "text-slate-950" : "text-slate-800"}`}>
                           {catItem.label}
                         </span>
-                        <span className="text-[10px] text-slate-400 line-clamp-1 mt-0.5 font-medium">
+                        <span className="text-[10px] text-slate-400 line-clamp-1 font-medium">
                           {catItem.desc}
                         </span>
                       </button>
@@ -827,13 +827,13 @@ export default function PostForm({ segment }: PostFormProps) {
                 </div>
 
                 {/* Subcategory Trade Pills */}
-                <div className="flex flex-col gap-2 pt-3 border-t border-slate-200/80">
+                <div className="flex flex-col gap-1.5 pt-2.5 border-t border-slate-200/80">
                   <label className="text-[11px] font-black text-slate-900 uppercase tracking-wider flex items-center justify-between">
                     <span>Select Specific Trade / Profession *</span>
                     <span className="text-slate-400 font-medium normal-case">Tap your exact trade</span>
                   </label>
 
-                  <div className="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto scrollbar-thin p-2 bg-white border border-slate-250 rounded-xl">
+                  <div className="flex flex-wrap gap-1.5 max-h-36 overflow-y-auto scrollbar-thin p-2 bg-white border border-slate-200 rounded-xl">
                     {(SERVICE_SUBCATEGORIES_MAP[category] || ["General Helper"]).map((sub) => {
                       const isSubSelected = subCategory === sub;
                       return (
@@ -857,12 +857,15 @@ export default function PostForm({ segment }: PostFormProps) {
               </div>
             ) : (
               /* Non-Service Categories Dropdown (Sell, Need, Offer) */
-              <div className="w-full flex flex-col gap-3">
+              <div className="w-full flex flex-col gap-1">
+                <label className="text-[11px] font-black text-slate-700 uppercase tracking-wider">
+                  Category *
+                </label>
                 <select
                   required
                   value={category}
                   onChange={(e) => setCategory(e.target.value)}
-                  className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 cursor-pointer"
+                  className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 cursor-pointer"
                 >
                   {config.categories.map((cat) => (
                     <option key={cat} value={cat}>
@@ -873,7 +876,7 @@ export default function PostForm({ segment }: PostFormProps) {
               </div>
             )}
 
-            {/* OFFER FORM INPUTS IN OLX CLEAN LINE STYLE */}
+            {/* OFFER FORM INPUTS */}
             {segment === "offer" ? (
               <>
                 {/* 1. UPLOAD VISITING CARD / FLYER PHOTO (TOP - OPTIONAL) */}
@@ -881,7 +884,7 @@ export default function PostForm({ segment }: PostFormProps) {
                   {isOcrScanning && (
                     <div className="absolute inset-0 bg-white/90 backdrop-blur-xs rounded-xl z-20 flex flex-col items-center justify-center gap-2">
                       <Loader2 className="w-6 h-6 animate-spin text-slate-800" />
-                      <span className="text-xs font-bold text-slate-800">Reading Store Name & Location from Card...</span>
+                      <span className="text-xs font-bold text-slate-800">Reading Store Name &amp; Location from Card...</span>
                     </div>
                   )}
                   {imagePreview ? (
@@ -916,10 +919,10 @@ export default function PostForm({ segment }: PostFormProps) {
                           Upload Visiting Card / Flyer Photo (Optional)
                         </span>
                         <span className="text-xs text-slate-500 mt-0.5 max-w-sm font-medium">
-                          Fills Store Name & Location directly into Live Preview!
+                          Fills Store Name &amp; Location directly into Live Preview!
                         </span>
                       </div>
-                      <span className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs px-3.5 py-1.5 rounded-lg transition-all border border-amber-400 shadow-2xs mt-0.5">
+                      <span className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs px-3.5 py-1.5 rounded-lg transition-all border border-amber-400 shadow-2xs mt-0.5">
                         Upload Card Photo →
                       </span>
                       <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
@@ -972,7 +975,7 @@ export default function PostForm({ segment }: PostFormProps) {
                     placeholder="🎥 Or paste YouTube / Instagram Reel Video Link (Optional)"
                     value={youtubeUrl}
                     onChange={(e) => setYoutubeUrl(e.target.value)}
-                    className="w-full py-2 text-xs font-medium border-b border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400"
+                    className="w-full py-2.5 text-xs font-medium border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400"
                   />
                 </div>
 
@@ -985,14 +988,14 @@ export default function PostForm({ segment }: PostFormProps) {
                     placeholder="Shop Name * (e.g. GLEN Exclusive Gallery / Sri Kumaran Silks)"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal pr-12"
+                    className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal pr-12"
                   />
                   <span className="absolute right-0 top-3 text-[11px] font-medium text-slate-400">
                     {title.length}/{config.maxTitleChars}
                   </span>
                 </div>
 
-                {/* 3. OFFER DESCRIPTION LINE (OPTIONAL) */}
+                {/* 3. OFFER DESCRIPTION LINE */}
                 <div className="relative w-full">
                   <textarea
                     rows={3}
@@ -1000,14 +1003,14 @@ export default function PostForm({ segment }: PostFormProps) {
                     placeholder="Offer Description (Optional — Describe discount, terms, packages, or items)"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="w-full py-2.5 text-sm font-medium border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors leading-relaxed placeholder:text-slate-400"
+                    className="w-full py-2.5 text-sm font-medium border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors leading-relaxed placeholder:text-slate-400"
                   />
                   <span className="absolute right-0 bottom-3 text-[11px] font-medium text-slate-400">
                     {description.length}/{config.maxDescChars}
                   </span>
                 </div>
 
-                {/* 4. OFFER VALIDITY DATES (OPTIONAL) */}
+                {/* 4. OFFER VALIDITY DATES */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50 border border-slate-200/80 p-3.5 rounded-xl">
                   <div className="flex flex-col gap-1">
                     <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
@@ -1041,7 +1044,7 @@ export default function PostForm({ segment }: PostFormProps) {
                     placeholder="Enter location / area *"
                     value={area}
                     onChange={(e) => setArea(e.target.value)}
-                    className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal"
+                    className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal"
                   />
                 </div>
 
@@ -1053,7 +1056,7 @@ export default function PostForm({ segment }: PostFormProps) {
                     placeholder="📞 Contact phone number * (e.g. 9994837342)"
                     value={phone}
                     onChange={(e) => { userEditedPhone.current = true; setPhone(e.target.value); }}
-                    className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal"
+                    className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal"
                   />
                 </div>
 
@@ -1092,7 +1095,7 @@ export default function PostForm({ segment }: PostFormProps) {
                     }
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal pr-12"
+                    className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal pr-12"
                   />
                   <span className="absolute right-0 top-3 text-[11px] font-medium text-slate-400">
                     {title.length}/{config.maxTitleChars}
@@ -1106,7 +1109,7 @@ export default function PostForm({ segment }: PostFormProps) {
                       required
                       value={area}
                       onChange={(e) => setArea(e.target.value)}
-                      className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors cursor-pointer"
+                      className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors cursor-pointer"
                     >
                       <option value="" disabled>Select Location *</option>
                       {THANJAVUR_TOWNS.map((town) => (
@@ -1159,7 +1162,7 @@ export default function PostForm({ segment }: PostFormProps) {
                         placeholder="Price or Rate (e.g. 5000, 5000rs, or 5000/month)"
                         value={price}
                         onChange={(e) => setPrice(e.target.value)}
-                        className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal pr-20"
+                        className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal pr-20"
                       />
                       {formattedPriceBadge && (
                         <span className="absolute right-0 top-2.5 text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
@@ -1175,7 +1178,7 @@ export default function PostForm({ segment }: PostFormProps) {
                         placeholder="Enter location / area *"
                         value={area}
                         onChange={(e) => setArea(e.target.value)}
-                        className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal"
+                        className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal"
                       />
                     </div>
                   </>
@@ -1190,7 +1193,7 @@ export default function PostForm({ segment }: PostFormProps) {
                         placeholder="Budget From (e.g. 5000, 5000rs - Optional)"
                         value={price}
                         onChange={(e) => setPrice(e.target.value)}
-                        className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium"
+                        className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal"
                       />
                     </div>
 
@@ -1199,7 +1202,7 @@ export default function PostForm({ segment }: PostFormProps) {
                         required
                         value={area}
                         onChange={(e) => setArea(e.target.value)}
-                        className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors cursor-pointer"
+                        className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors cursor-pointer"
                       >
                         <option value="" disabled>Select Location *</option>
                         {THANJAVUR_TOWNS.map((town) => (
@@ -1218,14 +1221,14 @@ export default function PostForm({ segment }: PostFormProps) {
                     placeholder="📞 Contact phone number * (e.g. 9994837342)"
                     value={phone}
                     onChange={(e) => { userEditedPhone.current = true; setPhone(e.target.value); }}
-                    className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium"
+                    className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal"
                   />
                 </div>
 
-                {/* Description Input (Optional) */}
-                <div className="flex flex-col gap-2">
+                {/* Description Input */}
+                <div className="flex flex-col gap-1.5">
                   <div className="flex items-center justify-between gap-2 flex-wrap">
-                    <label className="text-sm font-bold text-slate-800">
+                    <label className="text-xs font-bold text-slate-800">
                       {segment === "service" ? "Work Experience & Skill Details (Optional)" : "Description or details (Optional)"}
                     </label>
                     <div className="flex items-center gap-2">
@@ -1234,7 +1237,7 @@ export default function PostForm({ segment }: PostFormProps) {
                         onClick={() => handleBlurDescription(description)}
                         disabled={isAiRewriting || !description.trim()}
                         className="px-2.5 py-1 rounded-lg bg-amber-400 hover:bg-amber-500 text-slate-950 font-heading font-black text-[11px] flex items-center gap-1.5 transition-all shadow-2xs cursor-pointer border border-amber-300 disabled:opacity-50"
-                        title="Refine description (fixes typos, capitalizes, formats professionally)"
+                        title="Refine description"
                       >
                         <span>{isAiRewriting ? "Refining..." : "Auto-Refine Description"}</span>
                       </button>
@@ -1253,7 +1256,7 @@ export default function PostForm({ segment }: PostFormProps) {
                     }
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="w-full px-4 py-3 text-sm font-medium border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all resize-none leading-relaxed"
+                    className="w-full px-3.5 py-2.5 text-sm font-medium border border-slate-200 rounded-xl bg-slate-50 focus:outline-none focus:border-amber-500 focus:bg-white text-slate-900 transition-all resize-none leading-relaxed"
                   />
                 </div>
               </>
@@ -1261,16 +1264,16 @@ export default function PostForm({ segment }: PostFormProps) {
 
             {/* Sell Specific Links */}
             {segment === "sell" && (
-              <div className="flex flex-col gap-1.5">
-                <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
-                  <Globe className="w-4 h-4 text-blue-500" /> Google Maps URL
+              <div className="flex flex-col gap-1">
+                <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
+                  <Globe className="w-4 h-4 text-blue-500" /> Google Maps URL (Optional)
                 </label>
                 <input
                   type="url"
                   placeholder="https://maps.google.com/..."
                   value={googleMapsUrl}
                   onChange={(e) => setGoogleMapsUrl(e.target.value)}
-                  className="w-full px-4 py-3 text-sm font-medium border border-slate-200 rounded-xl bg-slate-100/80 focus:outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/20 focus:bg-white text-slate-900 transition-all"
+                  className="w-full py-2.5 text-xs font-medium border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors"
                 />
               </div>
             )}
@@ -1278,7 +1281,7 @@ export default function PostForm({ segment }: PostFormProps) {
             {/* Sell/Need Phone Toggle */}
             {(segment === "sell" || segment === "need") && (
               <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 flex items-center justify-between gap-3 mt-1">
-                <span className="text-sm font-bold text-slate-800 flex items-center gap-2">
+                <span className="text-xs font-bold text-slate-800 flex items-center gap-2">
                   <Phone className="w-4 h-4 text-amber-600" />
                   <span>Display your phone number publicly</span>
                 </span>
@@ -1297,7 +1300,7 @@ export default function PostForm({ segment }: PostFormProps) {
             {/* Image Upload */}
             {segment === "sell" && (
               <div className="flex flex-col gap-2">
-                <label className="text-sm font-bold text-slate-800 flex items-center gap-1.5">
+                <label className="text-xs font-bold text-slate-800 flex items-center gap-1.5">
                   <Camera className="w-4 h-4 text-slate-400" />
                   <span>Photos — up to 3 images (tap to add)</span>
                 </label>
@@ -1332,10 +1335,10 @@ export default function PostForm({ segment }: PostFormProps) {
                     <div className="w-9 h-9 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold shadow-2xs">
                       <Camera className="w-4 h-4" />
                     </div>
-                    <span className="text-sm font-extrabold text-slate-800">
+                    <span className="text-xs font-extrabold text-slate-800">
                       {imagePreviews.length === 0 ? "Click to Upload Photos" : `Add More (${imagePreviews.length}/3)`}
                     </span>
-                    <span className="text-xs text-slate-500 font-medium">JPEG, PNG, WebP up to 5MB each</span>
+                    <span className="text-[11px] text-slate-500 font-medium">JPEG, PNG, WebP up to 5MB each</span>
                     <input
                       type="file"
                       accept="image/*"
@@ -1349,12 +1352,12 @@ export default function PostForm({ segment }: PostFormProps) {
             )}
           </form>
 
-          {/* RIGHT COLUMN: Instant 1:1 Live Preview Card (PROMINENT HIGHLIGHTED HEADER) */}
+          {/* RIGHT COLUMN: Instant 1:1 Live Preview Card */}
           <div className="lg:col-span-5 sticky top-20 flex flex-col gap-3">
-            <div className="flex items-center justify-between px-3 py-2 bg-slate-100 border-l-4 border-slate-800 rounded-r-xl shadow-2xs">
+            <div className="flex items-center justify-between px-3.5 py-2 bg-slate-100 border-l-4 border-slate-800 rounded-r-xl shadow-2xs">
               <div className="flex items-center gap-2">
                 <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping" />
-                <h3 className="font-heading font-black text-sm text-slate-900 tracking-tight">
+                <h3 className="font-heading font-black text-xs sm:text-sm text-slate-900 tracking-tight">
                   LIVE CARD PREVIEW
                 </h3>
               </div>
@@ -1383,7 +1386,7 @@ export default function PostForm({ segment }: PostFormProps) {
               type="submit"
               onClick={handleSubmit}
               disabled={loading}
-              className="w-full sm:w-auto sm:min-w-[240px] px-8 py-3.5 sm:py-4 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer rounded-xl shadow-md transition-all select-none mt-2 mb-28 md:mb-6 active:scale-95 sm:self-end"
+              className="w-full px-6 py-3.5 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs sm:text-sm uppercase tracking-wider flex items-center justify-center gap-2 cursor-pointer rounded-xl shadow-md transition-all select-none active:scale-95 disabled:opacity-50"
             >
               {loading ? (
                 <>
