@@ -192,17 +192,20 @@ export default function PostForm({ segment }: PostFormProps) {
     if (!editId) return;
 
     const populateFields = (data: any) => {
-      if (data.title || data.name || data.shop_name) setTitle(data.title || data.name || data.shop_name);
-      if (data.description || data.offer_description) {
-        const desc = data.description || data.offer_description;
+      if (data.title || data.name || data.shop_name || data.offer_title) setTitle(data.title || data.name || data.shop_name || data.offer_title);
+      if (data.description || data.offer_description || data.raw_text) {
+        const desc = data.description || data.offer_description || data.raw_text;
         setDescription(desc);
         setPreviewDescription(desc);
       }
+      if (data.category || data.skill_category) setCategory(data.category || data.skill_category);
       if (data.area_tag) setArea(data.area_tag);
       if (data.price !== undefined && data.price !== null) setPrice(String(data.price));
       if (data.phone) setPhone(data.phone);
       if (data.show_phone !== undefined) setShowPhone(Boolean(data.show_phone));
       if (data.google_maps_url) setGoogleMapsUrl(data.google_maps_url);
+      if (data.youtube_url) setYoutubeUrl(data.youtube_url);
+      if (data.video_url) setYoutubeUrl(data.video_url);
       if (data.valid_from) setValidFrom(data.valid_from);
       if (data.valid_to) setValidTo(data.valid_to);
       if (data.image_url) setImagePreview(data.image_url);
@@ -466,13 +469,13 @@ export default function PostForm({ segment }: PostFormProps) {
         const uploadedUrls = await Promise.all(
           selectedImages.map(async (img) => {
             try {
-              const compressed = await compressImage(img);
-              const storageRef = ref(storage, `postings/${Date.now()}_${img.name}`);
+              const compressed = await compressImage(img, 800, 800, 0.7);
+              const storageRef = ref(storage, `postings/${Date.now()}_${img.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`);
               const snapshot = await uploadBytes(storageRef, compressed.blob);
               return await getDownloadURL(snapshot.ref);
             } catch {
-              const compressed = await compressImage(img);
-              return compressed.base64 || defaultCoverImage;
+              const fallback = await compressImage(img, 400, 400, 0.4).catch(() => null);
+              return fallback?.base64 || defaultCoverImage;
             }
           })
         );
@@ -480,15 +483,19 @@ export default function PostForm({ segment }: PostFormProps) {
         cloudImageUrl = uploadedUrls[0] || cloudImageUrl;
       } else if (selectedImage) {
         try {
-          const compressed = await compressImage(selectedImage);
-          const storageRef = ref(storage, `postings/${Date.now()}_${selectedImage.name}`);
+          const compressed = await compressImage(selectedImage, 800, 800, 0.7);
+          const storageRef = ref(storage, `postings/${Date.now()}_${selectedImage.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`);
           const snapshot = await uploadBytes(storageRef, compressed.blob);
           cloudImageUrl = await getDownloadURL(snapshot.ref);
           cloudImageUrls = [cloudImageUrl];
         } catch {
-          cloudImageUrl = imagePreview || defaultCoverImage;
+          const fallback = await compressImage(selectedImage, 400, 400, 0.4).catch(() => null);
+          cloudImageUrl = fallback?.base64 || imagePreview || defaultCoverImage;
           cloudImageUrls = [cloudImageUrl];
         }
+      } else if (imagePreviews.length > 0) {
+        cloudImageUrls = imagePreviews;
+        cloudImageUrl = imagePreviews[0] || defaultCoverImage;
       }
     } catch (storageErr) {
       console.warn("Storage upload warning, using preview fallback:", storageErr);
@@ -608,7 +615,9 @@ export default function PostForm({ segment }: PostFormProps) {
           image_url: cloudImageUrl || "",
           offer_description: cleanDesc,
           address_text: area ? `${area}, Thanjavur` : "Thanjavur",
-          video_url: uploadedVideoUrl || youtubeUrl || "",
+          video_url: uploadedVideoUrl || youtubeUrl.trim() || "",
+          youtube_url: youtubeUrl.trim() || uploadedVideoUrl || "",
+          offer_social_link: uploadedVideoUrl || youtubeUrl.trim() || "",
           show_phone: Boolean(showPhone),
           is_verified: true,
           status: "active",

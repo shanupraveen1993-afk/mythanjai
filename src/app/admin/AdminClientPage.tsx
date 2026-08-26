@@ -302,9 +302,13 @@ export default function AdminClientPage() {
   const executeDelete = async (id: string, colName: string) => {
     const targetItem = items.find((i) => i.id === id);
     try {
-      await deleteDoc(doc(db, colName, id)).catch((err) => {
-        console.warn("Firestore delete document note:", err);
-      });
+      await Promise.all([
+        deleteDoc(doc(db, "needs_and_sales", id)).catch(() => {}),
+        deleteDoc(doc(db, "services", id)).catch(() => {}),
+        deleteDoc(doc(db, "shops", id)).catch(() => {}),
+        deleteDoc(doc(db, "offers", id)).catch(() => {}),
+        deleteDoc(doc(db, colName, id)).catch(() => {}),
+      ]);
     } catch (e) {
       console.warn("Delete document caught:", e);
     }
