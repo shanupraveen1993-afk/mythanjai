@@ -13,150 +13,6 @@ import { useAuth } from "@/hooks/use-auth";
 import UniversalSearchBarRow from "@/components/layout/UniversalSearchBarRow";
 import HomeCategorySegmentBar from "@/components/layout/HomeCategorySegmentBar";
 
-const SAMPLE_POSTS: NeedOrSalePost[] = [
-  {
-    id: "sample_1",
-    userId: "sample_user_1",
-    title: "iPhone 14 Pro Max 256GB - Deep Purple (Mint Condition)",
-    description: "Original box, bill, and Apple official Magsafe case included. Battery health 92%. Scratchless body. Selling to upgrade to 16 Pro.",
-    price: "₹68,000",
-    area_tag: "Medical College Rd",
-    seller_name: "Praveen Focus",
-    category: "Electronics",
-    type: "SELL",
-    image_url: "https://images.unsplash.com/photo-1695048133142-1a20484d2569?w=800&auto=format&fit=crop&q=80",
-    phone: "9994837342",
-    is_verified: true,
-    created_at: new Date(Date.now() - 2 * 3600000).toISOString(),
-  },
-  {
-    id: "sample_2",
-    userId: "sample_user_2",
-    title: "Hero Splendor Plus BS6 (2023 Single Owner)",
-    description: "Mileage 65 km/l. Fully serviced at authorized Hero showroom. Showroom condition with 1 year insurance valid.",
-    price: "₹55,000",
-    area_tag: "Old Bus Stand",
-    seller_name: "Senthil Nathan",
-    category: "Vehicles",
-    type: "SELL",
-    image_url: "https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=800&auto=format&fit=crop&q=80",
-    phone: "9842412345",
-    created_at: new Date(Date.now() - 5 * 3600000).toISOString(),
-  },
-  {
-    id: "sample_3",
-    userId: "sample_user_3",
-    title: "Teak Wood 6-Seater Dining Table Set with Cushioned Chairs",
-    description: "Pure Burma teak wood, hand polished. No damage or scratches. Urgent sale due to relocation.",
-    price: "₹18,500",
-    area_tag: "New Housing Unit",
-    seller_name: "Kavitha Rajan",
-    category: "Furniture",
-    type: "SELL",
-    image_url: "https://images.unsplash.com/photo-1615066390971-03e4e1c36ddf?w=800&auto=format&fit=crop&q=80",
-    phone: "9443198765",
-    created_at: new Date(Date.now() - 12 * 3600000).toISOString(),
-  },
-  {
-    id: "sample_4",
-    userId: "sample_user_4",
-    title: "Dell XPS 15 Laptop i7 12th Gen / 16GB RAM / 512GB SSD",
-    description: "OLED Touch Display, NVIDIA RTX Graphics. Perfect for video editing and software engineering.",
-    price: "₹72,000",
-    area_tag: "Pullanaboot",
-    seller_name: "Arun Kumar Tech",
-    category: "Electronics",
-    type: "SELL",
-    image_url: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=800&auto=format&fit=crop&q=80",
-    phone: "9876543210",
-    created_at: new Date(Date.now() - 24 * 3600000).toISOString(),
-  },
-  {
-    id: "sample_5",
-    userId: "sample_user_5",
-    title: "Sony PlayStation 5 Disc Edition + 2 DualSense Controllers",
-    description: "Includes God of War Ragnarok & Spider-Man 2 game discs. Works 100% fine. Reason for selling: switching to PC.",
-    price: "₹38,000",
-    area_tag: "Rajappa Nagar",
-    seller_name: "Vignesh G",
-    category: "Electronics",
-    type: "SELL",
-    image_url: "https://images.unsplash.com/photo-1606813907291-d86efa9b94db?w=800&auto=format&fit=crop&q=80",
-    phone: "9789012345",
-    created_at: new Date(Date.now() - 36 * 3600000).toISOString(),
-  },
-  {
-    id: "sample_6",
-    userId: "sample_user_6",
-    title: "Whirlpool 240L Triple Door Refrigerator (5 Star)",
-    description: "Frost-free triple door fridge. Very low power usage. 2 years old, stainless steel finish.",
-    price: "₹14,000",
-    area_tag: "Medical College Rd",
-    seller_name: "Manikandan S",
-    category: "Home Appliances",
-    type: "SELL",
-    image_url: "https://images.unsplash.com/photo-1584992236310-6edddc08acff?w=800&auto=format&fit=crop&q=80",
-    phone: "9944056789",
-    created_at: new Date(Date.now() - 48 * 3600000).toISOString(),
-  },
-  {
-    id: "sample_7",
-    userId: "sample_user_7",
-    title: "Royal Enfield Classic 350 Stealth Black (2022)",
-    description: "Dual channel ABS. Alloy wheels & tubeless tires installed. Run 14,000 km only.",
-    price: "₹1,65,000",
-    area_tag: "Trichy Road",
-    seller_name: "Karthik RE",
-    category: "Vehicles",
-    type: "SELL",
-    image_url: "https://images.unsplash.com/photo-1558981806-ec527fa84c39?w=800&auto=format&fit=crop&q=80",
-    phone: "9865012345",
-    created_at: new Date(Date.now() - 60 * 3600000).toISOString(),
-  },
-  {
-    id: "sample_8",
-    userId: "sample_user_8",
-    title: "Canon EOS 1500D DSLR Camera with 18-55mm + 55-250mm Lens",
-    description: "Includes camera bag, 64GB SanDisk Extreme SD card, and extra battery. Barely used.",
-    price: "₹26,500",
-    area_tag: "Vilar Bypass",
-    seller_name: "Pradeep Studio",
-    category: "Electronics",
-    type: "SELL",
-    image_url: "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=800&auto=format&fit=crop&q=80",
-    phone: "9442098765",
-    created_at: new Date(Date.now() - 72 * 3600000).toISOString(),
-  },
-  {
-    id: "sample_9",
-    userId: "sample_user_9",
-    title: "Solid Wood Study Desk with Bookshelf & Ergonomic Chair",
-    description: "Spacious computer desk with drawer storage and adjustable executive swivel chair.",
-    price: "₹7,500",
-    area_tag: "Karanthai",
-    seller_name: "Anand Home Furniture",
-    category: "Furniture",
-    type: "SELL",
-    image_url: "https://images.unsplash.com/photo-1518455027359-f3f8164ba6bd?w=800&auto=format&fit=crop&q=80",
-    phone: "9790123456",
-    created_at: new Date(Date.now() - 84 * 3600000).toISOString(),
-  },
-  {
-    id: "sample_10",
-    userId: "sample_user_10",
-    title: "LG 1.5 Ton 5 Star Dual Inverter Split AC (Copper Condenser)",
-    description: "Includes outdoor bracket & 10ft copper pipe. Super fast cooling with HD filter.",
-    price: "₹24,000",
-    area_tag: "Vallam",
-    seller_name: "Murugan Cool Care",
-    category: "Home Appliances",
-    type: "SELL",
-    image_url: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?w=800&auto=format&fit=crop&q=80",
-    phone: "9842098765",
-    created_at: new Date(Date.now() - 96 * 3600000).toISOString(),
-  },
-];
-
 export default function SellClientPage() {
   const router = useRouter();
   const { user, profile, isVerified } = useAuth();
@@ -197,11 +53,10 @@ export default function SellClientPage() {
 
 
 
-  // Public feed: Firestore live query data + Sample posts fallback for localhost design preview
+  // Public feed: ONLY Firestore data — no localStorage merge.
+  // Published post data is strictly managed via Firestore live queries.
   const allPosts = React.useMemo(() => {
-    const live = firestorePosts || [];
-    if (live.length >= 2) return live;
-    return [...live, ...SAMPLE_POSTS];
+    return firestorePosts || [];
   }, [firestorePosts]);
 
   const filteredPosts = React.useMemo(() => {

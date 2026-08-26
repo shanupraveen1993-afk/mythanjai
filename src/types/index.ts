@@ -15,24 +15,22 @@ export interface NeedOrSalePost {
   id: string;
   userId: string;
   type: "NEED" | "SELL";
-  raw_text?: string;
+  raw_text: string;
   title: string;
   description: string;
   category: string;
   area_tag: TanjoreLocality | string;
   price: number | string | null;
   phone: string;
-  is_verified?: boolean;
+  is_verified: boolean;
   created_at: any; // Firestore Timestamp
-  expires_at?: any; // Firestore Timestamp
+  expires_at: any; // Firestore Timestamp
   image_url?: string;
   image_urls?: string[];
   youtube_url?: string;
   youtube_thumbnail?: string;
   is_fulfilled?: boolean;
   pinned?: boolean;
-  seller_name?: string;
-  seller_id?: string;
 }
 
 export interface ServiceProviderPost {
