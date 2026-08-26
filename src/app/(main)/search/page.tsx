@@ -46,8 +46,20 @@ function SearchContent() {
         const sellMatches: any[] = [];
         const needMatches: any[] = [];
 
+        const isPostValid = (d: any) => {
+          const postTime = typeof d.created_at?.toDate === "function"
+            ? d.created_at.toDate().getTime()
+            : d.created_at?.seconds
+            ? d.created_at.seconds * 1000
+            : typeof d.created_at === "string" || typeof d.created_at === "number"
+            ? new Date(d.created_at).getTime()
+            : 0;
+          return postTime === 0 || postTime >= 1787766000000;
+        };
+
         classifiedsSnap.docs.forEach((docSnap) => {
           const d = docSnap.data();
+          if (!isPostValid(d)) return;
           const text = `${d.title || ""} ${d.description || ""} ${d.category || ""} ${d.area_tag || ""}`.toLowerCase();
           if (text.includes(qTerm)) {
             if (d.type === "NEED" || d.category === "NEED") {
@@ -61,6 +73,7 @@ function SearchContent() {
         const serviceMatches: any[] = [];
         servicesSnap.docs.forEach((docSnap) => {
           const d = docSnap.data();
+          if (!isPostValid(d)) return;
           const text = `${d.name || ""} ${d.skill_category || ""} ${d.description || ""} ${d.area_tag || ""}`.toLowerCase();
           if (text.includes(qTerm)) {
             serviceMatches.push({ id: docSnap.id, ...d });
@@ -70,6 +83,7 @@ function SearchContent() {
         const offerMatches: any[] = [];
         shopsSnap.docs.forEach((docSnap) => {
           const d = docSnap.data();
+          if (!isPostValid(d)) return;
           const text = `${d.shop_name || ""} ${d.category || ""} ${d.offer_title || ""} ${d.offer_description || ""} ${d.area_tag || ""}`.toLowerCase();
           if (text.includes(qTerm)) {
             offerMatches.push({ id: docSnap.id, ...d });

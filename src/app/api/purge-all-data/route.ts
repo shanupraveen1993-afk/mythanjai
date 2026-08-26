@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { adminDb } from "@/lib/firebase-admin";
 
+export const dynamic = "force-dynamic";
+
 const COLLECTIONS = ["needs_and_sales", "services", "shops", "offers", "reports", "audit_logs"];
 
 export async function GET() {

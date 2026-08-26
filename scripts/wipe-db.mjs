@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs, deleteDoc, doc } from "firebase/firestore";
+import { getFirestore, collection, getDocs, updateDoc, setDoc, doc } from "firebase/firestore";
 import { getAuth, signInAnonymously } from "firebase/auth";
 
 const firebaseConfig = {
@@ -15,43 +15,48 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 const auth = getAuth(app);
 
-const COLLECTIONS = ["needs_and_sales", "services", "shops", "offers", "reports", "audit_logs"];
+const COLLECTIONS = ["needs_and_sales", "services", "shops", "offers"];
 
-async function wipeDatabase() {
-  console.log("Signing in anonymously to Firebase Auth...");
+async function deactivateAllListings() {
+  console.log("Signing in to Firebase Auth...");
   try {
-    const userCred = await signInAnonymously(auth);
-    console.log("Signed in anonymously as UID:", userCred.user.uid);
-  } catch (authErr) {
-    console.warn("Anonymous sign in notice:", authErr?.message);
+    const cred = await signInAnonymously(auth);
+    console.log("Authenticated as UID:", cred.user.uid);
+  } catch (e) {
+    console.warn("Auth error:", e?.message);
   }
 
-  console.log("Starting Cloud Firestore database wipe...");
-  let totalDeleted = 0;
+  let count = 0;
 
   for (const colName of COLLECTIONS) {
     try {
-      const colRef = collection(db, colName);
-      const snap = await getDocs(colRef);
-      console.log(`Collection '${colName}': found ${snap.size} documents.`);
-      
-      for (const docSnap of snap.docs) {
-        const itemTitle = docSnap.data().title || docSnap.data().name || docSnap.data().shop_name || docSnap.data().offer_title || docSnap.id;
+      const snap = await getDocs(collection(db, colName));
+      console.log(`Checking ${colName}: found ${snap.size} documents.`);
+
+      for (const d of snap.docs) {
+        const itemTitle = d.data().title || d.data().name || d.data().shop_name || d.id;
+        console.log(`Deactivating ${colName}/${d.id} ("${itemTitle}")...`);
         try {
-          await deleteDoc(doc(db, colName, docSnap.id));
-          console.log(`✓ Deleted ${colName}/${docSnap.id} ("${itemTitle}")`);
-          totalDeleted++;
-        } catch (delErr) {
-          console.error(`Failed to delete ${colName}/${docSnap.id}:`, delErr?.message);
+          await setDoc(doc(db, colName, d.id), {
+            is_inactive: true,
+            is_sold: true,
+            is_expired: true,
+            is_offline: true,
+            status: "inactive",
+          }, { merge: true });
+          console.log(`✓ Deactivated ${colName}/${d.id}`);
+          count++;
+        } catch (err) {
+          console.error(`Failed to update ${colName}/${d.id}:`, err?.message);
         }
       }
     } catch (err) {
-      console.error(`Error reading collection ${colName}:`, err?.message);
+      console.error(`Error reading ${colName}:`, err?.message);
     }
   }
 
-  console.log(`\n🎉 Firestore wipe completed! Total ${totalDeleted} documents deleted.`);
+  console.log(`\n🎉 Successfully deactivated ${count} items in Cloud Firestore!`);
   process.exit(0);
 }
 
-wipeDatabase();
+deactivateAllListings();
