@@ -272,13 +272,13 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
   };
 
   // Report Listing
-  const handleReportListing = (e: React.MouseEvent) => {
+  const handleReportListing = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    const result = reportListing(listing.id, "Inappropriate content");
-    if (result.isQuarantined) {
-      toast.info("Post flagged and sent to moderation review.");
+    const res = await reportListing(listing.id, "needs_and_sales", "Inappropriate content", profile?.phone || user?.phoneNumber || "Anonymous");
+    if (res.success) {
+      toast.success("Thank you! Report submitted to admin for verification.");
     } else {
-      toast.info("Thank you for reporting. Admin has been notified.");
+      toast.error("Could not submit report. Please try again.");
     }
   };
 

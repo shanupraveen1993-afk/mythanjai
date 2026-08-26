@@ -205,11 +205,14 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
     }
   };
 
-  const handleReport = (e: React.MouseEvent) => {
+  const handleReport = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    const result = reportListing(post.id, "Inappropriate content");
-    if (result.isQuarantined) toast.error("This store offer has been sent for moderation review.");
-    else toast.success("Thank you! Listing reported to admin for verification.");
+    const res = await reportListing(post.id, "shops", "Inappropriate content", profile?.phone || user?.phoneNumber || "Anonymous");
+    if (res.success) {
+      toast.success("Thank you! Listing reported to admin for verification.");
+    } else {
+      toast.error("Could not submit report. Please try again.");
+    }
   };
 
   const handleToggleSave = (e: React.MouseEvent) => {

@@ -84,13 +84,13 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
     }
   };
 
-  const handleReport = (e: React.MouseEvent) => {
+  const handleReport = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    const result = reportListing(post.id, "Inappropriate content");
-    if (result.isQuarantined) {
-      toast.error("This post has been quarantined for moderation review.");
+    const res = await reportListing(post.id, "needs_and_sales", "Inappropriate content", profile?.phone || user?.phoneNumber || "Anonymous");
+    if (res.success) {
+      toast.success("Thank you! Report submitted to admin for verification.");
     } else {
-      toast.success("Thank you! Post reported to admin for verification.");
+      toast.error("Could not submit report. Please try again.");
     }
   };
 

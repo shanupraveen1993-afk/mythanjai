@@ -113,13 +113,13 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
     }
   };
 
-  const handleReport = (e: React.MouseEvent) => {
+  const handleReport = async (e: React.MouseEvent) => {
     e.stopPropagation();
-    const result = reportListing(post.id, "Inappropriate content");
-    if (result.isQuarantined) {
-      toast.error("This service provider listing has been sent for moderation review.");
-    } else {
+    const res = await reportListing(post.id, "services", "Inappropriate content", profile?.phone || user?.phoneNumber || "Anonymous");
+    if (res.success) {
       toast.success("Thank you! Listing reported to admin for verification.");
+    } else {
+      toast.error("Could not submit report. Please try again.");
     }
   };
 

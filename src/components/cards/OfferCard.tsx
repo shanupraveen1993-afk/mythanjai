@@ -20,14 +20,14 @@ export default function OfferCard({ post }: OfferCardProps) {
   const { toast } = useToast();
   const [isPlayingVideo, setIsPlayingVideo] = useState(false);
 
-  const handleReport = (e: React.MouseEvent) => {
+  const handleReport = async (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
-    const result = reportListing(post.id, "Inappropriate offer content");
-    if (result.isQuarantined) {
-      toast.success("This offer has been sent for moderation review.");
-    } else {
+    const res = await reportListing(post.id, "offers", "Inappropriate offer content");
+    if (res.success) {
       toast.success("Thank you! Offer reported to admin for verification.");
+    } else {
+      toast.error("Could not submit report. Please try again.");
     }
   };
 

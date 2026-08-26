@@ -39,8 +39,6 @@ export default function LandingClientPage() {
   const [matchedPosts, setMatchedPosts] = useState<any[]>([]);
   const [loadingData, setLoadingData] = useState(true);
 
-  const [loadingData, setLoadingData] = useState(true);
-
   // Fetch real live listings from Firestore
   useEffect(() => {
     let isMounted = true;

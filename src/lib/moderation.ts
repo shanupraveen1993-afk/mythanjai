@@ -1,4 +1,6 @@
 // ── Namma Thanjai Moderation & Safety Engine ──────────────────────────────
+import { db } from "@/lib/firebase";
+import { collection, addDoc, serverTimestamp, doc, updateDoc, increment } from "firebase/firestore";
 
 export const BANNED_KEYWORDS = [
   "casino", "gambling", "betting", "lottery", "porn", "adult", "weapon", "drugs", "hack", "scam",
@@ -21,39 +23,45 @@ export function validatePostContent(title: string, description: string = ""): { 
 }
 
 /**
- * Reports a listing. Auto-quarantines if reports > 3.
+ * Reports a listing directly to Firestore reports collection.
  */
-export function reportListing(listingId: string, reason: string = "Inappropriate content"): { success: boolean; isQuarantined: boolean; reportCount: number } {
-  if (typeof window === "undefined") return { success: false, isQuarantined: false, reportCount: 0 };
-  
+export async function reportListing(
+  listingId: string,
+  colName: string = "needs_and_sales",
+  reason: string = "Inappropriate content",
+  reporterPhone: string = "Anonymous"
+): Promise<{ success: boolean }> {
   try {
-    const reportsKey = `namma_thanjai_reports_${listingId}`;
-    const currentCount = parseInt(localStorage.getItem(reportsKey) || "0", 10) + 1;
-    localStorage.setItem(reportsKey, String(currentCount));
-    
-    // Store report entry in history log
-    const historyKey = "namma_thanjai_reported_listings";
-    const history = JSON.parse(localStorage.getItem(historyKey) || "[]");
-    history.push({ listingId, reason, timestamp: new Date().toISOString() });
-    localStorage.setItem(historyKey, JSON.stringify(history));
+    // 1. Add record to Firestore reports collection
+    await addDoc(collection(db, "reports"), {
+      postId: listingId,
+      colName,
+      reason,
+      reporterPhone,
+      created_at: serverTimestamp(),
+      status: "pending",
+    });
 
-    const isQuarantined = currentCount > 3;
-    if (isQuarantined) {
-      const quarantinedKey = `namma_thanjai_quarantined_${listingId}`;
-      localStorage.setItem(quarantinedKey, "true");
-    }
+    // 2. Increment negative_reports_count & flag on target document in Firestore
+    try {
+      const targetDocRef = doc(db, colName, listingId);
+      await updateDoc(targetDocRef, {
+        negative_reports_count: increment(1),
+        is_reported: true,
+      });
+    } catch (e) {}
 
-    return { success: true, isQuarantined, reportCount: currentCount };
+    return { success: true };
   } catch (e) {
-    console.error("Failed to report listing:", e);
-    return { success: false, isQuarantined: false, reportCount: 0 };
+    console.error("Failed to report listing to Firestore:", e);
+    return { success: false };
   }
 }
 
 /**
- * Checks if a listing is quarantined due to moderation flags (>3 reports).
+ * Checks if a listing is quarantined (retained for backward compatibility).
+ * Real quarantine filtering is driven by Firestore is_reported / negative_reports_count.
  */
-export function isListingQuarantined(listingId: string): boolean {
-  if (typeof window === "undefined") return false;
-  return localStorage.getItem(`namma_thanjai_quarantined_${listingId}`) === "true";
+export function isListingQuarantined(listingId?: string): boolean {
+  return false;
 }
