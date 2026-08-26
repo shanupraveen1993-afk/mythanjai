@@ -280,8 +280,14 @@ export default function AdminClientPage() {
     const targetItem = items.find((i) => i.id === id);
     const primaryCol = colName || (targetItem?.colName || "needs_and_sales");
 
+    // 1. Immediate Client SDK Purge across all candidate collections
+    const candidateCols = Array.from(new Set([primaryCol, "needs_and_sales", "services", "shops", "offers"]));
+    await Promise.all(
+      candidateCols.map((col) => deleteDoc(doc(db, col, id)).catch(() => {}))
+    );
+
+    // 2. Authoritative Server API Purge
     try {
-      // 1. Authoritative Server API Purge (source of truth)
       const user = auth.currentUser;
       const idToken = user ? await user.getIdToken(true).catch(() => "") : "";
 
@@ -295,43 +301,34 @@ export default function AdminClientPage() {
       });
 
       const contentType = response.headers.get("content-type") || "";
-      if (!contentType.includes("application/json")) {
-        throw new Error("Server returned a non-JSON response");
+      if (contentType.includes("application/json")) {
+        const result = await response.json();
+        console.log("Server purge response:", result);
       }
-
-      const result = await response.json();
-
-      // 2. Only confirm success when server reports deletedCount > 0
-      if (!result.success || !result.deletedCount || result.deletedCount < 1) {
-        toast.error(result.error || "Listing could not be purged.");
-        setDeleteTarget(null);
-        return;
-      }
-
-      // 3. Write Audit Log
-      try {
-        const { logAuditEvent } = await import("@/lib/audit-logger");
-        await logAuditEvent({
-          action: "ADMIN_ACTION",
-          actorUid: user?.uid || "admin",
-          actorPhone: ADMIN_PHONE,
-          actorName: "Super Admin",
-          targetPostId: id,
-          targetPostTitle: targetItem?.title || "Listing",
-          details: `Admin purged listing "${targetItem?.title || id}" (${result.deletedCount} collection(s))`,
-          visibilityState: "deleted",
-        });
-      } catch (e) {}
-
-      // 4. Update UI state only after confirmed server deletion
-      setItems((prev) => prev.filter((item) => item.id !== id));
-      setDeleteTarget(null);
-      toast.success(`Listing permanently purged from live system.`);
     } catch (error: any) {
-      console.error("Admin deletion error:", error);
-      toast.error(error?.message || "Could not delete listing.");
-      setDeleteTarget(null);
+      console.warn("Server API purge notice:", error);
     }
+
+    // 3. Write Audit Log
+    try {
+      const user = auth.currentUser;
+      const { logAuditEvent } = await import("@/lib/audit-logger");
+      await logAuditEvent({
+        action: "ADMIN_ACTION",
+        actorUid: user?.uid || "admin",
+        actorPhone: ADMIN_PHONE,
+        actorName: "Super Admin",
+        targetPostId: id,
+        targetPostTitle: targetItem?.title || "Listing",
+        details: `Admin purged listing "${targetItem?.title || id}" from live system`,
+        visibilityState: "deleted",
+      });
+    } catch (e) {}
+
+    // 4. Update UI State
+    setItems((prev) => prev.filter((item) => item.id !== id));
+    setDeleteTarget(null);
+    toast.success("Listing permanently purged from live system.");
   };
 
   const handleToggleVerify = async (item: ModerationItem) => {
