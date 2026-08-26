@@ -66,11 +66,17 @@ export default function LandingClientPage() {
         const services: any[] = servicesSnap.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() }));
         const offers: any[] = shopsSnap.docs.map((docSnap) => ({ id: docSnap.id, ...docSnap.data() }));
 
+        const filterActiveOnly = (arr: any[]) =>
+          arr.filter((p) => {
+            if (p.is_sold || p.is_inactive || p.is_offline || p.is_expired || p.status === "inactive" || p.status === "moderation_review") return false;
+            return true;
+          });
+
         if (isMounted) {
-          setLiveSellPosts(sells);
-          setLiveNeedPosts(needs);
-          setLiveServicePosts(services);
-          setLiveOfferPosts(offers);
+          setLiveSellPosts(filterActiveOnly(sells));
+          setLiveNeedPosts(filterActiveOnly(needs));
+          setLiveServicePosts(filterActiveOnly(services));
+          setLiveOfferPosts(filterActiveOnly(offers));
 
           // Dynamic Matchmaker Logic
           if (activeSellOrNeedPost) {

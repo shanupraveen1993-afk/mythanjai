@@ -31,6 +31,11 @@ const ALLOWED_UPDATE_FIELDS = [
   "is_available_now",
   "experience",
   "working_hours",
+  "is_inactive",
+  "is_sold",
+  "is_offline",
+  "is_contacted",
+  "status",
 ];
 
 export async function POST(request: Request) {

@@ -2,7 +2,13 @@
 
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/use-auth";
-import { db } from "@/lib/firebase";
+import { db, auth } from "@/lib/firebase";
+
+const getApiUrl = (endpoint: string) => {
+  if (typeof window !== "undefined") return endpoint;
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+  return `${baseUrl}${endpoint}`;
+};
 import {
   collection,
   query,
@@ -191,15 +197,32 @@ function ListingsContent() {
     );
 
     const col = post.colName || (post.skill_category ? "services" : (post.type === "SELL" || post.type === "NEED") ? "needs_and_sales" : "shops");
+    const updatePayload = {
+      is_inactive: nextState,
+      is_sold: nextState,
+      is_offline: nextState,
+      is_contacted: nextState,
+      status: nextState ? "inactive" : "active",
+    };
+
     try {
-      await updateDoc(doc(db, col, post.id), {
-        is_inactive: nextState,
-        is_sold: nextState,
-        is_offline: nextState,
-        is_contacted: nextState,
-        status: nextState ? "inactive" : "active",
-      });
-    } catch (e) {}
+      await updateDoc(doc(db, col, post.id), updatePayload);
+    } catch (clientErr: any) {
+      console.warn("Client updateDoc failed, trying server API update:", clientErr?.message);
+      try {
+        const idToken = (await auth.currentUser?.getIdToken().catch(() => "")) || "";
+        await fetch(getApiUrl("/api/post/update"), {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: idToken ? `Bearer ${idToken}` : "",
+          },
+          body: JSON.stringify({ postId: post.id, colName: col, payload: updatePayload }),
+        });
+      } catch (apiErr) {
+        console.error("Server API update failed:", apiErr);
+      }
+    }
 
     toast.success(nextState ? "Listing marked as INACTIVE." : "Listing reactivated as ACTIVE!");
   };
