@@ -125,13 +125,12 @@ export default function TopHeader({
         </div>
 
         {/* Center: Sub-Screen Title or 4 Category Tabs with Vector Icons */}
-        {pathname.includes("/profile") || pathname.includes("/post") || pathname.includes("/chat") || pathname.includes("/admin") ? (
+        {pathname.includes("/profile") || pathname.includes("/post") || pathname.includes("/chat") ? (
           <div className="absolute left-1/2 -translate-x-1/2 font-heading font-black text-sm sm:text-base text-slate-900 truncate max-w-[180px] sm:max-w-xs text-center z-10">
             {pathname.includes("/profile")
               ? (profileTab === "listings" ? "My Listings" : profileTab === "saved" ? "Saved Items" : "My Profile")
               : pathname.includes("/post") ? "Post a Free Ad"
               : pathname.includes("/chat") ? "Direct Messages"
-              : pathname.includes("/admin") ? "Admin Dashboard"
               : "Namma Thanjai"}
           </div>
         ) : (

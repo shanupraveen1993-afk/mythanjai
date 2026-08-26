@@ -44,8 +44,7 @@ export default function UniversalSearchBarRow() {
   const isHiddenPage =
     pathname.includes("/profile") ||
     pathname.includes("/chat") ||
-    pathname.includes("/post") ||
-    pathname.includes("/admin");
+    pathname.includes("/post");
 
   if (isHiddenPage) return null;
 

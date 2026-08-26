@@ -15,8 +15,7 @@ export default function FloatingPostButton() {
     pathname.startsWith("/chat") ||
     pathname.startsWith("/profile") ||
     pathname.startsWith("/listings") ||
-    pathname.startsWith("/post") ||
-    pathname.startsWith("/admin")
+    pathname.startsWith("/post")
   ) {
     return null;
   }
