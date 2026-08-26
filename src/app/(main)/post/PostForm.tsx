@@ -151,8 +151,64 @@ export default function PostForm({ segment }: PostFormProps) {
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
   const [videoPreview, setVideoPreview] = useState<string>("");
+  const [uploadedVideoUrl, setUploadedVideoUrl] = useState<string>("");
+  const [isUploadingVideo, setIsUploadingVideo] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [uploadStatusMsg, setUploadStatusMsg] = useState<string>("");
+
+  const startBackgroundVideoUpload = (file: File) => {
+    setIsUploadingVideo(true);
+    setUploadProgress(0);
+    const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
+    setUploadStatusMsg(`Pre-uploading Video Reel (${sizeMb} MB)... 0%`);
+
+    try {
+      const videoRef = ref(storage, `videos/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`);
+      const uploadTask = uploadBytesResumable(videoRef, file);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+          setUploadProgress(pct);
+          setUploadStatusMsg(`Pre-uploading Video Reel (${sizeMb} MB)... ${pct}%`);
+        },
+        (err) => {
+          console.warn("Background video upload error:", err);
+          setIsUploadingVideo(false);
+          setUploadProgress(null);
+          setUploadStatusMsg("");
+        },
+        async () => {
+          const url = await getDownloadURL(uploadTask.snapshot.ref);
+          setUploadedVideoUrl(url);
+          setIsUploadingVideo(false);
+          setUploadProgress(null);
+          setUploadStatusMsg("");
+          toast.success("Video pre-uploaded in background! Ready for instant publish.");
+        }
+      );
+    } catch (err) {
+      setIsUploadingVideo(false);
+      setUploadProgress(null);
+      setUploadStatusMsg("");
+    }
+  };
+
+  const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      if (file.size > 25 * 1024 * 1024) {
+        toast.error("Video file size must be under 25MB.");
+        return;
+      }
+      setSelectedVideo(file);
+      setVideoPreview(URL.createObjectURL(file));
+      setUploadedVideoUrl("");
+      toast.info("Video selected! Pre-uploading in background...");
+      startBackgroundVideoUpload(file);
+    }
+  };
   const [price, setPrice] = useState("");
   const [hasSpecificPrice, setHasSpecificPrice] = useState<boolean>(true);
   const [youtubeUrl, setYoutubeUrl] = useState("");
@@ -245,18 +301,7 @@ export default function PostForm({ segment }: PostFormProps) {
     return endpoint;
   };
 
-  const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      if (file.size > 25 * 1024 * 1024) {
-        toast.error("Video file size must be under 25MB.");
-        return;
-      }
-      setSelectedVideo(file);
-      setVideoPreview(URL.createObjectURL(file));
-      toast.success("Store Video Flyer attached!");
-    }
-  };
+
 
   const [isAiRefined, setIsAiRefined] = useState(false);
 
@@ -523,39 +568,51 @@ export default function PostForm({ segment }: PostFormProps) {
       console.warn("Storage upload warning, using preview fallback:", storageErr);
     }
 
-    // ── STEP 2b: Upload Video Reel to Firebase Storage with Resumable Progress ──
-    let cloudVideoUrl = "";
-    if (selectedVideo) {
-      const sizeMb = (selectedVideo.size / (1024 * 1024)).toFixed(1);
-      setUploadStatusMsg(`Uploading Video Reel (${sizeMb} MB)... 0%`);
-      setUploadProgress(0);
-      try {
-        const videoRef = ref(storage, `videos/${Date.now()}_${selectedVideo.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`);
-        const uploadTask = uploadBytesResumable(videoRef, selectedVideo);
+    // ── STEP 2b: Use background pre-uploaded Video Reel URL or finish background upload ──
+    let cloudVideoUrl = uploadedVideoUrl;
+    if (selectedVideo && !cloudVideoUrl) {
+      if (isUploadingVideo) {
+        // Video is already uploading in the background — wait for it to complete
+        setUploadStatusMsg("Finishing background video upload...");
+        let attempts = 0;
+        while (isUploadingVideo && attempts < 100) {
+          await new Promise((r) => setTimeout(r, 300));
+          attempts++;
+        }
+        cloudVideoUrl = uploadedVideoUrl;
+      } else {
+        // Fallback: Upload synchronously if background task was interrupted
+        const sizeMb = (selectedVideo.size / (1024 * 1024)).toFixed(1);
+        setUploadStatusMsg(`Uploading Video Reel (${sizeMb} MB)... 0%`);
+        setUploadProgress(0);
+        try {
+          const videoRef = ref(storage, `videos/${Date.now()}_${selectedVideo.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`);
+          const uploadTask = uploadBytesResumable(videoRef, selectedVideo);
 
-        cloudVideoUrl = await new Promise<string>((resolve) => {
-          uploadTask.on(
-            "state_changed",
-            (snapshot) => {
-              const pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-              setUploadProgress(pct);
-              setUploadStatusMsg(`Uploading Video Reel (${sizeMb} MB)... ${pct}%`);
-            },
-            (err) => {
-              console.warn("Video upload error:", err);
-              resolve("");
-            },
-            async () => {
-              const url = await getDownloadURL(uploadTask.snapshot.ref);
-              resolve(url);
-            }
-          );
-        });
-      } catch (videoErr) {
-        console.warn("Video storage upload warning:", videoErr);
-      } finally {
-        setUploadProgress(null);
-        setUploadStatusMsg("");
+          cloudVideoUrl = await new Promise<string>((resolve) => {
+            uploadTask.on(
+              "state_changed",
+              (snapshot) => {
+                const pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                setUploadProgress(pct);
+                setUploadStatusMsg(`Uploading Video Reel (${sizeMb} MB)... ${pct}%`);
+              },
+              (err) => {
+                console.warn("Video upload error:", err);
+                resolve("");
+              },
+              async () => {
+                const url = await getDownloadURL(uploadTask.snapshot.ref);
+                resolve(url);
+              }
+            );
+          });
+        } catch (videoErr) {
+          console.warn("Video storage upload warning:", videoErr);
+        } finally {
+          setUploadProgress(null);
+          setUploadStatusMsg("");
+        }
       }
     }
 
