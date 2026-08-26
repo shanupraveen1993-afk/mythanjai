@@ -51,22 +51,10 @@ export default function TopHeader({
   const phoneDisplay = profile?.phone ? `+${profile.phone}` : "+919994837342";
   const isHomePage = pathname === "/";
 
-  // Dynamic Post CTA info based on active page route or tab
+  // Static Post Ad CTA info for Web App
   const postInfo = React.useMemo(() => {
-    if (pathname.includes("/sell") || activeTab === "sell") {
-      return { label: "Post Item", route: "/post/sell" };
-    }
-    if (pathname.includes("/need") || activeTab === "need") {
-      return { label: "Post Requirement", route: "/post/need" };
-    }
-    if (pathname.includes("/services") || activeTab === "services") {
-      return { label: "Post Service", route: "/post/service" };
-    }
-    if (pathname.includes("/shops") || pathname.includes("/offers") || activeTab === "shops") {
-      return { label: "Post Offer", route: "/post/offer" };
-    }
-    return { label: "Post Ad", route: "/post/sell" };
-  }, [pathname, activeTab]);
+    return { label: "+ Post Ad", route: "/post/sell" };
+  }, []);
 
   const handleDynamicPostClick = () => {
     if (!isAuthVerified) {
@@ -287,7 +275,7 @@ export default function TopHeader({
               title={postInfo.label}
             >
               <Plus className="w-4 h-4 stroke-[3] text-[#0F172A]" />
-              <span>{postInfo.label}</span>
+              <span>Post Ad</span>
             </button>
           )}
         </div>

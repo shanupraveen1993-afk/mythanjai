@@ -104,7 +104,7 @@ export default function SellClientPage() {
 
       <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 flex flex-col gap-3 mt-2">
         {/* 1. TITLE BAR */}
-        <div className="py-1.5 flex items-center justify-between gap-3 w-full border-b border-slate-200/80">
+        <div className="py-1 flex items-center justify-between gap-3 w-full">
           <h2 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight">
             Items for Sale (விற்பனை)
           </h2>
