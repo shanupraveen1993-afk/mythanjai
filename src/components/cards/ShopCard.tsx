@@ -75,7 +75,16 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
         videoRef.current.pause();
         setIsPlaying(false);
       } else {
-        videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+        videoRef.current
+          .play()
+          .then(() => setIsPlaying(true))
+          .catch((err) => {
+            console.warn("Video play exception, trying muted fallback:", err);
+            if (videoRef.current) {
+              videoRef.current.muted = true;
+              videoRef.current.play().then(() => setIsPlaying(true)).catch(() => {});
+            }
+          });
       }
     }
   };
@@ -271,16 +280,13 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
         <video
           ref={videoRef}
           src={videoSrc}
-          poster={(post as any).cover_image_url || (post as any).cover_image || undefined}
+          poster={(post as any).cover_image_url || (post as any).cover_image || (post as any).image_url || undefined}
           playsInline
           loop
-          muted={Boolean(isExpired)}
+          controls
           preload="metadata"
-          crossOrigin="anonymous"
-          onError={(e) => {
-            const videoEl = e.currentTarget;
-            videoEl.style.display = "none";
-          }}
+          onPlay={() => setIsPlaying(true)}
+          onPause={() => setIsPlaying(false)}
           onClick={togglePlay}
           className="absolute inset-0 w-full h-full object-cover z-0 cursor-pointer"
         />
@@ -290,10 +296,10 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
           <button
             type="button"
             onClick={togglePlay}
-            className="absolute inset-0 z-20 flex items-center justify-center bg-slate-950/20 hover:bg-slate-950/40 transition-all cursor-pointer"
+            className="absolute inset-0 z-20 flex items-center justify-center bg-slate-950/30 hover:bg-slate-950/50 transition-all cursor-pointer"
           >
-            <div className="w-14 h-14 rounded-full bg-slate-950/80 text-amber-400 border-2 border-amber-400/60 backdrop-blur-md flex items-center justify-center shadow-2xl hover:scale-110 transition-transform">
-              <Play className="w-7 h-7 fill-amber-400 ml-1" />
+            <div className="w-16 h-16 rounded-full bg-slate-950/85 text-amber-400 border-2 border-amber-400/80 backdrop-blur-md flex items-center justify-center shadow-2xl hover:scale-110 active:scale-95 transition-transform">
+              <Play className="w-8 h-8 fill-amber-400 ml-1" />
             </div>
           </button>
         )}
