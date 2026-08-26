@@ -130,7 +130,7 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
   )}`;
 
   const rawVideoSrc = (post as any).video_url || (post as any).video_reel_url || (post as any).videoUrl || "";
-  const videoSrc = typeof rawVideoSrc === "string" && (rawVideoSrc.startsWith("http://") || rawVideoSrc.startsWith("https://")) ? rawVideoSrc : "";
+  const videoSrc = typeof rawVideoSrc === "string" && (rawVideoSrc.startsWith("http://") || rawVideoSrc.startsWith("https://") || rawVideoSrc.startsWith("data:video/")) ? rawVideoSrc : "";
   const hasVideo = Boolean(videoSrc);
 
   const images = React.useMemo(() => {

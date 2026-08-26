@@ -168,8 +168,25 @@ export default function PostForm({ segment }: PostFormProps) {
       setUploadedVideoUrl(url);
       toast.success("Video upload complete! Ready to publish.");
     } catch (err: any) {
-      console.error("Background video upload error:", err);
-      toast.error(`Video upload error: ${err?.message || "Storage error"}. Retrying on submit...`);
+      console.warn("Client video storage upload failed, trying server API fallback...", err);
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+        const res = await fetch("/api/upload-video", {
+          method: "POST",
+          body: formData,
+        });
+        const data = await res.json();
+        if (data.success && data.url) {
+          setUploadedVideoUrl(data.url);
+          toast.success("Video processed & ready to publish!");
+        } else {
+          toast.error("Video processing failed. Please re-select file.");
+        }
+      } catch (serverErr) {
+        console.error("Server video upload error:", serverErr);
+        toast.error("Video upload failed. Please try a smaller video file.");
+      }
     } finally {
       setIsUploadingVideo(false);
       setUploadStatusMsg("");
@@ -574,7 +591,7 @@ export default function PostForm({ segment }: PostFormProps) {
       }
     }
 
-    if (selectedVideo && (!cloudVideoUrl || (!cloudVideoUrl.startsWith("http://") && !cloudVideoUrl.startsWith("https://")))) {
+    if (selectedVideo && (!cloudVideoUrl || (!cloudVideoUrl.startsWith("http://") && !cloudVideoUrl.startsWith("https://") && !cloudVideoUrl.startsWith("data:video/")))) {
       setLoading(false);
       const videoErrMsg = "Video upload to cloud storage failed. Please re-select your video reel file and try again.";
       setValidationError(videoErrMsg);
