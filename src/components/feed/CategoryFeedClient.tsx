@@ -121,33 +121,10 @@ export default function CategoryFeedClient({ segmentType }: CategoryFeedClientPr
     postType: segmentType === "sell" ? "sale" : segmentType === "need" ? "need" : null,
   });
 
-  // Load local posts from localStorage + Firestore
+  // Pure Firestore live data feed
   const allPosts = React.useMemo(() => {
-    let stored: any[] = [];
-    if (typeof window !== "undefined") {
-      try {
-        stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-        if (segmentType === "sell") {
-          stored = stored.filter((p: any) => {
-            const pType = (p.type || "").toString().toUpperCase();
-            return pType !== "NEED" && !p.name && !p.shop_name;
-          });
-        } else if (segmentType === "need") {
-          stored = stored.filter((p: any) => {
-            const pType = (p.type || "").toString().toUpperCase();
-            return pType === "NEED";
-          });
-        } else if (segmentType === "services") {
-          stored = stored.filter((p: any) => p.name || p.skill_category || p.type === "SERVICE");
-        } else if (segmentType === "shops") {
-          stored = stored.filter((p: any) => p.shop_name || p.offer_title || p.type === "OFFER" || p.type === "SHOP");
-        }
-      } catch (e) {}
-    }
-    const firestoreIds = new Set((firestoreData || []).map((p: any) => p.id));
-    const uniqueLocal = stored.filter((s: any) => !firestoreIds.has(s.id));
-    return [...uniqueLocal, ...(firestoreData || [])];
-  }, [firestoreData, segmentType]);
+    return firestoreData || [];
+  }, [firestoreData]);
 
   // Sub-category filter (client-side)
   const filteredBySub = React.useMemo(() => {

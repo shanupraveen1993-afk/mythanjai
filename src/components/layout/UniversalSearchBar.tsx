@@ -80,25 +80,6 @@ export default function UniversalSearchBar() {
           }
         });
 
-        // Merge local posts stored in localStorage so local listings are ALWAYS searched!
-        if (typeof window !== "undefined") {
-          try {
-            const localPosts = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-            localPosts.forEach((lp: any) => {
-              const text = `${lp.title || lp.name || lp.shop_name || lp.offer_title || ""} ${lp.description || ""} ${lp.category || lp.skill_category || ""} ${lp.area_tag || ""}`.toLowerCase();
-              if (text.includes(queryTerm)) {
-                if (lp.skill_category || lp.type === "SERVICE") {
-                  if (!matchedServices.some((s) => s.id === lp.id)) matchedServices.push(lp);
-                } else if (lp.type === "OFFER" || lp.type === "SHOP") {
-                  if (!matchedShops.some((s) => s.id === lp.id)) matchedShops.push(lp);
-                } else {
-                  if (!matchedClassifieds.some((c) => c.id === lp.id)) matchedClassifieds.push(lp);
-                }
-              }
-            });
-          } catch (e) {}
-        }
-
         setResults({
           classifieds: matchedClassifieds.slice(0, 4),
           services: matchedServices.slice(0, 4),

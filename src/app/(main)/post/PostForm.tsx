@@ -438,7 +438,6 @@ export default function PostForm({ segment }: PostFormProps) {
     const timestamp = serverTimestamp();
     const uid = user?.uid || "guest_user";
     const cleanDesc = description.trim();
-    const targetPostId = editId || `user_post_${Date.now()}`;
 
     const defaultCoverImage =
       imagePreviews.length > 0
@@ -449,104 +448,45 @@ export default function PostForm({ segment }: PostFormProps) {
         ? "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&auto=format&fit=crop"
         : "/thanjavur_temple_illustration.png";
 
-    // ── STEP 0: Check Rate Limit & Banned Keywords ──
-    const { checkPostSpamAndRateLimit } = await import("@/lib/spam-filter");
-    const spamCheck = await checkPostSpamAndRateLimit({
-      phone: phone || "9876543210",
-      title: title.trim(),
-      description: cleanDesc,
-    });
-
-    if (!spamCheck.isAllowed) {
-      setLoading(false);
-      toast.error(spamCheck.reason || "Post rejected by spam filter.");
-      return;
-    }
-
-    // ── STEP 1: Build & Persist Local Record IMMEDIATELY (0ms Delay) ─────────
-    const localPostRecord: any = {
-      id: targetPostId,
-      userId: uid,
-      area_tag: area,
-      phone: phone || "9876543210",
-      created_at: new Date().toISOString(),
-      is_verified: true,
-    };
-
-    if (segment === "sell" || segment === "need") {
-      localPostRecord.type = segment === "sell" ? "SELL" : "NEED";
-      localPostRecord.title = title.trim();
-      localPostRecord.description = cleanDesc;
-      localPostRecord.price = price || null;
-      localPostRecord.show_phone = showPhone;
-      localPostRecord.image_url = defaultCoverImage;
-      if (imagePreviews.length > 0) {
-        localPostRecord.image_urls = imagePreviews;
-      }
-    } else if (segment === "service") {
-      localPostRecord.name = title.trim();
-      localPostRecord.is_available_now = isAvailable;
-      localPostRecord.experience = allWorkingDays === "Yes" ? "All Working Days" : "Flexible Days";
-      localPostRecord.working_hours = sundayLeave === "Yes" ? "Sunday Off" : "Open 7 Days";
-      localPostRecord.description = cleanDesc;
-      localPostRecord.image_url = defaultCoverImage;
-    } else if (segment === "offer") {
-      localPostRecord.shop_name = title.trim();
-      localPostRecord.offer_title = title.trim();
-      localPostRecord.offer_description = cleanDesc;
-      localPostRecord.image_url = defaultCoverImage;
-      localPostRecord.video_url = videoPreview || youtubeUrl || "";
-      localPostRecord.address_text = area ? `${area}, Thanjavur` : "Thanjavur";
-    }
-
-    // ── STEP 1: Fast Image Preview Setup (<10ms) ──
-    let imageUrl = defaultCoverImage;
-    let imageUrls: string[] = [];
-    if (segment === "sell" && imagePreviews.length > 0) {
-      imageUrls = imagePreviews;
-      imageUrl = imagePreviews[0] || defaultCoverImage;
-    } else if (imagePreview) {
-      imageUrl = imagePreview;
-      imageUrls = [imagePreview];
-    }
-
-    localPostRecord.image_url = imageUrl;
-    if (imageUrls.length > 0) localPostRecord.image_urls = imageUrls;
-
-    // ── STEP 2: Save to LocalStorage Backup ──
+    // ── STEP 1: Content & Moderation Check ──
     try {
-      let storedPosts = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-      if (editId) {
-        storedPosts = storedPosts.map((p: any) => (p.id === editId ? { ...p, ...localPostRecord } : p));
-      } else {
-        storedPosts.unshift(localPostRecord);
+      const { checkPostSpamAndRateLimit } = await import("@/lib/spam-filter");
+      const spamCheck = await checkPostSpamAndRateLimit({
+        phone: phone || "9876543210",
+        title: title.trim(),
+        description: cleanDesc,
+      });
+
+      if (!spamCheck.isAllowed) {
+        setLoading(false);
+        const err = spamCheck.reason || "Post rejected by moderation filter.";
+        setValidationError(err);
+        toast.error(err);
+        return;
       }
-      localStorage.setItem("namma_thanjai_local_posts", JSON.stringify(storedPosts.slice(0, 50)));
     } catch (e) {}
 
-    // ── STEP 3: AWAIT Firestore Cloud Storage & Firestore Canonical Write ──
-    try {
-      let cloudImageUrl = imageUrl;
-      let cloudImageUrls: string[] = imageUrls;
+    // ── STEP 2: Upload Images to Firebase Storage (if selected) ──
+    let cloudImageUrl = defaultCoverImage;
+    let cloudImageUrls: string[] = [];
 
+    try {
       if (segment === "sell" && selectedImages.length > 0) {
-        try {
-          const uploadedUrls = await Promise.all(
-            selectedImages.map(async (img) => {
-              try {
-                const compressed = await compressImage(img);
-                const storageRef = ref(storage, `postings/${Date.now()}_${img.name}`);
-                const snapshot = await uploadBytes(storageRef, compressed.blob);
-                return await getDownloadURL(snapshot.ref);
-              } catch {
-                const compressed = await compressImage(img);
-                return compressed.base64 || defaultCoverImage;
-              }
-            })
-          );
-          cloudImageUrls = uploadedUrls;
-          cloudImageUrl = uploadedUrls[0] || cloudImageUrl;
-        } catch (e) {}
+        const uploadedUrls = await Promise.all(
+          selectedImages.map(async (img) => {
+            try {
+              const compressed = await compressImage(img);
+              const storageRef = ref(storage, `postings/${Date.now()}_${img.name}`);
+              const snapshot = await uploadBytes(storageRef, compressed.blob);
+              return await getDownloadURL(snapshot.ref);
+            } catch {
+              const compressed = await compressImage(img);
+              return compressed.base64 || defaultCoverImage;
+            }
+          })
+        );
+        cloudImageUrls = uploadedUrls;
+        cloudImageUrl = uploadedUrls[0] || cloudImageUrl;
       } else if (selectedImage) {
         try {
           const compressed = await compressImage(selectedImage);
@@ -554,16 +494,24 @@ export default function PostForm({ segment }: PostFormProps) {
           const snapshot = await uploadBytes(storageRef, compressed.blob);
           cloudImageUrl = await getDownloadURL(snapshot.ref);
           cloudImageUrls = [cloudImageUrl];
-        } catch (e) {}
+        } catch {
+          cloudImageUrl = imagePreview || defaultCoverImage;
+          cloudImageUrls = [cloudImageUrl];
+        }
       }
+    } catch (storageErr) {
+      console.warn("Storage upload warning, using preview fallback:", storageErr);
+    }
 
-      const targetCol = editCol || (segment === "service" ? "services" : segment === "offer" ? "shops" : "needs_and_sales");
-      let createdDocId = editId || "";
+    // ── STEP 3: Write Directly to Firestore (NO LOCALSTORAGE) ──
+    const targetCol = editCol || (segment === "service" ? "services" : segment === "offer" ? "shops" : "needs_and_sales");
+    let createdDocId = editId || "";
 
+    try {
       if (segment === "sell" || segment === "need") {
         const payload: any = {
           userId: uid,
-          seller_id: uid, // mirrors userId so ListingCard.isOwnPost check works
+          seller_id: uid,
           type: segment === "sell" ? "SELL" : "NEED",
           title: title.trim(),
           description: cleanDesc,
@@ -584,18 +532,14 @@ export default function PostForm({ segment }: PostFormProps) {
         }
 
         if (editId) {
-          await updateDoc(doc(db, targetCol, editId), payload).catch((e) => console.error("updateDoc error:", e));
+          await updateDoc(doc(db, targetCol, editId), payload);
         } else {
-          try {
-            const docRef = await addDoc(collection(db, targetCol), {
-              ...payload,
-              created_at: timestamp,
-              expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-            });
-            if (docRef) createdDocId = docRef.id;
-          } catch (addErr) {
-            console.error("addDoc error for sell/need:", addErr);
-          }
+          const docRef = await addDoc(collection(db, targetCol), {
+            ...payload,
+            created_at: timestamp,
+            expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+          });
+          if (docRef) createdDocId = docRef.id;
         }
       } else if (segment === "service") {
         const payload: any = {
@@ -616,19 +560,16 @@ export default function PostForm({ segment }: PostFormProps) {
           is_verified: true,
           status: "active",
         };
+
         if (editId) {
-          await updateDoc(doc(db, targetCol, editId), payload).catch((e) => console.error("updateDoc error:", e));
+          await updateDoc(doc(db, targetCol, editId), payload);
         } else {
-          try {
-            const docRef = await addDoc(collection(db, targetCol), {
-              ...payload,
-              negative_reports_count: 0,
-              created_at: timestamp,
-            });
-            if (docRef) createdDocId = docRef.id;
-          } catch (addErr) {
-            console.error("addDoc error for service:", addErr);
-          }
+          const docRef = await addDoc(collection(db, targetCol), {
+            ...payload,
+            negative_reports_count: 0,
+            created_at: timestamp,
+          });
+          if (docRef) createdDocId = docRef.id;
         }
       } else if (segment === "offer") {
         let uploadedVideoUrl = videoPreview || "";
@@ -639,6 +580,7 @@ export default function PostForm({ segment }: PostFormProps) {
             uploadedVideoUrl = await getDownloadURL(snap.ref);
           } catch (vErr) {}
         }
+
         const payload: any = {
           userId: uid,
           seller_id: uid,
@@ -655,44 +597,48 @@ export default function PostForm({ segment }: PostFormProps) {
           is_verified: true,
           status: "active",
         };
+
         if (editId) {
-          await updateDoc(doc(db, targetCol, editId), payload).catch((e) => console.error("updateDoc error:", e));
+          await updateDoc(doc(db, targetCol, editId), payload);
         } else {
-          try {
-            const docRef = await addDoc(collection(db, targetCol), {
-              ...payload,
-              created_at: timestamp,
-            });
-            if (docRef) createdDocId = docRef.id;
-          } catch (addErr) {
-            console.error("addDoc error for offer:", addErr);
-          }
+          const docRef = await addDoc(collection(db, targetCol), {
+            ...payload,
+            created_at: timestamp,
+          });
+          if (docRef) createdDocId = docRef.id;
         }
       }
 
-      // ── STEP 4: Log Audit Event for Activity Trail ──
-      const { logAuditEvent } = await import("@/lib/audit-logger");
-      await logAuditEvent({
-        action: editId ? "POST_UPDATED" : "POST_CREATED",
-        actorUid: uid,
-        actorPhone: phone || "Unknown",
-        actorName: profile?.displayName || "Namma Thanjai User",
-        targetPostId: createdDocId || "post_" + Date.now(),
-        targetPostTitle: title.trim(),
-        category: segment.toUpperCase(),
-        details: `${editId ? "Updated" : "Created"} post "${title.trim()}" in category ${segment.toUpperCase()} at ${area}`,
-        visibilityState: "public",
-      }).catch(() => {});
+      // Log Audit Event
+      try {
+        const { logAuditEvent } = await import("@/lib/audit-logger");
+        await logAuditEvent({
+          action: editId ? "POST_UPDATED" : "POST_CREATED",
+          actorUid: uid,
+          actorPhone: phone || "Unknown",
+          actorName: profile?.displayName || "Namma Thanjai User",
+          targetPostId: createdDocId || "post_" + Date.now(),
+          targetPostTitle: title.trim(),
+          category: segment.toUpperCase(),
+          details: `${editId ? "Updated" : "Created"} post "${title.trim()}" in category ${segment.toUpperCase()} at ${area}`,
+          visibilityState: "public",
+        });
+      } catch (e) {}
 
-    } catch (e) {
-      console.error("Firestore submission error:", e);
+      // ONLY WHEN FIRESTORE SUCCEEDS: Show success and navigate
+      setSuccess(true);
+      setLoading(false);
+      toast.success(editId ? "Post updated in Firebase!" : "Post published to Firebase!");
+      router.push(config.redirectPath);
+
+    } catch (firestoreError: any) {
+      // ON FIRESTORE FAILURE: DO NOT save to localStorage, DO NOT redirect, DO NOT show success
+      console.error("Firestore persistence error:", firestoreError);
+      setLoading(false);
+      const errMsg = `Firebase Publish Failed: ${firestoreError?.message || "Cloud database write rejected."} Please check your connection and try again.`;
+      setValidationError(errMsg);
+      toast.error(errMsg);
     }
-
-    // ── STEP 5: Complete UI Response & Navigate ──
-    setSuccess(true);
-    setLoading(false);
-    toast.success(editId ? "Post updated successfully!" : "Post published successfully!");
-    router.push(config.redirectPath);
   };
 
   // Direct 1:1 Live Preview Cards Data

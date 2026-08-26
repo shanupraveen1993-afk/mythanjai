@@ -39,17 +39,7 @@ export default function LandingClientPage() {
   const [matchedPosts, setMatchedPosts] = useState<any[]>([]);
   const [loadingData, setLoadingData] = useState(true);
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      try {
-        const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-        const activeSellNeed = stored.find((p: any) => !p.is_sold && (p.type === "SELL" || p.type === "NEED" || p.category === "SELL" || p.category === "NEED"));
-        const activeServiceOffer = stored.find((p: any) => !p.is_sold && (p.type === "SERVICE" || p.type === "OFFER" || p.type === "SHOP" || p.category === "SERVICE" || p.category === "OFFER"));
-        setActiveSellOrNeedPost(activeSellNeed || null);
-        setActiveServiceOrOfferPost(activeServiceOffer || null);
-      } catch (e) {}
-    }
-  }, []);
+  const [loadingData, setLoadingData] = useState(true);
 
   // Fetch real live listings from Firestore
   useEffect(() => {

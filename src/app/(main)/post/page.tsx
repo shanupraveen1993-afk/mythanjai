@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import PostClientPage from "./PostClientPage";
+import PostForm from "./PostForm";
 
 export default function PostPage() {
   return (
@@ -10,7 +10,7 @@ export default function PostPage() {
         </div>
       }
     >
-      <PostClientPage />
+      <PostForm segment="sell" />
     </Suspense>
   );
 }

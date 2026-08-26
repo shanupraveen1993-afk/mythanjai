@@ -83,31 +83,7 @@ function ListingsContent() {
         let combinedMyPosts: any[] = [];
         const seenIds = new Set<string>();
 
-        // 1. Load local posts created by this user on this device from localStorage
-        if (typeof window !== "undefined") {
-          try {
-            const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-            stored.forEach((localP: any) => {
-              const pPhone = String(localP.phone || "").replace(/\D/g, "");
-              const pPhone10 = pPhone.length >= 10 ? pPhone.slice(-10) : "";
-              const matchesUid = Boolean(userId && localP.userId === userId);
-              const matchesPhone = Boolean(userPhone10 && pPhone10 && pPhone10 === userPhone10);
-              const isAuthor = !userPhone10 || matchesUid || matchesPhone;
-
-              if (isAuthor && !seenIds.has(localP.id)) {
-                seenIds.add(localP.id);
-                const determinedCol = localP.skill_category
-                  ? "services"
-                  : localP.type === "SELL" || localP.type === "NEED"
-                  ? "needs_and_sales"
-                  : "shops";
-                combinedMyPosts.push({ ...localP, colName: determinedCol });
-              }
-            });
-          } catch (e) {}
-        }
-
-        // 2. Fetch from Firestore for this user (by userId or phone number)
+        // Fetch My Posted Ads strictly from Firestore (by userId or phone number)
         const targetCollections = ["needs_and_sales", "services", "shops"];
         await Promise.all(
           targetCollections.map(async (colName) => {

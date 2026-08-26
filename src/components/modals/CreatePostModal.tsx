@@ -534,34 +534,11 @@ export default function CreatePostModal({
             category: type.toUpperCase(),
             details: `Created post "${postTitle}" in ${type.toUpperCase()} at ${area}`,
             visibilityState: "public",
-          });
-          // Save new post to local storage for immediate 0ms UI update
-          const newLocalPost = {
-            id: "local_" + Date.now(),
-            userId: uid,
-            type: "OFFER",
-            title: title || serviceName || shopName || offerTitle || "New Listing",
-            description: finalDescription || finalOfferDesc || "",
-            category: classifiedCategory || serviceCategory || shopCategory || offerCategory || "General",
-            area_tag: area,
-            price: price ? parseFloat(price) : (priceTo ? parseFloat(priceTo) : null),
-            price_from: priceFrom ? parseFloat(priceFrom) : null,
-            price_to: priceTo ? parseFloat(priceTo) : null,
-            phone,
-            image_url: imageUrl || "",
-            created_at: new Date().toISOString(),
-          };
+          }).catch(() => {});
 
-          if (typeof window !== "undefined") {
-            try {
-              const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-              localStorage.setItem("namma_thanjai_local_posts", JSON.stringify([newLocalPost, ...stored]));
-            } catch (e) {}
-          }
+          toast.success("Post published to Thanjavur hub!");
 
-          toast.success("AI refined success! Post published to Tanjore hub.");
-
-          const targetRoute = "/shops";
+          const targetRoute = type === "needs" ? (classifiedType === "NEED" ? "/need" : "/sell") : (type === "services" ? "/services" : "/shops");
 
           setTimeout(() => {
             if (typeof window !== "undefined") {
