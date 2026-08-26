@@ -563,13 +563,21 @@ export default function PostForm({ segment }: PostFormProps) {
           if (docRef) createdDocId = docRef.id;
         }
       } else if (segment === "offer") {
-        let uploadedVideoUrl = videoPreview || "";
+        let uploadedVideoUrl = "";
         if (selectedVideo) {
+          toast.info("Uploading video reel to Firebase Storage... Please wait.");
           try {
-            const videoRef = ref(storage, `offer_reels/${Date.now()}_${selectedVideo.name}`);
+            const videoRef = ref(storage, `offer_reels/${Date.now()}_${selectedVideo.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`);
             const snap = await uploadBytes(videoRef, selectedVideo);
             uploadedVideoUrl = await getDownloadURL(snap.ref);
-          } catch (vErr) {}
+            toast.success("Video reel uploaded to cloud storage!");
+          } catch (vErr: any) {
+            console.error("Video reel upload error:", vErr);
+            toast.error(`Video upload error: ${vErr?.message || "Storage error"}. Trying link fallback.`);
+          }
+        }
+        if (!uploadedVideoUrl && youtubeUrl.trim()) {
+          uploadedVideoUrl = youtubeUrl.trim();
         }
 
         const payload: any = {
