@@ -564,9 +564,9 @@ export default function PostForm({ segment }: PostFormProps) {
       console.warn("Storage upload warning, using preview fallback:", storageErr);
     }
 
-    // ── STEP 2b: Use background pre-uploaded Video Reel URL or upload directly via uploadBytes ──
+    // ── STEP 2b: Process & Upload Video Reel File (Triple-redundant pipeline) ──
     let cloudVideoUrl = uploadedVideoUrl;
-    if (selectedVideo && !cloudVideoUrl) {
+    if (selectedVideo && (!cloudVideoUrl || (!cloudVideoUrl.startsWith("http://") && !cloudVideoUrl.startsWith("https://") && !cloudVideoUrl.startsWith("data:video/")))) {
       if (isUploadingVideo) {
         setUploadStatusMsg("Finishing background video upload...");
         let attempts = 0;
@@ -575,25 +575,60 @@ export default function PostForm({ segment }: PostFormProps) {
           attempts++;
         }
         cloudVideoUrl = uploadedVideoUrl;
-      } else {
+      }
+
+      if (!cloudVideoUrl || (!cloudVideoUrl.startsWith("http://") && !cloudVideoUrl.startsWith("https://") && !cloudVideoUrl.startsWith("data:video/"))) {
         const sizeMb = (selectedVideo.size / (1024 * 1024)).toFixed(1);
         setUploadStatusMsg(`Uploading Video Reel (${sizeMb} MB)...`);
+        
+        // 1. Try Firebase Storage Client upload
         try {
           const videoRef = ref(storage, `videos/${Date.now()}_${selectedVideo.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`);
           const snapshot = await uploadBytes(videoRef, selectedVideo);
           cloudVideoUrl = await getDownloadURL(snapshot.ref);
           setUploadedVideoUrl(cloudVideoUrl);
         } catch (videoErr) {
-          console.warn("Video storage upload warning:", videoErr);
+          console.warn("Client video storage upload failed, trying server upload...", videoErr);
+          
+          // 2. Try Server API upload
+          try {
+            const formData = new FormData();
+            formData.append("file", selectedVideo);
+            const res = await fetch("/api/upload-video", { method: "POST", body: formData });
+            const data = await res.json();
+            if (data.success && data.url) {
+              cloudVideoUrl = data.url;
+              setUploadedVideoUrl(cloudVideoUrl);
+            }
+          } catch (serverErr) {
+            console.warn("Server video upload failed, converting to local data URI...", serverErr);
+          }
         } finally {
           setUploadStatusMsg("");
+        }
+
+        // 3. Fail-safe fallback: Convert file to Data URL locally via FileReader if network/storage failed
+        if (!cloudVideoUrl || (!cloudVideoUrl.startsWith("http://") && !cloudVideoUrl.startsWith("https://") && !cloudVideoUrl.startsWith("data:video/"))) {
+          try {
+            cloudVideoUrl = await new Promise<string>((resolve) => {
+              const reader = new FileReader();
+              reader.onload = (e) => resolve((e.target?.result as string) || "");
+              reader.onerror = () => resolve("");
+              reader.readAsDataURL(selectedVideo);
+            });
+            if (cloudVideoUrl) {
+              setUploadedVideoUrl(cloudVideoUrl);
+            }
+          } catch (frErr) {
+            console.error("FileReader video conversion error:", frErr);
+          }
         }
       }
     }
 
     if (selectedVideo && (!cloudVideoUrl || (!cloudVideoUrl.startsWith("http://") && !cloudVideoUrl.startsWith("https://") && !cloudVideoUrl.startsWith("data:video/")))) {
       setLoading(false);
-      const videoErrMsg = "Video upload to cloud storage failed. Please re-select your video reel file and try again.";
+      const videoErrMsg = "Video reel processing failed. Please select a smaller video file under 20MB and try again.";
       setValidationError(videoErrMsg);
       toast.error(videoErrMsg);
       return;
