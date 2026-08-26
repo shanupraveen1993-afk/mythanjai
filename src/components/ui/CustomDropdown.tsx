@@ -47,7 +47,7 @@ export default function CustomDropdown({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-fit bg-white border border-slate-300 hover:border-slate-400 text-slate-800 font-semibold text-xs sm:text-sm px-3.5 py-2 rounded-xl shadow-2xs flex items-center justify-between gap-2 min-h-[38px] cursor-pointer transition-colors focus:outline-none focus:ring-2 focus:ring-amber-500/40 whitespace-nowrap"
+        className="w-fit bg-white border border-slate-300 hover:border-slate-400 text-slate-800 font-bold text-xs sm:text-sm px-4 py-2 rounded-full shadow-2xs flex items-center justify-between gap-2.5 min-h-[38px] cursor-pointer transition-all focus:outline-none focus:ring-2 focus:ring-amber-500/40 whitespace-nowrap"
       >
         <div className="flex items-center gap-1.5 shrink-0">
           {icon && <span className="text-slate-500 shrink-0">{icon}</span>}
@@ -58,7 +58,7 @@ export default function CustomDropdown({
 
       {/* Popover Options Menu */}
       {isOpen && (
-        <div className="absolute left-0 mt-1.5 z-50 min-w-[200px] w-max max-w-xs bg-white border border-slate-200 rounded-xl shadow-xl max-h-60 overflow-y-auto py-1 animate-in fade-in slide-in-from-top-1 duration-150 scrollbar-none">
+        <div className="absolute left-0 mt-1.5 z-50 min-w-[200px] w-max max-w-xs bg-white border border-slate-200 rounded-2xl shadow-xl max-h-60 overflow-y-auto py-1.5 animate-in fade-in slide-in-from-top-1 duration-150 scrollbar-none">
           {options.map((opt) => {
             const isSelected = opt.value === value;
             return (

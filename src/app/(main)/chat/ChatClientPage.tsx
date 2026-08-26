@@ -508,7 +508,7 @@ export default function ChatClientPage() {
         <div className={`w-full lg:w-80 border-r border-slate-200 flex-col bg-white ${showMobileChat ? "hidden lg:flex" : "flex"}`}>
           
           {/* 1. BRANDED HEADER WITH LOGO */}
-          <div className="bg-white px-4 py-3 border-b border-slate-200 flex items-center justify-between shadow-2xs shrink-0">
+          <div className="bg-white px-4 sm:px-6 h-14 sm:h-16 border-b border-slate-200 flex items-center justify-between shadow-2xs shrink-0">
             <div className="flex items-center gap-2">
               <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="h-8 w-auto object-contain" />
               <span className="font-heading font-black tracking-tight text-base sm:text-lg">
