@@ -130,7 +130,7 @@ export default function PostForm({ segment }: PostFormProps) {
 
   // Form Fields
   const [phone, setPhone] = useState("");
-  const [area, setArea] = useState<string>("");
+  const [area, setArea] = useState<string>("Thanjavur");
   const [category, setCategory] = useState<string>(config.categories[0]);
   const [subCategory, setSubCategory] = useState<string>("");
   const [title, setTitle] = useState("");
@@ -397,12 +397,7 @@ export default function PostForm({ segment }: PostFormProps) {
       return;
     }
 
-    if (!area || !area.trim()) {
-      const err = "Required Field Missing: Please enter or select a Location in Thanjavur *";
-      setValidationError(err);
-      toast.error(err);
-      return;
-    }
+    const finalArea = area && area.trim() ? area.trim() : "Thanjavur";
 
     const cleanPhone = (phone || "").replace(/\D/g, "");
     if (!cleanPhone || cleanPhone.length < 10) {
@@ -517,7 +512,7 @@ export default function PostForm({ segment }: PostFormProps) {
           title: title.trim(),
           description: cleanDesc,
           raw_text: cleanDesc,
-          area_tag: area || "Thanjavur",
+          area_tag: finalArea,
           category: category || "General",
           price: price ? price : null,
           phone: phone || "9876543210",
