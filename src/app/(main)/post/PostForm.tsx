@@ -485,8 +485,6 @@ export default function PostForm({ segment }: PostFormProps) {
         ? imagePreviews[0]
         : imagePreview && !imagePreview.startsWith("data:")
         ? imagePreview
-        : segment === "offer"
-        ? "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&auto=format&fit=crop"
         : "/thanjavur_temple_illustration.png";
 
     // ── STEP 1: Content & Moderation Check ──
@@ -575,6 +573,14 @@ export default function PostForm({ segment }: PostFormProps) {
       }
     }
 
+    if (selectedVideo && (!cloudVideoUrl || (!cloudVideoUrl.startsWith("http://") && !cloudVideoUrl.startsWith("https://")))) {
+      setLoading(false);
+      const videoErrMsg = "Video upload to cloud storage failed. Please re-select your video reel file and try again.";
+      setValidationError(videoErrMsg);
+      toast.error(videoErrMsg);
+      return;
+    }
+
     // ── STEP 3: Write Directly to Firestore (NO LOCALSTORAGE) ──
     if (editId && !editCol) {
       setLoading(false);
@@ -645,9 +651,9 @@ export default function PostForm({ segment }: PostFormProps) {
           offer_description: cleanDesc,
           valid_from: validFrom || null,
           valid_to: validTo || null,
-          video_url: cloudVideoUrl || videoPreview || "",
-          video_reel_url: cloudVideoUrl || videoPreview || "",
-          videoUrl: cloudVideoUrl || videoPreview || "",
+          video_url: (cloudVideoUrl && (cloudVideoUrl.startsWith("http://") || cloudVideoUrl.startsWith("https://"))) ? cloudVideoUrl : "",
+          video_reel_url: (cloudVideoUrl && (cloudVideoUrl.startsWith("http://") || cloudVideoUrl.startsWith("https://"))) ? cloudVideoUrl : "",
+          videoUrl: (cloudVideoUrl && (cloudVideoUrl.startsWith("http://") || cloudVideoUrl.startsWith("https://"))) ? cloudVideoUrl : "",
           image_url: cloudImageUrl || "",
           image_urls: finalImageUrls,
           is_verified: true,

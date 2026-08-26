@@ -129,18 +129,22 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
     `${post.shop_name} ${post.address_text || post.area_tag || "Thanjavur"}`
   )}`;
 
-  const hasVideo = !!(post as any).video_url || !!(post as any).video_reel_url || !!(post as any).videoUrl;
-  const videoSrc = (post as any).video_url || (post as any).video_reel_url || (post as any).videoUrl || "";
+  const rawVideoSrc = (post as any).video_url || (post as any).video_reel_url || (post as any).videoUrl || "";
+  const videoSrc = typeof rawVideoSrc === "string" && (rawVideoSrc.startsWith("http://") || rawVideoSrc.startsWith("https://")) ? rawVideoSrc : "";
+  const hasVideo = Boolean(videoSrc);
 
   const images = React.useMemo(() => {
     const rawList = (post as any).image_urls || [];
+    let list: string[] = [];
     if (Array.isArray(rawList) && rawList.length > 0) {
-      return rawList.filter((url: any): url is string => typeof url === "string" && url.trim().length > 0);
+      list = rawList.filter((url: any): url is string => typeof url === "string" && url.trim().length > 0);
+    } else if (typeof post.image_url === "string" && post.image_url.trim().length > 0) {
+      list = [post.image_url];
+    } else if (typeof (post as any).thumbnail_url === "string" && (post as any).thumbnail_url.trim().length > 0) {
+      list = [(post as any).thumbnail_url];
     }
-    if (typeof post.image_url === "string" && post.image_url.trim().length > 0) return [post.image_url];
-    if (typeof (post as any).thumbnail_url === "string" && (post as any).thumbnail_url.trim().length > 0)
-      return [(post as any).thumbnail_url];
-    return [];
+    // Filter out unwanted unsplash cooking fallback
+    return list.filter((url) => !url.includes("photo-1556911220-e15b29be8c8f"));
   }, [post]);
 
   const coverImage = images[0] || null;
