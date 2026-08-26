@@ -132,49 +132,60 @@ export default function ChatClientPage() {
     }
   }, []);
 
-  // Real-time Firestore snapshot for User Threads
+  // Real-time Firestore snapshot for User Threads across all participating users
   useEffect(() => {
     const currentUid = user?.uid;
-    const currentPhone = profile?.phone || user?.phoneNumber?.replace(/\D/g, "");
+    const currentPhone = profile?.phone ? profile.phone.replace(/\D/g, "") : "";
 
-    const fetchThreads = async () => {
-      try {
-        const chatsRef = collection(db, "chats");
-        const snapshot = await getDocs(chatsRef).catch(() => null);
-        if (snapshot && !snapshot.empty) {
-          const userThreads: ChatThread[] = [];
-          snapshot.forEach((docSnap) => {
-            const data = docSnap.data();
-            const participants = data.participants || [];
-            const isUserParticipant =
-              participants.includes(currentUid) ||
-              participants.includes("guest_user") ||
-              (currentPhone && participants.includes(currentPhone));
+    const chatsRef = collection(db, "chats");
+    const unsubscribe = onSnapshot(
+      chatsRef,
+      (snapshot) => {
+        const userThreads: ChatThread[] = [];
+        snapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          const participants = data.participants || [];
+          const isUserParticipant =
+            (currentUid && participants.includes(currentUid)) ||
+            (currentPhone && participants.includes(currentPhone)) ||
+            participants.includes("guest_user") ||
+            !currentUid;
 
-            if (isUserParticipant || !currentUid) {
-              userThreads.push({
-                chatId: docSnap.id,
-                listingId: data.listingId || "post",
-                listingTitle: data.listingTitle || "Thanjavur Listing",
-                peerId: data.peerId || "seller",
-                peerName: data.peerName || data.listingTitle || "Local Contact",
-                peerPhone: data.peerPhone || "",
-                lastMessage: data.lastMessage || "Conversation started",
-                lastTimestamp: data.lastTimestamp || data.created_at,
-              });
-            }
-          });
+          if (isUserParticipant) {
+            const isBuyer = data.buyerId === currentUid;
+            const peerName = isBuyer
+              ? data.sellerName || data.listingTitle || "Seller / Contact"
+              : data.buyerName || "Buyer / Interested User";
+            const peerPhone = isBuyer ? data.sellerPhone : data.buyerPhone;
+            const peerId = isBuyer ? data.sellerId : data.buyerId;
 
-          if (userThreads.length > 0) {
-            setThreads(userThreads);
+            userThreads.push({
+              chatId: docSnap.id,
+              listingId: data.listingId || "post",
+              listingTitle: data.listingTitle || "Thanjavur Listing",
+              peerId: peerId || "contact",
+              peerName: peerName || "Local Contact",
+              peerPhone: peerPhone || "",
+              lastMessage: data.lastMessage || "Conversation started",
+              lastTimestamp: data.lastTimestamp,
+            });
           }
-        }
-      } catch (e) {
-        console.warn("Threads fetch warning:", e);
-      }
-    };
+        });
 
-    fetchThreads();
+        userThreads.sort((a, b) => {
+          const tA = a.lastTimestamp?.seconds ? a.lastTimestamp.seconds * 1000 : new Date(a.lastTimestamp || 0).getTime();
+          const tB = b.lastTimestamp?.seconds ? b.lastTimestamp.seconds * 1000 : new Date(b.lastTimestamp || 0).getTime();
+          return tB - tA;
+        });
+
+        setThreads(userThreads);
+      },
+      (err) => {
+        console.warn("Real-time threads listener note:", err);
+      }
+    );
+
+    return () => unsubscribe();
   }, [user?.uid, profile?.phone]);
 
   // Initialize active chat room when navigating from an ad card
@@ -207,13 +218,7 @@ export default function ChatClientPage() {
           lastMessage: "Conversation initiated",
           lastTimestamp: new Date(),
         };
-        const updated = [newThread, ...prev];
-        if (typeof window !== "undefined") {
-          try {
-            localStorage.setItem("namma_thanjai_chat_threads", JSON.stringify(updated));
-          } catch (e) {}
-        }
-        return updated;
+        return [newThread, ...prev];
       });
     }
   }, [queryListingId, querySellerId, queryTitle, queryAutoMsg, user?.uid]);
@@ -274,6 +279,10 @@ export default function ChatClientPage() {
         timestamp: serverTimestamp(),
       });
 
+      const currentUid = user?.uid || "guest_user";
+      const currentName = profile?.displayName || user?.displayName || "Buyer";
+      const currentPhone = profile?.phone || user?.phoneNumber || "";
+
       const threadRef = doc(db, "chats", activeChatId);
       await setDoc(
         threadRef,
@@ -281,11 +290,15 @@ export default function ChatClientPage() {
           chatId: activeChatId,
           listingId: queryListingId || "post",
           listingTitle: activeListingTitle,
-          peerId: activePeerId,
-          peerName: activePeerName,
+          buyerId: currentUid,
+          buyerName: currentName,
+          buyerPhone: currentPhone,
+          sellerId: activePeerId,
+          sellerName: activePeerName,
+          sellerPhone: activePeerPhone,
           lastMessage: currentText,
           lastTimestamp: serverTimestamp(),
-          participants: [user?.uid || "guest_user", activePeerId].filter(Boolean),
+          participants: Array.from(new Set([currentUid, activePeerId, currentPhone].filter(Boolean))),
         },
         { merge: true }
       );
