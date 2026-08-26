@@ -193,8 +193,13 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
   const [imgError, setImgError] = useState(false);
 
   const isOwnPost = React.useMemo(() => {
-    if (user?.uid && listing.seller_id === user.uid) return true;
-    if (profile?.phone && listing.phone && profile.phone === listing.phone) return true;
+    // Check by Firebase UID (most reliable)
+    if (user?.uid && user.uid !== "guest_user" && listing.seller_id === user.uid) return true;
+    // Check by phone number (normalized — strip country code for comparison)
+    const normalizePhone = (p: string) => String(p || "").replace(/\D/g, "").slice(-10);
+    if (profile?.phone && listing.phone) {
+      if (normalizePhone(profile.phone) === normalizePhone(listing.phone)) return true;
+    }
     return false;
   }, [user, profile, listing]);
 

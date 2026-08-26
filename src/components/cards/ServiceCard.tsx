@@ -209,8 +209,11 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
   }, [post.created_at]);
 
   const isOwnPost = React.useMemo(() => {
-    if (user?.uid && post.userId === user.uid) return true;
-    if (profile?.phone && post.phone && profile.phone === post.phone) return true;
+    if (user?.uid && user.uid !== "guest_user" && post.userId === user.uid) return true;
+    const normalizePhone = (p: string) => String(p || "").replace(/\D/g, "").slice(-10);
+    if (profile?.phone && post.phone) {
+      if (normalizePhone(profile.phone) === normalizePhone(post.phone)) return true;
+    }
     return false;
   }, [user, profile, post]);
 

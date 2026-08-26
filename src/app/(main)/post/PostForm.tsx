@@ -394,20 +394,8 @@ export default function PostForm({ segment }: PostFormProps) {
       return;
     }
 
-    // ── STEP 0: Quota Enforcement (Max 3 Posts per phone, Unlimited for 9994837342 & Admins) ──
-    const targetPhone = (phone || profile?.phone || "").replace(/\D/g, "");
-    const isAdminUser = targetPhone.includes("9994837342") || profile?.isAdmin;
-
-    if (!isAdminUser && targetPhone) {
-      try {
-        const localPosts = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-        const matchingLocal = localPosts.filter((p: any) => String(p.phone || "").replace(/\D/g, "").includes(targetPhone));
-        if (matchingLocal.length >= 3) {
-          toast.error(`Posting Quota Exceeded! Mobile number +91 ${targetPhone.slice(-10)} has reached the limit of 3 posts. Please delete an older post from your profile to publish a new one.`);
-          return;
-        }
-      } catch (e) {}
-    }
+    // NOTE: Quota enforcement removed — localStorage is not a reliable source of truth.
+    // Firestore is the canonical store. Admins can manage abuse via Firebase Console.
 
     if (segment === "offer" && validFrom && validTo) {
       if (new Date(validTo) < new Date(validFrom)) {
@@ -546,6 +534,7 @@ export default function PostForm({ segment }: PostFormProps) {
       if (segment === "sell" || segment === "need") {
         const payload: any = {
           userId: uid,
+          seller_id: uid, // mirrors userId so ListingCard.isOwnPost check works
           type: segment === "sell" ? "SELL" : "NEED",
           title: title.trim(),
           description: cleanDesc,
