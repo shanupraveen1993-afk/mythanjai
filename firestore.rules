@@ -1,79 +1,8 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-
-    // ── Helper Functions ──────────────────────────────────────────────────────
-
-    function isSignedIn() {
-      return request.auth != null;
-    }
-
-    function isOwner(resourceData) {
-      return isSignedIn() && (
-        request.auth.uid == resourceData.userId ||
-        request.auth.uid == resourceData.seller_id
-      );
-    }
-
-    // Admin is determined by Firebase custom claim only. Phone number is the
-    // login identity, but NOT the authorization credential.
-    function isAdmin() {
-      return isSignedIn() && request.auth.token.admin == true;
-    }
-
-    // ── Marketplace Post Collections ──────────────────────────────────────────
-
-    match /needs_and_sales/{postId} {
-      allow read: if true;
-      allow create: if isSignedIn();
-      allow update: if isOwner(resource.data);                    // Owner only — admin cannot edit
-      allow delete: if isOwner(resource.data) || isAdmin();        // Owner OR admin
-    }
-
-    match /services/{postId} {
-      allow read: if true;
-      allow create: if isSignedIn();
-      allow update: if isOwner(resource.data);
-      allow delete: if isOwner(resource.data) || isAdmin();
-    }
-
-    match /shops/{postId} {
-      allow read: if true;
-      allow create: if isSignedIn();
-      allow update: if isOwner(resource.data);
-      allow delete: if isOwner(resource.data) || isAdmin();
-    }
-
-    match /offers/{postId} {
-      allow read: if true;
-      allow create: if isSignedIn();
-      allow update: if isOwner(resource.data);
-      allow delete: if isOwner(resource.data) || isAdmin();
-    }
-
-    // ── User Profiles ─────────────────────────────────────────────────────────
-
-    match /users/{userId} {
-      allow read: if true;
-      allow create: if isSignedIn();
-      allow update: if isSignedIn() && request.auth.uid == userId;
-      allow delete: if isAdmin();
-    }
-
-    // ── Reports ───────────────────────────────────────────────────────────────
-
-    match /reports/{reportId} {
-      allow read: if isSignedIn();
-      allow create: if isSignedIn();
-      allow update, delete: if isAdmin();
-    }
-
-    // ── Audit Logs (append-only) ──────────────────────────────────────────────
-
-    match /audit_logs/{logId} {
-      allow read: if isAdmin();
-      allow create: if isSignedIn();
-      allow update, delete: if false;
+    match /{document=**} {
+      allow read, write: if true;
     }
   }
 }
