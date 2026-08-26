@@ -211,12 +211,6 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
   const isOwnPost = React.useMemo(() => {
     if (user?.uid && post.userId === user.uid) return true;
     if (profile?.phone && post.phone && profile.phone === post.phone) return true;
-    if (typeof window !== "undefined") {
-      try {
-        const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-        if (stored.some((p: any) => p.id === post.id)) return true;
-      } catch (e) {}
-    }
     return false;
   }, [user, profile, post]);
 

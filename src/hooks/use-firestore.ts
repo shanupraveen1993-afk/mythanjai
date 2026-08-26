@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { db, auth } from "@/lib/firebase";
+import { db } from "@/lib/firebase";
 import {
   collection,
   query,
@@ -12,7 +12,6 @@ import {
   DocumentData,
   Query,
 } from "firebase/firestore";
-import { onAuthStateChanged } from "firebase/auth";
 import { TanjoreLocality } from "@/lib/constants";
 
 interface UseFirestoreOptions {
@@ -35,138 +34,134 @@ export function useFirestore<T = any>({
   const [error, setError] = useState<Error | null>(null);
 
   useEffect(() => {
-    setLoading(true);
-    let q: Query<DocumentData>;
-    let unsubscribeSnapshot: (() => void) | null = null;
     let isMounted = true;
+
+    // Build Firestore query
+    let q: Query<DocumentData>;
+    try {
+      const colRef = collection(db, collectionName);
+      const constraints: any[] = [];
+
+      // Only add userId constraint if specifically requesting a single user's profile
+      if (onlyUserPosted) {
+        constraints.push(where("userId", "==", onlyUserPosted));
+      }
+
+      // Limit results to last 200 items (newest first by Firestore insertion order)
+      constraints.push(limit(200));
+
+      q = query(colRef, ...constraints);
+    } catch (err: any) {
+      console.error("useFirestore: Query building error:", err);
+      if (isMounted) {
+        setError(err);
+        setLoading(false);
+      }
+      return;
+    }
 
     const processSnapshot = (snapshot: any) => {
       if (!isMounted) return;
+
       const items: any[] = [];
 
       snapshot.forEach((doc: any) => {
         const docData = doc.data();
 
-        // Client-side secondary filters (avoids multi-field Firestore index requirements)
+        // Client-side secondary filters
         if (onlyUserPosted && docData.userId !== onlyUserPosted) return;
         if (areaTag !== "All Areas" && docData.area_tag !== areaTag) return;
 
         if (category && category !== "All") {
-          const catField = (collectionName === "services" ? docData.skill_category : docData.category) || "";
-          const normalizeCat = (s: string) => s.toLowerCase().replace(/[^a-z0-9]/g, "");
+          const catField =
+            (collectionName === "services"
+              ? docData.skill_category
+              : docData.category) || "";
+          const normalizeCat = (s: string) =>
+            s.toLowerCase().replace(/[^a-z0-9]/g, "");
           if (normalizeCat(catField) !== normalizeCat(category)) return;
         }
 
         if (postType && collectionName === "needs_and_sales") {
           const docType = (docData.type || "").toString().toUpperCase();
-          if (postType.toLowerCase() === "need" || postType.toLowerCase() === "buy") {
+          if (
+            postType.toLowerCase() === "need" ||
+            postType.toLowerCase() === "buy"
+          ) {
             if (docType !== "NEED") return;
           } else {
-            // Target is SELL/SALE: Only exclude if explicitly type == "NEED"
+            // Sell feed: exclude NEEDs
             if (docType === "NEED") return;
           }
         }
 
-        // 60-day validity check (safely ignore invalid or missing dates)
+        // 60-day expiry check
         if (docData.expires_at) {
           try {
-            const expiryDate = typeof docData.expires_at?.toDate === "function"
-              ? docData.expires_at.toDate()
-              : new Date(docData.expires_at);
+            const expiryDate =
+              typeof docData.expires_at?.toDate === "function"
+                ? docData.expires_at.toDate()
+                : new Date(docData.expires_at);
 
-            if (expiryDate instanceof Date && !isNaN(expiryDate.getTime()) && expiryDate.getTime() < Date.now() - 60 * 24 * 60 * 60 * 1000) {
+            if (
+              expiryDate instanceof Date &&
+              !isNaN(expiryDate.getTime()) &&
+              expiryDate.getTime() <
+                Date.now() - 60 * 24 * 60 * 60 * 1000
+            ) {
               return;
             }
           } catch (e) {}
         }
 
-        items.push({
-          id: doc.id,
-          ...docData,
-        });
+        items.push({ id: doc.id, ...docData });
       });
 
-      // Client-side sorting by creation time (descending - newest first)
-      const parseTimestamp = (val: any) => {
-        if (!val) return Date.now();
+      // Sort newest first
+      const parseTimestamp = (val: any): number => {
+        if (!val) return 0;
         if (typeof val.seconds === "number") return val.seconds * 1000;
         if (typeof val.toDate === "function") return val.toDate().getTime();
         const parsed = new Date(val).getTime();
-        return isNaN(parsed) || parsed === 0 ? Date.now() : parsed;
+        return isNaN(parsed) ? 0 : parsed;
       };
+      items.sort(
+        (a, b) => parseTimestamp(b.created_at) - parseTimestamp(a.created_at)
+      );
 
-      items.sort((a, b) => parseTimestamp(b.created_at) - parseTimestamp(a.created_at));
-
-      if (isMounted) {
-        setData(items);
-        setLoading(false);
-      }
+      setData(items as T[]);
+      setLoading(false);
     };
 
-    const startListener = () => {
-      try {
-        const colRef = collection(db, collectionName);
-        const constraints: any[] = [];
-
-        // Only add userId constraint if specifically requesting a single user's profile
-        if (onlyUserPosted) {
-          constraints.push(where("userId", "==", onlyUserPosted));
-        }
-
-        // Limit results to last 150 items
-        constraints.push(limit(150));
-
-        q = query(colRef, ...constraints);
-      } catch (err: any) {
-        console.error("Query building error:", err);
-        if (isMounted) {
-          setError(err);
-          setLoading(false);
-        }
-        return;
-      }
-
-      // Unsubscribe previous listener if any
-      if (unsubscribeSnapshot) {
-        unsubscribeSnapshot();
-        unsubscribeSnapshot = null;
-      }
-
-      unsubscribeSnapshot = onSnapshot(
-        q,
-        processSnapshot,
-        async (err) => {
-          // On snapshot error (e.g., auth not yet initialized), fall back to getDocs
-          console.warn("Firestore snapshot listener note:", err);
-          try {
-            const snap = await getDocs(q);
-            processSnapshot(snap);
-          } catch (fallbackErr) {
-            console.warn("Firestore getDocs fallback also failed:", fallbackErr);
-            if (isMounted) {
-              setError(err);
-              setLoading(false);
-            }
+    // Try real-time listener first
+    const unsubscribe = onSnapshot(
+      q,
+      processSnapshot,
+      async (snapshotErr) => {
+        // onSnapshot failed — fall back to a one-time getDocs fetch
+        console.warn(
+          "useFirestore: onSnapshot error, falling back to getDocs:",
+          snapshotErr
+        );
+        try {
+          const snap = await getDocs(q);
+          processSnapshot(snap);
+        } catch (docsErr: any) {
+          console.error(
+            "useFirestore: getDocs fallback also failed:",
+            docsErr
+          );
+          if (isMounted) {
+            setError(docsErr);
+            setLoading(false);
           }
         }
-      );
-    };
-
-    // Start the listener immediately
-    startListener();
-
-    // Also re-start once Firebase auth initializes (handles the anonymous auth race condition
-    // where the first snapshot fires before auth is ready and returns empty/permission error)
-    const unsubscribeAuth = onAuthStateChanged(auth, () => {
-      if (isMounted) {
-        startListener();
       }
-    });
+    );
 
     return () => {
       isMounted = false;
-      if (unsubscribeSnapshot) unsubscribeSnapshot();
-      unsubscribeAuth();
+      unsubscribe();
     };
   }, [collectionName, category, areaTag, postType, onlyUserPosted]);
 

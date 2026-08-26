@@ -195,12 +195,6 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
   const isOwnPost = React.useMemo(() => {
     if (user?.uid && listing.seller_id === user.uid) return true;
     if (profile?.phone && listing.phone && profile.phone === listing.phone) return true;
-    if (typeof window !== "undefined") {
-      try {
-        const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-        if (stored.some((p: any) => p.id === listing.id)) return true;
-      } catch (e) {}
-    }
     return false;
   }, [user, profile, listing]);
 
