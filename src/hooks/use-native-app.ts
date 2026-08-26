@@ -18,8 +18,6 @@ export function useNativeApp() {
           if (pathname === "/" || pathname === "/home" || pathname === "/onboarding") {
             // Exit app when on home page or onboarding
             App.exitApp();
-          } else if (canGoBack) {
-            router.back();
           } else {
             router.push("/");
           }

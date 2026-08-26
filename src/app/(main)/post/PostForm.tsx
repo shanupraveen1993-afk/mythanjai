@@ -809,33 +809,7 @@ export default function PostForm({ segment }: PostFormProps) {
 
   return (
     <div className="w-full max-w-6xl mx-auto px-3 sm:px-6 py-2 sm:py-3 pb-6 sm:pb-8 flex flex-col gap-3 font-sans">
-      {/* 4 SEGMENT TOP TAB BAR WITH ICONS */}
-      <div className="w-full flex items-center justify-center gap-1.5 p-1 bg-slate-100/90 border border-slate-200/80 rounded-2xl max-w-2xl mx-auto shadow-2xs overflow-x-auto no-scrollbar">
-        {[
-          { id: "sell", label: "For Sale", path: "/post/sell", icon: ShoppingBag },
-          { id: "need", label: "Looking For", path: "/post/need", icon: Search },
-          { id: "service", label: "Services", path: "/post/service", icon: Wrench },
-          { id: "offer", label: "Offers", path: "/post/offer", icon: Tag },
-        ].map((tab) => {
-          const IconComp = tab.icon;
-          const isActive = segment === tab.id;
-          return (
-            <button
-              key={tab.id}
-              type="button"
-              onClick={() => router.push(tab.path)}
-              className={`flex-1 min-w-[100px] py-2 px-3 rounded-xl text-xs transition-all cursor-pointer flex items-center justify-center gap-1.5 select-none whitespace-nowrap ${
-                isActive
-                  ? "bg-[#FBBF24] text-slate-950 font-bold shadow-2xs border border-amber-400"
-                  : "text-slate-600 hover:text-slate-900 font-medium hover:bg-slate-200/60"
-              }`}
-            >
-              <IconComp className={`w-3.5 h-3.5 ${isActive ? "text-slate-950 stroke-[2.5]" : "text-slate-500"}`} />
-              <span>{tab.label}</span>
-            </button>
-          );
-        })}
-      </div>
+
 
       {/* Page Header */}
       <div className="flex flex-col items-center border-b border-slate-200/80 pb-2.5">

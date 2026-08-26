@@ -5,21 +5,17 @@ import { usePathname, useRouter } from "next/navigation";
 
 export function useBackNavigation() {
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePathname() || "";
 
   useEffect(() => {
+    if (typeof window === "undefined") return;
+
     const handlePopState = (e: PopStateEvent) => {
-      // If user is on a main segment page, back button goes to Homepage (/)
-      if (
-        pathname === "/sell" ||
-        pathname === "/need" ||
-        pathname === "/services" ||
-        pathname === "/shops"
-      ) {
+      // If user is on any subpage, back button goes directly to Homepage (/)
+      if (pathname !== "/" && pathname !== "/home" && pathname !== "/onboarding") {
         e.preventDefault();
         router.push("/");
       }
-      // For /chat and /profile, default browser back (router.back()) navigates to related previous page.
     };
 
     window.addEventListener("popstate", handlePopState);
