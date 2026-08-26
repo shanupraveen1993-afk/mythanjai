@@ -19,7 +19,7 @@ export function useNativeApp() {
             // Exit app when on home page or onboarding
             App.exitApp();
           } else {
-            router.push("/");
+            router.replace("/");
           }
         }).catch(() => {});
       })

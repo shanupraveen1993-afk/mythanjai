@@ -14,7 +14,7 @@ export function useBackNavigation() {
       // If user is on any subpage, back button goes directly to Homepage (/)
       if (pathname !== "/" && pathname !== "/home" && pathname !== "/onboarding") {
         e.preventDefault();
-        router.push("/");
+        router.replace("/");
       }
     };
 

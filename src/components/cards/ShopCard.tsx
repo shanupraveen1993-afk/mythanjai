@@ -105,12 +105,19 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
   }, [post.valid_to]);
 
   const [sharesCount, setSharesCount] = useState(19);
-  const [viewsCount, setViewsCount] = useState<number>(() => {
-    return (post as any).views_count || Math.floor(28 + (post.shop_name?.length || 5) * 3);
-  });
+  const [viewsCount, setViewsCount] = useState<number>((post as any).views_count || 0);
+  const hasRecordedWatchRef = useRef<boolean>(false);
 
   const handleRecordWatch = async () => {
+    if (hasRecordedWatchRef.current) return;
+    if (typeof window !== "undefined") {
+      const sessionKey = `watched_reel_${post.id}`;
+      if (sessionStorage.getItem(sessionKey)) return;
+      sessionStorage.setItem(sessionKey, "true");
+    }
+    hasRecordedWatchRef.current = true;
     setViewsCount((prev) => prev + 1);
+
     try {
       const { doc, updateDoc, increment } = await import("firebase/firestore");
       const { db } = await import("@/lib/firebase");
