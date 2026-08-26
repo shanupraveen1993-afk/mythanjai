@@ -216,17 +216,24 @@ export default function PostForm({ segment }: PostFormProps) {
       }
     };
 
-    // Fetch from Firestore for authoritative cloud data
-    const targetCol = editCol || (segment === "service" ? "services" : segment === "offer" ? "shops" : "needs_and_sales");
-    const docRef = doc(db, targetCol, editId);
-    getDoc(docRef)
-      .then((snap) => {
-        if (snap.exists()) {
-          populateFields(snap.data());
-          toast.success("Loaded post data for editing!");
-        }
-      })
-      .catch(() => {});
+    // Fetch from Firestore for authoritative cloud data across all collections
+    const candidateCols = editCol ? [editCol, "needs_and_sales", "services", "shops", "offers"] : [segment === "service" ? "services" : segment === "offer" ? "shops" : "needs_and_sales", "needs_and_sales", "services", "shops", "offers"];
+    
+    async function loadEditData() {
+      if (!editId) return;
+      for (const col of candidateCols) {
+        try {
+          const snap = await getDoc(doc(db, col, editId));
+          if (snap.exists()) {
+            setEditCol(col);
+            populateFields(snap.data());
+            toast.success("Loaded post data for editing!");
+            break;
+          }
+        } catch (e) {}
+      }
+    }
+    loadEditData();
   }, [editId, editCol, segment]);
 
 

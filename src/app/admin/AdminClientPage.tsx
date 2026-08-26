@@ -127,34 +127,7 @@ export default function AdminClientPage() {
           })
         );
 
-        // Merge global public posts API if available
-        if (typeof window !== "undefined") {
-          try {
-            const apiRes = await fetch("/api/public-posts").then((r) => r.json()).catch(() => null);
-            if (apiRes && apiRes.success && Array.isArray(apiRes.posts)) {
-              apiRes.posts.forEach((lp: any) => {
-                const targetCol = lp.skill_category ? "services" : (lp.type === "SELL" || lp.type === "NEED" || lp.price) ? "needs_and_sales" : "shops";
-                if (!collectionDataMap[targetCol]) collectionDataMap[targetCol] = [];
-                if (!collectionDataMap[targetCol].some((m) => m.id === lp.id)) {
-                  collectionDataMap[targetCol].push({
-                    id: lp.id,
-                    colName: targetCol,
-                    title: lp.title || lp.name || lp.shop_name || lp.offer_title || "Public Post",
-                    phone: lp.phone || "",
-                    area_tag: lp.area_tag || "Thanjavur",
-                    is_verified: lp.is_verified !== false,
-                    is_reported: Boolean(lp.is_reported),
-                    price: lp.price || null,
-                    category: lp.category || lp.skill_category || "General",
-                    created_at: lp.created_at,
-                    image_url: lp.image_url || lp.image_urls?.[0],
-                    video_url: lp.video_url,
-                  });
-                }
-              });
-            }
-          } catch (e) {}
-        }
+
 
         const getTime = (val: any) => {
           if (!val) return Date.now();
@@ -306,15 +279,20 @@ export default function AdminClientPage() {
   const executeDelete = async (id: string, colName: string) => {
     const targetItem = items.find((i) => i.id === id);
     try {
+      if (colName && colName.trim()) {
+        await deleteDoc(doc(db, colName, id)).catch((err) => {
+          console.warn(`Direct delete note for ${colName}/${id}:`, err);
+        });
+      }
       await Promise.all([
         deleteDoc(doc(db, "needs_and_sales", id)).catch(() => {}),
         deleteDoc(doc(db, "services", id)).catch(() => {}),
         deleteDoc(doc(db, "shops", id)).catch(() => {}),
         deleteDoc(doc(db, "offers", id)).catch(() => {}),
-        deleteDoc(doc(db, colName, id)).catch(() => {}),
       ]);
-    } catch (e) {
-      console.warn("Delete document caught:", e);
+    } catch (e: any) {
+      console.error("Delete document error:", e);
+      toast.error(`Purge error: ${e?.message || "Permission or network error"}`);
     }
 
     // Write Audit Log for Admin Deletion
