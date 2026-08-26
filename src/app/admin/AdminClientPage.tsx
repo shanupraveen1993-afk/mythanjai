@@ -278,21 +278,30 @@ export default function AdminClientPage() {
 
   const executeDelete = async (id: string, colName: string) => {
     const targetItem = items.find((i) => i.id === id);
+    let deleteSuccess = false;
+
+    // Target the primary collection first
+    const primaryCol = colName || (targetItem?.colName || "needs_and_sales");
     try {
-      if (colName && colName.trim()) {
-        await deleteDoc(doc(db, colName, id)).catch((err) => {
-          console.warn(`Direct delete note for ${colName}/${id}:`, err);
-        });
-      }
-      await Promise.all([
-        deleteDoc(doc(db, "needs_and_sales", id)).catch(() => {}),
-        deleteDoc(doc(db, "services", id)).catch(() => {}),
-        deleteDoc(doc(db, "shops", id)).catch(() => {}),
-        deleteDoc(doc(db, "offers", id)).catch(() => {}),
-      ]);
-    } catch (e: any) {
-      console.error("Delete document error:", e);
-      toast.error(`Purge error: ${e?.message || "Permission or network error"}`);
+      await deleteDoc(doc(db, primaryCol, id));
+      deleteSuccess = true;
+    } catch (err: any) {
+      console.warn(`Primary delete attempt on ${primaryCol}/${id} returned:`, err?.message);
+    }
+
+    // Try secondary candidate collections to ensure complete purge
+    const secondaryCols = ["needs_and_sales", "services", "shops", "offers"].filter((c) => c !== primaryCol);
+    for (const secCol of secondaryCols) {
+      try {
+        await deleteDoc(doc(db, secCol, id));
+        deleteSuccess = true;
+      } catch (e) {}
+    }
+
+    if (!deleteSuccess) {
+      toast.error("Could not purge listing from Firestore. Please try again.");
+      setDeleteTarget(null);
+      return;
     }
 
     // Write Audit Log for Admin Deletion
@@ -305,7 +314,7 @@ export default function AdminClientPage() {
         actorName: "Super Admin",
         targetPostId: id,
         targetPostTitle: targetItem?.title || "Listing",
-        details: `Admin deleted listing "${targetItem?.title || id}" from collection ${colName}`,
+        details: `Admin deleted listing "${targetItem?.title || id}" from collection ${primaryCol}`,
         visibilityState: "deleted",
       });
     } catch (e) {}

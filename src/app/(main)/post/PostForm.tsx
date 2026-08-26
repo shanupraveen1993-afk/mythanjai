@@ -234,7 +234,7 @@ export default function PostForm({ segment }: PostFormProps) {
       }
     }
     loadEditData();
-  }, [editId, editCol, segment]);
+  }, [editId]);
 
 
 
@@ -509,8 +509,17 @@ export default function PostForm({ segment }: PostFormProps) {
     }
 
     // ── STEP 3: Write Directly to Firestore (NO LOCALSTORAGE) ──
+    if (editId && !editCol) {
+      setLoading(false);
+      const err = "Error: Could not locate original listing in cloud database to update.";
+      setValidationError(err);
+      toast.error(err);
+      return;
+    }
+
     const targetCol = editCol || (segment === "service" ? "services" : segment === "offer" ? "shops" : "needs_and_sales");
     let createdDocId = editId || "";
+    const finalImageUrls = cloudImageUrls && cloudImageUrls.length > 0 ? cloudImageUrls : [cloudImageUrl || ""];
 
     try {
       if (segment === "sell" || segment === "need") {
@@ -527,14 +536,12 @@ export default function PostForm({ segment }: PostFormProps) {
           phone: phone || "9876543210",
           show_phone: Boolean(showPhone),
           image_url: cloudImageUrl || "",
+          image_urls: finalImageUrls,
           youtube_url: youtubeUrl.trim() || "",
           google_maps_url: googleMapsUrl.trim() || "",
           is_verified: true,
           status: "active",
         };
-        if (cloudImageUrls && cloudImageUrls.length > 0) {
-          payload.image_urls = cloudImageUrls;
-        }
 
         if (editId) {
           await updateDoc(doc(db, targetCol, editId), payload);
@@ -562,6 +569,7 @@ export default function PostForm({ segment }: PostFormProps) {
           rating: 5.0,
           description: cleanDesc,
           image_url: cloudImageUrl || "",
+          image_urls: finalImageUrls,
           is_verified: true,
           status: "active",
         };
@@ -620,6 +628,7 @@ export default function PostForm({ segment }: PostFormProps) {
           category: category || "General",
           phone: phone || "9876543210",
           image_url: cloudImageUrl || "",
+          image_urls: finalImageUrls,
           offer_description: cleanDesc,
           address_text: area ? `${area}, Thanjavur` : "Thanjavur",
           video_url: uploadedVideoUrl || youtubeUrl.trim() || "",
