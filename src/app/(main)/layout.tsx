@@ -288,7 +288,9 @@ function MainLayoutContent({
       <main
         className="flex-1 w-full flex flex-col p-0 m-0 bg-[#f8fafc] pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))] md:pb-8"
         style={{
-          paddingTop: !isStandaloneView && !isOnboardingView ? "calc(3.5rem + env(safe-area-inset-top, 0px))" : undefined,
+          paddingTop: !isStandaloneView && !isOnboardingView
+            ? (isChatRoute ? undefined : "calc(3.5rem + env(safe-area-inset-top, 0px))")
+            : undefined,
         }}
       >
         {/* Sleek Tamil Welcome Banner — ALWAYS visible on main feed segments */}

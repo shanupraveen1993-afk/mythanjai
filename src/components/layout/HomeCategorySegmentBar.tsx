@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import { ShoppingBag, Search, Wrench, Tag } from "lucide-react";
 
 export default function HomeCategorySegmentBar() {
   const router = useRouter();
@@ -33,40 +34,42 @@ export default function HomeCategorySegmentBar() {
   const activeTab = getActiveTab();
 
   const segments = [
-    { id: "sell", label: "For Sale", route: "/sell" },
-    { id: "need", label: "Looking For", route: "/need" },
-    { id: "service", label: "Services", route: "/services" },
-    { id: "offer", label: "Offers", route: "/shops" },
+    { id: "sell", label: "For Sale", route: "/sell", icon: ShoppingBag },
+    { id: "need", label: "Looking For", route: "/need", icon: Search },
+    { id: "service", label: "Services", route: "/services", icon: Wrench },
+    { id: "offer", label: "Offers", route: "/shops", icon: Tag },
   ];
 
   return (
-    <div className="w-full md:hidden sticky top-[110px] z-30 bg-slate-50/98 backdrop-blur-md pt-2 pb-2 border-b border-slate-200/80 shadow-2xs transition-all">
-      <div className="w-full max-w-7xl mx-auto px-3 sm:px-6">
+    <div className="w-full md:hidden sticky top-[110px] z-30 bg-slate-50/98 backdrop-blur-md pt-1.5 pb-2 border-b border-slate-200/80 shadow-2xs transition-all">
+      <div className="w-full max-w-7xl mx-auto px-2 sm:px-4">
         <div className="grid grid-cols-4 gap-1.5 sm:gap-2.5 w-full max-w-2xl mx-auto">
-        {segments.map((seg) => {
-          const isActive = activeTab === seg.id;
-          return (
-            <button
-              key={seg.id}
-              type="button"
-              onClick={() => {
-                if (typeof window !== "undefined") {
-                  localStorage.setItem("namma_thanjai_active_segment", seg.id);
-                }
-                router.push(seg.route);
-              }}
-              className={`py-2 px-3 rounded-xl text-xs sm:text-sm transition-all cursor-pointer flex items-center justify-center w-full text-center ${
-                isActive
-                  ? "bg-[#FBBF24] text-slate-950 font-bold border border-amber-400/90 shadow-2xs"
-                  : "bg-white text-slate-700 hover:text-slate-950 border border-slate-200/90 font-semibold"
-              }`}
-            >
-              <span className="truncate w-full">{seg.label}</span>
-            </button>
-          );
-        })}
+          {segments.map((seg) => {
+            const IconComp = seg.icon;
+            const isActive = activeTab === seg.id;
+            return (
+              <button
+                key={seg.id}
+                type="button"
+                onClick={() => {
+                  if (typeof window !== "undefined") {
+                    localStorage.setItem("namma_thanjai_active_segment", seg.id);
+                  }
+                  router.push(seg.route);
+                }}
+                className={`py-2 px-1 rounded-xl transition-all cursor-pointer flex flex-col items-center justify-center gap-1 w-full text-center ${
+                  isActive
+                    ? "bg-[#FBBF24] text-slate-950 font-bold border border-amber-400/90 shadow-2xs"
+                    : "bg-white text-slate-700 hover:text-slate-950 border border-slate-200/90 font-semibold"
+                }`}
+              >
+                <IconComp className={`w-4 h-4 stroke-[2.2] ${isActive ? "text-slate-950" : "text-slate-600"}`} />
+                <span className="text-[11px] sm:text-xs font-bold leading-none truncate w-full">{seg.label}</span>
+              </button>
+            );
+          })}
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
 }

@@ -463,7 +463,7 @@ export default function ChatClientPage() {
   }
 
   return (
-    <div className="w-full flex-1 flex flex-col bg-white font-sans max-w-7xl mx-auto px-0 sm:px-4 sm:py-2 h-[calc(100dvh-3.5rem-4.5rem)] md:h-[calc(100vh-4rem-2rem)] overflow-hidden">
+    <div className="w-full flex-1 flex flex-col bg-white font-sans max-w-7xl mx-auto px-0 sm:px-4 sm:py-2 h-[calc(100dvh-4.5rem)] md:h-[calc(100vh-4rem-2rem)] md:pt-14 overflow-hidden">
       {/* SCAM WARNING MODAL */}
       {scamAlertTriggered && (
         <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 animate-fade-in">

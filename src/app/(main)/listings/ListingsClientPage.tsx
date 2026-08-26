@@ -396,7 +396,7 @@ function ListingsContent() {
                       <div className="flex items-center justify-between text-xs font-semibold text-slate-600 mt-1 pt-1.5 border-t border-slate-100">
                         <span className="flex items-center gap-1.5 text-emerald-800 font-bold bg-emerald-50 px-2.5 py-1 rounded-lg border border-emerald-200/80">
                           <Eye className="w-3.5 h-3.5 text-emerald-600" />
-                          <span>👁️ {post.views_count || 14} buyers in Thanjavur viewed this</span>
+                          <span>👁️ {post.views_count || 14} Views</span>
                         </span>
                         <button
                           type="button"
