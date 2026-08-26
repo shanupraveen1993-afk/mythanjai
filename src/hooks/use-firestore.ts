@@ -70,6 +70,9 @@ export function useFirestore<T = any>({
 
         // Client-side secondary filters
         if (onlyUserPosted && docData.userId !== onlyUserPosted) return;
+        if (!onlyUserPosted) {
+          if (docData.is_sold || docData.is_inactive || docData.is_offline || docData.status === "inactive") return;
+        }
         if (areaTag !== "All Areas" && docData.area_tag !== areaTag) return;
 
         if (category && category !== "All") {

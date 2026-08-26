@@ -61,12 +61,12 @@ export default function SellClientPage() {
 
   const filteredPosts = React.useMemo(() => {
     let list: NeedOrSalePost[] = allPosts.filter((p: any) => {
-      if (p.status === "moderation_review") return false;
+      if (p.status === "moderation_review" || p.status === "inactive") return false;
       if (isListingQuarantined(p.id)) return false;
       if (!p.title || p.title.trim() === "") return false;
       const pType = (p.type || "SELL").toUpperCase();
       if (pType === "NEED") return false;
-      if (p.is_sold) return false;
+      if (p.is_sold || p.is_inactive || p.is_offline) return false;
       return true;
     });
 

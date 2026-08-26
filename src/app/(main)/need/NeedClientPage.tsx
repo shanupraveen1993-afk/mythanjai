@@ -58,7 +58,8 @@ export default function NeedClientPage() {
 
   const filteredPosts = React.useMemo(() => {
     let list = allPosts.filter((p) => {
-      if ((p as any).status === "moderation_review") return false;
+      if ((p as any).status === "moderation_review" || (p as any).status === "inactive") return false;
+      if ((p as any).is_sold || (p as any).is_inactive || (p as any).is_offline) return false;
       if (isListingQuarantined(p.id)) return false;
       if (!p.title || p.title.trim() === "") return false;
       return p.type?.toUpperCase() === "NEED";
