@@ -215,7 +215,7 @@ function ListingsContent() {
   // Unauthenticated Guest State CTA
   if (!isVerified && !authLoading) {
     return (
-      <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 pt-6 pb-24 font-sans">
+      <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 pt-4 pb-6 sm:pb-10 font-sans">
         <div className="w-full bg-white border border-slate-200/90 rounded-2xl p-6 sm:p-10 shadow-sm flex flex-col items-center justify-center text-center gap-4">
           <div className="w-16 h-16 rounded-full bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 shadow-2xs">
             <Lock className="w-8 h-8 stroke-[2.5]" />
@@ -247,7 +247,7 @@ function ListingsContent() {
   }
 
   return (
-    <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-4 sm:pt-8 pb-24 flex flex-col gap-4 font-sans">
+    <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-3 sm:pt-4 pb-6 sm:pb-10 flex flex-col gap-4 font-sans">
       {/* 2 Navigation Tabs: My Posted Ads | Saved Items */}
       <div className="flex items-center gap-6 border-b border-slate-200 pb-1">
         <button

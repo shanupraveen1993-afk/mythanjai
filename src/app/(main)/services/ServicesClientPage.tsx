@@ -93,7 +93,7 @@ export default function ServicesClientPage() {
   }, [filteredPosts, currentPage]);
 
   return (
-    <div className="flex flex-col gap-0 pb-24 w-full font-sans">
+    <div className="flex flex-col gap-0 pb-6 sm:pb-10 w-full font-sans">
       <UniversalSearchBarRow />
       <HomeCategorySegmentBar />
 

@@ -843,7 +843,7 @@ export default function PostForm({ segment }: PostFormProps) {
 
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-3 sm:px-6 py-3 sm:py-5 pb-24 flex flex-col gap-4 font-sans">
+    <div className="w-full max-w-6xl mx-auto px-3 sm:px-6 py-2 sm:py-3 pb-6 sm:pb-8 flex flex-col gap-3 font-sans">
       {/* 4 SEGMENT TOP TAB BAR WITH ICONS */}
       <div className="w-full flex items-center justify-center gap-1.5 p-1 bg-slate-100/90 border border-slate-200/80 rounded-2xl max-w-2xl mx-auto shadow-2xs overflow-x-auto no-scrollbar">
         {[
