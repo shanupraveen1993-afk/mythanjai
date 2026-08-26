@@ -2,63 +2,34 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Helper function to check Admin authorization
-    function isAdmin() {
-      return request.auth != null && 
-        (request.auth.token.phone_number == '+919994837342' || 
-         request.auth.token.phone_number == '9994837342' ||
-         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.phone == '9994837342' ||
-         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.isAdmin == true);
-    }
-
-    // Helper function to check if user owns document
-    function isOwner(userId, phone) {
-      return request.auth != null && 
-        (request.auth.uid == userId || 
-         request.auth.token.phone_number == phone ||
-         get(/databases/$(database)/documents/users/$(request.auth.uid)).data.phone == phone);
-    }
-
-    // Canonical Post Collections: Public Read, Unrestricted Create, Owner/Admin Update & Delete
+    // Canonical Marketplace Post Collections
     match /needs_and_sales/{postId} {
-      allow read: if true;
-      allow create: if true;
-      allow update, delete: if isAdmin() || isOwner(resource.data.userId, resource.data.phone) || true;
+      allow read, create, update, delete: if true;
     }
 
     match /services/{postId} {
-      allow read: if true;
-      allow create: if true;
-      allow update, delete: if isAdmin() || isOwner(resource.data.userId, resource.data.phone) || true;
+      allow read, create, update, delete: if true;
     }
 
     match /shops/{postId} {
-      allow read: if true;
-      allow create: if true;
-      allow update, delete: if isAdmin() || isOwner(resource.data.userId, resource.data.phone) || true;
+      allow read, create, update, delete: if true;
     }
 
     match /offers/{postId} {
-      allow read: if true;
-      allow create: if true;
-      allow update, delete: if isAdmin() || isOwner(resource.data.userId, resource.data.phone) || true;
+      allow read, create, update, delete: if true;
     }
 
     // User Profiles Collection
     match /users/{userId} {
-      allow read: if true;
-      allow create, update: if true;
-      allow delete: if isAdmin() || true;
+      allow read, create, update, delete: if true;
     }
 
     // Reports Collection
     match /reports/{reportId} {
-      allow read: if true;
-      allow create: if true;
-      allow update, delete: if isAdmin() || true;
+      allow read, create, update, delete: if true;
     }
 
-    // Audit Logs Collection: Read by Admin/Public; Create system events; No updates or deletes!
+    // Audit Logs Collection
     match /audit_logs/{logId} {
       allow read, create: if true;
       allow update, delete: if false;

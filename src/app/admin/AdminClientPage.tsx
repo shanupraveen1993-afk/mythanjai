@@ -280,22 +280,41 @@ export default function AdminClientPage() {
     const targetItem = items.find((i) => i.id === id);
     let deleteSuccess = false;
 
-    // Target the primary collection first
+    // Target the primary collection first via client SDK
     const primaryCol = colName || (targetItem?.colName || "needs_and_sales");
     try {
       await deleteDoc(doc(db, primaryCol, id));
       deleteSuccess = true;
     } catch (err: any) {
-      console.warn(`Primary delete attempt on ${primaryCol}/${id} returned:`, err?.message);
+      console.warn(`Client delete attempt on ${primaryCol}/${id} failed, trying server API:`, err?.message);
     }
 
-    // Try secondary candidate collections to ensure complete purge
-    const secondaryCols = ["needs_and_sales", "services", "shops", "offers"].filter((c) => c !== primaryCol);
-    for (const secCol of secondaryCols) {
+    // Try secondary candidate collections
+    if (!deleteSuccess) {
+      const secondaryCols = ["needs_and_sales", "services", "shops", "offers"].filter((c) => c !== primaryCol);
+      for (const secCol of secondaryCols) {
+        try {
+          await deleteDoc(doc(db, secCol, id));
+          deleteSuccess = true;
+        } catch (e) {}
+      }
+    }
+
+    // Server-side API Fallback (Guarantees deletion even if Firebase Security Rules block client SDK)
+    if (!deleteSuccess) {
       try {
-        await deleteDoc(doc(db, secCol, id));
-        deleteSuccess = true;
-      } catch (e) {}
+        const apiRes = await fetch("/api/admin/delete-post", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ postId: id, colName: primaryCol }),
+        }).then((r) => r.json());
+
+        if (apiRes && apiRes.success) {
+          deleteSuccess = true;
+        }
+      } catch (apiErr) {
+        console.error("Server API delete fallback error:", apiErr);
+      }
     }
 
     if (!deleteSuccess) {

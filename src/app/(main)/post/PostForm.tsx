@@ -543,110 +543,39 @@ export default function PostForm({ segment }: PostFormProps) {
           status: "active",
         };
 
-        if (editId) {
-          await updateDoc(doc(db, targetCol, editId), payload);
-        } else {
-          const docRef = await addDoc(collection(db, targetCol), {
-            ...payload,
-            created_at: timestamp,
-            expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-          });
-          if (docRef) createdDocId = docRef.id;
-        }
-      } else if (segment === "service") {
-        const payload: any = {
-          userId: uid,
-          seller_id: uid,
-          name: title.trim(),
-          title: title.trim(),
-          is_available_now: Boolean(isAvailable),
-          experience: allWorkingDays === "Yes" ? "All Working Days" : "Flexible Days",
-          working_hours: sundayLeave === "Yes" ? "Sunday Off" : "Open 7 Days",
-          area_tag: area || "Thanjavur",
-          category: category || "General",
-          skill_category: category || "General",
-          phone: phone || "9876543210",
-          rating: 5.0,
-          description: cleanDesc,
-          image_url: cloudImageUrl || "",
-          image_urls: finalImageUrls,
-          is_verified: true,
-          status: "active",
-        };
+        const saveOrUpdateDocument = async (col: string, id: string | null, dataPayload: any) => {
+          if (id) {
+            try {
+              await updateDoc(doc(db, col, id), dataPayload);
+            } catch (clientErr: any) {
+              console.warn("Client updateDoc failed, invoking server API fallback:", clientErr?.message);
+              const apiRes = await fetch(getApiUrl("/api/post/update"), {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ postId: id, colName: col, payload: dataPayload }),
+              }).then((r) => r.json());
 
-        if (editId) {
-          await updateDoc(doc(db, targetCol, editId), payload);
-        } else {
-          const docRef = await addDoc(collection(db, targetCol), {
-            ...payload,
-            negative_reports_count: 0,
-            created_at: timestamp,
-          });
-          if (docRef) createdDocId = docRef.id;
-        }
-      } else if (segment === "offer") {
-        let uploadedVideoUrl = "";
-        if (selectedVideo) {
-          const sizeMb = (selectedVideo.size / (1024 * 1024)).toFixed(1);
-          toast.info(`Starting Reel Upload (${sizeMb} MB)... Please wait.`);
-          try {
-            const videoRef = ref(storage, `offer_reels/${Date.now()}_${selectedVideo.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`);
-            const uploadTask = uploadBytesResumable(videoRef, selectedVideo);
-
-            await new Promise<void>((resolve, reject) => {
-              uploadTask.on(
-                "state_changed",
-                (snapshot) => {
-                  if (snapshot.totalBytes > 0) {
-                    const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-                    toast.info(`Uploading Reel Video: ${progress}%...`);
-                  }
-                },
-                (error) => reject(error),
-                async () => {
-                  uploadedVideoUrl = await getDownloadURL(uploadTask.snapshot.ref);
-                  toast.success("Video reel uploaded to cloud storage!");
-                  resolve();
-                }
-              );
+              if (!apiRes || !apiRes.success) {
+                throw new Error(apiRes?.error || clientErr?.message || "Missing or insufficient permissions");
+              }
+            }
+          } else {
+            const docRef = await addDoc(collection(db, col), {
+              ...dataPayload,
+              created_at: timestamp,
+              ...((segment as string) === "sell" || (segment as string) === "need" ? { expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) } : {}),
+              ...((segment as string) === "service" ? { negative_reports_count: 0 } : {}),
             });
-          } catch (vErr: any) {
-            console.error("Video reel upload error:", vErr);
-            toast.error(`Video upload error: ${vErr?.message || "Storage error"}. Trying link fallback.`);
+            if (docRef) createdDocId = docRef.id;
           }
-        }
-        if (!uploadedVideoUrl && youtubeUrl.trim()) {
-          uploadedVideoUrl = youtubeUrl.trim();
-        }
-
-        const payload: any = {
-          userId: uid,
-          seller_id: uid,
-          shop_name: title.trim(),
-          offer_title: title.trim(),
-          area_tag: area || "Thanjavur",
-          category: category || "General",
-          phone: phone || "9876543210",
-          image_url: cloudImageUrl || "",
-          image_urls: finalImageUrls,
-          offer_description: cleanDesc,
-          address_text: area ? `${area}, Thanjavur` : "Thanjavur",
-          video_url: uploadedVideoUrl || youtubeUrl.trim() || "",
-          youtube_url: youtubeUrl.trim() || uploadedVideoUrl || "",
-          offer_social_link: uploadedVideoUrl || youtubeUrl.trim() || "",
-          show_phone: Boolean(showPhone),
-          is_verified: true,
-          status: "active",
         };
 
-        if (editId) {
-          await updateDoc(doc(db, targetCol, editId), payload);
-        } else {
-          const docRef = await addDoc(collection(db, targetCol), {
-            ...payload,
-            created_at: timestamp,
-          });
-          if (docRef) createdDocId = docRef.id;
+        if (segment === "sell" || segment === "need") {
+          await saveOrUpdateDocument(targetCol, editId, payload);
+        } else if (segment === "service") {
+          await saveOrUpdateDocument(targetCol, editId, payload);
+        } else if (segment === "offer") {
+          await saveOrUpdateDocument(targetCol, editId, payload);
         }
       }
 
