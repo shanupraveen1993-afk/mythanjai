@@ -463,7 +463,7 @@ export default function ChatClientPage() {
   }
 
   return (
-    <div className="w-full flex-1 flex flex-col bg-slate-100 font-sans pb-16 md:pb-6 max-w-7xl mx-auto px-0 sm:px-6 h-[calc(100dvh-4rem)] md:h-[calc(100vh-5rem)] overflow-hidden">
+    <div className="w-full flex-1 flex flex-col bg-white font-sans max-w-7xl mx-auto px-0 sm:px-4 sm:py-2 h-[calc(100dvh-3.5rem-4.5rem)] md:h-[calc(100vh-4rem-2rem)] overflow-hidden">
       {/* SCAM WARNING MODAL */}
       {scamAlertTriggered && (
         <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 animate-fade-in">
@@ -502,7 +502,7 @@ export default function ChatClientPage() {
       )}
 
       {/* MAIN CHAT LAYOUT PANEL */}
-      <div className="flex-1 w-full flex bg-white rounded-2xl border border-slate-200/90 shadow-md overflow-hidden my-2 min-h-[520px]">
+      <div className="flex-1 w-full flex bg-white sm:rounded-2xl sm:border sm:border-slate-200/90 sm:shadow-md overflow-hidden h-full">
         
         {/* LEFT COLUMN: WhatsApp-Style Conversation List */}
         <div className={`w-full lg:w-80 border-r border-slate-200 flex-col bg-white ${showMobileChat ? "hidden lg:flex" : "flex"}`}>
