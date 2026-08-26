@@ -14,15 +14,29 @@ import {
   Search,
   CheckCheck,
   Lock,
-  PhoneCall,
+  Phone,
   MoreVertical,
   Trash2,
   Share2,
+  Filter,
+  Check,
 } from "lucide-react";
-import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, doc, getDoc, setDoc } from "firebase/firestore";
+import {
+  collection,
+  addDoc,
+  query,
+  orderBy,
+  onSnapshot,
+  serverTimestamp,
+  doc,
+  getDoc,
+  setDoc,
+  deleteDoc,
+  getDocs,
+  where,
+} from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/hooks/use-auth";
-import { formatRelativeTime } from "@/lib/constants";
 import { useToast } from "@/context/ToastContext";
 
 interface ChatMessage {
@@ -40,8 +54,10 @@ interface ChatThread {
   listingTitle: string;
   peerId: string;
   peerName: string;
+  peerPhone?: string;
   lastMessage?: string;
   lastTimestamp?: any;
+  unreadCount?: number;
 }
 
 const SCAM_KEYWORDS = [
@@ -66,11 +82,32 @@ export default function ChatClientPage() {
   const [queryListingId, setQueryListingId] = useState<string>("");
   const [querySellerId, setQuerySellerId] = useState<string>("");
   const [queryTitle, setQueryTitle] = useState<string>("Classified Item");
+  const [queryAutoMsg, setQueryAutoMsg] = useState<string>("");
+
   const [activeChatId, setActiveChatId] = useState<string>("");
   const [activeListingTitle, setActiveListingTitle] = useState<string>("Classified Item");
   const [activePeerName, setActivePeerName] = useState<string>("Seller / Contact");
   const [activePeerId, setActivePeerId] = useState<string>("");
+  const [activePeerPhone, setActivePeerPhone] = useState<string>("");
 
+  const [threads, setThreads] = useState<ChatThread[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
+  const [inputText, setInputText] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [scamAlertTriggered, setScamAlertTriggered] = useState(false);
+  const [detectedKeyword, setDetectedKeyword] = useState("");
+  const [showMobileChat, setShowMobileChat] = useState(false);
+  const [activeFilter, setActiveFilter] = useState<"all" | "unread" | "ads">("all");
+  const [searchQuery, setSearchQuery] = useState("");
+
+  const [selectedThreadForDelete, setSelectedThreadForDelete] = useState<ChatThread | null>(null);
+  const [activeMsgAction, setActiveMsgAction] = useState<ChatMessage | null>(null);
+
+  const longPressTimerRef = useRef<any>(null);
+  const threadPressTimerRef = useRef<any>(null);
+  const chatBottomRef = useRef<HTMLDivElement | null>(null);
+
+  // Read URL query parameters
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
@@ -85,69 +122,92 @@ export default function ChatClientPage() {
         setQueryTitle(decoded);
         setActiveListingTitle(decoded);
       }
+      const autoMsg = params.get("autoMsg");
+      if (autoMsg) {
+        setQueryAutoMsg(decodeURIComponent(autoMsg));
+      }
       if (listingId || sellerId) {
         setShowMobileChat(true);
       }
     }
   }, []);
 
-  const [threads, setThreads] = useState<ChatThread[]>([]);
-  const [messages, setMessages] = useState<ChatMessage[]>([]);
-  const [inputText, setInputText] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [scamAlertTriggered, setScamAlertTriggered] = useState(false);
-  const [detectedKeyword, setDetectedKeyword] = useState("");
-  const [showMobileChat, setShowMobileChat] = useState(false);
-  const [activeMsgAction, setActiveMsgAction] = useState<ChatMessage | null>(null);
-  const longPressTimerRef = useRef<any>(null);
+  // Real-time Firestore snapshot for User Threads
+  useEffect(() => {
+    const currentUid = user?.uid;
+    const currentPhone = profile?.phone || user?.phoneNumber?.replace(/\D/g, "");
 
-  const handleTouchStart = (msg: ChatMessage) => {
-    longPressTimerRef.current = setTimeout(() => {
-      setActiveMsgAction(msg);
-    }, 500);
-  };
+    const fetchThreads = async () => {
+      try {
+        const chatsRef = collection(db, "chats");
+        const snapshot = await getDocs(chatsRef).catch(() => null);
+        if (snapshot && !snapshot.empty) {
+          const userThreads: ChatThread[] = [];
+          snapshot.forEach((docSnap) => {
+            const data = docSnap.data();
+            const participants = data.participants || [];
+            const isUserParticipant =
+              participants.includes(currentUid) ||
+              participants.includes("guest_user") ||
+              (currentPhone && participants.includes(currentPhone));
 
-  const handleTouchEnd = () => {
-    if (longPressTimerRef.current) {
-      clearTimeout(longPressTimerRef.current);
-    }
-  };
+            if (isUserParticipant || !currentUid) {
+              userThreads.push({
+                chatId: docSnap.id,
+                listingId: data.listingId || "post",
+                listingTitle: data.listingTitle || "Thanjavur Listing",
+                peerId: data.peerId || "seller",
+                peerName: data.peerName || data.listingTitle || "Local Contact",
+                peerPhone: data.peerPhone || "",
+                lastMessage: data.lastMessage || "Conversation started",
+                lastTimestamp: data.lastTimestamp || data.created_at,
+              });
+            }
+          });
 
-  const chatBottomRef = useRef<HTMLDivElement | null>(null);
+          if (userThreads.length > 0) {
+            setThreads(userThreads);
+          }
+        }
+      } catch (e) {
+        console.warn("Threads fetch warning:", e);
+      }
+    };
 
-  // Sample messages removed to provide clean slate for user live testing
-  const SAMPLE_MESSAGES_MAP: Record<string, ChatMessage[]> = {};
+    fetchThreads();
+  }, [user?.uid, profile?.phone]);
 
-  // Initialize or load active chat room from query params or user threads
+  // Initialize active chat room when navigating from an ad card
   useEffect(() => {
     if (queryListingId || querySellerId || (queryTitle && queryTitle !== "Classified Item")) {
       const currentUserId = user?.uid || "guest_user";
       const sellerId = querySellerId || "seller_contact";
       const generatedChatId = `${queryListingId || "post"}_${[currentUserId, sellerId].sort().join("_")}`;
+
       setActiveChatId(generatedChatId);
       setActiveListingTitle(queryTitle);
-        // Preset message offering interest in the ad
-        setInputText(`Hi, I saw your listing "${queryTitle}". I'm interested and would like more details.`);
-
       setActivePeerId(sellerId);
       setActivePeerName(queryTitle !== "Classified Item" ? queryTitle : "Seller / Contact");
       setShowMobileChat(true);
 
-      // Add to thread list if not present
+      if (queryAutoMsg) {
+        setInputText(queryAutoMsg);
+      } else {
+        setInputText(`Hi, I am interested in your listing "${queryTitle}". Is it still available?`);
+      }
+
       setThreads((prev) => {
         if (prev.some((t) => t.chatId === generatedChatId)) return prev;
-        const updated = [
-          {
-            chatId: generatedChatId,
-            listingId: queryListingId || "post",
-            listingTitle: queryTitle,
-            peerId: sellerId,
-            peerName: queryTitle !== "Classified Item" ? queryTitle : "Seller / Contact",
-            lastMessage: "Click to start conversation...",
-            lastTimestamp: new Date(),
-          },
-          ...prev,
-        ];
+        const newThread: ChatThread = {
+          chatId: generatedChatId,
+          listingId: queryListingId || "post",
+          listingTitle: queryTitle,
+          peerId: sellerId,
+          peerName: queryTitle !== "Classified Item" ? queryTitle : "Seller / Contact",
+          lastMessage: "Conversation initiated",
+          lastTimestamp: new Date(),
+        };
+        const updated = [newThread, ...prev];
         if (typeof window !== "undefined") {
           try {
             localStorage.setItem("namma_thanjai_chat_threads", JSON.stringify(updated));
@@ -156,7 +216,7 @@ export default function ChatClientPage() {
         return updated;
       });
     }
-  }, [queryListingId, querySellerId, queryTitle, user?.uid]);
+  }, [queryListingId, querySellerId, queryTitle, queryAutoMsg, user?.uid]);
 
   // Firestore Messages Snapshot Listener for Active Chat
   useEffect(() => {
@@ -181,13 +241,14 @@ export default function ChatClientPage() {
         }, 100);
       },
       (err) => {
-        console.warn("Firestore chat listener fallback:", err);
+        console.warn("Firestore chat listener note:", err);
       }
     );
 
     return () => unsubscribe();
   }, [activeChatId]);
 
+  // Send Message Handler
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputText.trim() || !activeChatId) return;
@@ -208,35 +269,40 @@ export default function ChatClientPage() {
       const messagesRef = collection(db, "chats", activeChatId, "messages");
       await addDoc(messagesRef, {
         senderId: user?.uid || "buyer_guest",
-        senderName: profile?.displayName || "Buyer",
+        senderName: profile?.displayName || user?.displayName || "Buyer",
         text: currentText,
         timestamp: serverTimestamp(),
       });
 
-      // Update thread document in Firestore and local storage
       const threadRef = doc(db, "chats", activeChatId);
-      await setDoc(threadRef, {
-        chatId: activeChatId,
-        listingId: queryListingId || "post",
-        listingTitle: activeListingTitle,
-        peerId: activePeerId,
-        peerName: activePeerName,
-        lastMessage: currentText,
-        lastTimestamp: serverTimestamp(),
-        participants: [user?.uid || "guest_user", activePeerId].filter(Boolean),
-      }, { merge: true });
+      await setDoc(
+        threadRef,
+        {
+          chatId: activeChatId,
+          listingId: queryListingId || "post",
+          listingTitle: activeListingTitle,
+          peerId: activePeerId,
+          peerName: activePeerName,
+          lastMessage: currentText,
+          lastTimestamp: serverTimestamp(),
+          participants: [user?.uid || "guest_user", activePeerId].filter(Boolean),
+        },
+        { merge: true }
+      );
 
       setThreads((prev) => {
         const updated = prev.map((t) =>
           t.chatId === activeChatId ? { ...t, lastMessage: currentText, lastTimestamp: new Date() } : t
         );
         if (typeof window !== "undefined") {
-          try { localStorage.setItem("namma_thanjai_chat_threads", JSON.stringify(updated)); } catch (e) {}
+          try {
+            localStorage.setItem("namma_thanjai_chat_threads", JSON.stringify(updated));
+          } catch (e) {}
         }
         return updated;
       });
     } catch (err) {
-      console.warn("Failed to send message to Firestore (using local preview):", err);
+      console.warn("Local chat fallback active:", err);
       setMessages((prev) => [
         ...prev,
         {
@@ -256,6 +322,59 @@ export default function ChatClientPage() {
     }
   };
 
+  // Long-press handlers for Thread deletion
+  const handleThreadTouchStart = (thread: ChatThread) => {
+    threadPressTimerRef.current = setTimeout(() => {
+      setSelectedThreadForDelete(thread);
+      if (typeof navigator !== "undefined" && navigator.vibrate) {
+        navigator.vibrate(40);
+      }
+    }, 500);
+  };
+
+  const handleThreadTouchEnd = () => {
+    if (threadPressTimerRef.current) {
+      clearTimeout(threadPressTimerRef.current);
+    }
+  };
+
+  // Execute thread deletion from Cloud Firestore and local state
+  const executeDeleteThread = async (chatId: string) => {
+    try {
+      await deleteDoc(doc(db, "chats", chatId));
+      const messagesRef = collection(db, "chats", chatId, "messages");
+      const snap = await getDocs(messagesRef).catch(() => null);
+      if (snap) {
+        snap.forEach((d) => deleteDoc(d.ref).catch(() => {}));
+      }
+    } catch (e) {
+      console.warn("Delete thread note:", e);
+    }
+
+    setThreads((prev) => prev.filter((t) => t.chatId !== chatId));
+    if (activeChatId === chatId) {
+      setActiveChatId("");
+      setShowMobileChat(false);
+    }
+    setSelectedThreadForDelete(null);
+    toast.success("Conversation thread deleted.");
+  };
+
+  // Long-press handlers for Message options
+  const handleMsgTouchStart = (msg: ChatMessage) => {
+    longPressTimerRef.current = setTimeout(() => {
+      setActiveMsgAction(msg);
+      if (typeof navigator !== "undefined" && navigator.vibrate) {
+        navigator.vibrate(30);
+      }
+    }, 500);
+  };
+
+  const handleMsgTouchEnd = () => {
+    if (longPressTimerRef.current) {
+      clearTimeout(longPressTimerRef.current);
+    }
+  };
 
   const highlightFlaggedText = (text: string) => {
     const textLower = text.toLowerCase();
@@ -289,40 +408,23 @@ export default function ChatClientPage() {
     }
   };
 
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [showDeleteChatConfirm, setShowDeleteChatConfirm] = useState(false);
-
-  const handleDeleteChat = () => {
-    setShowDeleteChatConfirm(true);
-  };
-
-  const executeDeleteChat = () => {
-    setThreads((prev) => prev.filter((t) => t.chatId !== activeChatId));
-    setMessages([]);
-    setIsMenuOpen(false);
-    setShowMobileChat(false);
-    setShowDeleteChatConfirm(false);
-    toast.success("Conversation thread deleted.");
-  };
-
-  const handleShareChat = async () => {
-    try {
-      if (navigator.share) {
-        await navigator.share({
-          title: activeListingTitle,
-          url: window.location.href,
-        });
-      } else {
-        await navigator.clipboard.writeText(window.location.href);
-        toast.success("Listing chat link copied to clipboard!");
+  // Filtered threads list
+  const filteredThreads = React.useMemo(() => {
+    return threads.filter((t) => {
+      if (searchQuery.trim()) {
+        const query = searchQuery.toLowerCase();
+        const matchesName = (t.peerName || "").toLowerCase().includes(query);
+        const matchesTitle = (t.listingTitle || "").toLowerCase().includes(query);
+        const matchesMsg = (t.lastMessage || "").toLowerCase().includes(query);
+        if (!matchesName && !matchesTitle && !matchesMsg) return false;
       }
-    } catch (err) {}
-    setIsMenuOpen(false);
-  };
+      return true;
+    });
+  }, [threads, searchQuery]);
 
   if (!isVerified) {
     return (
-      <div className="w-full max-w-md mx-auto py-12 px-6 flex flex-col items-center justify-center text-center gap-4 bg-white rounded-2xl border border-slate-200 shadow-2xs my-8">
+      <div className="w-full max-w-md mx-auto py-12 px-6 flex flex-col items-center justify-center text-center gap-4 bg-white rounded-2xl border border-slate-200 shadow-2xs my-8 font-sans">
         <div className="w-16 h-16 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
           <MessageSquare className="w-8 h-8 stroke-[2.5]" />
         </div>
@@ -380,7 +482,6 @@ export default function ChatClientPage() {
 
             <button
               onClick={() => setScamAlertTriggered(false)}
-              aria-label="I Understand & Proceed Safely"
               className="mt-2 w-full py-2.5 bg-red-600 hover:bg-red-500 text-white font-bold text-xs uppercase tracking-wider rounded-lg cursor-pointer border border-red-500 shadow-xs"
             >
               I Understand &amp; Proceed Safely
@@ -389,77 +490,151 @@ export default function ChatClientPage() {
         </div>
       )}
 
-      {/* CHAT CONTAINER PANEL */}
+      {/* MAIN CHAT LAYOUT PANEL */}
       <div className="flex-1 w-full flex bg-white rounded-2xl border border-slate-200/90 shadow-md overflow-hidden my-2 min-h-[520px]">
-        {/* LEFT COLUMN: Conversations List */}
+        
+        {/* LEFT COLUMN: WhatsApp-Style Conversation List */}
         <div className={`w-full lg:w-80 border-r border-slate-200 flex-col bg-white ${showMobileChat ? "hidden lg:flex" : "flex"}`}>
-          {/* Threads List Header */}
-          <div className="bg-slate-100 p-3.5 border-b border-slate-200 flex items-center justify-between">
+          
+          {/* 1. BRANDED HEADER WITH LOGO */}
+          <div className="bg-white px-4 py-3 border-b border-slate-200 flex items-center justify-between shadow-2xs shrink-0">
             <div className="flex items-center gap-2">
-              <div className="w-8 h-8 rounded-full bg-[#128c7e] text-white flex items-center justify-center font-bold text-xs">
-                <MessageSquare className="w-4 h-4" />
-              </div>
-              <h2 className="font-heading font-bold text-sm text-slate-800">Direct Messages</h2>
+              <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="h-8 w-auto object-contain" />
+              <span className="font-heading font-black tracking-tight text-base sm:text-lg">
+                <span className="text-[#1d4ed8]">நம்ம</span> <span className="text-[#f59e0b]">thanjai</span>
+              </span>
             </div>
-            <span className="text-xs font-semibold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
-              Encrypted
-            </span>
+            <div className="flex items-center gap-1.5">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" title="Real-time messaging active" />
+              <span className="text-[11px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
+                Chats
+              </span>
+            </div>
           </div>
 
-          {/* Search Contacts Bar */}
+          {/* 2. SEARCH CONTACTS BAR */}
           <div className="p-2.5 bg-slate-50 border-b border-slate-200">
-            <div className="flex items-center gap-2 bg-white border border-slate-200 rounded-lg px-3 py-1.5 text-xs text-slate-500">
-              <Search className="w-3.5 h-3.5 text-slate-400" />
+            <div className="flex items-center gap-2 bg-white border border-slate-200/90 rounded-xl px-3 py-2 text-xs text-slate-500 shadow-2xs">
+              <Search className="w-4 h-4 text-slate-400 shrink-0" />
               <input
                 type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search chats or listings..."
-                className="w-full bg-transparent focus:outline-none text-xs"
+                className="w-full bg-transparent focus:outline-none text-xs text-slate-900 font-medium placeholder:text-slate-400"
               />
+              {searchQuery && (
+                <button type="button" onClick={() => setSearchQuery("")} className="text-slate-400 hover:text-slate-600">
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              )}
             </div>
           </div>
 
-          {/* Conversation Threads */}
-          <div className="flex-1 overflow-y-auto divide-y divide-slate-100">
-            {threads.map((t) => (
-              <div
-                key={t.chatId}
-                onClick={() => {
-                  setActiveChatId(t.chatId);
-                  setActiveListingTitle(t.listingTitle);
-                  setActivePeerName(t.peerName);
-                  setShowMobileChat(true);
-                }}
-                className={`p-3 flex items-center gap-3 cursor-pointer transition-colors hover:bg-slate-50 ${
-                  activeChatId === t.chatId ? "bg-slate-100/80 border-l-4 border-[#128c7e]" : ""
+          {/* 3. WHATSAPP FILTER PILLS */}
+          <div className="flex items-center gap-2 px-3 py-2 border-b border-slate-100 bg-slate-50/50">
+            {(["all", "unread", "ads"] as const).map((filterKey) => (
+              <button
+                key={filterKey}
+                type="button"
+                onClick={() => setActiveFilter(filterKey)}
+                className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+                  activeFilter === filterKey
+                    ? "bg-[#128c7e] text-white shadow-2xs"
+                    : "bg-slate-200/80 text-slate-700 hover:bg-slate-300/80"
                 }`}
               >
-                <div className="w-10 h-10 rounded-full bg-slate-200 text-slate-600 flex items-center justify-center font-bold text-xs shrink-0">
-                  <User className="w-5 h-5 text-slate-500" />
-                </div>
-
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center justify-between">
-                    <h3 className="font-bold text-xs text-slate-800 truncate">{t.peerName}</h3>
-                    <span className="text-xs text-slate-400 font-medium">{formatTime(t.lastTimestamp)}</span>
-                  </div>
-                  <p className="text-xs font-semibold text-emerald-800 truncate mt-0.5">{t.listingTitle}</p>
-                  <p className="text-xs text-slate-500 truncate">{t.lastMessage}</p>
-                </div>
-              </div>
+                {filterKey === "all" ? "All" : filterKey === "unread" ? "Unread" : "Ad Inquiries"}
+              </button>
             ))}
           </div>
 
-          {/* Safety Footer Note */}
-          <div className="p-3 bg-slate-50 border-t border-slate-200 text-xs text-slate-500 font-medium flex items-center gap-1.5">
-            <Lock className="w-3 h-3 text-emerald-600 shrink-0" />
-            <span>Direct encrypted WhatsApp &amp; Call connection active.</span>
+          {/* 4. CONVERSATION THREADS LIST */}
+          <div className="flex-1 overflow-y-auto divide-y divide-slate-100">
+            {filteredThreads.length === 0 ? (
+              <div className="p-8 text-center flex flex-col items-center gap-2 text-slate-400">
+                <MessageSquare className="w-8 h-8 text-slate-300 stroke-[1.5]" />
+                <p className="text-xs font-bold text-slate-500">No chat conversations yet.</p>
+                <p className="text-[11px] text-slate-400">Browse listings and click 'Chat' to connect with sellers.</p>
+              </div>
+            ) : (
+              filteredThreads.map((t) => (
+                <div
+                  key={t.chatId}
+                  onClick={() => {
+                    setActiveChatId(t.chatId);
+                    setActiveListingTitle(t.listingTitle);
+                    setActivePeerName(t.peerName);
+                    setActivePeerPhone(t.peerPhone || "");
+                    setShowMobileChat(true);
+                  }}
+                  onMouseDown={() => handleThreadTouchStart(t)}
+                  onMouseUp={handleThreadTouchEnd}
+                  onTouchStart={() => handleThreadTouchStart(t)}
+                  onTouchEnd={handleThreadTouchEnd}
+                  onContextMenu={(e) => {
+                    e.preventDefault();
+                    setSelectedThreadForDelete(t);
+                  }}
+                  className={`p-3 flex items-center gap-3 cursor-pointer transition-colors hover:bg-slate-50 select-none relative group ${
+                    activeChatId === t.chatId ? "bg-emerald-50/60 border-l-4 border-[#128c7e]" : ""
+                  }`}
+                >
+                  {/* User Avatar */}
+                  <div className="w-11 h-11 rounded-full bg-slate-950 text-amber-400 flex items-center justify-center font-bold text-xs shrink-0 border border-amber-400/40 relative">
+                    <User className="w-5 h-5 text-amber-400" />
+                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white absolute bottom-0 right-0" />
+                  </div>
+
+                  {/* Thread Info */}
+                  <div className="min-w-0 flex-1">
+                    <div className="flex items-center justify-between">
+                      <h3 className="font-bold text-xs text-slate-900 truncate">{t.peerName}</h3>
+                      <span className="text-[10px] text-slate-400 font-medium shrink-0 ml-1">
+                        {formatTime(t.lastTimestamp)}
+                      </span>
+                    </div>
+                    
+                    {/* Ad Title Badge */}
+                    <div className="flex items-center gap-1 mt-0.5">
+                      <span className="text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-200/80 px-1.5 py-0.2 rounded truncate">
+                        📌 {t.listingTitle}
+                      </span>
+                    </div>
+
+                    {/* Last Message Preview */}
+                    <p className="text-xs text-slate-500 truncate mt-1">{t.lastMessage}</p>
+                  </div>
+
+                  {/* Desktop Hover Delete Icon */}
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setSelectedThreadForDelete(t);
+                    }}
+                    className="opacity-0 group-hover:opacity-100 p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all shrink-0 cursor-pointer"
+                    title="Delete Conversation (Hold or Click)"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
+              ))
+            )}
+          </div>
+
+          {/* 5. ENCRYPTED FOOTER BANNER */}
+          <div className="p-3 bg-slate-50 border-t border-slate-200 text-[11px] text-slate-500 font-semibold flex items-center gap-1.5 shrink-0">
+            <Lock className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
+            <span>End-to-end encrypted local messaging</span>
           </div>
 
         </div>
 
         {/* RIGHT COLUMN: WhatsApp Active Chat Window */}
         <div className={`flex-1 flex-col bg-[#efeae2] relative ${showMobileChat ? "flex" : "hidden lg:flex"}`}>
-          {/* WhatsApp Header Bar (Deep Teal #075E54) */}
+          
+          {/* Active Chat Header Bar (Deep Teal #075E54) */}
           <div className="bg-[#075E54] text-white px-3.5 py-2.5 flex items-center justify-between shadow-md shrink-0 border-b border-[#054c44]">
             <div className="flex items-center gap-2.5 min-w-0 flex-1">
               <button
@@ -477,33 +652,29 @@ export default function ChatClientPage() {
               </div>
               
               <div className="min-w-0 flex flex-col justify-center flex-1">
-                <div className="flex items-center gap-2">
-                  <h3 className="font-heading font-black text-xs sm:text-sm text-white truncate leading-tight">{activePeerName}</h3>
-                  <span className="bg-emerald-700/90 text-emerald-100 text-[10px] font-black px-1.5 py-0.5 rounded border border-emerald-500/50 uppercase shrink-0 tracking-wider">
-                    Seller
-                  </span>
-                </div>
+                <h3 className="font-heading font-black text-xs sm:text-sm text-white truncate leading-tight">{activePeerName}</h3>
                 <div className="flex items-center gap-1 text-[11px] text-[#ffeeb3] font-bold truncate mt-0.5">
                   <span className="truncate">📌 {activeListingTitle}</span>
                 </div>
               </div>
             </div>
 
-            {/* Right Side Actions: Call Seller, Share & Delete */}
+            {/* Header Right Actions */}
             <div className="flex items-center gap-1 shrink-0 ml-2">
-              <button
-                type="button"
-                onClick={() => handleShareChat()}
-                className="p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-full cursor-pointer transition-colors"
-                title="Share Listing"
-              >
-                <Share2 className="w-4 h-4" />
-              </button>
+              {activePeerPhone && (
+                <a
+                  href={`tel:${activePeerPhone.replace(/\D/g, "")}`}
+                  className="p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-full cursor-pointer transition-colors"
+                  title="Call Contact"
+                >
+                  <Phone className="w-4 h-4 text-emerald-300" />
+                </a>
+              )}
 
               <button
                 type="button"
-                onClick={() => handleDeleteChat()}
-                className="p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-full cursor-pointer transition-colors text-rose-200 hover:text-rose-100"
+                onClick={() => setSelectedThreadForDelete(threads.find((t) => t.chatId === activeChatId) || null)}
+                className="p-2 text-rose-200 hover:text-rose-100 hover:bg-white/10 rounded-full cursor-pointer transition-colors"
                 title="Delete Conversation"
               >
                 <Trash2 className="w-4 h-4" />
@@ -511,15 +682,15 @@ export default function ChatClientPage() {
             </div>
           </div>
 
-          {/* PERMANENT TOP SCAM SAFETY BANNER (WhatsApp Styled Amber Alert) */}
-          <div className="bg-[#fff3c4] text-[#856404] px-3.5 py-2 flex items-center gap-2 text-[11px] font-bold border-b border-[#ffeeba] shadow-2xs">
+          {/* TOP SAFETY WARNING BANNER */}
+          <div className="bg-[#fff3c4] text-[#856404] px-3.5 py-2 flex items-center gap-2 text-[11px] font-bold border-b border-[#ffeeba] shadow-2xs shrink-0">
             <AlertTriangle className="w-4 h-4 text-[#856404] shrink-0 stroke-[2.5]" />
             <span>
-              Safety Warning: Never send advance payments or UPI transfers before physically inspecting the item in Thanjavur.
+              Safety Warning: Never send advance payments or UPI transfers before physically inspecting items in Thanjavur.
             </span>
           </div>
 
-          {/* Messages Feed (WhatsApp #efeae2 Wallpaper background) */}
+          {/* Messages Feed */}
           <div
             className="flex-1 p-3.5 sm:p-5 overflow-y-auto flex flex-col gap-2.5 bg-[#efeae2] bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:16px_16px]"
             style={{ paddingBottom: "calc(max(env(safe-area-inset-bottom, 0px), 16px) + 24px)" }}
@@ -540,10 +711,10 @@ export default function ChatClientPage() {
                 return (
                   <div key={msg.id} className={`flex flex-col ${isMe ? "items-end" : "items-start"}`}>
                     <div
-                      onTouchStart={() => handleTouchStart(msg)}
-                      onTouchEnd={handleTouchEnd}
-                      onMouseDown={() => handleTouchStart(msg)}
-                      onMouseUp={handleTouchEnd}
+                      onTouchStart={() => handleMsgTouchStart(msg)}
+                      onTouchEnd={handleMsgTouchEnd}
+                      onMouseDown={() => handleMsgTouchStart(msg)}
+                      onMouseUp={handleMsgTouchEnd}
                       onContextMenu={(e) => {
                         e.preventDefault();
                         setActiveMsgAction(msg);
@@ -567,7 +738,7 @@ export default function ChatClientPage() {
             <div ref={chatBottomRef} />
           </div>
 
-          {/* Long-Press Action Modal Overlay for Message (Copy, Delete, Share) */}
+          {/* Long-Press Message Options Modal */}
           {activeMsgAction && (
             <div
               className="fixed inset-0 z-[999999] bg-slate-950/60 backdrop-blur-xs flex items-center justify-center p-4 animate-fade-in"
@@ -588,7 +759,6 @@ export default function ChatClientPage() {
                 </div>
 
                 <div className="flex flex-col gap-2 pt-1">
-                  {/* Copy Action */}
                   <button
                     type="button"
                     onClick={() => {
@@ -601,24 +771,6 @@ export default function ChatClientPage() {
                     <span>📋 Copy Message</span>
                   </button>
 
-                  {/* Share Action */}
-                  <button
-                    type="button"
-                    onClick={() => {
-                      if (navigator.share) {
-                        navigator.share({ text: activeMsgAction.text }).catch(() => {});
-                      } else {
-                        navigator.clipboard.writeText(activeMsgAction.text);
-                        toast.success("Message text copied for sharing!");
-                      }
-                      setActiveMsgAction(null);
-                    }}
-                    className="w-full py-2.5 px-3 bg-blue-50 hover:bg-blue-100 text-blue-800 font-heading font-black text-xs rounded-xl flex items-center gap-2 cursor-pointer transition-colors border border-blue-200"
-                  >
-                    <span>📤 Share Message</span>
-                  </button>
-
-                  {/* Delete Action */}
                   <button
                     type="button"
                     onClick={() => {
@@ -635,7 +787,7 @@ export default function ChatClientPage() {
             </div>
           )}
 
-          {/* WhatsApp Message Input Form (#f0f2f5 Footer Bar) */}
+          {/* Message Input Form */}
           <form
             onSubmit={handleSendMessage}
             className="p-2.5 sm:p-3.5 bg-[#f0f2f5] border-t border-[#e9edef] flex items-center gap-2 shadow-xs"
@@ -666,31 +818,33 @@ export default function ChatClientPage() {
 
       </div>
 
-      {/* Custom Delete Chat Confirmation Modal */}
-      {showDeleteChatConfirm && (
-        <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 animate-fade-in">
-          <div className="bg-white rounded-2xl max-w-sm w-full p-6 border border-slate-200 shadow-lg flex flex-col gap-4 text-center">
+      {/* LONG PRESS / DELETE THREAD CONFIRMATION MODAL */}
+      {selectedThreadForDelete && (
+        <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 animate-fade-in font-sans">
+          <div className="bg-white rounded-2xl max-w-sm w-full p-6 border border-slate-200 shadow-2xl flex flex-col gap-4 text-center">
             <div className="w-14 h-14 rounded-full bg-rose-100 text-rose-600 flex items-center justify-center mx-auto border border-rose-200">
               <Trash2 className="w-7 h-7 stroke-[2.5]" />
             </div>
             <div>
               <h3 className="font-heading font-black text-lg text-slate-900">Delete Conversation?</h3>
-              <p className="text-xs text-slate-500 font-medium mt-1">This chat thread and messages will be removed from your inbox.</p>
+              <p className="text-xs text-slate-600 font-medium mt-1">
+                Delete chat history with <span className="font-bold text-slate-900">{selectedThreadForDelete.peerName}</span> for listing "<span className="font-bold text-slate-900">{selectedThreadForDelete.listingTitle}</span>"?
+              </p>
             </div>
             <div className="flex items-center gap-2 pt-2">
               <button
                 type="button"
-                onClick={() => setShowDeleteChatConfirm(false)}
+                onClick={() => setSelectedThreadForDelete(null)}
                 className="flex-1 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-heading font-black text-xs rounded-2xl cursor-pointer transition-colors"
               >
                 Cancel
               </button>
               <button
                 type="button"
-                onClick={executeDeleteChat}
+                onClick={() => executeDeleteThread(selectedThreadForDelete.chatId)}
                 className="flex-1 py-3 bg-rose-600 hover:bg-rose-700 text-white font-heading font-black text-xs rounded-2xl cursor-pointer shadow-md transition-all"
               >
-                Delete Thread
+                Delete Chat
               </button>
             </div>
           </div>
