@@ -333,173 +333,148 @@ export default function ListingCard({ listing, isPreview }: { listing: ListingIt
 
   return (
     <>
-      <div className="bg-white rounded-xl p-4 flex flex-col justify-between shadow-2xs border border-slate-200/90 relative font-sans h-full">
-        <div className="flex flex-col gap-3 flex-1">
-
-          {/* ── TOP HEADER BLOCK: Left Image Box + Right Details Column ── */}
-          <div className="flex items-start gap-3 w-full">
+      {/* FACEBOOK-STYLE POST CARD CONTAINER */}
+      <div className="bg-white border-y sm:border sm:rounded-xl border-slate-200/90 shadow-2xs mb-3.5 font-sans overflow-hidden transition-all">
+        
+        {/* 1. FACEBOOK POST HEADER ROW */}
+        <div className="p-3.5 sm:p-4 flex items-center justify-between gap-3">
+          <div className="flex items-center gap-3 min-w-0">
+            {/* Avatar Circle */}
+            <div className="w-10 h-10 rounded-full bg-slate-950 text-amber-400 font-heading font-black text-sm flex items-center justify-center border border-amber-400/80 shrink-0 shadow-2xs select-none">
+              {(listing.seller_name || listing.title || "NT").slice(0, 2).toUpperCase()}
+            </div>
             
-            {/* LEFT: Compact Square Image Container — ONLY render if not a NEED/looking_for requirement card */}
-            {!isLookingFor && (
-              <div
-                className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl bg-slate-100 relative overflow-hidden shrink-0 border border-slate-200/80 shadow-2xs group/img cursor-pointer"
-                onClick={(e) => {
-                  if (allImages.length > 0) {
-                    e.stopPropagation();
-                    setGalleryIndex(0);
-                  }
-                }}
-              >
-                {allImages.length > 0 ? (
-                  <Image
-                    src={imgError ? "/placeholder.webp" : imageSrc}
-                    alt={listing.title}
-                    fill
-                    onError={() => setImgError(true)}
-                    className="object-cover transition-transform duration-300 group-hover/img:scale-105"
-                  />
-                ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 text-amber-400 p-2 flex flex-col items-center justify-center text-center select-none">
-                    <Camera className="w-5 h-5 text-amber-400 mb-1 opacity-80" />
-                    <span className="text-[10px] font-black uppercase tracking-wider text-amber-300">Request Photo</span>
-                  </div>
-                )}
-                {/* +N Badge overlay on bottom-right of image */}
-                {extraCount > 0 && (
-                  <div className="absolute bottom-1.5 right-1.5 bg-slate-950/85 backdrop-blur-md text-amber-400 text-[10px] font-black px-1.5 py-0.5 rounded-md border border-amber-400/40 shadow-md">
-                    +{extraCount}
-                  </div>
-                )}
+            {/* Author Name + Time + Location */}
+            <div className="flex flex-col min-w-0">
+              <div className="flex items-center gap-2">
+                <span className="font-heading font-black text-sm text-slate-950 truncate leading-tight">
+                  {listing.seller_name || "Thanjavur Resident"}
+                </span>
+                <span className="text-[10px] font-black uppercase text-blue-700 bg-blue-50 border border-blue-200 px-2 py-0.5 rounded-md shrink-0">
+                  {listing.category || listing.type || "Listing"}
+                </span>
+              </div>
+              <div className="flex items-center gap-1.5 text-xs text-slate-500 font-medium truncate mt-0.5">
+                <span>{formatRelativeTime(listing.created_at)}</span>
+                <span>·</span>
+                <MapPin className="w-3 h-3 text-amber-600 shrink-0" />
+                <span className="truncate">{listing.location || "Thanjavur"}</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Price Badge on Right */}
+          {formattedPrice && (
+            <div className="font-heading font-black text-base sm:text-lg text-amber-600 tracking-tight shrink-0 bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200/80">
+              {formattedPrice}
+            </div>
+          )}
+        </div>
+
+        {/* 2. FACEBOOK POST CAPTION & TITLE SECTION */}
+        <div className="px-3.5 sm:px-4 pb-3 flex flex-col gap-1.5">
+          <h3 className="font-heading font-black text-base text-slate-950 leading-snug">
+            {listing.title}
+          </h3>
+          {listing.description && (
+            <p className="text-sm text-slate-800 leading-relaxed font-normal whitespace-pre-line">
+              {listing.description}
+            </p>
+          )}
+        </div>
+
+        {/* 3. FULL-BLEED FACEBOOK MEDIA BLOCK */}
+        {!isLookingFor && allImages.length > 0 && (
+          <div
+            className="relative w-full max-h-96 min-h-[220px] bg-slate-900 overflow-hidden cursor-pointer group"
+            onClick={(e) => {
+              e.stopPropagation();
+              setGalleryIndex(0);
+            }}
+          >
+            <img
+              src={imgError ? "/placeholder.webp" : imageSrc}
+              alt={listing.title}
+              onError={() => setImgError(true)}
+              className="w-full max-h-96 object-cover transition-transform duration-300 group-hover:scale-[1.02]"
+            />
+            {extraCount > 0 && (
+              <div className="absolute bottom-3 right-3 bg-slate-950/85 backdrop-blur-md text-amber-400 text-xs font-black px-2.5 py-1 rounded-lg border border-amber-400/40 shadow-lg">
+                +{extraCount} Photos
               </div>
             )}
-
-            {/* RIGHT COLUMN: Category Badge (left) + Price (right) + Title (left) */}
-            <div className="flex-1 min-w-0 flex flex-col justify-between self-stretch">
-              {/* Top Row: Category Name on Left, Price on Right */}
-              <div className="flex items-center justify-between gap-2 w-full">
-                <CategoryIcon category={listing.category || listing.type} />
-                <div className="font-heading font-black text-lg sm:text-xl text-amber-600 tracking-tight shrink-0">
-                  {formattedPrice}
-                </div>
-              </div>
-
-              {/* Title: Single-line bold text */}
-              <h3 className="font-sans font-bold text-base sm:text-lg text-slate-900 truncate line-clamp-1 whitespace-nowrap leading-snug text-left mt-0.5">
-                {listing.title}
-              </h3>
-            </div>
           </div>
+        )}
 
-          {/* ── MIDDLE SECTION: Fixed Height Description Box ── */}
-          <div className="min-h-[4.5rem] bg-slate-50/80 border border-slate-200/60 p-2.5 rounded-xl flex items-center">
-            <p className="text-sm text-slate-700 font-medium leading-relaxed line-clamp-3">
-              {listing.description || "No detailed description provided."}
-            </p>
+        {/* 4. FACEBOOK REACTION COUNTER & STATS BAR */}
+        <div className="px-3.5 sm:px-4 py-2 bg-slate-50/60 border-t border-b border-slate-100 flex items-center justify-between text-xs text-slate-500 font-semibold">
+          <div className="flex items-center gap-1.5">
+            <span className="text-amber-500">👍 ❤️</span>
+            <span>18 interested in Thanjavur</span>
           </div>
-
-          {/* ── ROW 3: Location on Left + 3 Icon Buttons on Right ── */}
-          <div className="flex items-center justify-between text-xs text-slate-600 border-t border-b border-slate-100 py-2 my-0.5 gap-2">
-            {/* Location Tag */}
-            <div className="flex items-center gap-1 text-xs text-slate-600 font-semibold truncate">
-              <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-              <span className="truncate">{listing.location || "Medical College Rd, Thanjavur"}</span>
-            </div>
-
-            {/* 3 Square Action Icon Buttons (Save, Share, Report) */}
-            <div className="flex items-center gap-1.5 shrink-0">
-              {/* 1st: Save */}
-              <button
-                type="button"
-                onClick={handleSaveToggle}
-                className={`w-7 h-7 rounded-xl border flex items-center justify-center transition-colors cursor-pointer ${
-                  isSaved
-                    ? "bg-amber-50 border-amber-300 text-amber-600"
-                    : "border-slate-200 bg-white text-slate-500 hover:text-slate-800"
-                }`}
-                title={isSaved ? "Saved" : "Save Listing"}
-              >
-                <Bookmark className={`w-3.5 h-3.5 ${isSaved ? "fill-amber-600" : ""}`} />
-              </button>
-
-              {/* 2nd: Share */}
-              <button
-                type="button"
-                onClick={handleShare}
-                className="w-7 h-7 rounded-xl border border-slate-200 bg-white text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors cursor-pointer"
-                title="Share Listing"
-              >
-                <Share2 className="w-3.5 h-3.5" />
-              </button>
-
-              {/* 3rd: Report */}
-              <button
-                type="button"
-                onClick={handleReportListing}
-                className="w-7 h-7 rounded-xl border border-slate-200 bg-white text-slate-400 hover:text-rose-500 hover:border-rose-200 flex items-center justify-center transition-colors cursor-pointer"
-                title="Report Listing"
-              >
-                <Flag className="w-3.5 h-3.5" />
-              </button>
-            </div>
+          <div className="flex items-center gap-3 text-slate-500">
+            <button type="button" onClick={handleSaveToggle} className="hover:text-amber-600 flex items-center gap-1 cursor-pointer">
+              <Bookmark className={`w-3.5 h-3.5 ${isSaved ? "fill-amber-600 text-amber-600" : ""}`} />
+              <span>{isSaved ? "Saved" : "Save"}</span>
+            </button>
+            <button type="button" onClick={handleShare} className="hover:text-slate-900 flex items-center gap-1 cursor-pointer">
+              <Share2 className="w-3.5 h-3.5" />
+              <span>Share</span>
+            </button>
+            <button type="button" onClick={handleReportListing} className="hover:text-rose-600 flex items-center gap-1 cursor-pointer">
+              <Flag className="w-3.5 h-3.5" />
+              <span>Report</span>
+            </button>
           </div>
         </div>
 
-        {/* ── FOOTER ROW: Date Ago (Left) + Buttons (Right) ── */}
-        <div className="pt-2 flex items-center justify-between gap-2 mt-auto border-t border-slate-100">
-          {/* Left: Date Ago */}
-          <span className="text-[11px] font-medium text-slate-400 flex items-center gap-1 shrink-0">
-            <Calendar className="w-3.5 h-3.5 text-slate-400" />
-            <span>{formatRelativeTime(listing.created_at)}</span>
-          </span>
-
-          {/* Right: 2 Rectangular CTA Buttons (Exact w-[128px] each matching other segments) */}
-          <div className="flex items-center gap-2 shrink-0 justify-end">
-            {isOwnPost ? (
+        {/* 5. FACEBOOK POST ACTION BUTTONS ROW */}
+        <div className="p-3 sm:p-3.5 flex items-center justify-end gap-2 bg-white">
+          {isOwnPost ? (
+            <button
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                router.push("/listings");
+              }}
+              className="bg-blue-600 hover:bg-blue-700 text-white font-heading font-black text-xs sm:text-sm py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 cursor-pointer transition-colors shadow-2xs whitespace-nowrap"
+            >
+              <Pencil className="w-4 h-4 text-white shrink-0" />
+              <span>Manage My Post</span>
+            </button>
+          ) : (
+            <>
               <button
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
-                  router.push("/listings");
-                }}
-                className="bg-blue-600 hover:bg-blue-700 text-white font-heading font-black text-xs sm:text-sm py-2.5 px-4.5 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] cursor-pointer transition-colors shadow-2xs whitespace-nowrap"
-              >
-                <Pencil className="w-4 h-4 text-white shrink-0" />
-                <span>Manage</span>
-              </button>
-            ) : (
-              <>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (isPreview) return;
-                    if (!isVerified) {
-                      if (typeof window !== "undefined") {
-                        window.dispatchEvent(new Event("namma_thanjai_open_signin"));
-                      }
-                      return;
+                  if (isPreview) return;
+                  if (!isVerified) {
+                    if (typeof window !== "undefined") {
+                      window.dispatchEvent(new Event("namma_thanjai_open_signin"));
                     }
-                    router.push(`/chat?listingId=${listing.id}&sellerId=${listing.seller_id || ""}&title=${encodeURIComponent(listing.title)}`);
-                  }}
-                  className={`w-[128px] shrink-0 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors whitespace-nowrap ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
-                >
-                  <MessageSquare className="w-4 h-4 text-[#0F172A] shrink-0 stroke-[2.5]" />
-                  <span>Chat</span>
-                </button>
+                    return;
+                  }
+                  router.push(`/chat?listingId=${listing.id}&sellerId=${listing.seller_id || ""}&title=${encodeURIComponent(listing.title)}`);
+                }}
+                className={`flex-1 sm:flex-none border-2 border-slate-900 text-slate-900 bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer transition-colors whitespace-nowrap ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
+              >
+                <MessageSquare className="w-4 h-4 text-slate-900 shrink-0 stroke-[2.5]" />
+                <span>Chat</span>
+              </button>
 
-                {(listing.show_phone !== false) && (
-                  <a
-                    href={isPreview ? "#" : callUrl}
-                    onClick={(e) => { if (isPreview) e.preventDefault(); e.stopPropagation(); }}
-                    className={`w-[128px] shrink-0 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors whitespace-nowrap ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
-                  >
-                    <Phone className="w-4 h-4 text-white shrink-0" />
-                    <span>Call</span>
-                  </a>
-                )}
-              </>
-            )}
-          </div>
+              {(listing.show_phone !== false) && (
+                <a
+                  href={isPreview ? "#" : callUrl}
+                  onClick={(e) => { if (isPreview) e.preventDefault(); e.stopPropagation(); }}
+                  className={`flex-1 sm:flex-none bg-[#1d4ed8] hover:bg-blue-800 text-white font-heading font-black text-xs sm:text-sm py-2 px-4 rounded-lg flex items-center justify-center gap-1.5 shadow-2xs cursor-pointer transition-colors whitespace-nowrap ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
+                >
+                  <Phone className="w-4 h-4 text-white shrink-0" />
+                  <span>Call</span>
+                </a>
+              )}
+            </>
+          )}
         </div>
       </div>
 
