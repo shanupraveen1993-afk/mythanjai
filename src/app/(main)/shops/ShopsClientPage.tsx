@@ -52,7 +52,8 @@ export default function ShopsClientPage() {
 
   const filteredPosts = React.useMemo(() => {
     let list = allPosts.filter((p) => {
-      if ((p as any).status === "moderation_review") return false;
+      if ((p as any).status === "moderation_review" || (p as any).status === "inactive") return false;
+      if ((p as any).is_sold || (p as any).is_inactive || (p as any).is_offline) return false;
       if (isListingQuarantined(p.id)) return false;
       if (!p.shop_name && !(p as any).title && !p.offer_title) return false;
       return true;

@@ -172,7 +172,7 @@ function ListingsContent() {
 
   // Toggle Active / Inactive State
   const handleToggleSegmentStatus = async (post: any) => {
-    const isCurrentlyInactive = Boolean(post.is_sold || post.is_contacted || post.is_offline || post.is_expired || post.is_inactive);
+    const isCurrentlyInactive = Boolean(post.is_sold || post.is_contacted || post.is_offline || post.is_expired || post.is_inactive || post.status === "inactive");
     const nextState = !isCurrentlyInactive;
 
     setMyPosts((prev) =>
@@ -184,6 +184,7 @@ function ListingsContent() {
               is_sold: nextState,
               is_offline: nextState,
               is_contacted: nextState,
+              status: nextState ? "inactive" : "active",
             }
           : p
       )
@@ -196,6 +197,7 @@ function ListingsContent() {
         is_sold: nextState,
         is_offline: nextState,
         is_contacted: nextState,
+        status: nextState ? "inactive" : "active",
       });
     } catch (e) {}
 

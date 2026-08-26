@@ -140,7 +140,7 @@ export default function CategoryFeedClient({ segmentType }: CategoryFeedClientPr
   // Search Filter & Active Status
   const filteredBySearch = React.useMemo(() => {
     let list = filteredBySub.filter((p: any) => {
-      if (p.is_sold || p.is_inactive || p.is_expired || p.is_offline) return false;
+      if (p.is_sold || p.is_inactive || p.is_expired || p.is_offline || p.status === "inactive") return false;
       return true;
     });
 
