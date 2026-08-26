@@ -279,24 +279,14 @@ export default function AdminClientPage() {
   const executeDelete = async (id: string, colName: string) => {
     const targetItem = items.find((i) => i.id === id);
     const primaryCol = colName || (targetItem?.colName || "needs_and_sales");
-    let deleteSuccess = false;
 
-    // 1. Client SDK delete
-    try {
-      await deleteDoc(doc(db, primaryCol, id));
-      deleteSuccess = true;
-    } catch (e) {}
+    // 1. Issue client delete across all collections simultaneously
+    const candidateCols = Array.from(new Set([primaryCol, "needs_and_sales", "services", "shops", "offers"]));
+    await Promise.all(
+      candidateCols.map((col) => deleteDoc(doc(db, col, id)).catch(() => {}))
+    );
 
-    // 2. Candidate collections purge
-    const secondaryCols = ["needs_and_sales", "services", "shops", "offers"].filter((c) => c !== primaryCol);
-    for (const secCol of secondaryCols) {
-      try {
-        await deleteDoc(doc(db, secCol, id));
-        deleteSuccess = true;
-      } catch (e) {}
-    }
-
-    // 3. Server API fallback with safe JSON parsing
+    // 2. Authoritative Server API Purge
     try {
       const user = auth.currentUser;
       const idToken = user ? await user.getIdToken(true).catch(() => "") : "";
@@ -316,7 +306,7 @@ export default function AdminClientPage() {
       if (contentType.includes("application/json")) {
         const result = await response.json();
         if (result && result.success) {
-          deleteSuccess = true;
+          console.log("Server API delete success:", result);
         }
       }
     } catch (error: any) {
