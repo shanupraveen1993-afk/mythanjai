@@ -39,6 +39,8 @@ import {
   GraduationCap,
   Briefcase,
   UserCheck,
+  ShoppingBag,
+  Search,
 } from "lucide-react";
 import ListingCard from "@/components/cards/ListingCard";
 import ServiceCard from "@/components/cards/ServiceCard";
@@ -729,13 +731,41 @@ export default function PostForm({ segment }: PostFormProps) {
 
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-3 sm:px-6 py-4 sm:py-6 pb-24 flex flex-col gap-4 font-sans">
+    <div className="w-full max-w-6xl mx-auto px-3 sm:px-6 py-3 sm:py-5 pb-24 flex flex-col gap-4 font-sans">
+      {/* 4 SEGMENT TOP TAB BAR WITH ICONS */}
+      <div className="w-full flex items-center justify-center gap-1.5 p-1 bg-slate-100/90 border border-slate-200/80 rounded-2xl max-w-2xl mx-auto shadow-2xs overflow-x-auto no-scrollbar">
+        {[
+          { id: "sell", label: "For Sale", path: "/post/sell", icon: ShoppingBag },
+          { id: "need", label: "Looking For", path: "/post/need", icon: Search },
+          { id: "service", label: "Services", path: "/post/service", icon: Wrench },
+          { id: "offer", label: "Offers", path: "/post/offer", icon: Tag },
+        ].map((tab) => {
+          const IconComp = tab.icon;
+          const isActive = segment === tab.id;
+          return (
+            <button
+              key={tab.id}
+              type="button"
+              onClick={() => router.push(tab.path)}
+              className={`flex-1 min-w-[100px] py-2 px-3 rounded-xl text-xs transition-all cursor-pointer flex items-center justify-center gap-1.5 select-none whitespace-nowrap ${
+                isActive
+                  ? "bg-[#FBBF24] text-slate-950 font-bold shadow-2xs border border-amber-400"
+                  : "text-slate-600 hover:text-slate-900 font-medium hover:bg-slate-200/60"
+              }`}
+            >
+              <IconComp className={`w-3.5 h-3.5 ${isActive ? "text-slate-950 stroke-[2.5]" : "text-slate-500"}`} />
+              <span>{tab.label}</span>
+            </button>
+          );
+        })}
+      </div>
+
       {/* Page Header */}
-      <div className="flex flex-col items-center border-b border-slate-200/80 pb-3">
-        <span className="text-[11px] font-black uppercase tracking-widest text-slate-400">
+      <div className="flex flex-col items-center border-b border-slate-200/80 pb-2.5">
+        <span className="text-[11px] font-semibold uppercase tracking-widest text-slate-400">
           {config.badge}
         </span>
-        <h1 className="font-heading font-black text-lg sm:text-xl text-slate-900 tracking-tight mt-0.5">
+        <h1 className="font-heading font-bold text-base sm:text-lg text-slate-900 tracking-tight mt-0.5">
           {config.title}
         </h1>
       </div>
@@ -745,7 +775,7 @@ export default function PostForm({ segment }: PostFormProps) {
           <div className="w-12 h-12 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-xs">
             <Check className="w-7 h-7 stroke-[2.5]" />
           </div>
-          <h2 className="font-heading font-black text-lg text-emerald-900">Post Published Successfully!</h2>
+          <h2 className="font-heading font-bold text-lg text-emerald-900">Post Published Successfully!</h2>
           <p className="text-xs text-emerald-700 font-medium">Redirecting to feed...</p>
         </div>
       ) : (
@@ -753,10 +783,10 @@ export default function PostForm({ segment }: PostFormProps) {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           
           {/* LEFT COLUMN: Form Controls */}
-          <form onSubmit={handleSubmit} className="lg:col-span-7 flex flex-col gap-4 bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-6 shadow-xs">
+          <form onSubmit={handleSubmit} className="lg:col-span-7 flex flex-col gap-4 bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-2xs">
             {/* Red Alert Box for Missing Required Fields */}
             {validationError && (
-              <div className="w-full p-3.5 bg-rose-50 border border-rose-300 rounded-xl text-rose-800 text-xs sm:text-sm font-bold flex items-center justify-between gap-3 shadow-2xs animate-shake">
+              <div className="w-full p-3 bg-rose-50 border border-rose-300 rounded-xl text-rose-800 text-xs sm:text-sm font-semibold flex items-center justify-between gap-3 shadow-2xs animate-shake">
                 <div className="flex items-center gap-2">
                   <span className="text-base">⚠️</span>
                   <span>{validationError}</span>
@@ -764,7 +794,7 @@ export default function PostForm({ segment }: PostFormProps) {
                 <button
                   type="button"
                   onClick={() => setValidationError(null)}
-                  className="text-rose-600 hover:text-rose-900 font-black text-xs uppercase cursor-pointer"
+                  className="text-rose-600 hover:text-rose-900 font-bold text-xs uppercase cursor-pointer"
                 >
                   ✕ Dismiss
                 </button>
