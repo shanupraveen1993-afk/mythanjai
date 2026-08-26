@@ -223,6 +223,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       localStorage.setItem("namma_thanjai_user_verified", "true");
       localStorage.setItem("my_thanjai_phone", targetPhone);
       localStorage.setItem("namma_thanjai_phone", targetPhone);
+      try {
+        document.cookie = `namma_thanjai_verified=true; path=/; max-age=${10 * 365 * 86400}; SameSite=Lax`;
+        document.cookie = `namma_thanjai_phone=${targetPhone}; path=/; max-age=${10 * 365 * 86400}; SameSite=Lax`;
+      } catch (e) {}
     }
 
     try {
@@ -261,6 +265,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       localStorage.removeItem("namma_thanjai_user_verified");
       localStorage.removeItem("my_thanjai_phone");
       localStorage.removeItem("namma_thanjai_phone");
+      try {
+        document.cookie = "namma_thanjai_verified=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+        document.cookie = "namma_thanjai_phone=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+      } catch (e) {}
       window.dispatchEvent(new Event("namma_thanjai_auth_changed"));
     }
     setProfile(null);
