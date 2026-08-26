@@ -864,6 +864,55 @@ export default function PostForm({ segment }: PostFormProps) {
                   )}
                 </div>
 
+                {/* 1b. UPLOAD OFFER VIDEO REEL (OPTIONAL) */}
+                <div className="w-full bg-slate-50 border-2 border-dashed border-amber-400 hover:border-amber-500 p-4 rounded-xl flex flex-col items-center justify-center text-center gap-2 transition-all group relative">
+                  {videoPreview ? (
+                    <div className="relative w-full max-h-56 rounded-xl overflow-hidden border border-slate-200 shadow-sm bg-slate-950 flex justify-center items-center">
+                      <video src={videoPreview} controls className="max-h-56 max-w-full object-contain" />
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setVideoPreview("");
+                          setSelectedVideo(null);
+                        }}
+                        className="absolute top-2 right-2 bg-red-600/90 hover:bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer flex items-center gap-1 backdrop-blur-xs shadow"
+                      >
+                        <X className="w-3.5 h-3.5" />
+                        <span>Remove Reel Video</span>
+                      </button>
+                    </div>
+                  ) : (
+                    <label className="w-full flex flex-col items-center justify-center gap-2 cursor-pointer py-2">
+                      <div className="w-10 h-10 rounded-lg bg-amber-400 text-slate-950 flex items-center justify-center font-bold shadow-sm group-hover:scale-105 transition-transform">
+                        <Video className="w-5 h-5 stroke-[2.5]" />
+                      </div>
+                      <div className="flex flex-col items-center">
+                        <span className="font-heading font-black text-xs text-slate-900">
+                          🎬 Upload Offer Video Reel (MP4 / Short Video - Optional)
+                        </span>
+                        <span className="text-xs text-slate-500 mt-0.5 max-w-sm font-medium">
+                          Upload short video walkthrough or offer reel to display on Thanjavur Store Deals!
+                        </span>
+                      </div>
+                      <span className="bg-slate-950 hover:bg-slate-800 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg transition-all shadow-2xs mt-0.5">
+                        Select Video Reel File →
+                      </span>
+                      <input type="file" accept="video/*" onChange={handleVideoChange} className="hidden" />
+                    </label>
+                  )}
+                </div>
+
+                {/* 1c. YOUTUBE / REEL LINK (OPTIONAL) */}
+                <div className="w-full">
+                  <input
+                    type="url"
+                    placeholder="🎥 Or paste YouTube / Instagram Reel Video Link (Optional)"
+                    value={youtubeUrl}
+                    onChange={(e) => setYoutubeUrl(e.target.value)}
+                    className="w-full py-2 text-xs font-medium border-b border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400"
+                  />
+                </div>
+
                 {/* 2. SHOP NAME LINE */}
                 <div className="relative w-full">
                   <input
