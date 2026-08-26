@@ -1219,7 +1219,7 @@ export default function CreatePostModal({
                   {aiRefining && (
                     <div className="text-xs font-black text-amber-800 bg-amber-100 border border-amber-300 px-3.5 py-2 rounded-xl animate-pulse flex items-center justify-center gap-2 max-w-sm mx-auto shadow-xs">
                       <Sparkles className="w-4 h-4 text-amber-600 animate-spin" />
-                      <span>✨ AI is refining your description...</span>
+                      <span>Refining description...</span>
                     </div>
                   )}
 

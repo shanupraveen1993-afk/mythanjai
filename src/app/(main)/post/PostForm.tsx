@@ -31,8 +31,14 @@ import {
   Calendar,
   IndianRupee,
   Lock,
-  Sparkles,
   X,
+  Wrench,
+  Home,
+  Car,
+  Heart,
+  GraduationCap,
+  Briefcase,
+  UserCheck,
 } from "lucide-react";
 import ListingCard from "@/components/cards/ListingCard";
 import ServiceCard from "@/components/cards/ServiceCard";
@@ -718,62 +724,117 @@ export default function PostForm({ segment }: PostFormProps) {
               </div>
             )}
 
-            {/* Primary Category Selection Line */}
-            <div className="w-full flex flex-col gap-3">
-              <select
-                required
-                value={category}
-                onChange={(e) => {
-                  const newCat = e.target.value;
-                  setCategory(newCat);
-                  if (segment === "service") {
-                    const subs = SERVICE_SUBCATEGORIES_MAP[newCat] || [];
-                    setSubCategory(subs[0] || "");
-                  }
-                }}
-                className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 cursor-pointer"
-              >
-                {config.categories.map((cat) => {
-                  let labelText = cat;
-                  if (segment === "service") {
-                    if (cat === "Home Services") labelText = "🛠️ Home Services (Plumber, Electrician, Carpenter, Painter, Mason...)";
-                    else if (cat === "Repair & Technicians") labelText = "🔧 Repair & Technicians (AC Repair, Fridge, TV, Mobile, Laptop...)";
-                    else if (cat === "Vehicle Services") labelText = "🚗 Vehicle Services (Car & Bike Mechanic, Tyre Puncture, Auto...)";
-                    else if (cat === "Health & Personal Care") labelText = "🩺 Health & Care (Home Nurse, Caretaker, Beautician, Fitness...)";
-                    else if (cat === "Event & Media Services") labelText = "📸 Event & Media (Photographer, Catering Cooking, DJ, Decor...)";
-                    else if (cat === "Education & Tutors") labelText = "📚 Education & Tutors (Home Tuition, Music/Dance Teacher...)";
-                    else if (cat === "Business & Professional") labelText = "💼 Business & Legal (Tax Auditor, Stamp Paper, Flex Printing...)";
-                    else if (cat === "General Service") labelText = "🌟 General Service (Helper, Laborer, Other Trade)";
-                  }
-                  return (
-                    <option key={cat} value={cat}>
-                      {labelText}
-                    </option>
-                  );
-                })}
-              </select>
-
-              {/* Dynamic Subcategory Dropdown for Services */}
-              {segment === "service" && (
-                <div className="flex flex-col gap-1.5 mt-1">
-                  <label className="text-[11px] font-black text-amber-800 uppercase tracking-wider">
-                    Select Your Specific Trade / Profession *
-                  </label>
-                  <select
-                    required
-                    value={subCategory}
-                    onChange={(e) => setSubCategory(e.target.value)}
-                    className="w-full py-2.5 px-3 text-xs font-bold border border-amber-400 bg-amber-50 focus:border-amber-600 rounded-xl focus:outline-none text-slate-900 cursor-pointer shadow-2xs"
-                  >
-                    {(SERVICE_SUBCATEGORIES_MAP[category] || ["General Helper"]).map((sub) => (
-                      <option key={sub} value={sub}>
-                        ↳ Trade: {sub}
-                      </option>
-                    ))}
-                  </select>
+            {/* CATEGORY & SUBCATEGORY SELECTION */}
+            {segment === "service" ? (
+              <div className="w-full flex flex-col gap-4 bg-slate-50 border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-2xs">
+                {/* Header */}
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-black text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                      <Wrench className="w-4 h-4 text-amber-500" />
+                      <span>Select Service Category & Trade *</span>
+                    </label>
+                    <span className="text-[11px] font-bold text-slate-700 bg-white border border-slate-250 px-2.5 py-0.5 rounded-full shadow-2xs">
+                      {category}
+                    </span>
+                  </div>
+                  <p className="text-xs text-slate-500 font-medium">Select your service category and exact trade below</p>
                 </div>
-              )}
-            </div>
+
+                {/* Neat Category Grid Cards */}
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                  {[
+                    { id: "Home Services", label: "Home Services", desc: "Plumber, Electrician", icon: Home },
+                    { id: "Repair & Technicians", label: "Repair & Tech", desc: "AC, Fridge, TV, Mobile", icon: Wrench },
+                    { id: "Vehicle Services", label: "Vehicle Care", desc: "Mechanic, Puncture", icon: Car },
+                    { id: "Health & Personal Care", label: "Health & Care", desc: "Nursing, Beautician", icon: Heart },
+                    { id: "Event & Media Services", label: "Event & Media", desc: "Photos, Catering", icon: Camera },
+                    { id: "Education & Tutors", label: "Education", desc: "Tuition, Teachers", icon: GraduationCap },
+                    { id: "Business & Professional", label: "Business & Legal", desc: "Tax, Printing, Legal", icon: Briefcase },
+                    { id: "General Service", label: "General Trade", desc: "Helper, Laborer", icon: UserCheck },
+                  ].map((catItem) => {
+                    const IconComponent = catItem.icon;
+                    const isSelected = category === catItem.id;
+                    return (
+                      <button
+                        key={catItem.id}
+                        type="button"
+                        onClick={() => {
+                          setCategory(catItem.id);
+                          const subs = SERVICE_SUBCATEGORIES_MAP[catItem.id] || [];
+                          setSubCategory(subs[0] || "");
+                        }}
+                        className={`flex flex-col items-start p-3 rounded-xl border text-left transition-all cursor-pointer relative overflow-hidden ${
+                          isSelected
+                            ? "bg-amber-500/10 border-amber-500 ring-2 ring-amber-400/30 shadow-2xs"
+                            : "bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50"
+                        }`}
+                      >
+                        {isSelected && (
+                          <span className="absolute top-2 right-2 w-4 h-4 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center shadow-xs">
+                            <Check className="w-2.5 h-2.5 stroke-[3]" />
+                          </span>
+                        )}
+                        <div className={`p-2 rounded-lg mb-2 ${isSelected ? "bg-amber-500 text-slate-950 font-bold" : "bg-slate-100 text-slate-700"}`}>
+                          <IconComponent className="w-4 h-4 stroke-[2.2]" />
+                        </div>
+                        <span className={`text-xs font-black line-clamp-1 ${isSelected ? "text-slate-950" : "text-slate-800"}`}>
+                          {catItem.label}
+                        </span>
+                        <span className="text-[10px] text-slate-400 line-clamp-1 mt-0.5 font-medium">
+                          {catItem.desc}
+                        </span>
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* Subcategory Trade Pills */}
+                <div className="flex flex-col gap-2 pt-3 border-t border-slate-200/80">
+                  <label className="text-[11px] font-black text-slate-900 uppercase tracking-wider flex items-center justify-between">
+                    <span>Select Specific Trade / Profession *</span>
+                    <span className="text-slate-400 font-medium normal-case">Tap your exact trade</span>
+                  </label>
+
+                  <div className="flex flex-wrap gap-1.5 max-h-40 overflow-y-auto scrollbar-thin p-2 bg-white border border-slate-250 rounded-xl">
+                    {(SERVICE_SUBCATEGORIES_MAP[category] || ["General Helper"]).map((sub) => {
+                      const isSubSelected = subCategory === sub;
+                      return (
+                        <button
+                          key={sub}
+                          type="button"
+                          onClick={() => setSubCategory(sub)}
+                          className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer flex items-center gap-1.5 ${
+                            isSubSelected
+                              ? "bg-slate-900 text-white shadow-2xs"
+                              : "bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-200/60"
+                          }`}
+                        >
+                          {isSubSelected && <Check className="w-3 h-3 text-amber-400 stroke-[3]" />}
+                          <span>{sub}</span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            ) : (
+              /* Non-Service Categories Dropdown (Sell, Need, Offer) */
+              <div className="w-full flex flex-col gap-3">
+                <select
+                  required
+                  value={category}
+                  onChange={(e) => setCategory(e.target.value)}
+                  className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 cursor-pointer"
+                >
+                  {config.categories.map((cat) => (
+                    <option key={cat} value={cat}>
+                      {cat}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            )}
 
             {/* OFFER FORM INPUTS IN OLX CLEAN LINE STYLE */}
             {segment === "offer" ? (
@@ -940,7 +1001,7 @@ export default function PostForm({ segment }: PostFormProps) {
                   <input
                     type="text"
                     required
-                    placeholder="📍 Shop Address & Locality in Thanjavur *"
+                    placeholder="Select Your Area *"
                     value={area}
                     onChange={(e) => setArea(e.target.value)}
                     className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal"
@@ -1010,7 +1071,7 @@ export default function PostForm({ segment }: PostFormProps) {
                       onChange={(e) => setArea(e.target.value)}
                       className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors cursor-pointer"
                     >
-                      <option value="" disabled>📍 Select Thanjavur Town / Taluk Location *</option>
+                      <option value="" disabled>Select Your Area *</option>
                       {THANJAVUR_TOWNS.map((town) => (
                         <option key={town} value={town}>{town}</option>
                       ))}
@@ -1074,7 +1135,7 @@ export default function PostForm({ segment }: PostFormProps) {
                       <input
                         type="text"
                         required
-                        placeholder="📍 Address / Dedicated Typing Location in Thanjavur *"
+                        placeholder="Select Your Area *"
                         value={area}
                         onChange={(e) => setArea(e.target.value)}
                         className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal"
@@ -1103,7 +1164,7 @@ export default function PostForm({ segment }: PostFormProps) {
                         onChange={(e) => setArea(e.target.value)}
                         className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors cursor-pointer"
                       >
-                        <option value="" disabled>📍 Select Preferred Thanjavur Town / Taluk *</option>
+                        <option value="" disabled>Select Your Area *</option>
                         {THANJAVUR_TOWNS.map((town) => (
                           <option key={town} value={town}>{town}</option>
                         ))}
@@ -1136,10 +1197,9 @@ export default function PostForm({ segment }: PostFormProps) {
                         onClick={() => handleBlurDescription(description)}
                         disabled={isAiRewriting || !description.trim()}
                         className="px-2.5 py-1 rounded-lg bg-amber-400 hover:bg-amber-500 text-slate-950 font-heading font-black text-[11px] flex items-center gap-1.5 transition-all shadow-2xs cursor-pointer border border-amber-300 disabled:opacity-50"
-                        title="Refine description with AI (fixes typos, capitalizes, formats professionally)"
+                        title="Refine description (fixes typos, capitalizes, formats professionally)"
                       >
-                        <Sparkles className={`w-3.5 h-3.5 text-slate-950 ${isAiRewriting ? "animate-spin" : ""}`} />
-                        <span>{isAiRewriting ? "Refining..." : "✨ Auto-Refine with AI"}</span>
+                        <span>{isAiRewriting ? "Refining..." : "Auto-Refine Description"}</span>
                       </button>
                       <span className={`text-xs font-medium ${description.length >= config.maxDescChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>
                         {description.length}/{config.maxDescChars}
