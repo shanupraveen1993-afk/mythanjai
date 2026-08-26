@@ -158,36 +158,52 @@ export default function PostForm({ segment }: PostFormProps) {
 
   const startBackgroundVideoUpload = async (file: File) => {
     setIsUploadingVideo(true);
+    setUploadProgress(0);
     const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
-    setUploadStatusMsg(`Uploading Video Reel (${sizeMb} MB)...`);
+    setUploadStatusMsg(`Uploading Reel (${sizeMb} MB): 0%`);
 
     try {
       const videoRef = ref(storage, `videos/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`);
-      const snapshot = await uploadBytes(videoRef, file);
-      const url = await getDownloadURL(snapshot.ref);
-      setUploadedVideoUrl(url);
-      toast.success("Video upload complete! Ready to publish.");
-    } catch (err: any) {
-      console.warn("Client video storage upload failed, trying server API fallback...", err);
-      try {
-        const formData = new FormData();
-        formData.append("file", file);
-        const res = await fetch("/api/upload-video", {
-          method: "POST",
-          body: formData,
-        });
-        const data = await res.json();
-        if (data.success && data.url) {
-          setUploadedVideoUrl(data.url);
-          toast.success("Video processed & ready to publish!");
-        } else {
-          toast.error("Video processing failed. Please re-select file.");
+      const uploadTask = uploadBytesResumable(videoRef, file);
+
+      uploadTask.on(
+        "state_changed",
+        (snapshot) => {
+          const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+          setUploadProgress(progress);
+          setUploadStatusMsg(`Uploading Reel (${sizeMb} MB): ${progress}%`);
+        },
+        async (error) => {
+          console.warn("Resumable upload error, trying server API fallback...", error);
+          try {
+            const formData = new FormData();
+            formData.append("file", file);
+            const res = await fetch("/api/upload-video", { method: "POST", body: formData });
+            const data = await res.json();
+            if (data.success && data.url) {
+              setUploadedVideoUrl(data.url);
+              setUploadProgress(100);
+              toast.success("Video processed & ready to publish!");
+            } else {
+              toast.error("Video upload failed. Please re-select file.");
+            }
+          } catch (serverErr) {
+            console.error("Server video upload error:", serverErr);
+            toast.error("Video upload failed. Please try a smaller video file.");
+          } finally {
+            setIsUploadingVideo(false);
+          }
+        },
+        async () => {
+          const url = await getDownloadURL(uploadTask.snapshot.ref);
+          setUploadedVideoUrl(url);
+          setUploadProgress(100);
+          setIsUploadingVideo(false);
+          toast.success("Video upload complete! Ready to publish.");
         }
-      } catch (serverErr) {
-        console.error("Server video upload error:", serverErr);
-        toast.error("Video upload failed. Please try a smaller video file.");
-      }
-    } finally {
+      );
+    } catch (err: any) {
+      console.warn("Initial storage task creation failed:", err);
       setIsUploadingVideo(false);
       setUploadStatusMsg("");
     }

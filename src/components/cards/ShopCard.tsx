@@ -314,7 +314,6 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
             handleRecordWatch();
           }}
           onPause={() => setIsPlaying(false)}
-          onClick={togglePlay}
           className="absolute inset-0 w-full h-full object-cover z-0 cursor-pointer"
         />
 
