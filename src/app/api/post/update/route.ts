@@ -1,8 +1,37 @@
 import { NextResponse } from "next/server";
 import { adminDb, adminAuth } from "@/lib/firebase-admin";
 
-const ADMIN_PHONES = ["+919994837342", "9994837342"];
+const ADMIN_PHONE_LAST10 = "9994837342";
 const COLLECTIONS = ["needs_and_sales", "services", "shops", "offers"];
+
+const ALLOWED_UPDATE_FIELDS = [
+  "title",
+  "name",
+  "shop_name",
+  "offer_title",
+  "description",
+  "offer_description",
+  "raw_text",
+  "area_tag",
+  "address_text",
+  "category",
+  "skill_category",
+  "price",
+  "phone",
+  "show_phone",
+  "image_url",
+  "image_urls",
+  "youtube_url",
+  "video_url",
+  "offer_social_link",
+  "google_maps_url",
+  "valid_from",
+  "valid_to",
+  "is_available_now",
+  "experience",
+  "working_hours",
+  "status",
+];
 
 export async function POST(request: Request) {
   try {
@@ -25,7 +54,7 @@ export async function POST(request: Request) {
     // 2. Validate Request Parameters
     const { postId, colName, payload } = await request.json();
     if (!postId || !colName || !payload || typeof payload !== "object") {
-      return NextResponse.json({ success: false, error: "Invalid update parameters" }, { status: 400 });
+      return NextResponse.json({ success: false, error: "Invalid update request" }, { status: 400 });
     }
 
     if (!COLLECTIONS.includes(colName)) {
@@ -37,38 +66,42 @@ export async function POST(request: Request) {
     const snap = await ref.get();
 
     if (!snap.exists) {
-      return NextResponse.json({ success: false, error: `Listing ${postId} not found in ${colName}` }, { status: 404 });
+      return NextResponse.json({ success: false, error: "Listing not found" }, { status: 404 });
     }
 
     const existingData = snap.data() || {};
     const requesterPhone = decodedToken.phone_number || "";
-    const isAdmin = decodedToken.admin === true || ADMIN_PHONES.some((p) => requesterPhone.includes(p));
+    const isAdmin = decodedToken.admin === true || requesterPhone.slice(-10) === ADMIN_PHONE_LAST10;
     const ownerUid = existingData.userId || existingData.seller_id;
-    const ownerPhone = existingData.phone || "";
 
-    const isOwner =
-      decodedToken.uid === ownerUid ||
-      (requesterPhone && ownerPhone && requesterPhone.slice(-10) === ownerPhone.slice(-10));
+    // Strict UID Ownership Check
+    const isOwner = Boolean(decodedToken.uid && ownerUid && decodedToken.uid === ownerUid);
 
     if (!isAdmin && !isOwner) {
       return NextResponse.json({ success: false, error: "Forbidden: You do not own this listing" }, { status: 403 });
     }
 
-    // 4. Perform Privileged Update via Admin SDK
+    // 4. Whitelist Payload Fields to Prevent Mass Assignment Vulnerabilities
+    const safePayload: Record<string, any> = {};
+    for (const field of ALLOWED_UPDATE_FIELDS) {
+      if (field in payload) {
+        safePayload[field] = payload[field];
+      }
+    }
+
     await ref.update({
-      ...payload,
+      ...safePayload,
       updated_at: new Date(),
     });
 
     return NextResponse.json({
       success: true,
-      message: `Listing ${postId} updated successfully.`,
       updated: true,
     });
   } catch (error: any) {
-    console.error("Post Update API Error:", error);
+    console.error("Post update error:", error);
     return NextResponse.json(
-      { success: false, error: error?.message || "Post update failed" },
+      { success: false, error: error?.message || "Update failed" },
       { status: 500 }
     );
   }

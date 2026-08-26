@@ -21,7 +21,7 @@ function getAdminApp() {
     });
   }
 
-  // Initializing with Google Application Default Credentials or Project ID for production environment
+  // Standard project initialization for server environment
   return initializeApp({
     projectId,
   });
