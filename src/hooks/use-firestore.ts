@@ -119,11 +119,11 @@ export function useFirestore<T = any>({
 
       // Sort newest first
       const parseTimestamp = (val: any): number => {
-        if (!val) return 0;
+        if (!val) return Date.now();
         if (typeof val.seconds === "number") return val.seconds * 1000;
         if (typeof val.toDate === "function") return val.toDate().getTime();
         const parsed = new Date(val).getTime();
-        return isNaN(parsed) ? 0 : parsed;
+        return isNaN(parsed) || parsed <= 0 ? Date.now() : parsed;
       };
       items.sort(
         (a, b) => parseTimestamp(b.created_at) - parseTimestamp(a.created_at)

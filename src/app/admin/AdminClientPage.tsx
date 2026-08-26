@@ -156,13 +156,17 @@ export default function AdminClientPage() {
           } catch (e) {}
         }
 
+        const getTime = (val: any) => {
+          if (!val) return Date.now();
+          if (typeof val.seconds === "number") return val.seconds * 1000;
+          if (typeof val.toDate === "function") return val.toDate().getTime();
+          const t = new Date(val).getTime();
+          return isNaN(t) || t <= 0 ? Date.now() : t;
+        };
+
         const merged: ModerationItem[] = Object.values(collectionDataMap)
           .flat()
-          .sort((a, b) => {
-            const timeA = a.created_at?.seconds ? a.created_at.seconds * 1000 : new Date(a.created_at || 0).getTime();
-            const timeB = b.created_at?.seconds ? b.created_at.seconds * 1000 : new Date(b.created_at || 0).getTime();
-            return timeB - timeA;
-          });
+          .sort((a, b) => getTime(b.created_at) - getTime(a.created_at));
 
         if (merged.length > 0) {
           setItems(merged);
