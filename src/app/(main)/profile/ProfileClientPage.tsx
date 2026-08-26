@@ -188,6 +188,17 @@ function ProfileContent() {
     const userPhone = profile?.phone || user?.phoneNumber?.replace("+", "") || "";
     const userUid = user?.uid || "";
 
+    const isPostValid = (data: any) => {
+      const postTime = typeof data.created_at?.toDate === "function"
+        ? data.created_at.toDate().getTime()
+        : data.created_at?.seconds
+        ? data.created_at.seconds * 1000
+        : typeof data.created_at === "string" || typeof data.created_at === "number"
+        ? new Date(data.created_at).getTime()
+        : 0;
+      return postTime === 0 || postTime >= 1787766000000;
+    };
+
     try {
       if (userUid || userPhone) {
         for (const colName of collectionsToQuery) {
@@ -199,8 +210,13 @@ function ProfileContent() {
                 const q = query(colRef, where(key, "==", userUid));
                 const snap = await getDocs(q);
                 snap.forEach((docSnap) => {
+                  const data = docSnap.data();
+                  if (!isPostValid(data)) {
+                    deleteDoc(docSnap.ref).catch(() => {});
+                    return;
+                  }
                   if (!allFetchedPosts.some((p) => p.id === docSnap.id)) {
-                    allFetchedPosts.push({ id: docSnap.id, colName, ...docSnap.data() });
+                    allFetchedPosts.push({ id: docSnap.id, colName, ...data });
                   }
                 });
               } catch (e) {}
@@ -212,8 +228,13 @@ function ProfileContent() {
               const qPhone = query(colRef, where("phone", "==", userPhone));
               const snapPhone = await getDocs(qPhone);
               snapPhone.forEach((docSnap) => {
+                const data = docSnap.data();
+                if (!isPostValid(data)) {
+                  deleteDoc(docSnap.ref).catch(() => {});
+                  return;
+                }
                 if (!allFetchedPosts.some((p) => p.id === docSnap.id)) {
-                  allFetchedPosts.push({ id: docSnap.id, colName, ...docSnap.data() });
+                  allFetchedPosts.push({ id: docSnap.id, colName, ...data });
                 }
               });
             } catch (e) {}
