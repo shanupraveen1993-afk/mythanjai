@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
 
 const COLLECTIONS = ["needs_and_sales", "services", "shops", "offers"];
-const ADMIN_PHONE_LAST10 = "9994837342";
 
 const ALLOWED_UPDATE_FIELDS = [
   "title",
@@ -30,12 +29,11 @@ const ALLOWED_UPDATE_FIELDS = [
   "is_available_now",
   "experience",
   "working_hours",
-  "status",
 ];
 
 export async function POST(request: Request) {
   try {
-    // 1. Authenticate Request via Bearer Token
+    // 1. Authenticate Firebase user
     const authHeader = request.headers.get("authorization") || request.headers.get("Authorization");
 
     if (!authHeader?.startsWith("Bearer ")) {
@@ -62,7 +60,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "Invalid collection" }, { status: 400 });
     }
 
-    // 3. Get Existing Listing Document
+    // 3. Find Listing Document
     const ref = adminDb.collection(colName).doc(postId);
     const snapshot = await ref.get();
 
@@ -72,9 +70,9 @@ export async function POST(request: Request) {
 
     const existingData = snapshot.data() || {};
 
-    // 4. Authorization (Admin or Immutable UID Owner)
+    // 4. Authorization (Admin Claim / Admin Phone or UID Owner)
     const userPhone = decodedToken.phone_number || "";
-    const isAdmin = decodedToken.admin === true || (userPhone && userPhone.slice(-10) === ADMIN_PHONE_LAST10);
+    const isAdmin = decodedToken.admin === true || Boolean(userPhone && userPhone.slice(-10) === "9994837342");
     const ownerUid = existingData.userId || existingData.seller_id;
     const isOwner = Boolean(ownerUid && decodedToken.uid === ownerUid);
 
@@ -82,7 +80,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "Forbidden: You do not own this listing" }, { status: 403 });
     }
 
-    // 5. Whitelist Editable Fields (Prevent Mass Assignment)
+    // 5. Whitelist Payload Fields (Mass Assignment Protection)
     const safePayload: Record<string, unknown> = {};
 
     for (const field of ALLOWED_UPDATE_FIELDS) {
@@ -95,7 +93,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "No permitted fields supplied" }, { status: 400 });
     }
 
-    // 6. Perform Privileged Admin SDK Update
+    // 6. Perform Privileged Update via Admin SDK
     await ref.update({
       ...safePayload,
       updated_at: new Date(),
