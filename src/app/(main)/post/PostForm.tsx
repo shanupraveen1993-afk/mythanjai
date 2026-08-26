@@ -380,8 +380,12 @@ export default function PostForm({ segment }: PostFormProps) {
     }
   };
 
+  const [validationError, setValidationError] = useState<string | null>(null);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setValidationError(null);
+
     if (!isAuthVerified) {
       toast.info("Please verify your WhatsApp mobile number to publish your ad.");
       if (typeof window !== "undefined") {
@@ -389,17 +393,42 @@ export default function PostForm({ segment }: PostFormProps) {
       }
       return;
     }
+
     if (!title.trim()) {
-      toast.error("Please enter a title for your posting.");
+      const fieldName = segment === "offer" ? "Shop Name" : segment === "service" ? "Full Name / Service Title" : "Title / Item Name";
+      const err = `Required Field Missing: Please enter ${fieldName} *`;
+      setValidationError(err);
+      toast.error(err);
       return;
     }
 
-    // NOTE: Quota enforcement removed — localStorage is not a reliable source of truth.
-    // Firestore is the canonical store. Admins can manage abuse via Firebase Console.
+    if (!category || !category.trim()) {
+      const err = "Required Field Missing: Please select a Category *";
+      setValidationError(err);
+      toast.error(err);
+      return;
+    }
+
+    if (!area || !area.trim()) {
+      const err = "Required Field Missing: Please enter or select a Location in Thanjavur *";
+      setValidationError(err);
+      toast.error(err);
+      return;
+    }
+
+    const cleanPhone = (phone || "").replace(/\D/g, "");
+    if (!cleanPhone || cleanPhone.length < 10) {
+      const err = "Required Field Missing: Please enter a valid 10-digit Contact Phone Number *";
+      setValidationError(err);
+      toast.error(err);
+      return;
+    }
 
     if (segment === "offer" && validFrom && validTo) {
       if (new Date(validTo) < new Date(validFrom)) {
-        toast.error("Valid To date cannot be earlier than Valid From date!");
+        const err = "Valid To date cannot be earlier than Valid From date!";
+        setValidationError(err);
+        toast.error(err);
         return;
       }
     }
@@ -770,6 +799,23 @@ export default function PostForm({ segment }: PostFormProps) {
           
           {/* LEFT COLUMN: Form Controls (Borderless Free Design) */}
           <form onSubmit={handleSubmit} className="lg:col-span-7 flex flex-col gap-4 bg-transparent border-0 p-0 sm:p-1">
+            {/* Red Alert Box for Missing Required Fields */}
+            {validationError && (
+              <div className="w-full p-4 bg-rose-50 border-2 border-rose-500 rounded-xl text-rose-800 text-xs sm:text-sm font-bold flex items-center justify-between gap-3 shadow-md animate-shake">
+                <div className="flex items-center gap-2">
+                  <span className="text-base">⚠️</span>
+                  <span>{validationError}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setValidationError(null)}
+                  className="text-rose-600 hover:text-rose-900 font-black text-xs uppercase cursor-pointer"
+                >
+                  ✕ Dismiss
+                </button>
+              </div>
+            )}
+
             {/* Primary Category Selection Line */}
             <div className="w-full flex flex-col gap-3">
               <select
@@ -830,7 +876,7 @@ export default function PostForm({ segment }: PostFormProps) {
             {/* OFFER FORM INPUTS IN OLX CLEAN LINE STYLE */}
             {segment === "offer" ? (
               <>
-                {/* 1. UPLOAD VISITING CARD / FLYER PHOTO (TOP) */}
+                {/* 1. UPLOAD VISITING CARD / FLYER PHOTO (TOP - OPTIONAL) */}
                 <div className="w-full bg-slate-50 border-2 border-dashed border-slate-300 hover:border-slate-400 p-4 rounded-xl flex flex-col items-center justify-center text-center gap-2 transition-all group relative">
                   {isOcrScanning && (
                     <div className="absolute inset-0 bg-white/90 backdrop-blur-xs rounded-xl z-20 flex flex-col items-center justify-center gap-2">
@@ -867,7 +913,7 @@ export default function PostForm({ segment }: PostFormProps) {
                       </div>
                       <div className="flex flex-col items-center">
                         <span className="font-heading font-bold text-xs text-slate-900">
-                          Upload Visiting Card / Flyer Photo *
+                          Upload Visiting Card / Flyer Photo (Optional)
                         </span>
                         <span className="text-xs text-slate-500 mt-0.5 max-w-sm font-medium">
                           Fills Store Name & Location directly into Live Preview!
@@ -897,13 +943,12 @@ export default function PostForm({ segment }: PostFormProps) {
                   </span>
                 </div>
 
-                {/* 3. OFFER DESCRIPTION LINE */}
+                {/* 3. OFFER DESCRIPTION LINE (OPTIONAL) */}
                 <div className="relative w-full">
                   <textarea
-                    required
                     rows={3}
                     maxLength={config.maxDescChars}
-                    placeholder="Offer Description * (Describe discount, terms, packages, or specific items...)"
+                    placeholder="Offer Description (Optional — Describe discount, terms, packages, or items)"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
                     className="w-full py-2.5 text-sm font-medium border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors leading-relaxed placeholder:text-slate-400"
@@ -913,15 +958,14 @@ export default function PostForm({ segment }: PostFormProps) {
                   </span>
                 </div>
 
-                {/* 4. OFFER VALIDITY DATES */}
+                {/* 4. OFFER VALIDITY DATES (OPTIONAL) */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50 border border-slate-200/80 p-3.5 rounded-xl">
                   <div className="flex flex-col gap-1">
                     <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-amber-600" /> Valid From Date *
+                      <Calendar className="w-3.5 h-3.5 text-amber-600" /> Valid From Date (Optional)
                     </label>
                     <input
                       type="date"
-                      required
                       value={validFrom}
                       onChange={(e) => setValidFrom(e.target.value)}
                       className="w-full py-1.5 text-xs font-bold border-b border-slate-300 bg-transparent focus:outline-none focus:border-amber-500 text-slate-900"
@@ -929,11 +973,10 @@ export default function PostForm({ segment }: PostFormProps) {
                   </div>
                   <div className="flex flex-col gap-1">
                     <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-amber-600" /> Valid To Date *
+                      <Calendar className="w-3.5 h-3.5 text-amber-600" /> Valid To Date (Optional)
                     </label>
                     <input
                       type="date"
-                      required
                       value={validTo}
                       onChange={(e) => setValidTo(e.target.value)}
                       className="w-full py-1.5 text-xs font-bold border-b border-slate-300 bg-transparent focus:outline-none focus:border-amber-500 text-slate-900"
@@ -1130,11 +1173,11 @@ export default function PostForm({ segment }: PostFormProps) {
                   />
                 </div>
 
-                {/* Description Input */}
+                {/* Description Input (Optional) */}
                 <div className="flex flex-col gap-2">
                   <div className="flex items-center justify-between gap-2 flex-wrap">
                     <label className="text-sm font-bold text-slate-800">
-                      {segment === "service" ? "Work Experience & Skill Details *" : "Description or details *"}
+                      {segment === "service" ? "Work Experience & Skill Details (Optional)" : "Description or details (Optional)"}
                     </label>
                     <div className="flex items-center gap-2">
                       <button
@@ -1153,13 +1196,12 @@ export default function PostForm({ segment }: PostFormProps) {
                     </div>
                   </div>
                   <textarea
-                    required
                     rows={3}
                     maxLength={config.maxDescChars}
                     placeholder={
                       segment === "service"
-                        ? "Describe your trade skills, work experience, and services offered..."
-                        : "Describe your requirement, item condition, or service details..."
+                        ? "Describe your trade skills, work experience, and services offered (Optional)..."
+                        : "Describe your requirement, item condition, or service details (Optional)..."
                     }
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
