@@ -2,10 +2,11 @@ import { NextResponse } from "next/server";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
 
 const COLLECTIONS = ["needs_and_sales", "services", "shops", "offers"];
+const ADMIN_PHONE_LAST10 = "9994837342";
 
 export async function POST(request: Request) {
   try {
-    // 1. Authenticate Firebase user via Bearer token
+    // 1. Authenticate Request via Bearer Token
     const authHeader = request.headers.get("authorization") || request.headers.get("Authorization");
 
     if (!authHeader?.startsWith("Bearer ")) {
@@ -21,17 +22,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "Invalid or expired session token" }, { status: 401 });
     }
 
-    // 2. Admin Authorization
-    const userPhone = decodedToken.phone_number || "";
-    const isAdmin =
-      decodedToken.admin === true ||
-      Boolean(userPhone && userPhone.slice(-10) === "9994837342");
-
-    if (!isAdmin) {
-      return NextResponse.json({ success: false, error: "Admin privileges required" }, { status: 403 });
-    }
-
-    // 3. Validate Request Parameters
+    // 2. Validate Request Parameters
     const { postId, colName } = await request.json();
 
     if (!postId) {
@@ -42,12 +33,15 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "Invalid target collection" }, { status: 400 });
     }
 
-    // 4. Determine Target Collection(s)
+    // 3. Determine Target Collection(s)
     const collections = colName ? [colName] : COLLECTIONS;
     let deletedCount = 0;
     const deletedCollections: string[] = [];
 
-    // 5. Privileged Admin SDK Deletion
+    // 4. Perform Authorization & Privileged Deletion
+    const userPhone = decodedToken.phone_number || "";
+    const isAdmin = decodedToken.admin === true || Boolean(userPhone && userPhone.slice(-10) === ADMIN_PHONE_LAST10);
+
     for (const collection of collections) {
       const ref = adminDb.collection(collection).doc(postId);
       const snapshot = await ref.get();
@@ -56,12 +50,21 @@ export async function POST(request: Request) {
         continue;
       }
 
+      const existingData = snapshot.data() || {};
+      const ownerUid = existingData.userId || existingData.seller_id;
+      const isOwner = Boolean(ownerUid && decodedToken.uid === ownerUid);
+
+      // Rule: Admin can delete ANY post. Normal user can delete ONLY THEIR OWN post.
+      if (!isAdmin && !isOwner) {
+        return NextResponse.json({ success: false, error: "Forbidden: You do not own this listing" }, { status: 403 });
+      }
+
       await ref.delete();
       deletedCount++;
       deletedCollections.push(collection);
     }
 
-    // 6. Verify Result
+    // 5. Verify Result
     if (deletedCount === 0) {
       return NextResponse.json({ success: false, error: "Listing not found in database" }, { status: 404 });
     }
@@ -73,9 +76,9 @@ export async function POST(request: Request) {
       deletedBy: decodedToken.uid,
     });
   } catch (error: any) {
-    console.error("Admin delete error:", error);
+    console.error("Post delete error:", error);
     return NextResponse.json(
-      { success: false, error: error?.message || "Admin deletion failed" },
+      { success: false, error: error?.message || "Deletion failed" },
       { status: 500 }
     );
   }
