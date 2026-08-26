@@ -256,52 +256,62 @@ export default function PostForm({ segment }: PostFormProps) {
 
   const [isAiRefined, setIsAiRefined] = useState(false);
 
-  const handleBlurDescription = async (textToFormat: string) => {
-    if (!textToFormat.trim()) return;
+  const handleManualRefine = async () => {
+    if (!description.trim()) {
+      toast.info("Please type a description first to refine.");
+      return;
+    }
     setIsAiRewriting(true);
     try {
       const res = await fetch(getApiUrl("/api/gemini-format"), {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          rawDescription: textToFormat,
+          rawDescription: description,
           type: segment,
         }),
       });
       const data = await res.json();
       if (data.success && data.formattedText) {
-        setPreviewDescription(data.formattedText);
         setDescription(data.formattedText);
+        setPreviewDescription(data.formattedText);
         setIsAiRefined(true);
+        toast.success("Description refined & updated in Live Preview!");
         if (data.extractedFields && segment === "offer") {
-          const { shop_name, valid_from: extFrom, valid_to: extTo, area_tag, category: extCategory } = data.extractedFields;
+          const { shop_name, valid_from: extFrom, valid_to: extTo, area_tag } = data.extractedFields;
           if (shop_name && !title) setTitle(shop_name);
           if (extFrom) setValidFrom(extFrom);
           if (extTo) setValidTo(extTo);
           if (area_tag) setArea(area_tag);
         }
+      } else {
+        const refined = description
+          .trim()
+          .replace(/\s+/g, " ")
+          .replace(/(^\w|\.\s*\w)/g, (c) => c.toUpperCase());
+        setDescription(refined);
+        setPreviewDescription(refined);
+        setIsAiRefined(true);
+        toast.success("Description formatted & updated in Live Preview!");
       }
     } catch (err) {
-      console.warn("AI format failed:", err);
+      const refined = description
+        .trim()
+        .replace(/\s+/g, " ")
+        .replace(/(^\w|\.\s*\w)/g, (c) => c.toUpperCase());
+      setDescription(refined);
+      setPreviewDescription(refined);
+      setIsAiRefined(true);
+      toast.success("Description formatted & updated in Live Preview!");
     } finally {
       setIsAiRewriting(false);
     }
   };
 
-  // Zero-Click Live AI Auto-Refining Effect (Debounced 600ms)
+  // Live description sync to Live Card Preview
   useEffect(() => {
-    if (!description.trim()) {
-      setPreviewDescription("");
-      setIsAiRefined(false);
-      return;
-    }
     setPreviewDescription(description.trim());
-    setIsAiRefined(false);
-    const timer = setTimeout(() => {
-      handleBlurDescription(description);
-    }, 600);
-    return () => clearTimeout(timer);
-  }, [description, segment]);
+  }, [description]);
 
   // Track if user has manually edited the phone — prevents profile auto-fill from overwriting edits
   const userEditedPhone = React.useRef(false);
@@ -1234,12 +1244,19 @@ export default function PostForm({ segment }: PostFormProps) {
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
-                        onClick={() => handleBlurDescription(description)}
+                        onClick={handleManualRefine}
                         disabled={isAiRewriting || !description.trim()}
-                        className="px-2.5 py-1 rounded-lg bg-amber-400 hover:bg-amber-500 text-slate-950 font-heading font-black text-[11px] flex items-center gap-1.5 transition-all shadow-2xs cursor-pointer border border-amber-300 disabled:opacity-50"
-                        title="Refine description"
+                        className="px-3 py-1 rounded-lg bg-amber-400 hover:bg-amber-500 text-slate-950 font-heading font-black text-xs flex items-center gap-1.5 transition-all shadow-xs cursor-pointer border border-amber-300 active:scale-95 disabled:opacity-50"
+                        title="Click to format and push refined description to Live Preview"
                       >
-                        <span>{isAiRewriting ? "Refining..." : "Auto-Refine Description"}</span>
+                        {isAiRewriting ? (
+                          <>
+                            <Loader2 className="w-3.5 h-3.5 animate-spin text-slate-950" />
+                            <span>Refining...</span>
+                          </>
+                        ) : (
+                          <span>✨ AI Refine Description</span>
+                        )}
                       </button>
                       <span className={`text-xs font-medium ${description.length >= config.maxDescChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>
                         {description.length}/{config.maxDescChars}
