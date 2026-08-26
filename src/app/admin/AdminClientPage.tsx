@@ -66,6 +66,29 @@ export default function AdminClientPage() {
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; colName: string } | null>(null);
   const [chatCount, setChatCount] = useState(0);
 
+  const handleWipeAllDatabasePosts = async () => {
+    if (!confirm("Are you sure you want to PERMANENTLY WIPE ALL POSTS from the database? This cannot be undone.")) return;
+    setLoading(true);
+    let count = 0;
+    const targetCols = ["needs_and_sales", "services", "shops", "offers", "reports"];
+
+    for (const colName of targetCols) {
+      try {
+        const snap = await getDocs(collection(db, colName));
+        for (const docSnap of snap.docs) {
+          await deleteDoc(doc(db, colName, docSnap.id));
+          count++;
+        }
+      } catch (err: any) {
+        console.error(`Wipe error for ${colName}:`, err);
+      }
+    }
+
+    setItems([]);
+    setLoading(false);
+    toast.success(`Database completely wiped! Removed ${count} total post(s).`);
+  };
+
   // ── Admin Auth Guard — check profile + localStorage phone + URL query param ──
   const rawPhone = String(profile?.phone || user?.phoneNumber || "").replace(/\D/g, "");
   const localPhone = typeof window !== "undefined"
@@ -534,13 +557,23 @@ export default function AdminClientPage() {
             </p>
           </div>
         </div>
-        <Link
-          href="/"
-          className="flex items-center gap-1.5 text-xs bg-amber-400 hover:bg-amber-300 text-slate-950 font-heading font-black px-4 py-2.5 rounded-xl shadow-lg shadow-amber-400/15 transition-all cursor-pointer shrink-0 active:scale-95"
-        >
-          <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
-          <span>Exit Console</span>
-        </Link>
+        <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={handleWipeAllDatabasePosts}
+            className="flex items-center gap-1.5 text-xs bg-rose-600 hover:bg-rose-500 text-white font-heading font-black px-4 py-2.5 rounded-xl shadow-lg shadow-rose-600/20 transition-all cursor-pointer shrink-0 active:scale-95 border border-rose-500/50"
+          >
+            <Trash2 className="w-4 h-4 stroke-[2.5]" />
+            <span>Wipe All Database Posts</span>
+          </button>
+          <Link
+            href="/"
+            className="flex items-center gap-1.5 text-xs bg-amber-400 hover:bg-amber-300 text-slate-950 font-heading font-black px-4 py-2.5 rounded-xl shadow-lg shadow-amber-400/15 transition-all cursor-pointer shrink-0 active:scale-95"
+          >
+            <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
+            <span>Exit Console</span>
+          </Link>
+        </div>
       </header>
 
       <div className="flex-1 px-4 sm:px-8 py-6 max-w-7xl mx-auto w-full flex flex-col gap-6">
