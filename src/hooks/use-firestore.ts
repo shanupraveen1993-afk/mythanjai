@@ -95,21 +95,7 @@ export function useFirestore<T = any>({
           }
         }
 
-        // Ignore pre-cleanup sample posting data created before project clean reset
-        if (!onlyUserPosted) {
-          const postTime = typeof docData.created_at?.toDate === "function"
-            ? docData.created_at.toDate().getTime()
-            : docData.created_at?.seconds
-            ? docData.created_at.seconds * 1000
-            : typeof docData.created_at === "string" || typeof docData.created_at === "number"
-            ? new Date(docData.created_at).getTime()
-            : 0;
 
-          // 2026-08-26T23:00:00Z cutoff for old sample data
-          if (postTime > 0 && postTime < 1787766000000) {
-            return;
-          }
-        }
 
         // 60-day expiry check
         if (docData.expires_at) {

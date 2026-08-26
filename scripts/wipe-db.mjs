@@ -1,6 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs, updateDoc, setDoc, doc } from "firebase/firestore";
-import { getAuth, signInAnonymously } from "firebase/auth";
+import { getFirestore, collection, getDocs, deleteDoc, doc } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyARIlmmsFmp6plkviJYVNEifLZH-vAw8yA",
@@ -13,41 +12,28 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const auth = getAuth(app);
 
-const COLLECTIONS = ["needs_and_sales", "services", "shops", "offers"];
+const COLLECTIONS = ["needs_and_sales", "services", "shops", "offers", "reports", "audit_logs"];
 
-async function deactivateAllListings() {
-  console.log("Signing in to Firebase Auth...");
-  try {
-    const cred = await signInAnonymously(auth);
-    console.log("Authenticated as UID:", cred.user.uid);
-  } catch (e) {
-    console.warn("Auth error:", e?.message);
-  }
-
-  let count = 0;
+async function wipeAllData() {
+  console.log("Starting full Firestore database wipe...");
+  let deletedCount = 0;
+  let failedCount = 0;
 
   for (const colName of COLLECTIONS) {
     try {
       const snap = await getDocs(collection(db, colName));
-      console.log(`Checking ${colName}: found ${snap.size} documents.`);
+      console.log(`Checking '${colName}': found ${snap.size} documents.`);
 
       for (const d of snap.docs) {
         const itemTitle = d.data().title || d.data().name || d.data().shop_name || d.id;
-        console.log(`Deactivating ${colName}/${d.id} ("${itemTitle}")...`);
         try {
-          await setDoc(doc(db, colName, d.id), {
-            is_inactive: true,
-            is_sold: true,
-            is_expired: true,
-            is_offline: true,
-            status: "inactive",
-          }, { merge: true });
-          console.log(`✓ Deactivated ${colName}/${d.id}`);
-          count++;
+          await deleteDoc(doc(db, colName, d.id));
+          console.log(`✓ Deleted ${colName}/${d.id} ("${itemTitle}")`);
+          deletedCount++;
         } catch (err) {
-          console.error(`Failed to update ${colName}/${d.id}:`, err?.message);
+          console.error(`✗ Failed to delete ${colName}/${d.id}:`, err?.message);
+          failedCount++;
         }
       }
     } catch (err) {
@@ -55,8 +41,14 @@ async function deactivateAllListings() {
     }
   }
 
-  console.log(`\n🎉 Successfully deactivated ${count} items in Cloud Firestore!`);
+  console.log(`\n==========================================`);
+  console.log(`Purge finished: ${deletedCount} deleted, ${failedCount} failed.`);
+  if (failedCount > 0) {
+    console.log(`NOTE: ${failedCount} items failed because Firebase Console Security Rules currently block unauthenticated deletes.`);
+    console.log(`To fix: Go to Firebase Console -> Firestore -> Rules, set 'allow read, write, delete: if true;' and re-run this script.`);
+  }
+  console.log(`==========================================\n`);
   process.exit(0);
 }
 
-deactivateAllListings();
+wipeAllData();
