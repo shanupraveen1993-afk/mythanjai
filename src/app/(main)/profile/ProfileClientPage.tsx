@@ -88,11 +88,7 @@ function ProfileContent() {
   const [isDbVerified, setIsDbVerified] = useState(false);
   const [showPricingModal, setShowPricingModal] = useState(false);
 
-  const isSuperAdmin = React.useMemo(() => {
-    const rawPhone = String(profile?.phone || phoneNumber || user?.phoneNumber || "");
-    const cleanPhone = rawPhone.replace(/\D/g, "");
-    return cleanPhone.includes("9994837342") || profile?.isAdmin;
-  }, [profile, phoneNumber, user]);
+
 
   // My Postings & Saved Bookmarks states
   const [myPosts, setMyPosts] = useState<any[]>([]);
@@ -667,11 +663,6 @@ function ProfileContent() {
                       <span className="inline-flex items-center gap-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 px-2.5 py-1 rounded-xl text-xs font-black">
                         <CheckCircle className="w-3.5 h-3.5" />
                         Verified Member
-                        {isSuperAdmin && (
-                          <span className="ml-1 bg-amber-500 text-slate-950 px-1.5 py-0.5 rounded-lg text-[10px] font-black uppercase flex items-center gap-0.5">
-                            <ShieldCheck className="w-3 h-3" /> Admin
-                          </span>
-                        )}
                       </span>
                     ) : (
                       <button
@@ -741,21 +732,7 @@ function ProfileContent() {
             </button>
           </div>
 
-          {/* Settings & Troubleshooting Card List */}
-          <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden flex flex-col divide-y divide-slate-100">
-            {/* Admin Console Row (if Admin) */}
-            {isSuperAdmin && (
-              <Link href="/admin" className="flex items-center justify-between p-4 hover:bg-slate-50 cursor-pointer transition-colors group">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-slate-900 text-amber-400 flex items-center justify-center shrink-0">
-                    <Shield className="w-4 h-4 stroke-[2.5]" />
-                  </div>
-                  <span className="font-heading font-black text-sm text-slate-900">Admin Console</span>
-                </div>
-                <ChevronRight className="w-4 h-4 text-slate-400 group-hover:text-amber-600 transition-colors" />
-              </Link>
-            )}
-          </div>
+
 
           {/* Relocated Sign Out at Bottom of Screen (unhighlighted text button) */}
           <div className="w-full flex flex-col items-center justify-center gap-3 pt-6 pb-12">

@@ -277,7 +277,7 @@ export default function ListingCard({ listing, isPreview }: { listing: ListingIt
     e.stopPropagation();
     const res = await reportListing(listing.id, "needs_and_sales", "Inappropriate content", profile?.phone || user?.phoneNumber || "Anonymous");
     if (res.success) {
-      toast.success("Thank you! Report submitted to admin for verification.");
+      toast.success("Thank you! Report submitted for verification.");
     } else {
       toast.error("Could not submit report. Please try again.");
     }

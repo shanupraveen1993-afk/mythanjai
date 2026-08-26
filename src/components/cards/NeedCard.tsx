@@ -88,7 +88,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
     e.stopPropagation();
     const res = await reportListing(post.id, "needs_and_sales", "Inappropriate content", profile?.phone || user?.phoneNumber || "Anonymous");
     if (res.success) {
-      toast.success("Thank you! Report submitted to admin for verification.");
+      toast.success("Thank you! Report submitted for verification.");
     } else {
       toast.error("Could not submit report. Please try again.");
     }

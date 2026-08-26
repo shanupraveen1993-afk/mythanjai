@@ -6,7 +6,6 @@ export interface UserProfile {
   uid: string;
   phone: string;
   isVerified: boolean;
-  isAdmin?: boolean;
   createdAt: any; // Firestore Timestamp
   displayName?: string;
 }

@@ -13,7 +13,6 @@ interface AuthContextType {
   loading: boolean;
   updatePhone: (phone: string) => Promise<{ success: boolean }>;
   updateDisplayName: (name: string) => Promise<{ success: boolean }>;
-  setAdminStatus: (isAdmin: boolean) => Promise<void>;
   signOutUser: () => Promise<void>;
 }
 
@@ -33,7 +32,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           uid: "saved_session",
           phone: storedPhone,
           isVerified: true,
-          isAdmin: storedPhone.includes("9994837342"),
           displayName: storedName,
           createdAt: new Date(),
         };
@@ -95,13 +93,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               userProfileData.phone = activeVerifiedPhone;
               userProfileData.isVerified = true;
             }
-            const adminPhone = process.env.NEXT_PUBLIC_ADMIN_PHONE?.replace(/\D/g, "");
-            const hasAdminPhone = userProfileData.phone && (userProfileData.phone.replace(/\D/g, "") === adminPhone || userProfileData.phone.includes("9994837342"));
-            if (hasAdminPhone && !userProfileData.isAdmin) {
-              const userRef = doc(db, "users", currentUser.uid);
-              await updateDoc(userRef, { isAdmin: true });
-              userProfileData.isAdmin = true;
-            }
             if (storedDisplayName) userProfileData.displayName = storedDisplayName;
 
             setProfile(userProfileData);
@@ -110,7 +101,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               uid: currentUser.uid,
               phone: activeVerifiedPhone || "",
               isVerified: Boolean(activeVerifiedPhone),
-              isAdmin: Boolean(activeVerifiedPhone && activeVerifiedPhone.includes("9994837342")),
               displayName: storedDisplayName || currentUser.displayName || "Namma Thanjai User",
               createdAt: new Date(),
             };
@@ -125,7 +115,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
               uid: currentUser.uid,
               phone: activeVerifiedPhone,
               isVerified: true,
-              isAdmin: activeVerifiedPhone.includes("9994837342"),
               displayName: storedDisplayName || "Namma Thanjai User",
               createdAt: new Date(),
             });
@@ -137,7 +126,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             uid: "saved_session",
             phone: activeVerifiedPhone,
             isVerified: true,
-            isAdmin: activeVerifiedPhone.includes("9994837342"),
             displayName: storedDisplayName || "Namma Thanjai User",
             createdAt: new Date(),
           });
@@ -171,7 +159,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             uid: prev?.uid || user?.uid || "saved_session",
             phone: storedPhone,
             isVerified: true,
-            isAdmin: storedPhone.includes("9994837342"),
             displayName: storedName,
             createdAt: prev?.createdAt || new Date(),
           }));
@@ -228,8 +215,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const cleanedPhone = phone.replace(/\D/g, "");
     const targetPhone = cleanedPhone.length === 10 ? `91${cleanedPhone}` : cleanedPhone;
-    const adminPhone = process.env.NEXT_PUBLIC_ADMIN_PHONE?.replace(/\D/g, "");
-    const isAdminPhone = targetPhone.includes("9994837342");
 
     // Set local persistence across both key namespaces
     if (typeof window !== "undefined") {
@@ -247,7 +232,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           uid: activeUser.uid,
           phone: targetPhone,
           isVerified: true,
-          isAdmin: isAdminPhone,
         }, { merge: true });
       }
 
@@ -255,7 +239,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         uid: activeUser?.uid || "mock_uid",
         phone: targetPhone,
         isVerified: true,
-        isAdmin: isAdminPhone,
         createdAt: new Date(),
       });
       return { success: true };
@@ -265,21 +248,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         uid: activeUser?.uid || "mock_uid",
         phone: targetPhone,
         isVerified: true,
-        isAdmin: isAdminPhone,
         createdAt: new Date(),
       });
       return { success: true };
-    }
-  };
-
-  const setAdminStatus = async (isAdmin: boolean) => {
-    if (!user) return;
-    const userRef = doc(db, "users", user.uid);
-    try {
-      await updateDoc(userRef, { isAdmin });
-      setProfile((prev) => prev ? { ...prev, isAdmin } : null);
-    } catch (error) {
-      console.error("Error setting admin status:", error);
     }
   };
 
@@ -326,7 +297,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   return React.createElement(
     AuthContext.Provider,
-    { value: { user, profile, isVerified, loading, updatePhone, updateDisplayName, setAdminStatus, signOutUser } },
+    { value: { user, profile, isVerified, loading, updatePhone, updateDisplayName, signOutUser } },
     children
   );
 }
@@ -341,7 +312,6 @@ export function useAuth() {
       loading: true,
       updatePhone: async () => ({ success: false }),
       updateDisplayName: async () => ({ success: false }),
-      setAdminStatus: async () => {},
       signOutUser: async () => {},
     };
   }

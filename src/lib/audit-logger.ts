@@ -6,8 +6,7 @@ export type AuditActionType =
   | "POST_UPDATED"
   | "POST_DELETED"
   | "POST_REPORTED"
-  | "USER_DELETED"
-  | "ADMIN_ACTION";
+  | "USER_DELETED";
 
 export interface AuditEventInput {
   action: AuditActionType;

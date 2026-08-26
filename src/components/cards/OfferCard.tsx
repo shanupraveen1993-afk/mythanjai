@@ -25,7 +25,7 @@ export default function OfferCard({ post }: OfferCardProps) {
     e.stopPropagation();
     const res = await reportListing(post.id, "offers", "Inappropriate offer content");
     if (res.success) {
-      toast.success("Thank you! Offer reported to admin for verification.");
+      toast.success("Thank you! Report submitted for verification.");
     } else {
       toast.error("Could not submit report. Please try again.");
     }

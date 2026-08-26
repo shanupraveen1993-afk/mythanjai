@@ -25,15 +25,7 @@ export interface SpamCheckResult {
  * Rate limiting is handled server-side via Firestore — not localStorage.
  */
 export async function checkPostSpamAndRateLimit(input: SpamCheckInput): Promise<SpamCheckResult> {
-  const cleanPhone = (input.phone || "").replace(/\D/g, "");
-  const phone10 = cleanPhone.slice(-10);
-
-  // Super-Admin bypass
-  if (phone10.includes("9994837342")) {
-    return { isAllowed: true };
-  }
-
-  // 1. Check Banned Keywords (only real content moderation — no localStorage)
+  // 1. Check Banned Keywords
   const fullContent = `${input.title} ${input.description}`.toLowerCase();
   for (const word of BANNED_KEYWORDS) {
     if (fullContent.includes(word)) {
@@ -43,10 +35,6 @@ export async function checkPostSpamAndRateLimit(input: SpamCheckInput): Promise<
       };
     }
   }
-
-  // NOTE: localStorage-based rate limits & duplicate checks removed.
-  // They were unreliable (different browsers, cleared storage) and silently blocked legitimate posts.
-  // Admins can manage spam via Firebase Console if needed.
 
   return { isAllowed: true };
 }

@@ -210,7 +210,7 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
     e.stopPropagation();
     const res = await reportListing(post.id, "shops", "Inappropriate content", profile?.phone || user?.phoneNumber || "Anonymous");
     if (res.success) {
-      toast.success("Thank you! Listing reported to admin for verification.");
+      toast.success("Thank you! Report submitted for verification.");
     } else {
       toast.error("Could not submit report. Please try again.");
     }

@@ -125,19 +125,6 @@ export default function PostForm({ segment }: PostFormProps) {
   const { user, profile, isVerified, loading: authLoading } = useAuth();
   const isAuthVerified = isVerified;
 
-  // Admin check at render level (used to show/hide admin-only UI like video upload)
-  const isAdminUser = useMemo(() => {
-    if (typeof window !== "undefined") {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get("admin") === "true") return true;
-      const storedPhone = localStorage.getItem("namma_thanjai_phone") || localStorage.getItem("my_thanjai_phone") || "";
-      if (storedPhone.replace(/\D/g, "").includes("9994837342")) return true;
-    }
-    const rawPhone = String(profile?.phone || user?.phoneNumber || "");
-    const cleanPhone = rawPhone.replace(/\D/g, "");
-    return cleanPhone.includes("9994837342") || Boolean(profile?.isAdmin);
-  }, [profile, user]);
-
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
 
