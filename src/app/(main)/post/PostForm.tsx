@@ -1074,7 +1074,7 @@ export default function PostForm({ segment }: PostFormProps) {
                       <span className="bg-slate-950 hover:bg-slate-800 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg transition-all shadow-2xs mt-0.5">
                         Select Video Reel File →
                       </span>
-                      <input type="file" accept="video/*" onChange={handleVideoChange} className="hidden" />
+                      <input type="file" accept="video/mp4,video/webm,video/quicktime,video/*" onChange={handleVideoChange} className="hidden" />
                     </label>
                   )}
                 </div>
