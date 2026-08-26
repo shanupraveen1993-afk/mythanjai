@@ -486,25 +486,11 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
             <span className="truncate">{post.address_text || post.area_tag || "Thanjavur"}</span>
           </div>
 
-          {/* Footer CTAs — Plain Text Posted Month+Year (Left) + Distinct Buttons (Right) */}
+          {/* Footer CTAs */}
           <div className="pt-3 flex items-center justify-between gap-4 sm:gap-6 mt-auto w-full border-t border-slate-100">
-          <span className="text-xs font-semibold text-slate-600 shrink-0 select-none">
-            {(() => {
-              try {
-                return formatRelativeTime(post.created_at || new Date().toISOString());
-              } catch {
-                return "Aug 2026";
-              }
-            })()}
-          </span>
-            <span className="text-xs font-semibold text-slate-600 shrink-0 select-none">
-              {(() => {
-                try {
-                  return formatRelativeTime(post.created_at || new Date().toISOString());
-                } catch {
-                  return "Aug 2026";
-                }
-              })()}
+            <span className="text-[11px] font-medium text-slate-400 shrink-0 select-none flex items-center gap-1">
+              <Calendar className="w-3.5 h-3.5 text-slate-400" />
+              <span>{formatRelativeTime(post.created_at || new Date().toISOString())}</span>
             </span>
             <div className="flex items-center gap-2 shrink-0 justify-end">
               {isOwnPost ? (
