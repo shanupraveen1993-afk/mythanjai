@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { adminDb, adminAuth } from "@/lib/firebase-admin";
+import { adminAuth, adminDb } from "@/lib/firebase-admin";
 
-const ADMIN_PHONE_LAST10 = "9994837342";
 const COLLECTIONS = ["needs_and_sales", "services", "shops", "offers"];
+const ADMIN_PHONE_LAST10 = "9994837342";
 
 const ALLOWED_UPDATE_FIELDS = [
   "title",
@@ -35,25 +35,26 @@ const ALLOWED_UPDATE_FIELDS = [
 
 export async function POST(request: Request) {
   try {
-    // 1. Authenticate via Bearer Token
+    // 1. Authenticate Request via Bearer Token
     const authHeader = request.headers.get("authorization") || request.headers.get("Authorization");
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+
+    if (!authHeader?.startsWith("Bearer ")) {
       return NextResponse.json({ success: false, error: "Authentication required" }, { status: 401 });
     }
 
     const token = authHeader.substring("Bearer ".length).trim();
-    let decodedToken: any = null;
+    let decodedToken: any;
 
     try {
       decodedToken = await adminAuth.verifyIdToken(token);
-    } catch (err: any) {
-      console.error("Token verification failed:", err?.message);
+    } catch {
       return NextResponse.json({ success: false, error: "Invalid or expired session token" }, { status: 401 });
     }
 
-    // 2. Validate Request Parameters
+    // 2. Validate Request Body
     const { postId, colName, payload } = await request.json();
-    if (!postId || !colName || !payload || typeof payload !== "object") {
+
+    if (!postId || !colName || !payload || typeof payload !== "object" || Array.isArray(payload)) {
       return NextResponse.json({ success: false, error: "Invalid update request" }, { status: 400 });
     }
 
@@ -61,34 +62,40 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "Invalid collection" }, { status: 400 });
     }
 
-    // 3. Retrieve Document & Check Ownership / Admin Privilege
+    // 3. Get Existing Listing Document
     const ref = adminDb.collection(colName).doc(postId);
-    const snap = await ref.get();
+    const snapshot = await ref.get();
 
-    if (!snap.exists) {
+    if (!snapshot.exists) {
       return NextResponse.json({ success: false, error: "Listing not found" }, { status: 404 });
     }
 
-    const existingData = snap.data() || {};
-    const requesterPhone = decodedToken.phone_number || "";
-    const isAdmin = decodedToken.admin === true || requesterPhone.slice(-10) === ADMIN_PHONE_LAST10;
-    const ownerUid = existingData.userId || existingData.seller_id;
+    const existingData = snapshot.data() || {};
 
-    // Strict UID Ownership Check
-    const isOwner = Boolean(decodedToken.uid && ownerUid && decodedToken.uid === ownerUid);
+    // 4. Authorization (Admin or Immutable UID Owner)
+    const userPhone = decodedToken.phone_number || "";
+    const isAdmin = decodedToken.admin === true || (userPhone && userPhone.slice(-10) === ADMIN_PHONE_LAST10);
+    const ownerUid = existingData.userId || existingData.seller_id;
+    const isOwner = Boolean(ownerUid && decodedToken.uid === ownerUid);
 
     if (!isAdmin && !isOwner) {
       return NextResponse.json({ success: false, error: "Forbidden: You do not own this listing" }, { status: 403 });
     }
 
-    // 4. Whitelist Payload Fields to Prevent Mass Assignment Vulnerabilities
-    const safePayload: Record<string, any> = {};
+    // 5. Whitelist Editable Fields (Prevent Mass Assignment)
+    const safePayload: Record<string, unknown> = {};
+
     for (const field of ALLOWED_UPDATE_FIELDS) {
-      if (field in payload) {
+      if (Object.prototype.hasOwnProperty.call(payload, field)) {
         safePayload[field] = payload[field];
       }
     }
 
+    if (Object.keys(safePayload).length === 0) {
+      return NextResponse.json({ success: false, error: "No permitted fields supplied" }, { status: 400 });
+    }
+
+    // 6. Perform Privileged Admin SDK Update
     await ref.update({
       ...safePayload,
       updated_at: new Date(),
