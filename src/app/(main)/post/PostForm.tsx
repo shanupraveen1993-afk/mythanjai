@@ -151,6 +151,8 @@ export default function PostForm({ segment }: PostFormProps) {
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
   const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
   const [videoPreview, setVideoPreview] = useState<string>("");
+  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
+  const [uploadStatusMsg, setUploadStatusMsg] = useState<string>("");
   const [price, setPrice] = useState("");
   const [hasSpecificPrice, setHasSpecificPrice] = useState<boolean>(true);
   const [youtubeUrl, setYoutubeUrl] = useState("");
@@ -521,15 +523,39 @@ export default function PostForm({ segment }: PostFormProps) {
       console.warn("Storage upload warning, using preview fallback:", storageErr);
     }
 
-    // ── STEP 2b: Upload Video Reel to Firebase Storage (if selected) ──
+    // ── STEP 2b: Upload Video Reel to Firebase Storage with Resumable Progress ──
     let cloudVideoUrl = "";
     if (selectedVideo) {
+      const sizeMb = (selectedVideo.size / (1024 * 1024)).toFixed(1);
+      setUploadStatusMsg(`Uploading Video Reel (${sizeMb} MB)... 0%`);
+      setUploadProgress(0);
       try {
         const videoRef = ref(storage, `videos/${Date.now()}_${selectedVideo.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`);
-        const videoSnapshot = await uploadBytes(videoRef, selectedVideo);
-        cloudVideoUrl = await getDownloadURL(videoSnapshot.ref);
+        const uploadTask = uploadBytesResumable(videoRef, selectedVideo);
+
+        cloudVideoUrl = await new Promise<string>((resolve) => {
+          uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+              const pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+              setUploadProgress(pct);
+              setUploadStatusMsg(`Uploading Video Reel (${sizeMb} MB)... ${pct}%`);
+            },
+            (err) => {
+              console.warn("Video upload error:", err);
+              resolve("");
+            },
+            async () => {
+              const url = await getDownloadURL(uploadTask.snapshot.ref);
+              resolve(url);
+            }
+          );
+        });
       } catch (videoErr) {
         console.warn("Video storage upload warning:", videoErr);
+      } finally {
+        setUploadProgress(null);
+        setUploadStatusMsg("");
       }
     }
 
@@ -1448,6 +1474,25 @@ export default function PostForm({ segment }: PostFormProps) {
               )}
             </div>
 
+            {/* Live Resumable Upload Progress Bar */}
+            {uploadProgress !== null && (
+              <div className="w-full p-3 bg-amber-50 border border-amber-300 rounded-xl flex flex-col gap-1.5 shadow-2xs">
+                <div className="flex items-center justify-between text-xs font-bold text-slate-900">
+                  <span className="flex items-center gap-1.5">
+                    <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-600" />
+                    <span>{uploadStatusMsg || "Uploading Video Reel..."}</span>
+                  </span>
+                  <span>{uploadProgress}%</span>
+                </div>
+                <div className="w-full h-2.5 bg-amber-200/80 rounded-full overflow-hidden">
+                  <div
+                    className="h-full bg-amber-500 transition-all duration-150"
+                    style={{ width: `${uploadProgress}%` }}
+                  />
+                </div>
+              </div>
+            )}
+
             {/* Primary Submit Button Positioned Directly Below Live Preview Card */}
             <button
               type="submit"
@@ -1458,7 +1503,7 @@ export default function PostForm({ segment }: PostFormProps) {
               {loading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin text-[#0F172A]" />
-                  <span>Publishing Post...</span>
+                  <span>{uploadStatusMsg || "Publishing Post..."}</span>
                 </>
               ) : (
                 <span>{config.buttonLabel}</span>
