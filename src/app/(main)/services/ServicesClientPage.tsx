@@ -51,7 +51,7 @@ export default function ServicesClientPage() {
   });
 
   // Public feed: ONLY Firestore data — no localStorage merge.
-  // localStorage (namma_thanjai_local_posts) is only used for "My Listings" in the Profile page.
+  // Published post data is strictly managed via Firestore live queries.
   const allPosts = React.useMemo(() => {
     return firestorePosts || [];
   }, [firestorePosts]);

@@ -213,16 +213,7 @@ export default function PostForm({ segment }: PostFormProps) {
       }
     };
 
-    // 1. Try local storage first for instant load
-    try {
-      const localPosts = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-      const match = localPosts.find((p: any) => p.id === editId);
-      if (match) {
-        populateFields(match);
-      }
-    } catch (e) {}
-
-    // 2. Fetch from Firestore for authoritative cloud data
+    // Fetch from Firestore for authoritative cloud data
     const targetCol = editCol || (segment === "service" ? "services" : segment === "offer" ? "shops" : "needs_and_sales");
     const docRef = doc(db, targetCol, editId);
     getDoc(docRef)

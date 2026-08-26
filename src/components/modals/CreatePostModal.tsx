@@ -428,13 +428,6 @@ export default function CreatePostModal({
             await updateDoc(docRef, updatePayload);
           } catch (e) {}
 
-          if (typeof window !== "undefined") {
-            try {
-              const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-              const updated = stored.map((p: any) => (p.id === editPost.id ? { ...p, ...updatePayload } : p));
-              localStorage.setItem("namma_thanjai_local_posts", JSON.stringify(updated));
-            } catch (e) {}
-          }
           toast.success("Listing updated successfully!");
         } else {
           // ── CREATE NEW POST FLOW ──

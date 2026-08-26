@@ -127,7 +127,7 @@ export default function AdminClientPage() {
           })
         );
 
-        // Also merge global public posts API + local posts from localStorage
+        // Merge global public posts API if available
         if (typeof window !== "undefined") {
           try {
             const apiRes = await fetch("/api/public-posts").then((r) => r.json()).catch(() => null);
@@ -153,28 +153,6 @@ export default function AdminClientPage() {
                 }
               });
             }
-
-            const localPosts = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-            localPosts.forEach((lp: any) => {
-              const targetCol = lp.skill_category ? "services" : (lp.type === "SELL" || lp.type === "NEED") ? "needs_and_sales" : "shops";
-              if (!collectionDataMap[targetCol]) collectionDataMap[targetCol] = [];
-              if (!collectionDataMap[targetCol].some((m) => m.id === lp.id)) {
-                collectionDataMap[targetCol].push({
-                  id: lp.id,
-                  colName: targetCol,
-                  title: lp.title || lp.name || lp.shop_name || lp.offer_title || "Local Post",
-                  phone: lp.phone || "",
-                  area_tag: lp.area_tag || "Thanjavur",
-                  is_verified: lp.is_verified !== false,
-                  is_reported: Boolean(lp.is_reported),
-                  price: lp.price || null,
-                  category: lp.category || lp.skill_category || "General",
-                  created_at: lp.created_at,
-                  image_url: lp.image_url || lp.image_urls?.[0],
-                  video_url: lp.video_url,
-                });
-              }
-            });
           } catch (e) {}
         }
 
@@ -329,14 +307,6 @@ export default function AdminClientPage() {
       });
     } catch (e) {
       console.warn("Delete document caught:", e);
-    }
-
-    if (typeof window !== "undefined") {
-      try {
-        const localPosts = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-        const filtered = localPosts.filter((p: any) => p.id !== id);
-        localStorage.setItem("namma_thanjai_local_posts", JSON.stringify(filtered));
-      } catch (e) {}
     }
 
     // Write Audit Log for Admin Deletion

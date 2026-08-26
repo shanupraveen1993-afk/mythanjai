@@ -143,14 +143,6 @@ function ListingsContent() {
     try {
       setMyPosts((prev) => prev.filter((p) => p.id !== postId));
 
-      if (typeof window !== "undefined") {
-        try {
-          let local = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-          local = local.filter((p: any) => p.id !== postId);
-          localStorage.setItem("namma_thanjai_local_posts", JSON.stringify(local));
-        } catch (e) {}
-      }
-
       // Purge permanently from all possible collections in Firestore
       const targetCols = collectionName ? [collectionName] : ["needs_and_sales", "services", "shops"];
       await Promise.all(
@@ -196,24 +188,6 @@ function ListingsContent() {
           : p
       )
     );
-
-    if (typeof window !== "undefined") {
-      try {
-        const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-        const updated = stored.map((p: any) =>
-          p.id === post.id
-            ? {
-                ...p,
-                is_inactive: nextState,
-                is_sold: nextState,
-                is_offline: nextState,
-                is_contacted: nextState,
-              }
-            : p
-        );
-        localStorage.setItem("namma_thanjai_local_posts", JSON.stringify(updated));
-      } catch (e) {}
-    }
 
     const col = post.colName || (post.skill_category ? "services" : (post.type === "SELL" || post.type === "NEED") ? "needs_and_sales" : "shops");
     try {

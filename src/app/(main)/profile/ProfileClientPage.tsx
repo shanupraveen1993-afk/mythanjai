@@ -112,17 +112,14 @@ function ProfileContent() {
     toast.success("Listing testified as 100% accurate & true. Report count reset!");
   };
 
-  const handleToggleSoldState = (postId: string, currentSold: boolean) => {
+  const handleToggleSoldState = async (postId: string, currentSold: boolean, colName?: string) => {
     setMyPosts((prev) =>
       prev.map((p) => (p.id === postId ? { ...p, is_sold: !currentSold } : p))
     );
-    if (typeof window !== "undefined") {
-      try {
-        const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-        const updated = stored.map((p: any) => (p.id === postId ? { ...p, is_sold: !currentSold } : p));
-        localStorage.setItem("namma_thanjai_local_posts", JSON.stringify(updated));
-      } catch (e) {}
-    }
+    try {
+      const docRef = doc(db, colName || "needs_and_sales", postId);
+      await updateDoc(docRef, { is_sold: !currentSold });
+    } catch (e) {}
     toast.success(!currentSold ? "Listing marked as SOLD!" : "Listing reactivated as Active!");
   };
 
@@ -131,15 +128,6 @@ function ProfileContent() {
     setMyPosts((prev) =>
       prev.map((p) => (p.id === postId ? { ...p, created_at: newDate, is_sold: false } : p))
     );
-    if (typeof window !== "undefined") {
-      try {
-        const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-        const updated = stored.map((p: any) =>
-          p.id === postId ? { ...p, created_at: newDate, is_sold: false } : p
-        );
-        localStorage.setItem("namma_thanjai_local_posts", JSON.stringify(updated));
-      } catch (e) {}
-    }
     try {
       const docRef = doc(db, colName || "needs_and_sales", postId);
       await updateDoc(docRef, { created_at: serverTimestamp(), is_sold: false });
@@ -333,17 +321,9 @@ function ProfileContent() {
     }
   };
 
-  // 100% WORKING DELETE POST (Purges from local storage + Firestore + UI state)
+  // Delete Post (Purges from Firestore + UI state)
   const handleDeletePost = async (id: string, colName: string) => {
     setMyPosts((prev) => prev.filter((p) => p.id !== id));
-
-    if (typeof window !== "undefined") {
-      try {
-        const stored = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-        const updated = stored.filter((p: any) => p.id !== id);
-        localStorage.setItem("namma_thanjai_local_posts", JSON.stringify(updated));
-      } catch (e) {}
-    }
 
     try {
       const docRef = doc(db, colName || "needs_and_sales", id);
