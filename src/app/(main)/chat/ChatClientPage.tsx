@@ -267,21 +267,19 @@ export default function ChatClientPage() {
     }
 
     const currentText = inputText.trim();
-    setInputText("");
-    setLoading(true);
-
     try {
+      const currentUid = user?.uid || (profile?.phone ? `phone_${profile.phone.replace(/\D/g, "")}` : "guest_user");
+      const currentName = profile?.displayName || user?.displayName || "User";
+      const currentPhone = (profile?.phone || user?.phoneNumber || "").replace(/\D/g, "");
+
       const messagesRef = collection(db, "chats", activeChatId, "messages");
       await addDoc(messagesRef, {
-        senderId: user?.uid || "buyer_guest",
-        senderName: profile?.displayName || user?.displayName || "Buyer",
+        senderId: currentUid,
+        senderPhone: currentPhone,
+        senderName: currentName,
         text: currentText,
         timestamp: serverTimestamp(),
       });
-
-      const currentUid = user?.uid || "guest_user";
-      const currentName = profile?.displayName || user?.displayName || "Buyer";
-      const currentPhone = profile?.phone || user?.phoneNumber || "";
 
       const threadRef = doc(db, "chats", activeChatId);
       await setDoc(
@@ -720,9 +718,18 @@ export default function ChatClientPage() {
               </div>
             ) : (
               messages.map((msg) => {
-                const isMe = msg.senderId === user?.uid || msg.senderId === "buyer_guest";
+                const currentUid = user?.uid;
+                const currentPhone = (profile?.phone || user?.phoneNumber || "").replace(/\D/g, "");
+                const senderPhone = (msg as any).senderPhone ? String((msg as any).senderPhone).replace(/\D/g, "") : "";
+
+                const isMe = Boolean(
+                  (currentUid && msg.senderId === currentUid) ||
+                  (currentPhone && senderPhone && currentPhone === senderPhone) ||
+                  (msg.senderId === "buyer_guest" && !currentUid)
+                );
+
                 return (
-                  <div key={msg.id} className={`flex flex-col ${isMe ? "items-end" : "items-start"}`}>
+                  <div key={msg.id} className={`flex w-full ${isMe ? "justify-end" : "justify-start"} my-0.5`}>
                     <div
                       onTouchStart={() => handleMsgTouchStart(msg)}
                       onTouchEnd={handleMsgTouchEnd}
@@ -732,14 +739,21 @@ export default function ChatClientPage() {
                         e.preventDefault();
                         setActiveMsgAction(msg);
                       }}
-                      className={`px-3.5 py-2.5 rounded-2xl max-w-[85%] sm:max-w-[70%] text-xs font-medium shadow-2xs select-none cursor-pointer transition-transform active:scale-[0.98] ${
+                      className={`relative px-3 py-2 rounded-2xl max-w-[85%] sm:max-w-[70%] text-xs font-medium shadow-2xs select-none cursor-pointer transition-transform active:scale-[0.98] ${
                         isMe
-                          ? "bg-[#d9fdd3] text-slate-900 rounded-tr-none border border-[#c2f0b7]"
-                          : "bg-white text-slate-900 rounded-tl-none border border-slate-200/80"
+                          ? "bg-[#d9fdd3] text-slate-900 rounded-tr-xs border border-[#bbf2b3] self-end"
+                          : "bg-white text-slate-900 rounded-tl-xs border border-slate-200/90 self-start"
                       }`}
                     >
-                      {highlightFlaggedText(msg.text)}
-                      <div className="flex items-center justify-end gap-1 mt-1 text-[10px] text-slate-500 font-bold">
+                      {!isMe && (
+                        <div className="text-[11px] font-bold text-[#075e54] mb-0.5 truncate">
+                          {msg.senderName || "Contact"}
+                        </div>
+                      )}
+                      <div className="leading-relaxed text-slate-900 font-normal">
+                        {highlightFlaggedText(msg.text)}
+                      </div>
+                      <div className="flex items-center justify-end gap-1 mt-1 text-[10px] text-slate-400 font-semibold leading-none">
                         <span>{formatTime(msg.timestamp)}</span>
                         {isMe && <CheckCheck className="w-3.5 h-3.5 text-[#34b7f1] stroke-[2.5]" />}
                       </div>
