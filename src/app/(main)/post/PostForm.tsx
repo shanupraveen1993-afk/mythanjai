@@ -539,55 +539,67 @@ export default function PostForm({ segment }: PostFormProps) {
           title: title.trim(),
           description: cleanDesc,
           raw_text: cleanDesc,
-          area_tag: area,
+          area_tag: area || "Thanjavur",
           category: category || "General",
-          price: price || null,
+          price: price ? price : null,
           phone: phone || "9876543210",
-          show_phone: showPhone,
-          image_url: cloudImageUrl,
-          image_urls: cloudImageUrls.length > 0 ? cloudImageUrls : undefined,
+          show_phone: Boolean(showPhone),
+          image_url: cloudImageUrl || "",
           youtube_url: youtubeUrl.trim() || "",
           google_maps_url: googleMapsUrl.trim() || "",
           is_verified: true,
           status: "active",
         };
+        if (cloudImageUrls && cloudImageUrls.length > 0) {
+          payload.image_urls = cloudImageUrls;
+        }
+
         if (editId) {
-          await updateDoc(doc(db, targetCol, editId), payload).catch(() => {});
+          await updateDoc(doc(db, targetCol, editId), payload).catch((e) => console.error("updateDoc error:", e));
         } else {
-          const docRef = await addDoc(collection(db, targetCol), {
-            ...payload,
-            created_at: timestamp,
-            expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
-          }).catch(() => null);
-          if (docRef) createdDocId = docRef.id;
+          try {
+            const docRef = await addDoc(collection(db, targetCol), {
+              ...payload,
+              created_at: timestamp,
+              expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
+            });
+            if (docRef) createdDocId = docRef.id;
+          } catch (addErr) {
+            console.error("addDoc error for sell/need:", addErr);
+          }
         }
       } else if (segment === "service") {
         const payload: any = {
           userId: uid,
+          seller_id: uid,
           name: title.trim(),
           title: title.trim(),
-          is_available_now: isAvailable,
+          is_available_now: Boolean(isAvailable),
           experience: allWorkingDays === "Yes" ? "All Working Days" : "Flexible Days",
           working_hours: sundayLeave === "Yes" ? "Sunday Off" : "Open 7 Days",
-          area_tag: area,
+          area_tag: area || "Thanjavur",
           category: category || "General",
           skill_category: category || "General",
           phone: phone || "9876543210",
           rating: 5.0,
           description: cleanDesc,
-          image_url: cloudImageUrl,
+          image_url: cloudImageUrl || "",
           is_verified: true,
           status: "active",
         };
         if (editId) {
-          await updateDoc(doc(db, targetCol, editId), payload).catch(() => {});
+          await updateDoc(doc(db, targetCol, editId), payload).catch((e) => console.error("updateDoc error:", e));
         } else {
-          const docRef = await addDoc(collection(db, targetCol), {
-            ...payload,
-            negative_reports_count: 0,
-            created_at: timestamp,
-          }).catch(() => null);
-          if (docRef) createdDocId = docRef.id;
+          try {
+            const docRef = await addDoc(collection(db, targetCol), {
+              ...payload,
+              negative_reports_count: 0,
+              created_at: timestamp,
+            });
+            if (docRef) createdDocId = docRef.id;
+          } catch (addErr) {
+            console.error("addDoc error for service:", addErr);
+          }
         }
       } else if (segment === "offer") {
         let uploadedVideoUrl = videoPreview || "";
@@ -600,27 +612,32 @@ export default function PostForm({ segment }: PostFormProps) {
         }
         const payload: any = {
           userId: uid,
+          seller_id: uid,
           shop_name: title.trim(),
           offer_title: title.trim(),
-          area_tag: area,
+          area_tag: area || "Thanjavur",
           category: category || "General",
           phone: phone || "9876543210",
-          image_url: cloudImageUrl,
+          image_url: cloudImageUrl || "",
           offer_description: cleanDesc,
           address_text: area ? `${area}, Thanjavur` : "Thanjavur",
           video_url: uploadedVideoUrl || youtubeUrl || "",
-          show_phone: showPhone,
+          show_phone: Boolean(showPhone),
           is_verified: true,
           status: "active",
         };
         if (editId) {
-          await updateDoc(doc(db, targetCol, editId), payload).catch(() => {});
+          await updateDoc(doc(db, targetCol, editId), payload).catch((e) => console.error("updateDoc error:", e));
         } else {
-          const docRef = await addDoc(collection(db, targetCol), {
-            ...payload,
-            created_at: timestamp,
-          }).catch(() => null);
-          if (docRef) createdDocId = docRef.id;
+          try {
+            const docRef = await addDoc(collection(db, targetCol), {
+              ...payload,
+              created_at: timestamp,
+            });
+            if (docRef) createdDocId = docRef.id;
+          } catch (addErr) {
+            console.error("addDoc error for offer:", addErr);
+          }
         }
       }
 

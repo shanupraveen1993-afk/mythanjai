@@ -181,22 +181,24 @@ export default function PostClientPage() {
         try {
           await addDoc(collection(db, "needs_and_sales"), {
             userId: uid,
+            seller_id: uid,
             type: segment === "sell" ? "SELL" : "NEED",
             title: title.trim(),
             description: description.trim(),
             raw_text: description.trim(),
-            category,
-            area_tag: area,
+            category: category || "General",
+            area_tag: area || "Thanjavur",
             price: price ? parseFloat(price) : null,
             phone: sanitizedPhone || "9876543210",
-            show_phone: showPhone,
+            show_phone: Boolean(showPhone),
             image_url: segment === "need" ? "" : (imageUrl || "/thanjavur_temple_illustration.png"),
             is_verified: true,
+            status: "active",
             created_at: timestamp,
             expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
           });
         } catch (fErr) {
-          console.warn("Firestore write skipped, relying on local storage persistence:", fErr);
+          console.warn("Firestore write error:", fErr);
         }
       } else if (segment === "service") {
         localPostRecord.name = title.trim();
@@ -209,20 +211,23 @@ export default function PostClientPage() {
         try {
           await addDoc(collection(db, "services"), {
             userId: uid,
+            seller_id: uid,
             name: title.trim(),
-            skill_category: category,
+            title: title.trim(),
+            skill_category: category || "General",
             experience: experience || "5+ Years",
-            area_tag: area,
+            area_tag: area || "Thanjavur",
             phone: sanitizedPhone || "9876543210",
-            show_phone: showPhone,
+            show_phone: Boolean(showPhone),
             rating: 5.0,
             description: description.trim(),
-            image_url: imageUrl,
+            image_url: imageUrl || "",
             is_verified: true,
+            status: "active",
             created_at: timestamp,
           });
         } catch (fErr) {
-          console.warn("Firestore write skipped, relying on local storage persistence:", fErr);
+          console.warn("Firestore write error:", fErr);
         }
       } else if (segment === "offer") {
         localPostRecord.shop_name = title.trim();
@@ -234,23 +239,25 @@ export default function PostClientPage() {
         try {
           await addDoc(collection(db, "shops"), {
             userId: uid,
+            seller_id: uid,
             shop_name: title.trim(),
-            category,
-            area_tag: area,
+            category: category || "General",
+            area_tag: area || "Thanjavur",
             phone: sanitizedPhone || "9876543210",
-            show_phone: showPhone,
+            show_phone: Boolean(showPhone),
             image_url: imageUrl || "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=600&auto=format&fit=crop",
             latitude: 10.7870,
             longitude: 79.1378,
             address_text: address || `${area}, Thanjavur`,
             hours: "9 AM - 9 PM",
             is_claimed: true,
+            status: "active",
             created_at: timestamp,
             offer_title: title.trim(),
             offer_description: description.trim(),
           });
         } catch (fErr) {
-          console.warn("Firestore write skipped, relying on local storage persistence:", fErr);
+          console.warn("Firestore write error:", fErr);
         }
       }
 
