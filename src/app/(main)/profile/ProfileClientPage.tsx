@@ -108,15 +108,32 @@ function ProfileContent() {
     toast.success("Listing testified as 100% accurate & true. Report count reset!");
   };
 
-  const handleToggleSoldState = async (postId: string, currentSold: boolean, colName?: string) => {
+  const handleToggleSoldState = async (postId: string, currentInactive: boolean, colName?: string) => {
+    const nextState = !currentInactive;
     setMyPosts((prev) =>
-      prev.map((p) => (p.id === postId ? { ...p, is_sold: !currentSold } : p))
+      prev.map((p) =>
+        p.id === postId
+          ? {
+              ...p,
+              is_sold: nextState,
+              is_inactive: nextState,
+              is_offline: nextState,
+              status: nextState ? "inactive" : "active",
+            }
+          : p
+      )
     );
     try {
-      const docRef = doc(db, colName || "needs_and_sales", postId);
-      await updateDoc(docRef, { is_sold: !currentSold });
+      const targetCol = colName || "needs_and_sales";
+      const docRef = doc(db, targetCol, postId);
+      await updateDoc(docRef, {
+        is_sold: nextState,
+        is_inactive: nextState,
+        is_offline: nextState,
+        status: nextState ? "inactive" : "active",
+      });
     } catch (e) {}
-    toast.success(!currentSold ? "Listing marked as SOLD!" : "Listing reactivated as Active!");
+    toast.success(nextState ? "Listing marked as INACTIVE." : "Listing reactivated as ACTIVE!");
   };
 
   const handleRenewListing = async (postId: string, colName?: string) => {
@@ -759,20 +776,25 @@ function ProfileContent() {
                       ) : (
                         <div className="flex items-center justify-between gap-2 pt-2 border-t border-slate-200">
                           {/* Active / Inactive Toggle Switch */}
-                          <div className="flex items-center gap-2 bg-white px-2.5 py-1 rounded-xl border border-slate-200 shadow-2xs">
-                            <span className={`text-[11px] font-bold ${!post.is_sold ? "text-emerald-700 font-extrabold" : "text-slate-500"}`}>
-                              {!post.is_sold ? "Active" : "Inactive"}
-                            </span>
-                            <label className="relative inline-flex items-center cursor-pointer shrink-0">
-                              <input
-                                type="checkbox"
-                                checked={!post.is_sold}
-                                onChange={() => handleToggleSoldState(post.id, Boolean(post.is_sold))}
-                                className="sr-only peer"
-                              />
-                              <div className="w-8 h-4.5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-emerald-600" />
-                            </label>
-                          </div>
+                          {(() => {
+                            const isInactive = Boolean(post.is_sold || post.is_inactive || post.is_offline || post.status === "inactive");
+                            return (
+                              <div className="flex items-center gap-2 bg-white px-2.5 py-1 rounded-xl border border-slate-200 shadow-2xs">
+                                <span className={`text-[11px] font-bold ${!isInactive ? "text-emerald-700 font-extrabold" : "text-slate-500"}`}>
+                                  {!isInactive ? "Active" : "Inactive"}
+                                </span>
+                                <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                                  <input
+                                    type="checkbox"
+                                    checked={!isInactive}
+                                    onChange={() => handleToggleSoldState(post.id, isInactive, post.colName)}
+                                    className="sr-only peer"
+                                  />
+                                  <div className="w-8 h-4.5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-3.5 after:w-3.5 after:transition-all peer-checked:bg-emerald-600" />
+                                </label>
+                              </div>
+                            );
+                          })()}
 
                           <div className="flex items-center gap-2">
                             <button
