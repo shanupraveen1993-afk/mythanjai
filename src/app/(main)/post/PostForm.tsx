@@ -136,7 +136,7 @@ export default function PostForm({ segment }: PostFormProps) {
 
   // Form Fields
   const [phone, setPhone] = useState("");
-  const [area, setArea] = useState<string>("Thanjavur");
+  const [area, setArea] = useState<string>("");
   const [category, setCategory] = useState<string>(config.categories[0]);
   const [subCategory, setSubCategory] = useState<string>("");
   const [title, setTitle] = useState("");
@@ -1033,12 +1033,12 @@ export default function PostForm({ segment }: PostFormProps) {
                   </div>
                 </div>
 
-                {/* 5. ADDRESS LINE — Freeform Location Input */}
+                {/* 5. ADDRESS LINE — Freeform Location Input (FOR OFFER) */}
                 <div className="w-full">
                   <input
                     type="text"
                     required
-                    placeholder="Select Your Area *"
+                    placeholder="Enter location / area *"
                     value={area}
                     onChange={(e) => setArea(e.target.value)}
                     className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal"
@@ -1108,7 +1108,7 @@ export default function PostForm({ segment }: PostFormProps) {
                       onChange={(e) => setArea(e.target.value)}
                       className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors cursor-pointer"
                     >
-                      <option value="" disabled>Select Your Area *</option>
+                      <option value="" disabled>Select Location *</option>
                       {THANJAVUR_TOWNS.map((town) => (
                         <option key={town} value={town}>{town}</option>
                       ))}
@@ -1172,7 +1172,7 @@ export default function PostForm({ segment }: PostFormProps) {
                       <input
                         type="text"
                         required
-                        placeholder="Select Your Area *"
+                        placeholder="Enter location / area *"
                         value={area}
                         onChange={(e) => setArea(e.target.value)}
                         className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal"
@@ -1201,7 +1201,7 @@ export default function PostForm({ segment }: PostFormProps) {
                         onChange={(e) => setArea(e.target.value)}
                         className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors cursor-pointer"
                       >
-                        <option value="" disabled>Select Your Area *</option>
+                        <option value="" disabled>Select Location *</option>
                         {THANJAVUR_TOWNS.map((town) => (
                           <option key={town} value={town}>{town}</option>
                         ))}
