@@ -126,7 +126,7 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
               }`}
             >
               <div
-                className={`p-1.5 rounded-xl transition-all duration-200 relative ${
+                className={`p-1.5 rounded-lg transition-all duration-200 relative ${
                   isActive
                     ? "bg-slate-900 text-amber-400 shadow-xs"
                     : "bg-transparent text-slate-500"

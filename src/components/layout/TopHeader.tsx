@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { MapPin, Plus, User, ShieldCheck, Check, MessageSquare, Globe, Download, Menu, X, ArrowLeft, Package } from "lucide-react";
+import { MapPin, Plus, User, ShieldCheck, Check, MessageSquare, Globe, Download, Menu, X, ArrowLeft, Package, Tag, Search, Wrench, Store } from "lucide-react";
 import { TANJORE_LOCALITIES, TanjoreLocality } from "@/lib/constants";
 import SearchableAreaDropdown from "./SearchableAreaDropdown";
 import { AppTab } from "./BottomTabBar";
@@ -109,14 +109,14 @@ export default function TopHeader({
     >
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 py-2 flex items-center justify-between gap-3 relative">
 
-        {/* Left Side: Always Namma Thanjai Logo + Brand Name across all screens */}
+        {/* Left Side: Full Fit Namma Thanjai Logo + Brand Name across all screens */}
         <div className="flex items-center gap-2 sm:gap-3 shrink-0 z-20">
           <div
             onClick={() => router.push("/")}
-            className="flex items-center gap-1.5 cursor-pointer shrink-0 group select-none"
+            className="flex items-center gap-2 cursor-pointer shrink-0 group select-none"
           >
-            <div className="w-8 h-8 sm:w-9 sm:h-9 shrink-0 group-hover:scale-[1.08] transition-transform duration-300 flex items-center justify-center">
-              <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="w-full h-full object-contain" />
+            <div className="h-8 sm:h-9 w-auto flex items-center justify-center shrink-0">
+              <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="h-full w-auto object-contain max-h-9" />
             </div>
             <span className="inline-block font-heading font-black tracking-tight text-sm sm:text-lg md:text-xl leading-none">
               <span className="text-[#1d4ed8] font-black">நம்ம</span> <span className="text-[#f59e0b] font-black">thanjai</span>
@@ -124,7 +124,7 @@ export default function TopHeader({
           </div>
         </div>
 
-        {/* Center: Sub-Screen Title or 5 Category Tabs */}
+        {/* Center: Sub-Screen Title or 4 Category Tabs with Vector Icons */}
         {pathname.includes("/profile") || pathname.includes("/post") || pathname.includes("/chat") || pathname.includes("/admin") ? (
           <div className="absolute left-1/2 -translate-x-1/2 font-heading font-black text-sm sm:text-base text-slate-900 truncate max-w-[180px] sm:max-w-xs text-center z-10">
             {pathname.includes("/profile")
@@ -136,50 +136,54 @@ export default function TopHeader({
           </div>
         ) : (
           showCenterNav ? (
-            <div className="absolute left-1/2 -translate-x-1/2 hidden md:flex items-center gap-1.5 bg-slate-100/90 p-1.5 rounded-2xl border border-slate-200/80 font-heading backdrop-blur-sm z-10">
+            <div className="absolute left-1/2 -translate-x-1/2 hidden md:flex items-center gap-1.5 bg-slate-100/90 p-1.5 rounded-xl border border-slate-200/80 font-heading backdrop-blur-sm z-10">
               <button
                 type="button"
                 onClick={() => router.push("/")}
-                className={`px-4 py-1.5 rounded-xl text-xs sm:text-sm transition-all cursor-pointer ${
+                className={`px-3.5 py-1.5 rounded-lg text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 ${
                   pathname === "/" || pathname === "/home" || pathname.includes("/sell")
                     ? "bg-[#FBBF24] text-slate-950 font-bold border border-amber-400/90 shadow-2xs"
                     : "text-slate-700 hover:text-slate-950 font-semibold transition-colors"
                 }`}
               >
-                For Sale
+                <Tag className="w-3.5 h-3.5 text-slate-900" />
+                <span>For Sale</span>
               </button>
               <button
                 type="button"
                 onClick={() => router.push("/need")}
-                className={`px-4 py-1.5 rounded-xl text-xs sm:text-sm transition-all cursor-pointer ${
+                className={`px-3.5 py-1.5 rounded-lg text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 ${
                   pathname.includes("/need")
                     ? "bg-[#FBBF24] text-slate-950 font-bold border border-amber-400/90 shadow-2xs"
                     : "text-slate-700 hover:text-slate-950 font-semibold transition-colors"
                 }`}
               >
-                Looking For
+                <Search className="w-3.5 h-3.5 text-slate-900" />
+                <span>Looking For</span>
               </button>
               <button
                 type="button"
                 onClick={() => router.push("/services")}
-                className={`px-4 py-1.5 rounded-xl text-xs sm:text-sm transition-all cursor-pointer ${
+                className={`px-3.5 py-1.5 rounded-lg text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 ${
                   pathname.includes("/services")
                     ? "bg-[#FBBF24] text-slate-950 font-bold border border-amber-400/90 shadow-2xs"
                     : "text-slate-700 hover:text-slate-950 font-semibold transition-colors"
                 }`}
               >
-                Services
+                <Wrench className="w-3.5 h-3.5 text-slate-900" />
+                <span>Services</span>
               </button>
               <button
                 type="button"
                 onClick={() => router.push("/shops")}
-                className={`px-4 py-1.5 rounded-xl text-xs sm:text-sm transition-all cursor-pointer ${
+                className={`px-3.5 py-1.5 rounded-lg text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 ${
                   pathname.includes("/shops") || pathname.includes("/offers")
                     ? "bg-[#FBBF24] text-slate-950 font-bold border border-amber-400/90 shadow-2xs"
                     : "text-slate-700 hover:text-slate-950 font-semibold transition-colors"
                 }`}
               >
-                Offers
+                <Store className="w-3.5 h-3.5 text-slate-900" />
+                <span>Offers</span>
               </button>
             </div>
           ) : null
@@ -280,7 +284,7 @@ export default function TopHeader({
             <button
               type="button"
               onClick={handleDynamicPostClick}
-              className="bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded-xl font-heading font-black shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none touch-manipulation active:scale-[0.97] transition-all border border-amber-400 ml-1"
+              className="bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-heading font-black shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none touch-manipulation active:scale-[0.97] transition-all border border-amber-400 ml-1"
               title={postInfo.label}
             >
               <Plus className="w-4 h-4 stroke-[3] text-[#0F172A]" />
