@@ -50,20 +50,10 @@ export default function ServicesClientPage() {
     category: "All",
   });
 
-  // NOTE: localStorage posts are ONLY for My Listings page.
-  // Public services feed always shows only Firestore data.
-
+  // Public feed: ONLY Firestore data — no localStorage merge.
+  // localStorage (namma_thanjai_local_posts) is only used for "My Listings" in the Profile page.
   const allPosts = React.useMemo(() => {
-    let stored: ServiceProviderPost[] = [];
-    if (typeof window !== "undefined") {
-      try {
-        const raw = JSON.parse(localStorage.getItem("namma_thanjai_local_posts") || "[]");
-        stored = raw.filter((p: any) => p.name || p.skill_category || p.type === "SERVICE");
-      } catch (e) {}
-    }
-    const firestoreIds = new Set((firestorePosts || []).map((p: any) => p.id));
-    const uniqueLocal = stored.filter((s: any) => !firestoreIds.has(s.id));
-    return [...uniqueLocal, ...(firestorePosts || [])];
+    return firestorePosts || [];
   }, [firestorePosts]);
 
   const filteredPosts = React.useMemo(() => {
