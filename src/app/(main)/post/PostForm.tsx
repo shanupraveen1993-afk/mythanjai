@@ -258,12 +258,35 @@ export default function PostForm({ segment }: PostFormProps) {
 
   const [isAiRefined, setIsAiRefined] = useState(false);
 
+  const formatTextFallback = (text: string) => {
+    if (!text || !text.trim()) return "";
+    let lines = text
+      .split(/\r?\n/)
+      .map((l) => l.trim())
+      .filter(Boolean);
+
+    if (lines.length === 1 && lines[0].includes(",")) {
+      const parts = lines[0].split(",").map((p) => p.trim()).filter((p) => p.length > 2);
+      if (parts.length >= 2) lines = parts;
+    }
+
+    const formatted = lines.map((line) => {
+      let cleaned = line.replace(/^[\s•\-\*\d\.\:\>]+/g, "").trim();
+      if (!cleaned) return "";
+      cleaned = cleaned.charAt(0).toUpperCase() + cleaned.slice(1);
+      return `• ${cleaned}`;
+    }).filter(Boolean);
+
+    return formatted.length > 0 ? formatted.join("\n") : text.trim();
+  };
+
   const handleManualRefine = async () => {
     if (!description.trim()) {
       toast.info("Please type a description first to refine.");
       return;
     }
     setIsAiRewriting(true);
+    let newDesc = "";
     try {
       const res = await fetch(getApiUrl("/api/gemini-format"), {
         method: "POST",
@@ -275,10 +298,7 @@ export default function PostForm({ segment }: PostFormProps) {
       });
       const data = await res.json();
       if (data.success && data.formattedText) {
-        setDescription(data.formattedText);
-        setPreviewDescription(data.formattedText);
-        setIsAiRefined(true);
-        toast.success("Description refined & updated in Live Preview!");
+        newDesc = data.formattedText;
         if (data.extractedFields && segment === "offer") {
           const { shop_name, valid_from: extFrom, valid_to: extTo, area_tag } = data.extractedFields;
           if (shop_name && !title) setTitle(shop_name);
@@ -287,26 +307,19 @@ export default function PostForm({ segment }: PostFormProps) {
           if (area_tag) setArea(area_tag);
         }
       } else {
-        const refined = description
-          .trim()
-          .replace(/\s+/g, " ")
-          .replace(/(^\w|\.\s*\w)/g, (c) => c.toUpperCase());
-        setDescription(refined);
-        setPreviewDescription(refined);
-        setIsAiRefined(true);
-        toast.success("Description formatted & updated in Live Preview!");
+        newDesc = formatTextFallback(description);
       }
     } catch (err) {
-      const refined = description
-        .trim()
-        .replace(/\s+/g, " ")
-        .replace(/(^\w|\.\s*\w)/g, (c) => c.toUpperCase());
-      setDescription(refined);
-      setPreviewDescription(refined);
-      setIsAiRefined(true);
-      toast.success("Description formatted & updated in Live Preview!");
+      newDesc = formatTextFallback(description);
     } finally {
+      if (!newDesc || newDesc.trim() === description.trim()) {
+        newDesc = formatTextFallback(description);
+      }
+      setDescription(newDesc);
+      setPreviewDescription(newDesc);
+      setIsAiRefined(true);
       setIsAiRewriting(false);
+      toast.success("Description refined & updated in Live Preview!");
     }
   };
 
