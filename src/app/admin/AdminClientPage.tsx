@@ -280,57 +280,58 @@ export default function AdminClientPage() {
     const targetItem = items.find((i) => i.id === id);
     const primaryCol = colName || (targetItem?.colName || "needs_and_sales");
 
-    // 1. Issue client delete across all collections simultaneously
-    const candidateCols = Array.from(new Set([primaryCol, "needs_and_sales", "services", "shops", "offers"]));
-    await Promise.all(
-      candidateCols.map((col) => deleteDoc(doc(db, col, id)).catch(() => {}))
-    );
-
-    // 2. Authoritative Server API Purge
     try {
+      // 1. Authoritative Server API Purge (source of truth)
       const user = auth.currentUser;
       const idToken = user ? await user.getIdToken(true).catch(() => "") : "";
+
       const response = await fetch("/api/admin/delete-post", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${idToken}`,
         },
-        body: JSON.stringify({
-          postId: id,
-          colName: primaryCol,
-        }),
+        body: JSON.stringify({ postId: id, colName: primaryCol }),
       });
 
       const contentType = response.headers.get("content-type") || "";
-      if (contentType.includes("application/json")) {
-        const result = await response.json();
-        if (result && result.success) {
-          console.log("Server API delete success:", result);
-        }
+      if (!contentType.includes("application/json")) {
+        throw new Error("Server returned a non-JSON response");
       }
+
+      const result = await response.json();
+
+      // 2. Only confirm success when server reports deletedCount > 0
+      if (!result.success || !result.deletedCount || result.deletedCount < 1) {
+        toast.error(result.error || "Listing could not be purged.");
+        setDeleteTarget(null);
+        return;
+      }
+
+      // 3. Write Audit Log
+      try {
+        const { logAuditEvent } = await import("@/lib/audit-logger");
+        await logAuditEvent({
+          action: "ADMIN_ACTION",
+          actorUid: user?.uid || "admin",
+          actorPhone: ADMIN_PHONE,
+          actorName: "Super Admin",
+          targetPostId: id,
+          targetPostTitle: targetItem?.title || "Listing",
+          details: `Admin purged listing "${targetItem?.title || id}" (${result.deletedCount} collection(s))`,
+          visibilityState: "deleted",
+        });
+      } catch (e) {}
+
+      // 4. Update UI state only after confirmed server deletion
+      setItems((prev) => prev.filter((item) => item.id !== id));
+      setDeleteTarget(null);
+      toast.success(`Listing permanently purged from live system.`);
     } catch (error: any) {
-      console.warn("Admin server API delete warning:", error);
+      console.error("Admin deletion error:", error);
+      toast.error(error?.message || "Could not delete listing.");
+      setDeleteTarget(null);
     }
-
-    // Write Audit Log for Admin Deletion
-    try {
-      const { logAuditEvent } = await import("@/lib/audit-logger");
-      await logAuditEvent({
-        action: "ADMIN_ACTION",
-        actorUid: user?.uid || "admin",
-        actorPhone: ADMIN_PHONE,
-        actorName: "Super Admin",
-        targetPostId: id,
-        targetPostTitle: targetItem?.title || "Listing",
-        details: `Admin deleted listing "${targetItem?.title || id}" from collection ${primaryCol}`,
-        visibilityState: "deleted",
-      });
-    } catch (e) {}
-
-    setItems((prev) => prev.filter((item) => item.id !== id));
-    setDeleteTarget(null);
-    toast.success("Listing purged permanently from live system.");
   };
 
   const handleToggleVerify = async (item: ModerationItem) => {

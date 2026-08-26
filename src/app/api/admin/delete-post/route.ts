@@ -2,14 +2,14 @@ import { NextResponse } from "next/server";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
 
 const COLLECTIONS = ["needs_and_sales", "services", "shops", "offers"];
-const ADMIN_PHONE_LAST10 = "9994837342";
 
 export async function POST(request: Request) {
   try {
+    // ── 1. Parse & validate request body ─────────────────────────────────────
     let body: any = {};
     try {
       body = await request.json();
-    } catch (e) {
+    } catch {
       return NextResponse.json({ success: false, error: "Invalid JSON request body" }, { status: 400 });
     }
 
@@ -18,51 +18,68 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "postId parameter is required" }, { status: 400 });
     }
 
-    // 1. Determine Target Collection(s)
-    const targetCols = colName && COLLECTIONS.includes(colName) ? [colName] : COLLECTIONS;
-    let deletedCount = 0;
-    const deletedCollections: string[] = [];
+    if (colName && !COLLECTIONS.includes(colName)) {
+      return NextResponse.json({ success: false, error: "Invalid target collection" }, { status: 400 });
+    }
 
-    // 2. Perform Primary Deletion via Firebase Admin SDK
+    // ── 2. Authenticate caller ────────────────────────────────────────────────
+    const authHeader = request.headers.get("authorization") || "";
+    if (!authHeader.startsWith("Bearer ")) {
+      return NextResponse.json({ success: false, error: "Authentication required" }, { status: 401 });
+    }
+
+    const token = authHeader.substring("Bearer ".length).trim();
+    let decodedToken: any;
     try {
-      for (const collection of targetCols) {
-        const ref = adminDb.collection(collection).doc(postId);
-        const snapshot = await ref.get();
-        if (snapshot.exists) {
-          await ref.delete();
-          deletedCount++;
-          deletedCollections.push(collection);
-        }
+      decodedToken = await adminAuth.verifyIdToken(token);
+    } catch {
+      return NextResponse.json({ success: false, error: "Invalid or expired session token" }, { status: 401 });
+    }
+
+    // ── 3. Find matching documents across all candidate collections ───────────
+    const targetCols = colName ? [colName] : COLLECTIONS;
+    const matchingRefs: FirebaseFirestore.DocumentReference[] = [];
+
+    for (const col of targetCols) {
+      const ref = adminDb.collection(col).doc(postId);
+      const snap = await ref.get();
+      if (!snap.exists) continue;
+
+      const data = snap.data() || {};
+      const ownerUid = data.userId || data.seller_id;
+
+      // ── 4. Authorization: owner OR admin (via custom claim) ─────────────────
+      const isAdmin = decodedToken.admin === true;
+      const isOwner = Boolean(ownerUid && decodedToken.uid === ownerUid);
+
+      if (!isAdmin && !isOwner) {
+        return NextResponse.json(
+          { success: false, error: "Forbidden: You do not own this listing" },
+          { status: 403 }
+        );
       }
-    } catch (sdkErr: any) {
-      console.warn("Admin SDK delete warning, executing REST API fallback:", sdkErr?.message);
+
+      matchingRefs.push(ref);
     }
 
-    // 3. Perform Secondary Deletion via Direct Firestore REST API (Guarantees purge even if Admin SDK credentials are unset)
-    const projectId = process.env.FIREBASE_PROJECT_ID || process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "mythanjai-40db2";
-    const apiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyARIlmmsFmp6plkviJYVNEifLZH-vAw8yA";
-
-    for (const collection of targetCols) {
-      try {
-        const restUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents/${collection}/${postId}?key=${apiKey}`;
-        const restRes = await fetch(restUrl, { method: "DELETE" });
-        if (restRes.ok) {
-          if (!deletedCollections.includes(collection)) {
-            deletedCount++;
-            deletedCollections.push(collection);
-          }
-        }
-      } catch (restErr) {}
+    if (matchingRefs.length === 0) {
+      return NextResponse.json({ success: false, error: "Listing not found in database" }, { status: 404 });
     }
+
+    // ── 5. Batch delete all matching documents via Admin SDK ──────────────────
+    const batch = adminDb.batch();
+    for (const ref of matchingRefs) {
+      batch.delete(ref);
+    }
+    await batch.commit();
 
     return NextResponse.json({
       success: true,
-      message: `Listing ${postId} purged permanently from database.`,
-      deletedCount: Math.max(deletedCount, 1),
-      deletedCollections,
+      deletedCount: matchingRefs.length,
+      deletedBy: decodedToken.uid,
     });
   } catch (error: any) {
-    console.error("Admin delete route error:", error);
+    console.error("Admin delete error:", error);
     return NextResponse.json(
       { success: false, error: error?.message || "Admin deletion failed" },
       { status: 500 }
