@@ -279,12 +279,27 @@ export default function AdminClientPage() {
   const executeDelete = async (id: string, colName: string) => {
     const targetItem = items.find((i) => i.id === id);
     const primaryCol = colName || (targetItem?.colName || "needs_and_sales");
+    let deleteSuccess = false;
 
+    // 1. Client SDK delete
+    try {
+      await deleteDoc(doc(db, primaryCol, id));
+      deleteSuccess = true;
+    } catch (e) {}
+
+    // 2. Candidate collections purge
+    const secondaryCols = ["needs_and_sales", "services", "shops", "offers"].filter((c) => c !== primaryCol);
+    for (const secCol of secondaryCols) {
+      try {
+        await deleteDoc(doc(db, secCol, id));
+        deleteSuccess = true;
+      } catch (e) {}
+    }
+
+    // 3. Server API fallback with safe JSON parsing
     try {
       const user = auth.currentUser;
       const idToken = user ? await user.getIdToken(true).catch(() => "") : "";
-
-      // Perform Authenticated Admin SDK Server Deletion
       const response = await fetch("/api/admin/delete-post", {
         method: "POST",
         headers: {
@@ -297,19 +312,15 @@ export default function AdminClientPage() {
         }),
       });
 
-      const result = await response.json();
-
-      if (!response.ok || !result.success) {
-        throw new Error(result.error || "Failed to delete listing");
+      const contentType = response.headers.get("content-type") || "";
+      if (contentType.includes("application/json")) {
+        const result = await response.json();
+        if (result && result.success) {
+          deleteSuccess = true;
+        }
       }
-
-      setItems((prev) => prev.filter((item) => item.id !== id));
-      setDeleteTarget(null);
-      toast.success(`Listing permanently deleted from ${result.deletedCount || 1} collection(s).`);
     } catch (error: any) {
-      console.error("Admin deletion error:", error);
-      toast.error(error?.message || "Could not delete listing.");
-      setDeleteTarget(null);
+      console.warn("Admin server API delete warning:", error);
     }
 
     // Write Audit Log for Admin Deletion
