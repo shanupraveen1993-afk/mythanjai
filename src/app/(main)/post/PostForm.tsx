@@ -168,7 +168,8 @@ export default function PostForm({ segment }: PostFormProps) {
       setUploadedVideoUrl(url);
       toast.success("Video upload complete! Ready to publish.");
     } catch (err: any) {
-      console.warn("Background video upload error:", err);
+      console.error("Background video upload error:", err);
+      toast.error(`Video upload error: ${err?.message || "Storage error"}. Retrying on submit...`);
     } finally {
       setIsUploadingVideo(false);
       setUploadStatusMsg("");
