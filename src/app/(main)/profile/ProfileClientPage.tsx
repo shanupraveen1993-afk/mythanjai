@@ -463,9 +463,159 @@ function ProfileContent() {
         </div>
       )}
 
-      {/* SCREEN 1: PROFILE DASHBOARD OVERVIEW */}
-      {activeView === "dashboard" && (
-        <div className="flex flex-col gap-4 animate-fade-in">
+      {/* MODERN 2-COLUMN DASHBOARD LAYOUT */}
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+        
+        {/* LEFT SIDEBAR COLUMN (4 cols on lg screens) */}
+        <div className="lg:col-span-4 flex flex-col gap-4 sticky top-20">
+          
+          {/* Profile User Info Card */}
+          <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden p-5 flex flex-col gap-4">
+            <div className="flex items-center gap-3.5">
+              <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full bg-slate-950 text-amber-400 flex items-center justify-center font-heading font-black text-xl shrink-0 select-none shadow-xs border-2 border-amber-400">
+                {initials}
+              </div>
+
+              <div className="flex-1 min-w-0">
+                {isEditingName ? (
+                  <div className="flex items-center gap-1.5">
+                    <input
+                      type="text"
+                      value={displayName}
+                      onChange={(e) => setDisplayName(e.target.value)}
+                      onKeyDown={(e) => { if (e.key === "Enter") handleSaveDisplayName(); }}
+                      placeholder="Enter name"
+                      disabled={displayNameUpdating}
+                      autoFocus
+                      className="px-2.5 py-1 text-xs font-semibold text-slate-900 border border-slate-300 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-amber-400 w-full"
+                    />
+                    <button type="button" onClick={handleSaveDisplayName} disabled={displayNameUpdating} className="w-7 h-7 bg-amber-400 text-slate-950 rounded-lg flex items-center justify-center shrink-0 cursor-pointer">
+                      {displayNameUpdating ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <CheckCircle className="w-3.5 h-3.5" />}
+                    </button>
+                    <button type="button" onClick={() => setIsEditingName(false)} className="w-7 h-7 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 shrink-0 cursor-pointer">
+                      <XCircle className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-1.5">
+                    <h2 className="font-heading font-black text-base text-slate-900 truncate leading-tight">
+                      {profile?.displayName || displayName || "Namma Thanjai User"}
+                    </h2>
+                    <button onClick={() => setIsEditingName(true)} className="w-6 h-6 flex items-center justify-center rounded-md text-slate-400 hover:text-slate-800 hover:bg-slate-100 transition-colors shrink-0 cursor-pointer" title="Edit Name">
+                      <Pencil className="w-3 h-3" />
+                    </button>
+                  </div>
+                )}
+
+                <p className="text-xs text-slate-500 font-medium truncate mt-0.5">
+                  {isDbVerified && phoneNumber ? `+91 ${phoneNumber}` : "Guest / Unverified"}
+                </p>
+
+                <div className="mt-1.5">
+                  {isDbVerified ? (
+                    <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-lg text-[11px] font-black">
+                      <CheckCircle className="w-3 h-3" /> Verified Member
+                    </span>
+                  ) : (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (typeof window !== "undefined") {
+                          window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+                        }
+                      }}
+                      className="inline-flex items-center gap-1 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 px-2 py-0.5 rounded-lg text-[11px] font-black cursor-pointer"
+                    >
+                      <AlertCircle className="w-3 h-3" /> Verify WhatsApp
+                    </button>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            {/* Quick Stats Grid */}
+            <div className="grid grid-cols-2 gap-2 pt-3 border-t border-slate-100">
+              <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-2.5 flex flex-col items-center text-center">
+                <span className="font-heading font-black text-lg text-slate-900">{myPosts.length}</span>
+                <span className="text-[11px] font-semibold text-slate-500">My Posted Ads</span>
+              </div>
+              <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-2.5 flex flex-col items-center text-center">
+                <span className="font-heading font-black text-lg text-slate-900">{savedPosts.length}</span>
+                <span className="text-[11px] font-semibold text-slate-500">Saved Ads</span>
+              </div>
+            </div>
+
+            {/* Sidebar Tab Navigation Buttons */}
+            <div className="flex flex-col gap-1.5 pt-2 border-t border-slate-100">
+              <button
+                type="button"
+                onClick={() => setActiveView("dashboard")}
+                className={`w-full py-2.5 px-3.5 rounded-xl font-heading font-bold text-xs flex items-center justify-between transition-all cursor-pointer ${
+                  activeView === "dashboard"
+                    ? "bg-[#FBBF24] text-slate-950 border border-amber-400 shadow-2xs"
+                    : "bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200/80"
+                }`}
+              >
+                <span className="flex items-center gap-2">
+                  <User className="w-4 h-4" /> Account Overview
+                </span>
+                <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveView("listings")}
+                className={`w-full py-2.5 px-3.5 rounded-xl font-heading font-bold text-xs flex items-center justify-between transition-all cursor-pointer ${
+                  activeView === "listings"
+                    ? "bg-[#FBBF24] text-slate-950 border border-amber-400 shadow-2xs"
+                    : "bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200/80"
+                }`}
+              >
+                <span className="flex items-center gap-2">
+                  <Package className="w-4 h-4" /> My Posted Ads ({myPosts.length})
+                </span>
+                <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setActiveView("saved")}
+                className={`w-full py-2.5 px-3.5 rounded-xl font-heading font-bold text-xs flex items-center justify-between transition-all cursor-pointer ${
+                  activeView === "saved"
+                    ? "bg-[#FBBF24] text-slate-950 border border-amber-400 shadow-2xs"
+                    : "bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200/80"
+                }`}
+              >
+                <span className="flex items-center gap-2">
+                  <Bookmark className="w-4 h-4" /> Saved Bookmarks ({savedPosts.length})
+                </span>
+                <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
+              </button>
+            </div>
+
+            {/* Sign Out Button */}
+            <button
+              onClick={async () => {
+                await signOutUser();
+                if (typeof window !== "undefined") {
+                  localStorage.removeItem("my_thanjai_verified");
+                  localStorage.removeItem("my_thanjai_phone");
+                  localStorage.removeItem("namma_thanjai_guest_mode");
+                }
+                toast.success("Logged out successfully.");
+                router.push("/");
+              }}
+              className="w-full py-2 px-3 text-slate-400 hover:text-red-600 font-semibold text-xs transition-colors cursor-pointer text-center border-t border-slate-100 mt-1"
+            >
+              Sign Out Account
+            </button>
+          </div>
+        </div>
+
+        {/* RIGHT MAIN CONTENT COLUMN (8 cols on lg screens) */}
+        <div className="lg:col-span-8 flex flex-col gap-4">
+          {activeView === "dashboard" && (
+            <div className="flex flex-col gap-4 animate-fade-in">
           
           {/* Profile Card Header */}
           <div className="bg-white border border-slate-200/80 rounded-2xl shadow-sm overflow-hidden">
@@ -811,6 +961,9 @@ function ProfileContent() {
           </div>
         </div>
       )}
+
+        </div>
+      </div>
 
       {/* Edit Selected Post Modal */}
       {editingPost && (

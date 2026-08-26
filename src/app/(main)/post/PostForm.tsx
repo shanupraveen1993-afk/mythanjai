@@ -4,7 +4,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { db, storage } from "@/lib/firebase";
 import { collection, addDoc, doc, getDoc, updateDoc, serverTimestamp } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { ref, uploadBytes, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { compressImage } from "@/lib/image-compressor";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/context/ToastContext";
@@ -565,12 +565,29 @@ export default function PostForm({ segment }: PostFormProps) {
       } else if (segment === "offer") {
         let uploadedVideoUrl = "";
         if (selectedVideo) {
-          toast.info("Uploading video reel to Firebase Storage... Please wait.");
+          const sizeMb = (selectedVideo.size / (1024 * 1024)).toFixed(1);
+          toast.info(`Starting Reel Upload (${sizeMb} MB)... Please wait.`);
           try {
             const videoRef = ref(storage, `offer_reels/${Date.now()}_${selectedVideo.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`);
-            const snap = await uploadBytes(videoRef, selectedVideo);
-            uploadedVideoUrl = await getDownloadURL(snap.ref);
-            toast.success("Video reel uploaded to cloud storage!");
+            const uploadTask = uploadBytesResumable(videoRef, selectedVideo);
+
+            await new Promise<void>((resolve, reject) => {
+              uploadTask.on(
+                "state_changed",
+                (snapshot) => {
+                  if (snapshot.totalBytes > 0) {
+                    const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+                    toast.info(`Uploading Reel Video: ${progress}%...`);
+                  }
+                },
+                (error) => reject(error),
+                async () => {
+                  uploadedVideoUrl = await getDownloadURL(uploadTask.snapshot.ref);
+                  toast.success("Video reel uploaded to cloud storage!");
+                  resolve();
+                }
+              );
+            });
           } catch (vErr: any) {
             console.error("Video reel upload error:", vErr);
             toast.error(`Video upload error: ${vErr?.message || "Storage error"}. Trying link fallback.`);
@@ -930,7 +947,7 @@ export default function PostForm({ segment }: PostFormProps) {
                     placeholder="Shop Name * (e.g. GLEN Exclusive Gallery / Sri Kumaran Silks)"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium pr-12"
+                    className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal pr-12"
                   />
                   <span className="absolute right-0 top-3 text-[11px] font-medium text-slate-400">
                     {title.length}/{config.maxTitleChars}
@@ -986,7 +1003,7 @@ export default function PostForm({ segment }: PostFormProps) {
                     placeholder="📍 Shop Address & Locality in Thanjavur *"
                     value={area}
                     onChange={(e) => setArea(e.target.value)}
-                    className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium"
+                    className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal"
                   />
                 </div>
 
@@ -998,7 +1015,7 @@ export default function PostForm({ segment }: PostFormProps) {
                     placeholder="📞 Contact phone number * (e.g. 9994837342)"
                     value={phone}
                     onChange={(e) => { userEditedPhone.current = true; setPhone(e.target.value); }}
-                    className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium"
+                    className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal"
                   />
                 </div>
 
@@ -1037,7 +1054,7 @@ export default function PostForm({ segment }: PostFormProps) {
                     }
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium pr-12"
+                    className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal pr-12"
                   />
                   <span className="absolute right-0 top-3 text-[11px] font-medium text-slate-400">
                     {title.length}/{config.maxTitleChars}
@@ -1104,7 +1121,7 @@ export default function PostForm({ segment }: PostFormProps) {
                         placeholder="Price or Rate (e.g. 5000, 5000rs, or 5000/month)"
                         value={price}
                         onChange={(e) => setPrice(e.target.value)}
-                        className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium pr-20"
+                        className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal pr-20"
                       />
                       {formattedPriceBadge && (
                         <span className="absolute right-0 top-2.5 text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
@@ -1120,7 +1137,7 @@ export default function PostForm({ segment }: PostFormProps) {
                         placeholder="📍 Address / Dedicated Typing Location in Thanjavur *"
                         value={area}
                         onChange={(e) => setArea(e.target.value)}
-                        className="w-full py-2.5 text-sm font-bold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-medium"
+                        className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-300 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal"
                       />
                     </div>
                   </>

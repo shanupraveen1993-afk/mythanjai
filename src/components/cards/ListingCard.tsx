@@ -170,7 +170,7 @@ function GalleryModal({
 }
 
 // ── Sell Card Component (Figma Wireframe Exact Implementation) ──────────────
-export default function ListingCard({ listing }: { listing: ListingItem }) {
+export default function ListingCard({ listing, isPreview }: { listing: ListingItem; isPreview?: boolean }) {
   const router = useRouter();
   const { user, profile, isVerified } = useAuth();
   const { toast } = useToast();
@@ -193,6 +193,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
   const [imgError, setImgError] = useState(false);
 
   const isOwnPost = React.useMemo(() => {
+    if (isPreview) return false;
     // Check by Firebase UID (most reliable)
     if (user?.uid && user.uid !== "guest_user" && listing.seller_id === user.uid) return true;
     // Check by phone number (normalized — strip country code for comparison)
@@ -201,7 +202,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
       if (normalizePhone(profile.phone) === normalizePhone(listing.phone)) return true;
     }
     return false;
-  }, [user, profile, listing]);
+  }, [user, profile, listing, isPreview]);
 
   // Native Android System Share Action
   const handleShare = async (e: React.MouseEvent) => {
@@ -471,6 +472,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
                   type="button"
                   onClick={(e) => {
                     e.stopPropagation();
+                    if (isPreview) return;
                     if (!isVerified) {
                       if (typeof window !== "undefined") {
                         window.dispatchEvent(new Event("namma_thanjai_open_signin"));
@@ -479,7 +481,7 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
                     }
                     router.push(`/chat?listingId=${listing.id}&sellerId=${listing.seller_id || ""}&title=${encodeURIComponent(listing.title)}`);
                   }}
-                  className="w-[128px] shrink-0 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors whitespace-nowrap"
+                  className={`w-[128px] shrink-0 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors whitespace-nowrap ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
                 >
                   <MessageSquare className="w-4 h-4 text-[#0F172A] shrink-0 stroke-[2.5]" />
                   <span>Chat</span>
@@ -487,9 +489,9 @@ export default function ListingCard({ listing }: { listing: ListingItem }) {
 
                 {(listing.show_phone !== false) && (
                   <a
-                    href={callUrl}
-                    onClick={(e) => e.stopPropagation()}
-                    className="w-[128px] shrink-0 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors whitespace-nowrap"
+                    href={isPreview ? "#" : callUrl}
+                    onClick={(e) => { if (isPreview) e.preventDefault(); e.stopPropagation(); }}
+                    className={`w-[128px] shrink-0 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors whitespace-nowrap ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
                   >
                     <Phone className="w-4 h-4 text-white shrink-0" />
                     <span>Call</span>

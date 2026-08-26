@@ -209,13 +209,14 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
   }, [post.created_at]);
 
   const isOwnPost = React.useMemo(() => {
+    if (isPreview) return false;
     if (user?.uid && user.uid !== "guest_user" && post.userId === user.uid) return true;
     const normalizePhone = (p: string) => String(p || "").replace(/\D/g, "").slice(-10);
     if (profile?.phone && post.phone) {
       if (normalizePhone(profile.phone) === normalizePhone(post.phone)) return true;
     }
     return false;
-  }, [user, profile, post]);
+  }, [user, profile, post, isPreview]);
 
   return (
     <div className="bg-white rounded-2xl p-3.5 flex flex-col justify-between shadow-2xs hover:shadow-md transition-all duration-200 font-sans border border-slate-200/90 relative h-full">
@@ -327,6 +328,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
                 type="button"
                 onClick={(e) => {
                   e.stopPropagation();
+                  if (isPreview) return;
                   if (!isVerified) {
                     if (typeof window !== "undefined") {
                       window.dispatchEvent(new Event("namma_thanjai_open_signin"));
@@ -336,7 +338,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
                   const callMsg = `📞 Call Back Request: A customer requested a call back regarding your service "${post.name}".`;
                   router.push(`/chat?listingId=${post.id}&sellerId=${post.userId || ""}&title=${encodeURIComponent(post.name)}&autoMsg=${encodeURIComponent(callMsg)}`);
                 }}
-                className="w-[128px] shrink-0 border-2 border-amber-500 text-amber-900 bg-amber-50 hover:bg-amber-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
+                className={`w-[128px] shrink-0 border-2 border-amber-500 text-amber-900 bg-amber-50 hover:bg-amber-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
               >
                 <Phone className="w-4 h-4 text-amber-700 shrink-0 stroke-[2.5]" />
                 <span>Call Back</span>
@@ -344,8 +346,8 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
 
               <button
                 type="button"
-                onClick={(e) => handleOpenPreContactModal(e, "call")}
-                className="w-[128px] shrink-0 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
+                onClick={(e) => { if (isPreview) return; handleOpenPreContactModal(e, "call"); }}
+                className={`w-[128px] shrink-0 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
               >
                 <Phone className="w-4 h-4 text-white shrink-0" />
                 <span>Call</span>

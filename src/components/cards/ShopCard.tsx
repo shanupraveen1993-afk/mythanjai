@@ -59,13 +59,14 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const isOwnPost = React.useMemo(() => {
+    if (isPreview) return false;
     if (user?.uid && user.uid !== "guest_user" && post.userId === user.uid) return true;
     const normalizePhone = (p: string) => String(p || "").replace(/\D/g, "").slice(-10);
     if (profile?.phone && post.phone) {
       if (normalizePhone(profile.phone) === normalizePhone(post.phone)) return true;
     }
     return false;
-  }, [user, profile, post]);
+  }, [user, profile, post, isPreview]);
 
   const togglePlay = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -522,19 +523,20 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
               ) : (
                 <>
                   <a
-                    href={directionUrl}
+                    href={isPreview ? "#" : directionUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-[128px] shrink-0 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
+                    onClick={(e) => { if (isPreview) e.preventDefault(); }}
+                    className={`w-[128px] shrink-0 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
                   >
                     <Navigation className="w-4 h-4 text-[#0F172A] shrink-0" />
                     <span>Visit Store</span>
                   </a>
                   {(post as any).is_available_now !== false && post.show_phone !== false && (
                     <a
-                      href={callUrl}
-                      onClick={(e) => e.stopPropagation()}
-                      className="w-[128px] shrink-0 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors"
+                      href={isPreview ? "#" : callUrl}
+                      onClick={(e) => { if (isPreview) e.preventDefault(); e.stopPropagation(); }}
+                      className={`w-[128px] shrink-0 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
                     >
                       <Phone className="w-4 h-4 text-white shrink-0" />
                       <span>Call Shop</span>
