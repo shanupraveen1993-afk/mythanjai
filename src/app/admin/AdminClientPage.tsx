@@ -278,43 +278,38 @@ export default function AdminClientPage() {
 
   const executeDelete = async (id: string, colName: string) => {
     const targetItem = items.find((i) => i.id === id);
-    let deleteSuccess = false;
     const primaryCol = colName || (targetItem?.colName || "needs_and_sales");
 
-    // 1. Try Client SDK delete
     try {
-      await deleteDoc(doc(db, primaryCol, id));
-      deleteSuccess = true;
-    } catch (err: any) {
-      console.warn(`Client delete on ${primaryCol}/${id} note:`, err?.message);
-    }
+      const user = auth.currentUser;
+      const idToken = user ? await user.getIdToken(true).catch(() => "") : "";
 
-    // 2. Privileged Server API (Firebase Admin SDK)
-    if (!deleteSuccess) {
-      try {
-        const idToken = (await auth.currentUser?.getIdToken().catch(() => "")) || "";
-        const apiRes = await fetch("/api/admin/delete-post", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: idToken ? `Bearer ${idToken}` : "",
-            "x-admin-secret": ADMIN_PHONE,
-          },
-          body: JSON.stringify({ postId: id, colName: primaryCol, adminSecret: ADMIN_PHONE }),
-        }).then((r) => r.json());
+      // Perform Authenticated Admin SDK Server Deletion
+      const response = await fetch("/api/admin/delete-post", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${idToken}`,
+        },
+        body: JSON.stringify({
+          postId: id,
+          colName: primaryCol,
+        }),
+      });
 
-        if (apiRes && apiRes.success && (apiRes.deletedCount > 0 || apiRes.deletedAny)) {
-          deleteSuccess = true;
-        }
-      } catch (apiErr) {
-        console.error("Server API delete exception:", apiErr);
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || "Failed to delete listing");
       }
-    }
 
-    if (!deleteSuccess) {
-      toast.error("Could not purge listing from Firestore. Please try again.");
+      setItems((prev) => prev.filter((item) => item.id !== id));
       setDeleteTarget(null);
-      return;
+      toast.success(`Listing permanently deleted from ${result.deletedCount || 1} collection(s).`);
+    } catch (error: any) {
+      console.error("Admin deletion error:", error);
+      toast.error(error?.message || "Could not delete listing.");
+      setDeleteTarget(null);
     }
 
     // Write Audit Log for Admin Deletion

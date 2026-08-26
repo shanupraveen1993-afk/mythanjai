@@ -21,7 +21,7 @@ function getAdminApp() {
     });
   }
 
-  // Fallback for environment without service account credentials
+  // Initializing with Google Application Default Credentials or Project ID for production environment
   return initializeApp({
     projectId,
   });

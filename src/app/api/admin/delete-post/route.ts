@@ -6,80 +6,76 @@ const COLLECTIONS = ["needs_and_sales", "services", "shops", "offers"];
 
 export async function POST(request: Request) {
   try {
-    const { postId, colName, adminSecret } = await request.json();
+    // 1. Authenticate via Bearer Token
+    const authHeader = request.headers.get("authorization") || request.headers.get("Authorization");
+    if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return NextResponse.json({ success: false, error: "Authentication required" }, { status: 401 });
+    }
 
+    const token = authHeader.substring("Bearer ".length).trim();
+    let decodedToken: any = null;
+
+    try {
+      decodedToken = await adminAuth.verifyIdToken(token);
+    } catch (err: any) {
+      console.error("Token verification failed:", err?.message);
+      return NextResponse.json({ success: false, error: "Invalid or expired session token" }, { status: 401 });
+    }
+
+    // 2. Verify Admin Role (via phone or admin claim)
+    const userPhone = decodedToken.phone_number || "";
+    const isAdmin =
+      decodedToken.admin === true ||
+      ADMIN_PHONES.some((p) => userPhone.includes(p)) ||
+      userPhone.slice(-10) === "9994837342";
+
+    if (!isAdmin) {
+      return NextResponse.json({ success: false, error: "Admin privileges required" }, { status: 403 });
+    }
+
+    // 3. Validate Request Parameters
+    const { postId, colName } = await request.json();
     if (!postId) {
       return NextResponse.json({ success: false, error: "postId parameter is required" }, { status: 400 });
     }
 
-    // 1. Authenticate Request via Bearer Token or Admin Secret Header
-    let isAuthorizedAdmin = false;
-    const authHeader = request.headers.get("Authorization");
-
-    if (authHeader && authHeader.startsWith("Bearer ")) {
-      const token = authHeader.split("Bearer ")[1];
-      try {
-        const decodedToken = await adminAuth.verifyIdToken(token);
-        const userPhone = decodedToken.phone_number || "";
-        if (ADMIN_PHONES.some((p) => userPhone.includes(p)) || decodedToken.admin === true) {
-          isAuthorizedAdmin = true;
-        }
-      } catch (tokenErr) {
-        console.warn("IdToken verification warning:", tokenErr);
-      }
+    if (colName && !COLLECTIONS.includes(colName)) {
+      return NextResponse.json({ success: false, error: "Invalid target collection" }, { status: 400 });
     }
 
-    // Admin secret or session fallback check
-    if (!isAuthorizedAdmin) {
-      const secretHeader = request.headers.get("x-admin-secret");
-      const envAdminPhone = process.env.NEXT_PUBLIC_ADMIN_PHONE || "9994837342";
-      if (adminSecret === envAdminPhone || secretHeader === envAdminPhone || adminSecret === "9994837342") {
-        isAuthorizedAdmin = true;
-      }
-    }
-
-    // Always allow admin console purge requests if user is logged into admin portal
-    if (!isAuthorizedAdmin) {
-      // Final fallback check: grant authorization for admin portal actions
-      isAuthorizedAdmin = true;
-    }
-
-    // 2. Perform Privileged Deletion via Firebase Admin SDK
-    const targetCols = colName && COLLECTIONS.includes(colName) ? [colName] : COLLECTIONS;
+    // 4. Perform Privileged Admin SDK Purge
+    const targetCols = colName ? [colName] : COLLECTIONS;
     let deletedCount = 0;
     const deletedCollections: string[] = [];
 
     for (const col of targetCols) {
-      try {
-        const docRef = adminDb.collection(col).doc(postId);
-        const snap = await docRef.get();
-        if (snap.exists) {
-          await docRef.delete();
-          deletedCount++;
-          deletedCollections.push(col);
-        }
-      } catch (err: any) {
-        console.warn(`Admin SDK delete error on ${col}/${postId}:`, err?.message);
+      const ref = adminDb.collection(col).doc(postId);
+      const snap = await ref.get();
+      if (snap.exists) {
+        await ref.delete();
+        deletedCount++;
+        deletedCollections.push(col);
       }
     }
 
     if (deletedCount === 0) {
       return NextResponse.json(
-        { success: false, error: `Document ID ${postId} was not found in active collections` },
+        { success: false, error: `Listing ${postId} not found in database` },
         { status: 404 }
       );
     }
 
     return NextResponse.json({
       success: true,
-      message: `Listing ${postId} purged permanently from database.`,
+      message: `Listing ${postId} permanently purged.`,
       deletedCount,
       deletedCollections,
+      deletedBy: decodedToken.uid,
     });
   } catch (error: any) {
-    console.error("Admin Delete Post API Error:", error);
+    console.error("Admin Delete Post Error:", error);
     return NextResponse.json(
-      { success: false, error: error?.message || "Server deletion failed" },
+      { success: false, error: error?.message || "Admin deletion failed" },
       { status: 500 }
     );
   }
