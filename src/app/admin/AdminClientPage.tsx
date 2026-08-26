@@ -93,7 +93,7 @@ export default function AdminClientPage() {
     if (!isAdmin) return;
     setLoading(true);
 
-    const correctCollections = ["needs_and_sales", "services", "shops"];
+    const correctCollections = ["needs_and_sales", "services", "shops", "offers"];
     const collectionDataMap: Record<string, ModerationItem[]> = {};
 
     // Initial manual fetch via getDocs to guarantee immediate data on refresh

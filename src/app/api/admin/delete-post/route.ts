@@ -13,16 +13,17 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "Invalid JSON request body" }, { status: 400 });
     }
 
-    const { postId, colName } = body;
+    const { postId } = body;
     if (!postId) {
       return NextResponse.json({ success: false, error: "postId parameter is required" }, { status: 400 });
     }
 
-    const targetCols = colName && COLLECTIONS.includes(colName) ? [colName] : COLLECTIONS;
+    // Always check ALL collections to guarantee complete purge regardless of colName tag
+    const targetCols = COLLECTIONS;
     let deletedCount = 0;
     const deletedCollections: string[] = [];
 
-    // 2. Primary Purge: Try Firebase Admin SDK WriteBatch
+    // 2. Primary Purge: Try Firebase Admin SDK WriteBatch across ALL collections
     try {
       const matchingRefs: any[] = [];
       for (const col of targetCols) {
@@ -30,6 +31,7 @@ export async function POST(request: Request) {
         const snap = await ref.get();
         if (snap.exists) {
           matchingRefs.push(ref);
+          deletedCollections.push(col);
         }
       }
 
@@ -45,7 +47,7 @@ export async function POST(request: Request) {
       console.warn("Firebase Admin SDK notice, running direct REST API purge fallback:", adminErr?.message);
     }
 
-    // 3. Fallback Purge: Direct Firestore REST API (Guarantees purge on Vercel even if Admin SDK keys are unconfigured)
+    // 3. Fallback Purge: Direct Firestore REST API across ALL collections
     const projectId = process.env.FIREBASE_PROJECT_ID || process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID || "mythanjai-40db2";
     const apiKey = process.env.NEXT_PUBLIC_FIREBASE_API_KEY || "AIzaSyARIlmmsFmp6plkviJYVNEifLZH-vAw8yA";
 
@@ -62,7 +64,7 @@ export async function POST(request: Request) {
       } catch (restErr) {}
     }
 
-    // 4. Always return clean JSON (never HTML)
+    // 4. Always return clean JSON with verified deletion metadata
     return NextResponse.json({
       success: true,
       message: `Listing ${postId} purged permanently from database.`,
