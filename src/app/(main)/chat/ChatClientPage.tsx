@@ -39,6 +39,24 @@ import { db } from "@/lib/firebase";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/context/ToastContext";
 
+export function generate5DigitMemberId(val?: string): string {
+  if (!val) return "NT-84921";
+  if (val.startsWith("NT-")) {
+    const code = val.replace("NT-", "").replace(/\D/g, "");
+    if (code.length >= 5) return `NT-${code.slice(-5)}`;
+  }
+  const digits = val.replace(/\D/g, "");
+  if (digits.length >= 5) return `NT-${digits.slice(-5)}`;
+
+  let hash = 0;
+  for (let i = 0; i < val.length; i++) {
+    hash = (hash << 5) - hash + val.charCodeAt(i);
+    hash |= 0;
+  }
+  const fiveDigits = 10000 + (Math.abs(hash) % 90000);
+  return `NT-${fiveDigits}`;
+}
+
 interface ChatMessage {
   id: string;
   senderId: string;
@@ -702,10 +720,14 @@ export default function ChatClientPage() {
                   {/* Thread Info */}
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1 min-w-0">
+                      <div className="flex items-center gap-1.5 min-w-0">
                         <h3 className="font-bold text-xs text-slate-900 truncate">{t.peerName}</h3>
-                        {t.isSystemThread && (
+                        {t.isSystemThread ? (
                           <span className="bg-amber-400 text-slate-950 text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase">Official</span>
+                        ) : (
+                          <span className="text-[10px] font-mono text-slate-500 bg-slate-100 px-1 py-0.2 rounded font-semibold shrink-0">
+                            {generate5DigitMemberId(t.peerId || t.peerPhone)}
+                          </span>
                         )}
                       </div>
                       <span className="text-[10px] text-[#00a884] font-bold shrink-0 ml-1">
@@ -777,7 +799,14 @@ export default function ChatClientPage() {
               </div>
               
               <div className="min-w-0 flex flex-col justify-center flex-1">
-                <h3 className="font-heading font-black text-xs sm:text-sm text-white truncate leading-tight">{activePeerName}</h3>
+                <div className="flex items-center gap-1.5 min-w-0">
+                  <h3 className="font-heading font-black text-xs sm:text-sm text-white truncate leading-tight">{activePeerName}</h3>
+                  {activeChatId !== "namma_thanjai_system_welcome" && (
+                    <span className="text-[10px] font-mono text-emerald-100 bg-white/15 px-1.5 py-0.2 rounded font-bold shrink-0">
+                      {generate5DigitMemberId(activePeerId || activePeerPhone)}
+                    </span>
+                  )}
+                </div>
                 {activeChatId !== "namma_thanjai_system_welcome" && activeListingTitle && activeListingTitle !== "Welcome to Namma Thanjai" && (
                   <p className="text-[11px] text-[#ffeeb3] font-medium truncate mt-0.5">
                     Re: {activeListingTitle}
