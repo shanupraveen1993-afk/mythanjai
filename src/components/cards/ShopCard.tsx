@@ -116,14 +116,20 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
       sessionStorage.setItem(sessionKey, "true");
     }
     hasRecordedWatchRef.current = true;
-    setViewsCount((prev) => prev + 1);
 
     try {
-      const { doc, updateDoc, increment } = await import("firebase/firestore");
-      const { db } = await import("@/lib/firebase");
-      const shopRef = doc(db, "shops", post.id);
-      await updateDoc(shopRef, { views_count: increment(1) });
-    } catch (e) {}
+      const res = await fetch("/api/record-view", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ shopId: post.id }),
+      });
+      const data = await res.json();
+      if (data.success && data.recorded) {
+        setViewsCount((prev) => prev + 1);
+      }
+    } catch (e) {
+      console.warn("Error calling record-view API:", e);
+    }
   };
 
   useEffect(() => {
