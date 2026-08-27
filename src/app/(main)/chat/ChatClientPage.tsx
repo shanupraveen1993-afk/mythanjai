@@ -221,14 +221,19 @@ export default function ChatClientPage() {
       setActivePeerName(queryTitle !== "Classified Item" ? queryTitle : "Seller / Contact");
       setShowMobileChat(true);
 
-      if (!queryAutoSend) {
-        if (queryAutoMsg) {
-          setInputText(queryAutoMsg);
+      // ONLY populate initial message ONCE per chat session to prevent re-fill bug
+      if (initialMsgSetRef.current !== generatedChatId) {
+        initialMsgSetRef.current = generatedChatId;
+
+        if (!queryAutoSend) {
+          if (queryAutoMsg) {
+            setInputText(queryAutoMsg);
+          } else if (queryTitle && queryTitle !== "Classified Item") {
+            setInputText(`Hi, I am interested in your listing "${queryTitle}". Is it still available?`);
+          }
         } else {
-          setInputText(`Hi, I am interested in your listing "${queryTitle}". Is it still available?`);
+          setInputText("");
         }
-      } else {
-        setInputText("");
       }
 
       setThreads((prev) => {
@@ -358,6 +363,8 @@ export default function ChatClientPage() {
     }
 
     const currentText = inputText.trim();
+    setInputText("");
+    setQueryAutoMsg("");
     try {
       const currentUid = user?.uid || (profile?.phone ? `phone_${profile.phone.replace(/\D/g, "")}` : "guest_user");
       const currentName = profile?.displayName || user?.displayName || "User";
