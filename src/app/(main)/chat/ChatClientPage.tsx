@@ -42,9 +42,9 @@ import BottomTabBar from "@/components/layout/BottomTabBar";
 
 export function generate5DigitMemberId(val?: string): string {
   if (!val) return "NT-84921";
+  // PRESERVE EXISTING MEMBER IDs (e.g. NT-9994837342) 100% AS IS!
   if (val.startsWith("NT-")) {
-    const code = val.replace("NT-", "").replace(/\D/g, "");
-    if (code.length >= 5) return `NT-${code.slice(-5)}`;
+    return val;
   }
   const digits = val.replace(/\D/g, "");
   if (digits.length >= 5) return `NT-${digits.slice(-5)}`;

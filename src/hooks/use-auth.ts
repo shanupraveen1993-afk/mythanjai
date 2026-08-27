@@ -92,8 +92,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }
           }
 
-          // IMMUTABLE MEMBER ID: Preserve existing memberId or generate ONCE
-          const effectiveMemberId = userProfileData?.memberId || localMemberId || (activeVerifiedPhone ? `NT-${activeVerifiedPhone.slice(-10)}` : `NT-${currentUser.uid.slice(-6).toUpperCase()}`);
+          // IMMUTABLE MEMBER ID: Preserve existing memberId 100% or generate 5-digit code for new registrations
+          const effectiveMemberId = userProfileData?.memberId || localMemberId || (activeVerifiedPhone ? `NT-${activeVerifiedPhone.replace(/\D/g, "").slice(-5)}` : `NT-${currentUser.uid.slice(-5).toUpperCase()}`);
           if (typeof window !== "undefined" && effectiveMemberId) {
             localStorage.setItem("namma_thanjai_member_id", effectiveMemberId);
           }
