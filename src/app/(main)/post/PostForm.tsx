@@ -159,15 +159,34 @@ export default function PostForm({ segment }: PostFormProps) {
 
   const startBackgroundVideoUpload = async (file: File): Promise<string | null> => {
     setIsUploadingVideo(true);
-    setUploadProgress(10);
+    setUploadProgress(20);
     const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
-    setUploadStatusMsg(`Uploading Reel (${sizeMb} MB): 10%`);
+    setUploadStatusMsg(`Uploading Reel (${sizeMb} MB)...`);
 
     try {
+      // 1. Primary Route: Server Admin SDK Storage Upload (/api/upload-video)
+      const formData = new FormData();
+      formData.append("file", file);
+
+      setUploadProgress(50);
+      setUploadStatusMsg(`Uploading Reel (${sizeMb} MB): 50%`);
+
+      const res = await fetch("/api/upload-video", { method: "POST", body: formData });
+      const data = await res.json();
+
+      if (data.success && data.url) {
+        setUploadedVideoUrl(data.url);
+        setUploadProgress(100);
+        toast.success("Video uploaded to Firebase Storage! Ready to publish.");
+        return data.url;
+      }
+
+      console.warn("Server API upload returned false, trying client SDK fallback...", data?.error);
+
+      // 2. Fallback Route: Client SDK Upload
       const fileName = `videos/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
       const storageRef = ref(storage, fileName);
 
-      // Pipeline 1: Direct Google Cloud Storage upload with live percentage tracking
       const clientUrl = await new Promise<string | null>((resolve) => {
         try {
           const uploadTask = uploadBytesResumable(storageRef, file);
@@ -192,7 +211,6 @@ export default function PostForm({ segment }: PostFormProps) {
             }
           );
         } catch (taskErr) {
-          console.warn("Task init error:", taskErr);
           resolve(null);
         }
       });
@@ -204,27 +222,10 @@ export default function PostForm({ segment }: PostFormProps) {
         return clientUrl;
       }
 
-      // Pipeline 2: Server API upload fallback (/api/upload-video)
-      console.warn("Client upload returned null, attempting server API fallback...");
-      setUploadProgress(50);
-      setUploadStatusMsg(`Uploading Reel (${sizeMb} MB)...`);
-
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await fetch("/api/upload-video", { method: "POST", body: formData });
-      const data = await res.json();
-
-      if (data.success && data.url) {
-        setUploadedVideoUrl(data.url);
-        setUploadProgress(100);
-        toast.success("Video uploaded to Cloud Storage! Ready to publish.");
-        return data.url;
-      } else {
-        toast.error(data.error || "Video upload failed. Please try a smaller video under 15MB.");
-      }
+      toast.error(data?.error || "Video upload failed. Please try a smaller video file under 15MB.");
     } catch (err: any) {
       console.error("Video upload error:", err);
-      toast.error("Video upload failed. Please try a smaller video under 15MB.");
+      toast.error("Video upload failed. Please select a smaller video file under 15MB.");
     } finally {
       setUploadProgress(null);
       setUploadStatusMsg("");
