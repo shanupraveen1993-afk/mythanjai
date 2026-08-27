@@ -506,28 +506,7 @@ export default function PostForm({ segment }: PostFormProps) {
       console.warn("Storage upload warning, using preview fallback:", storageErr);
     }
 
-    // ── STEP 2b: Process & Upload Video Reel File (Single-pipeline await with Promise.race timeout) ──
-    let cloudVideoUrl = uploadedVideoUrl;
-    if (selectedVideo && (!cloudVideoUrl || (!cloudVideoUrl.startsWith("http://") && !cloudVideoUrl.startsWith("https://")))) {
-      if (videoUploadPromiseRef.current) {
-        setUploadStatusMsg("Finishing background video upload...");
-        const timeoutPromise = new Promise<string | null>((resolve) => setTimeout(() => resolve(null), 10000));
-        const resultUrl = await Promise.race([videoUploadPromiseRef.current, timeoutPromise]);
-        if (resultUrl) {
-          cloudVideoUrl = resultUrl;
-        }
-      }
-    }
 
-    if (selectedVideo && (!cloudVideoUrl || (!cloudVideoUrl.startsWith("http://") && !cloudVideoUrl.startsWith("https://")))) {
-      setLoading(false);
-      setUploadStatusMsg("");
-      setUploadProgress(null);
-      const videoErrMsg = "Video reel upload failed. Please try a smaller video file under 15MB and try again.";
-      setValidationError(videoErrMsg);
-      toast.error(videoErrMsg);
-      return;
-    }
 
     // ── STEP 3: Write Directly to Firestore (NO LOCALSTORAGE) ──
     if (editId && !editCol) {
