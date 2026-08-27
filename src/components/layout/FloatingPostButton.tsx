@@ -43,15 +43,15 @@ export default function FloatingPostButton() {
 
   return (
     <div
-      className="fixed left-1/2 -translate-x-1/2 bottom-[calc(3.5rem+env(safe-area-inset-bottom,0px))] z-[99999] md:hidden select-none pointer-events-auto transition-transform duration-200 active:scale-95"
+      className="fixed left-1/2 -translate-x-1/2 bottom-[calc(4.25rem+env(safe-area-inset-bottom,0px))] z-[99999] md:hidden select-none pointer-events-auto transition-transform duration-200 active:scale-95"
     >
       <button
         type="button"
         onClick={handlePostClick}
-        className="bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-4 py-2 rounded-full shadow-lg shadow-amber-500/20 border-2 border-white flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap"
+        className="bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs sm:text-sm px-5 py-2.5 rounded-full shadow-xl shadow-amber-500/25 border-2 border-white flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap"
         aria-label="Create Post"
       >
-        <Plus className="w-4 h-4 stroke-[3] text-slate-950" />
+        <Plus className="w-4.5 h-4.5 stroke-[3] text-slate-950" />
         <span>{buttonConfig.label}</span>
       </button>
     </div>

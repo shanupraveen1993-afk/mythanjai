@@ -120,7 +120,7 @@ export default function TopHeader({
             <div className="h-8 sm:h-9 w-auto flex items-center justify-center shrink-0">
               <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="h-full w-auto object-contain max-h-9" />
             </div>
-            <span className="hidden md:inline-block font-heading font-black tracking-tight text-sm sm:text-lg md:text-xl leading-none">
+            <span className={`${isHomePage ? "hidden md:inline-block" : "inline-block"} font-heading font-black tracking-tight text-sm sm:text-lg md:text-xl leading-none`}>
               <span className="text-[#1d4ed8] font-black">நம்ம</span> <span className="text-[#f59e0b] font-black">thanjai</span>
             </span>
           </div>
