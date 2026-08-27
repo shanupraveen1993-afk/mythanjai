@@ -120,6 +120,7 @@ export default function ChatClientPage() {
   const longPressTimerRef = useRef<any>(null);
   const threadPressTimerRef = useRef<any>(null);
   const chatBottomRef = useRef<HTMLDivElement | null>(null);
+  const initialMsgSetRef = useRef<string>("");
 
   // Read URL query parameters
   useEffect(() => {
