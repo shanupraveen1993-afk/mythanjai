@@ -51,10 +51,10 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     <ToastContext.Provider value={{ toast }}>
       {children}
 
-      {/* Floating Toast Notification Container — Safe-area bleed protected */}
+      {/* Floating Toast Notification Container — Positioned safely above bottom tab bar & Android gesture inset */}
       <div 
-        className="fixed bottom-5 right-5 z-[99999] flex flex-col gap-2 max-w-sm w-full px-4 pointer-events-none font-sans"
-        style={{ paddingBottom: "calc(env(safe-area-inset-bottom, 0px) + 0.5rem)" }}
+        className="fixed bottom-20 left-1/2 -translate-x-1/2 md:translate-x-0 md:left-auto md:right-5 z-[99999] flex flex-col gap-2 max-w-sm w-full px-4 pointer-events-none font-sans"
+        style={{ paddingBottom: "max(calc(env(safe-area-inset-bottom, 0px) + 8px), 8px)" }}
       >
         {toasts.map((t) => (
           <div

@@ -159,24 +159,53 @@ export default function PostForm({ segment }: PostFormProps) {
 
   const startBackgroundVideoUpload = async (file: File): Promise<string | null> => {
     setIsUploadingVideo(true);
-    setUploadProgress(50);
+    setUploadProgress(30);
     const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
     setUploadStatusMsg(`Uploading Reel (${sizeMb} MB)...`);
 
     try {
+      const fileName = `videos/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
+      const storageRef = ref(storage, fileName);
+
+      setUploadProgress(50);
+      setUploadStatusMsg(`Uploading Reel (${sizeMb} MB): 50%`);
+
+      // Pipeline 1: Direct Google Cloud Storage upload via Firebase Client SDK
+      const clientUploadPromise = (async () => {
+        const snapshot = await uploadBytes(storageRef, file);
+        return await getDownloadURL(snapshot.ref);
+      })();
+
+      const timeoutPromise = new Promise<string | null>((resolve) => setTimeout(() => resolve(null), 10000));
+      const clientUrl = await Promise.race([clientUploadPromise, timeoutPromise]);
+
+      if (clientUrl) {
+        setUploadedVideoUrl(clientUrl);
+        setUploadProgress(100);
+        toast.success("Video uploaded to Cloud Storage! Ready to publish.");
+        return clientUrl;
+      }
+
+      // Pipeline 2: Server API upload fallback (/api/upload-video) if client direct upload stalls
+      console.warn("Client direct upload timed out after 10s, attempting server API fallback...");
+      setUploadProgress(75);
+      setUploadStatusMsg(`Uploading Reel (${sizeMb} MB): 75%`);
+
       const formData = new FormData();
       formData.append("file", file);
       const res = await fetch("/api/upload-video", { method: "POST", body: formData });
       const data = await res.json();
+
       if (data.success && data.url) {
         setUploadedVideoUrl(data.url);
-        toast.success("Video uploaded to Firebase Cloud! Ready to publish.");
+        setUploadProgress(100);
+        toast.success("Video uploaded to Cloud Storage! Ready to publish.");
         return data.url;
       } else {
-        toast.error(data.error || "Video upload failed. Please try a smaller file under 15MB.");
+        toast.error(data.error || "Video upload failed. Please try a smaller video under 15MB.");
       }
-    } catch (serverErr) {
-      console.error("Server video upload error:", serverErr);
+    } catch (err: any) {
+      console.error("Video upload error:", err);
       toast.error("Video upload failed. Please try a smaller video under 15MB.");
     } finally {
       setUploadProgress(null);
