@@ -58,7 +58,20 @@ interface ChatThread {
   lastMessage?: string;
   lastTimestamp?: any;
   unreadCount?: number;
+  isSystemThread?: boolean;
 }
+
+const DEFAULT_SYSTEM_THREAD: ChatThread = {
+  chatId: "namma_thanjai_system_welcome",
+  listingId: "system_welcome",
+  listingTitle: "Welcome to Namma Thanjai",
+  peerId: "namma_thanjai_official",
+  peerName: "Namma Thanjai",
+  peerPhone: "9994837342",
+  lastMessage: "Vanakkam! Welcome to Namma Thanjai. Chat directly with sellers, buyers & service providers here.",
+  lastTimestamp: new Date(),
+  isSystemThread: true,
+};
 
 const SCAM_KEYWORDS = [
   "advance payment",
@@ -84,13 +97,13 @@ export default function ChatClientPage() {
   const [queryTitle, setQueryTitle] = useState<string>("Classified Item");
   const [queryAutoMsg, setQueryAutoMsg] = useState<string>("");
 
-  const [activeChatId, setActiveChatId] = useState<string>("");
-  const [activeListingTitle, setActiveListingTitle] = useState<string>("Classified Item");
-  const [activePeerName, setActivePeerName] = useState<string>("Seller / Contact");
-  const [activePeerId, setActivePeerId] = useState<string>("");
-  const [activePeerPhone, setActivePeerPhone] = useState<string>("");
+  const [activeChatId, setActiveChatId] = useState<string>("namma_thanjai_system_welcome");
+  const [activeListingTitle, setActiveListingTitle] = useState<string>("Welcome to Namma Thanjai");
+  const [activePeerName, setActivePeerName] = useState<string>("Namma Thanjai");
+  const [activePeerId, setActivePeerId] = useState<string>("namma_thanjai_official");
+  const [activePeerPhone, setActivePeerPhone] = useState<string>("9994837342");
 
-  const [threads, setThreads] = useState<ChatThread[]>([]);
+  const [threads, setThreads] = useState<ChatThread[]>([DEFAULT_SYSTEM_THREAD]);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputText, setInputText] = useState("");
   const [loading, setLoading] = useState(false);
@@ -178,7 +191,10 @@ export default function ChatClientPage() {
           return tB - tA;
         });
 
-        setThreads(userThreads);
+        const hasSystem = userThreads.some((t) => t.chatId === DEFAULT_SYSTEM_THREAD.chatId);
+        const finalThreads = hasSystem ? userThreads : [DEFAULT_SYSTEM_THREAD, ...userThreads];
+
+        setThreads(finalThreads);
       },
       (err) => {
         console.warn("Real-time threads listener note:", err);
@@ -226,6 +242,26 @@ export default function ChatClientPage() {
   // Firestore Messages Snapshot Listener for Active Chat
   useEffect(() => {
     if (!activeChatId) return;
+
+    if (activeChatId === "namma_thanjai_system_welcome") {
+      setMessages([
+        {
+          id: "sys_welcome_1",
+          senderId: "namma_thanjai_official",
+          senderName: "Namma Thanjai",
+          text: "Vanakkam! Welcome to Namma Thanjai. 🙏",
+          timestamp: new Date("2026-08-01T10:00:00"),
+        },
+        {
+          id: "sys_welcome_2",
+          senderId: "namma_thanjai_official",
+          senderName: "Namma Thanjai",
+          text: "You can chat directly with verified sellers, buyers, and local service providers in Thanjavur right here safely.",
+          timestamp: new Date("2026-08-01T10:01:00"),
+        },
+      ]);
+      return;
+    }
 
     const messagesRef = collection(db, "chats", activeChatId, "messages");
     const q = query(messagesRef, orderBy("timestamp", "asc"));
@@ -335,6 +371,7 @@ export default function ChatClientPage() {
 
   // Long-press handlers for Thread deletion
   const handleThreadTouchStart = (thread: ChatThread) => {
+    if (thread.isSystemThread || thread.chatId === "namma_thanjai_system_welcome") return;
     threadPressTimerRef.current = setTimeout(() => {
       setSelectedThreadForDelete(thread);
       if (typeof navigator !== "undefined" && navigator.vibrate) {
@@ -351,6 +388,12 @@ export default function ChatClientPage() {
 
   // Execute thread deletion from Cloud Firestore and local state
   const executeDeleteThread = async (chatId: string) => {
+    if (chatId === "namma_thanjai_system_welcome") {
+      setSelectedThreadForDelete(null);
+      toast.info("Namma Thanjai default greeting cannot be deleted.");
+      return;
+    }
+
     try {
       await deleteDoc(doc(db, "chats", chatId));
       const messagesRef = collection(db, "chats", chatId, "messages");
@@ -501,56 +544,22 @@ export default function ChatClientPage() {
         </div>
       )}
 
-      {/* LEFTMOST WHATSAPP APP NAVIGATION SIDEBAR (DESKTOP) */}
-      <div className="hidden md:flex flex-col w-16 bg-[#202c33] border-r border-[#2a3942] items-center justify-between py-3 shrink-0 select-none">
-        <div className="flex flex-col items-center gap-5 text-slate-400">
-          <div className="w-9 h-9 rounded-full bg-[#00a884] text-white flex items-center justify-center font-bold text-xs shadow-md">
-            <MessageSquare className="w-5 h-5 fill-white stroke-[2]" />
-          </div>
-          <button className="p-2 text-[#00a884] hover:bg-[#2a3942] rounded-xl transition-colors cursor-pointer" title="Chats">
-            <MessageSquare className="w-5 h-5 fill-current" />
-          </button>
-          <button className="p-2 hover:text-white hover:bg-[#2a3942] rounded-xl transition-colors cursor-pointer text-slate-400" title="Calls">
-            <Phone className="w-4 h-4" />
-          </button>
-          <button className="p-2 hover:text-white hover:bg-[#2a3942] rounded-xl transition-colors cursor-pointer text-slate-400" title="Status">
-            <span className="text-base">⭕</span>
-          </button>
-          <button className="p-2 hover:text-white hover:bg-[#2a3942] rounded-xl transition-colors cursor-pointer text-slate-400" title="Communities">
-            <span className="text-base">👥</span>
-          </button>
-        </div>
-        
-        <div className="flex flex-col items-center gap-4 text-slate-400">
-          <button className="p-2 hover:text-white hover:bg-[#2a3942] rounded-xl transition-colors cursor-pointer text-slate-400" title="Settings">
-            <span className="text-base">⚙️</span>
-          </button>
-          <div className="w-8 h-8 rounded-full bg-slate-700 text-amber-400 font-bold text-xs flex items-center justify-center border border-slate-600">
-            {(profile?.displayName || "U")[0]}
-          </div>
-        </div>
-      </div>
-
-      {/* MAIN WHATSAPP CHAT PANEL (FILLS ENTIRE SCREEN 100%) */}
+      {/* MAIN CHAT PANEL (FILLS ENTIRE SCREEN 100%) */}
       <div className="flex-1 w-full flex bg-white overflow-hidden h-full">
         
-        {/* LEFT COLUMN: WhatsApp Conversation List */}
+        {/* LEFT COLUMN: Namma Thanjai Conversation List */}
         <div className={`w-full lg:w-[380px] border-r border-slate-200 flex-col bg-white ${showMobileChat ? "hidden lg:flex" : "flex"}`}>
           
-          {/* 1. WHATSAPP WEB TOP HEADER */}
+          {/* 1. BRANDED TOP HEADER */}
           <div className="bg-[#f0f2f5] px-4 h-14 border-b border-slate-200/90 flex items-center justify-between shrink-0 select-none">
-            <h2 className="font-heading font-black text-[#00a884] text-xl tracking-tight">
-              WhatsApp
-            </h2>
-            <div className="flex items-center gap-3 text-slate-600">
-              <button
-                type="button"
-                onClick={() => router.push("/")}
-                className="p-1.5 hover:bg-slate-200/80 rounded-full transition-colors cursor-pointer text-slate-600 font-bold text-xs flex items-center gap-1"
-                title="Back to Namma Thanjai Home"
-              >
-                <ArrowLeft className="w-4 h-4" /> Home
-              </button>
+            <div className="flex items-center gap-2">
+              <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="h-7 w-auto object-contain" />
+              <h2 className="font-heading font-black text-slate-900 text-base tracking-tight">
+                <span className="text-[#1d4ed8]">நம்ம</span> <span className="text-[#f59e0b]">thanjai</span>
+              </h2>
+            </div>
+            <div className="flex items-center gap-2 text-slate-600">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" title="Real-time messaging active" />
               <button
                 type="button"
                 onClick={() => setSearchQuery((prev) => (prev ? "" : " "))}
@@ -579,25 +588,6 @@ export default function ChatClientPage() {
                 </button>
               )}
             </div>
-          </div>
-
-          {/* 3. CATEGORY PILLS (ALL, UNREAD 115, FAVOURITES, GROUPS 7, +) */}
-          <div className="flex items-center gap-1.5 px-3 py-2 border-b border-slate-200/80 bg-white overflow-x-auto no-scrollbar select-none">
-            {(["all", "unread", "favourites", "groups"] as const).map((filterKey) => (
-              <button
-                key={filterKey}
-                type="button"
-                onClick={() => setActiveFilter(filterKey as any)}
-                className={`px-3 py-1 rounded-full text-xs transition-all cursor-pointer whitespace-nowrap ${
-                  activeFilter === filterKey
-                    ? "bg-[#00a884] text-white font-bold shadow-2xs"
-                    : "bg-[#f0f2f5] text-slate-700 font-semibold hover:bg-slate-200/80 border border-slate-200/80"
-                }`}
-              >
-                {filterKey === "all" ? "All" : filterKey === "unread" ? "Unread 115" : filterKey === "favourites" ? "Favourites" : "Groups 7"}
-              </button>
-            ))}
-            <button className="px-2 py-0.5 rounded-full bg-[#f0f2f5] text-slate-600 font-bold text-xs border border-slate-200/80">+</button>
           </div>
 
           {/* 4. CONVERSATION THREADS LIST */}
@@ -632,15 +622,24 @@ export default function ChatClientPage() {
                   }`}
                 >
                   {/* User Avatar */}
-                  <div className="w-12 h-12 rounded-full bg-slate-950 text-amber-400 flex items-center justify-center font-bold text-xs shrink-0 border border-amber-400/40 relative">
-                    <User className="w-5 h-5 text-amber-400" />
+                  <div className="w-12 h-12 rounded-full bg-slate-950 text-amber-400 flex items-center justify-center font-bold text-xs shrink-0 border border-amber-400/40 relative overflow-hidden">
+                    {t.isSystemThread ? (
+                      <img src="/namma_thanjai_logo.png" alt="Namma Thanjai" className="w-8 h-8 object-contain" />
+                    ) : (
+                      <User className="w-5 h-5 text-amber-400" />
+                    )}
                     <span className="w-3 h-3 rounded-full bg-[#00a884] border-2 border-white absolute bottom-0 right-0" />
                   </div>
 
                   {/* Thread Info */}
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between">
-                      <h3 className="font-bold text-xs text-slate-900 truncate">{t.peerName}</h3>
+                      <div className="flex items-center gap-1 min-w-0">
+                        <h3 className="font-bold text-xs text-slate-900 truncate">{t.peerName}</h3>
+                        {t.isSystemThread && (
+                          <span className="bg-amber-400 text-slate-950 text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase">Official</span>
+                        )}
+                      </div>
                       <span className="text-[10px] text-[#00a884] font-bold shrink-0 ml-1">
                         {formatTime(t.lastTimestamp)}
                       </span>
@@ -656,25 +655,23 @@ export default function ChatClientPage() {
                     {/* Last Message Preview */}
                     <div className="flex items-center justify-between mt-1">
                       <p className="text-xs text-slate-500 truncate">{t.lastMessage}</p>
-                      {/* WhatsApp Green Unread Badge Counter */}
-                      <span className="w-4 h-4 rounded-full bg-[#25d366] text-white text-[9px] font-black flex items-center justify-center shrink-0 ml-1 shadow-2xs">
-                        1
-                      </span>
                     </div>
                   </div>
 
                   {/* Desktop Hover Delete Icon */}
-                  <button
-                    type="button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setSelectedThreadForDelete(t);
-                    }}
-                    className="opacity-0 group-hover:opacity-100 p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all shrink-0 cursor-pointer"
-                    title="Delete Conversation (Hold or Click)"
-                  >
-                    <Trash2 className="w-4 h-4" />
-                  </button>
+                  {!t.isSystemThread && (
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setSelectedThreadForDelete(t);
+                      }}
+                      className="opacity-0 group-hover:opacity-100 p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all shrink-0 cursor-pointer"
+                      title="Delete Conversation"
+                    >
+                      <Trash2 className="w-4 h-4" />
+                    </button>
+                  )}
                 </div>
               ))
             )}
