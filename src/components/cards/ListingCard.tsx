@@ -479,27 +479,6 @@ export default function ListingCard({ listing, isPreview }: { listing: ListingIt
                       }
                       return;
                     }
-                    const buyerPhone = profile?.phone ? `+91 ${profile.phone.replace(/\D/g, "").slice(-10)}` : "Registered User";
-                    const callMsg = `📞 Call Back Request: Hello, a buyer (${buyerPhone}) requested a call back regarding your listing "${listing.title}". Please call them back when free.`;
-                    router.push(`/chat?listingId=${listing.id}&sellerId=${listing.seller_id || ""}&title=${encodeURIComponent(listing.title)}&autoMsg=${encodeURIComponent(callMsg)}&autoSend=true`);
-                  }}
-                  className={`w-[128px] shrink-0 border-2 border-amber-500 text-amber-900 bg-amber-50 hover:bg-amber-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors whitespace-nowrap ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
-                >
-                  <Phone className="w-4 h-4 text-amber-700 shrink-0 stroke-[2.5]" />
-                  <span>Call Back</span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (isPreview) return;
-                    if (!isVerified) {
-                      if (typeof window !== "undefined") {
-                        window.dispatchEvent(new Event("namma_thanjai_open_signin"));
-                      }
-                      return;
-                    }
                     router.push(`/chat?listingId=${listing.id}&sellerId=${listing.seller_id || ""}&title=${encodeURIComponent(listing.title)}`);
                   }}
                   className={`w-[128px] shrink-0 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors whitespace-nowrap ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
