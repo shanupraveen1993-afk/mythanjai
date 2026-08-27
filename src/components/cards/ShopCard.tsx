@@ -53,8 +53,24 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
   const router = useRouter();
   const { user, profile, isVerified } = useAuth();
   const { toast } = useToast();
-  const { t } = useLanguage();
+  // Expired & Ends Today logic
+  const { isExpired, isEndsToday } = React.useMemo(() => {
+    if (!post.valid_to) return { isExpired: false, isEndsToday: false };
+    try {
+      const toDate = new Date((post.valid_to as any).seconds ? (post.valid_to as any).seconds * 1000 : post.valid_to);
+      const now = new Date();
+      return {
+        isExpired: toDate < now,
+        isEndsToday: toDate.toDateString() === now.toDateString() && toDate >= now,
+      };
+    } catch {
+      return { isExpired: false, isEndsToday: false };
+    }
+  }, [post.valid_to]);
+
+  const validityText = formatOfferValidity(post.valid_from, post.valid_to, post.created_at);
   const [saved, setSaved] = useState(false);
+  const [sharesCount, setSharesCount] = useState(19);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -78,6 +94,107 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
   const directionUrl = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
     `${post.shop_name} ${post.address_text || post.area_tag || "Thanjavur"}`
   )}`;
+
+  const isOwnPost = React.useMemo(() => {
+    if (isPreview) return false;
+    if (user?.uid && user.uid !== "guest_user" && post.userId === user.uid) return true;
+    const normalizePhone = (p: string) => String(p || "").replace(/\D/g, "").slice(-10);
+    if (profile?.phone && post.phone) {
+      if (normalizePhone(profile.phone) === normalizePhone(post.phone)) return true;
+    }
+    return false;
+  }, [user, profile, post, isPreview]);
+
+  const handleShare = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const updatedShares = sharesCount + 1;
+    setSharesCount(updatedShares);
+    if (typeof window !== "undefined") localStorage.setItem(`shares_shop_${post.id}`, String(updatedShares));
+    const shareUrl = typeof window !== "undefined" ? window.location.href : "https://mythanjai.vercel.app";
+    const shareText = `Check out "${post.shop_name} — ${post.offer_title || "Special Offer"}" in ${post.area_tag || "Thanjavur"} on Namma Thanjai app:\n${shareUrl}`;
+
+    try {
+      if (typeof navigator !== "undefined" && (navigator as any).share) {
+        await (navigator as any).share({
+          title: `${post.shop_name} – ${post.offer_title || "Offer"}`,
+          text: shareText,
+          url: shareUrl,
+        });
+        toast.success("Shared successfully!");
+      } else {
+        const waUrl = `https://api.whatsapp.com/send?text=${encodeURIComponent(shareText)}`;
+        window.open(waUrl, "_blank");
+      }
+    } catch (err: any) {
+      if (err.name !== "AbortError") {
+        await navigator.clipboard.writeText(shareUrl);
+        toast.success("Offer link copied to clipboard!");
+      }
+    }
+  };
+
+  const handleReport = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const res = await reportListing(post.id, "shops", "Inappropriate content", profile?.phone || user?.phoneNumber || "Anonymous");
+    if (res.success) {
+      toast.success("Thank you! Report submitted for verification.");
+    } else {
+      toast.error("Could not submit report. Please try again.");
+    }
+  };
+
+  const handleToggleSave = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!isVerified) {
+      toast.info("Please verify your WhatsApp mobile number to save store offers to your profile.");
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+      }
+      return;
+    }
+    const nextState = !saved;
+    setSaved(nextState);
+    try {
+      const savedList: any[] = JSON.parse(localStorage.getItem("namma_thanjai_saved_posts") || "[]");
+      if (nextState) {
+        if (!savedList.some((s: any) => s.id === post.id)) {
+          savedList.unshift({
+            id: post.id,
+            title: post.shop_name,
+            offer_title: post.offer_title,
+            phone: post.phone,
+            area_tag: post.area_tag,
+            category: post.category,
+            type: "OFFER",
+            colName: "shops",
+            image_url: post.image_url,
+            saved_at: new Date().toISOString(),
+          });
+        }
+        localStorage.setItem("namma_thanjai_saved_posts", JSON.stringify(savedList));
+        toast.success("Store offer saved to your profile!");
+      } else {
+        const updated = savedList.filter((s: any) => s.id !== post.id);
+        localStorage.setItem("namma_thanjai_saved_posts", JSON.stringify(updated));
+        toast.info("Store offer removed from saved.");
+      }
+    } catch (e) {}
+  };
+
+  const images = React.useMemo(() => {
+    const rawList = (post as any).image_urls || [];
+    let list: string[] = [];
+    if (Array.isArray(rawList) && rawList.length > 0) {
+      list = rawList.filter((url: any): url is string => typeof url === "string" && url.trim().length > 0);
+    } else if (typeof post.image_url === "string" && post.image_url.trim().length > 0) {
+      list = [post.image_url];
+    } else if (typeof (post as any).thumbnail_url === "string" && (post as any).thumbnail_url.trim().length > 0) {
+      list = [(post as any).thumbnail_url];
+    }
+    return list.filter((url) => !url.includes("photo-1556911220-e15b29be8c8f"));
+  }, [post]);
+
+  const coverImage = images[0] || null;
 
   // ── VISITING CARD MODE: Photo cover header ─────────────────────────────
   if (coverImage) {
