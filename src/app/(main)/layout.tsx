@@ -253,7 +253,7 @@ function MainLayoutContent({
   }
 
   return (
-    <div className="w-full min-h-screen flex flex-col relative bg-[#f8fafc] font-sans">
+    <div className="w-full min-h-screen flex flex-col relative bg-[#f1f5f9] font-sans">
       <React.Suspense fallback={null}>
         <SearchParamSync onAreaSync={setSelectedArea} onAuthSync={setIsSignInOpen} />
       </React.Suspense>

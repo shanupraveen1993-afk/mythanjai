@@ -291,6 +291,39 @@ function ListingsContent() {
     router.push(`${route}?editId=${post.id}&editCol=${colName}`);
   };
 
+  // Group My Posts into categories (Only show categories that have posts)
+  const groupedMyPosts = React.useMemo(() => {
+    const groups: {
+      type: "SELL" | "NEED" | "SERVICE" | "OFFER";
+      title: string;
+      posts: any[];
+    }[] = [
+      { type: "SELL", title: "🛍️ Sell Ads (விற்பனை விளம்பரங்கள்)", posts: [] },
+      { type: "NEED", title: "🔍 Wanted Requirements (தேவை விளம்பரங்கள்)", posts: [] },
+      { type: "SERVICE", title: "🛠️ Local Services (சேவை விளம்பரங்கள்)", posts: [] },
+      { type: "OFFER", title: "🏪 Store Offers (கடை சலுகைகள்)", posts: [] },
+    ];
+
+    myPosts.forEach((post) => {
+      const rawType = (
+        post.type ||
+        (post.skill_category ? "SERVICE" : post.shop_name ? "OFFER" : "SELL")
+      ).toUpperCase();
+
+      if (rawType.includes("NEED") || rawType.includes("WANTED")) {
+        groups[1].posts.push(post);
+      } else if (rawType.includes("SERVICE")) {
+        groups[2].posts.push(post);
+      } else if (rawType.includes("OFFER") || rawType.includes("SHOP")) {
+        groups[3].posts.push(post);
+      } else {
+        groups[0].posts.push(post);
+      }
+    });
+
+    return groups.filter((g) => g.posts.length > 0);
+  }, [myPosts]);
+
   // Unauthenticated Guest State CTA
   if (!isVerified && !authLoading) {
     return (
@@ -375,142 +408,152 @@ function ListingsContent() {
             </button>
           </div>
         ) : (
-          <div className="w-full flex flex-col gap-3">
-            {myPosts.map((post) => {
-              const isInactive = Boolean(post.is_sold || post.is_contacted || post.is_offline || post.is_expired || post.is_inactive);
-              const pType = (post.type || (post.skill_category ? "SERVICE" : post.shop_name ? "OFFER" : "SELL")).toUpperCase();
-              let statusLabel = isInactive ? "INACTIVE" : "ACTIVE";
-
-              const itemTitle = post.title || post.name || post.shop_name || "Untitled Listing";
-              const itemImage = post.image_url || post.thumbnail_url || (Array.isArray(post.image_urls) && post.image_urls[0]) || "/placeholder.webp";
-              const itemPrice = post.price || post.rate || (post.budget ? `Budget: ₹${post.budget}` : "");
-              const itemLocation = post.area_tag || post.location || post.area || "Thanjavur";
-              const metrics = getListingMetrics(post);
-              const formattedDate = formatRelativeTime(post.created_at || post.date || post.timestamp);
-
-              return (
-                <div
-                  key={post.id}
-                  className={`w-full rounded-2xl border border-slate-200/90 p-4 sm:p-5 flex flex-col gap-3 font-sans transition-all shadow-xs ${
-                    isInactive ? "bg-slate-100/70 opacity-90" : "bg-white hover:border-amber-400/60"
-                  }`}
-                >
-                  {/* Top Row: Details + Image */}
-                  <div className="flex items-start gap-4 w-full">
-                    {/* Image Thumbnail */}
-                    <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl bg-slate-100 border border-slate-200 overflow-hidden shrink-0 relative">
-                      <img
-                        src={itemImage}
-                        alt={itemTitle}
-                        className="w-full h-full object-cover"
-                      />
-                      {isInactive && (
-                        <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center">
-                          <span className="text-[10px] font-black uppercase tracking-wider text-white bg-slate-800 px-2 py-0.5 rounded">
-                            INACTIVE
-                          </span>
-                        </div>
-                      )}
-                    </div>
-
-                    {/* Content */}
-                    <div className="flex flex-col gap-1.5 flex-1 min-w-0">
-                      {/* Status & Category */}
-                      <div className="flex items-center gap-2">
-                        <span className={`text-xs font-bold ${isInactive ? "text-slate-500" : "text-emerald-700"}`}>
-                          ● {isInactive ? "Inactive" : "Active"}
-                        </span>
-                        {post.category && <span className="text-xs font-medium text-slate-500">• {post.category}</span>}
-                      </div>
-
-                      {/* Title */}
-                      <h3 className="font-heading font-black text-sm sm:text-base text-slate-900 line-clamp-1 truncate">
-                        {itemTitle}
-                      </h3>
-
-                      {/* Price */}
-                      {itemPrice && (
-                        <div className="text-amber-600 font-heading font-black text-sm sm:text-base tracking-tight">
-                          {itemPrice.toString().startsWith("₹") ? itemPrice : `₹${itemPrice}`}
-                        </div>
-                      )}
-
-                      {/* Locality & Posted Date */}
-                      <div className="flex items-center gap-3 text-xs text-slate-500 font-medium">
-                        <span className="flex items-center gap-1 truncate">
-                          <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-                          <span className="truncate">{itemLocation}</span>
-                        </span>
-                        <span className="flex items-center gap-1 shrink-0">
-                          <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
-                          <span>{formattedDate}</span>
-                        </span>
-                      </div>
-
-                      {/* Real / Deterministic Engagement Metrics Row (Views, Saves, Shares) */}
-                      <div className="flex items-center gap-3 text-[11px] font-bold text-slate-600 bg-slate-100/90 border border-slate-200/80 px-2.5 py-1 rounded-lg w-fit mt-1 flex-wrap">
-                        <span className="flex items-center gap-1" title="Views">
-                          <Eye className="w-3.5 h-3.5 text-blue-600" />
-                          <span>{metrics.views} views</span>
-                        </span>
-                        <span className="flex items-center gap-1 text-slate-300">•</span>
-                        <span className="flex items-center gap-1" title="Saves">
-                          <Bookmark className="w-3.5 h-3.5 text-amber-500" />
-                          <span>{metrics.saves} saved</span>
-                        </span>
-                        <span className="flex items-center gap-1 text-slate-300">•</span>
-                        <span className="flex items-center gap-1" title="Shares">
-                          <Share2 className="w-3.5 h-3.5 text-emerald-600" />
-                          <span>{metrics.shares} shares</span>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Bottom Action Control Bar: Active Toggle Left + Edit/Delete Right */}
-                  <div className="flex items-center justify-between gap-2 pt-2.5 border-t border-slate-100 w-full">
-                    {/* Active / Inactive Toggle Switch */}
-                    <div className="flex items-center gap-2 bg-slate-100/90 px-3 py-1.5 rounded-xl border border-slate-200">
-                      <label className="relative inline-flex items-center cursor-pointer shrink-0">
-                        <input
-                          type="checkbox"
-                          checked={!isInactive}
-                          onChange={() => handleToggleSegmentStatus(post)}
-                          className="sr-only peer"
-                        />
-                        <div className="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600" />
-                      </label>
-                      <span className="text-xs font-black text-slate-700">
-                        {isInactive ? "Inactive" : "Active"}
-                      </span>
-                    </div>
-
-                    {/* Action Buttons: Clear Edit & Permanent Delete */}
-                    <div className="flex items-center gap-2">
-                      <button
-                        type="button"
-                        onClick={() => handleEditPost(post)}
-                        className="px-3.5 py-1.5 bg-[#0F172A] hover:bg-slate-900 text-white border border-slate-800 rounded-xl font-heading font-black text-xs transition-colors cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
-                        title="Edit Listing"
-                      >
-                        <Pencil className="w-3.5 h-3.5 text-white stroke-[2.5]" />
-                        <span>Edit</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        onClick={() => setDeleteConfirmTarget({ id: post.id, colName: post.colName })}
-                        className="px-3.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-xl font-heading font-black text-xs transition-colors cursor-pointer flex items-center gap-1.5"
-                        title="Delete Listing Permanently"
-                      >
-                        <Trash2 className="w-3.5 h-3.5 text-rose-600" />
-                        <span>Delete</span>
-                      </button>
-                    </div>
-                  </div>
+          <div className="w-full flex flex-col gap-6">
+            {groupedMyPosts.map((group) => (
+              <div key={group.type} className="flex flex-col gap-3 w-full">
+                {/* Category Section Header Title */}
+                <div className="flex items-center justify-between border-b border-slate-200/80 pb-2">
+                  <h3 className="font-heading font-black text-sm sm:text-base text-slate-900 tracking-tight">
+                    {group.title} ({group.posts.length})
+                  </h3>
                 </div>
-              );
-            })}
+
+                <div className="flex flex-col gap-3 w-full">
+                  {group.posts.map((post) => {
+                    const isInactive = Boolean(post.is_sold || post.is_contacted || post.is_offline || post.is_expired || post.is_inactive);
+                    const itemTitle = post.title || post.name || post.shop_name || "Untitled Listing";
+                    const itemImage = post.image_url || post.thumbnail_url || (Array.isArray(post.image_urls) && post.image_urls[0]) || "/placeholder.webp";
+                    const itemPrice = post.price || post.rate || (post.budget ? `Budget: ₹${post.budget}` : "");
+                    const itemLocation = post.area_tag || post.location || post.area || "Thanjavur";
+                    const metrics = getListingMetrics(post);
+                    const formattedDate = formatRelativeTime(post.created_at || post.date || post.timestamp);
+
+                    return (
+                      <div
+                        key={post.id}
+                        className={`w-full rounded-2xl border border-slate-200/90 p-4 sm:p-5 flex flex-col gap-3 font-sans transition-all shadow-xs ${
+                          isInactive ? "bg-slate-100/70 opacity-90" : "bg-white hover:border-amber-400/60"
+                        }`}
+                      >
+                        {/* Top Row: Details + Image */}
+                        <div className="flex items-start gap-4 w-full">
+                          {/* Image Thumbnail */}
+                          <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-xl bg-slate-100 border border-slate-200 overflow-hidden shrink-0 relative">
+                            <img
+                              src={itemImage}
+                              alt={itemTitle}
+                              className="w-full h-full object-cover"
+                            />
+                            {isInactive && (
+                              <div className="absolute inset-0 bg-slate-950/60 backdrop-blur-xs flex items-center justify-center">
+                                <span className="text-[10px] font-black uppercase tracking-wider text-white bg-slate-800 px-2 py-0.5 rounded">
+                                  INACTIVE
+                                </span>
+                              </div>
+                            )}
+                          </div>
+
+                          {/* Content */}
+                          <div className="flex flex-col gap-1.5 flex-1 min-w-0">
+                            {/* Status & Category */}
+                            <div className="flex items-center gap-2">
+                              <span className={`text-xs font-bold ${isInactive ? "text-slate-500" : "text-emerald-700"}`}>
+                                ● {isInactive ? "Inactive" : "Active"}
+                              </span>
+                              {post.category && <span className="text-xs font-medium text-slate-500">• {post.category}</span>}
+                            </div>
+
+                            {/* Title */}
+                            <h3 className="font-heading font-black text-sm sm:text-base text-slate-900 line-clamp-1 truncate">
+                              {itemTitle}
+                            </h3>
+
+                            {/* Price */}
+                            {itemPrice && (
+                              <div className="text-amber-600 font-heading font-black text-sm sm:text-base tracking-tight">
+                                {itemPrice.toString().startsWith("₹") ? itemPrice : `₹${itemPrice}`}
+                              </div>
+                            )}
+
+                            {/* Locality & Posted Date */}
+                            <div className="flex items-center gap-3 text-xs text-slate-500 font-medium">
+                              <span className="flex items-center gap-1 truncate">
+                                <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                                <span className="truncate">{itemLocation}</span>
+                              </span>
+                              <span className="flex items-center gap-1 shrink-0">
+                                <Clock className="w-3.5 h-3.5 text-slate-400 shrink-0" />
+                                <span>{formattedDate}</span>
+                              </span>
+                            </div>
+
+                            {/* Real / Deterministic Engagement Metrics Row (Views, Saves, Shares) */}
+                            <div className="flex items-center gap-3 text-[11px] font-bold text-slate-600 bg-slate-100/90 border border-slate-200/80 px-2.5 py-1 rounded-lg w-fit mt-1 flex-wrap">
+                              <span className="flex items-center gap-1" title="Views">
+                                <Eye className="w-3.5 h-3.5 text-blue-600" />
+                                <span>{metrics.views} views</span>
+                              </span>
+                              <span className="flex items-center gap-1 text-slate-300">•</span>
+                              <span className="flex items-center gap-1" title="Saves">
+                                <Bookmark className="w-3.5 h-3.5 text-amber-500" />
+                                <span>{metrics.saves} saved</span>
+                              </span>
+                              <span className="flex items-center gap-1 text-slate-300">•</span>
+                              <span className="flex items-center gap-1" title="Shares">
+                                <Share2 className="w-3.5 h-3.5 text-emerald-600" />
+                                <span>{metrics.shares} shares</span>
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Bottom Action Control Bar: Active Toggle Left + Edit/Delete Right */}
+                        <div className="flex items-center justify-between gap-2 pt-2.5 border-t border-slate-100 w-full">
+                          {/* Active / Inactive Toggle Switch */}
+                          <div className="flex items-center gap-2 bg-slate-100/90 px-3 py-1.5 rounded-xl border border-slate-200">
+                            <label className="relative inline-flex items-center cursor-pointer shrink-0">
+                              <input
+                                type="checkbox"
+                                checked={!isInactive}
+                                onChange={() => handleToggleSegmentStatus(post)}
+                                className="sr-only peer"
+                              />
+                              <div className="w-9 h-5 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600" />
+                            </label>
+                            <span className="text-xs font-black text-slate-700">
+                              {isInactive ? "Inactive" : "Active"}
+                            </span>
+                          </div>
+
+                          {/* Action Buttons: Clear Edit & Permanent Delete */}
+                          <div className="flex items-center gap-2">
+                            <button
+                              type="button"
+                              onClick={() => handleEditPost(post)}
+                              className="px-3.5 py-1.5 bg-[#0F172A] hover:bg-slate-900 text-white border border-slate-800 rounded-xl font-heading font-black text-xs transition-colors cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
+                              title="Edit Listing"
+                            >
+                              <Pencil className="w-3.5 h-3.5 text-white stroke-[2.5]" />
+                              <span>Edit</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              onClick={() => setDeleteConfirmTarget({ id: post.id, colName: post.colName })}
+                              className="px-3.5 py-1.5 bg-rose-50 hover:bg-rose-100 text-rose-700 border border-rose-200 rounded-xl font-heading font-black text-xs transition-colors cursor-pointer flex items-center gap-1.5"
+                              title="Delete Listing Permanently"
+                            >
+                              <Trash2 className="w-3.5 h-3.5 text-rose-600" />
+                              <span>Delete</span>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
           </div>
         )
       ) : (
