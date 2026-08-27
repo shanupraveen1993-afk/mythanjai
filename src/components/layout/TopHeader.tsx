@@ -123,23 +123,19 @@ export default function TopHeader({
       } ${
         pathname?.startsWith("/post") ? "hidden" : pathname?.startsWith("/chat") ? "hidden md:flex" : "flex"
       }`}
-      style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 14px)" }}
+      style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
     >
       <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 py-2 flex items-center justify-between gap-2.5 sm:gap-4 relative">
 
-        {/* Left Side: Logo Image + Brand Title (Never Clipped) */}
-        <div className="flex items-center gap-2 shrink-0 z-20 min-w-max">
+        {/* Left Side: Logo Image ONLY (No Text) */}
+        <div className="flex items-center gap-2 shrink-0 z-20">
           <div
             onClick={() => router.push("/")}
-            className="flex items-center gap-2 cursor-pointer shrink-0 group select-none flex-nowrap"
+            className="flex items-center cursor-pointer shrink-0 group select-none"
           >
             <div className="h-8 sm:h-9 w-auto flex items-center justify-center shrink-0">
               <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="h-full w-auto object-contain max-h-8 sm:max-h-9" />
             </div>
-            <h1 className="font-heading font-black text-base sm:text-lg tracking-tight whitespace-nowrap flex items-center gap-1">
-              <span className="text-[#1d4ed8]">நம்ம</span>
-              <span className="text-[#f59e0b]">thanjai</span>
-            </h1>
           </div>
         </div>
 

@@ -289,16 +289,16 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
             <div className="flex items-center gap-2 shrink-0 justify-end">
               {isOwnPost ? (
                 <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    router.push("/listings");
-                  }}
-                  className="bg-blue-600 hover:bg-blue-700 text-white font-heading font-black text-xs sm:text-sm py-2.5 px-4.5 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] cursor-pointer transition-colors shadow-2xs whitespace-nowrap"
-                >
-                  <Pencil className="w-4 h-4 text-white shrink-0" />
-                  <span>Manage</span>
-                </button>
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  router.push("/listings");
+                }}
+                className="bg-[#0F172A] hover:bg-slate-900 text-white font-heading font-black text-xs sm:text-sm py-2.5 px-4.5 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] border border-slate-800 shadow-sm cursor-pointer transition-colors whitespace-nowrap active:scale-95"
+              >
+                <Pencil className="w-4 h-4 text-white shrink-0 stroke-[2.5]" />
+                <span>Edit</span>
+              </button>
               ) : (
                 <>
                   <a
@@ -418,10 +418,10 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
                 e.stopPropagation();
                 router.push("/listings");
               }}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-heading font-black text-xs sm:text-sm py-2.5 px-4.5 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] cursor-pointer transition-colors shadow-2xs whitespace-nowrap"
+              className="bg-[#0F172A] hover:bg-slate-900 text-white font-heading font-black text-xs sm:text-sm py-2.5 px-4.5 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] border border-slate-800 shadow-sm cursor-pointer transition-colors whitespace-nowrap active:scale-95"
             >
-              <Pencil className="w-4 h-4 text-white shrink-0" />
-              <span>Manage</span>
+              <Pencil className="w-4 h-4 text-white shrink-0 stroke-[2.5]" />
+              <span>Edit</span>
             </button>
           ) : (
             <>

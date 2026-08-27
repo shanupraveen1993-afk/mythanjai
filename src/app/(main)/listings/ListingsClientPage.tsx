@@ -490,10 +490,10 @@ function ListingsContent() {
                       <button
                         type="button"
                         onClick={() => handleEditPost(post)}
-                        className="px-3.5 py-1.5 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-200 rounded-xl font-heading font-black text-xs transition-colors cursor-pointer flex items-center gap-1.5"
+                        className="px-3.5 py-1.5 bg-[#0F172A] hover:bg-slate-900 text-white border border-slate-800 rounded-xl font-heading font-black text-xs transition-colors cursor-pointer flex items-center gap-1.5 shadow-sm active:scale-95"
                         title="Edit Listing"
                       >
-                        <Pencil className="w-3.5 h-3.5 text-amber-700" />
+                        <Pencil className="w-3.5 h-3.5 text-white stroke-[2.5]" />
                         <span>Edit</span>
                       </button>
 

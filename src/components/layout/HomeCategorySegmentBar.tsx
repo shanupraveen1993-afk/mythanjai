@@ -46,8 +46,8 @@ export default function HomeCategorySegmentBar() {
     <div
       className={`w-full md:hidden sticky transition-all duration-300 z-40 bg-white/98 backdrop-blur-md pt-1.5 pb-2 shadow-[0_4px_16px_rgba(0,0,0,0.06)] ${
         scrollDirection === "down" && !isAtTop
-          ? "top-[max(env(safe-area-inset-top,0px),28px)]"
-          : "top-[calc(3.5rem+max(env(safe-area-inset-top,0px),12px))]"
+          ? "top-[env(safe-area-inset-top,0px)]"
+          : "top-[calc(3.5rem+env(safe-area-inset-top,0px))]"
       }`}
     >
       <div className="w-full max-w-7xl mx-auto px-2 sm:px-4">

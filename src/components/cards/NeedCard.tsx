@@ -207,7 +207,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
         {/* ── ROW 3: Preferred Locations on Left + 3 Icon Buttons on Right ── */}
         <div className="flex items-center justify-between text-xs border-t border-b border-slate-100 py-2 my-0.5 gap-2">
           {/* Preferred Locations Clean Text */}
-          <div className="flex items-center gap-1 text-xs text-slate-600 font-semibold truncate flex-1">
+          <div className="flex items-center gap-1 text-xs text-slate-500 font-medium truncate flex-1">
             <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
             <span className="truncate">{locationList.join(" • ")}</span>
           </div>
@@ -267,10 +267,10 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
                 e.stopPropagation();
                 router.push("/listings");
               }}
-              className="bg-blue-600 hover:bg-blue-700 text-white font-heading font-black text-xs sm:text-sm py-2.5 px-4.5 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] cursor-pointer transition-colors shadow-2xs whitespace-nowrap"
+              className="bg-[#0F172A] hover:bg-slate-900 text-white font-heading font-black text-xs sm:text-sm py-2.5 px-4.5 rounded-xl flex items-center justify-center gap-1.5 min-h-[44px] border border-slate-800 shadow-sm cursor-pointer transition-colors whitespace-nowrap active:scale-95"
             >
-              <Pencil className="w-4 h-4 text-white shrink-0" />
-              <span>Manage</span>
+              <Pencil className="w-4 h-4 text-white shrink-0 stroke-[2.5]" />
+              <span>Edit</span>
             </button>
           ) : (
             <>

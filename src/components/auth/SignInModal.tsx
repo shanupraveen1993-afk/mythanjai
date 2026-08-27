@@ -67,10 +67,10 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
           localStorage.removeItem("namma_thanjai_target_post_route");
         }
 
-        if (pendingTarget) {
+        if (pendingTarget && pendingTarget.startsWith("/post")) {
           router.push(pendingTarget);
         } else {
-          router.refresh();
+          router.push("/");
         }
       } else {
         toast.error("Sign-in failed.");
