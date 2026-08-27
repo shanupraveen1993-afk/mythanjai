@@ -790,7 +790,7 @@ export default function CreatePostModal({
                                   : "border-border hover:bg-slate-50"
                               }`}
                             >
-                              I Need / Looking for
+                              Wanted Ad (தேவை)
                             </button>
                             <button
                               type="button"

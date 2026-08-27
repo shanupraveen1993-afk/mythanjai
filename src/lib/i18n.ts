@@ -4,8 +4,8 @@ export const translations = {
   en: {
     // Navigation
     home: "Home",
-    sell: "Sell",
-    need: "Need",
+    sell: "Buy",
+    need: "Wanted",
     services: "Service",
     offers: "Offer",
     chat: "Chat",

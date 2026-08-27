@@ -21,10 +21,10 @@ export default function FloatingPostButton() {
   }
 
   const getButtonConfig = () => {
-    if (pathname.includes("/need")) return { label: "+ Post Need", route: "/post/need" };
+    if (pathname.includes("/need")) return { label: "+ Post Wanted Ad", route: "/post/need" };
     if (pathname.includes("/service")) return { label: "+ Post Service", route: "/post/service" };
-    if (pathname.includes("/shops") || pathname.includes("/offer")) return { label: "+ Post Offer", route: "/post/offer" };
-    return { label: "+ Post Ad", route: "/post/sell" };
+    if (pathname.includes("/shops") || pathname.includes("/offer")) return { label: "+ Post Store Offer", route: "/post/offer" };
+    return { label: "+ Post for Sale", route: "/post/sell" };
   };
 
   const buttonConfig = getButtonConfig();

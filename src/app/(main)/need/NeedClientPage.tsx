@@ -101,7 +101,7 @@ export default function NeedClientPage() {
         {/* 1. TITLE BAR */}
         <div className="py-1 flex items-center justify-between gap-3 w-full">
           <h2 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight">
-            People Looking For (தேவைகள்)
+            Wanted Ads (தேவை)
           </h2>
         </div>
 

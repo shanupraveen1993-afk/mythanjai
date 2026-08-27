@@ -57,7 +57,7 @@ export default function TopHeader({
   // Contextual Post Ad CTA info for Web App & Desktop
   const postInfo = React.useMemo(() => {
     if (pathname.includes("/need")) {
-      return { mobileLabel: "Post Ad", desktopLabel: "Post Need Ad", route: "/post/need" };
+      return { mobileLabel: "Post Ad", desktopLabel: "Post Wanted Ad", route: "/post/need" };
     }
     if (pathname.includes("/services")) {
       return { mobileLabel: "Post Ad", desktopLabel: "Post Service", route: "/post/service" };
@@ -148,7 +148,7 @@ export default function TopHeader({
                 }`}
               >
                 <Tag className="w-3.5 h-3.5 text-slate-900" />
-                <span>For Sale</span>
+                <span>Buy</span>
               </button>
               <button
                 type="button"
@@ -160,7 +160,7 @@ export default function TopHeader({
                 }`}
               >
                 <Search className="w-3.5 h-3.5 text-slate-900" />
-                <span>Looking For</span>
+                <span>Wanted</span>
               </button>
               <button
                 type="button"

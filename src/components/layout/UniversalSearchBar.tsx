@@ -115,7 +115,7 @@ export default function UniversalSearchBar() {
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           onFocus={() => searchTerm.trim().length >= 2 && setIsOpen(true)}
-          placeholder="Search Selling, Looking For, Local Service, Local Offer across Thanjavur..."
+          placeholder="Search Buy, Wanted, Services, Offers across Thanjavur..."
           autoComplete="off"
           className="w-full bg-transparent text-xs text-slate-900 placeholder:font-normal font-medium placeholder-slate-400 focus:outline-none tracking-normal"
         />

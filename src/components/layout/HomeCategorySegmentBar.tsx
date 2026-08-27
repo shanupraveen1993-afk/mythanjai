@@ -36,8 +36,8 @@ export default function HomeCategorySegmentBar() {
   const activeTab = getActiveTab();
 
   const segments = [
-    { id: "sell", label: "For Sale", route: "/sell", icon: ShoppingBag },
-    { id: "need", label: "Looking For", route: "/need", icon: Search },
+    { id: "sell", label: "Buy", route: "/sell", icon: ShoppingBag },
+    { id: "need", label: "Wanted", route: "/need", icon: Search },
     { id: "service", label: "Services", route: "/services", icon: Wrench },
     { id: "offer", label: "Offers", route: "/shops", icon: Tag },
   ];
