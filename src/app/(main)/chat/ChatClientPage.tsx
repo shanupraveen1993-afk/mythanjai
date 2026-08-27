@@ -505,34 +505,41 @@ export default function ChatClientPage() {
       <div className="flex-1 w-full flex bg-white sm:rounded-2xl sm:border sm:border-slate-200/90 sm:shadow-md overflow-hidden h-full">
         
         {/* LEFT COLUMN: WhatsApp-Style Conversation List */}
-        <div className={`w-full lg:w-80 border-r border-slate-200 flex-col bg-white ${showMobileChat ? "hidden lg:flex" : "flex"}`}>
+        <div className={`w-full lg:w-96 border-r border-slate-200 flex-col bg-white ${showMobileChat ? "hidden lg:flex" : "flex"}`}>
           
-          {/* 1. BRANDED HEADER WITH LOGO */}
-          <div className="bg-white px-4 sm:px-6 h-14 sm:h-16 border-b border-slate-200 flex items-center justify-between shadow-2xs shrink-0">
-            <div className="flex items-center gap-2">
-              <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="h-8 w-auto object-contain" />
-              <span className="font-heading font-black tracking-tight text-base sm:text-lg">
-                <span className="text-[#1d4ed8]">நம்ம</span> <span className="text-[#f59e0b]">thanjai</span>
+          {/* 1. WHATSAPP BRANDED TOP HEADER */}
+          <div className="bg-[#f0f2f5] px-4 h-14 border-b border-slate-200/90 flex items-center justify-between shadow-2xs shrink-0">
+            <div className="flex items-center gap-2.5">
+              <div className="w-9 h-9 rounded-full bg-[#00a884] text-white flex items-center justify-center font-bold text-xs shadow-2xs">
+                <MessageSquare className="w-5 h-5 fill-white stroke-[2.5]" />
+              </div>
+              <span className="font-heading font-black text-slate-900 text-base tracking-tight">
+                WhatsApp Chat
               </span>
             </div>
-            <div className="flex items-center gap-1.5">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" title="Real-time messaging active" />
-              <span className="text-[11px] font-bold text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-md border border-emerald-200">
-                Chats
-              </span>
+            <div className="flex items-center gap-2 text-slate-600">
+              <span className="w-2.5 h-2.5 rounded-full bg-[#00a884] animate-pulse" title="Real-time messaging active" />
+              <button
+                type="button"
+                onClick={() => setSearchQuery((prev) => (prev ? "" : " "))}
+                className="p-1.5 hover:bg-slate-200/80 rounded-full transition-colors cursor-pointer text-slate-600"
+                title="Search Chats"
+              >
+                <Search className="w-4 h-4" />
+              </button>
             </div>
           </div>
 
           {/* 2. SEARCH CONTACTS BAR */}
-          <div className="p-2.5 bg-slate-50 border-b border-slate-200">
-            <div className="flex items-center gap-2 bg-white border border-slate-200/90 rounded-xl px-3 py-2 text-xs text-slate-500 shadow-2xs">
+          <div className="p-2.5 bg-white border-b border-slate-200/80">
+            <div className="flex items-center gap-2 bg-[#f0f2f5] border border-slate-200/80 rounded-xl px-3 py-1.5 text-xs text-slate-600 shadow-2xs focus-within:ring-1 focus-within:ring-[#00a884]">
               <Search className="w-4 h-4 text-slate-400 shrink-0" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Search chats or listings..."
-                className="w-full bg-transparent focus:outline-none text-xs text-slate-900 font-medium placeholder:text-slate-400"
+                placeholder="Search or start a new chat"
+                className="w-full bg-transparent focus:outline-none text-xs text-slate-900 font-medium placeholder:text-slate-500"
               />
               {searchQuery && (
                 <button type="button" onClick={() => setSearchQuery("")} className="text-slate-400 hover:text-slate-600">
@@ -542,17 +549,17 @@ export default function ChatClientPage() {
             </div>
           </div>
 
-          {/* 3. WHATSAPP FILTER PILLS */}
-          <div className="flex items-center gap-2 px-3 py-2 border-b border-slate-100 bg-slate-50/50">
+          {/* 3. WHATSAPP CATEGORY FILTER PILLS */}
+          <div className="flex items-center gap-1.5 px-3 py-2 border-b border-slate-200/80 bg-white overflow-x-auto no-scrollbar">
             {(["all", "unread", "ads"] as const).map((filterKey) => (
               <button
                 key={filterKey}
                 type="button"
                 onClick={() => setActiveFilter(filterKey)}
-                className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer whitespace-nowrap ${
+                className={`px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
                   activeFilter === filterKey
-                    ? "bg-[#128c7e] text-white shadow-2xs"
-                    : "bg-slate-200/80 text-slate-700 hover:bg-slate-300/80"
+                    ? "bg-[#00a884] text-white shadow-2xs font-bold"
+                    : "bg-[#f0f2f5] text-slate-700 hover:bg-slate-200/80 border border-slate-200/80"
                 }`}
               >
                 {filterKey === "all" ? "All" : filterKey === "unread" ? "Unread" : "Ad Inquiries"}
@@ -561,7 +568,7 @@ export default function ChatClientPage() {
           </div>
 
           {/* 4. CONVERSATION THREADS LIST */}
-          <div className="flex-1 overflow-y-auto divide-y divide-slate-100">
+          <div className="flex-1 overflow-y-auto divide-y divide-slate-100/90">
             {filteredThreads.length === 0 ? (
               <div className="p-8 text-center flex flex-col items-center gap-2 text-slate-400">
                 <MessageSquare className="w-8 h-8 text-slate-300 stroke-[1.5]" />
@@ -587,34 +594,40 @@ export default function ChatClientPage() {
                     e.preventDefault();
                     setSelectedThreadForDelete(t);
                   }}
-                  className={`p-3 flex items-center gap-3 cursor-pointer transition-colors hover:bg-slate-50 select-none relative group ${
-                    activeChatId === t.chatId ? "bg-emerald-50/60 border-l-4 border-[#128c7e]" : ""
+                  className={`p-3 flex items-center gap-3 cursor-pointer transition-colors hover:bg-[#f5f6f8] select-none relative group ${
+                    activeChatId === t.chatId ? "bg-[#f0f2f5] border-l-4 border-[#00a884]" : ""
                   }`}
                 >
                   {/* User Avatar */}
-                  <div className="w-11 h-11 rounded-full bg-slate-950 text-amber-400 flex items-center justify-center font-bold text-xs shrink-0 border border-amber-400/40 relative">
+                  <div className="w-12 h-12 rounded-full bg-slate-950 text-amber-400 flex items-center justify-center font-bold text-xs shrink-0 border border-amber-400/40 relative">
                     <User className="w-5 h-5 text-amber-400" />
-                    <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 border-2 border-white absolute bottom-0 right-0" />
+                    <span className="w-3 h-3 rounded-full bg-[#00a884] border-2 border-white absolute bottom-0 right-0" />
                   </div>
 
                   {/* Thread Info */}
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between">
                       <h3 className="font-bold text-xs text-slate-900 truncate">{t.peerName}</h3>
-                      <span className="text-[10px] text-slate-400 font-medium shrink-0 ml-1">
+                      <span className="text-[10px] text-[#00a884] font-bold shrink-0 ml-1">
                         {formatTime(t.lastTimestamp)}
                       </span>
                     </div>
                     
                     {/* Ad Title Badge */}
                     <div className="flex items-center gap-1 mt-0.5">
-                      <span className="text-[10px] font-bold text-amber-800 bg-amber-50 border border-amber-200/80 px-1.5 py-0.2 rounded truncate">
+                      <span className="text-[10px] font-bold text-slate-700 bg-amber-50 border border-amber-200/80 px-1.5 py-0.2 rounded truncate">
                         📌 {t.listingTitle}
                       </span>
                     </div>
 
                     {/* Last Message Preview */}
-                    <p className="text-xs text-slate-500 truncate mt-1">{t.lastMessage}</p>
+                    <div className="flex items-center justify-between mt-1">
+                      <p className="text-xs text-slate-500 truncate">{t.lastMessage}</p>
+                      {/* WhatsApp Green Unread Badge Counter */}
+                      <span className="w-4 h-4 rounded-full bg-[#25d366] text-white text-[9px] font-black flex items-center justify-center shrink-0 ml-1 shadow-2xs">
+                        1
+                      </span>
+                    </div>
                   </div>
 
                   {/* Desktop Hover Delete Icon */}
@@ -635,9 +648,9 @@ export default function ChatClientPage() {
           </div>
 
           {/* 5. ENCRYPTED FOOTER BANNER */}
-          <div className="p-3 bg-slate-50 border-t border-slate-200 text-[11px] text-slate-500 font-semibold flex items-center gap-1.5 shrink-0">
-            <Lock className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-            <span>End-to-end encrypted local messaging</span>
+          <div className="p-3 bg-[#f0f2f5] border-t border-slate-200/90 text-[11px] text-slate-600 font-semibold flex items-center gap-1.5 shrink-0 justify-center">
+            <Lock className="w-3.5 h-3.5 text-[#00a884] shrink-0" />
+            <span>End-to-end encrypted direct messaging</span>
           </div>
 
         </div>
@@ -662,7 +675,7 @@ export default function ChatClientPage() {
               
               <div className="w-10 h-10 rounded-full bg-white/20 text-white flex items-center justify-center font-black text-xs shrink-0 border-2 border-emerald-400/40 relative">
                 <User className="w-5 h-5 text-white" />
-                <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 border-2 border-[#075E54] absolute bottom-0 right-0" />
+                <span className="w-2.5 h-2.5 rounded-full bg-[#25d366] border-2 border-[#075E54] absolute bottom-0 right-0" />
               </div>
               
               <div className="min-w-0 flex flex-col justify-center flex-1">
@@ -731,6 +744,8 @@ export default function ChatClientPage() {
                   (msg.senderId === "buyer_guest" && !currentUid)
                 );
 
+                const hasLink = msg.text && (msg.text.includes("http://") || msg.text.includes("https://"));
+
                 return (
                   <div key={msg.id} className={`flex w-full ${isMe ? "justify-end" : "justify-start"} my-0.5`}>
                     <div
@@ -742,7 +757,7 @@ export default function ChatClientPage() {
                         e.preventDefault();
                         setActiveMsgAction(msg);
                       }}
-                      className={`relative px-3 py-2 rounded-2xl max-w-[85%] sm:max-w-[70%] text-xs font-medium shadow-2xs select-none cursor-pointer transition-transform active:scale-[0.98] ${
+                      className={`relative px-3.5 py-2.5 rounded-2xl max-w-[85%] sm:max-w-[70%] text-xs font-medium shadow-2xs select-none cursor-pointer transition-transform active:scale-[0.98] ${
                         isMe
                           ? "bg-[#d9fdd3] text-slate-900 rounded-tr-xs border border-[#bbf2b3] self-end"
                           : "bg-white text-slate-900 rounded-tl-xs border border-slate-200/90 self-start"
@@ -750,12 +765,27 @@ export default function ChatClientPage() {
                     >
                       {!isMe && (
                         <div className="text-[11px] font-bold text-[#075e54] mb-0.5 truncate">
-                          {msg.senderName || "Contact"}
+                          ~{msg.senderName || "Contact"}
                         </div>
                       )}
+
+                      {/* Message Content + Link Preview Embed */}
                       <div className="leading-relaxed text-slate-900 font-normal">
                         {highlightFlaggedText(msg.text)}
                       </div>
+
+                      {hasLink && (
+                        <div className="bg-[#f0f2f5] border border-slate-200/80 rounded-xl p-2 mt-1.5 flex items-center gap-2">
+                          <div className="w-7 h-7 rounded-lg bg-[#00a884] text-white flex items-center justify-center font-bold text-xs shrink-0">
+                            🌐
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <span className="text-[11px] font-bold text-slate-900 block truncate">Shared Web Link</span>
+                            <span className="text-[10px] text-[#00a884] truncate block">Click to open link</span>
+                          </div>
+                        </div>
+                      )}
+
                       <div className="flex items-center justify-end gap-1 mt-1 text-[10px] text-slate-400 font-semibold leading-none">
                         <span>{formatTime(msg.timestamp)}</span>
                         {isMe && <CheckCheck className="w-3.5 h-3.5 text-[#34b7f1] stroke-[2.5]" />}
@@ -820,25 +850,44 @@ export default function ChatClientPage() {
           {/* Message Input Form (WhatsApp Flush Bottom Pinned Bar) */}
           <form
             onSubmit={handleSendMessage}
-            className="sticky bottom-0 z-40 p-2.5 sm:p-3.5 bg-[#f0f2f5] border-t border-[#e9edef] flex items-center gap-2 shadow-lg shrink-0"
+            className="sticky bottom-0 z-40 p-2 sm:p-3 bg-[#f0f2f5] border-t border-[#e9edef] flex items-center gap-2 shadow-lg shrink-0"
             style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 12px)" }}
           >
+            <button
+              type="button"
+              onClick={() => toast.info("Attachment selected")}
+              className="p-2 text-slate-500 hover:text-slate-800 rounded-full cursor-pointer transition-colors"
+              title="Attach File"
+            >
+              <span className="text-base">📎</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => toast.info("Emoji picker")}
+              className="p-2 text-slate-500 hover:text-slate-800 rounded-full cursor-pointer transition-colors"
+              title="Add Emoji"
+            >
+              <span className="text-base">😀</span>
+            </button>
+
             <input
               type="text"
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
-              placeholder="Type a message..."
+              placeholder="Type a message"
               autoComplete="on"
               autoCorrect="on"
               spellCheck={true}
               autoCapitalize="sentences"
-              className="flex-1 bg-white border border-slate-200/90 text-slate-900 rounded-full px-4 py-2.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-[#128c7e] shadow-2xs placeholder:text-slate-400"
+              className="flex-1 bg-white border border-slate-200/90 text-slate-900 rounded-2xl px-4 py-2 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-[#00a884] shadow-2xs placeholder:text-slate-400"
             />
+
             <button
               type="submit"
               disabled={loading || !inputText.trim()}
               aria-label="Send message"
-              className="w-10 h-10 rounded-full bg-[#128c7e] hover:bg-[#075e54] active:scale-95 disabled:opacity-50 text-white font-bold transition-all shadow-md cursor-pointer flex items-center justify-center shrink-0"
+              className="w-10 h-10 rounded-full bg-[#00a884] hover:bg-[#008f70] active:scale-95 disabled:opacity-50 text-white font-bold transition-all shadow-md cursor-pointer flex items-center justify-center shrink-0"
             >
               <Send className="w-4 h-4 text-white fill-white ml-0.5" />
             </button>
