@@ -159,25 +159,43 @@ export default function PostForm({ segment }: PostFormProps) {
 
   const startBackgroundVideoUpload = async (file: File): Promise<string | null> => {
     setIsUploadingVideo(true);
-    setUploadProgress(30);
+    setUploadProgress(10);
     const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
-    setUploadStatusMsg(`Uploading Reel (${sizeMb} MB)...`);
+    setUploadStatusMsg(`Uploading Reel (${sizeMb} MB): 10%`);
 
     try {
       const fileName = `videos/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
       const storageRef = ref(storage, fileName);
 
-      setUploadProgress(50);
-      setUploadStatusMsg(`Uploading Reel (${sizeMb} MB): 50%`);
-
-      // Pipeline 1: Direct Google Cloud Storage upload via Firebase Client SDK
-      const clientUploadPromise = (async () => {
-        const snapshot = await uploadBytes(storageRef, file);
-        return await getDownloadURL(snapshot.ref);
-      })();
-
-      const timeoutPromise = new Promise<string | null>((resolve) => setTimeout(() => resolve(null), 10000));
-      const clientUrl = await Promise.race([clientUploadPromise, timeoutPromise]);
+      // Pipeline 1: Direct Google Cloud Storage upload with live percentage tracking
+      const clientUrl = await new Promise<string | null>((resolve) => {
+        try {
+          const uploadTask = uploadBytesResumable(storageRef, file);
+          uploadTask.on(
+            "state_changed",
+            (snapshot) => {
+              const pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+              setUploadProgress(pct);
+              setUploadStatusMsg(`Uploading Reel (${sizeMb} MB): ${pct}%`);
+            },
+            (err) => {
+              console.warn("Client resumable upload error:", err);
+              resolve(null);
+            },
+            async () => {
+              try {
+                const url = await getDownloadURL(uploadTask.snapshot.ref);
+                resolve(url);
+              } catch (e) {
+                resolve(null);
+              }
+            }
+          );
+        } catch (taskErr) {
+          console.warn("Task init error:", taskErr);
+          resolve(null);
+        }
+      });
 
       if (clientUrl) {
         setUploadedVideoUrl(clientUrl);
@@ -186,10 +204,10 @@ export default function PostForm({ segment }: PostFormProps) {
         return clientUrl;
       }
 
-      // Pipeline 2: Server API upload fallback (/api/upload-video) if client direct upload stalls
-      console.warn("Client direct upload timed out after 10s, attempting server API fallback...");
-      setUploadProgress(75);
-      setUploadStatusMsg(`Uploading Reel (${sizeMb} MB): 75%`);
+      // Pipeline 2: Server API upload fallback (/api/upload-video)
+      console.warn("Client upload returned null, attempting server API fallback...");
+      setUploadProgress(50);
+      setUploadStatusMsg(`Uploading Reel (${sizeMb} MB)...`);
 
       const formData = new FormData();
       formData.append("file", file);
