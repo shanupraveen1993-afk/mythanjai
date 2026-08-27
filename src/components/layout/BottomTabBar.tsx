@@ -75,11 +75,12 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
   ];
 
   return (
-    <nav
-      className="md:hidden fixed bottom-0 left-0 right-0 z-30 w-full bg-white/98 backdrop-blur-2xl border-t border-slate-200/90 shadow-[0_-4px_25px_rgba(0,0,0,0.08)] pointer-events-auto select-none"
-      style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 10px)" }}
+    <div
+      className="md:hidden fixed bottom-0 left-0 right-0 z-30 w-full pointer-events-none select-none pb-[max(env(safe-area-inset-bottom,0px),8px)]"
     >
-      <div className="flex items-center justify-between h-14 px-6 sm:px-8 w-full max-w-md mx-auto">
+      <nav
+        className="pointer-events-auto mx-3 max-w-md sm:mx-auto bg-[#0F172A]/95 text-white backdrop-blur-2xl rounded-2xl border border-slate-800/80 shadow-[0_10px_30px_rgba(0,0,0,0.35)] px-2 py-1 flex items-center justify-between"
+      >
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive =
@@ -102,22 +103,22 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
             <button
               key={item.id}
               onClick={() => router.push(item.route)}
-              className={`flex flex-col items-center justify-center flex-1 h-full py-1 px-1 transition-all duration-200 cursor-pointer ${
-                isActive ? "text-amber-500" : "text-slate-500 hover:text-slate-800"
+              className={`flex flex-col items-center justify-center flex-1 h-12 py-0.5 px-1 transition-all duration-200 cursor-pointer rounded-xl ${
+                isActive ? "bg-amber-500/15 text-amber-400" : "text-slate-400 hover:text-slate-200"
               }`}
             >
-              <div
-                className={`p-1 rounded-xl transition-all duration-200 relative flex items-center justify-center ${
-                  isActive
-                    ? "text-amber-500 font-bold"
-                    : "text-slate-500 hover:bg-slate-100"
-                }`}
-              >
-                <Icon className={`w-5 h-5 ${isActive ? "stroke-[2.5] text-amber-500" : "stroke-[2] text-slate-500"}`} />
+              <div className="flex items-center justify-center transition-transform active:scale-90">
+                <Icon
+                  className={`w-5 h-5 transition-all ${
+                    isActive
+                      ? "fill-amber-400 text-amber-400 stroke-[1.2]"
+                      : "text-slate-400 stroke-[2] fill-transparent"
+                  }`}
+                />
               </div>
               <span
-                className={`text-[10px] sm:text-[11px] tracking-tight font-heading leading-tight ${
-                  isActive ? "font-black text-slate-950" : "font-semibold text-slate-500"
+                className={`text-[10px] tracking-tight font-heading mt-0.5 leading-tight ${
+                  isActive ? "font-black text-amber-400" : "font-semibold text-slate-400"
                 }`}
               >
                 {item.label}
@@ -125,7 +126,7 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
             </button>
           );
         })}
-      </div>
-    </nav>
+      </nav>
+    </div>
   );
 }

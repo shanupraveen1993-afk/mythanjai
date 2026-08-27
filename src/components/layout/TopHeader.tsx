@@ -198,7 +198,7 @@ export default function TopHeader({
 
         {/* Mobile Header Center: Universal Search on Home Page OR Dynamic Page Title on Sub-Pages */}
         <div className="flex md:hidden flex-1 min-w-0 mx-1.5 z-20 justify-center">
-          {pathname === "/" || pathname === "/sell" ? (
+          {pathname === "/" || pathname.includes("/sell") || pathname.includes("/need") || pathname.includes("/services") || pathname.includes("/shops") || pathname.includes("/offers") || pathname.includes("/classifieds") ? (
             <UniversalSearchBar />
           ) : (
             <span className="font-heading font-black text-sm sm:text-base text-slate-900 truncate tracking-tight text-center">
