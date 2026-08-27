@@ -149,105 +149,6 @@ export default function PostForm({ segment }: PostFormProps) {
   // Sell: supports up to 3 images
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
-  const [selectedVideo, setSelectedVideo] = useState<File | null>(null);
-  const [videoPreview, setVideoPreview] = useState<string>("");
-  const [uploadedVideoUrl, setUploadedVideoUrl] = useState<string>("");
-  const [isUploadingVideo, setIsUploadingVideo] = useState<boolean>(false);
-  const [uploadProgress, setUploadProgress] = useState<number | null>(null);
-  const [uploadStatusMsg, setUploadStatusMsg] = useState<string>("");
-  const videoUploadPromiseRef = React.useRef<Promise<string | null> | null>(null);
-
-  const startBackgroundVideoUpload = async (file: File): Promise<string | null> => {
-    setIsUploadingVideo(true);
-    setUploadProgress(20);
-    const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
-    setUploadStatusMsg(`Uploading Reel (${sizeMb} MB)...`);
-
-    try {
-      // 1. Primary Route: Server Admin SDK Storage Upload (/api/upload-video)
-      const formData = new FormData();
-      formData.append("file", file);
-
-      setUploadProgress(50);
-      setUploadStatusMsg(`Uploading Reel (${sizeMb} MB): 50%`);
-
-      const res = await fetch("/api/upload-video", { method: "POST", body: formData });
-      const data = await res.json();
-
-      if (data.success && data.url) {
-        setUploadedVideoUrl(data.url);
-        setUploadProgress(100);
-        toast.success("Video uploaded to Firebase Storage! Ready to publish.");
-        return data.url;
-      }
-
-      console.warn("Server API upload returned false, trying client SDK fallback...", data?.error);
-
-      // 2. Fallback Route: Client SDK Upload
-      const fileName = `videos/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
-      const storageRef = ref(storage, fileName);
-
-      const clientUrl = await new Promise<string | null>((resolve) => {
-        try {
-          const uploadTask = uploadBytesResumable(storageRef, file);
-          uploadTask.on(
-            "state_changed",
-            (snapshot) => {
-              const pct = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-              setUploadProgress(pct);
-              setUploadStatusMsg(`Uploading Reel (${sizeMb} MB): ${pct}%`);
-            },
-            (err) => {
-              console.warn("Client resumable upload error:", err);
-              resolve(null);
-            },
-            async () => {
-              try {
-                const url = await getDownloadURL(uploadTask.snapshot.ref);
-                resolve(url);
-              } catch (e) {
-                resolve(null);
-              }
-            }
-          );
-        } catch (taskErr) {
-          resolve(null);
-        }
-      });
-
-      if (clientUrl) {
-        setUploadedVideoUrl(clientUrl);
-        setUploadProgress(100);
-        toast.success("Video uploaded to Cloud Storage! Ready to publish.");
-        return clientUrl;
-      }
-
-      toast.error(data?.error || "Video upload failed. Please try a smaller video file under 15MB.");
-    } catch (err: any) {
-      console.error("Video upload error:", err);
-      toast.error("Video upload failed. Please select a smaller video file under 15MB.");
-    } finally {
-      setUploadProgress(null);
-      setUploadStatusMsg("");
-      setIsUploadingVideo(false);
-    }
-    return null;
-  };
-
-  const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      const file = e.target.files[0];
-      if (file.size > 15 * 1024 * 1024) {
-        toast.error("Video file size must be under 15MB.");
-        return;
-      }
-      setSelectedVideo(file);
-      setVideoPreview(URL.createObjectURL(file));
-      setUploadedVideoUrl("");
-      toast.info("Video selected! Pre-uploading in background...");
-      videoUploadPromiseRef.current = startBackgroundVideoUpload(file);
-    }
-  };
   const [price, setPrice] = useState("");
   const [hasSpecificPrice, setHasSpecificPrice] = useState<boolean>(true);
   const [youtubeUrl, setYoutubeUrl] = useState("");
@@ -1068,43 +969,7 @@ export default function PostForm({ segment }: PostFormProps) {
                   )}
                 </div>
 
-                {/* 1b. UPLOAD OFFER VIDEO REEL (OPTIONAL) */}
-                <div className="w-full bg-slate-50 border-2 border-dashed border-amber-400 hover:border-amber-500 p-4 rounded-xl flex flex-col items-center justify-center text-center gap-2 transition-all group relative">
-                  {videoPreview ? (
-                    <div className="relative w-full max-w-xs aspect-[9/16] rounded-2xl overflow-hidden border border-slate-800 shadow-md bg-slate-950 flex justify-center items-center">
-                      <video src={videoPreview} controls className="w-full h-full object-cover" />
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setVideoPreview("");
-                          setSelectedVideo(null);
-                        }}
-                        className="absolute top-2 right-2 bg-red-600/90 hover:bg-red-600 text-white text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer flex items-center gap-1 backdrop-blur-xs shadow"
-                      >
-                        <X className="w-3.5 h-3.5" />
-                        <span>Remove Reel Video</span>
-                      </button>
-                    </div>
-                  ) : (
-                    <label className="w-full flex flex-col items-center justify-center gap-2 cursor-pointer py-2">
-                      <div className="w-10 h-10 rounded-lg bg-amber-400 text-slate-950 flex items-center justify-center font-bold shadow-sm group-hover:scale-105 transition-transform">
-                        <Video className="w-5 h-5 stroke-[2.5]" />
-                      </div>
-                      <div className="flex flex-col items-center">
-                        <span className="font-heading font-black text-xs text-slate-900">
-                          🎬 Upload Offer Video Reel (MP4 / Short Video - Optional)
-                        </span>
-                        <span className="text-xs text-slate-500 mt-0.5 max-w-sm font-medium">
-                          Upload short video walkthrough or offer reel to display on Thanjavur Store Deals!
-                        </span>
-                      </div>
-                      <span className="bg-slate-950 hover:bg-slate-800 text-white font-bold text-xs px-3.5 py-1.5 rounded-lg transition-all shadow-2xs mt-0.5">
-                        Select Video Reel File →
-                      </span>
-                      <input type="file" accept="video/mp4,video/webm,video/quicktime,video/*" onChange={handleVideoChange} className="hidden" />
-                    </label>
-                  )}
-                </div>
+
 
 
 
@@ -1546,7 +1411,7 @@ export default function PostForm({ segment }: PostFormProps) {
               {loading ? (
                 <>
                   <Loader2 className="w-4 h-4 animate-spin text-[#0F172A]" />
-                  <span>{uploadStatusMsg || "Publishing Post..."}</span>
+                  <span>Publishing Post...</span>
                 </>
               ) : (
                 <span>{config.buttonLabel}</span>
