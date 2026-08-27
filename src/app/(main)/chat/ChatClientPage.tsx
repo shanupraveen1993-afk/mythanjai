@@ -977,10 +977,10 @@ export default function ChatClientPage() {
             </div>
           )}
 
-          {/* Message Input Form (WhatsApp Flush Bottom Pinned Bar) */}
+          {/* Message Input Form (WhatsApp Flush Bottom Pinned Bar with Bottom Nav Clearance) */}
           <form
             onSubmit={handleSendMessage}
-            className="sticky bottom-0 z-40 p-2 sm:p-3 bg-[#f0f2f5] border-t border-[#e9edef] flex items-center gap-2 shadow-lg shrink-0"
+            className="sticky bottom-0 z-40 p-2 sm:p-3 bg-[#f0f2f5] border-t border-[#e9edef] flex items-center gap-2 shadow-lg shrink-0 mb-[calc(3.5rem+max(env(safe-area-inset-bottom,0px),0px))] md:mb-0"
             style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 12px)" }}
           >
             <button

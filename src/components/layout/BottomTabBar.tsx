@@ -75,12 +75,11 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
   ];
 
   return (
-    <div
-      className="md:hidden fixed bottom-0 left-0 right-0 z-30 w-full pointer-events-none select-none pb-[max(env(safe-area-inset-bottom,0px),8px)]"
+    <nav
+      className="md:hidden fixed bottom-0 left-0 right-0 z-40 w-full bg-[#0F172A] border-t border-slate-800/90 shadow-[0_-8px_30px_rgba(0,0,0,0.45)] pointer-events-auto select-none"
+      style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 8px)" }}
     >
-      <nav
-        className="pointer-events-auto mx-3.5 max-w-md sm:mx-auto bg-[#0F172A]/95 text-white backdrop-blur-2xl rounded-full border border-slate-800 shadow-[0_12px_40px_rgba(0,0,0,0.45)] p-1.5 flex items-center justify-around gap-1"
-      >
+      <div className="flex items-center justify-around h-14 px-3 sm:px-6 w-full max-w-md mx-auto">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive =
@@ -104,10 +103,10 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
               <button
                 key={item.id}
                 onClick={() => router.push(item.route)}
-                className="bg-[#1d4ed8] text-white px-4 py-2 rounded-full flex items-center gap-2 font-heading font-black text-xs shadow-md shadow-blue-600/30 transition-all duration-300 scale-105 shrink-0 cursor-pointer"
+                className="bg-[#1d4ed8] text-white px-3.5 py-1.5 rounded-full flex items-center gap-1.5 font-heading font-black text-xs shadow-md shadow-blue-600/30 transition-all duration-300 scale-105 shrink-0 cursor-pointer"
               >
-                <Icon className="w-4.5 h-4.5 fill-white text-white stroke-[1.2]" />
-                <span className="truncate max-w-[100px] leading-none">{item.label}</span>
+                <Icon className="w-4 h-4 fill-white text-white stroke-[1.2]" />
+                <span className="truncate max-w-[90px] leading-none">{item.label}</span>
               </button>
             );
           }
@@ -116,7 +115,7 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
             <button
               key={item.id}
               onClick={() => router.push(item.route)}
-              className="p-2.5 rounded-full text-slate-400 hover:text-white transition-all cursor-pointer flex items-center justify-center shrink-0 active:scale-90"
+              className="p-2 rounded-full text-slate-400 hover:text-white transition-all cursor-pointer flex items-center justify-center shrink-0 active:scale-90"
               title={item.label}
               aria-label={item.label}
             >
@@ -124,7 +123,7 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
             </button>
           );
         })}
-      </nav>
-    </div>
+      </div>
+    </nav>
   );
 }
