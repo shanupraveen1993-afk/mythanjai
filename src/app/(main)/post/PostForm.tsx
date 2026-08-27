@@ -577,10 +577,6 @@ export default function PostForm({ segment }: PostFormProps) {
           offer_title: title.trim(),
           offer_description: cleanDesc,
           valid_from: validFrom || null,
-          valid_to: validTo || null,
-          video_url: (cloudVideoUrl && (cloudVideoUrl.startsWith("http://") || cloudVideoUrl.startsWith("https://"))) ? cloudVideoUrl : "",
-          video_reel_url: (cloudVideoUrl && (cloudVideoUrl.startsWith("http://") || cloudVideoUrl.startsWith("https://"))) ? cloudVideoUrl : "",
-          videoUrl: (cloudVideoUrl && (cloudVideoUrl.startsWith("http://") || cloudVideoUrl.startsWith("https://"))) ? cloudVideoUrl : "",
           image_url: cloudImageUrl || "",
           image_urls: finalImageUrls,
           is_verified: true,
@@ -709,9 +705,6 @@ export default function PostForm({ segment }: PostFormProps) {
       offer_title: title.trim() || "Store Offer",
       offer_description: previewDescription || description.trim() || "Special offer details...",
       image_url: imagePreview || "",
-      video_url: videoPreview || "",
-      video_reel_url: videoPreview || "",
-      videoUrl: videoPreview || "",
       latitude: 10.7870,
       longitude: 79.1378,
       show_phone: showPhone,
@@ -719,7 +712,7 @@ export default function PostForm({ segment }: PostFormProps) {
       category: category || config.categories[0] || "General",
       created_at: new Date() as any,
     };
-  }, [title, description, previewDescription, area, validFrom, validTo, showPhone, phone, imagePreview, videoPreview, user]);
+  }, [title, description, previewDescription, area, validFrom, validTo, showPhone, phone, imagePreview, user]);
 
 
   const formattedPriceBadge = formatIndianCurrencyText(price);
@@ -1361,24 +1354,7 @@ export default function PostForm({ segment }: PostFormProps) {
               )}
             </div>
 
-            {/* Live Resumable Upload Progress Bar */}
-            {uploadProgress !== null && (
-              <div className="w-full p-3 bg-amber-50 border border-amber-300 rounded-xl flex flex-col gap-1.5 shadow-2xs">
-                <div className="flex items-center justify-between text-xs font-bold text-slate-900">
-                  <span className="flex items-center gap-1.5">
-                    <Loader2 className="w-3.5 h-3.5 animate-spin text-amber-600" />
-                    <span>{uploadStatusMsg || "Uploading Video Reel..."}</span>
-                  </span>
-                  <span>{uploadProgress}%</span>
-                </div>
-                <div className="w-full h-2.5 bg-amber-200/80 rounded-full overflow-hidden">
-                  <div
-                    className="h-full bg-amber-500 transition-all duration-150"
-                    style={{ width: `${uploadProgress}%` }}
-                  />
-                </div>
-              </div>
-            )}
+
 
             {/* Primary Submit Button Positioned Directly Below Live Preview Card */}
             <button
