@@ -118,7 +118,7 @@ export default function TopHeader({
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 bg-white/96 backdrop-blur-xl border-b border-slate-200/80 shadow-[0_1px_12px_rgba(0,0,0,0.06)] flex-col justify-end transition-transform duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 bg-white/98 backdrop-blur-xl flex-col justify-end transition-transform duration-300 ${
         scrollDirection === "down" && !isAtTop ? "-translate-y-full md:translate-y-0" : "translate-y-0"
       } ${
         pathname?.startsWith("/chat") ? "hidden md:flex" : "flex"
