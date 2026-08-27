@@ -37,15 +37,9 @@ export async function POST(request: Request) {
         url: publicUrl,
         fileName,
       });
-    } catch (adminErr) {
-      console.warn("Admin Storage bucket save fallback to Data URL:", adminErr);
-      const base64Data = buffer.toString("base64");
-      const dataUrl = `data:${mimeType};base64,${base64Data}`;
-      return NextResponse.json({
-        success: true,
-        url: dataUrl,
-        fileName,
-      });
+    } catch (adminErr: any) {
+      console.error("Admin Storage bucket upload error:", adminErr);
+      return NextResponse.json({ success: false, error: adminErr?.message || "Storage bucket save failed" }, { status: 500 });
     }
   } catch (error: any) {
     console.error("Server video upload error:", error);

@@ -155,72 +155,85 @@ export default function PostForm({ segment }: PostFormProps) {
   const [isUploadingVideo, setIsUploadingVideo] = useState<boolean>(false);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
   const [uploadStatusMsg, setUploadStatusMsg] = useState<string>("");
+  const videoUploadPromiseRef = React.useRef<Promise<string | null> | null>(null);
 
-  const startBackgroundVideoUpload = async (file: File) => {
+  const startBackgroundVideoUpload = async (file: File): Promise<string | null> => {
     setIsUploadingVideo(true);
     setUploadProgress(0);
     const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
     setUploadStatusMsg(`Uploading Reel (${sizeMb} MB): 0%`);
 
-    try {
-      const videoRef = ref(storage, `videos/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`);
-      const uploadTask = uploadBytesResumable(videoRef, file);
+    return new Promise<string | null>((resolve) => {
+      try {
+        const videoRef = ref(storage, `videos/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`);
+        const uploadTask = uploadBytesResumable(videoRef, file);
 
-      uploadTask.on(
-        "state_changed",
-        (snapshot) => {
-          const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-          setUploadProgress(progress);
-          setUploadStatusMsg(`Uploading Reel (${sizeMb} MB): ${progress}%`);
-        },
-        async (error) => {
-          console.warn("Resumable upload error, trying server API fallback...", error);
-          try {
-            const formData = new FormData();
-            formData.append("file", file);
-            const res = await fetch("/api/upload-video", { method: "POST", body: formData });
-            const data = await res.json();
-            if (data.success && data.url) {
-              setUploadedVideoUrl(data.url);
-              setUploadProgress(100);
-              toast.success("Video processed & ready to publish!");
-            } else {
-              toast.error("Video upload failed. Please re-select file.");
+        uploadTask.on(
+          "state_changed",
+          (snapshot) => {
+            const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+            setUploadProgress(progress);
+            setUploadStatusMsg(`Uploading Reel (${sizeMb} MB): ${progress}%`);
+          },
+          async (error) => {
+            console.warn("Resumable upload error, trying server API fallback...", error);
+            try {
+              const formData = new FormData();
+              formData.append("file", file);
+              const res = await fetch("/api/upload-video", { method: "POST", body: formData });
+              const data = await res.json();
+              if (data.success && data.url) {
+                setUploadedVideoUrl(data.url);
+                setUploadProgress(100);
+                toast.success("Video processed & ready to publish!");
+                resolve(data.url);
+              } else {
+                toast.error("Video upload failed. Please re-select file.");
+                resolve(null);
+              }
+            } catch (serverErr) {
+              console.error("Server video upload error:", serverErr);
+              toast.error("Video upload failed. Please try a smaller video file under 15MB.");
+              resolve(null);
+            } finally {
+              setIsUploadingVideo(false);
             }
-          } catch (serverErr) {
-            console.error("Server video upload error:", serverErr);
-            toast.error("Video upload failed. Please try a smaller video file.");
-          } finally {
-            setIsUploadingVideo(false);
+          },
+          async () => {
+            try {
+              const url = await getDownloadURL(uploadTask.snapshot.ref);
+              setUploadedVideoUrl(url);
+              setUploadProgress(100);
+              setIsUploadingVideo(false);
+              toast.success("Video upload complete! Ready to publish.");
+              resolve(url);
+            } catch (urlErr) {
+              setIsUploadingVideo(false);
+              resolve(null);
+            }
           }
-        },
-        async () => {
-          const url = await getDownloadURL(uploadTask.snapshot.ref);
-          setUploadedVideoUrl(url);
-          setUploadProgress(100);
-          setIsUploadingVideo(false);
-          toast.success("Video upload complete! Ready to publish.");
-        }
-      );
-    } catch (err: any) {
-      console.warn("Initial storage task creation failed:", err);
-      setIsUploadingVideo(false);
-      setUploadStatusMsg("");
-    }
+        );
+      } catch (err: any) {
+        console.warn("Initial storage task creation failed:", err);
+        setIsUploadingVideo(false);
+        setUploadStatusMsg("");
+        resolve(null);
+      }
+    });
   };
 
   const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
       const file = e.target.files[0];
-      if (file.size > 25 * 1024 * 1024) {
-        toast.error("Video file size must be under 25MB.");
+      if (file.size > 15 * 1024 * 1024) {
+        toast.error("Video file size must be under 15MB.");
         return;
       }
       setSelectedVideo(file);
       setVideoPreview(URL.createObjectURL(file));
       setUploadedVideoUrl("");
       toast.info("Video selected! Pre-uploading in background...");
-      startBackgroundVideoUpload(file);
+      videoUploadPromiseRef.current = startBackgroundVideoUpload(file);
     }
   };
   const [price, setPrice] = useState("");
@@ -580,71 +593,21 @@ export default function PostForm({ segment }: PostFormProps) {
       console.warn("Storage upload warning, using preview fallback:", storageErr);
     }
 
-    // ── STEP 2b: Process & Upload Video Reel File (Triple-redundant pipeline) ──
+    // ── STEP 2b: Process & Upload Video Reel File (Single-pipeline await) ──
     let cloudVideoUrl = uploadedVideoUrl;
-    if (selectedVideo && (!cloudVideoUrl || (!cloudVideoUrl.startsWith("http://") && !cloudVideoUrl.startsWith("https://") && !cloudVideoUrl.startsWith("data:video/")))) {
-      if (isUploadingVideo) {
+    if (selectedVideo && (!cloudVideoUrl || (!cloudVideoUrl.startsWith("http://") && !cloudVideoUrl.startsWith("https://")))) {
+      if (videoUploadPromiseRef.current) {
         setUploadStatusMsg("Finishing background video upload...");
-        let attempts = 0;
-        while (isUploadingVideo && attempts < 50) {
-          await new Promise((r) => setTimeout(r, 200));
-          attempts++;
-        }
-        cloudVideoUrl = uploadedVideoUrl;
-      }
-
-      if (!cloudVideoUrl || (!cloudVideoUrl.startsWith("http://") && !cloudVideoUrl.startsWith("https://") && !cloudVideoUrl.startsWith("data:video/"))) {
-        const sizeMb = (selectedVideo.size / (1024 * 1024)).toFixed(1);
-        setUploadStatusMsg(`Uploading Video Reel (${sizeMb} MB)...`);
-        
-        // 1. Try Firebase Storage Client upload
-        try {
-          const videoRef = ref(storage, `videos/${Date.now()}_${selectedVideo.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`);
-          const snapshot = await uploadBytes(videoRef, selectedVideo);
-          cloudVideoUrl = await getDownloadURL(snapshot.ref);
-          setUploadedVideoUrl(cloudVideoUrl);
-        } catch (videoErr) {
-          console.warn("Client video storage upload failed, trying server upload...", videoErr);
-          
-          // 2. Try Server API upload
-          try {
-            const formData = new FormData();
-            formData.append("file", selectedVideo);
-            const res = await fetch("/api/upload-video", { method: "POST", body: formData });
-            const data = await res.json();
-            if (data.success && data.url) {
-              cloudVideoUrl = data.url;
-              setUploadedVideoUrl(cloudVideoUrl);
-            }
-          } catch (serverErr) {
-            console.warn("Server video upload failed, converting to local data URI...", serverErr);
-          }
-        } finally {
-          setUploadStatusMsg("");
-        }
-
-        // 3. Fail-safe fallback: Convert file to Data URL locally via FileReader if network/storage failed
-        if (!cloudVideoUrl || (!cloudVideoUrl.startsWith("http://") && !cloudVideoUrl.startsWith("https://") && !cloudVideoUrl.startsWith("data:video/"))) {
-          try {
-            cloudVideoUrl = await new Promise<string>((resolve) => {
-              const reader = new FileReader();
-              reader.onload = (e) => resolve((e.target?.result as string) || "");
-              reader.onerror = () => resolve("");
-              reader.readAsDataURL(selectedVideo);
-            });
-            if (cloudVideoUrl) {
-              setUploadedVideoUrl(cloudVideoUrl);
-            }
-          } catch (frErr) {
-            console.error("FileReader video conversion error:", frErr);
-          }
+        const resultUrl = await videoUploadPromiseRef.current;
+        if (resultUrl) {
+          cloudVideoUrl = resultUrl;
         }
       }
     }
 
-    if (selectedVideo && (!cloudVideoUrl || (!cloudVideoUrl.startsWith("http://") && !cloudVideoUrl.startsWith("https://") && !cloudVideoUrl.startsWith("data:video/")))) {
+    if (selectedVideo && (!cloudVideoUrl || (!cloudVideoUrl.startsWith("http://") && !cloudVideoUrl.startsWith("https://")))) {
       setLoading(false);
-      const videoErrMsg = "Video reel processing failed. Please select a smaller video file under 20MB and try again.";
+      const videoErrMsg = "Video reel upload failed. Please try a smaller video file under 15MB and try again.";
       setValidationError(videoErrMsg);
       toast.error(videoErrMsg);
       return;
