@@ -76,10 +76,10 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
 
   return (
     <nav
-      className="md:hidden fixed bottom-0 left-0 right-0 z-[9999] w-full bg-white/98 backdrop-blur-2xl border-t border-slate-200/90 shadow-[0_-4px_25px_rgba(0,0,0,0.08)] pointer-events-auto select-none"
-      style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 8px)" }}
+      className="md:hidden fixed bottom-0 left-0 right-0 z-30 w-full bg-white/98 backdrop-blur-2xl border-t border-slate-200/90 shadow-[0_-4px_25px_rgba(0,0,0,0.08)] pointer-events-auto select-none"
+      style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 10px)" }}
     >
-      <div className="flex items-center justify-between h-16 px-8 sm:px-10 w-full max-w-md mx-auto">
+      <div className="flex items-center justify-between h-14 px-6 sm:px-8 w-full max-w-md mx-auto">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive =
@@ -98,44 +98,25 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
               ? pathname.startsWith("/listings") || pathname.includes("tab=listings") || pathname.includes("tab=my_posts")
               : pathname === "/profile";
 
-          if (item.isCenter) {
-            return (
-              <button
-                key={item.id}
-                type="button"
-                onClick={() => router.push(getDynamicPostRoute())}
-                className="flex flex-col items-center justify-center flex-1 h-full py-1 cursor-pointer group shrink-0 z-50"
-                aria-label="Post a Free Ad"
-              >
-                <div className="w-12 h-12 rounded-full bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] shadow-md shadow-amber-500/25 border-2 border-white flex items-center justify-center group-hover:scale-105 active:scale-95 transition-all">
-                  <Plus className="w-6 h-6 stroke-[3]" />
-                </div>
-                <span className="mt-0.5 text-[11px] font-heading font-black text-[#0F172A] uppercase tracking-wider">
-                  {item.label}
-                </span>
-              </button>
-            );
-          }
-
           return (
             <button
               key={item.id}
               onClick={() => router.push(item.route)}
               className={`flex flex-col items-center justify-center flex-1 h-full py-1 px-1 transition-all duration-200 cursor-pointer ${
-                isActive ? "text-slate-950" : "text-slate-500 hover:text-slate-900"
+                isActive ? "text-amber-500" : "text-slate-500 hover:text-slate-800"
               }`}
             >
               <div
-                className={`px-3 py-1 rounded-xl transition-all duration-200 relative flex items-center justify-center ${
+                className={`p-1 rounded-xl transition-all duration-200 relative flex items-center justify-center ${
                   isActive
-                    ? "bg-slate-900 text-amber-400 shadow-2xs"
-                    : "bg-transparent text-slate-500 hover:bg-slate-100"
+                    ? "text-amber-500 font-bold"
+                    : "text-slate-500 hover:bg-slate-100"
                 }`}
               >
-                <Icon className="w-5 h-5 stroke-[2.2]" />
+                <Icon className={`w-5 h-5 ${isActive ? "stroke-[2.5] text-amber-500" : "stroke-[2] text-slate-500"}`} />
               </div>
               <span
-                className={`mt-1 text-[11px] tracking-tight font-heading leading-tight ${
+                className={`text-[10px] sm:text-[11px] tracking-tight font-heading leading-tight ${
                   isActive ? "font-black text-slate-950" : "font-semibold text-slate-500"
                 }`}
               >

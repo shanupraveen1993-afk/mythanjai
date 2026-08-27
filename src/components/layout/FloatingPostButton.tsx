@@ -21,10 +21,10 @@ export default function FloatingPostButton() {
   }
 
   const getButtonConfig = () => {
-    if (pathname.includes("/need")) return { label: "+ Post Wanted Ad", route: "/post/need" };
-    if (pathname.includes("/service")) return { label: "+ Post Service", route: "/post/service" };
-    if (pathname.includes("/shops") || pathname.includes("/offer")) return { label: "+ Post Store Offer", route: "/post/offer" };
-    return { label: "+ Post for Sale", route: "/post/sell" };
+    if (pathname.includes("/need")) return { label: "Post Wanted Ad", route: "/post/need" };
+    if (pathname.includes("/service")) return { label: "Post Service", route: "/post/service" };
+    if (pathname.includes("/shops") || pathname.includes("/offer")) return { label: "Post Store Offer", route: "/post/offer" };
+    return { label: "Post for Sale", route: "/post/sell" };
   };
 
   const buttonConfig = getButtonConfig();
@@ -43,12 +43,12 @@ export default function FloatingPostButton() {
 
   return (
     <div
-      className="fixed left-1/2 -translate-x-1/2 bottom-[calc(4.25rem+env(safe-area-inset-bottom,0px))] z-[99999] md:hidden select-none pointer-events-auto transition-transform duration-200 active:scale-95"
+      className="fixed left-1/2 -translate-x-1/2 bottom-[calc(4.75rem+max(env(safe-area-inset-bottom,0px),10px))] z-40 md:hidden select-none pointer-events-auto transition-transform duration-200 active:scale-95"
     >
       <button
         type="button"
         onClick={handlePostClick}
-        className="bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs sm:text-sm px-5 py-2.5 rounded-full shadow-xl shadow-amber-500/25 border-2 border-white flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap"
+        className="bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs sm:text-sm px-5 py-2.5 rounded-full shadow-lg shadow-amber-500/20 border-2 border-white flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap"
         aria-label="Create Post"
       >
         <Plus className="w-4.5 h-4.5 stroke-[3] text-slate-950" />

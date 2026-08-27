@@ -123,7 +123,7 @@ export default function TopHeader({
       } ${
         pathname?.startsWith("/chat") ? "hidden md:flex" : "flex"
       }`}
-      style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 6px)" }}
+      style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 12px)" }}
     >
       <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 py-2 flex items-center justify-between gap-2.5 sm:gap-4 relative">
 
