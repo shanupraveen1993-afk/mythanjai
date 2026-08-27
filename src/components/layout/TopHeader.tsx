@@ -123,11 +123,11 @@ export default function TopHeader({
           </div>
         ) : (
           showCenterNav ? (
-            <div className="absolute left-1/2 -translate-x-1/2 hidden md:flex items-center gap-1.5 bg-slate-100/90 p-1.5 rounded-xl border border-slate-200/80 font-heading backdrop-blur-sm z-10">
+            <div className="absolute left-1/2 -translate-x-1/2 hidden md:flex items-center gap-1.5 bg-slate-100/90 p-1.5 rounded-full border border-slate-200/80 font-heading backdrop-blur-sm z-10 shadow-2xs">
               <button
                 type="button"
                 onClick={() => router.push("/")}
-                className={`px-3.5 py-1.5 rounded-lg text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`px-4 py-1.5 rounded-full text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 ${
                   pathname === "/" || pathname === "/home" || pathname.includes("/sell")
                     ? "bg-[#FBBF24] text-slate-950 font-bold border border-amber-400/90 shadow-2xs"
                     : "text-slate-700 hover:text-slate-950 font-semibold transition-colors"
@@ -139,7 +139,7 @@ export default function TopHeader({
               <button
                 type="button"
                 onClick={() => router.push("/need")}
-                className={`px-3.5 py-1.5 rounded-lg text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`px-4 py-1.5 rounded-full text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 ${
                   pathname.includes("/need")
                     ? "bg-[#FBBF24] text-slate-950 font-bold border border-amber-400/90 shadow-2xs"
                     : "text-slate-700 hover:text-slate-950 font-semibold transition-colors"
@@ -151,7 +151,7 @@ export default function TopHeader({
               <button
                 type="button"
                 onClick={() => router.push("/services")}
-                className={`px-3.5 py-1.5 rounded-lg text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`px-4 py-1.5 rounded-full text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 ${
                   pathname.includes("/services")
                     ? "bg-[#FBBF24] text-slate-950 font-bold border border-amber-400/90 shadow-2xs"
                     : "text-slate-700 hover:text-slate-950 font-semibold transition-colors"
@@ -163,7 +163,7 @@ export default function TopHeader({
               <button
                 type="button"
                 onClick={() => router.push("/shops")}
-                className={`px-3.5 py-1.5 rounded-lg text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 ${
+                className={`px-4 py-1.5 rounded-full text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 ${
                   pathname.includes("/shops") || pathname.includes("/offers")
                     ? "bg-[#FBBF24] text-slate-950 font-bold border border-amber-400/90 shadow-2xs"
                     : "text-slate-700 hover:text-slate-950 font-semibold transition-colors"
@@ -183,15 +183,13 @@ export default function TopHeader({
             <a
               href="/api/apk-download"
               download="NammaThanjai-v16.apk"
-              className="flex md:hidden bg-[#1d4ed8] hover:bg-blue-800 text-white font-heading font-bold text-xs px-3 py-1.5 rounded-lg shadow-2xs transition-all items-center gap-1.5 shrink-0 active:scale-95 border border-blue-600 cursor-pointer whitespace-nowrap"
+              className="flex md:hidden bg-[#1d4ed8] hover:bg-blue-800 text-white font-heading font-bold text-xs px-3.5 py-1.5 rounded-full shadow-2xs transition-all items-center gap-1.5 shrink-0 active:scale-95 border border-blue-600 cursor-pointer whitespace-nowrap"
               title="Download Namma Thanjai Official Android App"
             >
               <Download className="w-3.5 h-3.5 text-white stroke-[2.5]" />
               <span>Get App</span>
             </a>
           )}
-
-
 
           {/* Desktop Website Only: Chat, My Listings & Profile Buttons */}
           <div className="hidden md:flex items-center gap-2">
@@ -271,7 +269,7 @@ export default function TopHeader({
             <button
               type="button"
               onClick={handleDynamicPostClick}
-              className="bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-xs sm:text-sm px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-heading font-black shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none touch-manipulation active:scale-[0.97] transition-all border border-amber-400 ml-1"
+              className="bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-xs sm:text-sm px-4 sm:px-5 py-1.5 sm:py-2 rounded-full font-heading font-black shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none touch-manipulation active:scale-[0.97] transition-all border border-amber-400 ml-1"
               title={postInfo.label}
             >
               <Plus className="w-4 h-4 stroke-[3] text-[#0F172A]" />
