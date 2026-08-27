@@ -645,15 +645,15 @@ export default function ChatClientPage() {
                       </span>
                     </div>
                     
-                    {/* Ad Title Badge */}
-                    <div className="flex items-center gap-1 mt-0.5">
-                      <span className="text-[10px] font-bold text-slate-700 bg-amber-50 border border-amber-200/80 px-1.5 py-0.2 rounded truncate">
-                        📌 {t.listingTitle}
-                      </span>
-                    </div>
+                    {/* Ad Title Subtitle */}
+                    {!t.isSystemThread && t.listingTitle && t.listingTitle !== "Welcome to Namma Thanjai" && (
+                      <p className="text-[10px] font-medium text-slate-500 truncate mt-0.5">
+                        Re: {t.listingTitle}
+                      </p>
+                    )}
 
                     {/* Last Message Preview */}
-                    <div className="flex items-center justify-between mt-1">
+                    <div className="flex items-center justify-between mt-0.5">
                       <p className="text-xs text-slate-500 truncate">{t.lastMessage}</p>
                     </div>
                   </div>
@@ -710,9 +710,11 @@ export default function ChatClientPage() {
               
               <div className="min-w-0 flex flex-col justify-center flex-1">
                 <h3 className="font-heading font-black text-xs sm:text-sm text-white truncate leading-tight">{activePeerName}</h3>
-                <div className="flex items-center gap-1 text-[11px] text-[#ffeeb3] font-bold truncate mt-0.5">
-                  <span className="truncate">📌 {activeListingTitle}</span>
-                </div>
+                {activeChatId !== "namma_thanjai_system_welcome" && activeListingTitle && activeListingTitle !== "Welcome to Namma Thanjai" && (
+                  <p className="text-[11px] text-[#ffeeb3] font-medium truncate mt-0.5">
+                    Re: {activeListingTitle}
+                  </p>
+                )}
               </div>
             </div>
 

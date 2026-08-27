@@ -40,39 +40,9 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
   const [contactType, setContactType] = useState<"call" | "whatsapp">("call");
   const [isFeedbackOpen, setIsFeedbackOpen] = useState(false);
 
-  // AI Description Text Analyzer: Generates 1 of 4 citation words (Skilled, Talented, Expert, Proficient) strictly from description text
   const skillBadge = React.useMemo(() => {
-    const text = (post.description || post.name || "").toLowerCase();
-    
-    // Deterministic hash selector for fallback across the 4 words
-    let hash = 0;
-    for (let i = 0; i < text.length; i++) {
-      hash = (hash << 5) - hash + text.charCodeAt(i);
-      hash |= 0;
-    }
-    const idx = Math.abs(hash) % 4;
-
-    if (text.includes("expert") || text.includes("professional") || text.includes("architect")) {
-      return { label: "Expert", cls: "bg-emerald-50 text-emerald-700 border-emerald-200" };
-    }
-    if (text.includes("proficient") || text.includes("master") || text.includes("quality")) {
-      return { label: "Proficient", cls: "bg-amber-50 text-amber-900 border-amber-300 font-bold" };
-    }
-    if (text.includes("talent") || text.includes("creative") || text.includes("repair")) {
-      return { label: "Top Rated", cls: "bg-amber-50 text-amber-900 border-amber-300 font-bold" };
-    }
-    if (text.includes("skill") || text.includes("service") || text.includes("wiring")) {
-      return { label: "Verified Trade", cls: "bg-emerald-50 text-emerald-800 border-emerald-300" };
-    }
-
-    const fallbacks = [
-      { label: "Verified Trade", cls: "bg-emerald-50 text-emerald-800 border-emerald-300" },
-      { label: "Top Rated", cls: "bg-amber-50 text-amber-900 border-amber-300 font-bold" },
-      { label: "Expert Trade", cls: "bg-emerald-50 text-emerald-800 border-emerald-300" },
-      { label: "Proficient", cls: "bg-amber-50 text-amber-900 border-amber-300 font-bold" },
-    ];
-    return fallbacks[idx];
-  }, [post.description, post.name]);
+    return { label: "Verified Service", cls: "bg-slate-100 text-slate-700 border-slate-200 font-medium" };
+  }, []);
 
   const hasRealReviews = Boolean((post as any).review_count && Number((post as any).review_count) > 0);
 

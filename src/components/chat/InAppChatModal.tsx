@@ -183,8 +183,8 @@ export default function InAppChatModal({
                 <h3 className="font-heading font-black text-sm text-white truncate">{sellerName}</h3>
                 <span className="bg-emerald-800/80 text-emerald-100 text-[10px] font-extrabold px-1.5 py-0.2 rounded border border-emerald-600/60 uppercase">Seller</span>
               </div>
-              <p className="text-[11px] text-amber-300 font-extrabold truncate">
-                📌 Item: {listingTitle}
+              <p className="text-[11px] text-[#ffeeb3] font-medium truncate">
+                Re: {listingTitle}
               </p>
             </div>
           </div>
