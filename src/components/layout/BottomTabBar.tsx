@@ -79,7 +79,7 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
       className="md:hidden fixed bottom-0 left-0 right-0 z-30 w-full pointer-events-none select-none pb-[max(env(safe-area-inset-bottom,0px),8px)]"
     >
       <nav
-        className="pointer-events-auto mx-3 max-w-md sm:mx-auto bg-[#1e3a8a]/95 text-white backdrop-blur-2xl rounded-2xl border border-blue-800/80 shadow-[0_10px_35px_rgba(30,58,138,0.4)] px-2 py-1 flex items-center justify-between"
+        className="pointer-events-auto mx-3.5 max-w-md sm:mx-auto bg-[#0F172A]/95 text-white backdrop-blur-2xl rounded-full border border-slate-800 shadow-[0_12px_40px_rgba(0,0,0,0.45)] p-1.5 flex items-center justify-around gap-1"
       >
         {navItems.map((item) => {
           const Icon = item.icon;
@@ -99,36 +99,28 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
               ? pathname.startsWith("/listings") || pathname.includes("tab=listings") || pathname.includes("tab=my_posts")
               : pathname === "/profile";
 
+          if (isActive) {
+            return (
+              <button
+                key={item.id}
+                onClick={() => router.push(item.route)}
+                className="bg-[#1d4ed8] text-white px-4 py-2 rounded-full flex items-center gap-2 font-heading font-black text-xs shadow-md shadow-blue-600/30 transition-all duration-300 scale-105 shrink-0 cursor-pointer"
+              >
+                <Icon className="w-4.5 h-4.5 fill-white text-white stroke-[1.2]" />
+                <span className="truncate max-w-[100px] leading-none">{item.label}</span>
+              </button>
+            );
+          }
+
           return (
             <button
               key={item.id}
               onClick={() => router.push(item.route)}
-              className={`relative flex flex-col items-center justify-center flex-1 h-12 py-0.5 px-1 transition-all duration-200 cursor-pointer rounded-xl ${
-                isActive ? "bg-amber-400/20 text-[#FBBF24]" : "text-blue-200/70 hover:text-white"
-              }`}
+              className="p-2.5 rounded-full text-slate-400 hover:text-white transition-all cursor-pointer flex items-center justify-center shrink-0 active:scale-90"
+              title={item.label}
+              aria-label={item.label}
             >
-              {/* Top Golden Active Indicator Bar */}
-              {isActive && (
-                <div className="absolute -top-1 left-1/2 -translate-x-1/2 w-7 h-1 bg-[#FBBF24] rounded-full shadow-md shadow-amber-400/80" />
-              )}
-
-              <div className="flex items-center justify-center transition-transform active:scale-90">
-                <Icon
-                  className={`w-5 h-5 transition-all duration-200 ${
-                    isActive
-                      ? "fill-[#FBBF24] text-[#FBBF24] stroke-[1.2] scale-110"
-                      : "text-blue-200/70 stroke-[2] fill-transparent"
-                  }`}
-                />
-              </div>
-
-              <span
-                className={`text-[10px] tracking-tight font-heading mt-0.5 leading-tight transition-colors ${
-                  isActive ? "font-black text-[#FBBF24]" : "font-semibold text-blue-200/70"
-                }`}
-              >
-                {item.label}
-              </span>
+              <Icon className="w-5 h-5 text-slate-400 stroke-[2] fill-transparent hover:text-white transition-colors" />
             </button>
           );
         })}
