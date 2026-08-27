@@ -2,8 +2,8 @@ import React from "react";
 import ListingsClientPage from "./ListingsClientPage";
 
 export const metadata = {
-  title: "My Listings & Saved Ads — Namma Thanjai",
-  description: "View and manage your live posted ads and saved listings in Thanjavur.",
+  title: "My Ads & Saved Items — Namma Thanjai",
+  description: "View and manage your live posted ads and saved items in Thanjavur.",
 };
 
 export default function ListingsPage() {

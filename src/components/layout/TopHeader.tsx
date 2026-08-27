@@ -139,8 +139,8 @@ export default function TopHeader({
           </div>
         </div>
 
-        {/* Desktop Header Center: Compact Search Bar + Prominent 4 Category Tabs */}
-        <div className="hidden md:flex items-center gap-4 z-20">
+        {/* Desktop Header Center: 100% Perfectly Center Aligned */}
+        <div className="hidden md:flex items-center gap-4 z-20 absolute left-1/2 -translate-x-1/2">
           <div className="w-52 sm:w-60 shrink-0">
             <UniversalSearchBar />
           </div>
@@ -253,24 +253,25 @@ export default function TopHeader({
               </div>
             )}
 
-            {/* 2. My Listings Button (Second) */}
+            {/* 2. My Ads Button (Second) */}
             {!pathname.includes("/post") && (
               <div className="relative group flex items-center justify-center">
                 <button
                   type="button"
                   onClick={() => router.push("/listings")}
-                  className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border shrink-0 ${
+                  className={`px-3 py-1.5 rounded-full text-xs font-extrabold transition-all cursor-pointer flex items-center gap-1.5 select-none ${
                     pathname.startsWith("/listings")
-                      ? "bg-[#FBBF24] text-[#0F172A] border-amber-400 shadow-xs"
-                      : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
+                      ? "bg-[#FBBF24] text-slate-950 border border-amber-400/90 shadow-2xs"
+                      : "text-slate-700 hover:text-slate-950 transition-colors"
                   }`}
-                  title="My Listings"
-                  aria-label="View my listings"
+                  title="My Ads"
+                  aria-label="View my ads"
                 >
                   <Package className={`w-4 h-4 ${pathname.startsWith("/listings") ? "text-[#0F172A] stroke-[2.5]" : "text-slate-600"}`} />
+                  <span>My Ads</span>
                 </button>
                 <div className="absolute top-full mt-1.5 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 bg-slate-900 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow-md whitespace-nowrap z-50">
-                  My Listings
+                  My Ads
                 </div>
               </div>
             )}

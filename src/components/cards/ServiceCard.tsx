@@ -197,14 +197,10 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
           {/* Top Row: Category Badge (left) + Skill Badge / Real Ratings (right) */}
           <div className="flex items-center justify-between gap-2 w-full">
             <CategoryIcon category={post.skill_category} />
-            {hasRealReviews ? (
+            {hasRealReviews && (
               <span className="flex items-center gap-1 bg-amber-50 text-amber-700 border border-amber-200 font-extrabold text-[10px] px-2 py-0.5 rounded-md shrink-0">
                 <Star className="w-3 h-3 fill-amber-500 text-amber-500 shrink-0" />
                 <span>{Number(post.rating || 0).toFixed(1)} ★ ({(post as any).review_count})</span>
-              </span>
-            ) : (
-              <span className={`text-[10px] font-black border px-2 py-0.5 rounded-md uppercase tracking-wider shrink-0 ${skillBadge.cls}`}>
-                {skillBadge.label}
               </span>
             )}
           </div>
@@ -218,7 +214,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
         {/* ── MIDDLE SECTION: Fixed Height Description Box ── */}
         <div className="min-h-[4.25rem] bg-slate-50/80 border border-slate-200/60 p-2.5 rounded-xl flex items-center">
           <p className="text-sm text-slate-700 font-medium leading-relaxed line-clamp-3">
-            {post.description || "Verified trade professional serving Thanjavur region."}
+            {post.description || "Skilled trade professional serving Thanjavur region."}
           </p>
         </div>
 
