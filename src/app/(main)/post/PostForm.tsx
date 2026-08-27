@@ -164,9 +164,49 @@ export default function PostForm({ segment }: PostFormProps) {
     setUploadStatusMsg(`Uploading Reel (${sizeMb} MB): 0%`);
 
     return new Promise<string | null>((resolve) => {
+      let stallTimer: NodeJS.Timeout | null = null;
+      let isResolved = false;
+
+      const safeResolve = (url: string | null) => {
+        if (isResolved) return;
+        isResolved = true;
+        if (stallTimer) clearTimeout(stallTimer);
+        setIsUploadingVideo(false);
+        setUploadStatusMsg("");
+        resolve(url);
+      };
+
       try {
         const videoRef = ref(storage, `videos/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`);
         const uploadTask = uploadBytesResumable(videoRef, file);
+
+        // 6-Second Stall Watchdog: If client upload stalls at 0%, trigger server API fallback immediately
+        stallTimer = setTimeout(async () => {
+          if (!isResolved && uploadTask.snapshot.bytesTransferred === 0) {
+            console.warn("Client Firebase upload stalled at 0%, triggering server API upload fallback...");
+            try {
+              uploadTask.cancel();
+            } catch (e) {}
+
+            try {
+              const formData = new FormData();
+              formData.append("file", file);
+              const res = await fetch("/api/upload-video", { method: "POST", body: formData });
+              const data = await res.json();
+              if (data.success && data.url) {
+                setUploadedVideoUrl(data.url);
+                setUploadProgress(100);
+                toast.success("Video processed & ready to publish!");
+                safeResolve(data.url);
+                return;
+              }
+            } catch (serverErr) {
+              console.error("Server upload fallback error:", serverErr);
+            }
+            toast.error("Video upload timed out. Please try a smaller video under 15MB.");
+            safeResolve(null);
+          }
+        }, 6000);
 
         uploadTask.on(
           "state_changed",
@@ -174,6 +214,10 @@ export default function PostForm({ segment }: PostFormProps) {
             const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
             setUploadProgress(progress);
             setUploadStatusMsg(`Uploading Reel (${sizeMb} MB): ${progress}%`);
+            if (snapshot.bytesTransferred > 0 && stallTimer) {
+              clearTimeout(stallTimer);
+              stallTimer = null;
+            }
           },
           async (error) => {
             console.warn("Resumable upload error, trying server API fallback...", error);
@@ -186,17 +230,15 @@ export default function PostForm({ segment }: PostFormProps) {
                 setUploadedVideoUrl(data.url);
                 setUploadProgress(100);
                 toast.success("Video processed & ready to publish!");
-                resolve(data.url);
+                safeResolve(data.url);
               } else {
                 toast.error("Video upload failed. Please re-select file.");
-                resolve(null);
+                safeResolve(null);
               }
             } catch (serverErr) {
               console.error("Server video upload error:", serverErr);
               toast.error("Video upload failed. Please try a smaller video file under 15MB.");
-              resolve(null);
-            } finally {
-              setIsUploadingVideo(false);
+              safeResolve(null);
             }
           },
           async () => {
@@ -204,20 +246,16 @@ export default function PostForm({ segment }: PostFormProps) {
               const url = await getDownloadURL(uploadTask.snapshot.ref);
               setUploadedVideoUrl(url);
               setUploadProgress(100);
-              setIsUploadingVideo(false);
               toast.success("Video upload complete! Ready to publish.");
-              resolve(url);
+              safeResolve(url);
             } catch (urlErr) {
-              setIsUploadingVideo(false);
-              resolve(null);
+              safeResolve(null);
             }
           }
         );
       } catch (err: any) {
         console.warn("Initial storage task creation failed:", err);
-        setIsUploadingVideo(false);
-        setUploadStatusMsg("");
-        resolve(null);
+        safeResolve(null);
       }
     });
   };
@@ -593,12 +631,13 @@ export default function PostForm({ segment }: PostFormProps) {
       console.warn("Storage upload warning, using preview fallback:", storageErr);
     }
 
-    // ── STEP 2b: Process & Upload Video Reel File (Single-pipeline await) ──
+    // ── STEP 2b: Process & Upload Video Reel File (Single-pipeline await with Promise.race timeout) ──
     let cloudVideoUrl = uploadedVideoUrl;
     if (selectedVideo && (!cloudVideoUrl || (!cloudVideoUrl.startsWith("http://") && !cloudVideoUrl.startsWith("https://")))) {
       if (videoUploadPromiseRef.current) {
         setUploadStatusMsg("Finishing background video upload...");
-        const resultUrl = await videoUploadPromiseRef.current;
+        const timeoutPromise = new Promise<string | null>((resolve) => setTimeout(() => resolve(null), 10000));
+        const resultUrl = await Promise.race([videoUploadPromiseRef.current, timeoutPromise]);
         if (resultUrl) {
           cloudVideoUrl = resultUrl;
         }
