@@ -465,45 +465,50 @@ export default function PostForm({ segment }: PostFormProps) {
       }
     } catch (e) {}
 
-    // ── STEP 2: Upload Images to Firebase Storage (if selected) ──
+    // ── STEP 2: Upload Images to Firebase Storage (with 2.5s timeout & instant base64 fallback) ──
     let cloudImageUrl = defaultCoverImage;
     let cloudImageUrls: string[] = [];
 
+    const uploadSingleImageWithTimeout = async (file: File, fallbackBase64: string): Promise<string> => {
+      try {
+        const compressed = await compressImage(file, 600, 600, 0.65).catch(() => null);
+        const blobToUpload = compressed?.blob || file;
+        const fileName = `postings/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`;
+        const storageRef = ref(storage, fileName);
+
+        const uploadPromise = uploadBytes(storageRef, blobToUpload).then((snap) => getDownloadURL(snap.ref));
+        const timeoutPromise = new Promise<string>((_, reject) =>
+          setTimeout(() => reject(new Error("Storage upload timeout")), 2500)
+        );
+
+        return await Promise.race([uploadPromise, timeoutPromise]);
+      } catch (err) {
+        console.warn("Storage upload note (using instant WebP fallback):", err);
+        return fallbackBase64 || defaultCoverImage;
+      }
+    };
+
     try {
       if (segment === "sell" && selectedImages.length > 0) {
-        const uploadedUrls = await Promise.all(
-          selectedImages.map(async (img) => {
-            try {
-              const compressed = await compressImage(img, 800, 800, 0.7);
-              const storageRef = ref(storage, `postings/${Date.now()}_${img.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`);
-              const snapshot = await uploadBytes(storageRef, compressed.blob);
-              return await getDownloadURL(snapshot.ref);
-            } catch {
-              const fallback = await compressImage(img, 400, 400, 0.4).catch(() => null);
-              return fallback?.base64 || defaultCoverImage;
-            }
-          })
+        const uploaded = await Promise.all(
+          selectedImages.map((img, idx) =>
+            uploadSingleImageWithTimeout(img, imagePreviews[idx] || defaultCoverImage)
+          )
         );
-        cloudImageUrls = uploadedUrls;
-        cloudImageUrl = uploadedUrls[0] || cloudImageUrl;
+        cloudImageUrls = uploaded;
+        cloudImageUrl = uploaded[0] || defaultCoverImage;
       } else if (selectedImage) {
-        try {
-          const compressed = await compressImage(selectedImage, 800, 800, 0.7);
-          const storageRef = ref(storage, `postings/${Date.now()}_${selectedImage.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`);
-          const snapshot = await uploadBytes(storageRef, compressed.blob);
-          cloudImageUrl = await getDownloadURL(snapshot.ref);
-          cloudImageUrls = [cloudImageUrl];
-        } catch {
-          const fallback = await compressImage(selectedImage, 400, 400, 0.4).catch(() => null);
-          cloudImageUrl = fallback?.base64 || imagePreview || defaultCoverImage;
-          cloudImageUrls = [cloudImageUrl];
-        }
+        const uploadedUrl = await uploadSingleImageWithTimeout(selectedImage, imagePreview || defaultCoverImage);
+        cloudImageUrl = uploadedUrl;
+        cloudImageUrls = [uploadedUrl];
       } else if (imagePreviews.length > 0) {
         cloudImageUrls = imagePreviews;
         cloudImageUrl = imagePreviews[0] || defaultCoverImage;
       }
     } catch (storageErr) {
-      console.warn("Storage upload warning, using preview fallback:", storageErr);
+      console.warn("Storage processing note:", storageErr);
+      cloudImageUrls = imagePreviews.length > 0 ? imagePreviews : [defaultCoverImage];
+      cloudImageUrl = cloudImageUrls[0] || defaultCoverImage;
     }
 
 
