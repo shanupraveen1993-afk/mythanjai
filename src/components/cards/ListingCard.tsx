@@ -179,6 +179,34 @@ export default function ListingCard({ listing, isPreview }: { listing: ListingIt
     return Boolean(user?.uid && listing.saved_by && listing.saved_by.includes(user.uid));
   });
 
+  const [photoRequestCount, setPhotoRequestCount] = useState<number>(() => {
+    return (listing as any).photo_requests_count || 0;
+  });
+  const [hasRequestedPhoto, setHasRequestedPhoto] = useState<boolean>(false);
+
+  const handleRequestPhotoClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (hasRequestedPhoto) {
+      toast.info("You have already requested a photo for this listing.");
+      return;
+    }
+    if (photoRequestCount >= 3) {
+      toast.info("Photo request limit reached (3 requests). Owner has been notified!");
+      return;
+    }
+    setPhotoRequestCount((prev) => prev + 1);
+    setHasRequestedPhoto(true);
+    toast.success("Photo request sent to seller!");
+
+    if (typeof window !== "undefined" && listing.phone) {
+      const cleanPh = listing.phone.replace(/\D/g, "");
+      if (cleanPh.length >= 10) {
+        const caption = `வணக்கம்! Namma Thanjai ஃபீடில் உங்கள் விளம்பரம் "${listing.title}"-க்கு புகைப்படம் (Photo) பதிவேற்ற கோரிக்கை வரப்பெற்றுள்ளது.`;
+        window.open(`https://api.whatsapp.com/send?phone=91${cleanPh.slice(-10)}&text=${encodeURIComponent(caption)}`, "_blank");
+      }
+    }
+  };
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       try {
@@ -359,9 +387,19 @@ export default function ListingCard({ listing, isPreview }: { listing: ListingIt
                     className="object-cover transition-transform duration-300 group-hover/img:scale-105"
                   />
                 ) : (
-                  <div className="w-full h-full bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 text-amber-400 p-2 flex flex-col items-center justify-center text-center select-none">
-                    <Camera className="w-5 h-5 text-amber-400 mb-1 opacity-80" />
-                    <span className="text-[10px] font-black uppercase tracking-wider text-amber-300">Request Photo</span>
+                  <div
+                    onClick={handleRequestPhotoClick}
+                    className={`w-full h-full bg-gradient-to-br from-slate-900 via-slate-950 to-slate-900 text-amber-400 p-2 flex flex-col items-center justify-center text-center select-none transition-all ${
+                      photoRequestCount >= 3 || hasRequestedPhoto ? "opacity-85 cursor-default" : "hover:bg-slate-900 cursor-pointer active:scale-95"
+                    }`}
+                    title={photoRequestCount >= 3 ? "Photo requested by 3 members" : "Click to request seller to upload photo"}
+                  >
+                    <Camera className="w-5 h-5 text-amber-400 mb-1 opacity-85" />
+                    <span className="text-[10px] font-black uppercase tracking-wider text-amber-300">
+                      {photoRequestCount >= 3 || hasRequestedPhoto
+                        ? `Photo Requested (${photoRequestCount >= 3 ? 3 : photoRequestCount})`
+                        : "Request Photo"}
+                    </span>
                   </div>
                 )}
                 {/* +N Badge overlay on bottom-right of image */}

@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import { Phone, MessageSquare, MapPin, Store, Sparkles, Calendar, Navigation, Share2, Bookmark, Lock, Flag, Camera, Clock, Video, Play, Pause, Pencil, Eye } from "lucide-react";
+import { Phone, MessageSquare, MapPin, Store, Tag, Calendar, Navigation, Share2, Bookmark, Lock, Flag, Camera, Clock, Video, Play, Pause, Pencil, Eye } from "lucide-react";
 import { ShopPost } from "@/types";
 import { useToast } from "@/context/ToastContext";
 import { useLanguage } from "@/context/LanguageContext";
@@ -214,12 +214,12 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
           <div className="absolute top-2.5 left-2.5 z-20 bg-rose-600 text-white text-xs font-bold px-2.5 py-0.5 rounded-lg shadow-md">⚠️ Offer Expired</div>
         ) : isEndsToday ? (
           <div className="absolute top-2.5 left-2.5 z-20 bg-slate-950/90 text-white font-extrabold text-xs px-2.5 py-0.5 rounded-lg flex items-center gap-1 shadow-md border border-slate-800">
-            <Sparkles className="w-3 h-3 text-amber-400 fill-current" />
+            <Clock className="w-3 h-3 text-amber-400" />
             <span>Ends Today!</span>
           </div>
         ) : post.is_featured ? (
           <div className="absolute top-2.5 left-2.5 z-20 bg-[#FBBF24] text-[#0F172A] text-xs font-semibold px-2 py-0.5 rounded-lg flex items-center gap-1 shadow-md">
-            <Sparkles className="w-2.5 h-2.5 fill-current" />
+            <Tag className="w-2.5 h-2.5 fill-current" />
             <span>Featured Store</span>
           </div>
         ) : (
@@ -259,7 +259,7 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
             <div className={`border rounded-xl p-3 flex flex-col gap-1.5 font-sans ${isExpired ? "bg-slate-50 border-slate-200 text-slate-500 opacity-75" : "bg-blue-50/80 border-blue-200 text-blue-950"}`}>
               <div className="flex items-center justify-between gap-2 font-bold text-xs truncate">
                 <span className="flex items-center gap-1.5 truncate">
-                  <Sparkles className="w-3.5 h-3.5 fill-blue-600 text-blue-700 shrink-0" />
+                  <Tag className="w-3.5 h-3.5 text-blue-700 shrink-0" />
                   <span className="truncate">{post.offer_title}</span>
                 </span>
                 <span className="text-[10px] font-semibold text-slate-500 shrink-0 bg-white/80 px-2 py-0.5 rounded-md border border-slate-200">

@@ -339,7 +339,7 @@ function ListingsContent() {
           }`}
         >
           <Package className="w-4.5 h-4.5 text-amber-500" />
-          <span>My Posted Ads ({myPosts.length})</span>
+          <span>My Ads ({myPosts.length})</span>
         </button>
 
         <button

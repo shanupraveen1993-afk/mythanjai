@@ -103,32 +103,75 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
 
         {/* Modal Body */}
         <div className="flex flex-col gap-4">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-2xl bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-600 shrink-0">
-              <Phone className="w-5 h-5 stroke-[2.5]" />
+          
+          {/* Logo & Brand Header */}
+          <div className="flex flex-col items-center text-center gap-1.5 pt-1">
+            <div className="w-14 h-14 rounded-2xl bg-white p-2 shadow-md border border-slate-200 flex items-center justify-center">
+              <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="w-full h-full object-contain" />
             </div>
-            <div>
-              <h3 className="font-heading font-black text-base text-slate-900 leading-tight">
-                Enter Mobile Number
-              </h3>
-              <p className="text-xs text-slate-500 font-medium">
-                Verify your 10-digit phone number to publish &amp; access your account
-              </p>
+            <h2 className="font-heading font-black text-xl text-slate-900 tracking-tight flex items-center gap-1.5 mt-1">
+              <span className="text-[#1d4ed8]">நம்ம</span>
+              <span className="text-[#f59e0b]">thanjai</span>
+            </h2>
+            <p className="text-xs text-slate-500 font-bold max-w-xs leading-relaxed">
+              Thanjavur's #1 Local Marketplace, Need Requests &amp; Trade Directory
+            </p>
+          </div>
+
+          {/* 4-SEGMENT FEATURE SHOWCASE (DISPLAY ONLY - NOT BUTTONS) */}
+          <div className="bg-slate-50 border border-slate-200/90 rounded-2xl p-3 flex flex-col gap-2">
+            <div className="flex items-center justify-between px-1">
+              <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Platform Services Showcase</span>
+              <span className="text-[10px] font-bold text-amber-600 bg-amber-100 px-2 py-0.5 rounded">All-in-One Tanjore App</span>
+            </div>
+            
+            <div className="grid grid-cols-2 gap-2">
+              <div className="bg-white border border-slate-200 p-2.5 rounded-xl flex items-center gap-2 shadow-2xs select-none">
+                <span className="text-base shrink-0">🏷️</span>
+                <div className="min-w-0">
+                  <span className="text-xs font-extrabold text-slate-900 block leading-none">Sell Items</span>
+                  <span className="text-[10px] text-slate-500 font-medium block truncate mt-0.5">Bikes, Phones, Goods</span>
+                </div>
+              </div>
+
+              <div className="bg-white border border-slate-200 p-2.5 rounded-xl flex items-center gap-2 shadow-2xs select-none">
+                <span className="text-base shrink-0">🔍</span>
+                <div className="min-w-0">
+                  <span className="text-xs font-extrabold text-slate-900 block leading-none">Need Requests</span>
+                  <span className="text-[10px] text-slate-500 font-medium block truncate mt-0.5">Rentals &amp; Buying</span>
+                </div>
+              </div>
+
+              <div className="bg-white border border-slate-200 p-2.5 rounded-xl flex items-center gap-2 shadow-2xs select-none">
+                <span className="text-base shrink-0">🛠️</span>
+                <div className="min-w-0">
+                  <span className="text-xs font-extrabold text-slate-900 block leading-none">Local Services</span>
+                  <span className="text-[10px] text-slate-500 font-medium block truncate mt-0.5">Electricians &amp; Drivers</span>
+                </div>
+              </div>
+
+              <div className="bg-white border border-slate-200 p-2.5 rounded-xl flex items-center gap-2 shadow-2xs select-none">
+                <span className="text-base shrink-0">🏪</span>
+                <div className="min-w-0">
+                  <span className="text-xs font-extrabold text-slate-900 block leading-none">Store Offers</span>
+                  <span className="text-[10px] text-slate-500 font-medium block truncate mt-0.5">Shops &amp; Discounts</span>
+                </div>
+              </div>
             </div>
           </div>
 
-          <form onSubmit={handleDirectLogin} className="flex flex-col gap-3 mt-1">
+          {/* Login Form */}
+          <form onSubmit={handleDirectLogin} className="flex flex-col gap-3">
             <div className="flex flex-col gap-1.5">
               <label className="text-[11px] font-black text-slate-500 uppercase tracking-wider">
-                10-Digit Mobile Number
+                Enter Mobile Number to Sign In
               </label>
               <div className="relative">
-                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-black text-slate-700 bg-slate-200/60 px-2 py-0.5 rounded-md">
+                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-black text-slate-700 bg-slate-200/70 px-2 py-0.5 rounded-md">
                   +91 🇮🇳
                 </span>
                 <input
                   ref={phoneInputRef}
-                  autoFocus
                   type="tel"
                   inputMode="tel"
                   required
@@ -143,7 +186,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
             <button
               type="submit"
               disabled={phoneUpdating}
-              className="w-full py-3.5 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs uppercase tracking-wider rounded-xl flex items-center justify-center gap-2 shadow-md cursor-pointer transition-all active:scale-98 mt-1"
+              className="w-full py-3.5 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs uppercase tracking-wider rounded-xl flex items-center justify-center gap-2 shadow-md cursor-pointer transition-all active:scale-98"
             >
               {phoneUpdating ? (
                 <>
@@ -153,15 +196,15 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
               ) : (
                 <>
                   <CheckCircle className="w-4 h-4 text-[#0F172A]" />
-                  <span>Verify &amp; Continue →</span>
+                  <span>Verify &amp; Enter Home Page →</span>
                 </>
               )}
             </button>
           </form>
 
-          <div className="flex items-center justify-center gap-1 text-[11px] text-slate-400 font-medium pt-1">
+          <div className="flex items-center justify-center gap-1 text-[11px] text-slate-400 font-medium pt-0.5">
             <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Encrypted local community sign-in</span>
+            <span>Encrypted WhatsApp sign-in for Thanjavur users</span>
           </div>
         </div>
       </div>

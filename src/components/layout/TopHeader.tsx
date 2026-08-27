@@ -71,11 +71,11 @@ export default function TopHeader({
 
   const getSubPageTitle = React.useCallback(() => {
     if (pathname.includes("/profile")) {
-      return profileTab === "listings" ? "My Listings" : profileTab === "saved" ? "Saved Items" : "My Profile";
+      return profileTab === "listings" ? "My Ads" : profileTab === "saved" ? "Saved Items" : "My Profile";
     }
     if (pathname.includes("/post")) return "Post a Free Ad";
     if (pathname.includes("/chat")) return "Direct Messages";
-    if (pathname.includes("/listings")) return "My Listings";
+    if (pathname.includes("/listings")) return "My Ads";
     if (pathname.includes("/need")) return "Wanted Ads";
     if (pathname.includes("/services")) return "Services";
     if (pathname.includes("/shops") || pathname.includes("/offers")) return "Store Offers";
@@ -121,21 +121,25 @@ export default function TopHeader({
       className={`fixed top-0 left-0 right-0 z-50 bg-white/98 backdrop-blur-xl flex-col justify-end transition-transform duration-300 ${
         scrollDirection === "down" && !isAtTop ? "-translate-y-full md:translate-y-0" : "translate-y-0"
       } ${
-        pathname?.startsWith("/chat") ? "hidden md:flex" : "flex"
+        pathname?.startsWith("/post") ? "hidden" : pathname?.startsWith("/chat") ? "hidden md:flex" : "flex"
       }`}
-      style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 12px)" }}
+      style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 14px)" }}
     >
       <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 py-2 flex items-center justify-between gap-2.5 sm:gap-4 relative">
 
-        {/* Left Side: Logo Image ONLY (No text) across ALL screens */}
-        <div className="flex items-center gap-2 shrink-0 z-20">
+        {/* Left Side: Logo Image + Brand Title (Never Clipped) */}
+        <div className="flex items-center gap-2 shrink-0 z-20 min-w-max">
           <div
             onClick={() => router.push("/")}
-            className="flex items-center gap-2 cursor-pointer shrink-0 group select-none"
+            className="flex items-center gap-2 cursor-pointer shrink-0 group select-none flex-nowrap"
           >
             <div className="h-8 sm:h-9 w-auto flex items-center justify-center shrink-0">
-              <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="h-full w-auto object-contain max-h-9" />
+              <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="h-full w-auto object-contain max-h-8 sm:max-h-9" />
             </div>
+            <h1 className="font-heading font-black text-base sm:text-lg tracking-tight whitespace-nowrap flex items-center gap-1">
+              <span className="text-[#1d4ed8]">நம்ம</span>
+              <span className="text-[#f59e0b]">thanjai</span>
+            </h1>
           </div>
         </div>
 

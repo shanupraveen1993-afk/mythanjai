@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { MapPin, ExternalLink, Sparkles, Video, Calendar, Clock, Flag } from "lucide-react";
+import { MapPin, ExternalLink, Tag, Video, Calendar, Clock, Flag } from "lucide-react";
 import { OfferPost } from "@/types";
 import { reportListing } from "@/lib/moderation";
 import { useToast } from "@/context/ToastContext";
@@ -49,7 +49,7 @@ export default function OfferCard({ post }: OfferCardProps) {
       {/* Featured Badge Overlay */}
       {post.is_featured && (
         <div className="absolute top-2.5 left-2.5 z-20 bg-[#FBBF24] text-[#0F172A] text-xs font-black uppercase tracking-wider px-2 py-0.5 rounded-xl flex items-center gap-1 shadow-md border-b border-[#D97706]">
-          <Sparkles className="w-2.5 h-2.5 fill-current" />
+          <Tag className="w-2.5 h-2.5 fill-current" />
           <span>Featured Offer</span>
         </div>
       )}

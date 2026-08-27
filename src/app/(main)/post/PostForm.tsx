@@ -376,7 +376,7 @@ export default function PostForm({ segment }: PostFormProps) {
           if (shop_name) setTitle(shop_name);
           if (detected_area) setArea(detected_area);
           if (ocrPhone) setPhone(ocrPhone);
-          toast.success("AI extracted Company Name, Location & Phone!");
+          toast.success("✓ Auto-filled Store Name, Location & Phone!");
         }
       } catch (err) {
         console.warn("OCR auto-extraction skipped:", err);
@@ -773,14 +773,31 @@ export default function PostForm({ segment }: PostFormProps) {
     <div className="w-full max-w-6xl mx-auto px-3 sm:px-6 py-2 sm:py-3 pb-6 sm:pb-8 flex flex-col gap-3 font-sans">
 
 
-      {/* Page Header */}
-      <div className="flex flex-col items-center border-b border-slate-200/80 pb-2.5">
-        <span className="text-[11px] font-semibold uppercase tracking-widest text-slate-400">
-          {config.badge}
-        </span>
-        <h1 className="font-heading font-bold text-base sm:text-lg text-slate-900 tracking-tight mt-0.5">
+      {/* Clean Minimal Standalone Header Bar */}
+      <div
+        className="flex items-center justify-between border-b border-slate-200/80 pb-3 w-full"
+        style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 12px)" }}
+      >
+        <button
+          type="button"
+          onClick={() => router.back()}
+          className="flex items-center gap-1.5 text-xs font-heading font-black text-slate-700 hover:text-slate-950 bg-slate-100 hover:bg-slate-200 px-3.5 py-1.5 rounded-xl transition-colors cursor-pointer select-none active:scale-95"
+        >
+          <span>← Back</span>
+        </button>
+
+        <h1 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight text-center">
           {config.title}
         </h1>
+
+        <button
+          type="button"
+          onClick={() => router.push(config.redirectPath)}
+          className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-950 flex items-center justify-center transition-colors cursor-pointer active:scale-95"
+          title="Close Form"
+        >
+          <X className="w-4 h-4 stroke-[2.5]" />
+        </button>
       </div>
 
       {success ? (
@@ -1233,18 +1250,38 @@ export default function PostForm({ segment }: PostFormProps) {
                   />
                 </div>
 
-                {/* Description Input */}
-                <div className="flex flex-col gap-1.5">
+                {/* Description Input Container */}
+                <div className="flex flex-col gap-1.5 w-full relative">
                   <div className="flex items-center justify-between gap-2 flex-wrap">
                     <label className="text-xs font-bold text-slate-800">
                       {segment === "service" ? "Work Experience & Skill Details (Optional)" : "Description or details (Optional)"}
                     </label>
-                    <div className="flex items-center gap-2">
+                    <span className={`text-xs font-medium ${description.length >= config.maxDescChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>
+                      {description.length}/{config.maxDescChars}
+                    </span>
+                  </div>
+
+                  <div className="relative w-full">
+                    <textarea
+                      rows={4}
+                      maxLength={config.maxDescChars}
+                      placeholder={
+                        segment === "service"
+                          ? "Describe your trade skills, work experience, and services offered (Optional)..."
+                          : "Describe your requirement, item condition, or service details (Optional)..."
+                      }
+                      value={description}
+                      onChange={(e) => setDescription(e.target.value)}
+                      className="w-full px-3.5 py-2.5 pb-12 text-sm font-medium border border-slate-200 rounded-xl bg-slate-50 focus:outline-none focus:border-amber-500 focus:bg-white text-slate-900 transition-all resize-y min-h-[110px] max-h-56 overflow-y-auto leading-relaxed"
+                    />
+
+                    {/* AI Refine Button Pinned to Bottom-Right */}
+                    <div className="absolute bottom-2.5 right-2.5 z-10">
                       <button
                         type="button"
                         onClick={handleManualRefine}
                         disabled={isAiRewriting || !description.trim()}
-                        className="px-3 py-1 rounded-lg bg-amber-400 hover:bg-amber-500 text-slate-950 font-heading font-black text-xs flex items-center gap-1.5 transition-all shadow-xs cursor-pointer border border-amber-300 active:scale-95 disabled:opacity-50"
+                        className="px-3 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-500 text-slate-950 font-heading font-black text-xs flex items-center gap-1.5 transition-all shadow-xs cursor-pointer border border-amber-300 active:scale-95 disabled:opacity-40"
                         title="Click to format and push refined description to Live Preview"
                       >
                         {isAiRewriting ? (
@@ -1253,26 +1290,11 @@ export default function PostForm({ segment }: PostFormProps) {
                             <span>Refining...</span>
                           </>
                         ) : (
-                          <span>✨ AI Refine Description</span>
+                          <span>✨ Auto-Format Description</span>
                         )}
                       </button>
-                      <span className={`text-xs font-medium ${description.length >= config.maxDescChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>
-                        {description.length}/{config.maxDescChars}
-                      </span>
                     </div>
                   </div>
-                  <textarea
-                    rows={3}
-                    maxLength={config.maxDescChars}
-                    placeholder={
-                      segment === "service"
-                        ? "Describe your trade skills, work experience, and services offered (Optional)..."
-                        : "Describe your requirement, item condition, or service details (Optional)..."
-                    }
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    className="w-full px-3.5 py-2.5 text-sm font-medium border border-slate-200 rounded-xl bg-slate-50 focus:outline-none focus:border-amber-500 focus:bg-white text-slate-900 transition-all resize-none leading-relaxed"
-                  />
                 </div>
               </>
             )}

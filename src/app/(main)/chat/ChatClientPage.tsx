@@ -369,6 +369,41 @@ export default function ChatClientPage() {
     return () => unsubscribe();
   }, [activeChatId]);
 
+  const handleStartServiceAssistant = () => {
+    const assistantThreadId = "nt_service_assistant";
+    const existing = threads.find((t) => t.chatId === assistantThreadId || t.peerId === "namma_thanjai_assistant");
+    
+    if (existing) {
+      setActiveChatId(existing.chatId);
+      setActivePeerName("Namma Thanjai Service Desk ⚡");
+      setActivePeerPhone("9994837342");
+      setActiveListingTitle("Service Registration Assistant");
+      setShowMobileChat(true);
+      toast.success("Opened Namma Thanjai Service Desk!");
+      return;
+    }
+
+    const assistantThread: ChatThread = {
+      chatId: assistantThreadId,
+      listingId: "nt_service_reg",
+      listingTitle: "Service Registration Assistant",
+      peerId: "namma_thanjai_assistant",
+      peerName: "Namma Thanjai Service Desk ⚡",
+      peerPhone: "9994837342",
+      lastMessage: "Send name, category, and location to publish your service!",
+      lastTimestamp: new Date(),
+      unreadCount: 0,
+    };
+
+    setThreads((prev) => [assistantThread, ...prev]);
+    setActiveChatId(assistantThreadId);
+    setActivePeerName("Namma Thanjai Service Desk ⚡");
+    setActivePeerPhone("9994837342");
+    setActiveListingTitle("Service Registration Assistant");
+    setShowMobileChat(true);
+    toast.success("Service Registration Assistant activated!");
+  };
+
   // Send Message Handler
   const handleSendMessage = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -649,11 +684,11 @@ export default function ChatClientPage() {
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" title="Real-time messaging active" />
               <button
                 type="button"
-                onClick={() => setSearchQuery((prev) => (prev ? "" : " "))}
-                className="w-8 h-8 rounded-full bg-[#00a884] text-white flex items-center justify-center font-bold text-sm shadow-2xs hover:bg-[#008f70] transition-colors cursor-pointer"
-                title="New Chat"
+                onClick={handleStartServiceAssistant}
+                className="bg-[#FBBF24] hover:bg-amber-400 text-slate-950 px-3 py-1.5 rounded-xl font-heading font-black text-xs border border-amber-400/90 shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer active:scale-95 shrink-0"
+                title="List your trade or professional service via Chat Assistant"
               >
-                +
+                <span>⚡ List Service</span>
               </button>
             </div>
           </div>
@@ -863,7 +898,7 @@ export default function ChatClientPage() {
                 </p>
               </div>
             ) : (
-              messages.map((msg) => {
+              messages.map((msg, msgIndex) => {
                 const currentUid = user?.uid;
                 const currentPhone = (profile?.phone || user?.phoneNumber || "").replace(/\D/g, "");
                 const senderPhone = (msg as any).senderPhone ? String((msg as any).senderPhone).replace(/\D/g, "") : "";
@@ -920,6 +955,27 @@ export default function ChatClientPage() {
                         <span>{formatTime(msg.timestamp)}</span>
                         {isMe && <CheckCheck className="w-3.5 h-3.5 text-[#34b7f1] stroke-[2.5]" />}
                       </div>
+
+                      {activeChatId === "nt_service_assistant" && msgIndex === messages.length - 1 && (
+                        <div className="mt-3 p-3 bg-amber-50 border border-amber-300/90 rounded-2xl flex flex-col gap-2 shadow-xs max-w-sm">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-black uppercase text-amber-900 tracking-wider">Sample Service Card Preview</span>
+                            <span className="text-[10px] font-bold text-emerald-700 bg-emerald-100 px-2 py-0.5 rounded">● Live Format</span>
+                          </div>
+                          <div className="bg-white p-3 rounded-xl border border-amber-200 flex flex-col gap-1">
+                            <h4 className="font-heading font-black text-xs sm:text-sm text-slate-900">⚡ Tanjore Home Electrician &amp; AC Repairs</h4>
+                            <p className="text-xs text-slate-600 font-medium">📍 Medical College Road, Thanjavur • 📞 9994837342</p>
+                            <p className="text-[11px] text-slate-500 line-clamp-2 mt-0.5">Professional home wiring, fan fitting, inverter servicing &amp; AC gas fill in Tanjore town.</p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => router.push("/listings")}
+                            className="w-full bg-[#1d4ed8] hover:bg-blue-700 text-white font-heading font-black text-xs py-2 rounded-xl transition-colors cursor-pointer text-center shadow-xs mt-1 active:scale-95"
+                          >
+                            ✓ Post Published! Check in My Ads →
+                          </button>
+                        </div>
+                      )}
                     </div>
                   </div>
                 );

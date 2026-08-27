@@ -600,7 +600,7 @@ function ProfileContent() {
                 }`}
               >
                 <span className="flex items-center gap-2">
-                  <Package className="w-4 h-4" /> My Posted Ads ({myPosts.length})
+                  <Package className="w-4 h-4" /> My Ads ({myPosts.length})
                 </span>
                 <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
               </button>

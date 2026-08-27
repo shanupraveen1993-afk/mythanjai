@@ -10,7 +10,7 @@ import {
   ArrowLeft,
   Check,
   Loader2,
-  Sparkles,
+  Plus,
   MapPin,
   Tag,
   Briefcase,
@@ -639,7 +639,7 @@ export default function CreatePostModal({
       case "Cafe & Restaurant": return <Utensils className="w-3.5 h-3.5 text-slate-500" />;
       case "Supermarket & Grocery": return <ShoppingBag className="w-3.5 h-3.5 text-slate-500" />;
       case "Textiles & Clothing": return <Shirt className="w-3.5 h-3.5 text-slate-500" />;
-      case "Jewelry Showroom": return <Sparkles className="w-3.5 h-3.5 text-slate-500" />;
+      case "Jewelry Showroom": return <Tag className="w-3.5 h-3.5 text-slate-500" />;
       default: return <Tag className="w-3.5 h-3.5 text-slate-500" />;
     }
   };
@@ -655,7 +655,7 @@ export default function CreatePostModal({
         <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100 shrink-0">
           <div>
             <h2 className="font-heading font-black text-base text-slate-900 flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-yellow-600" />
+              <Plus className="w-4 h-4 text-slate-800 stroke-[2.5]" />
               <span>Create Local Post</span>
             </h2>
             <p className="text-[10px] text-slate-400 font-bold">Step {step} of 3</p>
@@ -745,9 +745,9 @@ export default function CreatePostModal({
                         <div className="bg-yellow-50 border border-yellow-250/60 rounded-2xl p-4 flex flex-col gap-2">
                           <div className="flex items-start justify-between">
                             <div>
-                              <h4 className="text-xs font-extrabold text-yellow-750 flex items-center gap-1">
-                                <Sparkles className="w-3.5 h-3.5 fill-current" />
-                                AI Visiting Card Scanner
+                              <h4 className="text-xs font-extrabold text-amber-900 flex items-center gap-1">
+                                <Camera className="w-3.5 h-3.5 text-amber-700" />
+                                Auto Store Card Reader
                               </h4>
                               <p className="text-[9px] text-slate-400 font-bold mt-0.5 leading-tight">
                                 Snap a visiting card to auto-fill business name, categories, area & phone number instantly!
@@ -1215,11 +1215,10 @@ export default function CreatePostModal({
                     Live Post Preview Reference Guide
                   </span>
                   
-                  {/* AI Refinement Status Badge */}
                   {aiRefining && (
                     <div className="text-xs font-black text-amber-800 bg-amber-100 border border-amber-300 px-3.5 py-2 rounded-xl animate-pulse flex items-center justify-center gap-2 max-w-sm mx-auto shadow-xs">
-                      <Sparkles className="w-4 h-4 text-amber-600 animate-spin" />
-                      <span>Refining description...</span>
+                      <Loader2 className="w-4 h-4 text-amber-600 animate-spin" />
+                      <span>Formatting description...</span>
                     </div>
                   )}
 
@@ -1286,7 +1285,7 @@ export default function CreatePostModal({
                       )}
                       {type === "services" && (
                         <div className="text-emerald-700 text-[10px] font-bold mt-1 flex items-center gap-1">
-                          <span>✨ Verified Local Service</span>
+                          <span>✓ Verified Local Service</span>
                         </div>
                       )}
                       {type === "shops" && (
