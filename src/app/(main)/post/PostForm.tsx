@@ -159,103 +159,31 @@ export default function PostForm({ segment }: PostFormProps) {
 
   const startBackgroundVideoUpload = async (file: File): Promise<string | null> => {
     setIsUploadingVideo(true);
-    setUploadProgress(0);
+    setUploadProgress(50);
     const sizeMb = (file.size / (1024 * 1024)).toFixed(1);
-    setUploadStatusMsg(`Uploading Reel (${sizeMb} MB): 0%`);
+    setUploadStatusMsg(`Uploading Reel (${sizeMb} MB)...`);
 
-    return new Promise<string | null>((resolve) => {
-      let stallTimer: NodeJS.Timeout | null = null;
-      let isResolved = false;
-
-      const safeResolve = (url: string | null) => {
-        if (isResolved) return;
-        isResolved = true;
-        if (stallTimer) clearTimeout(stallTimer);
-        setIsUploadingVideo(false);
-        setUploadStatusMsg("");
-        setUploadProgress(null);
-        resolve(url);
-      };
-
-      try {
-        const videoRef = ref(storage, `videos/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, "_")}`);
-        const uploadTask = uploadBytesResumable(videoRef, file);
-
-        // 6-Second Stall Watchdog: If client upload stalls at 0%, trigger server API fallback immediately
-        stallTimer = setTimeout(async () => {
-          if (!isResolved && uploadTask.snapshot.bytesTransferred === 0) {
-            console.warn("Client Firebase upload stalled at 0%, triggering server API upload fallback...");
-            try {
-              uploadTask.cancel();
-            } catch (e) {}
-
-            try {
-              const formData = new FormData();
-              formData.append("file", file);
-              const res = await fetch("/api/upload-video", { method: "POST", body: formData });
-              const data = await res.json();
-              if (data.success && data.url) {
-                setUploadedVideoUrl(data.url);
-                toast.success("Video processed & ready to publish!");
-                safeResolve(data.url);
-                return;
-              }
-            } catch (serverErr) {
-              console.error("Server upload fallback error:", serverErr);
-            }
-            toast.error("Video upload timed out. Please try a smaller video under 15MB.");
-            safeResolve(null);
-          }
-        }, 6000);
-
-        uploadTask.on(
-          "state_changed",
-          (snapshot) => {
-            const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
-            setUploadProgress(progress);
-            setUploadStatusMsg(`Uploading Reel (${sizeMb} MB): ${progress}%`);
-            if (snapshot.bytesTransferred > 0 && stallTimer) {
-              clearTimeout(stallTimer);
-              stallTimer = null;
-            }
-          },
-          async (error) => {
-            console.warn("Resumable upload error, trying server API fallback...", error);
-            try {
-              const formData = new FormData();
-              formData.append("file", file);
-              const res = await fetch("/api/upload-video", { method: "POST", body: formData });
-              const data = await res.json();
-              if (data.success && data.url) {
-                setUploadedVideoUrl(data.url);
-                toast.success("Video processed & ready to publish!");
-                safeResolve(data.url);
-              } else {
-                toast.error("Video upload failed. Please re-select file.");
-                safeResolve(null);
-              }
-            } catch (serverErr) {
-              console.error("Server video upload error:", serverErr);
-              toast.error("Video upload failed. Please try a smaller video file under 15MB.");
-              safeResolve(null);
-            }
-          },
-          async () => {
-            try {
-              const url = await getDownloadURL(uploadTask.snapshot.ref);
-              setUploadedVideoUrl(url);
-              toast.success("Video upload complete! Ready to publish.");
-              safeResolve(url);
-            } catch (urlErr) {
-              safeResolve(null);
-            }
-          }
-        );
-      } catch (err: any) {
-        console.warn("Initial storage task creation failed:", err);
-        safeResolve(null);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const res = await fetch("/api/upload-video", { method: "POST", body: formData });
+      const data = await res.json();
+      if (data.success && data.url) {
+        setUploadedVideoUrl(data.url);
+        toast.success("Video uploaded to Firebase Cloud! Ready to publish.");
+        return data.url;
+      } else {
+        toast.error(data.error || "Video upload failed. Please try a smaller file under 15MB.");
       }
-    });
+    } catch (serverErr) {
+      console.error("Server video upload error:", serverErr);
+      toast.error("Video upload failed. Please try a smaller video under 15MB.");
+    } finally {
+      setUploadProgress(null);
+      setUploadStatusMsg("");
+      setIsUploadingVideo(false);
+    }
+    return null;
   };
 
   const handleVideoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
