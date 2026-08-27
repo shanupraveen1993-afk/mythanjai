@@ -259,8 +259,8 @@ function MainLayoutContent({
         <SearchParamSync onAreaSync={setSelectedArea} onAuthSync={setIsSignInOpen} />
       </React.Suspense>
 
-      {/* Top Header — always shown except on chat/onboarding */}
-      {!isStandaloneView && !isOnboardingView && (
+      {/* Top Header — shown except on chat/onboarding */}
+      {!isStandaloneView && !isOnboardingView && !isChatRoute && (
         <React.Suspense fallback={null}>
           <TopHeader
             selectedArea={selectedArea}
@@ -286,10 +286,10 @@ function MainLayoutContent({
 
       {/* Main Content Panel */}
       <main
-        className="flex-1 w-full flex flex-col p-0 m-0 bg-[#f8fafc] pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))] md:pb-8"
+        className={`flex-1 w-full flex flex-col p-0 m-0 bg-[#f8fafc] ${isChatRoute ? "h-screen overflow-hidden pb-0" : "pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))] md:pb-8"}`}
         style={{
-          paddingTop: !isStandaloneView && !isOnboardingView
-            ? (isChatRoute ? undefined : "calc(3.5rem + env(safe-area-inset-top, 0px))")
+          paddingTop: !isStandaloneView && !isOnboardingView && !isChatRoute
+            ? "calc(3.5rem + env(safe-area-inset-top, 0px))"
             : undefined,
         }}
       >
@@ -316,7 +316,7 @@ function MainLayoutContent({
       </main>
 
       {/* Persistent Opinion Feedback Manager */}
-      {!isStandaloneView && !isOnboardingView && !isSignInOpen && (
+      {!isStandaloneView && !isOnboardingView && !isSignInOpen && !isChatRoute && (
         <>
           <BottomTabBar
             activeTab={getActiveTab()}

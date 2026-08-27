@@ -463,7 +463,7 @@ export default function ChatClientPage() {
   }
 
   return (
-    <div className="w-full flex-1 flex flex-col bg-white font-sans max-w-7xl mx-auto px-0 sm:px-4 sm:py-2 h-[calc(100dvh-4.5rem)] md:h-[calc(100vh-4rem-2rem)] md:pt-14 overflow-hidden">
+    <div className="fixed inset-0 z-50 w-screen h-screen flex bg-[#f0f2f5] font-sans overflow-hidden p-0 m-0">
       {/* SCAM WARNING MODAL */}
       {scamAlertTriggered && (
         <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 animate-fade-in">
@@ -501,36 +501,68 @@ export default function ChatClientPage() {
         </div>
       )}
 
-      {/* MAIN CHAT LAYOUT PANEL */}
-      <div className="flex-1 w-full flex bg-white sm:rounded-2xl sm:border sm:border-slate-200/90 sm:shadow-md overflow-hidden h-full">
+      {/* LEFTMOST WHATSAPP APP NAVIGATION SIDEBAR (DESKTOP) */}
+      <div className="hidden md:flex flex-col w-16 bg-[#202c33] border-r border-[#2a3942] items-center justify-between py-3 shrink-0 select-none">
+        <div className="flex flex-col items-center gap-5 text-slate-400">
+          <div className="w-9 h-9 rounded-full bg-[#00a884] text-white flex items-center justify-center font-bold text-xs shadow-md">
+            <MessageSquare className="w-5 h-5 fill-white stroke-[2]" />
+          </div>
+          <button className="p-2 text-[#00a884] hover:bg-[#2a3942] rounded-xl transition-colors cursor-pointer" title="Chats">
+            <MessageSquare className="w-5 h-5 fill-current" />
+          </button>
+          <button className="p-2 hover:text-white hover:bg-[#2a3942] rounded-xl transition-colors cursor-pointer text-slate-400" title="Calls">
+            <Phone className="w-4 h-4" />
+          </button>
+          <button className="p-2 hover:text-white hover:bg-[#2a3942] rounded-xl transition-colors cursor-pointer text-slate-400" title="Status">
+            <span className="text-base">⭕</span>
+          </button>
+          <button className="p-2 hover:text-white hover:bg-[#2a3942] rounded-xl transition-colors cursor-pointer text-slate-400" title="Communities">
+            <span className="text-base">👥</span>
+          </button>
+        </div>
         
-        {/* LEFT COLUMN: WhatsApp-Style Conversation List */}
-        <div className={`w-full lg:w-96 border-r border-slate-200 flex-col bg-white ${showMobileChat ? "hidden lg:flex" : "flex"}`}>
+        <div className="flex flex-col items-center gap-4 text-slate-400">
+          <button className="p-2 hover:text-white hover:bg-[#2a3942] rounded-xl transition-colors cursor-pointer text-slate-400" title="Settings">
+            <span className="text-base">⚙️</span>
+          </button>
+          <div className="w-8 h-8 rounded-full bg-slate-700 text-amber-400 font-bold text-xs flex items-center justify-center border border-slate-600">
+            {(profile?.displayName || "U")[0]}
+          </div>
+        </div>
+      </div>
+
+      {/* MAIN WHATSAPP CHAT PANEL (FILLS ENTIRE SCREEN 100%) */}
+      <div className="flex-1 w-full flex bg-white overflow-hidden h-full">
+        
+        {/* LEFT COLUMN: WhatsApp Conversation List */}
+        <div className={`w-full lg:w-[380px] border-r border-slate-200 flex-col bg-white ${showMobileChat ? "hidden lg:flex" : "flex"}`}>
           
-          {/* 1. WHATSAPP BRANDED TOP HEADER */}
-          <div className="bg-[#f0f2f5] px-4 h-14 border-b border-slate-200/90 flex items-center justify-between shadow-2xs shrink-0">
-            <div className="flex items-center gap-2.5">
-              <div className="w-9 h-9 rounded-full bg-[#00a884] text-white flex items-center justify-center font-bold text-xs shadow-2xs">
-                <MessageSquare className="w-5 h-5 fill-white stroke-[2.5]" />
-              </div>
-              <span className="font-heading font-black text-slate-900 text-base tracking-tight">
-                WhatsApp Chat
-              </span>
-            </div>
-            <div className="flex items-center gap-2 text-slate-600">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#00a884] animate-pulse" title="Real-time messaging active" />
+          {/* 1. WHATSAPP WEB TOP HEADER */}
+          <div className="bg-[#f0f2f5] px-4 h-14 border-b border-slate-200/90 flex items-center justify-between shrink-0 select-none">
+            <h2 className="font-heading font-black text-[#00a884] text-xl tracking-tight">
+              WhatsApp
+            </h2>
+            <div className="flex items-center gap-3 text-slate-600">
+              <button
+                type="button"
+                onClick={() => router.push("/")}
+                className="p-1.5 hover:bg-slate-200/80 rounded-full transition-colors cursor-pointer text-slate-600 font-bold text-xs flex items-center gap-1"
+                title="Back to Namma Thanjai Home"
+              >
+                <ArrowLeft className="w-4 h-4" /> Home
+              </button>
               <button
                 type="button"
                 onClick={() => setSearchQuery((prev) => (prev ? "" : " "))}
-                className="p-1.5 hover:bg-slate-200/80 rounded-full transition-colors cursor-pointer text-slate-600"
-                title="Search Chats"
+                className="w-8 h-8 rounded-full bg-[#00a884] text-white flex items-center justify-center font-bold text-sm shadow-2xs hover:bg-[#008f70] transition-colors cursor-pointer"
+                title="New Chat"
               >
-                <Search className="w-4 h-4" />
+                +
               </button>
             </div>
           </div>
 
-          {/* 2. SEARCH CONTACTS BAR */}
+          {/* 2. SEARCH BAR */}
           <div className="p-2.5 bg-white border-b border-slate-200/80">
             <div className="flex items-center gap-2 bg-[#f0f2f5] border border-slate-200/80 rounded-xl px-3 py-1.5 text-xs text-slate-600 shadow-2xs focus-within:ring-1 focus-within:ring-[#00a884]">
               <Search className="w-4 h-4 text-slate-400 shrink-0" />
@@ -549,22 +581,23 @@ export default function ChatClientPage() {
             </div>
           </div>
 
-          {/* 3. WHATSAPP CATEGORY FILTER PILLS */}
-          <div className="flex items-center gap-1.5 px-3 py-2 border-b border-slate-200/80 bg-white overflow-x-auto no-scrollbar">
-            {(["all", "unread", "ads"] as const).map((filterKey) => (
+          {/* 3. CATEGORY PILLS (ALL, UNREAD 115, FAVOURITES, GROUPS 7, +) */}
+          <div className="flex items-center gap-1.5 px-3 py-2 border-b border-slate-200/80 bg-white overflow-x-auto no-scrollbar select-none">
+            {(["all", "unread", "favourites", "groups"] as const).map((filterKey) => (
               <button
                 key={filterKey}
                 type="button"
-                onClick={() => setActiveFilter(filterKey)}
-                className={`px-3 py-1 rounded-full text-xs font-semibold transition-all cursor-pointer whitespace-nowrap ${
+                onClick={() => setActiveFilter(filterKey as any)}
+                className={`px-3 py-1 rounded-full text-xs transition-all cursor-pointer whitespace-nowrap ${
                   activeFilter === filterKey
-                    ? "bg-[#00a884] text-white shadow-2xs font-bold"
-                    : "bg-[#f0f2f5] text-slate-700 hover:bg-slate-200/80 border border-slate-200/80"
+                    ? "bg-[#00a884] text-white font-bold shadow-2xs"
+                    : "bg-[#f0f2f5] text-slate-700 font-semibold hover:bg-slate-200/80 border border-slate-200/80"
                 }`}
               >
-                {filterKey === "all" ? "All" : filterKey === "unread" ? "Unread" : "Ad Inquiries"}
+                {filterKey === "all" ? "All" : filterKey === "unread" ? "Unread 115" : filterKey === "favourites" ? "Favourites" : "Groups 7"}
               </button>
             ))}
+            <button className="px-2 py-0.5 rounded-full bg-[#f0f2f5] text-slate-600 font-bold text-xs border border-slate-200/80">+</button>
           </div>
 
           {/* 4. CONVERSATION THREADS LIST */}
