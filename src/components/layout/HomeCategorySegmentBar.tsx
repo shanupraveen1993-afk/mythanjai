@@ -71,7 +71,7 @@ export default function HomeCategorySegmentBar() {
                 }}
                 className={`py-2 px-1 rounded-2xl transition-all cursor-pointer flex flex-col items-center justify-center gap-1 w-full text-center select-none active:scale-95 ${
                   isActive
-                    ? "bg-[#FBBF24] text-slate-950 font-heading font-black border-2 border-[#0F172A] shadow-md scale-[1.02]"
+                    ? "bg-[#FBBF24] text-slate-950 font-heading font-black border-2 border-amber-600 shadow-md scale-[1.02]"
                     : "bg-amber-50/90 hover:bg-amber-100/80 text-amber-950 font-bold border border-amber-300/80 shadow-2xs"
                 }`}
               >
