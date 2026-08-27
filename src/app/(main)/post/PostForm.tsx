@@ -173,6 +173,7 @@ export default function PostForm({ segment }: PostFormProps) {
         if (stallTimer) clearTimeout(stallTimer);
         setIsUploadingVideo(false);
         setUploadStatusMsg("");
+        setUploadProgress(null);
         resolve(url);
       };
 
@@ -195,7 +196,6 @@ export default function PostForm({ segment }: PostFormProps) {
               const data = await res.json();
               if (data.success && data.url) {
                 setUploadedVideoUrl(data.url);
-                setUploadProgress(100);
                 toast.success("Video processed & ready to publish!");
                 safeResolve(data.url);
                 return;
@@ -228,7 +228,6 @@ export default function PostForm({ segment }: PostFormProps) {
               const data = await res.json();
               if (data.success && data.url) {
                 setUploadedVideoUrl(data.url);
-                setUploadProgress(100);
                 toast.success("Video processed & ready to publish!");
                 safeResolve(data.url);
               } else {
@@ -245,7 +244,6 @@ export default function PostForm({ segment }: PostFormProps) {
             try {
               const url = await getDownloadURL(uploadTask.snapshot.ref);
               setUploadedVideoUrl(url);
-              setUploadProgress(100);
               toast.success("Video upload complete! Ready to publish.");
               safeResolve(url);
             } catch (urlErr) {
@@ -646,6 +644,8 @@ export default function PostForm({ segment }: PostFormProps) {
 
     if (selectedVideo && (!cloudVideoUrl || (!cloudVideoUrl.startsWith("http://") && !cloudVideoUrl.startsWith("https://")))) {
       setLoading(false);
+      setUploadStatusMsg("");
+      setUploadProgress(null);
       const videoErrMsg = "Video reel upload failed. Please try a smaller video file under 15MB and try again.";
       setValidationError(videoErrMsg);
       toast.error(videoErrMsg);
