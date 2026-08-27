@@ -3,10 +3,12 @@
 import React, { useState, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import { ShoppingBag, Search, Wrench, Tag } from "lucide-react";
+import { useScrollDirection } from "@/hooks/use-scroll-direction";
 
 export default function HomeCategorySegmentBar() {
   const router = useRouter();
   const pathname = usePathname();
+  const { scrollDirection, isAtTop } = useScrollDirection();
 
   const [isNativeApp, setIsNativeApp] = useState(false);
 
@@ -41,7 +43,11 @@ export default function HomeCategorySegmentBar() {
   ];
 
   return (
-    <div className="w-full md:hidden sticky top-[110px] z-30 bg-slate-50/98 backdrop-blur-md pt-1.5 pb-2 transition-all">
+    <div
+      className={`w-full md:hidden sticky top-[110px] z-30 bg-slate-50/98 backdrop-blur-md pt-1.5 pb-2 transition-transform duration-300 ${
+        scrollDirection === "down" && !isAtTop ? "-translate-y-full" : "translate-y-0"
+      }`}
+    >
       <div className="w-full max-w-7xl mx-auto px-2 sm:px-4">
         <div className="grid grid-cols-4 gap-1.5 sm:gap-2.5 w-full max-w-2xl mx-auto">
           {segments.map((seg) => {

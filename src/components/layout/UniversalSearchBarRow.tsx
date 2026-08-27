@@ -5,11 +5,13 @@ import UniversalSearchBar from "./UniversalSearchBar";
 import { Download, Plus } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
+import { useScrollDirection } from "@/hooks/use-scroll-direction";
 
 export default function UniversalSearchBarRow() {
   const router = useRouter();
   const pathname = usePathname();
   const { user, profile, isVerified } = useAuth();
+  const { scrollDirection, isAtTop } = useScrollDirection();
 
   const [isNativeApp, setIsNativeApp] = useState(false);
 
@@ -22,25 +24,7 @@ export default function UniversalSearchBarRow() {
     }
   }, []);
 
-  const [isVisible, setIsVisible] = useState(true);
-  const [lastScrollY, setLastScrollY] = useState(0);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
-      if (currentScrollY > 120 && currentScrollY > lastScrollY) {
-        setIsVisible(false);
-      } else {
-        setIsVisible(true);
-      }
-      setLastScrollY(currentScrollY);
-    };
-
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, [lastScrollY]);
-
-  // Hide Search Bar Row on Profile, Chat, Post, Admin, and Listings sub-pages
+  // Hide Search Bar Row on Profile, Chat, Post sub-pages
   const isHiddenPage =
     pathname.includes("/profile") ||
     pathname.includes("/chat") ||
@@ -67,16 +51,12 @@ export default function UniversalSearchBarRow() {
     router.push(targetRoute);
   };
 
-  const handleGetAppClick = (e: React.MouseEvent) => {
-    if (typeof window !== "undefined") {
-      try {
-        localStorage.setItem("namma_thanjai_apk_downloaded", "true");
-      } catch (err) {}
-    }
-  };
-
   return (
-    <div className="w-full sticky top-14 sm:top-16 z-40 bg-white/95 backdrop-blur-md border-y border-slate-200/80 py-3 sm:py-3.5 shadow-2xs my-0 transition-all">
+    <div
+      className={`w-full sticky top-14 sm:top-16 z-40 bg-white/95 backdrop-blur-md border-y border-slate-200/80 py-3 sm:py-3.5 shadow-2xs my-0 transition-transform duration-300 ${
+        scrollDirection === "down" && !isAtTop ? "-translate-y-full md:translate-y-0" : "translate-y-0"
+      }`}
+    >
       <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 flex items-center justify-between gap-3">
         {/* Left-Aligned Full Width Search Input */}
         <div className="flex-1 min-w-0">

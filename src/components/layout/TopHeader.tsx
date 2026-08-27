@@ -10,6 +10,8 @@ import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/context/ToastContext";
 import { useLanguage } from "@/context/LanguageContext";
 import { useBackNavigation } from "@/hooks/use-back-navigation";
+import { useScrollDirection } from "@/hooks/use-scroll-direction";
+import { Bell } from "lucide-react";
 
 interface TopHeaderProps {
   selectedArea: TanjoreLocality | "All Areas";
@@ -32,6 +34,7 @@ export default function TopHeader({
   const pathname = usePathname() || "";
   const { user, profile, isVerified } = useAuth();
   const { lang, toggleLanguage, t } = useLanguage();
+  const { scrollDirection, isAtTop } = useScrollDirection();
 
   const [profileTab, setProfileTab] = useState<string | null>(null);
 
@@ -99,7 +102,9 @@ export default function TopHeader({
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 bg-white/96 backdrop-blur-xl border-b border-slate-200/80 shadow-[0_1px_12px_rgba(0,0,0,0.06)] flex-col justify-end ${
+      className={`fixed top-0 left-0 right-0 z-50 bg-white/96 backdrop-blur-xl border-b border-slate-200/80 shadow-[0_1px_12px_rgba(0,0,0,0.06)] flex-col justify-end transition-transform duration-300 ${
+        scrollDirection === "down" && !isAtTop ? "-translate-y-full md:translate-y-0" : "translate-y-0"
+      } ${
         pathname?.startsWith("/chat") ? "hidden md:flex" : "flex"
       }`}
       style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 6px)" }}
@@ -185,18 +190,37 @@ export default function TopHeader({
           ) : null
         )}
 
-        {/* Right Side Action Cluster: WebApp Get App button (Mobile WebApp only), APK +Post button (APK only), Desktop Chat/Profile/Listings icons (Desktop only) */}
+        {/* Right Side Action Cluster: Notification Bell, Mobile Get App button, Desktop Chat/Profile/Listings icons */}
         <div className="flex items-center justify-end gap-2 shrink-0 ml-auto z-20">
+
+          {/* Notification Hub Bell (🔔) Drawer Trigger */}
+          <button
+            type="button"
+            onClick={() => {
+              if (typeof window !== "undefined") {
+                window.dispatchEvent(new Event("namma_thanjai_open_notifications"));
+              }
+            }}
+            className="w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border border-slate-200/90 bg-slate-100 hover:bg-slate-200 text-slate-700 shrink-0 relative"
+            title="Notifications Hub"
+            aria-label="View notifications"
+          >
+            <Bell className="w-4 h-4 text-slate-700 stroke-[2.2]" />
+            <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-rose-600 text-white text-[10px] font-black rounded-full flex items-center justify-center border-2 border-white shadow-2xs">
+              3
+            </span>
+          </button>
+
           {/* Mobile WebApp Only: 🔵 Get App Button */}
           {!isNativeApp && (
             <a
               href="/api/apk-download"
               download="NammaThanjai-v16.apk"
-              className="flex md:hidden bg-[#1d4ed8] hover:bg-blue-800 text-white font-heading font-bold text-xs px-3.5 py-1.5 rounded-full shadow-2xs transition-all items-center gap-1.5 shrink-0 active:scale-95 border border-blue-600 cursor-pointer whitespace-nowrap"
+              className="flex md:hidden bg-[#1d4ed8] hover:bg-blue-800 text-white font-heading font-bold text-xs px-3 py-1.5 rounded-full shadow-2xs transition-all items-center gap-1 shrink-0 active:scale-95 border border-blue-600 cursor-pointer whitespace-nowrap"
               title="Download Namma Thanjai Official Android App"
             >
               <Download className="w-3.5 h-3.5 text-white stroke-[2.5]" />
-              <span>Get App</span>
+              <span>App</span>
             </a>
           )}
 
