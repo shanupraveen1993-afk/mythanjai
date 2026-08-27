@@ -552,12 +552,17 @@ export default function ChatClientPage() {
           
           {/* 1. BRANDED TOP HEADER */}
           <div className="bg-[#f0f2f5] px-4 h-14 border-b border-slate-200/90 flex items-center justify-between shrink-0 select-none">
-            <div className="flex items-center gap-2">
-              <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="h-7 w-auto object-contain" />
+            <button
+              type="button"
+              onClick={() => router.push("/")}
+              className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity group"
+              title="Go to Namma Thanjai Home"
+            >
+              <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="h-7 w-auto object-contain transition-transform group-hover:scale-105" />
               <h2 className="font-heading font-black text-slate-900 text-base tracking-tight">
                 <span className="text-[#1d4ed8]">நம்ம</span> <span className="text-[#f59e0b]">thanjai</span>
               </h2>
-            </div>
+            </button>
             <div className="flex items-center gap-2 text-slate-600">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" title="Real-time messaging active" />
               <button
