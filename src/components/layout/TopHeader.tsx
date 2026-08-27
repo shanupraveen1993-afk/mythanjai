@@ -139,58 +139,58 @@ export default function TopHeader({
           </div>
         </div>
 
-        {/* Desktop Header Center: Search Bar + 4 Category Tabs */}
-        <div className="hidden md:flex items-center gap-3 flex-1 max-w-2xl mx-2 z-20">
-          <div className="flex-1 min-w-0">
+        {/* Desktop Header Center: Compact Search Bar + Prominent 4 Category Tabs */}
+        <div className="hidden md:flex items-center gap-4 z-20">
+          <div className="w-52 sm:w-60 shrink-0">
             <UniversalSearchBar />
           </div>
-          <div className="flex items-center gap-1 bg-slate-100/90 p-1 rounded-full border border-slate-200/80 font-heading backdrop-blur-sm shadow-2xs shrink-0">
+          <div className="flex items-center gap-1.5 bg-slate-100/90 p-1.5 rounded-full border border-slate-200/80 font-heading backdrop-blur-sm shadow-2xs">
             <button
               type="button"
               onClick={() => router.push("/")}
-              className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
+              className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all cursor-pointer flex items-center gap-1.5 ${
                 pathname === "/" || pathname === "/home" || pathname.includes("/sell")
                   ? "bg-[#FBBF24] text-slate-950 border border-amber-400/90 shadow-2xs"
                   : "text-slate-700 hover:text-slate-950 transition-colors"
               }`}
             >
-              <Tag className="w-3.5 h-3.5 text-slate-900" />
+              <Tag className="w-4 h-4 text-slate-900" />
               <span>Buy</span>
             </button>
             <button
               type="button"
               onClick={() => router.push("/need")}
-              className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
+              className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all cursor-pointer flex items-center gap-1.5 ${
                 pathname.includes("/need")
                   ? "bg-[#FBBF24] text-slate-950 border border-amber-400/90 shadow-2xs"
                   : "text-slate-700 hover:text-slate-950 transition-colors"
               }`}
             >
-              <Search className="w-3.5 h-3.5 text-slate-900" />
+              <Search className="w-4 h-4 text-slate-900" />
               <span>Wanted</span>
             </button>
             <button
               type="button"
               onClick={() => router.push("/services")}
-              className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
+              className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all cursor-pointer flex items-center gap-1.5 ${
                 pathname.includes("/services")
                   ? "bg-[#FBBF24] text-slate-950 border border-amber-400/90 shadow-2xs"
                   : "text-slate-700 hover:text-slate-950 transition-colors"
               }`}
             >
-              <Wrench className="w-3.5 h-3.5 text-slate-900" />
+              <Wrench className="w-4 h-4 text-slate-900" />
               <span>Services</span>
             </button>
             <button
               type="button"
               onClick={() => router.push("/shops")}
-              className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
+              className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all cursor-pointer flex items-center gap-1.5 ${
                 pathname.includes("/shops") || pathname.includes("/offers")
                   ? "bg-[#FBBF24] text-slate-950 border border-amber-400/90 shadow-2xs"
                   : "text-slate-700 hover:text-slate-950 transition-colors"
               }`}
             >
-              <Store className="w-3.5 h-3.5 text-slate-900" />
+              <Store className="w-4 h-4 text-slate-900" />
               <span>Offers</span>
             </button>
           </div>
