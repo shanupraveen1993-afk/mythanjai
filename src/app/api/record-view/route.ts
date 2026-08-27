@@ -1,11 +1,9 @@
 import { NextResponse } from "next/server";
 import { adminDb } from "@/lib/firebase-admin";
 import { FieldValue } from "firebase-admin/firestore";
+import crypto from "crypto";
 
 export const dynamic = "force-dynamic";
-
-// In-memory cache for IP + Reel ID rate limiting (cleared on deployment, reset per 1 hour)
-const viewCache = new Set<string>();
 
 export async function POST(request: Request) {
   try {
@@ -15,30 +13,44 @@ export async function POST(request: Request) {
       return NextResponse.json({ success: false, error: "Invalid shopId" }, { status: 400 });
     }
 
-    // IP + shopId rate limiting (max 1 view per IP per reel per hour)
-    const clientIp = request.headers.get("x-forwarded-for")?.split(",")[0] || "127.0.0.1";
-    const cacheKey = `${clientIp}_${shopId}`;
+    const rawIp = request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "127.0.0.1";
+    const ipHash = crypto.createHash("sha256").update(rawIp).digest("hex");
+    const logDocId = `${ipHash}_${shopId}`;
 
-    if (viewCache.has(cacheKey)) {
-      return NextResponse.json({ success: true, recorded: false, message: "Already recorded for this session" });
-    }
-
-    viewCache.add(cacheKey);
-
-    // Limit memory cache size
-    if (viewCache.size > 10000) {
-      viewCache.clear();
-    }
-
-    // Server-side atomic increment using Admin SDK
+    const logRef = adminDb.collection("view_logs").doc(logDocId);
     const shopRef = adminDb.collection("shops").doc(shopId);
-    await shopRef.update({
-      views_count: FieldValue.increment(1),
+
+    let recorded = false;
+
+    // Transactional read + write lock inside runTransaction
+    await adminDb.runTransaction(async (transaction) => {
+      const logSnap = await transaction.get(logRef);
+
+      if (logSnap.exists) {
+        const lastViewData = logSnap.data();
+        const lastViewTime = lastViewData?.timestamp?.toMillis ? lastViewData.timestamp.toMillis() : 0;
+        const oneHourAgo = Date.now() - 60 * 60 * 1000;
+
+        if (lastViewTime > oneHourAgo) {
+          recorded = false;
+          return;
+        }
+      }
+
+      transaction.set(logRef, {
+        timestamp: FieldValue.serverTimestamp(),
+      });
+
+      transaction.update(shopRef, {
+        views_count: FieldValue.increment(1),
+      });
+
+      recorded = true;
     });
 
-    return NextResponse.json({ success: true, recorded: true });
+    return NextResponse.json({ success: true, recorded });
   } catch (error: any) {
-    console.error("Error recording view:", error);
+    console.error("Error recording view in transaction:", error);
     return NextResponse.json({ success: false, error: error?.message || "Failed to record view" }, { status: 500 });
   }
 }
