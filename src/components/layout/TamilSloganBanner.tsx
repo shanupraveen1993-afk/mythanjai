@@ -59,7 +59,7 @@ export default function TamilSloganBanner() {
 
   return (
     <div 
-      className="w-full bg-slate-950 border-b border-amber-500/40 py-2.5 px-8 sm:px-12 flex items-center justify-center text-center font-sans shadow-md select-none relative overflow-hidden bg-cover bg-center transition-all"
+      className="w-full bg-slate-950 border-y border-amber-500/40 py-2.5 px-8 sm:px-12 flex items-center justify-center text-center font-sans shadow-md select-none relative overflow-hidden bg-cover bg-center transition-all mt-2 sm:mt-3 mb-2"
       style={{ backgroundImage: "linear-gradient(to right, rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.82)), url('/banner_abstract_bg.png')" }}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-center gap-2 py-0.5 relative z-10">

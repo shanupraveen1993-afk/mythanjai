@@ -289,7 +289,7 @@ function MainLayoutContent({
         className={`flex-1 w-full flex flex-col p-0 m-0 bg-[#f8fafc] ${isChatRoute ? "h-screen overflow-hidden pb-0" : "pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))] md:pb-8"}`}
         style={{
           paddingTop: !isStandaloneView && !isOnboardingView && !isChatRoute
-            ? "calc(3.5rem + env(safe-area-inset-top, 0px))"
+            ? "calc(4rem + env(safe-area-inset-top, 0px))"
             : undefined,
         }}
       >
