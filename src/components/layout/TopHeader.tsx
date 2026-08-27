@@ -211,19 +211,6 @@ export default function TopHeader({
             </span>
           </button>
 
-          {/* Mobile WebApp Only: 🔵 Get App Button */}
-          {!isNativeApp && (
-            <a
-              href="/api/apk-download"
-              download="NammaThanjai-v16.apk"
-              className="flex md:hidden bg-[#1d4ed8] hover:bg-blue-800 text-white font-heading font-bold text-xs px-3 py-1.5 rounded-full shadow-2xs transition-all items-center gap-1 shrink-0 active:scale-95 border border-blue-600 cursor-pointer whitespace-nowrap"
-              title="Download Namma Thanjai Official Android App"
-            >
-              <Download className="w-3.5 h-3.5 text-white stroke-[2.5]" />
-              <span>App</span>
-            </a>
-          )}
-
           {/* Desktop Website Only: Chat, My Listings & Profile Buttons */}
           <div className="hidden md:flex items-center gap-2">
 
@@ -297,17 +284,16 @@ export default function TopHeader({
             )}
           </div>
 
-          {/* Header Golden Yellow Post Ad Button (Single unified button for Web & APK) */}
+          {/* Desktop Website Only: Golden Yellow Post Ad Button */}
           {!pathname.includes("/chat") && !pathname.includes("/profile") && !pathname.includes("/listings") && !pathname.includes("/post") && (
             <button
               type="button"
               onClick={handleDynamicPostClick}
-              className="bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-xs sm:text-sm px-4 sm:px-5 py-1.5 sm:py-2 rounded-full font-heading font-black shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none touch-manipulation active:scale-[0.97] transition-all border border-amber-400 ml-1"
+              className="hidden md:flex bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-xs sm:text-sm px-4 sm:px-5 py-1.5 sm:py-2 rounded-full font-heading font-black shrink-0 items-center gap-1.5 shadow-2xs cursor-pointer select-none touch-manipulation active:scale-[0.97] transition-all border border-amber-400 ml-1"
               title={postInfo.desktopLabel}
             >
               <Plus className="w-4 h-4 stroke-[3] text-[#0F172A]" />
-              <span className="inline md:hidden">{postInfo.mobileLabel}</span>
-              <span className="hidden md:inline">{postInfo.desktopLabel}</span>
+              <span>{postInfo.desktopLabel}</span>
             </button>
           )}
         </div>

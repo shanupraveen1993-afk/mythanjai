@@ -21,6 +21,7 @@ import {
 import { collection, query, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import HomeCategorySegmentBar from "@/components/layout/HomeCategorySegmentBar";
+import GetAppHomeBanner from "@/components/layout/GetAppHomeBanner";
 import SellClientPage from "./sell/SellClientPage";
 
 export default function LandingClientPage() {
@@ -114,6 +115,9 @@ export default function LandingClientPage() {
 
         {/* ── Universal Sticky 4-Category Segment Bar (Mobile WebApp/APK STICKY TOP) ── */}
         <HomeCategorySegmentBar />
+
+        {/* ── Home Page Mobile WebApp Only Dismissible APK Download Banner ── */}
+        <GetAppHomeBanner />
 
 
 
