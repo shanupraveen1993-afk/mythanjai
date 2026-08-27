@@ -96,6 +96,7 @@ export default function ChatClientPage() {
   const [querySellerId, setQuerySellerId] = useState<string>("");
   const [queryTitle, setQueryTitle] = useState<string>("Classified Item");
   const [queryAutoMsg, setQueryAutoMsg] = useState<string>("");
+  const [queryAutoSend, setQueryAutoSend] = useState<boolean>(false);
 
   const [activeChatId, setActiveChatId] = useState<string>("namma_thanjai_system_welcome");
   const [activeListingTitle, setActiveListingTitle] = useState<string>("Welcome to Namma Thanjai");
@@ -139,6 +140,9 @@ export default function ChatClientPage() {
       if (autoMsg) {
         setQueryAutoMsg(decodeURIComponent(autoMsg));
       }
+      const autoSend = params.get("autoSend") === "true";
+      setQueryAutoSend(autoSend);
+
       if (listingId || sellerId) {
         setShowMobileChat(true);
       }
@@ -217,10 +221,14 @@ export default function ChatClientPage() {
       setActivePeerName(queryTitle !== "Classified Item" ? queryTitle : "Seller / Contact");
       setShowMobileChat(true);
 
-      if (queryAutoMsg) {
-        setInputText(queryAutoMsg);
+      if (!queryAutoSend) {
+        if (queryAutoMsg) {
+          setInputText(queryAutoMsg);
+        } else {
+          setInputText(`Hi, I am interested in your listing "${queryTitle}". Is it still available?`);
+        }
       } else {
-        setInputText(`Hi, I am interested in your listing "${queryTitle}". Is it still available?`);
+        setInputText("");
       }
 
       setThreads((prev) => {
@@ -237,7 +245,54 @@ export default function ChatClientPage() {
         return [newThread, ...prev];
       });
     }
-  }, [queryListingId, querySellerId, queryTitle, queryAutoMsg, user?.uid]);
+  }, [queryListingId, querySellerId, queryTitle, queryAutoMsg, queryAutoSend, user?.uid]);
+
+  // Execute Instant Auto-Send for Call Back Requests
+  useEffect(() => {
+    if (queryAutoSend && activeChatId && queryAutoMsg && activeChatId !== "namma_thanjai_system_welcome") {
+      const executeAutoSend = async () => {
+        try {
+          const messagesRef = collection(db, "chats", activeChatId, "messages");
+          await addDoc(messagesRef, {
+            senderId: user?.uid || "buyer_guest",
+            senderName: profile?.displayName || "Buyer",
+            text: queryAutoMsg,
+            timestamp: serverTimestamp(),
+          });
+          const chatDocRef = doc(db, "chats", activeChatId);
+          await setDoc(
+            chatDocRef,
+            {
+              lastMessage: queryAutoMsg,
+              lastTimestamp: serverTimestamp(),
+              participants: [user?.uid || "buyer_guest", activePeerId || "seller_contact"].filter(Boolean),
+              listingId: queryListingId,
+              listingTitle: activeListingTitle,
+              buyerId: user?.uid || "buyer_guest",
+              buyerName: profile?.displayName || "Buyer",
+              buyerPhone: profile?.phone || "",
+              sellerId: activePeerId,
+              sellerName: activePeerName,
+              sellerPhone: activePeerPhone,
+            },
+            { merge: true }
+          );
+        } catch (err) {
+          console.warn("Instant auto-send note:", err);
+        } finally {
+          setInputText("");
+          setQueryAutoSend(false);
+          if (typeof window !== "undefined") {
+            const url = new URL(window.location.href);
+            url.searchParams.delete("autoSend");
+            url.searchParams.delete("autoMsg");
+            window.history.replaceState({}, "", url.toString());
+          }
+        }
+      };
+      executeAutoSend();
+    }
+  }, [queryAutoSend, activeChatId, queryAutoMsg, user?.uid, profile?.displayName, profile?.phone, activePeerId, activePeerName, activePeerPhone, activeListingTitle, queryListingId]);
 
   // Firestore Messages Snapshot Listener for Active Chat
   useEffect(() => {

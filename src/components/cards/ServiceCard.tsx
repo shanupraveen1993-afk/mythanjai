@@ -305,8 +305,9 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
                     }
                     return;
                   }
-                  const callMsg = `📞 Call Back Request: A customer requested a call back regarding your service "${post.name}".`;
-                  router.push(`/chat?listingId=${post.id}&sellerId=${post.userId || ""}&title=${encodeURIComponent(post.name)}&autoMsg=${encodeURIComponent(callMsg)}`);
+                  const buyerPhone = profile?.phone ? `+91 ${profile.phone.replace(/\D/g, "").slice(-10)}` : "Registered User";
+                  const callMsg = `📞 Call Back Request: Hello, a buyer (${buyerPhone}) requested a call back regarding your listing "${post.name}". Please call them back when free.`;
+                  router.push(`/chat?listingId=${post.id}&sellerId=${post.userId || ""}&title=${encodeURIComponent(post.name)}&autoMsg=${encodeURIComponent(callMsg)}&autoSend=true`);
                 }}
                 className={`w-[128px] shrink-0 border-2 border-amber-500 text-amber-900 bg-amber-50 hover:bg-amber-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
               >
