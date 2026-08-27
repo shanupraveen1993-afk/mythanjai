@@ -234,13 +234,19 @@ export function formatIndianCurrencyText(amount: number | string | null | undefi
  * - > 30 days: "1 month 2 days ago", "2 months 5 days ago"
  */
 export function formatRelativeTime(timestamp: any): string {
-  if (!timestamp) return "Just now";
+  if (!timestamp) return "Recently";
   let date: Date;
   try {
-    date = typeof timestamp?.toDate === "function" ? timestamp.toDate() : new Date(timestamp);
-    if (!(date instanceof Date) || isNaN(date.getTime())) return "Just now";
+    if (typeof timestamp === "object" && timestamp !== null && "seconds" in timestamp) {
+      date = new Date(timestamp.seconds * 1000);
+    } else if (typeof timestamp?.toDate === "function") {
+      date = timestamp.toDate();
+    } else {
+      date = new Date(timestamp);
+    }
+    if (!(date instanceof Date) || isNaN(date.getTime())) return "Recently";
   } catch (e) {
-    return "Just now";
+    return "Recently";
   }
 
   const now = new Date();
