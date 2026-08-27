@@ -85,17 +85,31 @@ function ListingsContent() {
         const userId = user?.uid || "";
         const rawPhone = (profile?.phone || user?.phoneNumber || (typeof window !== "undefined" ? (localStorage.getItem("namma_thanjai_phone") || localStorage.getItem("my_thanjai_phone") || "") : "")).replace(/\D/g, "");
         const userPhone10 = rawPhone.length >= 10 ? rawPhone.slice(-10) : "";
+        const memberId = profile?.memberId || (typeof window !== "undefined" ? localStorage.getItem("namma_thanjai_member_id") : null) || (userPhone10 ? `NT-${userPhone10}` : "");
 
         let combinedMyPosts: any[] = [];
         const seenIds = new Set<string>();
 
-        // 1. Fetch My Posted Ads strictly from Firestore (by userId or phone variants)
+        // 1. Fetch My Posted Ads strictly from Firestore (by Member ID, UID, or phone variants)
         const targetCollections = ["needs_and_sales", "services", "shops"];
         await Promise.all(
           targetCollections.map(async (colName) => {
             const colRef = collection(db, colName);
 
-            // Query by UID
+            // Query 1: By Immutable Member ID (e.g. NT-9994837342)
+            if (memberId) {
+              const snapMember = await getDocs(query(colRef, where("userId", "==", memberId))).catch(() => null);
+              if (snapMember && !snapMember.empty) {
+                snapMember.forEach((docSnap) => {
+                  if (!seenIds.has(docSnap.id)) {
+                    seenIds.add(docSnap.id);
+                    combinedMyPosts.push({ id: docSnap.id, colName, ...docSnap.data() });
+                  }
+                });
+              }
+            }
+
+            // Query 2: By Auth UID
             if (userId) {
               const snapUid = await getDocs(query(colRef, where("userId", "==", userId))).catch(() => null);
               if (snapUid && !snapUid.empty) {

@@ -524,9 +524,9 @@ function ProfileContent() {
                   {isDbVerified && phoneNumber ? `+91 ${phoneNumber}` : "Guest / Unverified"}
                 </p>
 
-                <div className="mt-1.5">
+                <div className="mt-1.5 flex flex-col gap-2">
                   {isDbVerified ? (
-                    <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-lg text-[11px] font-black">
+                    <span className="inline-flex items-center gap-1 bg-emerald-50 text-emerald-700 border border-emerald-200 px-2 py-0.5 rounded-lg text-[11px] font-black self-start">
                       <CheckCircle className="w-3 h-3" /> Verified Member
                     </span>
                   ) : (
@@ -537,11 +537,33 @@ function ProfileContent() {
                           window.dispatchEvent(new Event("namma_thanjai_open_signin"));
                         }
                       }}
-                      className="inline-flex items-center gap-1 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 px-2 py-0.5 rounded-lg text-[11px] font-black cursor-pointer"
+                      className="inline-flex items-center gap-1 bg-amber-50 hover:bg-amber-100 text-amber-800 border border-amber-300 px-2 py-0.5 rounded-lg text-[11px] font-black cursor-pointer self-start"
                     >
                       <AlertCircle className="w-3 h-3" /> Verify WhatsApp
                     </button>
                   )}
+
+                  {/* Immutable Member ID Badge */}
+                  <div className="w-full bg-amber-50/80 border border-amber-300/80 p-2.5 rounded-xl flex items-center justify-between gap-2 shadow-2xs">
+                    <div className="flex flex-col min-w-0">
+                      <span className="text-[10px] font-extrabold text-amber-900 uppercase tracking-widest leading-none">Member ID</span>
+                      <span className="text-xs font-black text-slate-900 font-mono tracking-wider truncate mt-0.5">
+                        {profile?.memberId || `NT-${(profile?.phone || "USER").slice(-10)}`}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        const idToCopy = profile?.memberId || `NT-${(profile?.phone || "USER").slice(-10)}`;
+                        navigator.clipboard.writeText(idToCopy);
+                        toast.success("Member ID copied to clipboard!");
+                      }}
+                      className="px-2 py-1 bg-amber-400 hover:bg-amber-500 text-slate-950 text-[10px] font-black uppercase tracking-wider rounded-lg shrink-0 cursor-pointer shadow-2xs transition-all active:scale-95 border border-amber-400"
+                      title="Copy permanent Member ID"
+                    >
+                      Copy
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

@@ -27,9 +27,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                              localStorage.getItem("namma_thanjai_user_verified") === "true";
       const storedPhone = (localStorage.getItem("my_thanjai_phone") || localStorage.getItem("namma_thanjai_phone") || "").replace(/\D/g, "");
       const storedName = localStorage.getItem("my_thanjai_display_name") || "Namma Thanjai User";
+      const storedMemberId = localStorage.getItem("namma_thanjai_member_id") || localStorage.getItem("my_thanjai_member_id") || (storedPhone ? `NT-${storedPhone.slice(-10)}` : "");
+
       if (storedVerified && storedPhone && storedPhone.length >= 10 && storedPhone !== "9876543210") {
         return {
           uid: "saved_session",
+          memberId: storedMemberId || `NT-${storedPhone.slice(-10)}`,
           phone: storedPhone,
           isVerified: true,
           displayName: storedName,
@@ -61,6 +64,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       const cleanStoredPhone = storedPhone.replace(/\D/g, "");
       const storedVerified = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_verified") === "true" || localStorage.getItem("namma_thanjai_verified") === "true" || localStorage.getItem("namma_thanjai_user_verified") === "true") : false;
       const storedDisplayName = typeof window !== "undefined" ? (localStorage.getItem("my_thanjai_display_name") || "") : "";
+      const localMemberId = typeof window !== "undefined" ? (localStorage.getItem("namma_thanjai_member_id") || localStorage.getItem("my_thanjai_member_id") || "") : "";
 
       const activeVerifiedPhone = storedVerified && cleanStoredPhone.length >= 10 && cleanStoredPhone !== "9876543210" ? cleanStoredPhone : "";
 
@@ -88,7 +92,14 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             }
           }
 
+          // IMMUTABLE MEMBER ID: Preserve existing memberId or generate ONCE
+          const effectiveMemberId = userProfileData?.memberId || localMemberId || (activeVerifiedPhone ? `NT-${activeVerifiedPhone.slice(-10)}` : `NT-${currentUser.uid.slice(-6).toUpperCase()}`);
+          if (typeof window !== "undefined" && effectiveMemberId) {
+            localStorage.setItem("namma_thanjai_member_id", effectiveMemberId);
+          }
+
           if (userProfileData) {
+            userProfileData.memberId = effectiveMemberId;
             if (activeVerifiedPhone) {
               userProfileData.phone = activeVerifiedPhone;
               userProfileData.isVerified = true;
@@ -99,6 +110,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           } else {
             const newProfile: UserProfile = {
               uid: currentUser.uid,
+              memberId: effectiveMemberId,
               phone: activeVerifiedPhone || "",
               isVerified: Boolean(activeVerifiedPhone),
               displayName: storedDisplayName || currentUser.displayName || "Namma Thanjai User",
@@ -110,9 +122,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }
         } catch (error) {
           console.error("Error fetching user profile:", error);
+          const fallbackMemberId = localMemberId || (activeVerifiedPhone ? `NT-${activeVerifiedPhone.slice(-10)}` : `NT-${currentUser.uid.slice(-6).toUpperCase()}`);
           if (activeVerifiedPhone) {
             setProfile({
               uid: currentUser.uid,
+              memberId: fallbackMemberId,
               phone: activeVerifiedPhone,
               isVerified: true,
               displayName: storedDisplayName || "Namma Thanjai User",
@@ -122,8 +136,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       } else {
         if (activeVerifiedPhone) {
+          const fallbackMemberId = localMemberId || `NT-${activeVerifiedPhone.slice(-10)}`;
           setProfile({
             uid: "saved_session",
+            memberId: fallbackMemberId,
             phone: activeVerifiedPhone,
             isVerified: true,
             displayName: storedDisplayName || "Namma Thanjai User",
@@ -215,14 +231,15 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const cleanedPhone = phone.replace(/\D/g, "");
     const targetPhone = cleanedPhone.length === 10 ? `91${cleanedPhone}` : cleanedPhone;
+    const existingMemberId = profile?.memberId || (typeof window !== "undefined" ? localStorage.getItem("namma_thanjai_member_id") : null) || `NT-${targetPhone.slice(-10)}`;
 
-    // Set local persistence across both key namespaces
     if (typeof window !== "undefined") {
       localStorage.setItem("my_thanjai_verified", "true");
       localStorage.setItem("namma_thanjai_verified", "true");
       localStorage.setItem("namma_thanjai_user_verified", "true");
       localStorage.setItem("my_thanjai_phone", targetPhone);
       localStorage.setItem("namma_thanjai_phone", targetPhone);
+      localStorage.setItem("namma_thanjai_member_id", existingMemberId);
       try {
         document.cookie = `namma_thanjai_verified=true; path=/; max-age=${10 * 365 * 86400}; SameSite=Lax`;
         document.cookie = `namma_thanjai_phone=${targetPhone}; path=/; max-age=${10 * 365 * 86400}; SameSite=Lax`;
@@ -234,26 +251,31 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         const userRef = doc(db, "users", activeUser.uid);
         await setDoc(userRef, {
           uid: activeUser.uid,
+          memberId: existingMemberId,
           phone: targetPhone,
           isVerified: true,
         }, { merge: true });
       }
 
-      setProfile({
-        uid: activeUser?.uid || "mock_uid",
+      setProfile((prev) => ({
+        uid: activeUser?.uid || prev?.uid || "mock_uid",
+        memberId: existingMemberId,
         phone: targetPhone,
         isVerified: true,
-        createdAt: new Date(),
-      });
+        displayName: prev?.displayName || "Namma Thanjai User",
+        createdAt: prev?.createdAt || new Date(),
+      }));
       return { success: true };
     } catch (error: any) {
       console.warn("Firestore update failed, falling back to local state mock:", error);
-      setProfile({
-        uid: activeUser?.uid || "mock_uid",
+      setProfile((prev) => ({
+        uid: activeUser?.uid || prev?.uid || "mock_uid",
+        memberId: existingMemberId,
         phone: targetPhone,
         isVerified: true,
-        createdAt: new Date(),
-      });
+        displayName: prev?.displayName || "Namma Thanjai User",
+        createdAt: prev?.createdAt || new Date(),
+      }));
       return { success: true };
     }
   };
