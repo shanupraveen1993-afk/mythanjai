@@ -51,10 +51,19 @@ export default function TopHeader({
   const phoneDisplay = profile?.phone ? `+${profile.phone}` : "+919994837342";
   const isHomePage = pathname === "/";
 
-  // Static Post Ad CTA info for Web App
+  // Contextual Post Ad CTA info for Web App & Desktop
   const postInfo = React.useMemo(() => {
-    return { label: "+ Post Ad", route: "/post/sell" };
-  }, []);
+    if (pathname.includes("/need")) {
+      return { mobileLabel: "Post Ad", desktopLabel: "Post Need Ad", route: "/post/need" };
+    }
+    if (pathname.includes("/services")) {
+      return { mobileLabel: "Post Ad", desktopLabel: "Post Service", route: "/post/service" };
+    }
+    if (pathname.includes("/shops") || pathname.includes("/offers")) {
+      return { mobileLabel: "Post Ad", desktopLabel: "Post Store Offer", route: "/post/offer" };
+    }
+    return { mobileLabel: "Post Ad", desktopLabel: "Post Sell Ad", route: "/post/sell" };
+  }, [pathname]);
 
   const handleDynamicPostClick = () => {
     if (!isAuthVerified) {
@@ -270,10 +279,11 @@ export default function TopHeader({
               type="button"
               onClick={handleDynamicPostClick}
               className="bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-xs sm:text-sm px-4 sm:px-5 py-1.5 sm:py-2 rounded-full font-heading font-black shrink-0 flex items-center gap-1.5 shadow-2xs cursor-pointer select-none touch-manipulation active:scale-[0.97] transition-all border border-amber-400 ml-1"
-              title={postInfo.label}
+              title={postInfo.desktopLabel}
             >
               <Plus className="w-4 h-4 stroke-[3] text-[#0F172A]" />
-              <span>Post Ad</span>
+              <span className="inline md:hidden">{postInfo.mobileLabel}</span>
+              <span className="hidden md:inline">{postInfo.desktopLabel}</span>
             </button>
           )}
         </div>

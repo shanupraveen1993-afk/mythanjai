@@ -605,17 +605,54 @@ export default function PostForm({ segment }: PostFormProps) {
             }
           }
         } else {
-          const docRef = await addDoc(collection(db, col), {
-            ...dataPayload,
-            created_at: timestamp,
-            ...((segment as string) === "sell" || (segment as string) === "need" ? { expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) } : {}),
-            ...((segment as string) === "service" ? { negative_reports_count: 0 } : {}),
-          });
-          if (docRef) createdDocId = docRef.id;
+          try {
+            const docRef = await addDoc(collection(db, col), {
+              ...dataPayload,
+              created_at: timestamp,
+              ...((segment as string) === "sell" || (segment as string) === "need" ? { expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) } : {}),
+              ...((segment as string) === "service" ? { negative_reports_count: 0 } : {}),
+            });
+            if (docRef) createdDocId = docRef.id;
+          } catch (clientCreateErr: any) {
+            console.warn("Client addDoc failed, using privileged server API fallback:", clientCreateErr?.message);
+            const apiRes = await fetch(getApiUrl("/api/post/create"), {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                colName: col,
+                payload: {
+                  ...dataPayload,
+                  ...((segment as string) === "sell" || (segment as string) === "need" ? { expires_at: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString() } : {}),
+                  ...((segment as string) === "service" ? { negative_reports_count: 0 } : {}),
+                },
+              }),
+            }).then((r) => r.json());
+
+            if (apiRes && apiRes.success && apiRes.id) {
+              createdDocId = apiRes.id;
+            } else {
+              throw new Error(apiRes?.error || clientCreateErr?.message || "Failed to create post");
+            }
+          }
         }
       };
 
       await saveOrUpdateDocument(targetCol, editId, payloadToSave);
+
+      // Store in my_posts local tracker for instant retrieval on My Listings page
+      if (typeof window !== "undefined" && createdDocId) {
+        try {
+          const storedMyPosts: any[] = JSON.parse(localStorage.getItem("namma_thanjai_my_posts") || "[]");
+          const existingIdx = storedMyPosts.findIndex((p) => p.id === createdDocId);
+          const newPostItem = { id: createdDocId, colName: targetCol, ...payloadToSave, created_at: new Date().toISOString() };
+          if (existingIdx >= 0) {
+            storedMyPosts[existingIdx] = newPostItem;
+          } else {
+            storedMyPosts.unshift(newPostItem);
+          }
+          localStorage.setItem("namma_thanjai_my_posts", JSON.stringify(storedMyPosts));
+        } catch (e) {}
+      }
 
       // Log Audit Event
       try {

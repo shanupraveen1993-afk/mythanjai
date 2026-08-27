@@ -77,7 +77,7 @@ function ListingsContent() {
   const [loading, setLoading] = useState(true);
   const [deleteConfirmTarget, setDeleteConfirmTarget] = useState<{ id: string; colName: string } | null>(null);
 
-  // Load My Posts strictly filtered by current user's UID or Phone Number
+  // Load My Posts strictly filtered by current user's UID or Phone Number + Local Tracker
   useEffect(() => {
     async function fetchListingsData() {
       setLoading(true);
@@ -89,11 +89,13 @@ function ListingsContent() {
         let combinedMyPosts: any[] = [];
         const seenIds = new Set<string>();
 
-        // Fetch My Posted Ads strictly from Firestore (by userId or phone number)
+        // 1. Fetch My Posted Ads strictly from Firestore (by userId or phone variants)
         const targetCollections = ["needs_and_sales", "services", "shops"];
         await Promise.all(
           targetCollections.map(async (colName) => {
             const colRef = collection(db, colName);
+
+            // Query by UID
             if (userId) {
               const snapUid = await getDocs(query(colRef, where("userId", "==", userId))).catch(() => null);
               if (snapUid && !snapUid.empty) {
@@ -106,19 +108,38 @@ function ListingsContent() {
               }
             }
 
+            // Query by Phone number variations (10-digit, +91..., 91...)
             if (userPhone10) {
-              const snapPhone = await getDocs(query(colRef, where("phone", "==", userPhone10))).catch(() => null);
-              if (snapPhone && !snapPhone.empty) {
-                snapPhone.forEach((docSnap) => {
-                  if (!seenIds.has(docSnap.id)) {
-                    seenIds.add(docSnap.id);
-                    combinedMyPosts.push({ id: docSnap.id, colName, ...docSnap.data() });
+              const phoneVariations = [userPhone10, `+91${userPhone10}`, `91${userPhone10}`];
+              await Promise.all(
+                phoneVariations.map(async (ph) => {
+                  const snapPhone = await getDocs(query(colRef, where("phone", "==", ph))).catch(() => null);
+                  if (snapPhone && !snapPhone.empty) {
+                    snapPhone.forEach((docSnap) => {
+                      if (!seenIds.has(docSnap.id)) {
+                        seenIds.add(docSnap.id);
+                        combinedMyPosts.push({ id: docSnap.id, colName, ...docSnap.data() });
+                      }
+                    });
                   }
-                });
-              }
+                })
+              );
             }
           })
         );
+
+        // 2. Include posts created in local tracker if not already loaded
+        if (typeof window !== "undefined") {
+          try {
+            const localTracker: any[] = JSON.parse(localStorage.getItem("namma_thanjai_my_posts") || "[]");
+            localTracker.forEach((localItem) => {
+              if (localItem && localItem.id && !seenIds.has(localItem.id)) {
+                seenIds.add(localItem.id);
+                combinedMyPosts.push(localItem);
+              }
+            });
+          } catch (e) {}
+        }
 
         setMyPosts(combinedMyPosts);
 
@@ -149,10 +170,30 @@ function ListingsContent() {
     try {
       setMyPosts((prev) => prev.filter((p) => p.id !== postId));
 
-      // Purge permanently from all possible collections in Firestore
+      // Remove from local tracker
+      if (typeof window !== "undefined") {
+        try {
+          const storedMyPosts: any[] = JSON.parse(localStorage.getItem("namma_thanjai_my_posts") || "[]");
+          const updatedMyPosts = storedMyPosts.filter((p) => p.id !== postId);
+          localStorage.setItem("namma_thanjai_my_posts", JSON.stringify(updatedMyPosts));
+        } catch (e) {}
+      }
+
+      // Purge permanently from Firestore via client & privileged server API fallback
       const targetCols = collectionName ? [collectionName] : ["needs_and_sales", "services", "shops"];
       await Promise.all(
-        targetCols.map((col) => deleteDoc(doc(db, col, postId)).catch(() => {}))
+        targetCols.map(async (col) => {
+          try {
+            await deleteDoc(doc(db, col, postId));
+          } catch (clientErr: any) {
+            console.warn(`Client deleteDoc note for ${col}, calling privileged server API:`, clientErr?.message);
+            await fetch(getApiUrl("/api/post/delete"), {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ postId, colName: col }),
+            }).catch(() => {});
+          }
+        })
       );
 
       // Audit Log Trigger
