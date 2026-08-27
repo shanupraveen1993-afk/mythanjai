@@ -646,7 +646,10 @@ export default function ChatClientPage() {
         <div className={`flex-1 flex-col bg-[#efeae2] relative ${showMobileChat ? "flex" : "hidden lg:flex"}`}>
           
           {/* Active Chat Header Bar (Deep Teal #075E54) */}
-          <div className="bg-[#075E54] text-white px-3.5 py-2.5 flex items-center justify-between shadow-md shrink-0 border-b border-[#054c44]">
+          <div
+            className="bg-[#075E54] text-white px-3.5 py-2.5 flex items-center justify-between shadow-md shrink-0 border-b border-[#054c44]"
+            style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 12px)" }}
+          >
             <div className="flex items-center gap-2.5 min-w-0 flex-1">
               <button
                 type="button"
@@ -814,11 +817,11 @@ export default function ChatClientPage() {
             </div>
           )}
 
-          {/* Message Input Form */}
+          {/* Message Input Form (WhatsApp Flush Bottom Pinned Bar) */}
           <form
             onSubmit={handleSendMessage}
-            className="p-2.5 sm:p-3.5 bg-[#f0f2f5] border-t border-[#e9edef] flex items-center gap-2 shadow-xs"
-            style={{ paddingBottom: "max(calc(env(safe-area-inset-bottom, 0px) + 72px), 84px)" }}
+            className="sticky bottom-0 z-40 p-2.5 sm:p-3.5 bg-[#f0f2f5] border-t border-[#e9edef] flex items-center gap-2 shadow-lg shrink-0"
+            style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 12px)" }}
           >
             <input
               type="text"

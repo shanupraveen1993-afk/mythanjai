@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import adminApp from "@/lib/firebase-admin";
 import { getStorage } from "firebase-admin/storage";
+import crypto from "crypto";
 
 export const dynamic = "force-dynamic";
 
@@ -22,16 +23,20 @@ export async function POST(request: Request) {
       const bucketName = process.env.NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET || "mythanjai-40db2.firebasestorage.app";
       const bucket = getStorage(adminApp).bucket(bucketName);
       const storageFile = bucket.file(fileName);
+      const downloadToken = crypto.randomUUID();
 
+      // Use Firebase Storage download tokens to support Uniform Bucket-Level Access without 403 ACL errors
       await storageFile.save(buffer, {
         contentType: mimeType,
-        public: true,
         metadata: {
           cacheControl: "public, max-age=31536000",
+          metadata: {
+            firebaseStorageDownloadTokens: downloadToken,
+          },
         },
       });
 
-      const publicUrl = `https://storage.googleapis.com/${bucket.name}/${fileName}`;
+      const publicUrl = `https://firebasestorage.googleapis.com/v0/b/${bucket.name}/o/${encodeURIComponent(fileName)}?alt=media&token=${downloadToken}`;
       return NextResponse.json({
         success: true,
         url: publicUrl,
