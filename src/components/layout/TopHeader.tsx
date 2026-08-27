@@ -12,6 +12,7 @@ import { useLanguage } from "@/context/LanguageContext";
 import { useBackNavigation } from "@/hooks/use-back-navigation";
 import { useScrollDirection } from "@/hooks/use-scroll-direction";
 import { Bell } from "lucide-react";
+import UniversalSearchBar from "./UniversalSearchBar";
 
 interface TopHeaderProps {
   selectedArea: TanjoreLocality | "All Areas";
@@ -126,7 +127,14 @@ export default function TopHeader({
           </div>
         </div>
 
-        {/* Center: Sub-Screen Title or 4 Category Tabs with Vector Icons */}
+        {/* Center: Universal Search Input (Mobile WebApp & APK) */}
+        {!pathname.includes("/profile") && !pathname.includes("/post") && !pathname.includes("/chat") && (
+          <div className="flex-1 min-w-0 mx-1.5 md:hidden z-20">
+            <UniversalSearchBar />
+          </div>
+        )}
+
+        {/* Center: Sub-Screen Title or Desktop 4 Category Tabs */}
         {pathname.includes("/profile") || pathname.includes("/post") || pathname.includes("/chat") ? (
           <div className="absolute left-1/2 -translate-x-1/2 font-heading font-black text-sm sm:text-base text-slate-900 truncate max-w-[180px] sm:max-w-xs text-center z-10">
             {pathname.includes("/profile")

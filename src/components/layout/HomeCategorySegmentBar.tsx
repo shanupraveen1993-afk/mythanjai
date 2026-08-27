@@ -44,7 +44,7 @@ export default function HomeCategorySegmentBar() {
 
   return (
     <div
-      className={`w-full md:hidden bg-white/95 backdrop-blur-md pt-1.5 pb-2 border-b border-slate-200/80 transition-transform duration-300 ${
+      className={`w-full md:hidden sticky top-14 z-30 bg-white/95 backdrop-blur-md pt-1.5 pb-2 border-b border-slate-200/80 transition-transform duration-300 ${
         scrollDirection === "down" && !isAtTop ? "-translate-y-full" : "translate-y-0"
       }`}
     >
