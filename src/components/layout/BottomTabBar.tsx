@@ -79,7 +79,7 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
       className="md:hidden fixed bottom-0 left-0 right-0 z-40 w-full bg-[#0F172A] border-t border-slate-800/90 shadow-[0_-8px_30px_rgba(0,0,0,0.45)] pointer-events-auto select-none"
       style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 8px)" }}
     >
-      <div className="flex items-center justify-around h-14 px-3 sm:px-6 w-full max-w-md mx-auto">
+      <div className="flex items-center justify-around h-14 px-2 sm:px-6 w-full max-w-md mx-auto">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive =
@@ -98,28 +98,30 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
               ? pathname.startsWith("/listings") || pathname.includes("tab=listings") || pathname.includes("tab=my_posts")
               : pathname === "/profile";
 
-          if (isActive) {
-            return (
-              <button
-                key={item.id}
-                onClick={() => router.push(item.route)}
-                className="bg-[#1d4ed8] text-white px-3.5 py-1.5 rounded-full flex items-center gap-1.5 font-heading font-black text-xs shadow-md shadow-blue-600/30 transition-all duration-300 scale-105 shrink-0 cursor-pointer"
-              >
-                <Icon className="w-4 h-4 fill-white text-white stroke-[1.2]" />
-                <span className="truncate max-w-[90px] leading-none">{item.label}</span>
-              </button>
-            );
-          }
-
           return (
             <button
               key={item.id}
               onClick={() => router.push(item.route)}
-              className="p-2 rounded-full text-slate-400 hover:text-white transition-all cursor-pointer flex items-center justify-center shrink-0 active:scale-90"
+              className={`flex items-center gap-1.5 rounded-full transition-all duration-300 ease-out cursor-pointer select-none active:scale-95 ${
+                isActive
+                  ? "bg-[#1d4ed8] text-white px-3.5 py-1.5 font-heading font-black text-xs shadow-md shadow-blue-600/35 scale-105"
+                  : "text-slate-400 hover:text-white p-2"
+              }`}
               title={item.label}
               aria-label={item.label}
             >
-              <Icon className="w-5 h-5 text-slate-400 stroke-[2] fill-transparent hover:text-white transition-colors" />
+              <Icon
+                className={`transition-all duration-300 ${
+                  isActive
+                    ? "w-4 h-4 fill-white text-white stroke-[1.2]"
+                    : "w-5 h-5 text-slate-400 stroke-[2] fill-transparent hover:text-white"
+                }`}
+              />
+              {isActive && (
+                <span className="truncate max-w-[90px] leading-none text-xs font-black tracking-tight animate-fade-in">
+                  {item.label}
+                </span>
+              )}
             </button>
           );
         })}
