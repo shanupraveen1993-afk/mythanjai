@@ -775,8 +775,8 @@ export default function PostForm({ segment }: PostFormProps) {
 
       {/* Clean Minimal Standalone Header Bar */}
       <div
-        className="flex items-center justify-between border-b border-slate-200/80 pb-3 w-full"
-        style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 12px)" }}
+        className="flex items-center justify-between border-b border-slate-200/80 w-full h-14 sm:h-16 shrink-0"
+        style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
       >
         <button
           type="button"

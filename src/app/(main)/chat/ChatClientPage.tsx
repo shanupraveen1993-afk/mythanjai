@@ -669,8 +669,8 @@ export default function ChatClientPage() {
           
           {/* 1. BRANDED TOP HEADER */}
           <div
-            className="bg-[#f0f2f5] px-4 border-b border-slate-200/90 flex items-center justify-between shrink-0 select-none"
-            style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 12px)", height: "calc(3.5rem + max(env(safe-area-inset-top, 0px), 12px))" }}
+            className="bg-[#f0f2f5] px-4 border-b border-slate-200/90 flex items-center justify-between shrink-0 select-none h-14 sm:h-16"
+            style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
           >
             <button
               type="button"
@@ -816,8 +816,8 @@ export default function ChatClientPage() {
           
           {/* Active Chat Header Bar (Deep Teal #075E54) */}
           <div
-            className="bg-[#075E54] text-white px-3.5 py-2.5 flex items-center justify-between shadow-md shrink-0 border-b border-[#054c44]"
-            style={{ paddingTop: "calc(env(safe-area-inset-top, 0px) + 12px)" }}
+            className="bg-[#075E54] text-white px-3.5 flex items-center justify-between shadow-md shrink-0 border-b border-[#054c44] h-14 sm:h-16"
+            style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
           >
             <div className="flex items-center gap-2.5 min-w-0 flex-1">
               <button
