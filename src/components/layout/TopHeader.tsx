@@ -69,6 +69,21 @@ export default function TopHeader({
     return { mobileLabel: "Post Ad", desktopLabel: "Post Sell Ad", route: "/post/sell" };
   }, [pathname]);
 
+  const getSubPageTitle = React.useCallback(() => {
+    if (pathname.includes("/profile")) {
+      return profileTab === "listings" ? "My Listings" : profileTab === "saved" ? "Saved Items" : "My Profile";
+    }
+    if (pathname.includes("/post")) return "Post a Free Ad";
+    if (pathname.includes("/chat")) return "Direct Messages";
+    if (pathname.includes("/listings")) return "My Listings";
+    if (pathname.includes("/need")) return "Wanted Ads";
+    if (pathname.includes("/services")) return "Services";
+    if (pathname.includes("/shops") || pathname.includes("/offers")) return "Store Offers";
+    if (pathname.includes("/search")) return "Search Results";
+    if (pathname.includes("/classifieds")) return "Classifieds";
+    return "Namma Thanjai";
+  }, [pathname, profileTab]);
+
   const handleDynamicPostClick = () => {
     if (!isAuthVerified) {
       if (typeof window !== "undefined") {
@@ -110,10 +125,10 @@ export default function TopHeader({
       }`}
       style={{ paddingTop: "max(env(safe-area-inset-top, 0px), 6px)" }}
     >
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 py-2 flex items-center justify-between gap-3 relative">
+      <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 py-2 flex items-center justify-between gap-2.5 sm:gap-4 relative">
 
-        {/* Left Side: Full Fit Namma Thanjai Logo + Brand Name across all screens */}
-        <div className="flex items-center gap-2 sm:gap-3 shrink-0 z-20">
+        {/* Left Side: Logo Image ONLY (No text) across ALL screens */}
+        <div className="flex items-center gap-2 shrink-0 z-20">
           <div
             onClick={() => router.push("/")}
             className="flex items-center gap-2 cursor-pointer shrink-0 group select-none"
@@ -121,82 +136,76 @@ export default function TopHeader({
             <div className="h-8 sm:h-9 w-auto flex items-center justify-center shrink-0">
               <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="h-full w-auto object-contain max-h-9" />
             </div>
-            <span className={`${isHomePage ? "hidden md:inline-block" : "inline-block"} font-heading font-black tracking-tight text-sm sm:text-lg md:text-xl leading-none`}>
-              <span className="text-[#1d4ed8] font-black">நம்ம</span> <span className="text-[#f59e0b] font-black">thanjai</span>
-            </span>
           </div>
         </div>
 
-        {/* Center: Universal Search Input (Mobile WebApp & APK) */}
-        {!pathname.includes("/profile") && !pathname.includes("/post") && !pathname.includes("/chat") && (
-          <div className="flex-1 min-w-0 mx-1.5 md:hidden z-20">
+        {/* Desktop Header Center: Search Bar + 4 Category Tabs */}
+        <div className="hidden md:flex items-center gap-3 flex-1 max-w-2xl mx-2 z-20">
+          <div className="flex-1 min-w-0">
             <UniversalSearchBar />
           </div>
-        )}
-
-        {/* Center: Sub-Screen Title or Desktop 4 Category Tabs */}
-        {pathname.includes("/profile") || pathname.includes("/post") || pathname.includes("/chat") ? (
-          <div className="absolute left-1/2 -translate-x-1/2 font-heading font-black text-sm sm:text-base text-slate-900 truncate max-w-[180px] sm:max-w-xs text-center z-10">
-            {pathname.includes("/profile")
-              ? (profileTab === "listings" ? "My Listings" : profileTab === "saved" ? "Saved Items" : "My Profile")
-              : pathname.includes("/post") ? "Post a Free Ad"
-              : pathname.includes("/chat") ? "Direct Messages"
-              : "Namma Thanjai"}
+          <div className="flex items-center gap-1 bg-slate-100/90 p-1 rounded-full border border-slate-200/80 font-heading backdrop-blur-sm shadow-2xs shrink-0">
+            <button
+              type="button"
+              onClick={() => router.push("/")}
+              className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                pathname === "/" || pathname === "/home" || pathname.includes("/sell")
+                  ? "bg-[#FBBF24] text-slate-950 border border-amber-400/90 shadow-2xs"
+                  : "text-slate-700 hover:text-slate-950 transition-colors"
+              }`}
+            >
+              <Tag className="w-3.5 h-3.5 text-slate-900" />
+              <span>Buy</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => router.push("/need")}
+              className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                pathname.includes("/need")
+                  ? "bg-[#FBBF24] text-slate-950 border border-amber-400/90 shadow-2xs"
+                  : "text-slate-700 hover:text-slate-950 transition-colors"
+              }`}
+            >
+              <Search className="w-3.5 h-3.5 text-slate-900" />
+              <span>Wanted</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => router.push("/services")}
+              className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                pathname.includes("/services")
+                  ? "bg-[#FBBF24] text-slate-950 border border-amber-400/90 shadow-2xs"
+                  : "text-slate-700 hover:text-slate-950 transition-colors"
+              }`}
+            >
+              <Wrench className="w-3.5 h-3.5 text-slate-900" />
+              <span>Services</span>
+            </button>
+            <button
+              type="button"
+              onClick={() => router.push("/shops")}
+              className={`px-3 py-1 rounded-full text-xs font-bold transition-all cursor-pointer flex items-center gap-1 ${
+                pathname.includes("/shops") || pathname.includes("/offers")
+                  ? "bg-[#FBBF24] text-slate-950 border border-amber-400/90 shadow-2xs"
+                  : "text-slate-700 hover:text-slate-950 transition-colors"
+              }`}
+            >
+              <Store className="w-3.5 h-3.5 text-slate-900" />
+              <span>Offers</span>
+            </button>
           </div>
-        ) : (
-          showCenterNav ? (
-            <div className="absolute left-1/2 -translate-x-1/2 hidden md:flex items-center gap-1.5 bg-slate-100/90 p-1.5 rounded-full border border-slate-200/80 font-heading backdrop-blur-sm z-10 shadow-2xs">
-              <button
-                type="button"
-                onClick={() => router.push("/")}
-                className={`px-4 py-1.5 rounded-full text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 ${
-                  pathname === "/" || pathname === "/home" || pathname.includes("/sell")
-                    ? "bg-[#FBBF24] text-slate-950 font-bold border border-amber-400/90 shadow-2xs"
-                    : "text-slate-700 hover:text-slate-950 font-semibold transition-colors"
-                }`}
-              >
-                <Tag className="w-3.5 h-3.5 text-slate-900" />
-                <span>Buy</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => router.push("/need")}
-                className={`px-4 py-1.5 rounded-full text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 ${
-                  pathname.includes("/need")
-                    ? "bg-[#FBBF24] text-slate-950 font-bold border border-amber-400/90 shadow-2xs"
-                    : "text-slate-700 hover:text-slate-950 font-semibold transition-colors"
-                }`}
-              >
-                <Search className="w-3.5 h-3.5 text-slate-900" />
-                <span>Wanted</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => router.push("/services")}
-                className={`px-4 py-1.5 rounded-full text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 ${
-                  pathname.includes("/services")
-                    ? "bg-[#FBBF24] text-slate-950 font-bold border border-amber-400/90 shadow-2xs"
-                    : "text-slate-700 hover:text-slate-950 font-semibold transition-colors"
-                }`}
-              >
-                <Wrench className="w-3.5 h-3.5 text-slate-900" />
-                <span>Services</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => router.push("/shops")}
-                className={`px-4 py-1.5 rounded-full text-xs sm:text-sm transition-all cursor-pointer flex items-center gap-1.5 ${
-                  pathname.includes("/shops") || pathname.includes("/offers")
-                    ? "bg-[#FBBF24] text-slate-950 font-bold border border-amber-400/90 shadow-2xs"
-                    : "text-slate-700 hover:text-slate-950 font-semibold transition-colors"
-                }`}
-              >
-                <Store className="w-3.5 h-3.5 text-slate-900" />
-                <span>Offers</span>
-              </button>
-            </div>
-          ) : null
-        )}
+        </div>
+
+        {/* Mobile Header Center: Universal Search on Home Page OR Dynamic Page Title on Sub-Pages */}
+        <div className="flex md:hidden flex-1 min-w-0 mx-1.5 z-20 justify-center">
+          {pathname === "/" || pathname === "/sell" ? (
+            <UniversalSearchBar />
+          ) : (
+            <span className="font-heading font-black text-sm sm:text-base text-slate-900 truncate tracking-tight text-center">
+              {getSubPageTitle()}
+            </span>
+          )}
+        </div>
 
         {/* Right Side Action Cluster: Notification Bell, Mobile Get App button, Desktop Chat/Profile/Listings icons */}
         <div className="flex items-center justify-end gap-2 shrink-0 ml-auto z-20">
