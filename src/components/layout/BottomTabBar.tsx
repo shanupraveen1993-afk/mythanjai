@@ -52,17 +52,17 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
       isCenter: false,
     },
     {
-      id: "chat",
-      label: "Chat",
-      icon: MessageSquare,
-      route: "/chat",
-      isCenter: false,
-    },
-    {
       id: "listings",
       label: "My Listings",
       icon: Package,
       route: "/listings",
+      isCenter: false,
+    },
+    {
+      id: "chat",
+      label: "Chat",
+      icon: MessageSquare,
+      route: "/chat",
       isCenter: false,
     },
     {
