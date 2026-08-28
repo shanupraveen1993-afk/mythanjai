@@ -665,7 +665,7 @@ export default function ChatClientPage() {
   }
 
   return (
-    <div className={`fixed inset-0 z-40 w-screen h-screen flex bg-[#f0f2f5] font-sans overflow-hidden p-0 m-0 ${showMobileChat ? "pb-0" : "pb-16 md:pb-0"}`}>
+    <div className={`fixed inset-0 z-40 w-screen h-[100dvh] max-h-[100dvh] flex bg-[#f0f2f5] font-sans overflow-hidden p-0 m-0 ${showMobileChat ? "pb-0" : "pb-16 md:pb-0"}`}>
       {/* SCAM WARNING MODAL */}
       {scamAlertTriggered && (
         <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 animate-fade-in">
