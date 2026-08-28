@@ -127,8 +127,8 @@ export default function TopHeader({
     >
       <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 py-2 flex items-center justify-between gap-2.5 sm:gap-4 relative">
 
-        {/* Left Side: Logo Image ONLY (No Text) */}
-        <div className="flex items-center gap-2 shrink-0 z-20">
+        {/* Left Side Cluster: Logo Image + Desktop Search Bar */}
+        <div className="flex items-center gap-3 sm:gap-4 shrink-0 z-20">
           <div
             onClick={() => router.push("/")}
             className="flex items-center cursor-pointer shrink-0 group select-none"
@@ -137,13 +137,14 @@ export default function TopHeader({
               <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="h-full w-auto object-contain max-h-8 sm:max-h-9" />
             </div>
           </div>
-        </div>
-
-        {/* Desktop Header Center: Compact Search Bar + 4 Category Tabs (Flex Aligned) */}
-        <div className="hidden md:flex items-center gap-3 lg:gap-4 z-20 flex-1 justify-center min-w-0">
-          <div className="w-44 lg:w-56 shrink-0">
+          {/* Desktop Search Bar (Left Aligned Next to Logo) */}
+          <div className="hidden md:block w-48 lg:w-60 shrink-0">
             <UniversalSearchBar />
           </div>
+        </div>
+
+        {/* Desktop Header Center: 4 Category Tabs */}
+        <div className="hidden md:flex items-center justify-center z-20 flex-1 min-w-0 mx-2">
           <div className="flex items-center gap-1.5 bg-slate-100/90 p-1.5 rounded-full border border-slate-200/80 font-heading backdrop-blur-sm shadow-2xs">
             <button
               type="button"
