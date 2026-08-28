@@ -285,7 +285,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
                 e.stopPropagation();
                 router.push("/listings");
               }}
-              className="bg-blue-50 hover:bg-blue-100 text-blue-600 font-heading font-extrabold text-xs px-4 py-2 rounded-xl border border-blue-200 cursor-pointer transition-colors active:scale-95 shadow-2xs"
+              className="text-blue-600 hover:text-blue-700 font-heading font-extrabold text-xs sm:text-sm px-2.5 py-1.5 underline underline-offset-2 cursor-pointer transition-colors active:scale-95 bg-transparent border-0"
               title="Edit Service"
             >
               Edit
