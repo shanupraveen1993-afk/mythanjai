@@ -104,8 +104,8 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
               onClick={() => router.push(item.route)}
               className={`flex items-center gap-2 rounded-full min-h-[48px] min-w-[48px] justify-center transition-all duration-300 ease-out cursor-pointer select-none active:scale-95 ${
                 isActive
-                  ? "bg-[#1d4ed8] text-white px-4 py-2 font-heading font-black text-[13px] sm:text-sm shadow-md shadow-blue-600/35 scale-105"
-                  : "text-slate-400 hover:text-white p-2"
+                  ? "bg-[#1D4ED8] text-white px-4 py-2 font-heading font-black text-[13px] sm:text-sm shadow-md shadow-blue-600/35 scale-105"
+                  : "text-slate-900 hover:text-slate-950 font-bold p-2"
               }`}
               title={item.label}
               aria-label={item.label}
@@ -114,11 +114,11 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
                 className={`transition-all duration-300 ${
                   isActive
                     ? "w-5 h-5 fill-white text-white stroke-[1.2]"
-                    : "w-6 h-6 text-slate-400 stroke-[2] fill-transparent hover:text-white"
+                    : "w-6 h-6 text-slate-900 stroke-[2.2] fill-transparent hover:text-slate-950"
                 }`}
               />
               {isActive && (
-                <span className="truncate max-w-[100px] leading-none text-[13px] sm:text-sm font-black tracking-tight animate-fade-in">
+                <span className="truncate max-w-[100px] leading-none text-[13px] sm:text-sm font-black tracking-tight text-white animate-fade-in">
                   {item.label}
                 </span>
               )}
