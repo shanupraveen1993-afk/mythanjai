@@ -440,55 +440,57 @@ export default function ListingCard({ listing, isPreview }: { listing: ListingIt
             </p>
           </div>
 
-          {/* ── ROW 3: Location on Left + 3 Icon Buttons on Right ── */}
-          <div className="flex items-center justify-between text-xs text-slate-600 border-t border-b border-slate-100 py-2 my-0.5 gap-2">
+          {/* ── ROW 3: Location on Left + 3 Icon Buttons on Right (Hidden in Preview) ── */}
+          <div className="flex items-center justify-between text-xs text-slate-600 border-t border-slate-100/90 pt-2 mt-1 gap-2">
             {/* Location Tag */}
             <div className="flex items-center gap-1 text-xs text-slate-600 font-semibold truncate">
               <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
               <span className="truncate">{listing.location || "Medical College Rd, Thanjavur"}</span>
             </div>
 
-            {/* 3 Square Action Icon Buttons (Save, Share, Report) */}
-            <div className="flex items-center gap-1.5 shrink-0">
-              {/* 1st: Save */}
-              <button
-                type="button"
-                onClick={handleSaveToggle}
-                className={`w-7 h-7 rounded-xl border flex items-center justify-center transition-colors cursor-pointer ${
-                  isSaved
-                    ? "bg-amber-50 border-amber-300 text-amber-600"
-                    : "border-slate-200 bg-white text-slate-500 hover:text-slate-800"
-                }`}
-                title={isSaved ? "Saved" : "Save Listing"}
-              >
-                <Bookmark className={`w-3.5 h-3.5 ${isSaved ? "fill-amber-600" : ""}`} />
-              </button>
+            {/* 3 Square Action Icon Buttons (Save, Share, Report) - Hidden in Live Preview */}
+            {!isPreview && (
+              <div className="flex items-center gap-1.5 shrink-0">
+                {/* 1st: Save */}
+                <button
+                  type="button"
+                  onClick={handleSaveToggle}
+                  className={`w-7 h-7 rounded-xl border flex items-center justify-center transition-colors cursor-pointer ${
+                    isSaved
+                      ? "bg-amber-50 border-amber-300 text-amber-600"
+                      : "border-slate-200 bg-white text-slate-500 hover:text-slate-800"
+                  }`}
+                  title={isSaved ? "Saved" : "Save Listing"}
+                >
+                  <Bookmark className={`w-3.5 h-3.5 ${isSaved ? "fill-amber-600" : ""}`} />
+                </button>
 
-              {/* 2nd: Share */}
-              <button
-                type="button"
-                onClick={handleShare}
-                className="w-7 h-7 rounded-xl border border-slate-200 bg-white text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors cursor-pointer"
-                title="Share Listing"
-              >
-                <Share2 className="w-3.5 h-3.5" />
-              </button>
+                {/* 2nd: Share */}
+                <button
+                  type="button"
+                  onClick={handleShare}
+                  className="w-7 h-7 rounded-xl border border-slate-200 bg-white text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors cursor-pointer"
+                  title="Share Listing"
+                >
+                  <Share2 className="w-3.5 h-3.5" />
+                </button>
 
-              {/* 3rd: Report */}
-              <button
-                type="button"
-                onClick={handleReportListing}
-                className="w-7 h-7 rounded-xl border border-slate-200 bg-white text-slate-400 hover:text-rose-500 hover:border-rose-200 flex items-center justify-center transition-colors cursor-pointer"
-                title="Report Listing"
-              >
-                <Flag className="w-3.5 h-3.5" />
-              </button>
-            </div>
+                {/* 3rd: Report */}
+                <button
+                  type="button"
+                  onClick={handleReportListing}
+                  className="w-7 h-7 rounded-xl border border-slate-200 bg-white text-slate-400 hover:text-rose-500 hover:border-rose-200 flex items-center justify-center transition-colors cursor-pointer"
+                  title="Report Listing"
+                >
+                  <Flag className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            )}
           </div>
         </div>
 
         {/* ── FOOTER ROW: Date Ago (Left) + Buttons (Right) ── */}
-        <div className="pt-2 flex items-center justify-between gap-2 mt-auto border-t border-slate-100">
+        <div className="flex items-center justify-between gap-2 mt-2 pt-1">
           {/* Left: Date Ago */}
           <span className="text-[11px] font-medium text-slate-400 flex items-center gap-1 shrink-0">
             <Calendar className="w-3.5 h-3.5 text-slate-400" />

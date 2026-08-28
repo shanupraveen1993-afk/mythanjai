@@ -139,7 +139,7 @@ export default function PostForm({ segment }: PostFormProps) {
   // Form Fields
   const [phone, setPhone] = useState("");
   const [area, setArea] = useState<string>("");
-  const [category, setCategory] = useState<string>(config.categories[0]);
+  const [category, setCategory] = useState<string>(segment === "service" ? "" : config.categories[0]);
   const [subCategory, setSubCategory] = useState<string>("");
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -1184,7 +1184,8 @@ export default function PostForm({ segment }: PostFormProps) {
                     <div className="relative w-full">
                       <input
                         type="text"
-                        placeholder="Price or Rate (e.g. 5000, 5000rs, or 5000/month)"
+                        maxLength={12}
+                        placeholder="Price or Rate (e.g. 5000, 5000rs)"
                         value={price}
                         onChange={(e) => setPrice(e.target.value)}
                         className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal pr-20"
@@ -1215,7 +1216,8 @@ export default function PostForm({ segment }: PostFormProps) {
                     <div className="w-full">
                       <input
                         type="text"
-                        placeholder="Budget From (e.g. 5000, 5000rs - Optional)"
+                        maxLength={12}
+                        placeholder="Budget (e.g. 5000, 5000rs - Optional)"
                         value={price}
                         onChange={(e) => setPrice(e.target.value)}
                         className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal"
@@ -1261,7 +1263,7 @@ export default function PostForm({ segment }: PostFormProps) {
                     </span>
                   </div>
 
-                  <div className="relative w-full">
+                  <div className="w-full">
                     <textarea
                       rows={4}
                       maxLength={config.maxDescChars}
@@ -1272,28 +1274,28 @@ export default function PostForm({ segment }: PostFormProps) {
                       }
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
-                      className="w-full px-3.5 py-2.5 pb-12 text-sm font-medium border border-slate-200 rounded-xl bg-slate-50 focus:outline-none focus:border-amber-500 focus:bg-white text-slate-900 transition-all resize-y min-h-[110px] max-h-56 overflow-y-auto leading-relaxed"
+                      className="w-full px-3.5 py-2.5 text-sm font-medium border border-slate-200 rounded-xl bg-slate-50 focus:outline-none focus:border-amber-500 focus:bg-white text-slate-900 transition-all resize-y min-h-[100px] max-h-56 overflow-y-auto leading-relaxed"
                     />
+                  </div>
 
-                    {/* AI Refine Button Pinned to Bottom-Right */}
-                    <div className="absolute bottom-2.5 right-2.5 z-10">
-                      <button
-                        type="button"
-                        onClick={handleManualRefine}
-                        disabled={isAiRewriting || !description.trim()}
-                        className="px-3 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-500 text-slate-950 font-heading font-black text-xs flex items-center gap-1.5 transition-all shadow-xs cursor-pointer border border-amber-300 active:scale-95 disabled:opacity-40"
-                        title="Click to format and push refined description to Live Preview"
-                      >
-                        {isAiRewriting ? (
-                          <>
-                            <Loader2 className="w-3.5 h-3.5 animate-spin text-slate-950" />
-                            <span>Refining...</span>
-                          </>
-                        ) : (
-                          <span>✨ Auto-Format Description</span>
-                        )}
-                      </button>
-                    </div>
+                  {/* AI Refine Button Positioned Below Description Textarea */}
+                  <div className="flex justify-end pt-1">
+                    <button
+                      type="button"
+                      onClick={handleManualRefine}
+                      disabled={isAiRewriting || !description.trim()}
+                      className="px-3.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-heading font-black text-xs flex items-center gap-1.5 transition-all shadow-xs cursor-pointer border border-amber-300 active:scale-95 disabled:opacity-40"
+                      title="Click to auto-format and push refined description to Live Preview"
+                    >
+                      {isAiRewriting ? (
+                        <>
+                          <Loader2 className="w-3.5 h-3.5 animate-spin text-slate-950" />
+                          <span>Refining...</span>
+                        </>
+                      ) : (
+                        <span>✨ AI Refine</span>
+                      )}
+                    </button>
                   </div>
                 </div>
               </>

@@ -218,8 +218,8 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
           </p>
         </div>
 
-        {/* ── ROW 3: Location + Posted Date on Left + 3 Utility Icon Buttons on Right ── */}
-        <div className="flex items-center justify-between text-xs text-slate-600 border-t border-b border-slate-100 py-1.5 my-0.5 gap-2">
+        {/* ── ROW 3: Location + Posted Date on Left + 3 Utility Icon Buttons on Right (Hidden in Preview) ── */}
+        <div className="flex items-center justify-between text-xs text-slate-600 border-t border-slate-100/90 pt-2 mt-1 gap-2">
           {/* Location & Posted Month */}
           <div className="flex items-center gap-1.5 text-[11px] text-slate-600 font-semibold truncate min-w-0">
             <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
@@ -228,37 +228,39 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
             <span className="text-slate-400 font-normal shrink-0">{postedMonthText}</span>
           </div>
 
-          {/* 3 Square Action Icon Buttons (Save, Share, Report) */}
-          <div className="flex items-center gap-1 shrink-0">
-            <button
-              type="button"
-              onClick={handleToggleSave}
-              className={`w-7 h-7 rounded-xl border flex items-center justify-center transition-colors cursor-pointer ${
-                saved
-                  ? "bg-amber-50 border-amber-300 text-amber-600"
-                  : "border-slate-200 bg-white text-slate-500 hover:text-slate-800"
-              }`}
-              title="Save Provider"
-            >
-              <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-amber-600" : ""}`} />
-            </button>
-            <button
-              type="button"
-              onClick={handleShare}
-              className="w-7 h-7 rounded-xl border border-slate-200 bg-white text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors cursor-pointer"
-              title="Share via WhatsApp"
-            >
-              <Share2 className="w-3.5 h-3.5" />
-            </button>
-            <button
-              type="button"
-              onClick={handleReport}
-              className="w-7 h-7 rounded-xl border border-slate-200 bg-white text-slate-400 hover:text-rose-500 hover:border-rose-200 flex items-center justify-center transition-colors cursor-pointer"
-              title="Report Provider"
-            >
-              <Flag className="w-3.5 h-3.5" />
-            </button>
-          </div>
+          {/* 3 Square Action Icon Buttons (Save, Share, Report) - Hidden in Live Preview */}
+          {!isPreview && (
+            <div className="flex items-center gap-1 shrink-0">
+              <button
+                type="button"
+                onClick={handleToggleSave}
+                className={`w-7 h-7 rounded-xl border flex items-center justify-center transition-colors cursor-pointer ${
+                  saved
+                    ? "bg-amber-50 border-amber-300 text-amber-600"
+                    : "border-slate-200 bg-white text-slate-500 hover:text-slate-800"
+                }`}
+                title="Save Provider"
+              >
+                <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-amber-600" : ""}`} />
+              </button>
+              <button
+                type="button"
+                onClick={handleShare}
+                className="w-7 h-7 rounded-xl border border-slate-200 bg-white text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors cursor-pointer"
+                title="Share via WhatsApp"
+              >
+                <Share2 className="w-3.5 h-3.5" />
+              </button>
+              <button
+                type="button"
+                onClick={handleReport}
+                className="w-7 h-7 rounded-xl border border-slate-200 bg-white text-slate-400 hover:text-rose-500 hover:border-rose-200 flex items-center justify-center transition-colors cursor-pointer"
+                title="Report Provider"
+              >
+                <Flag className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

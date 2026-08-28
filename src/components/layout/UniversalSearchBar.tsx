@@ -150,10 +150,10 @@ export default function UniversalSearchBar() {
               
               {/* Category 1: Items for Sale */}
               {results.classifieds.filter((i) => i.type === "SELL" || i.category !== "NEED").length > 0 && (
-                <div className="flex flex-col gap-1.5">
-                  <div className="flex items-center justify-between px-1 text-[11px] font-black uppercase text-amber-800 tracking-wider">
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center justify-between px-1 text-[11px] font-black uppercase text-blue-900 tracking-wider">
                     <span className="flex items-center gap-1">
-                      <Building className="w-3.5 h-3.5 text-amber-600" />
+                      <Building className="w-3.5 h-3.5 text-blue-600" />
                       Items for Sale (Sell)
                     </span>
                     <button 
@@ -161,12 +161,12 @@ export default function UniversalSearchBar() {
                         setIsOpen(false);
                         router.push(`/sell?q=${encodeURIComponent(searchTerm.trim())}`);
                       }} 
-                      className="text-amber-700 hover:underline cursor-pointer font-bold text-[11px]"
+                      className="text-blue-700 hover:underline cursor-pointer font-bold text-[11px]"
                     >
                       View All →
                     </button>
                   </div>
-                  <div className="flex flex-col gap-1.5">
+                  <div className="flex flex-col gap-1">
                     {results.classifieds.filter((i) => i.type === "SELL" || i.category !== "NEED").map((item) => (
                       <div
                         key={item.id}
@@ -174,26 +174,22 @@ export default function UniversalSearchBar() {
                           setIsOpen(false);
                           router.push(`/sell?q=${encodeURIComponent(searchTerm.trim())}`);
                         }}
-                        className="bg-slate-50 hover:bg-amber-50/60 p-2.5 rounded-xl border border-slate-200/80 cursor-pointer transition-all flex items-center justify-between gap-3 group"
+                        className="bg-slate-50 hover:bg-blue-50/70 p-2.5 rounded-xl border border-slate-200/80 cursor-pointer transition-all flex items-center justify-between gap-3 group"
                       >
                         <div className="min-w-0 flex-1 flex flex-col">
-                          <h4 className="font-heading font-extrabold text-xs text-slate-900 truncate group-hover:text-amber-800">
+                          <h4 className="font-heading font-bold text-xs text-slate-900 truncate group-hover:text-blue-900">
                             {item.title}
                           </h4>
                           <div className="flex items-center gap-2 text-[11px] text-slate-500 font-medium mt-0.5">
                             <span className="flex items-center gap-1 shrink-0">
-                              <MapPin className="w-3 h-3 text-amber-600" />
+                              <MapPin className="w-3 h-3 text-blue-600" />
                               {item.area_tag || "Thanjavur"}
                             </span>
                             <span>•</span>
                             <span className="capitalize">{item.category || "Sell"}</span>
                           </div>
                         </div>
-                        {item.price && (
-                          <span className="text-amber-700 font-heading font-black text-xs shrink-0">
-                            ₹{item.price.toLocaleString("en-IN")}
-                          </span>
-                        )}
+                        <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-blue-600 transition-colors shrink-0" />
                       </div>
                     ))}
                   </div>
@@ -202,8 +198,8 @@ export default function UniversalSearchBar() {
 
               {/* Category 2: Requirements (Need) */}
               {results.classifieds.filter((i) => i.type === "NEED" || i.category === "NEED").length > 0 && (
-                <div className="flex flex-col gap-1.5">
-                  <div className="flex items-center justify-between px-1 text-[11px] font-black uppercase text-amber-800 tracking-wider">
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center justify-between px-1 text-[11px] font-black uppercase text-amber-900 tracking-wider">
                     <span className="flex items-center gap-1">
                       <Building className="w-3.5 h-3.5 text-amber-600" />
                       Requirements (Need)
@@ -218,7 +214,7 @@ export default function UniversalSearchBar() {
                       View All →
                     </button>
                   </div>
-                  <div className="flex flex-col gap-1.5">
+                  <div className="flex flex-col gap-1">
                     {results.classifieds.filter((i) => i.type === "NEED" || i.category === "NEED").map((item) => (
                       <div
                         key={item.id}
@@ -226,10 +222,10 @@ export default function UniversalSearchBar() {
                           setIsOpen(false);
                           router.push(`/need?q=${encodeURIComponent(searchTerm.trim())}`);
                         }}
-                        className="bg-slate-50 hover:bg-amber-50/60 p-2.5 rounded-xl border border-slate-200/80 cursor-pointer transition-all flex items-center justify-between gap-3 group"
+                        className="bg-slate-50 hover:bg-amber-50/70 p-2.5 rounded-xl border border-slate-200/80 cursor-pointer transition-all flex items-center justify-between gap-3 group"
                       >
                         <div className="min-w-0 flex-1 flex flex-col">
-                          <h4 className="font-heading font-extrabold text-xs text-slate-900 truncate group-hover:text-amber-800">
+                          <h4 className="font-heading font-bold text-xs text-slate-900 truncate group-hover:text-amber-900">
                             {item.title}
                           </h4>
                           <div className="flex items-center gap-2 text-[11px] text-slate-500 font-medium mt-0.5">
@@ -241,11 +237,7 @@ export default function UniversalSearchBar() {
                             <span>Buyer Request</span>
                           </div>
                         </div>
-                        {item.price && (
-                          <span className="text-amber-700 font-heading font-black text-xs shrink-0">
-                            ₹{item.price.toLocaleString("en-IN")}
-                          </span>
-                        )}
+                        <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-amber-600 transition-colors shrink-0" />
                       </div>
                     ))}
                   </div>
@@ -254,23 +246,23 @@ export default function UniversalSearchBar() {
 
               {/* Category 3: Local Services */}
               {results.services.length > 0 && (
-                <div className="flex flex-col gap-1.5">
-                  <div className="flex items-center justify-between px-1 text-[11px] font-black uppercase text-amber-800 tracking-wider">
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center justify-between px-1 text-[11px] font-black uppercase text-emerald-900 tracking-wider">
                     <span className="flex items-center gap-1">
-                      <Wrench className="w-3.5 h-3.5 text-amber-600" />
-                      Local Services ({results.services.length})
+                      <Wrench className="w-3.5 h-3.5 text-emerald-600" />
+                      Local Services
                     </span>
                     <button 
                       onClick={() => {
                         setIsOpen(false);
                         router.push(`/services?q=${encodeURIComponent(searchTerm.trim())}`);
                       }} 
-                      className="text-amber-700 hover:underline cursor-pointer font-bold text-[11px]"
+                      className="text-emerald-700 hover:underline cursor-pointer font-bold text-[11px]"
                     >
                       View All →
                     </button>
                   </div>
-                  <div className="flex flex-col gap-1.5">
+                  <div className="flex flex-col gap-1">
                     {results.services.map((item) => (
                       <div
                         key={item.id}
@@ -278,49 +270,47 @@ export default function UniversalSearchBar() {
                           setIsOpen(false);
                           router.push(`/services?q=${encodeURIComponent(searchTerm.trim())}`);
                         }}
-                        className="bg-slate-50 hover:bg-amber-50/60 p-2.5 rounded-xl border border-slate-200/80 cursor-pointer transition-all flex items-center justify-between gap-3 group"
+                        className="bg-slate-50 hover:bg-emerald-50/70 p-2.5 rounded-xl border border-slate-200/80 cursor-pointer transition-all flex items-center justify-between gap-3 group"
                       >
                         <div className="min-w-0 flex-1 flex flex-col">
-                          <h4 className="font-heading font-extrabold text-xs text-slate-900 truncate group-hover:text-amber-800">
-                            {item.name || item.title}
+                          <h4 className="font-heading font-bold text-xs text-slate-900 truncate group-hover:text-emerald-900">
+                            {item.name}
                           </h4>
                           <div className="flex items-center gap-2 text-[11px] text-slate-500 font-medium mt-0.5">
                             <span className="flex items-center gap-1 shrink-0">
-                              <MapPin className="w-3 h-3 text-amber-600" />
+                              <MapPin className="w-3 h-3 text-emerald-600" />
                               {item.area_tag || "Thanjavur"}
                             </span>
                             <span>•</span>
-                            <span className="capitalize">{item.skill_category || "Service"}</span>
+                            <span>{item.skill_category || "Service"}</span>
                           </div>
                         </div>
-                        <span className="text-emerald-700 font-bold text-[11px] bg-emerald-50 border border-emerald-200 px-2 py-0.5 rounded-md shrink-0">
-                          Verified Service
-                        </span>
+                        <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-emerald-600 transition-colors shrink-0" />
                       </div>
                     ))}
                   </div>
                 </div>
               )}
 
-              {/* Category 4: Local Offers */}
+              {/* Category 4: Store Offers */}
               {results.shops.length > 0 && (
-                <div className="flex flex-col gap-1.5">
-                  <div className="flex items-center justify-between px-1 text-[11px] font-black uppercase text-amber-800 tracking-wider">
+                <div className="flex flex-col gap-1">
+                  <div className="flex items-center justify-between px-1 text-[11px] font-black uppercase text-purple-900 tracking-wider">
                     <span className="flex items-center gap-1">
-                      <Store className="w-3.5 h-3.5 text-amber-600" />
-                      Local Offers ({results.shops.length})
+                      <Store className="w-3.5 h-3.5 text-purple-600" />
+                      Store Offers
                     </span>
                     <button 
                       onClick={() => {
                         setIsOpen(false);
                         router.push(`/shops?q=${encodeURIComponent(searchTerm.trim())}`);
                       }} 
-                      className="text-amber-700 hover:underline cursor-pointer font-bold text-[11px]"
+                      className="text-purple-700 hover:underline cursor-pointer font-bold text-[11px]"
                     >
                       View All →
                     </button>
                   </div>
-                  <div className="flex flex-col gap-1.5">
+                  <div className="flex flex-col gap-1">
                     {results.shops.map((item) => (
                       <div
                         key={item.id}
@@ -328,24 +318,22 @@ export default function UniversalSearchBar() {
                           setIsOpen(false);
                           router.push(`/shops?q=${encodeURIComponent(searchTerm.trim())}`);
                         }}
-                        className="bg-slate-50 hover:bg-amber-50/60 p-2.5 rounded-xl border border-slate-200/80 cursor-pointer transition-all flex items-center justify-between gap-3 group"
+                        className="bg-slate-50 hover:bg-purple-50/70 p-2.5 rounded-xl border border-slate-200/80 cursor-pointer transition-all flex items-center justify-between gap-3 group"
                       >
                         <div className="min-w-0 flex-1 flex flex-col">
-                          <h4 className="font-heading font-extrabold text-xs text-slate-900 truncate group-hover:text-amber-800">
+                          <h4 className="font-heading font-bold text-xs text-slate-900 truncate group-hover:text-purple-900">
                             {item.shop_name}
                           </h4>
                           <div className="flex items-center gap-2 text-[11px] text-slate-500 font-medium mt-0.5">
                             <span className="flex items-center gap-1 shrink-0">
-                              <MapPin className="w-3 h-3 text-amber-600" />
+                              <MapPin className="w-3 h-3 text-purple-600" />
                               {item.area_tag || "Thanjavur"}
                             </span>
                             <span>•</span>
-                            <span className="text-amber-700 font-bold">{item.offer_title || "Special Offer"}</span>
+                            <span>{item.category || "Store Offer"}</span>
                           </div>
                         </div>
-                        <span className="text-amber-800 font-extrabold text-[11px] hover:underline shrink-0">
-                          View Offer →
-                        </span>
+                        <ArrowRight className="w-4 h-4 text-slate-400 group-hover:text-purple-600 transition-colors shrink-0" />
                       </div>
                     ))}
                   </div>
