@@ -22,6 +22,9 @@ interface UseFirestoreOptions {
   postType?: "need" | "sale" | null;
 }
 
+// In-Memory Fast Cache for 0ms Instant Synchronous Initial State
+const globalMemoryCache: Record<string, any[]> = {};
+
 export function useFirestore<T = any>({
   collectionName,
   areaTag,
@@ -29,27 +32,41 @@ export function useFirestore<T = any>({
   onlyUserPosted = null,
   postType = null,
 }: UseFirestoreOptions) {
-  const [data, setData] = useState<T[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
-  // 1. Instant Client-Side SWR Cache Hydration (0ms Instant Load)
   const cacheKey = `namma_thanjai_cache_${collectionName}_${postType || "all"}_${category}`;
 
-  useEffect(() => {
+  // Synchronous Initial State Hydration (0ms Instant Load — Zero Spinner Flash)
+  const [data, setData] = useState<T[]>(() => {
+    if (globalMemoryCache[cacheKey]) return globalMemoryCache[cacheKey];
     if (typeof window !== "undefined") {
       try {
         const cachedStr = localStorage.getItem(cacheKey);
         if (cachedStr) {
-          const cachedData = JSON.parse(cachedStr);
-          if (Array.isArray(cachedData) && cachedData.length > 0) {
-            setData(cachedData as T[]);
-            setLoading(false);
+          const parsed = JSON.parse(cachedStr);
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            globalMemoryCache[cacheKey] = parsed;
+            return parsed;
           }
         }
       } catch (e) {}
     }
-  }, [cacheKey]);
+    return [];
+  });
+
+  const [loading, setLoading] = useState<boolean>(() => {
+    if (globalMemoryCache[cacheKey] && globalMemoryCache[cacheKey].length > 0) return false;
+    if (typeof window !== "undefined") {
+      try {
+        const cachedStr = localStorage.getItem(cacheKey);
+        if (cachedStr) {
+          const parsed = JSON.parse(cachedStr);
+          if (Array.isArray(parsed) && parsed.length > 0) return false;
+        }
+      } catch (e) {}
+    }
+    return true;
+  });
+
+  const [error, setError] = useState<Error | null>(null);
 
   // 2. Real-Time Firestore Synchronization
   useEffect(() => {
@@ -150,6 +167,7 @@ export function useFirestore<T = any>({
         (a, b) => parseTimestamp(b.created_at) - parseTimestamp(a.created_at)
       );
 
+      globalMemoryCache[cacheKey] = items;
       setData(items as T[]);
       setLoading(false);
 
