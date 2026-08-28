@@ -47,13 +47,7 @@ export default function HomeCategorySegmentBar() {
       {/* Solid Status Bar Top Filler */}
       <div className="fixed top-0 left-0 right-0 h-[env(safe-area-inset-top,0px)] bg-[#E2E6FE] z-50 pointer-events-none md:hidden" />
 
-      <div
-        className={`w-full md:hidden sticky transition-all duration-300 z-40 bg-[#E2E6FE] border-b border-indigo-200/80 pt-1.5 pb-2 shadow-2xs before:content-[''] before:absolute before:-top-20 before:left-0 before:right-0 before:h-20 before:bg-[#E2E6FE] before:pointer-events-none ${
-          scrollDirection === "down" && !isAtTop
-            ? "top-[env(safe-area-inset-top,0px)]"
-            : "top-[calc(3.5rem+env(safe-area-inset-top,0px))]"
-        }`}
-      >
+      <div className="w-full md:hidden sticky top-[calc(3.5rem+env(safe-area-inset-top,0px))] z-40 bg-[#E2E6FE] border-b border-indigo-200/80 pt-1.5 pb-2 shadow-2xs">
       <div className="w-full max-w-7xl mx-auto px-2 sm:px-4">
         <div className="grid grid-cols-4 gap-1.5 sm:gap-2.5 w-full max-w-2xl mx-auto">
           {segments.map((seg) => {

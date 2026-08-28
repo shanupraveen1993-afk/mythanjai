@@ -30,7 +30,7 @@ export default function TopAppShell({ children }: TopAppShellProps) {
   }, [scrollDirection, isAtTop]);
 
   return (
-    <div className="sticky top-0 z-40 w-full bg-[#E2E6FE] pointer-events-auto">
+    <div className="fixed top-0 left-0 right-0 z-50 w-full bg-[#E2E6FE] border-b border-indigo-200/80 shadow-2xs pointer-events-auto">
       {children}
     </div>
   );
