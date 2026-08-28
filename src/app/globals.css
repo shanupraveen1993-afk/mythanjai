@@ -15,12 +15,26 @@
    ========================================================================== */
 
 :root {
-  /* Brand Core Tokens */
-  --color-brand-royal-blue: #1D4ED8;
-  --color-brand-blue-hover: #1E40AF;
-  --primary-yellow:         #FBBF24;
-  --primary-deep:           #D97706;
-  --slate-dark:             #0F172A;
+  /* Pure Semantic Color Tokens */
+  --color-brand:             #FBBF24;
+  --color-brand-dark:        #D97706;
+  --color-link:              #1D4ED8;
+  --color-realtime:          #00A884;
+  --color-nav-surface:       #0F172A;
+  --color-text-primary:      #0F172A;
+  --color-text-secondary:    #64748B;
+  --color-border:            #E2E8F0;
+
+  /* 5-Tier Elevation Scale (E0-E4) */
+  --elevation-0:             none;
+  --elevation-1:             0 1px 3px rgba(15,23,42,0.06);
+  --elevation-2:             0 4px 12px rgba(15,23,42,0.08);
+  --elevation-3:             0 8px 24px rgba(15,23,42,0.18);
+  --elevation-4:             0 16px 40px rgba(15,23,42,0.25);
+
+  /* Motion & Animation Timing Tokens */
+  --motion-fast:             150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --motion-standard:         300ms cubic-bezier(0.4, 0, 0.2, 1);
 
   /* Native Safe-Area & Shell Custom Variables */
   --top-safe-area:          env(safe-area-inset-top, 0px);
