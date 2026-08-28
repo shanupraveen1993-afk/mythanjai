@@ -778,16 +778,37 @@ export default function PostForm({ segment }: PostFormProps) {
 
   return (
     <div className="w-full flex flex-col gap-0 font-sans min-h-screen bg-[#f8fafc]">
-      {/* Full-Width White Post Form Header Bar — Logo + Left-Aligned Title + Right (X) Close Button */}
+      {/* Full-Width White Post Form Header Bar — Back Button + Left-Aligned Title + Right (X) Discard Button */}
       <div className="w-full bg-white text-slate-900 border-b border-slate-200/90 py-3 px-4 sm:px-8 flex items-center justify-between shadow-sm shrink-0 sticky top-0 z-50 pt-[calc(0.75rem+env(safe-area-inset-top,0px))]">
         <div className="max-w-6xl mx-auto w-full flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0 flex-1">
+            {/* Mobile Web App & APK: Back Button */}
+            <button
+              type="button"
+              onClick={() => {
+                if (title.trim() || description.trim()) {
+                  if (window.confirm("Discard draft and return to feed?")) {
+                    router.push(config.redirectPath);
+                  }
+                } else {
+                  router.push(config.redirectPath);
+                }
+              }}
+              className="md:hidden px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-heading font-bold text-xs sm:text-sm flex items-center gap-1.5 border border-slate-200 transition-all cursor-pointer active:scale-95 shrink-0"
+              title="Back to feed"
+            >
+              <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
+              <span>Back</span>
+            </button>
+
+            {/* Desktop Website: Namma Thanjai Logo */}
             <img
               src="/namma_thanjai_logo.png"
               alt="Namma Thanjai"
-              className="h-8 w-auto object-contain cursor-pointer shrink-0"
+              className="hidden md:block h-8 w-auto object-contain cursor-pointer shrink-0"
               onClick={() => router.push("/")}
             />
+
             <h1 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight truncate text-left">
               {config.title}
             </h1>
