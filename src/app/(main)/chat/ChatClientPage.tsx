@@ -793,21 +793,20 @@ export default function ChatClientPage() {
                     activeChatId === t.chatId ? "bg-[#f0f2f5] border-l-4 border-[#00a884]" : ""
                   }`}
                 >
-                  {/* User Avatar */}
+                  {/* User Avatar (Online dot removed per user requirement) */}
                   <div className="w-12 h-12 rounded-full bg-slate-950 text-amber-400 flex items-center justify-center font-bold text-xs shrink-0 border border-amber-400/40 relative overflow-hidden">
                     {t.isSystemThread ? (
                       <img src="/namma_thanjai_logo.png" alt="Namma Thanjai" className="w-8 h-8 object-contain" />
                     ) : (
                       <User className="w-5 h-5 text-amber-400" />
                     )}
-                    <span className="w-3 h-3 rounded-full bg-[#00a884] border-2 border-white absolute bottom-0 right-0" />
                   </div>
 
                   {/* Thread Info */}
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1.5 min-w-0">
-                        <h3 className="font-bold text-xs text-slate-900 truncate">{t.peerName}</h3>
+                        <h3 className="font-extrabold text-sm sm:text-base text-slate-900 truncate">{t.peerName}</h3>
                         {t.isSystemThread ? (
                           <span className="bg-amber-400 text-slate-950 text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase">Official</span>
                         ) : (
@@ -816,21 +815,21 @@ export default function ChatClientPage() {
                           </span>
                         )}
                       </div>
-                      <span className="text-[10px] text-[#00a884] font-bold shrink-0 ml-1">
+                      <span className="text-xs text-[#00a884] font-bold shrink-0 ml-1">
                         {formatTime(t.lastTimestamp)}
                       </span>
                     </div>
                     
                     {/* Ad Title Subtitle */}
                     {!t.isSystemThread && t.listingTitle && t.listingTitle !== "Welcome to Namma Thanjai" && (
-                      <p className="text-[10px] font-medium text-slate-500 truncate mt-0.5">
+                      <p className="text-xs font-semibold text-slate-500 truncate mt-0.5">
                         Re: {t.listingTitle}
                       </p>
                     )}
 
                     {/* Last Message Preview */}
                     <div className="flex items-center justify-between mt-0.5">
-                      <p className="text-xs text-slate-500 truncate">{t.lastMessage}</p>
+                      <p className="text-xs sm:text-sm text-slate-600 font-medium truncate">{t.lastMessage}</p>
                     </div>
                   </div>
 
@@ -853,8 +852,8 @@ export default function ChatClientPage() {
             )}
           </div>
 
-          {/* 5. ENCRYPTED FOOTER BANNER (Flush against bottom bar) */}
-          <div className="p-3 bg-[#f0f2f5] border-t border-slate-200/90 text-[11px] text-slate-600 font-semibold flex items-center gap-1.5 shrink-0 justify-center mb-0">
+          {/* 5. ENCRYPTED FOOTER BANNER (Compensated for Bottom Tab Bar) */}
+          <div className="p-3 bg-[#f0f2f5] border-t border-slate-200/90 text-xs text-slate-600 font-semibold flex items-center gap-1.5 shrink-0 justify-center pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] md:pb-3 md:mb-0">
             <Lock className="w-3.5 h-3.5 text-[#00a884] shrink-0" />
             <span>End-to-end encrypted direct messaging</span>
           </div>
@@ -877,16 +876,15 @@ export default function ChatClientPage() {
               <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
             </button>
 
-            {/* Center Aligned Active Peer Info */}
-            <div className="flex items-center justify-center gap-2.5 min-w-0 flex-1 mx-auto text-center">
+            {/* Left Aligned Active Peer Info */}
+            <div className="flex items-center gap-2.5 min-w-0 flex-1 pl-9 lg:pl-0 text-left">
               <div className="w-9 h-9 rounded-full bg-white/20 text-white flex items-center justify-center font-black text-xs shrink-0 border-2 border-emerald-400/40 relative">
                 <User className="w-4 h-4 text-white" />
-                <span className="w-2.5 h-2.5 rounded-full bg-[#25d366] border-2 border-[#075E54] absolute bottom-0 right-0" />
               </div>
               
-              <div className="min-w-0 flex flex-col justify-center items-center text-center">
-                <div className="flex items-center justify-center gap-1.5 min-w-0 text-center">
-                  <h3 className="font-heading font-black text-xs sm:text-sm text-white truncate leading-tight text-center">{activePeerName}</h3>
+              <div className="min-w-0 flex flex-col justify-center items-start text-left">
+                <div className="flex items-center justify-start gap-1.5 min-w-0 text-left">
+                  <h3 className="font-heading font-black text-xs sm:text-sm text-white truncate leading-tight text-left">{activePeerName}</h3>
                   {activeChatId !== "namma_thanjai_system_welcome" && (
                     <span className="text-[10px] font-mono text-emerald-100 bg-white/15 px-1.5 py-0.2 rounded font-bold shrink-0">
                       {generate5DigitMemberId(activePeerId || activePeerPhone)}
@@ -894,7 +892,7 @@ export default function ChatClientPage() {
                   )}
                 </div>
                 {activeChatId !== "namma_thanjai_system_welcome" && activeListingTitle && activeListingTitle !== "Welcome to Namma Thanjai" && (
-                  <p className="text-[11px] text-[#ffeeb3] font-medium truncate mt-0.5 text-center">
+                  <p className="text-[11px] text-[#ffeeb3] font-bold truncate mt-0.5 text-left">
                     Re: {activeListingTitle}
                   </p>
                 )}

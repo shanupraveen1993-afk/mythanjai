@@ -286,12 +286,7 @@ function MainLayoutContent({
                 handleTabChange(tab);
               }}
             />
-            {isFeedPage && (
-              <>
-                <HomeCategorySegmentBar />
-                <TamilSloganBanner />
-              </>
-            )}
+            {isFeedPage && <HomeCategorySegmentBar />}
           </React.Suspense>
         </TopAppShell>
       )}
@@ -302,11 +297,17 @@ function MainLayoutContent({
         style={{
           paddingTop: !isOnboardingView && !isChatRoute && !isPostRoute
             ? isFeedPage
-              ? "calc(8.75rem + env(safe-area-inset-top, 0px))"
+              ? "calc(6.25rem + env(safe-area-inset-top, 0px))"
               : "calc(3.5rem + env(safe-area-inset-top, 0px))"
             : undefined,
         }}
       >
+        {/* Sleek Tamil Welcome Slogan Banner — Document Flow Placement */}
+        {(() => {
+          const purePath = (pathname || "").split("?")[0].toLowerCase().replace(/\/$/, "");
+          const showBanner = purePath === "" || purePath === "/" || purePath === "/home" || purePath === "/sell" || purePath === "/need" || purePath === "/services" || purePath === "/shops";
+          return showBanner ? <TamilSloganBanner /> : null;
+        })()}
 
         {/* Stable height wrapper — prevents page collapse and footer jump on route transitions */}
         <div className="w-full flex-1 flex flex-col min-h-0">
