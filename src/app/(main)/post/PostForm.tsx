@@ -780,27 +780,42 @@ export default function PostForm({ segment }: PostFormProps) {
     <div className="w-full max-w-6xl mx-auto px-3 sm:px-6 py-2 sm:py-3 pb-6 sm:pb-8 flex flex-col gap-3 font-sans">
 
 
-      {/* Clean Minimal Standalone Header Bar with Status Bar Top Clearance */}
-      <div className="flex items-center justify-between border-b border-slate-200/80 w-full min-h-[3.75rem] py-2 px-1 shrink-0 pt-[calc(0.5rem+env(safe-area-inset-top,0px))]">
+      {/* Standardized Namma Thanjai Post Form Header — Logo + Left-Aligned Title + Right Close Button */}
+      <div className="flex items-center justify-between border-b border-slate-200/80 w-full min-h-[3.75rem] py-2.5 px-3 shrink-0 pt-[calc(0.5rem+env(safe-area-inset-top,0px))] bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xs mb-2">
+        <div className="flex items-center gap-2.5 min-w-0 flex-1">
+          <button
+            type="button"
+            onClick={() => router.back()}
+            className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-950 flex items-center justify-center transition-colors cursor-pointer select-none active:scale-95 shrink-0"
+            title="Go Back"
+            aria-label="Go Back"
+          >
+            <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
+          </button>
+          <img
+            src="/namma_thanjai_logo.png"
+            alt="Namma Thanjai"
+            className="h-7 w-auto object-contain cursor-pointer shrink-0"
+            onClick={() => router.push("/")}
+          />
+          <h1 className="font-heading font-black text-sm sm:text-base text-slate-900 tracking-tight truncate text-left">
+            {config.title}
+          </h1>
+        </div>
+
         <button
           type="button"
-          onClick={() => router.back()}
-          className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-950 flex items-center justify-center transition-colors cursor-pointer select-none active:scale-95 shrink-0"
-          title="Go Back"
-          aria-label="Go Back"
-        >
-          <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
-        </button>
-
-        <h1 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight text-center">
-          {config.title}
-        </h1>
-
-        <button
-          type="button"
-          onClick={() => router.push(config.redirectPath)}
-          className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 hover:text-slate-950 flex items-center justify-center transition-colors cursor-pointer active:scale-95"
-          title="Close Form"
+          onClick={() => {
+            if (title.trim() || description.trim()) {
+              if (window.confirm("Discard listing draft and return to feed?")) {
+                router.push(config.redirectPath);
+              }
+            } else {
+              router.push(config.redirectPath);
+            }
+          }}
+          className="w-9 h-9 rounded-full bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 border border-slate-200/80 hover:border-rose-200 flex items-center justify-center transition-all cursor-pointer active:scale-95 shrink-0 ml-2"
+          title="Close & Discard Form"
         >
           <X className="w-4 h-4 stroke-[2.5]" />
         </button>
