@@ -139,9 +139,9 @@ export default function TopHeader({
           </div>
         </div>
 
-        {/* Desktop Header Center: 100% Perfectly Center Aligned */}
-        <div className="hidden md:flex items-center gap-4 z-20 absolute left-1/2 -translate-x-1/2">
-          <div className="w-52 sm:w-60 shrink-0">
+        {/* Desktop Header Center: Compact Search Bar + 4 Category Tabs (Flex Aligned) */}
+        <div className="hidden md:flex items-center gap-3 lg:gap-4 z-20 flex-1 justify-center min-w-0">
+          <div className="w-44 lg:w-56 shrink-0">
             <UniversalSearchBar />
           </div>
           <div className="flex items-center gap-1.5 bg-slate-100/90 p-1.5 rounded-full border border-slate-200/80 font-heading backdrop-blur-sm shadow-2xs">
@@ -211,24 +211,29 @@ export default function TopHeader({
         <div className="flex items-center justify-end gap-2 shrink-0 ml-auto z-20">
 
           {/* Notification Hub Bell (🔔) Drawer Trigger */}
-          <button
-            type="button"
-            onClick={() => {
-              if (typeof window !== "undefined") {
-                window.dispatchEvent(new Event("namma_thanjai_open_notifications"));
-              }
-            }}
-            className="w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border border-slate-200/90 bg-slate-100 hover:bg-slate-200 text-slate-700 shrink-0 relative"
-            title="Notifications Hub"
-            aria-label="View notifications"
-          >
-            <Bell className="w-4 h-4 text-slate-700 stroke-[2.2]" />
-            <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-rose-600 text-white text-[10px] font-black rounded-full flex items-center justify-center border-2 border-white shadow-2xs">
-              3
-            </span>
-          </button>
+          <div className="relative group flex items-center justify-center">
+            <button
+              type="button"
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  window.dispatchEvent(new Event("namma_thanjai_open_notifications"));
+                }
+              }}
+              className="w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border border-slate-200/90 bg-slate-100 hover:bg-slate-200 text-slate-700 shrink-0 relative"
+              title="Notifications"
+              aria-label="View notifications"
+            >
+              <Bell className="w-4 h-4 text-slate-700 stroke-[2.2]" />
+              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-rose-600 text-white text-[10px] font-black rounded-full flex items-center justify-center border-2 border-white shadow-2xs">
+                3
+              </span>
+            </button>
+            <div className="absolute top-full mt-1.5 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 bg-slate-900 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow-md whitespace-nowrap z-50">
+              Notifications
+            </div>
+          </div>
 
-          {/* Desktop Website Only: Chat, My Listings & Profile Buttons */}
+          {/* Desktop Website Only: Chat, My Ads & Profile Icon-Only Buttons */}
           <div className="hidden md:flex items-center gap-2">
 
             {/* 1. Chat Button (First) */}
@@ -253,22 +258,21 @@ export default function TopHeader({
               </div>
             )}
 
-            {/* 2. My Ads Button (Second) */}
+            {/* 2. My Ads Button (Second - Icon Only) */}
             {!pathname.includes("/post") && (
               <div className="relative group flex items-center justify-center">
                 <button
                   type="button"
                   onClick={() => router.push("/listings")}
-                  className={`px-3 py-1.5 rounded-full text-xs font-extrabold transition-all cursor-pointer flex items-center gap-1.5 select-none ${
+                  className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border shrink-0 ${
                     pathname.startsWith("/listings")
-                      ? "bg-[#FBBF24] text-slate-950 border border-amber-400/90 shadow-2xs"
-                      : "text-slate-700 hover:text-slate-950 transition-colors"
+                      ? "bg-[#FBBF24] text-[#0F172A] border-amber-400 shadow-xs"
+                      : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
                   }`}
                   title="My Ads"
                   aria-label="View my ads"
                 >
                   <Package className={`w-4 h-4 ${pathname.startsWith("/listings") ? "text-[#0F172A] stroke-[2.5]" : "text-slate-600"}`} />
-                  <span>My Ads</span>
                 </button>
                 <div className="absolute top-full mt-1.5 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 bg-slate-900 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow-md whitespace-nowrap z-50">
                   My Ads

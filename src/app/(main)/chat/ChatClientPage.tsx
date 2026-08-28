@@ -20,7 +20,9 @@ import {
   Share2,
   Filter,
   Check,
+  Bell,
 } from "lucide-react";
+import NotificationDrawer from "@/components/modals/NotificationDrawer";
 import {
   collection,
   addDoc,
@@ -369,40 +371,7 @@ export default function ChatClientPage() {
     return () => unsubscribe();
   }, [activeChatId]);
 
-  const handleStartServiceAssistant = () => {
-    const assistantThreadId = "nt_service_assistant";
-    const existing = threads.find((t) => t.chatId === assistantThreadId || t.peerId === "namma_thanjai_assistant");
-    
-    if (existing) {
-      setActiveChatId(existing.chatId);
-      setActivePeerName("Namma Thanjai Service Desk ⚡");
-      setActivePeerPhone("9994837342");
-      setActiveListingTitle("Service Registration Assistant");
-      setShowMobileChat(true);
-      toast.success("Opened Namma Thanjai Service Desk!");
-      return;
-    }
-
-    const assistantThread: ChatThread = {
-      chatId: assistantThreadId,
-      listingId: "nt_service_reg",
-      listingTitle: "Service Registration Assistant",
-      peerId: "namma_thanjai_assistant",
-      peerName: "Namma Thanjai Service Desk ⚡",
-      peerPhone: "9994837342",
-      lastMessage: "Send name, category, and location to publish your service!",
-      lastTimestamp: new Date(),
-      unreadCount: 0,
-    };
-
-    setThreads((prev) => [assistantThread, ...prev]);
-    setActiveChatId(assistantThreadId);
-    setActivePeerName("Namma Thanjai Service Desk ⚡");
-    setActivePeerPhone("9994837342");
-    setActiveListingTitle("Service Registration Assistant");
-    setShowMobileChat(true);
-    toast.success("Service Registration Assistant activated!");
-  };
+  const [isNotificationDrawerOpen, setIsNotificationDrawerOpen] = useState(false);
 
   // Send Message Handler
   const handleSendMessage = async (e: React.FormEvent) => {
@@ -684,11 +653,19 @@ export default function ChatClientPage() {
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" title="Real-time messaging active" />
               <button
                 type="button"
-                onClick={handleStartServiceAssistant}
-                className="bg-[#FBBF24] hover:bg-amber-400 text-slate-950 px-3 py-1.5 rounded-xl font-heading font-black text-xs border border-amber-400/90 shadow-2xs transition-all flex items-center gap-1.5 cursor-pointer active:scale-95 shrink-0"
-                title="List your trade or professional service via Chat Assistant"
+                onClick={() => {
+                  if (typeof window !== "undefined") {
+                    window.dispatchEvent(new Event("namma_thanjai_open_notifications"));
+                  }
+                }}
+                className="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition-colors cursor-pointer relative shrink-0"
+                title="Notifications"
+                aria-label="View notifications"
               >
-                <span>⚡ List Service</span>
+                <Bell className="w-4 h-4 text-slate-700" />
+                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-rose-600 text-white text-[10px] font-black rounded-full flex items-center justify-center border-2 border-white shadow-2xs">
+                  2
+                </span>
               </button>
             </div>
           </div>
@@ -1115,6 +1092,9 @@ export default function ChatClientPage() {
           </div>
         </div>
       )}
+
+      {/* Notification Drawer Modal */}
+      <NotificationDrawer />
 
       {/* Global Bottom Navigation Bar */}
       <BottomTabBar activeTab="chat" />
