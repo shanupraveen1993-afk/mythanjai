@@ -727,8 +727,8 @@ export default function ChatClientPage() {
             </div>
           </div>
 
-          {/* 4. CONVERSATION THREADS LIST */}
-          <div className="flex-1 overflow-y-auto divide-y divide-slate-100/90">
+          {/* 4. CONVERSATION THREADS LIST (With Bottom Navigation Clearance) */}
+          <div className="flex-1 overflow-y-auto divide-y divide-slate-100/90 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] lg:pb-0">
             {filteredThreads.length === 0 ? (
               <div className="p-8 text-center flex flex-col items-center gap-2 text-slate-400">
                 <MessageSquare className="w-8 h-8 text-slate-300 stroke-[1.5]" />

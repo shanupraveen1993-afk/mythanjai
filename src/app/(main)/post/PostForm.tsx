@@ -32,6 +32,7 @@ import {
   IndianRupee,
   Lock,
   X,
+  ArrowLeft,
   Wrench,
   Home,
   Car,
@@ -778,9 +779,11 @@ export default function PostForm({ segment }: PostFormProps) {
         <button
           type="button"
           onClick={() => router.back()}
-          className="flex items-center gap-1.5 text-xs font-heading font-black text-slate-700 hover:text-slate-950 bg-slate-100 hover:bg-slate-200 px-3.5 py-1.5 rounded-xl transition-colors cursor-pointer select-none active:scale-95"
+          className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-950 flex items-center justify-center transition-colors cursor-pointer select-none active:scale-95 shrink-0"
+          title="Go Back"
+          aria-label="Go Back"
         >
-          <span>← Back</span>
+          <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
         </button>
 
         <h1 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight text-center">
@@ -809,8 +812,8 @@ export default function PostForm({ segment }: PostFormProps) {
         /* CLEAN 2-COLUMN SPLIT LAYOUT */
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
           
-          {/* LEFT COLUMN: Form Controls */}
-          <form onSubmit={handleSubmit} className="lg:col-span-7 flex flex-col gap-4 bg-white border border-slate-200/90 rounded-2xl p-4 sm:p-5 shadow-2xs">
+          {/* LEFT COLUMN: Form Controls (Container-less flat form layout) */}
+          <form onSubmit={handleSubmit} className="lg:col-span-7 flex flex-col gap-4 p-0 m-0 bg-transparent border-0 shadow-none">
             {/* Red Alert Box for Missing Required Fields */}
             {validationError && (
               <div className="w-full p-3 bg-rose-50 border border-rose-300 rounded-xl text-rose-800 text-xs sm:text-sm font-semibold flex items-center justify-between gap-3 shadow-2xs animate-shake">
