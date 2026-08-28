@@ -417,18 +417,18 @@ export default function ListingCard({ listing, isPreview }: { listing: ListingIt
               </div>
             )}
 
-            {/* RIGHT COLUMN: Category Badge (left) + Price (right) + 2-Line Clamped Title */}
-            <div className="flex-1 min-w-0 flex flex-col justify-start gap-1">
+            {/* RIGHT COLUMN: Category Badge (left) + Price (right) + Title (Directly Underneath) */}
+            <div className="flex-1 min-w-0 flex flex-col justify-start gap-0">
               {/* Top Row: Category Name on Left, Price on Right */}
-              <div className="flex items-center justify-between gap-2 w-full">
+              <div className="flex items-center justify-between gap-2 w-full mb-0.5">
                 <CategoryIcon category={listing.category || listing.type} />
                 <div className="font-heading font-black text-base sm:text-lg text-amber-700 tracking-tight shrink-0">
                   {formattedPrice}
                 </div>
               </div>
 
-              {/* Title: Up to 2 Lines Clean Clamp with Tight Spacing */}
-              <h3 className="font-sans font-bold text-sm sm:text-base text-slate-900 line-clamp-2 leading-snug text-left mt-0.5">
+              {/* Title: Directly Underneath Category with Zero Gap */}
+              <h3 className="font-sans font-extrabold text-sm sm:text-base text-slate-900 line-clamp-2 leading-tight text-left mt-0">
                 {listing.title}
               </h3>
             </div>
