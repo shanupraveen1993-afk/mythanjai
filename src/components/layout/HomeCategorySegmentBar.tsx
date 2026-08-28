@@ -44,11 +44,11 @@ export default function HomeCategorySegmentBar() {
 
   return (
     <>
-      {/* Solid Royal Blue Status Bar Top Filler */}
-      <div className="fixed top-0 left-0 right-0 h-[env(safe-area-inset-top,0px)] bg-[#1D4ED8] z-50 pointer-events-none md:hidden" />
+      {/* Solid Status Bar Top Filler */}
+      <div className="fixed top-0 left-0 right-0 h-[env(safe-area-inset-top,0px)] bg-[#E2E6FE] z-50 pointer-events-none md:hidden" />
 
       <div
-        className={`w-full md:hidden sticky transition-all duration-300 z-40 bg-[#1D4ED8] border-b border-blue-800/80 pt-1.5 pb-2 shadow-[0_4px_16px_rgba(0,0,0,0.15)] before:content-[''] before:absolute before:-top-20 before:left-0 before:right-0 before:h-20 before:bg-[#1D4ED8] before:pointer-events-none ${
+        className={`w-full md:hidden sticky transition-all duration-300 z-40 bg-[#E2E6FE] border-b border-indigo-200/80 pt-1.5 pb-2 shadow-2xs before:content-[''] before:absolute before:-top-20 before:left-0 before:right-0 before:h-20 before:bg-[#E2E6FE] before:pointer-events-none ${
           scrollDirection === "down" && !isAtTop
             ? "top-[env(safe-area-inset-top,0px)]"
             : "top-[calc(3.5rem+env(safe-area-inset-top,0px))]"
