@@ -43,7 +43,7 @@ export default function HomeCategorySegmentBar() {
   ];
 
   return (
-    <div className="w-full md:hidden bg-[#1E244A] text-white border-b border-white/10 py-2 shadow-md">
+    <div className="w-full md:hidden bg-white text-slate-800 border-b border-slate-200/90 py-2 shadow-2xs">
       <div className="w-full max-w-7xl mx-auto px-2 sm:px-4">
         <div className="grid grid-cols-4 gap-1.5 sm:gap-2.5 w-full max-w-2xl mx-auto">
           {segments.map((seg) => {
@@ -59,14 +59,14 @@ export default function HomeCategorySegmentBar() {
                   }
                   router.push(seg.route);
                 }}
-                className={`py-2 px-1 rounded-2xl transition-all cursor-pointer flex flex-col items-center justify-center gap-1 w-full text-center select-none active:scale-95 ${
+                className={`py-2 px-1 rounded-xl transition-all cursor-pointer flex flex-col items-center justify-center gap-1 w-full text-center select-none active:scale-95 ${
                   isActive
-                    ? "bg-[#FBBF24] text-[#1E244A] font-black border border-amber-300 shadow-md"
-                    : "bg-white/15 text-white font-bold hover:bg-white/25 border border-white/20"
+                    ? "bg-[#FBBF24] text-slate-950 font-black border border-amber-400 shadow-sm"
+                    : "bg-transparent text-slate-600 font-bold hover:bg-slate-100/70 border border-transparent"
                 }`}
               >
-                <IconComp className={`w-4.5 h-4.5 transition-all duration-200 shrink-0 ${isActive ? "text-[#1E244A] fill-[#1E244A]/20 stroke-[2.5]" : "text-white stroke-[2] fill-transparent"}`} />
-                <span className={`text-[11px] sm:text-xs leading-none truncate w-full ${isActive ? "font-black text-[#1E244A]" : "font-bold text-white"}`}>
+                <IconComp className={`w-4.5 h-4.5 transition-all duration-200 shrink-0 ${isActive ? "text-slate-950 fill-slate-950/20 stroke-[2.5]" : "text-slate-600 stroke-[2] fill-transparent"}`} />
+                <span className={`text-[11px] sm:text-xs leading-none truncate w-full ${isActive ? "font-black text-slate-950" : "font-bold text-slate-600"}`}>
                   {seg.label}
                 </span>
               </button>
