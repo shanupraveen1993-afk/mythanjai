@@ -380,7 +380,7 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
                 </span>
               )}
             </div>
-            <h3 className="font-heading font-black text-base sm:text-lg text-slate-900 line-clamp-1 truncate mt-0.5">
+            <h3 className="font-sans font-extrabold text-base sm:text-lg text-slate-900 line-clamp-2 leading-snug text-left mt-1">
               {post.shop_name}
             </h3>
           </div>

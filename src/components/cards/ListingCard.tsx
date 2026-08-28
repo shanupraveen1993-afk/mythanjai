@@ -427,8 +427,8 @@ export default function ListingCard({ listing, isPreview }: { listing: ListingIt
                 </div>
               </div>
 
-              {/* Title: Directly Underneath Category with Zero Gap */}
-              <h3 className="font-sans font-extrabold text-sm sm:text-base text-slate-900 line-clamp-2 leading-tight text-left mt-0">
+              {/* Title: Clean 2-Line Clamped Title with Consistent Top Margin */}
+              <h3 className="font-sans font-extrabold text-sm sm:text-base text-slate-900 line-clamp-2 leading-snug text-left mt-1">
                 {listing.title}
               </h3>
             </div>

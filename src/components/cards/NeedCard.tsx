@@ -192,7 +192,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
           </div>
 
           {/* Title: Single Line Truncation for Compact Height */}
-          <h3 className="font-sans font-bold text-sm sm:text-base text-slate-900 line-clamp-2 leading-snug text-left mt-0.5">
+          <h3 className="font-sans font-extrabold text-sm sm:text-base text-slate-900 line-clamp-2 leading-snug text-left mt-1">
             {post.title}
           </h3>
         </div>

@@ -205,8 +205,8 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
             )}
           </div>
 
-          {/* Provider / Business Name Title (Single Line Truncation) */}
-          <h3 className="font-sans font-bold text-sm sm:text-base text-slate-900 truncate text-left mt-0.5">
+          {/* Provider / Business Name Title */}
+          <h3 className="font-sans font-extrabold text-sm sm:text-base text-slate-900 line-clamp-2 leading-snug text-left mt-1">
             {post.name}
           </h3>
         </div>
