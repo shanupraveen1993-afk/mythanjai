@@ -746,8 +746,8 @@ export default function ChatClientPage() {
             </div>
           </div>
 
-          {/* 4. CONVERSATION THREADS LIST (With Bottom Navigation Clearance) */}
-          <div className="flex-1 overflow-y-auto divide-y divide-slate-100/90 pb-[calc(5rem+env(safe-area-inset-bottom,0px))] lg:pb-0">
+          {/* 4. CONVERSATION THREADS LIST */}
+          <div className="flex-1 overflow-y-auto divide-y divide-slate-100/90">
             {filteredThreads.length === 0 ? (
               <div className="p-8 text-center flex flex-col items-center gap-2 text-slate-400">
                 <MessageSquare className="w-8 h-8 text-slate-300 stroke-[1.5]" />
@@ -837,8 +837,8 @@ export default function ChatClientPage() {
             )}
           </div>
 
-          {/* 5. ENCRYPTED FOOTER BANNER */}
-          <div className="p-3 bg-[#f0f2f5] border-t border-slate-200/90 text-[11px] text-slate-600 font-semibold flex items-center gap-1.5 shrink-0 justify-center">
+          {/* 5. ENCRYPTED FOOTER BANNER (Dynamic Safe-Area Bottom Margin for All Mobile Screen Sizes) */}
+          <div className="p-3 bg-[#f0f2f5] border-t border-slate-200/90 text-[11px] text-slate-600 font-semibold flex items-center gap-1.5 shrink-0 justify-center mb-[calc(3.75rem+env(safe-area-inset-bottom,0px))] lg:mb-0">
             <Lock className="w-3.5 h-3.5 text-[#00a884] shrink-0" />
             <span>End-to-end encrypted direct messaging</span>
           </div>
