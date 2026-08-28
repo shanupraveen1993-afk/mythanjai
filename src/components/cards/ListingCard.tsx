@@ -417,8 +417,8 @@ export default function ListingCard({ listing, isPreview }: { listing: ListingIt
               </div>
             )}
 
-            {/* RIGHT COLUMN: Category Badge (left) + Price (right) + Title (left) */}
-            <div className="flex-1 min-w-0 flex flex-col justify-between self-stretch">
+            {/* RIGHT COLUMN: Category Badge (left) + Price (right) + 2-Line Clamped Title */}
+            <div className="flex-1 min-w-0 flex flex-col justify-start gap-1">
               {/* Top Row: Category Name on Left, Price on Right */}
               <div className="flex items-center justify-between gap-2 w-full">
                 <CategoryIcon category={listing.category || listing.type} />
@@ -427,8 +427,8 @@ export default function ListingCard({ listing, isPreview }: { listing: ListingIt
                 </div>
               </div>
 
-              {/* Title: Single Line Truncation for Compact Height */}
-              <h3 className="font-sans font-bold text-sm sm:text-base text-slate-900 truncate text-left mt-0.5">
+              {/* Title: Up to 2 Lines Clean Clamp with Tight Spacing */}
+              <h3 className="font-sans font-bold text-sm sm:text-base text-slate-900 line-clamp-2 leading-snug text-left mt-0.5">
                 {listing.title}
               </h3>
             </div>
