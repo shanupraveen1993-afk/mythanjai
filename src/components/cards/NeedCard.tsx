@@ -186,13 +186,13 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
                 </span>
               )}
             </div>
-            <div className="font-heading font-black text-base sm:text-lg text-amber-700 bg-amber-50 px-2.5 py-1 rounded-xl border border-amber-200/90 shadow-2xs tracking-tight shrink-0">
+            <div className="font-heading font-black text-base sm:text-lg text-amber-700 tracking-tight shrink-0">
               {displayPriceText}
             </div>
           </div>
 
-          {/* Title: Max 2 lines with items-start for clean top alignment */}
-          <h3 className="font-sans font-semibold text-sm sm:text-base text-slate-900 line-clamp-2 leading-snug text-left mt-0.5 min-h-[2.5rem] flex items-start">
+          {/* Title: Single Line Truncation for Compact Height */}
+          <h3 className="font-sans font-bold text-sm sm:text-base text-slate-900 truncate text-left mt-0.5">
             {post.title}
           </h3>
         </div>

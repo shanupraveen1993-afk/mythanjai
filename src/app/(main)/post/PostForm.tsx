@@ -426,8 +426,14 @@ export default function PostForm({ segment }: PostFormProps) {
       return;
     }
 
-    if (segment === "offer" && validFrom && validTo) {
-      if (new Date(validTo) < new Date(validFrom)) {
+    if (segment === "offer") {
+      if (!selectedImage && !imagePreview && imagePreviews.length === 0) {
+        const err = "Required: Please attach a photo of your shop offer or bill (Compulsory for Store Offers).";
+        setValidationError(err);
+        toast.error(err);
+        return;
+      }
+      if (validFrom && validTo && new Date(validTo) < new Date(validFrom)) {
         const err = "Valid To date cannot be earlier than Valid From date!";
         setValidationError(err);
         toast.error(err);

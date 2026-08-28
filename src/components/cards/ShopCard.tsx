@@ -237,7 +237,7 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
 
         {/* Info Details */}
         <div className="p-4 flex flex-col gap-2.5 flex-1">
-          <h3 className="font-sans font-semibold text-sm sm:text-base text-slate-900 line-clamp-2 leading-snug text-left min-h-[2.5rem] flex items-start">
+          <h3 className="font-sans font-bold text-sm sm:text-base text-slate-900 truncate text-left">
             {post.shop_name}
           </h3>
 

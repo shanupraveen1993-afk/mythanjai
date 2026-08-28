@@ -718,6 +718,7 @@ export default function ChatClientPage() {
               title="Go to Namma Thanjai Home"
             >
               <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="h-8 w-auto object-contain transition-transform group-hover:scale-105" />
+              <h1 className="font-heading font-black text-lg text-slate-900 tracking-tight">Chats</h1>
             </button>
             <div className="flex items-center gap-2 text-slate-600">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" title="Real-time messaging active" />
@@ -847,8 +848,8 @@ export default function ChatClientPage() {
             )}
           </div>
 
-          {/* 5. ENCRYPTED FOOTER BANNER (Dynamic Safe-Area Bottom Margin for All Mobile Screen Sizes) */}
-          <div className="p-3 bg-[#f0f2f5] border-t border-slate-200/90 text-[11px] text-slate-600 font-semibold flex items-center gap-1.5 shrink-0 justify-center mb-[calc(3.75rem+env(safe-area-inset-bottom,0px))] lg:mb-0">
+          {/* 5. ENCRYPTED FOOTER BANNER (Flush against bottom bar) */}
+          <div className="p-3 bg-[#f0f2f5] border-t border-slate-200/90 text-[11px] text-slate-600 font-semibold flex items-center gap-1.5 shrink-0 justify-center mb-0">
             <Lock className="w-3.5 h-3.5 text-[#00a884] shrink-0" />
             <span>End-to-end encrypted direct messaging</span>
           </div>
