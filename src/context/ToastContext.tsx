@@ -51,34 +51,47 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     <ToastContext.Provider value={{ toast }}>
       {children}
 
-      {/* Floating Toast Notification Container — Positioned safely above bottom tab bar & Android gesture inset */}
+      {/* Floating Capsule Chip Notification Snackbar Container */}
       <div 
-        className="fixed bottom-20 left-1/2 -translate-x-1/2 md:translate-x-0 md:left-auto md:right-5 z-[99999] flex flex-col gap-2 max-w-sm w-full px-4 pointer-events-none font-sans"
+        className="fixed bottom-20 left-1/2 -translate-x-1/2 z-[999999] flex flex-col items-center gap-2 max-w-md w-auto px-4 pointer-events-none font-sans select-none"
         style={{ paddingBottom: "max(calc(env(safe-area-inset-bottom, 0px) + 8px), 8px)" }}
       >
         {toasts.map((t) => (
           <div
             key={t.id}
-            className={`pointer-events-auto flex items-center justify-between gap-3 p-3.5 rounded-2xl shadow-xl border backdrop-blur-md transition-all duration-300 animate-slide-up ${
+            onClick={() => removeToast(t.id)}
+            className={`pointer-events-auto flex items-center gap-2.5 px-4 py-2 rounded-full shadow-2xl border backdrop-blur-xl transition-all duration-300 animate-bounce-in cursor-pointer active:scale-95 whitespace-nowrap max-w-[90vw] ${
               t.type === "success"
-                ? "bg-slate-900/95 text-white border-emerald-500/40"
+                ? "bg-slate-950/95 text-white border-emerald-400/60 shadow-emerald-500/20"
                 : t.type === "error"
-                ? "bg-slate-900/95 text-white border-rose-500/40"
-                : "bg-slate-900/95 text-white border-slate-700"
+                ? "bg-slate-950/95 text-white border-rose-400/60 shadow-rose-500/20"
+                : "bg-slate-950/95 text-white border-amber-400/60 shadow-amber-500/20"
             }`}
           >
-            <div className="flex items-center gap-2.5 min-w-0 flex-1">
-              {t.type === "success" && <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0" />}
-              {t.type === "error" && <AlertCircle className="w-4 h-4 text-rose-400 shrink-0" />}
-              {t.type === "info" && <Info className="w-4 h-4 text-amber-400 shrink-0" />}
-              <span className="text-xs font-semibold leading-tight text-slate-100 line-clamp-2">{t.message}</span>
+            <div className="flex items-center gap-2 min-w-0">
+              {t.type === "success" && (
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+              )}
+              {t.type === "error" && (
+                <span className="w-2 h-2 rounded-full bg-rose-400 animate-pulse shrink-0" />
+              )}
+              {t.type === "info" && (
+                <span className="w-2 h-2 rounded-full bg-amber-400 animate-pulse shrink-0" />
+              )}
+              <span className="text-xs font-heading font-extrabold tracking-tight text-white truncate">
+                {t.message}
+              </span>
             </div>
 
             <button
-              onClick={() => removeToast(t.id)}
-              className="p-1 hover:bg-slate-800 rounded-lg text-slate-400 hover:text-slate-200 transition-colors shrink-0 cursor-pointer"
+              type="button"
+              onClick={(e) => {
+                e.stopPropagation();
+                removeToast(t.id);
+              }}
+              className="p-0.5 hover:bg-white/20 rounded-full text-slate-300 hover:text-white transition-colors shrink-0 ml-1 cursor-pointer"
             >
-              <X className="w-3.5 h-3.5" />
+              <X className="w-3 h-3 stroke-[3]" />
             </button>
           </div>
         ))}
