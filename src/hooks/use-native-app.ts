@@ -60,10 +60,13 @@ export function useNativeApp() {
       })
       .catch(() => {});
 
-    // 3. Android Native Keyboard Avoidance & Accessories
+    // 3. Android Native Keyboard Avoidance & Body Resize Mode
     import("@capacitor/keyboard")
-      .then(({ Keyboard }) => {
+      .then(({ Keyboard, KeyboardResize }) => {
         Keyboard.setAccessoryBarVisible({ isVisible: false }).catch(() => {});
+        if (KeyboardResize && KeyboardResize.Body) {
+          Keyboard.setResizeMode({ mode: KeyboardResize.Body }).catch(() => {});
+        }
       })
       .catch(() => {});
 

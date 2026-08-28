@@ -436,6 +436,37 @@ export default function ChatClientPage() {
         }
         return updated;
       });
+
+      // 🤖 GEMINI AI CUSTOMER ASSISTANT: Auto-reply to customer queries on Namma Thanjai Admin thread
+      if (activeChatId === "namma_thanjai_system_welcome") {
+        setTimeout(async () => {
+          try {
+            const aiRes = await fetch("/api/gemini-format", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                text: `You are Namma Thanjai Customer Support Assistant for the local Thanjavur app. Answer the user's question concisely in 2-3 friendly sentences in English or Tamil. User asked: "${currentText}"`,
+                type: "format_only",
+              }),
+            });
+            const aiData = await aiRes.json();
+            const replyText =
+              aiData.formattedText ||
+              "Vanakkam! I am Namma Thanjai Assistant. You can post sell items, requirement needs, service listings, or store offers for free in Thanjavur!";
+
+            const messagesRef = collection(db, "chats", activeChatId, "messages");
+            await addDoc(messagesRef, {
+              senderId: "namma_thanjai_official",
+              senderPhone: "9994837342",
+              senderName: "Namma Thanjai Assistant",
+              text: replyText,
+              timestamp: serverTimestamp(),
+            });
+          } catch (e) {
+            console.warn("AI Admin Assistant response error:", e);
+          }
+        }, 600);
+      }
     } catch (err) {
       console.warn("Local chat fallback active:", err);
       setMessages((prev) => [
@@ -1006,39 +1037,21 @@ export default function ChatClientPage() {
             </div>
           )}
 
-          {/* Message Input Form */}
+          {/* Message Input Form (Clean full-width input + Send button) */}
           <form
             onSubmit={handleSendMessage}
             className="p-2.5 sm:p-3 bg-[#f0f2f5] border-t border-slate-200/90 flex items-center gap-2 shrink-0 z-10 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))]"
           >
-            <button
-              type="button"
-              onClick={() => toast.info("Photo attachments coming soon!")}
-              className="p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-200/60 rounded-full cursor-pointer transition-colors shrink-0"
-              title="Attach File"
-            >
-              <Paperclip className="w-4 h-4" />
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setInputText((prev) => prev + " 😊")}
-              className="p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-200/60 rounded-full cursor-pointer transition-colors shrink-0"
-              title="Add Emoji"
-            >
-              <Smile className="w-4 h-4" />
-            </button>
-
             <input
               type="text"
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
-              placeholder="Type a message"
+              placeholder="Type a message..."
               autoComplete="on"
               autoCorrect="on"
               spellCheck={true}
               autoCapitalize="sentences"
-              className="flex-1 bg-white border border-slate-200/90 text-slate-900 rounded-2xl px-4 py-2 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-[#00a884] shadow-2xs placeholder:text-slate-400"
+              className="flex-1 bg-white border border-slate-200/90 text-slate-900 rounded-2xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-[#00a884] shadow-2xs placeholder:text-slate-400"
             />
 
             <button
