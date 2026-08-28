@@ -421,13 +421,13 @@ export default function ListingCard({ listing, isPreview }: { listing: ListingIt
               {/* Top Row: Category Name on Left, Price on Right */}
               <div className="flex items-center justify-between gap-2 w-full">
                 <CategoryIcon category={listing.category || listing.type} />
-                <div className="font-heading font-bold text-base sm:text-lg text-amber-600 tracking-tight shrink-0">
+                <div className="font-heading font-semibold text-base sm:text-lg text-amber-600 tracking-tight shrink-0">
                   {formattedPrice}
                 </div>
               </div>
 
               {/* Title: Max 2 lines with fixed min-height for uniform alignment */}
-              <h3 className="font-sans font-bold text-sm sm:text-base text-slate-900 line-clamp-2 leading-snug text-left mt-0.5 min-h-[2.5rem] flex items-center">
+              <h3 className="font-sans font-semibold text-sm sm:text-base text-slate-900 line-clamp-2 leading-snug text-left mt-0.5 min-h-[2.5rem] flex items-center">
                 {listing.title}
               </h3>
             </div>
