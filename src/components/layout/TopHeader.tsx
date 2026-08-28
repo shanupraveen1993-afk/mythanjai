@@ -118,9 +118,7 @@ export default function TopHeader({
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 z-50 bg-[#E2E6FE] border-b border-indigo-200/80 text-slate-900 shadow-2xs flex-col justify-end transition-transform duration-300 ${
-        scrollDirection === "down" && !isAtTop ? "-translate-y-full md:translate-y-0" : "translate-y-0"
-      } ${
+      className={`fixed top-0 left-0 right-0 z-50 bg-[#E2E6FE] border-b border-indigo-200/80 text-slate-900 shadow-2xs flex-col justify-end ${
         pathname?.startsWith("/post") ? "hidden" : pathname?.startsWith("/chat") ? "hidden md:flex" : "flex"
       }`}
       style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
