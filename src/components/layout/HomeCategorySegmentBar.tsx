@@ -62,7 +62,7 @@ export default function HomeCategorySegmentBar() {
                 className={`py-2 px-1 rounded-xl transition-all cursor-pointer flex flex-col items-center justify-center gap-1 w-full text-center select-none active:scale-95 ${
                   isActive
                     ? "bg-[#FBBF24] text-slate-950 font-black border border-amber-400 shadow-sm scale-102"
-                    : "bg-white text-slate-700 font-bold border border-slate-200/90 hover:border-slate-300 shadow-2xs"
+                    : "bg-amber-50/70 text-slate-800 font-bold border border-amber-200/60 hover:bg-amber-100/80 hover:border-amber-300/80 shadow-2xs"
                 }`}
               >
                 <IconComp className={`w-4.5 h-4.5 transition-all duration-200 shrink-0 ${isActive ? "text-slate-950 fill-slate-950/20 stroke-[2.5]" : "text-slate-700 stroke-[2] fill-transparent"}`} />
