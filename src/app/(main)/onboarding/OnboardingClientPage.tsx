@@ -77,7 +77,7 @@ export default function OnboardingClientPage() {
   };
 
   return (
-    <div className="min-h-screen w-full bg-[#1E244A] text-white flex flex-col justify-between p-6 sm:p-10 relative font-sans overflow-y-auto select-none">
+    <div className="h-screen max-h-screen w-full bg-[#1E244A] text-white flex flex-col justify-between p-6 sm:p-10 relative font-sans overflow-hidden select-none">
       {/* Background Gradient Accents */}
       <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
       <div className="absolute bottom-0 right-0 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
@@ -88,30 +88,50 @@ export default function OnboardingClientPage() {
       {stage === "splash" && (
         <div 
           onClick={() => setStage("walkthrough1")}
-          className="flex-1 flex flex-col items-center justify-center text-center gap-6 cursor-pointer animate-fade-in py-12"
+          className="flex-1 flex flex-col items-center justify-between text-center gap-8 cursor-pointer animate-fade-in py-8 my-auto"
         >
-          <div className="relative group">
-            <div className="absolute -inset-2 bg-gradient-to-r from-amber-400 to-yellow-500 rounded-3xl blur-md opacity-70 group-hover:opacity-100 transition duration-1000 animate-pulse" />
-            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-[#121633] p-4 shadow-2xl border-2 border-amber-400/80 flex items-center justify-center relative">
-              <img src="/namma_thanjai_logo_dark_bg.png" alt="Namma Thanjai Logo" className="w-full h-full object-contain animate-scale-up" />
+          <div className="my-auto flex flex-col items-center gap-6">
+            {/* Glowing Logo Badge */}
+            <div className="relative group">
+              <div className="absolute -inset-3 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 rounded-3xl blur-lg opacity-80 animate-pulse" />
+              <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl bg-[#121633] p-4 shadow-2xl border-2 border-amber-400 flex items-center justify-center relative z-10">
+                <img src="/namma_thanjai_logo_dark_bg.png" alt="Namma Thanjai Logo" className="w-full h-full object-contain animate-scale-up" />
+              </div>
+            </div>
+
+            {/* Brand Title & Tamil Badge */}
+            <div className="flex flex-col items-center gap-2 max-w-sm px-4">
+              <h1 className="font-heading font-black text-3xl sm:text-4xl text-white tracking-tight">
+                Namma Thanjai
+              </h1>
+              <span className="bg-[#FBBF24] text-slate-950 font-heading font-black text-xs uppercase tracking-wider px-4 py-1.5 rounded-full shadow-lg border border-amber-300">
+                தஞ்சாவூரின் #1 உள்ளூர் தளம்
+              </span>
+              <p className="text-xs sm:text-sm text-amber-200/90 font-semibold mt-1">
+                Thanjavur's Premier Local Classifieds &amp; Service Network
+              </p>
+            </div>
+
+            {/* Feature Pills */}
+            <div className="flex items-center justify-center flex-wrap gap-2 pt-2">
+              <span className="text-[11px] font-bold text-amber-200 bg-white/10 px-3 py-1 rounded-full border border-white/15">
+                Marketplace
+              </span>
+              <span className="text-[11px] font-bold text-amber-200 bg-white/10 px-3 py-1 rounded-full border border-white/15">
+                Need Requests
+              </span>
+              <span className="text-[11px] font-bold text-amber-200 bg-white/10 px-3 py-1 rounded-full border border-white/15">
+                Local Services
+              </span>
             </div>
           </div>
 
-          <div className="flex flex-col items-center gap-1.5 max-w-sm px-4">
-            <h1 className="font-heading font-black text-3xl sm:text-4xl text-white tracking-tight">
-              Namma Thanjai
-            </h1>
-            <span className="bg-amber-400 text-slate-950 font-black text-[11px] uppercase tracking-wider px-3 py-1 rounded-full shadow-md">
-              தஞ்சாவூரின் #1 உள்ளூர் தளம்
-            </span>
-            <p className="text-xs sm:text-sm text-amber-200/90 font-semibold mt-2">
-              Thanjavur's Premier Local Classifieds &amp; Service Network
-            </p>
-          </div>
-
-          <div className="mt-8 flex items-center gap-2 text-xs text-slate-400 font-bold animate-pulse">
-            <Loader2 className="w-4 h-4 animate-spin text-amber-400" />
-            <span>Tap anywhere to continue...</span>
+          {/* Animated Gold Loading Line */}
+          <div className="w-full max-w-xs flex flex-col items-center gap-2 pb-4">
+            <div className="w-full h-1.5 bg-white/15 rounded-full overflow-hidden relative">
+              <div className="h-full bg-gradient-to-r from-amber-400 to-yellow-300 rounded-full animate-pulse w-3/4" />
+            </div>
+            <span className="text-[11px] text-slate-300 font-medium">Loading Namma Thanjai...</span>
           </div>
         </div>
       )}
@@ -315,7 +335,7 @@ export default function OnboardingClientPage() {
               </div>
             </div>
 
-            {/* Skip to Browse Feed Button (No Icons) */}
+            {/* Skip Button (Clean Text-Only Button) */}
             <button
               type="button"
               onClick={() => {
@@ -324,9 +344,9 @@ export default function OnboardingClientPage() {
                 }
                 router.push("/");
               }}
-              className="w-full mt-4 py-3.5 bg-white/5 hover:bg-white/10 border border-white/15 text-slate-200 font-heading font-bold text-xs rounded-2xl flex items-center justify-center transition-all cursor-pointer"
+              className="w-full mt-3 py-3 text-slate-300 hover:text-white font-heading font-bold text-xs rounded-xl flex items-center justify-center transition-all cursor-pointer select-none"
             >
-              <span>Skip for now &amp; Explore Marketplace</span>
+              <span>Skip</span>
             </button>
           </div>
 
