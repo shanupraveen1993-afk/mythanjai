@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Plus } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
@@ -11,6 +11,21 @@ export default function FloatingPostButton() {
   const pathname = usePathname() || "";
   const { isVerified } = useAuth();
   const { scrollDirection, isAtTop } = useScrollDirection();
+  const [shouldHide, setShouldHide] = useState(false);
+
+  useEffect(() => {
+    setShouldHide(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (isAtTop) {
+      setShouldHide(false);
+    } else if (scrollDirection === "down") {
+      setShouldHide(true);
+    } else if (scrollDirection === "up") {
+      setShouldHide(false);
+    }
+  }, [scrollDirection, isAtTop]);
 
   // Hide FAB on Chat, Profile, My Listings & Post pages per user directive
   if (
@@ -30,7 +45,6 @@ export default function FloatingPostButton() {
   };
 
   const buttonConfig = getButtonConfig();
-  const isCompact = scrollDirection === "down" && !isAtTop;
 
   const handlePostClick = () => {
     const targetRoute = buttonConfig.route;
@@ -46,21 +60,19 @@ export default function FloatingPostButton() {
 
   return (
     <div
-      className="fixed left-1/2 -translate-x-1/2 bottom-[calc(4.75rem+max(env(safe-area-inset-bottom,0px),10px))] z-40 md:hidden select-none pointer-events-auto transition-all duration-300 active:scale-95"
+      className={`fixed left-1/2 -translate-x-1/2 bottom-[calc(4.75rem+max(env(safe-area-inset-bottom,0px),10px))] z-40 md:hidden select-none transition-all duration-300 ease-in-out active:scale-95 ${
+        shouldHide ? "translate-y-[250%] opacity-0 pointer-events-none" : "translate-y-0 opacity-100 pointer-events-auto"
+      }`}
     >
       <button
         type="button"
         onClick={handlePostClick}
-        className={`bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs sm:text-sm rounded-full shadow-lg shadow-amber-500/20 border-2 border-white flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap transition-all duration-300 ${
-          isCompact ? "p-3 w-12 h-12" : "px-5 py-2.5"
-        }`}
+        className="bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs sm:text-sm rounded-full shadow-lg shadow-amber-500/20 border-2 border-white flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap px-5 py-2.5 transition-all duration-300"
         aria-label={buttonConfig.label}
         title={buttonConfig.label}
       >
         <Plus className="w-5 h-5 stroke-[3] text-slate-950 shrink-0" />
-        {!isCompact && (
-          <span className="truncate transition-all duration-300">{buttonConfig.label}</span>
-        )}
+        <span className="truncate transition-all duration-300">{buttonConfig.label}</span>
       </button>
     </div>
   );
