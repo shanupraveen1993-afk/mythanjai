@@ -59,27 +59,27 @@ export default function TamilSloganBanner() {
 
   return (
     <div 
-      className="w-full bg-white border-b border-slate-200/80 py-1.5 px-4 sm:px-8 flex items-center justify-center text-center font-sans shadow-2xs select-none relative transition-all mt-0 mb-0"
+      className="w-full bg-[#0F172A] text-white border-b border-slate-800/90 py-2 px-4 sm:px-8 flex items-center justify-center text-center font-sans shadow-md select-none relative transition-all mt-0 mb-0"
     >
       <div className="max-w-7xl mx-auto flex items-center justify-center gap-2 py-0.5 relative z-10">
-        <span className="inline-flex items-center shrink-0">{content.icon}</span>
-        <p className="font-heading text-xs sm:text-[13px] tracking-normal leading-relaxed flex items-center flex-wrap justify-center gap-1.5 sm:gap-2 pr-4 sm:pr-0">
-          <span className="font-heading font-black text-amber-600 tracking-tight shrink-0 underline decoration-amber-500 decoration-2 underline-offset-4">
+        <span className="inline-flex items-center shrink-0 p-1 bg-amber-400/10 rounded-lg border border-amber-400/20">{content.icon}</span>
+        <p className="font-heading text-xs sm:text-[13px] tracking-normal leading-relaxed flex items-center flex-wrap justify-center gap-1.5 sm:gap-2 pr-5 sm:pr-0">
+          <span className="font-heading font-black tracking-wider shrink-0 uppercase text-[10px] sm:text-[11px] bg-amber-400/15 text-amber-300 px-2 py-0.5 rounded-md border border-amber-400/30">
             {content.title}
           </span>
-          <span className="text-slate-400 font-bold">—</span>
-          <span className="text-slate-800 font-bold font-tamil leading-snug">
+          <span className="text-slate-500 font-bold hidden sm:inline">—</span>
+          <span className="text-slate-200 font-semibold font-tamil leading-snug">
             {content.text}
           </span>
         </p>
-        <Sparkles className="w-3.5 h-3.5 text-amber-500 shrink-0 hidden sm:inline-block opacity-90 animate-pulse" />
+        <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0 hidden sm:inline-block opacity-90 animate-pulse" />
       </div>
 
       {/* Top-Right Dismiss 'X' Close Button */}
       <button
         type="button"
         onClick={handleDismiss}
-        className="absolute top-2 right-2.5 sm:right-4 z-20 text-slate-400 hover:text-white p-1 rounded-full bg-slate-900/70 hover:bg-slate-900 transition-colors cursor-pointer border border-slate-700/60 shadow-2xs"
+        className="absolute top-2 right-2.5 sm:right-4 z-20 text-slate-400 hover:text-white p-1 rounded-full bg-slate-800/80 hover:bg-slate-800 transition-colors cursor-pointer border border-slate-700/80 shadow-2xs"
         title="Close Banner for all pages"
       >
         <X className="w-3.5 h-3.5 stroke-[2.5]" />
