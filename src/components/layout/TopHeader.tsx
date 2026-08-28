@@ -208,8 +208,19 @@ export default function TopHeader({
           )}
         </div>
 
-        {/* Right Side Action Cluster: Notification Bell, Mobile Get App button, Desktop Chat/Profile/Listings icons */}
+        {/* Right Side Action Cluster: Download App Button, Notification Bell, Mobile Get App button, Desktop Chat/Profile/Listings icons */}
         <div className="flex items-center justify-end gap-2 shrink-0 ml-auto z-20">
+
+          {/* Download App APK Button */}
+          <a
+            href="/api/apk-download"
+            download="NammaThanjai-finalv10.apk"
+            className="bg-[#FBBF24] hover:bg-amber-300 text-slate-950 px-3 py-1.5 rounded-full font-heading font-black text-xs shadow-md flex items-center gap-1.5 transition-all cursor-pointer shrink-0 border border-amber-300 active:scale-95"
+            title="Download Namma Thanjai Android APK v10"
+          >
+            <Download className="w-3.5 h-3.5 stroke-[3] text-slate-950" />
+            <span className="hidden sm:inline">Get App</span>
+          </a>
 
           {/* Notification Hub Bell (🔔) Drawer Trigger */}
           <div className="relative group flex items-center justify-center">
