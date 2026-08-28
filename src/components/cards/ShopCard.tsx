@@ -237,7 +237,7 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
 
         {/* Info Details */}
         <div className="p-4 flex flex-col gap-2.5 flex-1">
-          <h3 className="font-sans font-semibold text-sm sm:text-base text-slate-900 line-clamp-2 leading-snug text-left min-h-[2.5rem] flex items-center">
+          <h3 className="font-sans font-semibold text-sm sm:text-base text-slate-900 line-clamp-2 leading-snug text-left min-h-[2.5rem] flex items-start">
             {post.shop_name}
           </h3>
 
@@ -254,7 +254,7 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
                 </span>
               </div>
               {post.offer_description && (
-                <div className="h-[4.5rem] bg-white/90 p-2 rounded-lg border border-blue-100 overflow-y-auto custom-scrollbar">
+                <div className="min-h-[3rem] max-h-[4.5rem] bg-white/90 p-2 rounded-lg border border-blue-100 overflow-y-auto custom-scrollbar">
                   <p className="text-xs text-slate-700 font-normal leading-relaxed whitespace-pre-line">
                     {post.offer_description}
                   </p>

@@ -206,13 +206,13 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
           </div>
 
           {/* Provider / Business Name Title */}
-          <h3 className="font-sans font-semibold text-sm sm:text-base text-slate-900 line-clamp-2 leading-snug text-left mt-0.5 min-h-[2.5rem] flex items-center">
+          <h3 className="font-sans font-semibold text-sm sm:text-base text-slate-900 line-clamp-2 leading-snug text-left mt-0.5 min-h-[2.5rem] flex items-start">
             {post.name}
           </h3>
         </div>
 
-        {/* ── MIDDLE SECTION: Fixed 3-Line Internal Scrollable Description Box ── */}
-        <div className="h-[4.5rem] bg-slate-50/80 border border-slate-200/60 p-2.5 rounded-xl flex flex-col justify-start overflow-y-auto custom-scrollbar">
+        {/* ── MIDDLE SECTION: Smart Responsive 1-to-3 Line Scrollable Description Box ── */}
+        <div className="min-h-[3rem] max-h-[4.5rem] bg-slate-50/80 border border-slate-200/60 p-2.5 rounded-xl flex flex-col justify-start overflow-y-auto custom-scrollbar">
           <p className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed whitespace-pre-line">
             {post.description || "Skilled trade professional serving Thanjavur region."}
           </p>
