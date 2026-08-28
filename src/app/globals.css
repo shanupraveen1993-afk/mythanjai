@@ -477,6 +477,24 @@ button, a, .btn {
   animation: bounce-slow 2.4s ease-in-out infinite;
 }
 
+/* Micro-animations for non-selected menu icons */
+@keyframes icon-wiggle {
+  0%, 100% { transform: rotate(0deg) scale(1); }
+  30% { transform: rotate(-7deg) scale(1.06); }
+  70% { transform: rotate(7deg) scale(1.06); }
+}
+.animate-icon-wiggle {
+  animation: icon-wiggle 3s ease-in-out infinite;
+}
+
+@keyframes icon-float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-2.5px) scale(1.06); }
+}
+.animate-icon-float {
+  animation: icon-float 2.5s ease-in-out infinite;
+}
+
 /* ── Tab Active Indicator ── */
 .tab-active-dot {
   position: relative;

@@ -164,54 +164,81 @@ export default function TopHeader({
         {/* Desktop Header Center: 4 Category Tabs */}
         <div className="hidden md:flex items-center justify-center z-20 flex-1 min-w-0 mx-2">
           <div className="flex items-center gap-1.5 bg-slate-100/80 p-1.5 rounded-full border border-slate-200 font-heading shadow-2xs">
-            <button
-              type="button"
-              onClick={() => router.push("/")}
-              className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all cursor-pointer flex items-center gap-1.5 ${
-                pathname === "/" || pathname === "/home" || pathname.includes("/sell")
-                  ? "bg-[#FBBF24] text-slate-950 border border-amber-400/90 shadow-2xs"
-                  : "bg-amber-50/60 hover:bg-amber-100/80 text-slate-800 border border-amber-200/50 transition-colors"
-              }`}
-            >
-              <Tag className="w-4 h-4 text-slate-900" />
-              <span>Buy</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => router.push("/need")}
-              className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all cursor-pointer flex items-center gap-1.5 ${
-                pathname.includes("/need")
-                  ? "bg-[#FBBF24] text-slate-950 border border-amber-400/90 shadow-2xs"
-                  : "bg-amber-50/60 hover:bg-amber-100/80 text-slate-800 border border-amber-200/50 transition-colors"
-              }`}
-            >
-              <Search className="w-4 h-4 text-slate-900" />
-              <span>Wanted</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => router.push("/services")}
-              className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all cursor-pointer flex items-center gap-1.5 ${
-                pathname.includes("/services")
-                  ? "bg-[#FBBF24] text-slate-950 border border-amber-400/90 shadow-2xs"
-                  : "bg-amber-50/60 hover:bg-amber-100/80 text-slate-800 border border-amber-200/50 transition-colors"
-              }`}
-            >
-              <Wrench className="w-4 h-4 text-slate-900" />
-              <span>Services</span>
-            </button>
-            <button
-              type="button"
-              onClick={() => router.push("/shops")}
-              className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all cursor-pointer flex items-center gap-1.5 ${
-                pathname.includes("/shops") || pathname.includes("/offers")
-                  ? "bg-[#FBBF24] text-slate-950 border border-amber-400/90 shadow-2xs"
-                  : "bg-amber-50/60 hover:bg-amber-100/80 text-slate-800 border border-amber-200/50 transition-colors"
-              }`}
-            >
-              <Store className="w-4 h-4 text-slate-900" />
-              <span>Offers</span>
-            </button>
+            {/* Buy Tab */}
+            {(() => {
+              const isActive = pathname === "/" || pathname === "/home" || pathname.includes("/sell");
+              return (
+                <button
+                  type="button"
+                  onClick={() => router.push("/")}
+                  className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all cursor-pointer flex items-center gap-1.5 ${
+                    isActive
+                      ? "bg-[#FBBF24] text-slate-950 border border-amber-400/90 shadow-2xs"
+                      : "bg-amber-50/60 hover:bg-amber-100/80 text-slate-800 border border-amber-200/50 transition-colors"
+                  }`}
+                >
+                  <Tag className={`w-4 h-4 ${isActive ? "text-slate-900" : "text-amber-800 animate-icon-wiggle"}`} />
+                  <span>Buy</span>
+                </button>
+              );
+            })()}
+
+            {/* Wanted Tab */}
+            {(() => {
+              const isActive = pathname.includes("/need");
+              return (
+                <button
+                  type="button"
+                  onClick={() => router.push("/need")}
+                  className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all cursor-pointer flex items-center gap-1.5 ${
+                    isActive
+                      ? "bg-[#FBBF24] text-slate-950 border border-amber-400/90 shadow-2xs"
+                      : "bg-amber-50/60 hover:bg-amber-100/80 text-slate-800 border border-amber-200/50 transition-colors"
+                  }`}
+                >
+                  <Search className={`w-4 h-4 ${isActive ? "text-slate-900" : "text-amber-800 animate-icon-float"}`} />
+                  <span>Wanted</span>
+                </button>
+              );
+            })()}
+
+            {/* Services Tab */}
+            {(() => {
+              const isActive = pathname.includes("/services");
+              return (
+                <button
+                  type="button"
+                  onClick={() => router.push("/services")}
+                  className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all cursor-pointer flex items-center gap-1.5 ${
+                    isActive
+                      ? "bg-[#FBBF24] text-slate-950 border border-amber-400/90 shadow-2xs"
+                      : "bg-amber-50/60 hover:bg-amber-100/80 text-slate-800 border border-amber-200/50 transition-colors"
+                  }`}
+                >
+                  <Wrench className={`w-4 h-4 ${isActive ? "text-slate-900" : "text-amber-800 animate-icon-wiggle"}`} />
+                  <span>Services</span>
+                </button>
+              );
+            })()}
+
+            {/* Offers Tab */}
+            {(() => {
+              const isActive = pathname.includes("/shops") || pathname.includes("/offers");
+              return (
+                <button
+                  type="button"
+                  onClick={() => router.push("/shops")}
+                  className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all cursor-pointer flex items-center gap-1.5 ${
+                    isActive
+                      ? "bg-[#FBBF24] text-slate-950 border border-amber-400/90 shadow-2xs"
+                      : "bg-amber-50/60 hover:bg-amber-100/80 text-slate-800 border border-amber-200/50 transition-colors"
+                  }`}
+                >
+                  <Store className={`w-4 h-4 ${isActive ? "text-slate-900" : "text-amber-800 animate-icon-float"}`} />
+                  <span>Offers</span>
+                </button>
+              );
+            })()}
           </div>
         </div>
 

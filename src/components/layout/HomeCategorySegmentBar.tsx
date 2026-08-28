@@ -65,7 +65,15 @@ export default function HomeCategorySegmentBar() {
                     : "bg-amber-50/70 text-slate-800 font-bold border border-amber-200/60 hover:bg-amber-100/80 hover:border-amber-300/80 shadow-2xs"
                 }`}
               >
-                <IconComp className={`w-4.5 h-4.5 transition-all duration-200 shrink-0 ${isActive ? "text-slate-950 fill-slate-950/20 stroke-[2.5]" : "text-slate-700 stroke-[2] fill-transparent"}`} />
+                <IconComp
+                  className={`w-4.5 h-4.5 transition-all duration-300 shrink-0 ${
+                    isActive
+                      ? "text-slate-950 fill-slate-950/20 stroke-[2.5]"
+                      : seg.id === "need" || seg.id === "shops"
+                      ? "text-amber-700 stroke-[2] fill-transparent animate-icon-float"
+                      : "text-amber-700 stroke-[2] fill-transparent animate-icon-wiggle"
+                  }`}
+                />
                 <span className={`text-[11px] sm:text-xs leading-none truncate w-full ${isActive ? "font-black text-slate-950" : "font-bold text-slate-700"}`}>
                   {seg.label}
                 </span>
