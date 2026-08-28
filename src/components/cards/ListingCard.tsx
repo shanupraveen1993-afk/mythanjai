@@ -383,6 +383,7 @@ export default function ListingCard({ listing, isPreview }: { listing: ListingIt
                     src={imgError ? "/placeholder.webp" : imageSrc}
                     alt={listing.title}
                     fill
+                    sizes="(max-width: 640px) 80px, 96px"
                     onError={() => setImgError(true)}
                     className="object-cover transition-transform duration-300 group-hover/img:scale-105"
                   />

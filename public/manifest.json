@@ -1,26 +1,24 @@
 {
-  "name": "Namma Thanjai",
-  "short_name": "NammaThanjai",
-  "description": "Thanjavur's Hyper-Local Network for Need, Sell, Services & Offers",
-  "id": "/",
-  "start_url": "/",
-  "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#0f172a",
-  "theme_color": "#0f172a",
-  "categories": ["shopping", "lifestyle", "business"],
+  "short_name": "Namma Thanjai",
+  "name": "Namma Thanjai - Thanjavur Local Feed, Marketplace & Services",
   "icons": [
     {
-      "src": "/icons/icon-192x192.png",
-      "sizes": "192x192",
+      "src": "/namma_thanjai_logo.png",
       "type": "image/png",
-      "purpose": "any maskable"
+      "sizes": "192x192"
     },
     {
-      "src": "/icons/icon-512x512.png",
-      "sizes": "512x512",
+      "src": "/store_icon.png",
       "type": "image/png",
-      "purpose": "any maskable"
+      "sizes": "512x512"
     }
-  ]
+  ],
+  "start_url": "/",
+  "background_color": "#F8FAFC",
+  "theme_color": "#0F172A",
+  "display": "standalone",
+  "orientation": "portrait",
+  "scope": "/",
+  "description": "Thanjavur's premier local marketplace, buy/sell feed, trade services, and store offers platform.",
+  "categories": ["shopping", "lifestyle", "utilities"]
 }
