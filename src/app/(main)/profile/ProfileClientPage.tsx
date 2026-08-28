@@ -197,50 +197,99 @@ function ProfileContent() {
     return () => window.removeEventListener("beforeinstallprompt", handleBeforeInstallPrompt);
   }, []);
 
-  // Fetch user posts from all collections + local storage
+  // Fetch user posts from all collections + local storage (Robust Multi-Query Sync)
   const fetchMyPosts = async () => {
     setPostsLoading(true);
-    const collectionsToQuery = ["needs_and_sales", "services", "shops", "offers"];
-    const allFetchedPosts: any[] = [];
-    const userPhone = profile?.phone || user?.phoneNumber?.replace("+", "") || "";
-    const userUid = user?.uid || "";
-
     try {
-      if (userUid || userPhone) {
-        for (const colName of collectionsToQuery) {
+      const userId = user?.uid || "";
+      const rawPhone = (profile?.phone || user?.phoneNumber || (typeof window !== "undefined" ? (localStorage.getItem("namma_thanjai_phone") || localStorage.getItem("my_thanjai_phone") || "") : "")).replace(/\D/g, "");
+      const userPhone10 = rawPhone.length >= 10 ? rawPhone.slice(-10) : "";
+      const memberId = profile?.memberId || (typeof window !== "undefined" ? localStorage.getItem("namma_thanjai_member_id") : null) || (userPhone10 ? `NT-${userPhone10}` : "");
+
+      let combinedMyPosts: any[] = [];
+      const seenIds = new Set<string>();
+
+      // 1. Fetch My Posted Ads strictly from Firestore (by Member ID, UID, or phone variants)
+      const targetCollections = ["needs_and_sales", "services", "shops", "offers"];
+      await Promise.all(
+        targetCollections.map(async (colName) => {
           const colRef = collection(db, colName);
-          const fieldKeys = ["userId", "seller_id", "sellerId", "user_id"];
-          for (const key of fieldKeys) {
-            if (userUid) {
-              try {
-                const q = query(colRef, where(key, "==", userUid));
-                const snap = await getDocs(q);
-                snap.forEach((docSnap) => {
-                  if (!allFetchedPosts.some((p) => p.id === docSnap.id)) {
-                    allFetchedPosts.push({ id: docSnap.id, colName, ...docSnap.data() });
-                  }
-                });
-              } catch (e) {}
+
+          // Query 1: By Immutable Member ID (e.g. NT-9994837342)
+          if (memberId) {
+            const snapMember = await getDocs(query(colRef, where("userId", "==", memberId))).catch(() => null);
+            if (snapMember && !snapMember.empty) {
+              snapMember.forEach((docSnap) => {
+                if (!seenIds.has(docSnap.id)) {
+                  seenIds.add(docSnap.id);
+                  combinedMyPosts.push({ id: docSnap.id, colName, ...docSnap.data() });
+                }
+              });
             }
           }
 
-          if (userPhone) {
-            try {
-              const qPhone = query(colRef, where("phone", "==", userPhone));
-              const snapPhone = await getDocs(qPhone);
-              snapPhone.forEach((docSnap) => {
-                if (!allFetchedPosts.some((p) => p.id === docSnap.id)) {
-                  allFetchedPosts.push({ id: docSnap.id, colName, ...docSnap.data() });
+          // Query 2: By Auth UID
+          if (userId) {
+            const snapUid = await getDocs(query(colRef, where("userId", "==", userId))).catch(() => null);
+            if (snapUid && !snapUid.empty) {
+              snapUid.forEach((docSnap) => {
+                if (!seenIds.has(docSnap.id)) {
+                  seenIds.add(docSnap.id);
+                  combinedMyPosts.push({ id: docSnap.id, colName, ...docSnap.data() });
                 }
               });
-            } catch (e) {}
+            }
           }
-        }
+
+          // Query 3: By Phone number variations (10-digit, +91..., 91...)
+          if (userPhone10) {
+            const phoneVariations = [userPhone10, `+91${userPhone10}`, `91${userPhone10}`];
+            await Promise.all(
+              phoneVariations.map(async (ph) => {
+                const snapPhone = await getDocs(query(colRef, where("phone", "==", ph))).catch(() => null);
+                if (snapPhone && !snapPhone.empty) {
+                  snapPhone.forEach((docSnap) => {
+                    if (!seenIds.has(docSnap.id)) {
+                      seenIds.add(docSnap.id);
+                      combinedMyPosts.push({ id: docSnap.id, colName, ...docSnap.data() });
+                    }
+                  });
+                }
+              })
+            );
+          }
+        })
+      );
+
+      // 2. Include posts created in local tracker if not already loaded
+      if (typeof window !== "undefined") {
+        try {
+          const localTracker: any[] = JSON.parse(localStorage.getItem("namma_thanjai_my_posts") || "[]");
+          localTracker.forEach((localItem) => {
+            if (localItem && localItem.id && !seenIds.has(localItem.id)) {
+              seenIds.add(localItem.id);
+              combinedMyPosts.push(localItem);
+            }
+          });
+        } catch (e) {}
       }
 
-      setMyPosts(allFetchedPosts);
+      setMyPosts(combinedMyPosts);
+
+      // Load Saved Bookmarks
+      if (typeof window !== "undefined") {
+        try {
+          const saved1 = JSON.parse(localStorage.getItem("namma_thanjai_saved_posts") || "[]");
+          const saved2 = JSON.parse(localStorage.getItem("my_thanjai_saved_posts") || "[]");
+          const combined = [...saved1, ...saved2];
+          const uniqueSaved = Array.from(new Map(combined.map((item: any) => [item.id, item])).values());
+          setSavedPosts(uniqueSaved);
+        } catch (e) {
+          setSavedPosts([]);
+        }
+      }
     } catch (error) {
-      console.error("Error fetching my posts:", error);
+      console.error("Error fetching my posts in profile:", error);
     } finally {
       setPostsLoading(false);
     }
