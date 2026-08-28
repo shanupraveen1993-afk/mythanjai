@@ -62,6 +62,7 @@ export default function OnboardingClientPage() {
           localStorage.setItem("my_thanjai_verified", "true");
           localStorage.setItem("namma_thanjai_phone", cleanPhone);
           localStorage.setItem("my_thanjai_phone", cleanPhone);
+          localStorage.setItem("namma_thanjai_onboarding_completed_v10", "true");
           window.dispatchEvent(new Event("namma_thanjai_auth_changed"));
         }
         router.push("/");
@@ -317,7 +318,12 @@ export default function OnboardingClientPage() {
             {/* Skip to Browse Feed Button (No Icons) */}
             <button
               type="button"
-              onClick={() => router.push("/")}
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  localStorage.setItem("namma_thanjai_onboarding_completed_v10", "true");
+                }
+                router.push("/");
+              }}
               className="w-full mt-4 py-3.5 bg-white/5 hover:bg-white/10 border border-white/15 text-slate-200 font-heading font-bold text-xs rounded-2xl flex items-center justify-center transition-all cursor-pointer"
             >
               <span>Skip for now &amp; Explore Marketplace</span>

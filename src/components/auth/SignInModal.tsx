@@ -102,72 +102,29 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
         </button>
 
         {/* Modal Body */}
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-6 pt-2">
           
           {/* Logo & Brand Header */}
-          <div className="flex flex-col items-center text-center gap-1.5 pt-1">
-            <div className="w-14 h-14 rounded-2xl bg-white p-2 shadow-md border border-slate-200 flex items-center justify-center">
+          <div className="flex flex-col items-center text-center gap-2">
+            <div className="w-16 h-16 rounded-2xl bg-slate-100 p-2.5 shadow-sm border border-slate-200 flex items-center justify-center">
               <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="w-full h-full object-contain" />
             </div>
-            <h2 className="font-heading font-black text-xl text-slate-900 tracking-tight flex items-center gap-1.5 mt-1">
-              <span className="text-[#1d4ed8]">நம்ம</span>
-              <span className="text-[#f59e0b]">thanjai</span>
+            <h2 className="font-heading font-black text-2xl text-slate-900 tracking-tight mt-1">
+              Sign in to Namma Thanjai
             </h2>
-            <p className="text-xs text-slate-500 font-bold max-w-xs leading-relaxed">
-              Thanjavur's #1 Local Marketplace, Need Requests &amp; Trade Directory
+            <p className="text-xs text-slate-600 font-medium max-w-xs leading-relaxed">
+              Enter your mobile number to post ads, chat directly with sellers &amp; explore Thanjavur store offers.
             </p>
           </div>
 
-          {/* 4-SEGMENT FEATURE SHOWCASE (DISPLAY ONLY - NOT BUTTONS) */}
-          <div className="bg-slate-50 border border-slate-200/90 rounded-2xl p-3 flex flex-col gap-2">
-            <div className="flex items-center justify-between px-1">
-              <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest">Platform Services Showcase</span>
-              <span className="text-[10px] font-bold text-amber-600 bg-amber-100 px-2 py-0.5 rounded">All-in-One Tanjore App</span>
-            </div>
-            
-            <div className="grid grid-cols-2 gap-2">
-              <div className="bg-white border border-slate-200 p-2.5 rounded-xl flex items-center gap-2 shadow-2xs select-none">
-                <span className="text-base shrink-0">🏷️</span>
-                <div className="min-w-0">
-                  <span className="text-xs font-extrabold text-slate-900 block leading-none">Sell Items</span>
-                  <span className="text-[10px] text-slate-500 font-medium block truncate mt-0.5">Bikes, Phones, Goods</span>
-                </div>
-              </div>
-
-              <div className="bg-white border border-slate-200 p-2.5 rounded-xl flex items-center gap-2 shadow-2xs select-none">
-                <span className="text-base shrink-0">🔍</span>
-                <div className="min-w-0">
-                  <span className="text-xs font-extrabold text-slate-900 block leading-none">Need Requests</span>
-                  <span className="text-[10px] text-slate-500 font-medium block truncate mt-0.5">Rentals &amp; Buying</span>
-                </div>
-              </div>
-
-              <div className="bg-white border border-slate-200 p-2.5 rounded-xl flex items-center gap-2 shadow-2xs select-none">
-                <span className="text-base shrink-0">🛠️</span>
-                <div className="min-w-0">
-                  <span className="text-xs font-extrabold text-slate-900 block leading-none">Local Services</span>
-                  <span className="text-[10px] text-slate-500 font-medium block truncate mt-0.5">Electricians &amp; Drivers</span>
-                </div>
-              </div>
-
-              <div className="bg-white border border-slate-200 p-2.5 rounded-xl flex items-center gap-2 shadow-2xs select-none">
-                <span className="text-base shrink-0">🏪</span>
-                <div className="min-w-0">
-                  <span className="text-xs font-extrabold text-slate-900 block leading-none">Store Offers</span>
-                  <span className="text-[10px] text-slate-500 font-medium block truncate mt-0.5">Shops &amp; Discounts</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
           {/* Login Form */}
-          <form onSubmit={handleDirectLogin} className="flex flex-col gap-3">
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[11px] font-black text-slate-500 uppercase tracking-wider">
-                Enter Mobile Number to Sign In
+          <form onSubmit={handleDirectLogin} className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
+              <label className="text-[11px] font-black text-slate-700 uppercase tracking-wider text-left">
+                Mobile Number
               </label>
               <div className="relative">
-                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-black text-slate-700 bg-slate-200/70 px-2 py-0.5 rounded-md">
+                <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-black text-slate-700 bg-slate-200/80 px-2.5 py-1 rounded-md border border-slate-300">
                   +91
                 </span>
                 <input
@@ -178,7 +135,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, "").slice(0, 10))}
                   placeholder="9994837342"
-                  className="w-full pl-18 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-900 focus:outline-none focus:border-amber-500 focus:bg-white transition-colors"
+                  className="w-full pl-20 pr-4 py-3.5 bg-slate-50 border border-slate-300 rounded-xl text-base font-bold text-slate-900 focus:outline-none focus:border-amber-400 focus:ring-2 focus:ring-amber-400/50 focus:bg-white transition-all placeholder:text-slate-400"
                 />
               </div>
             </div>
@@ -186,14 +143,14 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
             <button
               type="submit"
               disabled={phoneUpdating}
-              className="w-full py-3.5 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs uppercase tracking-wider rounded-xl flex items-center justify-center shadow-md cursor-pointer transition-all active:scale-98"
+              className="w-full py-4 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs uppercase tracking-wider rounded-xl flex items-center justify-center shadow-lg cursor-pointer transition-all active:scale-98 border border-amber-400"
             >
-              <span>{phoneUpdating ? "Verifying Account..." : "Verify & Enter Home Page"}</span>
+              <span>{phoneUpdating ? "Verifying Account..." : "Verify & Enter App"}</span>
             </button>
           </form>
 
-          <div className="text-center text-[11px] text-slate-500 font-medium pt-0.5">
-            Mobile Verification for Thanjavur Community
+          <div className="text-center text-[11px] text-slate-500 font-semibold border-t border-slate-100 pt-3">
+            Instant 1-Click Mobile Verification for Thanjavur Community
           </div>
         </div>
       </div>

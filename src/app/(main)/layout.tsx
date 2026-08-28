@@ -7,6 +7,7 @@ import TopAppShell from "@/components/layout/TopAppShell";
 import BottomTabBar, { AppTab } from "@/components/layout/BottomTabBar";
 import { TanjoreLocality } from "@/lib/constants";
 import { useAuth, AuthProvider } from "@/hooks/use-auth";
+import { useToast } from "@/context/ToastContext";
 import SignInModal from "@/components/auth/SignInModal";
 import UniversalSearchBar from "@/components/layout/UniversalSearchBar";
 
@@ -78,6 +79,7 @@ function MainLayoutContent({
   const router = useRouter();
   const pathname = usePathname() || "";
   const { user, profile, loading: authLoading } = useAuth();
+  const { toast } = useToast();
   const isAuthVerified = Boolean(profile?.isVerified);
   
   // Attach native Android event listeners (Back button, Keyboard, Status Bar)
@@ -97,7 +99,7 @@ function MainLayoutContent({
     setIsMounted(true);
     if (typeof window !== "undefined") {
       const isNative = Boolean((window as any).Capacitor?.isNativePlatform() || window.navigator.userAgent.includes("Capacitor"));
-      const hasCompletedOnboarding = Boolean(localStorage.getItem("namma_thanjai_onboarding_completed_v4"));
+      const hasCompletedOnboarding = Boolean(localStorage.getItem("namma_thanjai_onboarding_completed_v10"));
 
       if (isNative) {
         import("@capacitor/splash-screen")
@@ -106,12 +108,43 @@ function MainLayoutContent({
           })
           .catch(() => {});
 
-        if (!hasCompletedOnboarding) {
-          setShowWalkthrough(true);
+        if (!hasCompletedOnboarding && pathname !== "/onboarding") {
+          router.push("/onboarding");
         }
       }
     }
-  }, []);
+  }, [pathname]);
+
+  // Native Android Hardware Back Button Exit Confirmation Handler
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const isNative = Boolean((window as any).Capacitor?.isNativePlatform() || window.navigator.userAgent.includes("Capacitor"));
+    if (!isNative) return;
+
+    let backPressCount = 0;
+    let backTimer: any = null;
+
+    import("@capacitor/app")
+      .then(({ App: CapApp }) => {
+        const listenerPromise = CapApp.addListener("backButton", () => {
+          if (pathname === "/" || pathname === "/home" || pathname === "/onboarding") {
+            backPressCount++;
+            if (backPressCount === 1) {
+              toast.info("Press back again to exit Namma Thanjai");
+              backTimer = setTimeout(() => {
+                backPressCount = 0;
+              }, 2000);
+            } else if (backPressCount >= 2) {
+              if (backTimer) clearTimeout(backTimer);
+              CapApp.exitApp();
+            }
+          } else {
+            router.back();
+          }
+        });
+      })
+      .catch(() => {});
+  }, [pathname, toast, router]);
 
   const handleWalkthroughComplete = () => {
     setShowWalkthrough(false);
