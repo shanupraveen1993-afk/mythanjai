@@ -452,15 +452,6 @@ function ProfileContent() {
   return (
     <div className="w-full max-w-7xl mx-auto flex flex-col gap-4 pt-3 sm:pt-4 pb-6 sm:pb-10 font-sans px-2.5 sm:px-6 lg:px-8">
 
-      {/* Header Bar */}
-      <div className="flex flex-col gap-1 border-b border-slate-200/80 pb-3">
-        <h1 className="font-heading font-black text-xl sm:text-2xl text-slate-900 tracking-tight text-left">
-          My Profile
-        </h1>
-        <p className="text-xs sm:text-sm font-medium text-slate-500 text-left">
-          Manage your account settings, phone verification, and posted ads
-        </p>
-      </div>
 
 
 
