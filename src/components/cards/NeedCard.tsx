@@ -171,7 +171,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
   if (isDeleted) return null;
 
   return (
-    <div className={`bg-white rounded-2xl p-4 flex flex-col justify-between shadow-2xs border border-slate-200/90 relative font-sans h-full ${isSold ? "opacity-80" : ""}`}>
+    <div className={`bg-white rounded-none sm:rounded-2xl p-3.5 sm:p-4 flex flex-col justify-between shadow-none sm:shadow-2xs border-b sm:border border-slate-200/80 sm:border-slate-200/90 relative font-sans h-full w-full ${isSold ? "opacity-80" : ""}`}>
       <div className="flex flex-col gap-3 flex-1">
 
         {/* ── TOP HEADER BLOCK: Full-Width Title + Inline Category Badge + Budget ── */}

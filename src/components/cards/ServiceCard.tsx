@@ -189,7 +189,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
   }, [user, profile, post, isPreview]);
 
   return (
-    <div className="bg-white rounded-xl p-3.5 flex flex-col justify-between shadow-2xs hover:shadow-md transition-all duration-200 font-sans border border-slate-200/90 relative h-full">
+    <div className="bg-white rounded-none sm:rounded-2xl p-3.5 flex flex-col justify-between shadow-none sm:shadow-2xs border-b sm:border border-slate-200/80 sm:border-slate-200/90 relative font-sans h-full w-full">
       <div className="flex flex-col gap-2.5 flex-1">
 
         {/* ── TOP HEADER BLOCK: Full-Width Title + Category Badge & Rating ── */}

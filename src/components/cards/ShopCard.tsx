@@ -199,7 +199,7 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
   // ── VISITING CARD MODE: Photo cover header ─────────────────────────────
   if (coverImage) {
     return (
-      <div className={`bg-white rounded-xl overflow-hidden shadow-2xs border border-slate-200/80 flex flex-col relative font-sans h-full ${isExpired ? "opacity-60 grayscale filter pointer-events-none select-none" : ""}`} style={{ minHeight: 420 }}>
+      <div className={`bg-white rounded-none sm:rounded-2xl overflow-hidden shadow-none sm:shadow-2xs border-b sm:border border-slate-200/80 flex flex-col relative font-sans h-full w-full ${isExpired ? "opacity-60 grayscale filter pointer-events-none select-none" : ""}`} style={{ minHeight: 420 }}>
         {/* EXPIRED CENTER OVERLAY BADGE — Light transparent overlay (can see content, but cannot interact) */}
         {isExpired && (
           <div className="absolute inset-0 bg-slate-950/30 backdrop-blur-[1px] z-30 flex flex-col items-center justify-center p-4 text-center pointer-events-none select-none">
@@ -358,7 +358,7 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
 
   // ── STATE C: CORPORATE SHOP INFO CARD (No Media Provided Fallback) ───────
   return (
-    <div className={`bg-white rounded-xl p-4 flex flex-col justify-between shadow-2xs hover:shadow-md transition-all duration-200 border border-slate-200/90 relative font-sans h-full ${isExpired ? "opacity-60 grayscale filter pointer-events-none select-none" : ""}`}>
+    <div className={`bg-white rounded-none sm:rounded-2xl p-3.5 sm:p-4 flex flex-col justify-between shadow-none sm:shadow-2xs border-b sm:border border-slate-200/80 sm:border-slate-200/90 relative font-sans h-full w-full ${isExpired ? "opacity-60 grayscale filter pointer-events-none select-none" : ""}`}>
       {/* EXPIRED CENTER OVERLAY BADGE */}
       {isExpired && (
         <div className="absolute inset-0 bg-slate-950/30 backdrop-blur-[1px] z-30 flex flex-col items-center justify-center p-4 text-center pointer-events-none select-none rounded-xl">

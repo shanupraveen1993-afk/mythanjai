@@ -223,6 +223,7 @@ function MainLayoutContent({
   const isLandingMode = pathname === "/" || pathname === "/onboarding";
   const isChatRoute = pathname === "/chat";
   const isPostRoute = pathname.startsWith("/post");
+  const isFeedPage = pathname === "/" || pathname === "/home" || pathname.includes("/sell") || pathname.includes("/need") || pathname.includes("/services") || pathname.includes("/shops") || pathname.includes("/offers") || pathname.includes("/classifieds");
   const isStandaloneView = false;
   const isOnboardingView = false;
   const isFullWidthPage = isLandingMode;
@@ -263,7 +264,7 @@ function MainLayoutContent({
         <SearchParamSync onAreaSync={setSelectedArea} onAuthSync={setIsSignInOpen} />
       </React.Suspense>
 
-      {/* Unified Top App Shell — TopHeader + CategoryBar move as ONE UNIT */}
+      {/* Unified Top App Shell — TopHeader + CategoryBar (Feed pages only) move as ONE UNIT */}
       {!isOnboardingView && !isChatRoute && !isPostRoute && (
         <TopAppShell>
           <React.Suspense fallback={null}>
@@ -285,7 +286,7 @@ function MainLayoutContent({
                 handleTabChange(tab);
               }}
             />
-            <HomeCategorySegmentBar />
+            {isFeedPage && <HomeCategorySegmentBar />}
           </React.Suspense>
         </TopAppShell>
       )}
@@ -295,7 +296,9 @@ function MainLayoutContent({
         className={`flex-1 w-full flex flex-col p-0 m-0 bg-[#f8fafc] ${isChatRoute ? "h-screen overflow-hidden pb-0" : "pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] md:pb-8"}`}
         style={{
           paddingTop: !isOnboardingView && !isChatRoute && !isPostRoute
-            ? "calc(6.25rem + env(safe-area-inset-top, 0px))"
+            ? isFeedPage
+              ? "calc(6.25rem + env(safe-area-inset-top, 0px))"
+              : "calc(3.5rem + env(safe-area-inset-top, 0px))"
             : undefined,
         }}
       >

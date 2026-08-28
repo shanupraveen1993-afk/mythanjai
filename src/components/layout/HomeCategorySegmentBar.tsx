@@ -43,7 +43,7 @@ export default function HomeCategorySegmentBar() {
   ];
 
   return (
-    <div className="w-full md:hidden bg-white border-t border-slate-200/60 border-b border-slate-200/80 pt-1.5 pb-2 shadow-2xs">
+    <div className="w-full md:hidden bg-white border-t border-slate-200/60 border-b border-slate-200/80 py-2 shadow-2xs">
       <div className="w-full max-w-7xl mx-auto px-2 sm:px-4">
         <div className="grid grid-cols-4 gap-1.5 sm:gap-2.5 w-full max-w-2xl mx-auto">
           {segments.map((seg) => {
