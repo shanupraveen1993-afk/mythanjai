@@ -47,13 +47,13 @@ export default function CustomDropdown({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-fit bg-white border border-slate-300 hover:border-slate-400 text-slate-600 font-normal text-xs sm:text-sm px-3.5 py-1.5 rounded-full shadow-2xs flex items-center justify-between gap-2.5 min-h-[36px] cursor-pointer transition-all focus:outline-none focus:ring-2 focus:ring-amber-500/40 whitespace-nowrap"
+        className="w-fit bg-white border border-slate-300 hover:border-slate-400 text-slate-800 font-medium text-xs sm:text-sm px-3.5 py-1.5 rounded-full shadow-2xs flex items-center justify-between gap-2.5 min-h-[36px] cursor-pointer transition-all focus:outline-none focus:ring-2 focus:ring-amber-500/40 whitespace-nowrap"
       >
         <div className="flex items-center gap-1.5 shrink-0">
-          {icon && <span className="text-slate-400 shrink-0">{icon}</span>}
-          <span className="font-normal text-slate-600">{selectedOption?.label || placeholder}</span>
+          {icon && <span className="text-slate-500 shrink-0">{icon}</span>}
+          <span className="font-medium text-slate-800">{selectedOption?.label || placeholder}</span>
         </div>
-        <ChevronDown className={`w-3.5 h-3.5 text-slate-400 shrink-0 transition-transform duration-200 ${isOpen ? "rotate-180 text-slate-700" : ""}`} />
+        <ChevronDown className={`w-3.5 h-3.5 text-slate-500 shrink-0 transition-transform duration-200 ${isOpen ? "rotate-180 text-slate-800" : ""}`} />
       </button>
 
       {/* Popover Options Menu */}
