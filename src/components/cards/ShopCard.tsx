@@ -270,8 +270,8 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
               <span className="truncate">{post.address_text || post.area_tag || "Thanjavur"}</span>
             </div>
 
-            {/* 3 Square Action Icon Buttons (Save, Share, Report) - Hidden in Live Preview */}
-            {!isPreview && (
+            {/* 3 Square Action Icon Buttons (Save, Share, Report) - Hidden on Own Posts & Live Preview */}
+            {!isPreview && !isOwnPost && (
               <div className="flex items-center gap-1.5 shrink-0">
                 <button
                   type="button"
@@ -314,17 +314,16 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
             <div className="flex items-center gap-2 shrink-0 justify-end">
               {isOwnPost ? (
                 <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  router.push("/listings");
-                }}
-                className="bg-[#0F172A] hover:bg-slate-900 text-white font-heading font-black text-xs sm:text-sm p-2.5 rounded-xl flex items-center justify-center min-h-[44px] min-w-[44px] border border-slate-800 shadow-sm cursor-pointer transition-colors active:scale-95"
-                title="Edit Store Offer"
-                aria-label="Edit Store Offer"
-              >
-                <Pencil className="w-4 h-4 text-white shrink-0 stroke-[2.5]" />
-              </button>
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    router.push("/listings");
+                  }}
+                  className="bg-blue-50 hover:bg-blue-100 text-blue-600 font-heading font-extrabold text-xs px-4 py-2 rounded-xl border border-blue-200 cursor-pointer transition-colors active:scale-95 shadow-2xs"
+                  title="Edit Store Offer"
+                >
+                  Edit
+                </button>
               ) : (
                 <>
                   <a

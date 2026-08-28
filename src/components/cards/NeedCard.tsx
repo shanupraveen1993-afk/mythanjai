@@ -212,8 +212,8 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
             <span className="truncate">{locationList.join(" • ")}</span>
           </div>
 
-          {/* 3 Square Action Icon Buttons (Save, Share, Report) - Hidden in Live Preview */}
-          {!isPreview && (
+          {/* 3 Square Action Icon Buttons (Save, Share, Report) - Hidden on Own Posts & Live Preview */}
+          {!isPreview && !isOwnPost && (
             <div className="flex items-center gap-1.5 shrink-0">
               {/* 1st: Save */}
               <button
@@ -253,7 +253,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
         </div>
       </div>
 
-      {/* Footer Action Row: Plain Text Date Ago (Left) + 2 Fixed 128px CTA Buttons (Right) */}
+      {/* Footer Action Row: Plain Text Date Ago (Left) + Buttons (Right) */}
       <div className="pt-3 flex items-center justify-between gap-4 sm:gap-6 mt-auto w-full border-t border-slate-100">
         {/* 1. Plain Text Relative Date */}
         <span className="text-xs font-semibold text-slate-600 shrink-0 select-none">
@@ -269,11 +269,10 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
                 e.stopPropagation();
                 router.push("/listings");
               }}
-              className="bg-[#0F172A] hover:bg-slate-900 text-white font-heading font-black text-xs sm:text-sm p-2.5 rounded-xl flex items-center justify-center min-h-[44px] min-w-[44px] border border-slate-800 shadow-sm cursor-pointer transition-colors active:scale-95"
+              className="bg-blue-50 hover:bg-blue-100 text-blue-600 font-heading font-extrabold text-xs px-4 py-2 rounded-xl border border-blue-200 cursor-pointer transition-colors active:scale-95 shadow-2xs"
               title="Edit Need Ad"
-              aria-label="Edit Need Ad"
             >
-              <Pencil className="w-4 h-4 text-white shrink-0 stroke-[2.5]" />
+              Edit
             </button>
           ) : (
             <>

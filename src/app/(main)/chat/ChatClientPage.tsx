@@ -851,13 +851,6 @@ export default function ChatClientPage() {
               ))
             )}
           </div>
-
-          {/* 5. ENCRYPTED FOOTER BANNER */}
-          <div className="p-3 bg-[#f0f2f5] border-t border-slate-200/90 text-xs text-slate-600 font-semibold flex items-center gap-1.5 shrink-0 justify-center mb-0">
-            <Lock className="w-3.5 h-3.5 text-[#00a884] shrink-0" />
-            <span>End-to-end encrypted direct messaging</span>
-          </div>
-
         </div>
 
         {/* ========================================== */}

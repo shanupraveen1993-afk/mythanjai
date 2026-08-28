@@ -302,8 +302,8 @@ function MainLayoutContent({
         style={{
           paddingTop: !isOnboardingView && !isChatRoute && !isPostRoute
             ? isFeedPage
-              ? "calc(10.25rem + env(safe-area-inset-top, 0px))"
-              : "calc(4rem + env(safe-area-inset-top, 0px))"
+              ? "calc(var(--top-shell-height, 9.5rem) + 12px)"
+              : "calc(var(--top-shell-height, 3.5rem) + 12px)"
             : undefined,
         }}
       >

@@ -59,14 +59,14 @@ export default function HomeCategorySegmentBar() {
                   }
                   router.push(seg.route);
                 }}
-                className={`py-2 px-1 rounded-2xl transition-all cursor-pointer flex flex-col items-center justify-center gap-1 w-full text-center select-none active:scale-95 ${
+                className={`py-2 px-1.5 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 w-full text-center select-none active:scale-95 ${
                   isActive
-                    ? "bg-[#FBBF24] text-slate-950 font-black border-2 border-amber-500 shadow-md scale-[1.02]"
-                    : "bg-slate-100/90 hover:bg-slate-200/80 text-slate-700 font-bold border border-slate-200/80 shadow-2xs"
+                    ? "bg-[#0F172A] text-amber-400 font-black border border-amber-400/40 shadow-sm"
+                    : "bg-slate-100 text-slate-600 font-bold border border-slate-200/70 hover:bg-slate-200/80 hover:text-slate-900"
                 }`}
               >
-                <IconComp className={`w-4.5 h-4.5 transition-all duration-200 ${isActive ? "text-slate-950 fill-slate-950 stroke-[1.2]" : "text-slate-700 stroke-[2] fill-transparent"}`} />
-                <span className={`text-[11px] sm:text-xs leading-none truncate w-full ${isActive ? "font-black text-slate-950" : "font-bold text-slate-700"}`}>
+                <IconComp className={`w-3.5 h-3.5 transition-all duration-200 shrink-0 ${isActive ? "text-amber-400 fill-amber-400/20 stroke-[2.2]" : "text-slate-500 stroke-[2] fill-transparent"}`} />
+                <span className={`text-xs leading-none truncate ${isActive ? "font-black text-amber-400" : "font-bold text-slate-700"}`}>
                   {seg.label}
                 </span>
               </button>
