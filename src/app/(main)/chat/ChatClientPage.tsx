@@ -743,27 +743,27 @@ export default function ChatClientPage() {
             </div>
           </div>
 
-          {/* 2. SEARCH BAR */}
+          {/* 2. SEARCH BAR — Increased Height */}
           <div className="p-2.5 bg-white border-b border-slate-200/80">
-            <div className="flex items-center gap-2 bg-[#f0f2f5] border border-slate-200/80 rounded-xl px-3 py-1.5 text-xs text-slate-600 shadow-2xs focus-within:ring-1 focus-within:ring-[#00a884]">
+            <div className="flex items-center gap-2.5 bg-[#f0f2f5] border border-slate-200/80 rounded-2xl px-4 py-2.5 min-h-[44px] text-sm text-slate-700 shadow-2xs focus-within:ring-1 focus-within:ring-[#00a884]">
               <Search className="w-4 h-4 text-slate-400 shrink-0" />
               <input
                 type="text"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search or start a new chat"
-                className="w-full bg-transparent focus:outline-none text-xs text-slate-900 font-medium placeholder:text-slate-500 text-center"
+                className="w-full bg-transparent focus:outline-none text-sm text-slate-900 font-semibold placeholder:text-slate-500 text-center"
               />
               {searchQuery && (
                 <button type="button" onClick={() => setSearchQuery("")} className="text-slate-400 hover:text-slate-600">
-                  <X className="w-3.5 h-3.5" />
+                  <X className="w-4 h-4" />
                 </button>
               )}
             </div>
           </div>
 
-          {/* 4. CONVERSATION THREADS LIST */}
-          <div className="flex-1 overflow-y-auto divide-y divide-slate-100/90">
+          {/* 4. CONVERSATION THREADS LIST (Compensated for Bottom Navigation Bar) */}
+          <div className="flex-1 overflow-y-auto divide-y divide-slate-100/90 pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] md:pb-4">
             {filteredThreads.length === 0 ? (
               <div className="p-8 text-center flex flex-col items-center gap-2 text-slate-400">
                 <MessageSquare className="w-8 h-8 text-slate-300 stroke-[1.5]" />
@@ -852,8 +852,8 @@ export default function ChatClientPage() {
             )}
           </div>
 
-          {/* 5. ENCRYPTED FOOTER BANNER (Compensated for Bottom Tab Bar) */}
-          <div className="p-3 bg-[#f0f2f5] border-t border-slate-200/90 text-xs text-slate-600 font-semibold flex items-center gap-1.5 shrink-0 justify-center pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] md:pb-3 md:mb-0">
+          {/* 5. ENCRYPTED FOOTER BANNER */}
+          <div className="p-3 bg-[#f0f2f5] border-t border-slate-200/90 text-xs text-slate-600 font-semibold flex items-center gap-1.5 shrink-0 justify-center mb-0">
             <Lock className="w-3.5 h-3.5 text-[#00a884] shrink-0" />
             <span>End-to-end encrypted direct messaging</span>
           </div>
@@ -1082,10 +1082,10 @@ export default function ChatClientPage() {
             </div>
           )}
 
-          {/* Message Input Form (Clean full-width input + Send button) */}
+          {/* Message Input Form — Increased Height (48px input + 44px send button) */}
           <form
             onSubmit={handleSendMessage}
-            className="p-2.5 sm:p-3 bg-[#f0f2f5] border-t border-slate-200/90 flex items-center gap-2 shrink-0 z-10 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))]"
+            className="p-2.5 sm:p-3 bg-[#f0f2f5] border-t border-slate-200/90 flex items-center gap-2.5 shrink-0 z-10 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))]"
           >
             <input
               type="text"
@@ -1096,14 +1096,14 @@ export default function ChatClientPage() {
               autoCorrect="on"
               spellCheck={true}
               autoCapitalize="sentences"
-              className="flex-1 bg-white border border-slate-200/90 text-slate-900 rounded-2xl px-4 py-2.5 text-xs font-semibold focus:outline-none focus:ring-1 focus:ring-[#00a884] shadow-2xs placeholder:text-slate-400"
+              className="flex-1 bg-white border border-slate-200/90 text-slate-900 rounded-2xl px-4 py-3 min-h-[48px] text-sm font-medium focus:outline-none focus:ring-1 focus:ring-[#00a884] shadow-2xs placeholder:text-slate-400 placeholder:text-sm"
             />
 
             <button
               type="submit"
               disabled={loading || !inputText.trim()}
               aria-label="Send message"
-              className="w-10 h-10 rounded-full bg-[#00a884] hover:bg-[#008f70] active:scale-95 disabled:opacity-50 text-white font-bold transition-all shadow-md cursor-pointer flex items-center justify-center shrink-0"
+              className="w-11 h-11 rounded-full bg-[#00a884] hover:bg-[#008f70] active:scale-95 disabled:opacity-50 text-white font-bold transition-all shadow-md cursor-pointer flex items-center justify-center shrink-0"
             >
               <Send className="w-4 h-4 text-white fill-white ml-0.5" />
             </button>
