@@ -45,8 +45,16 @@ export default function TopAppShell({ children }: TopAppShellProps) {
     setShouldHide(false);
   }, [pathname]);
 
-  // Rule 2: Synchronize scroll direction state
+  // Rule 2: Synchronize scroll direction state (Website: Always Fixed Visible; Mobile APK: Scroll Hide)
   useEffect(() => {
+    if (typeof window !== "undefined") {
+      const isNative = Boolean((window as any).Capacitor?.isNativePlatform() || window.navigator.userAgent.includes("Capacitor"));
+      if (!isNative) {
+        setShouldHide(false);
+        return;
+      }
+    }
+
     if (isAtTop) {
       setShouldHide(false);
     } else if (scrollDirection === "down") {

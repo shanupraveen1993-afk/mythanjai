@@ -6,7 +6,7 @@ import { Sparkles, ShoppingBag, Search, Wrench, Store, X } from "lucide-react";
 
 export default function TamilSloganBanner() {
   const pathname = usePathname() || "";
-  const [isDismissed, setIsDismissed] = useState<boolean>(true); // default true until client check
+  const [isDismissed, setIsDismissed] = useState<boolean>(false);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
