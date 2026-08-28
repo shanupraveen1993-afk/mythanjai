@@ -386,6 +386,11 @@ export default function ListingCard({ listing, isPreview }: { listing: ListingIt
                     onError={() => setImgError(true)}
                     className="object-cover transition-transform duration-300 group-hover/img:scale-105"
                   />
+                ) : isPreview ? (
+                  <div className="w-full h-full bg-slate-100 border border-dashed border-slate-300 p-2 flex flex-col items-center justify-center text-center select-none">
+                    <Camera className="w-5 h-5 text-slate-400 mb-1" />
+                    <span className="text-[10px] font-bold text-slate-500 leading-tight">No Photo Uploaded</span>
+                  </div>
                 ) : (
                   <div
                     onClick={handleRequestPhotoClick}

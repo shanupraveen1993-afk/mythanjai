@@ -1410,7 +1410,7 @@ export default function PostForm({ segment }: PostFormProps) {
                 </div>
               )}
               {segment === "sell" || segment === "need" ? (
-                <ListingCard listing={previewSellOrNeedPost as any} />
+                <ListingCard listing={previewSellOrNeedPost as any} isPreview={true} />
               ) : segment === "service" ? (
                 <ServiceCard post={previewServicePost} isPreview={true} />
               ) : (
