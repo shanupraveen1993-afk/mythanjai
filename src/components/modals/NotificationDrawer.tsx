@@ -5,6 +5,8 @@ import { X, Bell, Phone, MessageSquare, ShieldCheck, Clock, ArrowRight, Trash2, 
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/context/ToastContext";
+import { collection, onSnapshot, doc, updateDoc, deleteDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 interface NotificationItem {
   id: string;
@@ -19,7 +21,7 @@ interface NotificationItem {
 
 export default function NotificationDrawer() {
   const router = useRouter();
-  const { profile } = useAuth();
+  const { user, profile } = useAuth();
   const { toast } = useToast();
 
   const [isOpen, setIsOpen] = useState(false);
@@ -39,12 +41,51 @@ export default function NotificationDrawer() {
     };
   }, []);
 
+  // Real-Time Firestore Notification Listener across current user UID & Phone Number
   useEffect(() => {
-    if (isOpen) {
-      // Real live customer notifications (initialized empty for production)
-      setNotifications([]);
-    }
-  }, [isOpen]);
+    const currentUid = user?.uid || "";
+    const currentPhone = profile?.phone ? profile.phone.replace(/\D/g, "") : "";
+
+    if (!currentUid && !currentPhone) return;
+
+    const notifRef = collection(db, "notifications");
+    const unsubscribe = onSnapshot(
+      notifRef,
+      (snapshot) => {
+        const list: NotificationItem[] = [];
+        snapshot.forEach((docSnap) => {
+          const data = docSnap.data();
+          const isRecipient =
+            (currentUid && data.recipientId === currentUid) ||
+            (currentPhone && data.recipientPhone && data.recipientPhone.replace(/\D/g, "").includes(currentPhone));
+
+          if (isRecipient) {
+            list.push({
+              id: docSnap.id,
+              type: data.type || "chat",
+              title: data.title || "New Alert",
+              message: data.message || "",
+              timestamp: data.timestamp?.seconds
+                ? new Date(data.timestamp.seconds * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+                : "Just now",
+              read: Boolean(data.read),
+              actionUrl: data.actionUrl || "/chat",
+              phone: data.senderPhone,
+            });
+          }
+        });
+
+        // Unread first, then sorted by newest
+        list.sort((a, b) => (a.read === b.read ? 0 : a.read ? 1 : -1));
+        setNotifications(list);
+      },
+      (err) => {
+        console.warn("Notifications real-time listener note:", err);
+      }
+    );
+
+    return () => unsubscribe();
+  }, [user?.uid, profile?.phone]);
 
   if (!isOpen) return null;
 
@@ -154,10 +195,19 @@ export default function NotificationDrawer() {
             filteredNotifications.map((n) => (
               <div
                 key={n.id}
-                className={`w-full rounded-2xl border p-4 flex items-start gap-3.5 transition-all shadow-2xs ${
+                onClick={async () => {
+                  setIsOpen(false);
+                  try {
+                    await updateDoc(doc(db, "notifications", n.id), { read: true });
+                  } catch (e) {}
+                  if (n.actionUrl) {
+                    router.push(n.actionUrl);
+                  }
+                }}
+                className={`w-full rounded-2xl border p-4 flex items-start gap-3.5 transition-all shadow-2xs cursor-pointer active:scale-[0.99] ${
                   n.read
                     ? "bg-white border-slate-200/90"
-                    : "bg-amber-50/50 border-amber-200 ring-1 ring-amber-400/30"
+                    : "bg-amber-50/70 border-amber-300 ring-1 ring-amber-400/40"
                 }`}
               >
                 <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border ${
@@ -194,6 +244,7 @@ export default function NotificationDrawer() {
                     {n.phone && (
                       <a
                         href={`tel:${n.phone}`}
+                        onClick={(e) => e.stopPropagation()}
                         className="px-3 py-1 bg-emerald-600 hover:bg-emerald-700 text-white font-heading font-bold text-[11px] rounded-lg flex items-center gap-1 transition-colors cursor-pointer"
                       >
                         <Phone className="w-3 h-3 text-white" />
@@ -201,18 +252,10 @@ export default function NotificationDrawer() {
                       </a>
                     )}
 
-                    {n.actionUrl && (
-                      <button
-                        onClick={() => {
-                          setIsOpen(false);
-                          router.push(n.actionUrl!);
-                        }}
-                        className="px-3 py-1 bg-[#0F172A] hover:bg-slate-800 text-white font-heading font-bold text-[11px] rounded-lg flex items-center gap-1 transition-colors cursor-pointer"
-                      >
-                        <span>Respond</span>
-                        <ArrowRight className="w-3 h-3 text-amber-400" />
-                      </button>
-                    )}
+                    <span className="px-3 py-1 bg-[#0F172A] hover:bg-slate-800 text-white font-heading font-bold text-[11px] rounded-lg flex items-center gap-1 transition-colors ml-auto">
+                      <span>View</span>
+                      <ArrowRight className="w-3 h-3 text-amber-400" />
+                    </span>
 
                     <button
                       onClick={() => deleteNotification(n.id)}

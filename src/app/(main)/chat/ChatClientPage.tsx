@@ -416,6 +416,25 @@ export default function ChatClientPage() {
         timestamp: serverTimestamp(),
       });
 
+      // 🔔 REAL-TIME NOTIFICATION RECORD: Notify recipient user of new message
+      if (activePeerId && activeChatId !== "namma_thanjai_system_welcome") {
+        try {
+          const notifRef = collection(db, "notifications");
+          await addDoc(notifRef, {
+            recipientId: activePeerId,
+            recipientPhone: activePeerPhone,
+            senderId: currentUid,
+            senderName: currentName,
+            type: "chat",
+            title: `New message from ${currentName}`,
+            message: `"${currentText.slice(0, 50)}${currentText.length > 50 ? "..." : ""}" re: ${activeListingTitle}`,
+            actionUrl: `/chat?chatId=${activeChatId}&listingId=${queryListingId || ""}`,
+            read: false,
+            timestamp: serverTimestamp(),
+          });
+        } catch (e) {}
+      }
+
       const threadRef = doc(db, "chats", activeChatId);
       await setDoc(
         threadRef,
