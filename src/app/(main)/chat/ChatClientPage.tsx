@@ -89,9 +89,9 @@ const DEFAULT_SYSTEM_THREAD: ChatThread = {
   listingId: "system_welcome",
   listingTitle: "Welcome to Namma Thanjai",
   peerId: "namma_thanjai_official",
-  peerName: "Namma Thanjai",
+  peerName: "Namma Thanjai Admin Support",
   peerPhone: "9994837342",
-  lastMessage: "Vanakkam! Welcome to Namma Thanjai. Chat directly with sellers, buyers & service providers here.",
+  lastMessage: "Vanakkam! Chat directly with Namma Thanjai Admin Support & local members here.",
   lastTimestamp: new Date(),
   isSystemThread: true,
 };
@@ -205,18 +205,28 @@ export default function ChatClientPage() {
 
           if (isUserParticipant) {
             const isBuyer = data.buyerId === currentUid;
-            const peerName = isBuyer
+            let peerName = isBuyer
               ? data.sellerName || data.listingTitle || "Seller / Contact"
               : data.buyerName || "Buyer / Interested User";
             const peerPhone = isBuyer ? data.sellerPhone : data.buyerPhone;
             const peerId = isBuyer ? data.sellerId : data.buyerId;
+
+            // 🏷️ UNIQUE DEDICATED NAME RESOLUTION:
+            // Ensure no 1-on-1 thread displays generic "Namma Thanjai" so every conversation item is distinct!
+            if (
+              docSnap.id !== "namma_thanjai_system_welcome" &&
+              (!peerName || peerName === "Namma Thanjai" || peerName === "Classified Item" || peerName === "Local Contact" || peerName === "Seller / Contact")
+            ) {
+              const memberIdVal = generate5DigitMemberId(peerId || peerPhone || docSnap.id);
+              peerName = `User ${memberIdVal}`;
+            }
 
             userThreads.push({
               chatId: docSnap.id,
               listingId: data.listingId || "post",
               listingTitle: data.listingTitle || "Thanjavur Listing",
               peerId: peerId || "contact",
-              peerName: peerName || "Local Contact",
+              peerName: peerName,
               peerPhone: peerPhone || "",
               lastMessage: data.lastMessage || "Conversation started",
               lastTimestamp: data.lastTimestamp,
