@@ -43,7 +43,7 @@ export default function HomeCategorySegmentBar() {
   ];
 
   return (
-    <div className="w-full md:hidden bg-white border-t border-slate-200/60 border-b border-slate-200/80 py-2 shadow-2xs">
+    <div className="w-full md:hidden bg-[#1E244A] text-white border-b border-white/10 py-2 shadow-md">
       <div className="w-full max-w-7xl mx-auto px-2 sm:px-4">
         <div className="grid grid-cols-4 gap-1.5 sm:gap-2.5 w-full max-w-2xl mx-auto">
           {segments.map((seg) => {
@@ -61,12 +61,12 @@ export default function HomeCategorySegmentBar() {
                 }}
                 className={`py-2 px-1 rounded-2xl transition-all cursor-pointer flex flex-col items-center justify-center gap-1 w-full text-center select-none active:scale-95 ${
                   isActive
-                    ? "bg-[#0F172A] text-amber-400 font-black border border-amber-400/40 shadow-sm"
-                    : "bg-slate-100 text-slate-600 font-bold border border-slate-200/70 hover:bg-slate-200/80 hover:text-slate-900"
+                    ? "bg-[#FBBF24] text-[#1E244A] font-black border border-amber-300 shadow-md"
+                    : "bg-white/15 text-white font-bold hover:bg-white/25 border border-white/20"
                 }`}
               >
-                <IconComp className={`w-4.5 h-4.5 transition-all duration-200 shrink-0 ${isActive ? "text-amber-400 fill-amber-400/20 stroke-[2.2]" : "text-slate-500 stroke-[2] fill-transparent"}`} />
-                <span className={`text-[11px] sm:text-xs leading-none truncate w-full ${isActive ? "font-black text-amber-400" : "font-bold text-slate-700"}`}>
+                <IconComp className={`w-4.5 h-4.5 transition-all duration-200 shrink-0 ${isActive ? "text-[#1E244A] fill-[#1E244A]/20 stroke-[2.5]" : "text-white stroke-[2] fill-transparent"}`} />
+                <span className={`text-[11px] sm:text-xs leading-none truncate w-full ${isActive ? "font-black text-[#1E244A]" : "font-bold text-white"}`}>
                   {seg.label}
                 </span>
               </button>

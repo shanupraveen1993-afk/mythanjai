@@ -59,7 +59,7 @@ export default function TamilSloganBanner() {
 
   return (
     <div 
-      className="w-full bg-[#0F172A] text-white border-b border-slate-800/90 py-2 px-4 sm:px-8 flex items-center justify-center text-center font-sans shadow-md select-none relative transition-all mt-0 mb-0"
+      className="w-full bg-[#1E244A] text-white border-b border-white/10 py-2 px-4 sm:px-8 flex items-center justify-center text-center font-sans shadow-md select-none relative transition-all mt-0 mb-0"
     >
       <div className="max-w-7xl mx-auto flex items-center justify-center gap-2 py-0.5 relative z-10">
         <span className="inline-flex items-center shrink-0 p-1 bg-amber-400/10 rounded-lg border border-amber-400/20">{content.icon}</span>

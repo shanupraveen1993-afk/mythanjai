@@ -116,23 +116,25 @@ export default function TopHeader({
     // no-op persistence, kept for backward compat
   };
 
+  const isSubPageWithBack = !isHomePage && (pathname.includes("/post") || pathname.includes("/chat") || pathname.includes("/listings") || pathname.includes("/profile") || pathname.includes("/search"));
+
   return (
     <header
-      className={`relative w-full z-50 bg-white/98 text-slate-900 flex-col justify-end ${
+      className={`relative w-full z-50 bg-[#1E244A] text-white flex-col justify-end border-b border-white/10 shadow-md ${
         pathname?.startsWith("/post") ? "hidden" : pathname?.startsWith("/chat") ? "hidden md:flex" : "flex"
       }`}
       style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
     >
       <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 py-2 flex items-center justify-between gap-2.5 sm:gap-4 relative">
 
-        {/* Left Side Cluster: Logo Image + Desktop Search Bar */}
+        {/* Left Side Cluster: Logo Image (Always Shown, Back Button Removed) + Desktop Search Bar */}
         <div className="flex items-center gap-3 sm:gap-4 shrink-0 z-20">
           <div
             onClick={() => router.push("/")}
             className="flex items-center cursor-pointer shrink-0 group select-none"
           >
             <div className="h-8 sm:h-9 w-auto flex items-center justify-center shrink-0">
-              <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="h-full w-auto object-contain max-h-8 sm:max-h-9" />
+              <img src="/namma_thanjai_logo_dark_bg.png" alt="Namma Thanjai Logo" className="h-full w-auto object-contain max-h-8 sm:max-h-9" />
             </div>
           </div>
           {/* Desktop Search Bar (Left Aligned Next to Logo) */}
@@ -200,7 +202,7 @@ export default function TopHeader({
           {pathname === "/" || pathname.includes("/sell") || pathname.includes("/need") || pathname.includes("/services") || pathname.includes("/shops") || pathname.includes("/offers") || pathname.includes("/classifieds") ? (
             <UniversalSearchBar />
           ) : (
-            <span className="font-heading font-black text-sm sm:text-base text-slate-900 truncate tracking-tight text-center w-full">
+            <span className="font-heading font-black text-sm sm:text-base text-white truncate tracking-tight text-center w-full">
               {getSubPageTitle()}
             </span>
           )}
@@ -218,11 +220,11 @@ export default function TopHeader({
                   window.dispatchEvent(new Event("namma_thanjai_open_notifications"));
                 }
               }}
-              className="w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border border-slate-200/90 bg-slate-100 hover:bg-slate-200 text-slate-700 shrink-0 relative"
+              className="w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border border-white/20 bg-white/10 hover:bg-white/20 text-white shrink-0 relative"
               title="Notifications"
               aria-label="View notifications"
             >
-              <Bell className="w-4 h-4 text-slate-700 stroke-[2.2]" />
+              <Bell className="w-4 h-4 text-white stroke-[2.2]" />
             </button>
             <div className="absolute top-full mt-1.5 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 bg-slate-900 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow-md whitespace-nowrap z-50">
               Notifications
@@ -240,13 +242,13 @@ export default function TopHeader({
                   onClick={() => router.push("/chat")}
                   className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border shrink-0 ${
                     pathname === "/chat"
-                      ? "bg-amber-400 text-slate-950 border-amber-400 shadow-xs"
-                      : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
+                      ? "bg-[#FBBF24] text-[#1E244A] border-amber-300 shadow-xs"
+                      : "bg-white/10 hover:bg-white/20 text-white border-white/20"
                   }`}
                   title="Chat"
                   aria-label="View messages"
                 >
-                  <MessageSquare className={`w-4 h-4 ${pathname === "/chat" ? "text-slate-950 stroke-[2.5]" : "text-slate-600"}`} />
+                  <MessageSquare className={`w-4 h-4 ${pathname === "/chat" ? "text-[#1E244A] stroke-[2.5]" : "text-white stroke-[2]"}`} />
                 </button>
                 <div className="absolute top-full mt-1.5 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 bg-slate-900 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow-md whitespace-nowrap z-50">
                   Chat
@@ -262,13 +264,13 @@ export default function TopHeader({
                   onClick={() => router.push("/listings")}
                   className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border shrink-0 ${
                     pathname.startsWith("/listings")
-                      ? "bg-amber-400 text-slate-950 border-amber-400 shadow-xs"
-                      : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
+                      ? "bg-[#FBBF24] text-[#1E244A] border-amber-300 shadow-xs"
+                      : "bg-white/10 hover:bg-white/20 text-white border-white/20"
                   }`}
                   title="My Ads"
                   aria-label="View my ads"
                 >
-                  <Package className={`w-4 h-4 ${pathname.startsWith("/listings") ? "text-slate-950 stroke-[2.5]" : "text-slate-600"}`} />
+                  <Package className={`w-4 h-4 ${pathname.startsWith("/listings") ? "text-[#1E244A] stroke-[2.5]" : "text-white stroke-[2]"}`} />
                 </button>
                 <div className="absolute top-full mt-1.5 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 bg-slate-900 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow-md whitespace-nowrap z-50">
                   My Ads
@@ -287,13 +289,13 @@ export default function TopHeader({
                   }}
                   className={`flex items-center justify-center w-9 h-9 rounded-full transition-all cursor-pointer border shrink-0 ${
                     pathname === "/profile" && !pathname.includes("tab=")
-                      ? "bg-amber-400 text-slate-950 border-amber-400 shadow-xs"
-                      : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
+                      ? "bg-[#FBBF24] text-[#1E244A] border-amber-300 shadow-xs"
+                      : "bg-white/10 hover:bg-white/20 text-white border-white/20"
                   }`}
                   title="Profile"
                   aria-label="View profile"
                 >
-                  <User className={`w-4 h-4 ${pathname === "/profile" && !pathname.includes("tab=") ? "text-slate-950 stroke-[2.5]" : "text-slate-600"}`} />
+                  <User className={`w-4 h-4 ${pathname === "/profile" && !pathname.includes("tab=") ? "text-[#1E244A] stroke-[2.5]" : "text-white stroke-[2]"}`} />
                 </button>
                 <div className="absolute top-full mt-1.5 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 bg-slate-900 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow-md whitespace-nowrap z-50">
                   Profile
