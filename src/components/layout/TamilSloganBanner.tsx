@@ -75,14 +75,15 @@ export default function TamilSloganBanner() {
         <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0 hidden sm:inline-block opacity-90 animate-pulse" />
       </div>
 
-      {/* Top-Right Dismiss 'X' Close Button */}
+      {/* Prominent White Close Button */}
       <button
         type="button"
         onClick={handleDismiss}
-        className="absolute top-2 right-2.5 sm:right-4 z-20 text-slate-400 hover:text-white p-1 rounded-full bg-slate-800/80 hover:bg-slate-800 transition-colors cursor-pointer border border-slate-700/80 shadow-2xs"
-        title="Close Banner for all pages"
+        className="absolute top-1/2 -translate-y-1/2 right-2.5 sm:right-4 z-20 text-slate-950 bg-white hover:bg-slate-100 p-1.5 rounded-full shadow-md transition-all cursor-pointer border border-white/90 active:scale-95 flex items-center justify-center"
+        title="Close Banner"
+        aria-label="Close Banner"
       >
-        <X className="w-3.5 h-3.5 stroke-[2.5]" />
+        <X className="w-3.5 h-3.5 stroke-[3] text-slate-950" />
       </button>
     </div>
   );
