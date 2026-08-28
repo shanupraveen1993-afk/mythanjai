@@ -773,11 +773,8 @@ export default function PostForm({ segment }: PostFormProps) {
     <div className="w-full max-w-6xl mx-auto px-3 sm:px-6 py-2 sm:py-3 pb-6 sm:pb-8 flex flex-col gap-3 font-sans">
 
 
-      {/* Clean Minimal Standalone Header Bar */}
-      <div
-        className="flex items-center justify-between border-b border-slate-200/80 w-full h-14 sm:h-16 shrink-0"
-        style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
-      >
+      {/* Clean Minimal Standalone Header Bar with Status Bar Top Clearance */}
+      <div className="flex items-center justify-between border-b border-slate-200/80 w-full min-h-[3.75rem] py-2 px-1 shrink-0 pt-[calc(0.5rem+env(safe-area-inset-top,0px))]">
         <button
           type="button"
           onClick={() => router.back()}

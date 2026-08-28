@@ -30,9 +30,15 @@ export function useNativeApp() {
         App.addListener("backButton", () => {
           const currentPath = typeof window !== "undefined" ? window.location.pathname : pathname;
 
-          // A. If any modal overlay is open, dispatch close event
+          // A. If active mobile chat room is open on /chat, close chat room view first
+          if (typeof window !== "undefined" && currentPath.includes("/chat")) {
+            const isMobileChatVisible = document.querySelector(".lg\\:flex-1.bg-\\[\\#efeae2\\]");
+            window.dispatchEvent(new Event("namma_thanjai_close_mobile_chat"));
+          }
+
+          // B. If any modal overlay is open, dispatch close event
           if (typeof window !== "undefined") {
-            const openModal = document.querySelector(".fixed.inset-0");
+            const openModal = document.querySelector(".fixed.inset-0.z-\\[99999\\], .fixed.inset-0.z-50");
             if (openModal) {
               window.dispatchEvent(new Event("namma_thanjai_close_all_modals"));
               return;

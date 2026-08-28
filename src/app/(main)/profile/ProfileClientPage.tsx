@@ -573,54 +573,6 @@ function ProfileContent() {
               </div>
             </div>
 
-            {/* Sidebar Tab Navigation Buttons */}
-            <div className="flex flex-col gap-1.5 pt-2 border-t border-slate-100">
-              <button
-                type="button"
-                onClick={() => setActiveView("dashboard")}
-                className={`w-full py-2.5 px-3.5 rounded-xl font-heading font-bold text-xs flex items-center justify-between transition-all cursor-pointer ${
-                  activeView === "dashboard"
-                    ? "bg-[#FBBF24] text-slate-950 border border-amber-400 shadow-2xs"
-                    : "bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200/80"
-                }`}
-              >
-                <span className="flex items-center gap-2">
-                  <User className="w-4 h-4" /> Account Overview
-                </span>
-                <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveView("listings")}
-                className={`w-full py-2.5 px-3.5 rounded-xl font-heading font-bold text-xs flex items-center justify-between transition-all cursor-pointer ${
-                  activeView === "listings"
-                    ? "bg-[#FBBF24] text-slate-950 border border-amber-400 shadow-2xs"
-                    : "bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200/80"
-                }`}
-              >
-                <span className="flex items-center gap-2">
-                  <Package className="w-4 h-4" /> My Ads ({myPosts.length})
-                </span>
-                <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveView("saved")}
-                className={`w-full py-2.5 px-3.5 rounded-xl font-heading font-bold text-xs flex items-center justify-between transition-all cursor-pointer ${
-                  activeView === "saved"
-                    ? "bg-[#FBBF24] text-slate-950 border border-amber-400 shadow-2xs"
-                    : "bg-slate-50 text-slate-700 hover:bg-slate-100 border border-slate-200/80"
-                }`}
-              >
-                <span className="flex items-center gap-2">
-                  <Bookmark className="w-4 h-4" /> Saved Bookmarks ({savedPosts.length})
-                </span>
-                <ChevronRight className="w-3.5 h-3.5 text-slate-500" />
-              </button>
-            </div>
-
             {/* Sign Out Button */}
             <button
               onClick={async () => {

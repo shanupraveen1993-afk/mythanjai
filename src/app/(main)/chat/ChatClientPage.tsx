@@ -173,6 +173,17 @@ export default function ChatClientPage() {
     }
   }, []);
 
+  // Mobile Back Button Handler: Return to Chat List View before exiting /chat route
+  useEffect(() => {
+    const handleCloseMobileChat = () => {
+      if (showMobileChat) {
+        setShowMobileChat(false);
+      }
+    };
+    window.addEventListener("namma_thanjai_close_mobile_chat", handleCloseMobileChat);
+    return () => window.removeEventListener("namma_thanjai_close_mobile_chat", handleCloseMobileChat);
+  }, [showMobileChat]);
+
   // Real-time Firestore snapshot for User Threads across all participating users
   useEffect(() => {
     const currentUid = user?.uid;
@@ -625,7 +636,7 @@ export default function ChatClientPage() {
   }
 
   return (
-    <div className="fixed inset-0 pb-16 md:pb-0 z-40 w-screen h-screen flex bg-[#f0f2f5] font-sans overflow-hidden p-0 m-0">
+    <div className={`fixed inset-0 z-40 w-screen h-screen flex bg-[#f0f2f5] font-sans overflow-hidden p-0 m-0 ${showMobileChat ? "pb-0" : "pb-16 md:pb-0"}`}>
       {/* SCAM WARNING MODAL */}
       {scamAlertTriggered && (
         <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-slate-950/80 backdrop-blur-sm p-4 animate-fade-in">
@@ -670,10 +681,7 @@ export default function ChatClientPage() {
         <div className={`w-full lg:w-[380px] border-r border-slate-200 flex-col bg-white ${showMobileChat ? "hidden lg:flex" : "flex"}`}>
           
           {/* 1. BRANDED TOP HEADER */}
-          <div
-            className="bg-[#f0f2f5] px-4 border-b border-slate-200/90 flex items-center justify-between shrink-0 select-none h-14 sm:h-16"
-            style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
-          >
+          <div className="bg-[#f0f2f5] px-4 pt-[calc(0.75rem+env(safe-area-inset-top,0px))] pb-3 border-b border-slate-200/90 flex items-center justify-between shrink-0 select-none min-h-[3.75rem]">
             <button
               type="button"
               onClick={() => router.push("/")}

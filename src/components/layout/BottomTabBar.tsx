@@ -76,10 +76,10 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
 
   return (
     <nav
-      className="md:hidden fixed bottom-2 left-3 right-3 z-40 max-w-md mx-auto bg-[#0F172A] border border-slate-700/80 rounded-2xl shadow-[0_10px_35px_rgba(0,0,0,0.5)] pointer-events-auto select-none transition-all duration-300"
-      style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 6px)", paddingTop: "6px" }}
+      className="md:hidden fixed bottom-0 left-0 right-0 z-40 w-full bg-[#0F172A] border-t border-slate-800/90 shadow-[0_-8px_30px_rgba(0,0,0,0.45)] pointer-events-auto select-none"
+      style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 8px)" }}
     >
-      <div className="flex items-center justify-around h-14 px-2 w-full mx-auto">
+      <div className="flex items-center justify-around h-15 px-2 sm:px-6 w-full max-w-md mx-auto">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive =
