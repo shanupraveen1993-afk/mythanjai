@@ -426,16 +426,16 @@ export default function ListingCard({ listing, isPreview }: { listing: ListingIt
                 </div>
               </div>
 
-              {/* Title: Single-line bold text */}
-              <h3 className="font-sans font-bold text-base sm:text-lg text-slate-900 truncate line-clamp-1 whitespace-nowrap leading-snug text-left mt-0.5">
+              {/* Title: Max 2 lines with fixed min-height for uniform alignment */}
+              <h3 className="font-sans font-bold text-sm sm:text-base text-slate-900 line-clamp-2 leading-snug text-left mt-0.5 min-h-[2.5rem] flex items-center">
                 {listing.title}
               </h3>
             </div>
           </div>
 
-          {/* ── MIDDLE SECTION: Fixed Height Description Box ── */}
-          <div className="min-h-[4.5rem] bg-slate-50/80 border border-slate-200/60 p-2.5 rounded-xl flex items-center">
-            <p className="text-sm text-slate-700 font-medium leading-relaxed line-clamp-3">
+          {/* ── MIDDLE SECTION: Fixed 3-Line Internal Scrollable Description Box ── */}
+          <div className="h-[4.5rem] bg-slate-50/80 border border-slate-200/60 p-2.5 rounded-xl flex flex-col justify-start overflow-y-auto custom-scrollbar">
+            <p className="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed whitespace-pre-line">
               {listing.description || "No detailed description provided."}
             </p>
           </div>
