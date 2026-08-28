@@ -21,6 +21,7 @@ import PendingFeedbackPrompt from "@/components/modals/PendingFeedbackPrompt";
 import NativePermissionsModal from "@/components/native/NativePermissionsModal";
 import NotificationDrawer from "@/components/modals/NotificationDrawer";
 import TamilSloganBanner from "@/components/layout/TamilSloganBanner";
+import HomeCategorySegmentBar from "@/components/layout/HomeCategorySegmentBar";
 
 export default function MainLayout({
   children,
@@ -259,7 +260,7 @@ function MainLayoutContent({
         <SearchParamSync onAreaSync={setSelectedArea} onAuthSync={setIsSignInOpen} />
       </React.Suspense>
 
-      {/* Top Header Shell — shown except on chat/post/onboarding */}
+      {/* Unified Top App Shell — TopHeader + CategoryBar move as ONE UNIT */}
       {!isOnboardingView && !isChatRoute && !isPostRoute && (
         <TopAppShell>
           <React.Suspense fallback={null}>
@@ -281,17 +282,17 @@ function MainLayoutContent({
                 handleTabChange(tab);
               }}
             />
+            <HomeCategorySegmentBar />
           </React.Suspense>
         </TopAppShell>
       )}
 
-
-      {/* Main Content Panel */}
+      {/* Main Content Panel — compensated with exact top shell height + safe area */}
       <main
         className={`flex-1 w-full flex flex-col p-0 m-0 bg-[#f8fafc] ${isChatRoute ? "h-screen overflow-hidden pb-0" : "pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] md:pb-8"}`}
         style={{
           paddingTop: !isOnboardingView && !isChatRoute && !isPostRoute
-            ? "calc(4rem + env(safe-area-inset-top, 0px))"
+            ? "calc(6.25rem + env(safe-area-inset-top, 0px))"
             : undefined,
         }}
       >

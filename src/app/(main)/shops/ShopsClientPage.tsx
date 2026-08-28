@@ -11,7 +11,7 @@ import CustomDropdown from "@/components/ui/CustomDropdown";
 import { Filter } from "lucide-react";
 import { isListingQuarantined } from "@/lib/moderation";
 import { useAuth } from "@/hooks/use-auth";
-import HomeCategorySegmentBar from "@/components/layout/HomeCategorySegmentBar";
+
 import UniversalSearchBarRow from "@/components/layout/UniversalSearchBarRow";
 
 export default function ShopsClientPage() {
@@ -73,7 +73,7 @@ export default function ShopsClientPage() {
 
   return (
     <div className="flex flex-col gap-0 pb-6 sm:pb-10 w-full font-sans">
-      <HomeCategorySegmentBar />
+
 
       <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 flex flex-col gap-3 mt-4 sm:mt-6 pt-1 sm:pt-2">
         {/* 1. TITLE BAR */}

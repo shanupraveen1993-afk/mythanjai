@@ -30,7 +30,11 @@ export default function TopAppShell({ children }: TopAppShellProps) {
   }, [scrollDirection, isAtTop]);
 
   return (
-    <div className="fixed top-0 left-0 right-0 z-50 w-full bg-[#0F172A] border-b border-slate-800/90 shadow-md pointer-events-auto">
+    <div
+      className={`fixed top-0 left-0 right-0 z-50 w-full bg-[#0F172A] border-b border-slate-800/90 shadow-md transition-transform duration-300 ease-in-out ${
+        shouldHide ? "-translate-y-full pointer-events-none" : "translate-y-0 pointer-events-auto"
+      }`}
+    >
       {children}
     </div>
   );

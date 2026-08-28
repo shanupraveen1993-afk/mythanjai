@@ -43,11 +43,7 @@ export default function HomeCategorySegmentBar() {
   ];
 
   return (
-    <>
-      {/* Solid Status Bar Top Filler */}
-      <div className="fixed top-0 left-0 right-0 h-[env(safe-area-inset-top,0px)] bg-[#0F172A] z-50 pointer-events-none md:hidden" />
-
-      <div className="w-full md:hidden sticky top-[calc(3.5rem+env(safe-area-inset-top,0px))] z-40 bg-[#0F172A] border-b border-slate-800/90 pt-1.5 pb-2 shadow-2xs">
+    <div className="w-full md:hidden bg-[#0F172A] border-t border-slate-800/60 border-b border-slate-800/90 pt-1.5 pb-2 shadow-2xs">
       <div className="w-full max-w-7xl mx-auto px-2 sm:px-4">
         <div className="grid grid-cols-4 gap-1.5 sm:gap-2.5 w-full max-w-2xl mx-auto">
           {segments.map((seg) => {
@@ -79,6 +75,5 @@ export default function HomeCategorySegmentBar() {
         </div>
       </div>
     </div>
-    </>
   );
 }
