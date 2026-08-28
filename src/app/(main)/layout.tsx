@@ -259,8 +259,8 @@ function MainLayoutContent({
         <SearchParamSync onAreaSync={setSelectedArea} onAuthSync={setIsSignInOpen} />
       </React.Suspense>
 
-      {/* Top Header Shell — shown except on chat/onboarding */}
-      {!isStandaloneView && !isOnboardingView && !isChatRoute && (
+      {/* Top Header Shell — shown except on chat/post/onboarding */}
+      {!isOnboardingView && !isChatRoute && !isPostRoute && (
         <TopAppShell>
           <React.Suspense fallback={null}>
             <TopHeader
@@ -290,7 +290,7 @@ function MainLayoutContent({
       <main
         className={`flex-1 w-full flex flex-col p-0 m-0 bg-[#f8fafc] ${isChatRoute ? "h-screen overflow-hidden pb-0" : "pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] md:pb-8"}`}
         style={{
-          paddingTop: !isStandaloneView && !isOnboardingView && !isChatRoute && !isPostRoute
+          paddingTop: !isOnboardingView && !isChatRoute && !isPostRoute
             ? "calc(4rem + env(safe-area-inset-top, 0px))"
             : undefined,
         }}
@@ -317,15 +317,12 @@ function MainLayoutContent({
         )}
       </main>
 
-      {/* Persistent Opinion Feedback Manager */}
-      {!isStandaloneView && !isOnboardingView && !isSignInOpen && !isChatRoute && (
-        <>
-          <BottomTabBar
-            activeTab={getActiveTab()}
-            onTabChange={handleTabChange}
-          />
-          <FloatingPostButton />
-        </>
+      {/* Bottom Navigation Bar */}
+      {!isOnboardingView && !isSignInOpen && !isChatRoute && (
+        <BottomTabBar
+          activeTab={getActiveTab()}
+          onTabChange={handleTabChange}
+        />
       )}
 
       {/* Persistent Opinion Feedback Manager & Native Permissions Modal */}

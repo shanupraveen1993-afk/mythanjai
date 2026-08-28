@@ -129,8 +129,8 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
       </div>
     </nav>
 
-    {/* PERSISTENT 50VW CENTER VIEWPORT FAB (+ POST ACTION) */}
-    {!pathname.startsWith("/post") && (
+    {/* PERSISTENT 50VW CENTER VIEWPORT FAB (+ POST ACTION) — Home Feed Only */}
+    {!pathname.startsWith("/post") && (pathname === "/" || pathname === "/home" || pathname.includes("/sell") || pathname.includes("/need") || pathname.includes("/services") || pathname.includes("/shops") || pathname.includes("/offer")) && (
       <button
         type="button"
         onClick={() => router.push(getDynamicPostRoute())}
