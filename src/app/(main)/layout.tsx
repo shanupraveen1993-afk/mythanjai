@@ -285,7 +285,7 @@ function MainLayoutContent({
 
       {/* Main Content Panel */}
       <main
-        className={`flex-1 w-full flex flex-col p-0 m-0 bg-[#f8fafc] ${isChatRoute ? "h-screen overflow-hidden pb-0" : "pb-[calc(4.5rem+env(safe-area-inset-bottom,0px))] md:pb-8"}`}
+        className={`flex-1 w-full flex flex-col p-0 m-0 bg-[#f8fafc] ${isChatRoute ? "h-screen overflow-hidden pb-0" : "pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] md:pb-8"}`}
         style={{
           paddingTop: !isStandaloneView && !isOnboardingView && !isChatRoute && !isPostRoute
             ? "calc(4rem + env(safe-area-inset-top, 0px))"
