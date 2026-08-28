@@ -33,6 +33,25 @@ export function useFirestore<T = any>({
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
+  // 1. Instant Client-Side SWR Cache Hydration (0ms Instant Load)
+  const cacheKey = `namma_thanjai_cache_${collectionName}_${postType || "all"}_${category}`;
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const cachedStr = localStorage.getItem(cacheKey);
+        if (cachedStr) {
+          const cachedData = JSON.parse(cachedStr);
+          if (Array.isArray(cachedData) && cachedData.length > 0) {
+            setData(cachedData as T[]);
+            setLoading(false);
+          }
+        }
+      } catch (e) {}
+    }
+  }, [cacheKey]);
+
+  // 2. Real-Time Firestore Synchronization
   useEffect(() => {
     let isMounted = true;
 
@@ -42,13 +61,12 @@ export function useFirestore<T = any>({
       const colRef = collection(db, collectionName);
       const constraints: any[] = [];
 
-      // Only add userId constraint if specifically requesting a single user's profile
       if (onlyUserPosted) {
         constraints.push(where("userId", "==", onlyUserPosted));
       }
 
-      // Limit results to last 200 items (newest first by Firestore insertion order)
-      constraints.push(limit(200));
+      // Limit results to last 150 items (fastest transfer)
+      constraints.push(limit(150));
 
       q = query(colRef, ...constraints);
     } catch (err: any) {
@@ -98,9 +116,7 @@ export function useFirestore<T = any>({
           }
         }
 
-
-
-        // 60-day expiry check
+        // Expiry check (60 days)
         if (docData.expires_at) {
           try {
             const expiryDate =
@@ -122,7 +138,7 @@ export function useFirestore<T = any>({
         items.push({ id: doc.id, ...docData });
       });
 
-      // Sort newest first
+      // Sort newest first strictly
       const parseTimestamp = (val: any): number => {
         if (!val) return Date.now();
         if (typeof val.seconds === "number") return val.seconds * 1000;
@@ -136,6 +152,13 @@ export function useFirestore<T = any>({
 
       setData(items as T[]);
       setLoading(false);
+
+      // Persist top 40 items in localStorage for instant 0ms hydration on next visit
+      if (typeof window !== "undefined" && items.length > 0) {
+        try {
+          localStorage.setItem(cacheKey, JSON.stringify(items.slice(0, 40)));
+        } catch (e) {}
+      }
     };
 
     // Try real-time listener first
@@ -143,19 +166,11 @@ export function useFirestore<T = any>({
       q,
       processSnapshot,
       async (snapshotErr) => {
-        // onSnapshot failed — fall back to a one-time getDocs fetch
-        console.warn(
-          "useFirestore: onSnapshot error, falling back to getDocs:",
-          snapshotErr
-        );
+        console.warn("useFirestore: onSnapshot fallback to getDocs:", snapshotErr);
         try {
           const snap = await getDocs(q);
           processSnapshot(snap);
         } catch (docsErr: any) {
-          console.error(
-            "useFirestore: getDocs fallback also failed:",
-            docsErr
-          );
           if (isMounted) {
             setError(docsErr);
             setLoading(false);
@@ -168,7 +183,7 @@ export function useFirestore<T = any>({
       isMounted = false;
       unsubscribe();
     };
-  }, [collectionName, category, areaTag, postType, onlyUserPosted]);
+  }, [collectionName, category, areaTag, postType, onlyUserPosted, cacheKey]);
 
   return { data: data || [], loading, error };
 }
