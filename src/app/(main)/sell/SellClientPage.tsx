@@ -101,7 +101,7 @@ export default function SellClientPage() {
     <div className="flex flex-col gap-0 pb-6 sm:pb-10 w-full font-sans">
 
 
-      <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 flex flex-col gap-3.5 mt-2 sm:mt-5 pt-2 sm:pt-4">
+      <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 flex flex-col gap-3.5 pt-2 sm:pt-4">
         {/* 1. TITLE BAR */}
         <div className="py-1 flex items-center justify-between gap-3 w-full">
           <h2 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight">
