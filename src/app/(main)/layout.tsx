@@ -258,7 +258,7 @@ function MainLayoutContent({
   const isPostRoute = pathname.startsWith("/post");
   const isFeedPage = pathname === "/" || pathname === "/home" || pathname.includes("/sell") || pathname.includes("/need") || pathname.includes("/services") || pathname.includes("/shops") || pathname.includes("/offers") || pathname.includes("/classifieds");
   const isStandaloneView = false;
-  const isOnboardingView = false;
+  const isOnboardingView = pathname === "/onboarding";
   const isFullWidthPage = isLandingMode;
   if (showSplash) {
     return (
