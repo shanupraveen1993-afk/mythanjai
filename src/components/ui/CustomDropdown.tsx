@@ -47,7 +47,7 @@ export default function CustomDropdown({
       <button
         type="button"
         onClick={() => setIsOpen(!isOpen)}
-        className="w-fit bg-white border border-slate-300 hover:border-slate-400 text-slate-800 font-bold text-xs sm:text-sm px-4 py-2 rounded-full shadow-2xs flex items-center justify-between gap-2.5 min-h-[38px] cursor-pointer transition-all focus:outline-none focus:ring-2 focus:ring-amber-500/40 whitespace-nowrap"
+        className="w-fit bg-white border border-slate-300 hover:border-slate-400 text-slate-700 font-medium text-xs sm:text-sm px-3.5 py-1.5 rounded-full shadow-2xs flex items-center justify-between gap-2.5 min-h-[36px] cursor-pointer transition-all focus:outline-none focus:ring-2 focus:ring-amber-500/40 whitespace-nowrap"
       >
         <div className="flex items-center gap-1.5 shrink-0">
           {icon && <span className="text-slate-500 shrink-0">{icon}</span>}
@@ -69,8 +69,8 @@ export default function CustomDropdown({
                   onChange(opt.value);
                   setIsOpen(false);
                 }}
-                className={`w-full text-left px-3.5 py-2 text-xs sm:text-sm font-semibold flex items-center justify-between gap-3 cursor-pointer transition-colors ${
-                  isSelected ? "bg-amber-50 text-amber-900 font-bold" : "text-slate-700 hover:bg-slate-50"
+                className={`w-full text-left px-3.5 py-2 text-xs sm:text-sm flex items-center justify-between gap-3 cursor-pointer transition-colors ${
+                  isSelected ? "bg-amber-50 text-amber-900 font-semibold" : "text-slate-700 font-normal hover:bg-slate-50"
                 }`}
               >
                 <span className="whitespace-nowrap">{opt.label}</span>
