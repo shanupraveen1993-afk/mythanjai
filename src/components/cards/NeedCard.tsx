@@ -175,79 +175,81 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
       <div className="flex flex-col gap-3 flex-1">
 
         {/* ── TOP HEADER BLOCK: Full-Width Title + Inline Category Badge + Budget ── */}
-        <div className="flex flex-col gap-2 w-full">
+        <div className="flex flex-col">
           {/* Top Row: Category Badge + FULFILLED status + Budget */}
           <div className="flex items-center justify-between gap-2 w-full">
             <div className="flex items-center gap-2">
               <CategoryIcon category={post.category} />
               {isSold && (
-                <span className="text-[10px] font-black bg-slate-900 text-amber-400 px-2 py-0.5 rounded-md uppercase tracking-wider">
+                <span className="text-[10px] font-bold bg-slate-900 text-amber-400 px-2 py-0.5 rounded-md uppercase tracking-wider">
                   FULFILLED
                 </span>
               )}
             </div>
-            <div className="font-heading font-black text-lg sm:text-xl text-amber-600 tracking-tight shrink-0">
+            <div className="font-heading font-bold text-base sm:text-lg text-amber-600 tracking-tight shrink-0">
               {displayPriceText}
             </div>
           </div>
 
-          {/* Title: Single-line bold text */}
-          <h3 className="font-sans font-bold text-base sm:text-lg text-slate-900 truncate line-clamp-1 whitespace-nowrap leading-snug">
+          {/* Title: Max 2 lines with fixed min-height for uniform alignment */}
+          <h3 className="font-sans font-semibold text-sm sm:text-base text-slate-900 line-clamp-2 leading-snug text-left mt-0.5 min-h-[2.5rem] flex items-start">
             {post.title}
           </h3>
         </div>
 
-        {/* ── MIDDLE SECTION: Description Box ── */}
-        <div className="min-h-[4.25rem] bg-slate-50/80 border border-slate-200/60 p-2.5 rounded-xl flex items-center">
-          <p className="text-sm text-slate-700 font-medium leading-relaxed line-clamp-3">
+        {/* ── MIDDLE SECTION: Fixed 3-Line Internal Scrollable Description Box ── */}
+        <div className="h-[4.5rem] bg-slate-50/80 border border-slate-200/60 p-2.5 rounded-xl flex flex-col justify-start overflow-y-auto custom-scrollbar">
+          <p className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed whitespace-pre-line">
             {post.description || "No specific requirement details provided."}
           </p>
         </div>
 
-        {/* ── ROW 3: Preferred Locations on Left + 3 Icon Buttons on Right ── */}
-        <div className="flex items-center justify-between text-xs border-t border-b border-slate-100 py-2 my-0.5 gap-2">
+        {/* ── ROW 3: Preferred Locations on Left + 3 Icon Buttons on Right (Hidden in Preview) ── */}
+        <div className="flex items-center justify-between text-xs border-t border-slate-100/90 pt-2 mt-1 gap-2">
           {/* Preferred Locations Clean Text */}
           <div className="flex items-center gap-1 text-xs text-slate-500 font-medium truncate flex-1">
             <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
             <span className="truncate">{locationList.join(" • ")}</span>
           </div>
 
-          {/* 3 Square Action Icon Buttons (Save, Share, Report) */}
-          <div className="flex items-center gap-1.5 shrink-0">
-            {/* 1st: Save */}
-            <button
-              type="button"
-              onClick={handleToggleSave}
-              className={`w-7 h-7 rounded-xl border flex items-center justify-center transition-colors cursor-pointer ${
-                saved
-                  ? "bg-amber-50 border-amber-300 text-amber-600"
-                  : "border-slate-200 bg-white text-slate-500 hover:text-slate-800"
-              }`}
-              title={saved ? "Saved" : "Save Requirement"}
-            >
-              <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-amber-600" : ""}`} />
-            </button>
+          {/* 3 Square Action Icon Buttons (Save, Share, Report) - Hidden in Live Preview */}
+          {!isPreview && (
+            <div className="flex items-center gap-1.5 shrink-0">
+              {/* 1st: Save */}
+              <button
+                type="button"
+                onClick={handleToggleSave}
+                className={`w-7 h-7 rounded-xl border flex items-center justify-center transition-colors cursor-pointer ${
+                  saved
+                    ? "bg-amber-50 border-amber-300 text-amber-600"
+                    : "border-slate-200 bg-white text-slate-500 hover:text-slate-800"
+                }`}
+                title="Save Requirement"
+              >
+                <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-amber-600" : ""}`} />
+              </button>
 
-            {/* 2nd: Share */}
-            <button
-              type="button"
-              onClick={handleSharePost}
-              className="w-7 h-7 rounded-xl border border-slate-200 bg-white text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors cursor-pointer"
-              title="Share Requirement"
-            >
-              <Share2 className="w-3.5 h-3.5" />
-            </button>
+              {/* 2nd: Share */}
+              <button
+                type="button"
+                onClick={handleSharePost}
+                className="w-7 h-7 rounded-xl border border-slate-200 bg-white text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors cursor-pointer"
+                title="Share Requirement"
+              >
+                <Share2 className="w-3.5 h-3.5" />
+              </button>
 
-            {/* 3rd: Report */}
-            <button
-              type="button"
-              onClick={handleReport}
-              className="w-7 h-7 rounded-xl border border-slate-200 bg-white text-slate-400 hover:text-rose-500 hover:border-rose-200 flex items-center justify-center transition-colors cursor-pointer"
-              title="Report Requirement"
-            >
-              <Flag className="w-3.5 h-3.5" />
-            </button>
-          </div>
+              {/* 3rd: Report */}
+              <button
+                type="button"
+                onClick={handleReport}
+                className="w-7 h-7 rounded-xl border border-slate-200 bg-white text-slate-400 hover:text-rose-500 hover:border-rose-200 flex items-center justify-center transition-colors cursor-pointer"
+                title="Report Requirement"
+              >
+                <Flag className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          )}
         </div>
       </div>
 
