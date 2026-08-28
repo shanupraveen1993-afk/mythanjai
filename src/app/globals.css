@@ -21,6 +21,14 @@
   --primary-yellow:         #FBBF24;
   --primary-deep:           #D97706;
   --slate-dark:             #0F172A;
+
+  /* Native Safe-Area & Shell Custom Variables */
+  --top-safe-area:          env(safe-area-inset-top, 0px);
+  --safe-bottom:            env(safe-area-inset-bottom, 0px);
+  --bottom-nav-height:      3.75rem; /* 60px */
+  --fab-size:               3.25rem; /* 52px */
+  --font-micro:             10px;
+  --font-caption:           11px;
   
   /* Backgrounds & Text */
   --bg-white:               #FFFFFF;

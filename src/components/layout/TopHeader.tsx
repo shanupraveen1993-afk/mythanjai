@@ -151,7 +151,7 @@ export default function TopHeader({
               onClick={() => router.push("/")}
               className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all cursor-pointer flex items-center gap-1.5 ${
                 pathname === "/" || pathname === "/home" || pathname.includes("/sell")
-                  ? "bg-[#FBBF24] text-slate-950 border border-amber-400/90 shadow-2xs"
+                  ? "bg-amber-400 text-slate-950 border border-amber-400/90 shadow-2xs"
                   : "text-slate-700 hover:text-slate-950 transition-colors"
               }`}
             >
@@ -163,7 +163,7 @@ export default function TopHeader({
               onClick={() => router.push("/need")}
               className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all cursor-pointer flex items-center gap-1.5 ${
                 pathname.includes("/need")
-                  ? "bg-[#FBBF24] text-slate-950 border border-amber-400/90 shadow-2xs"
+                  ? "bg-amber-400 text-slate-950 border border-amber-400/90 shadow-2xs"
                   : "text-slate-700 hover:text-slate-950 transition-colors"
               }`}
             >
@@ -175,7 +175,7 @@ export default function TopHeader({
               onClick={() => router.push("/services")}
               className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all cursor-pointer flex items-center gap-1.5 ${
                 pathname.includes("/services")
-                  ? "bg-[#FBBF24] text-slate-950 border border-amber-400/90 shadow-2xs"
+                  ? "bg-amber-400 text-slate-950 border border-amber-400/90 shadow-2xs"
                   : "text-slate-700 hover:text-slate-950 transition-colors"
               }`}
             >
@@ -242,13 +242,13 @@ export default function TopHeader({
                   onClick={() => router.push("/chat")}
                   className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border shrink-0 ${
                     pathname === "/chat"
-                      ? "bg-[#FBBF24] text-[#0F172A] border-amber-400 shadow-xs"
+                      ? "bg-amber-400 text-slate-950 border-amber-400 shadow-xs"
                       : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
                   }`}
                   title="Chat"
                   aria-label="View messages"
                 >
-                  <MessageSquare className={`w-4 h-4 ${pathname === "/chat" ? "text-[#0F172A] stroke-[2.5]" : "text-slate-600"}`} />
+                  <MessageSquare className={`w-4 h-4 ${pathname === "/chat" ? "text-slate-950 stroke-[2.5]" : "text-slate-600"}`} />
                 </button>
                 <div className="absolute top-full mt-1.5 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 bg-slate-900 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow-md whitespace-nowrap z-50">
                   Chat
@@ -264,13 +264,13 @@ export default function TopHeader({
                   onClick={() => router.push("/listings")}
                   className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border shrink-0 ${
                     pathname.startsWith("/listings")
-                      ? "bg-[#FBBF24] text-[#0F172A] border-amber-400 shadow-xs"
+                      ? "bg-amber-400 text-slate-950 border-amber-400 shadow-xs"
                       : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
                   }`}
                   title="My Ads"
                   aria-label="View my ads"
                 >
-                  <Package className={`w-4 h-4 ${pathname.startsWith("/listings") ? "text-[#0F172A] stroke-[2.5]" : "text-slate-600"}`} />
+                  <Package className={`w-4 h-4 ${pathname.startsWith("/listings") ? "text-slate-950 stroke-[2.5]" : "text-slate-600"}`} />
                 </button>
                 <div className="absolute top-full mt-1.5 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 bg-slate-900 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow-md whitespace-nowrap z-50">
                   My Ads
@@ -289,13 +289,13 @@ export default function TopHeader({
                   }}
                   className={`flex items-center justify-center w-9 h-9 rounded-full transition-all cursor-pointer border shrink-0 ${
                     pathname === "/profile" && !pathname.includes("tab=")
-                      ? "bg-[#FBBF24] text-[#0F172A] border-amber-400 shadow-xs"
+                      ? "bg-amber-400 text-slate-950 border-amber-400 shadow-xs"
                       : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
                   }`}
                   title="Profile"
                   aria-label="View profile"
                 >
-                  <User className={`w-4 h-4 ${pathname === "/profile" && !pathname.includes("tab=") ? "text-[#0F172A] stroke-[2.5]" : "text-slate-600"}`} />
+                  <User className={`w-4 h-4 ${pathname === "/profile" && !pathname.includes("tab=") ? "text-slate-950 stroke-[2.5]" : "text-slate-600"}`} />
                 </button>
                 <div className="absolute top-full mt-1.5 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 bg-slate-900 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow-md whitespace-nowrap z-50">
                   Profile
@@ -309,10 +309,10 @@ export default function TopHeader({
             <button
               type="button"
               onClick={handleDynamicPostClick}
-              className="hidden md:flex bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] text-xs sm:text-sm px-4 sm:px-5 py-1.5 sm:py-2 rounded-full font-heading font-black shrink-0 items-center gap-1.5 shadow-2xs cursor-pointer select-none touch-manipulation active:scale-[0.97] transition-all border border-amber-400 ml-1"
+              className="hidden md:flex bg-amber-400 hover:bg-amber-500 text-slate-950 text-xs sm:text-sm px-4 sm:px-5 py-1.5 sm:py-2 rounded-full font-heading font-black shrink-0 items-center gap-1.5 shadow-2xs cursor-pointer select-none touch-manipulation active:scale-[0.97] transition-all border border-amber-400 ml-1"
               title={postInfo.desktopLabel}
             >
-              <Plus className="w-4 h-4 stroke-[3] text-[#0F172A]" />
+              <Plus className="w-4 h-4 stroke-[3] text-slate-950" />
               <span>{postInfo.desktopLabel}</span>
             </button>
           )}

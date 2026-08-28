@@ -77,7 +77,7 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
   return (
     <nav
       className="md:hidden fixed bottom-0 left-0 right-0 z-40 w-full bg-[#0F172A] border-t border-slate-800/90 shadow-[0_-8px_30px_rgba(0,0,0,0.45)] pointer-events-auto select-none"
-      style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 8px)" }}
+      style={{ paddingBottom: "max(var(--safe-bottom), 8px)" }}
     >
       <div className="flex items-center justify-around h-15 px-2 sm:px-6 w-full max-w-md mx-auto">
         {navItems.map((item) => {
