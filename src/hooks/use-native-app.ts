@@ -3,37 +3,46 @@
 import { useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 
+const routeStack: string[] = ["/"];
 let lastBackPressTime = 0;
 
 export function useNativeApp() {
   const router = useRouter();
-  const pathname = usePathname();
+  const pathname = usePathname() || "";
 
+  // 1. Maintain in-memory route history stack
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const current = window.location.pathname;
+      if (routeStack[routeStack.length - 1] !== current) {
+        routeStack.push(current);
+        if (routeStack.length > 25) routeStack.shift();
+      }
+    }
+  }, [pathname]);
+
+  // 2. Android Native Back Button Listener (Stack Navigation & Double-Back Exit Protection)
   useEffect(() => {
     let backListener: any = null;
 
-    // 1. Android Native Back Button Listener (History Navigation & Double-Back Exit Protection)
     import("@capacitor/app")
       .then(({ App }) => {
         App.addListener("backButton", () => {
-          const currentPath = typeof window !== "undefined" ? window.location.pathname : (pathname || "");
-          const isMainTab =
-            currentPath === "/" ||
-            currentPath === "/home" ||
-            currentPath === "/sell" ||
-            currentPath === "/need" ||
-            currentPath === "/services" ||
-            currentPath === "/shops";
+          const currentPath = typeof window !== "undefined" ? window.location.pathname : pathname;
 
-          if (!isMainTab) {
-            // On sub-routes (e.g. /chat, /listings, /profile, /post/*, /search): Navigate back safely
-            if (typeof window !== "undefined" && window.history.length > 1) {
-              window.history.back();
-            } else {
-              router.replace("/");
+          // A. If any modal overlay is open, dispatch close event
+          if (typeof window !== "undefined") {
+            const openModal = document.querySelector(".fixed.inset-0");
+            if (openModal) {
+              window.dispatchEvent(new Event("namma_thanjai_close_all_modals"));
+              return;
             }
-          } else {
-            // On main tab root pages: Require double-back press within 2 seconds to exit app
+          }
+
+          // B. Check if user is at the absolute home root ("/" or "/home")
+          const isHomeRoot = currentPath === "/" || currentPath === "/home";
+
+          if (isHomeRoot) {
             const now = Date.now();
             if (now - lastBackPressTime < 2000) {
               App.exitApp();
@@ -45,6 +54,12 @@ export function useNativeApp() {
                 })
               );
             }
+          } else {
+            // C. On any other page (/sell, /need, /services, /shops, /chat, /profile, /listings, /post/*):
+            // Pop the current route and navigate back to previous route in stack or "/"
+            routeStack.pop();
+            const targetRoute = routeStack[routeStack.length - 1] || "/";
+            router.push(targetRoute);
           }
         }).then((handle) => {
           backListener = handle;
