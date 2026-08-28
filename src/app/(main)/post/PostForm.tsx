@@ -777,49 +777,42 @@ export default function PostForm({ segment }: PostFormProps) {
 
 
   return (
-    <div className="w-full max-w-6xl mx-auto px-3 sm:px-6 py-2 sm:py-3 pb-6 sm:pb-8 flex flex-col gap-3 font-sans">
+    <div className="w-full flex flex-col gap-0 font-sans min-h-screen bg-[#FFFDF7]">
+      {/* Full-Width Royal Navy Post Form Header Bar — Logo + Left-Aligned Title + Right (X) Close Button */}
+      <div className="w-full bg-[#1E244A] text-white border-b border-white/10 py-3 px-4 sm:px-8 flex items-center justify-between shadow-md shrink-0 sticky top-0 z-50 pt-[calc(0.75rem+env(safe-area-inset-top,0px))]">
+        <div className="max-w-6xl mx-auto w-full flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3 min-w-0 flex-1">
+            <img
+              src="/namma_thanjai_logo_dark_bg.png"
+              alt="Namma Thanjai"
+              className="h-8 w-auto object-contain cursor-pointer shrink-0"
+              onClick={() => router.push("/")}
+            />
+            <h1 className="font-heading font-black text-base sm:text-lg text-white tracking-tight truncate text-left">
+              {config.title}
+            </h1>
+          </div>
 
-
-      {/* Standardized Namma Thanjai Post Form Header — Logo + Left-Aligned Title + Right Close Button */}
-      <div className="flex items-center justify-between border-b border-slate-200/80 w-full min-h-[3.75rem] py-2.5 px-3 shrink-0 pt-[calc(0.5rem+env(safe-area-inset-top,0px))] bg-white/95 backdrop-blur-xl rounded-2xl shadow-2xs mb-2">
-        <div className="flex items-center gap-2.5 min-w-0 flex-1">
           <button
             type="button"
-            onClick={() => router.back()}
-            className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-950 flex items-center justify-center transition-colors cursor-pointer select-none active:scale-95 shrink-0"
-            title="Go Back"
-            aria-label="Go Back"
-          >
-            <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
-          </button>
-          <img
-            src="/namma_thanjai_logo.png"
-            alt="Namma Thanjai"
-            className="h-7 w-auto object-contain cursor-pointer shrink-0"
-            onClick={() => router.push("/")}
-          />
-          <h1 className="font-heading font-black text-sm sm:text-base text-slate-900 tracking-tight truncate text-left">
-            {config.title}
-          </h1>
-        </div>
-
-        <button
-          type="button"
-          onClick={() => {
-            if (title.trim() || description.trim()) {
-              if (window.confirm("Discard listing draft and return to feed?")) {
+            onClick={() => {
+              if (title.trim() || description.trim()) {
+                if (window.confirm("Discard listing draft and return to feed?")) {
+                  router.push(config.redirectPath);
+                }
+              } else {
                 router.push(config.redirectPath);
               }
-            } else {
-              router.push(config.redirectPath);
-            }
-          }}
-          className="w-9 h-9 rounded-full bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 border border-slate-200/80 hover:border-rose-200 flex items-center justify-center transition-all cursor-pointer active:scale-95 shrink-0 ml-2"
-          title="Close & Discard Form"
-        >
-          <X className="w-4 h-4 stroke-[2.5]" />
-        </button>
+            }}
+            className="w-9 h-9 rounded-full bg-white/10 hover:bg-rose-600 text-white border border-white/20 flex items-center justify-center transition-all cursor-pointer active:scale-95 shrink-0 ml-2"
+            title="Close & Discard Form"
+          >
+            <X className="w-4.5 h-4.5 stroke-[2.5]" />
+          </button>
+        </div>
       </div>
+
+      <div className="w-full max-w-6xl mx-auto px-3 sm:px-6 py-4 sm:py-6 pb-8 sm:pb-12 flex flex-col gap-3">
 
       {success ? (
         <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-8 flex flex-col items-center text-center gap-3 animate-fade-in my-8 max-w-xl mx-auto shadow-xs">
@@ -1463,6 +1456,7 @@ export default function PostForm({ segment }: PostFormProps) {
 
         </div>
       )}
+      </div>
     </div>
   );
 }
