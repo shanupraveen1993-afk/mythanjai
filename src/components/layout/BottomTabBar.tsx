@@ -103,7 +103,7 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
             <button
               key={item.id}
               onClick={() => router.push(item.route)}
-              className={`flex items-center gap-2 rounded-full transition-all duration-300 ease-out cursor-pointer select-none active:scale-95 ${
+              className={`flex items-center gap-2 rounded-full min-h-[48px] min-w-[48px] justify-center transition-all duration-300 ease-out cursor-pointer select-none active:scale-95 ${
                 isActive
                   ? "bg-[#1d4ed8] text-white px-4 py-2 font-heading font-black text-[13px] sm:text-sm shadow-md shadow-blue-600/35 scale-105"
                   : "text-slate-400 hover:text-white p-2"
@@ -134,8 +134,8 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
       <button
         type="button"
         onClick={() => router.push(getDynamicPostRoute())}
-        className="md:hidden fixed z-50 left-1/2 -translate-x-1/2 bg-amber-400 hover:bg-amber-500 text-slate-950 rounded-full w-12 h-12 flex items-center justify-center shadow-[0_8px_25px_rgba(251,191,36,0.55)] border-2 border-slate-900 cursor-pointer active:scale-90 transition-transform"
-        style={{ bottom: "calc(var(--bottom-nav-height) - 1.15rem + var(--safe-bottom))" }}
+        className="md:hidden fixed z-50 left-1/2 -translate-x-1/2 bg-amber-400 hover:bg-amber-500 text-slate-950 rounded-full w-13 h-13 min-h-[52px] min-w-[52px] flex items-center justify-center shadow-[0_8px_25px_rgba(251,191,36,0.55)] border-2 border-slate-900 cursor-pointer active:scale-90 transition-transform"
+        style={{ bottom: "calc(var(--bottom-nav-height) - var(--fab-nav-overlap) + var(--safe-bottom))" }}
         title="Post Free Ad"
         aria-label="Post Free Ad"
       >

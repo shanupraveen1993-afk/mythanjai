@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import TopHeader from "@/components/layout/TopHeader";
+import TopAppShell from "@/components/layout/TopAppShell";
 import BottomTabBar, { AppTab } from "@/components/layout/BottomTabBar";
 import { TanjoreLocality } from "@/lib/constants";
 import { useAuth, AuthProvider } from "@/hooks/use-auth";
@@ -258,28 +259,30 @@ function MainLayoutContent({
         <SearchParamSync onAreaSync={setSelectedArea} onAuthSync={setIsSignInOpen} />
       </React.Suspense>
 
-      {/* Top Header — shown except on chat/onboarding */}
+      {/* Top Header Shell — shown except on chat/onboarding */}
       {!isStandaloneView && !isOnboardingView && !isChatRoute && (
-        <React.Suspense fallback={null}>
-          <TopHeader
-            selectedArea={selectedArea}
-            onAreaChange={handleAreaChange}
-            onSignInClick={() => setIsSignInOpen(true)}
-            onPostClick={() => {
-              if (!isAuthVerified) {
-                setIsSignInOpen(true);
-              } else {
+        <TopAppShell>
+          <React.Suspense fallback={null}>
+            <TopHeader
+              selectedArea={selectedArea}
+              onAreaChange={handleAreaChange}
+              onSignInClick={() => setIsSignInOpen(true)}
+              onPostClick={() => {
+                if (!isAuthVerified) {
+                  setIsSignInOpen(true);
+                } else {
+                  if (typeof window !== "undefined") window.scrollTo(0, 0);
+                  router.push("/post/sell");
+                }
+              }}
+              activeTab={getActiveTab()}
+              onTabChange={(tab) => {
                 if (typeof window !== "undefined") window.scrollTo(0, 0);
-                router.push("/post/sell");
-              }
-            }}
-            activeTab={getActiveTab()}
-            onTabChange={(tab) => {
-              if (typeof window !== "undefined") window.scrollTo(0, 0);
-              handleTabChange(tab);
-            }}
-          />
-        </React.Suspense>
+                handleTabChange(tab);
+              }}
+            />
+          </React.Suspense>
+        </TopAppShell>
       )}
 
 

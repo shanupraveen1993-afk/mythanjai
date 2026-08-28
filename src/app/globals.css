@@ -25,8 +25,12 @@
   /* Native Safe-Area & Shell Custom Variables */
   --top-safe-area:          env(safe-area-inset-top, 0px);
   --safe-bottom:            env(safe-area-inset-bottom, 0px);
-  --bottom-nav-height:      3.75rem; /* 60px */
-  --fab-size:               3.25rem; /* 52px */
+  --top-header-height:      3.5rem;   /* 56px */
+  --category-bar-height:    2.75rem;  /* 44px */
+  --top-shell-height:       calc(var(--top-header-height) + var(--category-bar-height)); /* 100px */
+  --bottom-nav-height:      3.75rem;  /* 60px */
+  --fab-size:               3.25rem;  /* 52px */
+  --fab-nav-overlap:        1.15rem;  /* Semantic FAB vertical overlap offset */
   --font-micro:             10px;
   --font-caption:           11px;
   
