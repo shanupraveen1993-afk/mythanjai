@@ -21,6 +21,8 @@ import {
   Filter,
   Check,
   Bell,
+  Paperclip,
+  Smile,
 } from "lucide-react";
 import NotificationDrawer from "@/components/modals/NotificationDrawer";
 import {
@@ -788,11 +790,8 @@ export default function ChatClientPage() {
         {/* RIGHT COLUMN: WhatsApp Active Chat Window */}
         <div className={`flex-1 flex-col bg-[#efeae2] relative ${showMobileChat ? "flex" : "hidden lg:flex"}`}>
           
-          {/* Active Chat Header Bar (Deep Teal #075E54) */}
-          <div
-            className="bg-[#075E54] text-white px-3.5 flex items-center justify-between shadow-md shrink-0 border-b border-[#054c44] h-14 sm:h-16"
-            style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
-          >
+          {/* Active Chat Header Bar (Deep Teal #075E54) with Safe Area Top Status Bar Inset */}
+          <div className="bg-[#075E54] text-white px-3.5 pt-[calc(0.75rem+env(safe-area-inset-top,0px))] pb-3 flex items-center justify-between shadow-md shrink-0 border-b border-[#054c44] w-full min-h-[3.75rem]">
             <div className="flex items-center gap-2.5 min-w-0 flex-1">
               <button
                 type="button"
@@ -1007,28 +1006,27 @@ export default function ChatClientPage() {
             </div>
           )}
 
-          {/* Message Input Form (WhatsApp Flush Bottom Pinned Bar with Bottom Nav Clearance) */}
+          {/* Message Input Form */}
           <form
             onSubmit={handleSendMessage}
-            className="sticky bottom-0 z-40 p-2 sm:p-3 bg-[#f0f2f5] border-t border-[#e9edef] flex items-center gap-2 shadow-lg shrink-0 mb-[calc(3.5rem+max(env(safe-area-inset-bottom,0px),0px))] md:mb-0"
-            style={{ paddingBottom: "max(env(safe-area-inset-bottom, 0px), 12px)" }}
+            className="p-2.5 sm:p-3 bg-[#f0f2f5] border-t border-slate-200/90 flex items-center gap-2 shrink-0 z-10 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))]"
           >
             <button
               type="button"
-              onClick={() => toast.info("Attachment selected")}
-              className="p-2 text-slate-500 hover:text-slate-800 rounded-full cursor-pointer transition-colors"
+              onClick={() => toast.info("Photo attachments coming soon!")}
+              className="p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-200/60 rounded-full cursor-pointer transition-colors shrink-0"
               title="Attach File"
             >
-              <span className="text-base">📎</span>
+              <Paperclip className="w-4 h-4" />
             </button>
 
             <button
               type="button"
-              onClick={() => toast.info("Emoji picker")}
-              className="p-2 text-slate-500 hover:text-slate-800 rounded-full cursor-pointer transition-colors"
+              onClick={() => setInputText((prev) => prev + " 😊")}
+              className="p-2 text-slate-500 hover:text-slate-700 hover:bg-slate-200/60 rounded-full cursor-pointer transition-colors shrink-0"
               title="Add Emoji"
             >
-              <span className="text-base">😀</span>
+              <Smile className="w-4 h-4" />
             </button>
 
             <input
@@ -1093,8 +1091,8 @@ export default function ChatClientPage() {
       {/* Notification Drawer Modal */}
       <NotificationDrawer />
 
-      {/* Global Bottom Navigation Bar */}
-      <BottomTabBar activeTab="chat" />
+      {/* Global Bottom Navigation Bar (Rendered ONLY on conversation list view, HIDDEN in active 1-on-1 chat room) */}
+      {!showMobileChat && <BottomTabBar activeTab="chat" />}
     </div>
   );
 }
