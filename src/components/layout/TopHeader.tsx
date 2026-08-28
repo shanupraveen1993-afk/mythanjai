@@ -200,7 +200,7 @@ export default function TopHeader({
           {pathname === "/" || pathname.includes("/sell") || pathname.includes("/need") || pathname.includes("/services") || pathname.includes("/shops") || pathname.includes("/offers") || pathname.includes("/classifieds") ? (
             <UniversalSearchBar />
           ) : (
-            <span className="font-heading font-black text-sm sm:text-base text-slate-900 truncate tracking-tight text-center">
+            <span className="font-heading font-black text-sm sm:text-base text-white truncate tracking-tight text-center">
               {getSubPageTitle()}
             </span>
           )}
