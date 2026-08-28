@@ -168,7 +168,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
               </label>
               <div className="relative">
                 <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-black text-slate-700 bg-slate-200/70 px-2 py-0.5 rounded-md">
-                  +91 🇮🇳
+                  +91
                 </span>
                 <input
                   ref={phoneInputRef}
@@ -178,7 +178,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, "").slice(0, 10))}
                   placeholder="9994837342"
-                  className="w-full pl-22 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-900 focus:outline-none focus:border-amber-500 focus:bg-white transition-colors"
+                  className="w-full pl-18 pr-4 py-3 bg-slate-50 border border-slate-300 rounded-xl text-sm font-semibold text-slate-900 focus:outline-none focus:border-amber-500 focus:bg-white transition-colors"
                 />
               </div>
             </div>
@@ -186,25 +186,14 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
             <button
               type="submit"
               disabled={phoneUpdating}
-              className="w-full py-3.5 bg-[#FBBF24] hover:bg-amber-400 text-[#0F172A] font-heading font-black text-xs uppercase tracking-wider rounded-xl flex items-center justify-center gap-2 shadow-md cursor-pointer transition-all active:scale-98"
+              className="w-full py-3.5 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs uppercase tracking-wider rounded-xl flex items-center justify-center shadow-md cursor-pointer transition-all active:scale-98"
             >
-              {phoneUpdating ? (
-                <>
-                  <Loader2 className="w-4 h-4 animate-spin text-[#0F172A]" />
-                  <span>Verifying Account...</span>
-                </>
-              ) : (
-                <>
-                  <CheckCircle className="w-4 h-4 text-[#0F172A]" />
-                  <span>Verify &amp; Enter Home Page →</span>
-                </>
-              )}
+              <span>{phoneUpdating ? "Verifying Account..." : "Verify & Enter Home Page"}</span>
             </button>
           </form>
 
-          <div className="flex items-center justify-center gap-1 text-[11px] text-slate-400 font-medium pt-0.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-            <span>Encrypted WhatsApp sign-in for Thanjavur users</span>
+          <div className="text-center text-[11px] text-slate-500 font-medium pt-0.5">
+            Mobile Verification for Thanjavur Community
           </div>
         </div>
       </div>

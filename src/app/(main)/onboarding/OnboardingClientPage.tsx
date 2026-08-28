@@ -251,7 +251,7 @@ export default function OnboardingClientPage() {
       )}
 
       {/* ========================================================= */}
-      {/* STAGE 4: LOGIN PAGE (CLEAN STANDARD GOOD UI)              */}
+      {/* STAGE 4: LOGIN PAGE (CLEAN MINIMALIST UI - NO ICONS)      */}
       {/* ========================================================= */}
       {stage === "login" && (
         <div className="flex-1 flex flex-col justify-between max-w-md mx-auto w-full py-4 animate-fade-in">
@@ -272,10 +272,10 @@ export default function OnboardingClientPage() {
 
           {/* Center Auth Box */}
           <div className="w-full my-auto py-6 relative z-10">
-            <div className="bg-[#121633] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-xl flex flex-col gap-5">
-              <div className="flex flex-col gap-1 text-center">
-                <h2 className="font-heading font-black text-xl text-white">Sign In to Continue</h2>
-                <p className="text-xs text-slate-300 font-medium">Enter your mobile number to post ads &amp; chat directly with sellers</p>
+            <div className="bg-[#121633] border border-white/10 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-xl flex flex-col gap-6">
+              <div className="flex flex-col gap-1.5 text-center">
+                <h2 className="font-heading font-black text-xl sm:text-2xl text-white">Sign In to Continue</h2>
+                <p className="text-xs text-slate-300 font-medium">Enter your mobile number to post ads and chat with sellers</p>
               </div>
 
               <form onSubmit={handleLogin} className="flex flex-col gap-4">
@@ -285,7 +285,7 @@ export default function OnboardingClientPage() {
                   </label>
                   <div className="relative">
                     <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-black text-slate-200 bg-white/10 px-2.5 py-1.5 rounded-lg border border-white/15">
-                      +91 🇮🇳
+                      +91
                     </span>
                     <input
                       type="tel"
@@ -295,7 +295,7 @@ export default function OnboardingClientPage() {
                       value={phoneNumber}
                       onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, "").slice(0, 10))}
                       placeholder="9994837342"
-                      className="w-full pl-24 pr-4 py-3.5 bg-white/5 border border-white/15 rounded-2xl text-base font-semibold text-white focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition-all placeholder:text-slate-500"
+                      className="w-full pl-20 pr-4 py-3.5 bg-white/5 border border-white/15 rounded-2xl text-base font-semibold text-white focus:outline-none focus:border-amber-400 focus:ring-1 focus:ring-amber-400 transition-all placeholder:text-slate-500"
                     />
                   </div>
                 </div>
@@ -303,36 +303,24 @@ export default function OnboardingClientPage() {
                 <button
                   type="submit"
                   disabled={phoneUpdating}
-                  className="w-full py-4 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs uppercase tracking-wider rounded-2xl flex items-center justify-center gap-2 shadow-xl cursor-pointer transition-all active:scale-98"
+                  className="w-full py-4 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs uppercase tracking-wider rounded-2xl flex items-center justify-center shadow-xl cursor-pointer transition-all active:scale-98"
                 >
-                  {phoneUpdating ? (
-                    <>
-                      <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
-                      <span>Verifying Account...</span>
-                    </>
-                  ) : (
-                    <>
-                      <CheckCircle className="w-4 h-4 text-slate-950" />
-                      <span>Verify &amp; Enter App →</span>
-                    </>
-                  )}
+                  <span>{phoneUpdating ? "Verifying Account..." : "Verify & Enter App"}</span>
                 </button>
               </form>
 
-              <div className="flex items-center justify-center gap-1.5 text-[11px] text-emerald-300 font-medium pt-1">
-                <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                <span>Instant 1-Click Verification for Tanjore</span>
+              <div className="text-center text-[11px] text-emerald-300 font-bold">
+                Instant 1-Click Mobile Verification for Thanjavur
               </div>
             </div>
 
-            {/* Skip to Browse Feed Button */}
+            {/* Skip to Browse Feed Button (No Icons) */}
             <button
               type="button"
               onClick={() => router.push("/")}
-              className="w-full mt-4 py-3.5 bg-white/5 hover:bg-white/10 border border-white/15 text-slate-200 font-heading font-bold text-xs rounded-2xl flex items-center justify-center gap-2 transition-all cursor-pointer"
+              className="w-full mt-4 py-3.5 bg-white/5 hover:bg-white/10 border border-white/15 text-slate-200 font-heading font-bold text-xs rounded-2xl flex items-center justify-center transition-all cursor-pointer"
             >
               <span>Skip for now &amp; Explore Marketplace</span>
-              <ArrowRight className="w-4 h-4 text-amber-400" />
             </button>
           </div>
 
