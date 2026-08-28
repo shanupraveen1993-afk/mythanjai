@@ -418,6 +418,13 @@ function ProfileContent() {
     );
   }
 
+  // Auto-open Sign In Modal immediately for unverified users (1-Step Direct Sign In Flow)
+  useEffect(() => {
+    if (!isVerified && typeof window !== "undefined") {
+      window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+    }
+  }, [isVerified]);
+
   if (!isVerified) {
     return (
       <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 pt-4 pb-6 sm:pb-10 font-sans">

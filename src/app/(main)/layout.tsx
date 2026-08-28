@@ -357,7 +357,7 @@ function MainLayoutContent({
       </main>
 
       {/* Bottom Navigation Bar & Original Standalone Floating Post Button */}
-      {!isOnboardingView && !isSignInOpen && !isChatRoute && (
+      {!isOnboardingView && !isSignInOpen && (
         <>
           <BottomTabBar
             activeTab={getActiveTab()}

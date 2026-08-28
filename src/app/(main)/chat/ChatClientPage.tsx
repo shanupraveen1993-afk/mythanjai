@@ -635,6 +635,13 @@ export default function ChatClientPage() {
     });
   }, [threads, searchQuery]);
 
+  // Auto-open Sign In Modal immediately for unverified users (1-Step Direct Sign In Flow)
+  useEffect(() => {
+    if (!isVerified && typeof window !== "undefined") {
+      window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+    }
+  }, [isVerified]);
+
   if (!isVerified) {
     return (
       <div className="w-full max-w-md mx-auto py-12 px-6 flex flex-col items-center justify-center text-center gap-4 bg-white rounded-2xl border border-slate-200 shadow-2xs my-8 font-sans">
