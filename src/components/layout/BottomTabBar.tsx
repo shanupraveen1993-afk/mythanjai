@@ -76,7 +76,7 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
 
   return (
     <nav
-        className="md:hidden fixed bottom-0 left-0 right-0 z-40 w-full bg-[#E2E6FE] border-t border-indigo-200/80 shadow-[0_-8px_30px_rgba(15,23,42,0.12)] pointer-events-auto select-none"
+        className="md:hidden fixed bottom-0 left-0 right-0 z-40 w-full bg-[#0F172A] border-t border-slate-800/90 shadow-[0_-8px_30px_rgba(0,0,0,0.45)] pointer-events-auto select-none"
         style={{ paddingBottom: "max(var(--safe-bottom), 8px)" }}
       >
       <div className="flex items-center justify-around h-15 px-2 sm:px-6 w-full max-w-md mx-auto">
@@ -104,8 +104,8 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
               onClick={() => router.push(item.route)}
               className={`flex items-center gap-2 rounded-full min-h-[48px] min-w-[48px] justify-center transition-all duration-300 ease-out cursor-pointer select-none active:scale-95 ${
                 isActive
-                  ? "bg-[#1D4ED8] text-white px-4 py-2 font-heading font-black text-[13px] sm:text-sm shadow-md shadow-blue-600/35 scale-105"
-                  : "text-slate-900 hover:text-slate-950 font-bold p-2"
+                  ? "bg-[#1D4ED8] text-white px-4 py-2 font-heading font-black text-[13px] sm:text-sm shadow-md shadow-blue-600/40 scale-105"
+                  : "text-slate-300 hover:text-white font-bold p-2"
               }`}
               title={item.label}
               aria-label={item.label}
@@ -114,7 +114,7 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
                 className={`transition-all duration-300 ${
                   isActive
                     ? "w-5 h-5 fill-white text-white stroke-[1.2]"
-                    : "w-6 h-6 text-slate-900 stroke-[2.2] fill-transparent hover:text-slate-950"
+                    : "w-6 h-6 text-slate-300 stroke-[2] fill-transparent hover:text-white"
                 }`}
               />
               {isActive && (

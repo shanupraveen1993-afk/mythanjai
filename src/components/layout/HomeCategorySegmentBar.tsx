@@ -45,9 +45,9 @@ export default function HomeCategorySegmentBar() {
   return (
     <>
       {/* Solid Status Bar Top Filler */}
-      <div className="fixed top-0 left-0 right-0 h-[env(safe-area-inset-top,0px)] bg-[#E2E6FE] z-50 pointer-events-none md:hidden" />
+      <div className="fixed top-0 left-0 right-0 h-[env(safe-area-inset-top,0px)] bg-[#0F172A] z-50 pointer-events-none md:hidden" />
 
-      <div className="w-full md:hidden sticky top-[calc(3.5rem+env(safe-area-inset-top,0px))] z-40 bg-[#E2E6FE] border-b border-indigo-200/80 pt-1.5 pb-2 shadow-2xs">
+      <div className="w-full md:hidden sticky top-[calc(3.5rem+env(safe-area-inset-top,0px))] z-40 bg-[#0F172A] border-b border-slate-800/90 pt-1.5 pb-2 shadow-2xs">
       <div className="w-full max-w-7xl mx-auto px-2 sm:px-4">
         <div className="grid grid-cols-4 gap-1.5 sm:gap-2.5 w-full max-w-2xl mx-auto">
           {segments.map((seg) => {
@@ -65,12 +65,12 @@ export default function HomeCategorySegmentBar() {
                 }}
                 className={`py-2 px-1 rounded-2xl transition-all cursor-pointer flex flex-col items-center justify-center gap-1 w-full text-center select-none active:scale-95 ${
                   isActive
-                    ? "bg-[#1D4ED8] text-white font-black border-2 border-blue-600 shadow-md scale-[1.02]"
-                    : "bg-white/80 hover:bg-white text-slate-900 font-bold border border-indigo-200/80 shadow-2xs"
+                    ? "bg-[#FBBF24] text-slate-950 font-black border-2 border-amber-500 shadow-md scale-[1.02]"
+                    : "bg-slate-800/90 hover:bg-slate-800 text-slate-100 font-bold border border-slate-700/80 shadow-2xs"
                 }`}
               >
-                <IconComp className={`w-4.5 h-4.5 transition-all duration-200 ${isActive ? "text-white fill-white stroke-[1.2]" : "text-slate-900 stroke-[2.2] fill-transparent"}`} />
-                <span className={`text-[11px] sm:text-xs leading-none truncate w-full ${isActive ? "font-black text-white" : "font-extrabold text-slate-900"}`}>
+                <IconComp className={`w-4.5 h-4.5 transition-all duration-200 ${isActive ? "text-slate-950 fill-slate-950 stroke-[1.2]" : "text-slate-200 stroke-[2] fill-transparent"}`} />
+                <span className={`text-[11px] sm:text-xs leading-none truncate w-full ${isActive ? "font-black text-slate-950" : "font-bold text-slate-200"}`}>
                   {seg.label}
                 </span>
               </button>

@@ -118,7 +118,7 @@ export default function TopHeader({
 
   return (
     <header
-      className={`relative w-full z-50 bg-[#E2E6FE] text-slate-900 flex-col justify-end ${
+      className={`relative w-full z-50 bg-[#0F172A] text-white flex-col justify-end ${
         pathname?.startsWith("/post") ? "hidden" : pathname?.startsWith("/chat") ? "hidden md:flex" : "flex"
       }`}
       style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
