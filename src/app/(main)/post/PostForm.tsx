@@ -777,7 +777,7 @@ export default function PostForm({ segment }: PostFormProps) {
 
 
   return (
-    <div className="w-full flex flex-col gap-0 font-sans min-h-screen bg-[#F4F1EA]">
+    <div className="w-full flex flex-col gap-0 font-sans min-h-screen bg-[#f8fafc]">
       {/* Full-Width Royal Navy Post Form Header Bar — Logo + Left-Aligned Title + Right (X) Close Button */}
       <div className="w-full bg-[#1E244A] text-white border-b border-white/10 py-3 px-4 sm:px-8 flex items-center justify-between shadow-md shrink-0 sticky top-0 z-50 pt-[calc(0.75rem+env(safe-area-inset-top,0px))]">
         <div className="max-w-6xl mx-auto w-full flex items-center justify-between gap-4">

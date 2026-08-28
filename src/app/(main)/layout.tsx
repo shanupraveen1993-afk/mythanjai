@@ -298,7 +298,7 @@ function MainLayoutContent({
 
       {/* Main Content Panel — compensated with exact top shell height + safe area */}
       <main
-        className={`flex-1 w-full flex flex-col p-0 m-0 bg-[#F4F1EA] ${isChatRoute ? "h-screen overflow-hidden pb-0" : "pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] md:pb-8"}`}
+        className={`flex-1 w-full flex flex-col p-0 m-0 bg-[#f8fafc] ${isChatRoute ? "h-screen overflow-hidden pb-0" : "pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] md:pb-8"}`}
         style={{
           paddingTop: !isOnboardingView && !isChatRoute && !isPostRoute
             ? isFeedPage
