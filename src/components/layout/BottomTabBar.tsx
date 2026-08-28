@@ -1,9 +1,10 @@
 "use client";
 
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Home, MessageSquare, Plus, Package, User } from "lucide-react";
 import { useRouter, usePathname } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
+import { useScrollDirection } from "@/hooks/use-scroll-direction";
 
 export type AppTab = "home" | "sell" | "need" | "services" | "shops" | "profile" | "chat" | "post" | "listings";
 
@@ -16,6 +17,22 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
   const router = useRouter();
   const pathname = usePathname() || "";
   const { t } = useLanguage();
+  const { scrollDirection, isAtTop } = useScrollDirection();
+  const [shouldHide, setShouldHide] = useState(false);
+
+  useEffect(() => {
+    setShouldHide(false);
+  }, [pathname]);
+
+  useEffect(() => {
+    if (isAtTop) {
+      setShouldHide(false);
+    } else if (scrollDirection === "down") {
+      setShouldHide(true);
+    } else if (scrollDirection === "up") {
+      setShouldHide(false);
+    }
+  }, [scrollDirection, isAtTop]);
 
   useEffect(() => {
     try {
@@ -76,7 +93,9 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
 
   return (
     <nav
-        className="md:hidden fixed bottom-0 left-0 right-0 z-40 w-full bg-[#1E244A] text-white border-t border-white/10 shadow-[0_-8px_30px_rgba(0,0,0,0.45)] pointer-events-auto select-none"
+        className={`md:hidden fixed bottom-0 left-0 right-0 z-40 w-full bg-[#1E244A] text-white border-t border-white/10 shadow-[0_-8px_30px_rgba(0,0,0,0.45)] select-none transition-transform duration-300 ease-in-out ${
+          shouldHide ? "translate-y-full pointer-events-none" : "translate-y-0 pointer-events-auto"
+        }`}
         style={{ paddingBottom: "max(var(--safe-bottom), 8px)" }}
       >
       <div className="flex items-center justify-around h-15 px-2 sm:px-6 w-full max-w-md mx-auto">
