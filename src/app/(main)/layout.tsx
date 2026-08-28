@@ -123,6 +123,9 @@ function MainLayoutContent({
     if (typeof window !== "undefined") {
       localStorage.setItem("namma_thanjai_onboarding_completed_v4", "true");
     }
+    if (!user || !isAuthVerified) {
+      setIsSignInOpen(true);
+    }
   };
 
   const handleCloseSignIn = () => {
