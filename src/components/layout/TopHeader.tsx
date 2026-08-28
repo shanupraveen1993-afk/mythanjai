@@ -225,9 +225,6 @@ export default function TopHeader({
               aria-label="View notifications"
             >
               <Bell className="w-4 h-4 text-slate-700 stroke-[2.2]" />
-              <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-rose-600 text-white text-[10px] font-black rounded-full flex items-center justify-center border-2 border-white shadow-2xs">
-                3
-              </span>
             </button>
             <div className="absolute top-full mt-1.5 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 bg-slate-900 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow-md whitespace-nowrap z-50">
               Notifications

@@ -41,48 +41,10 @@ export default function NotificationDrawer() {
 
   useEffect(() => {
     if (isOpen) {
-      const sampleNotifications: NotificationItem[] = [
-        {
-          id: "n1",
-          type: "call_request",
-          title: "New Call Back Request",
-          message: `A buyer (+91 9994837342) requested a call back regarding your listing "2 BHK House for Rent in Medical College Rd".`,
-          timestamp: "10 mins ago",
-          read: false,
-          phone: "+919994837342",
-          actionUrl: "/chat",
-        },
-        {
-          id: "n2",
-          type: "chat",
-          title: "Direct Chat Message",
-          message: `Prathiksha Sridhar (ID: NT-37342) sent a message: "Is the Royal Enfield Classic 350 still available for test drive?"`,
-          timestamp: "45 mins ago",
-          read: false,
-          actionUrl: "/chat",
-        },
-        {
-          id: "n3",
-          type: "price_drop",
-          title: "Price Update on Saved Item",
-          message: `A seller in Thanjavur updated price on "Wooden Dining Table 6 Seater" to ₹14,500.`,
-          timestamp: "2 hours ago",
-          read: true,
-          actionUrl: "/sell",
-        },
-        {
-          id: "n4",
-          type: "system",
-          title: "Account Verified & Active",
-          message: `Vanakkam! Your Namma Thanjai account is 100% verified. Member ID: ${profile?.memberId || "NT-9994837342"}.`,
-          timestamp: "1 day ago",
-          read: true,
-          actionUrl: "/profile",
-        },
-      ];
-      setNotifications(sampleNotifications);
+      // Real live customer notifications (initialized empty for production)
+      setNotifications([]);
     }
-  }, [isOpen, profile]);
+  }, [isOpen]);
 
   if (!isOpen) return null;
 

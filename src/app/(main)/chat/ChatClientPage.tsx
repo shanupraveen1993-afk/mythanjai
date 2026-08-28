@@ -663,9 +663,6 @@ export default function ChatClientPage() {
                 aria-label="View notifications"
               >
                 <Bell className="w-4 h-4 text-slate-700" />
-                <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-rose-600 text-white text-[10px] font-black rounded-full flex items-center justify-center border-2 border-white shadow-2xs">
-                  2
-                </span>
               </button>
             </div>
           </div>
