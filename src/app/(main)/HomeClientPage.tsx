@@ -49,8 +49,8 @@ export default function HomeClientPage() {
           setShowWalkthrough(false);
           if (typeof window !== "undefined") {
             localStorage.setItem("namma_thanjai_seen_walkthrough", "true");
-            window.dispatchEvent(new Event("namma_thanjai_open_signin"));
           }
+          router.push("/onboarding");
         }}
       />
 
