@@ -143,7 +143,7 @@ function MainLayoutContent({
               CapApp.exitApp();
             }
           } else {
-            router.back();
+            router.push("/");
           }
         });
       })
@@ -372,7 +372,7 @@ function MainLayoutContent({
       </main>
 
       {/* Bottom Navigation Bar & Original Standalone Floating Post Button */}
-      {!isOnboardingView && !isSignInOpen && (
+      {!isOnboardingView && !isSignInOpen && !isChatRoute && (
         <>
           <BottomTabBar
             activeTab={getActiveTab()}
