@@ -317,12 +317,15 @@ function MainLayoutContent({
         )}
       </main>
 
-      {/* Bottom Navigation Bar */}
+      {/* Bottom Navigation Bar & Original Standalone Floating Post Button */}
       {!isOnboardingView && !isSignInOpen && !isChatRoute && (
-        <BottomTabBar
-          activeTab={getActiveTab()}
-          onTabChange={handleTabChange}
-        />
+        <>
+          <BottomTabBar
+            activeTab={getActiveTab()}
+            onTabChange={handleTabChange}
+          />
+          <FloatingPostButton />
+        </>
       )}
 
       {/* Persistent Opinion Feedback Manager & Native Permissions Modal */}

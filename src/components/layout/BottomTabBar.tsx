@@ -75,8 +75,7 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
   ];
 
   return (
-    <>
-      <nav
+    <nav
         className="md:hidden fixed bottom-0 left-0 right-0 z-40 w-full bg-[#0F172A] border-t border-slate-800/90 shadow-[0_-8px_30px_rgba(0,0,0,0.45)] pointer-events-auto select-none"
         style={{ paddingBottom: "max(var(--safe-bottom), 8px)" }}
       >
@@ -128,20 +127,5 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
         })}
       </div>
     </nav>
-
-    {/* PERSISTENT 50VW CENTER VIEWPORT FAB (+ POST ACTION) — Home Feed Only */}
-    {!pathname.startsWith("/post") && (pathname === "/" || pathname === "/home" || pathname.includes("/sell") || pathname.includes("/need") || pathname.includes("/services") || pathname.includes("/shops") || pathname.includes("/offer")) && (
-      <button
-        type="button"
-        onClick={() => router.push(getDynamicPostRoute())}
-        className="md:hidden fixed z-50 left-1/2 -translate-x-1/2 bg-amber-400 hover:bg-amber-500 text-slate-950 rounded-full w-13 h-13 min-h-[52px] min-w-[52px] flex items-center justify-center shadow-[0_8px_25px_rgba(251,191,36,0.55)] border-2 border-slate-900 cursor-pointer active:scale-90 transition-transform"
-        style={{ bottom: "calc(var(--bottom-nav-height) - var(--fab-nav-overlap) + var(--safe-bottom))" }}
-        title="Post Free Ad"
-        aria-label="Post Free Ad"
-      >
-        <Plus className="w-6 h-6 stroke-[3] text-slate-950" />
-      </button>
-    )}
-    </>
   );
 }
