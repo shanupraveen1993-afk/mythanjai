@@ -44,11 +44,11 @@ export default function HomeCategorySegmentBar() {
 
   return (
     <>
-      {/* Solid White Status Bar Top Filler */}
-      <div className="fixed top-0 left-0 right-0 h-[env(safe-area-inset-top,0px)] bg-white z-50 pointer-events-none md:hidden" />
+      {/* Solid Royal Blue Status Bar Top Filler */}
+      <div className="fixed top-0 left-0 right-0 h-[env(safe-area-inset-top,0px)] bg-[#1D4ED8] z-50 pointer-events-none md:hidden" />
 
       <div
-        className={`w-full md:hidden sticky transition-all duration-300 z-40 bg-white backdrop-blur-md pt-1.5 pb-2 shadow-[0_4px_16px_rgba(0,0,0,0.06)] before:content-[''] before:absolute before:-top-20 before:left-0 before:right-0 before:h-20 before:bg-white before:pointer-events-none ${
+        className={`w-full md:hidden sticky transition-all duration-300 z-40 bg-[#1D4ED8] border-b border-blue-800/80 pt-1.5 pb-2 shadow-[0_4px_16px_rgba(0,0,0,0.15)] before:content-[''] before:absolute before:-top-20 before:left-0 before:right-0 before:h-20 before:bg-[#1D4ED8] before:pointer-events-none ${
           scrollDirection === "down" && !isAtTop
             ? "top-[env(safe-area-inset-top,0px)]"
             : "top-[calc(3.5rem+env(safe-area-inset-top,0px))]"
@@ -71,12 +71,12 @@ export default function HomeCategorySegmentBar() {
                 }}
                 className={`py-2 px-1 rounded-2xl transition-all cursor-pointer flex flex-col items-center justify-center gap-1 w-full text-center select-none active:scale-95 ${
                   isActive
-                    ? "bg-[#FBBF24] text-slate-950 font-bold border-2 border-amber-600 shadow-sm scale-[1.02]"
-                    : "bg-amber-50/80 hover:bg-amber-100/90 text-slate-700 font-medium border border-amber-300/70 shadow-2xs"
+                    ? "bg-[#FBBF24] text-slate-950 font-black border-2 border-amber-600 shadow-md scale-[1.02]"
+                    : "bg-blue-800/50 hover:bg-blue-800/70 text-blue-100 font-medium border border-blue-700/60 shadow-2xs"
                 }`}
               >
-                <IconComp className={`w-4 h-4 stroke-[2.2] ${isActive ? "text-slate-950" : "text-amber-900"}`} />
-                <span className={`text-[11px] sm:text-xs leading-none truncate w-full ${isActive ? "font-bold text-slate-950" : "font-medium text-slate-700"}`}>
+                <IconComp className={`w-4.5 h-4.5 transition-all duration-200 ${isActive ? "text-slate-950 fill-slate-950 stroke-[1.5]" : "text-blue-100 stroke-[2] fill-transparent"}`} />
+                <span className={`text-[11px] sm:text-xs leading-none truncate w-full ${isActive ? "font-black text-slate-950" : "font-semibold text-blue-100"}`}>
                   {seg.label}
                 </span>
               </button>
