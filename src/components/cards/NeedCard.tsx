@@ -186,7 +186,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
                 </span>
               )}
             </div>
-            <div className="font-heading font-black text-base sm:text-lg text-amber-600 tracking-tight shrink-0">
+            <div className="font-heading font-black text-base sm:text-lg text-amber-700 bg-amber-50 px-2.5 py-1 rounded-xl border border-amber-200/90 shadow-2xs tracking-tight shrink-0">
               {displayPriceText}
             </div>
           </div>

@@ -421,7 +421,7 @@ export default function ListingCard({ listing, isPreview }: { listing: ListingIt
               {/* Top Row: Category Name on Left, Price on Right */}
               <div className="flex items-center justify-between gap-2 w-full">
                 <CategoryIcon category={listing.category || listing.type} />
-                <div className="font-heading font-black text-base sm:text-lg text-amber-600 tracking-tight shrink-0">
+                <div className="font-heading font-black text-base sm:text-lg text-amber-700 bg-amber-50 px-2.5 py-1 rounded-xl border border-amber-200/90 shadow-2xs tracking-tight shrink-0">
                   {formattedPrice}
                 </div>
               </div>
