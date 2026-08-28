@@ -778,17 +778,17 @@ export default function PostForm({ segment }: PostFormProps) {
 
   return (
     <div className="w-full flex flex-col gap-0 font-sans min-h-screen bg-[#f8fafc]">
-      {/* Full-Width Royal Navy Post Form Header Bar — Logo + Left-Aligned Title + Right (X) Close Button */}
-      <div className="w-full bg-[#1E244A] text-white border-b border-white/10 py-3 px-4 sm:px-8 flex items-center justify-between shadow-md shrink-0 sticky top-0 z-50 pt-[calc(0.75rem+env(safe-area-inset-top,0px))]">
+      {/* Full-Width White Post Form Header Bar — Logo + Left-Aligned Title + Right (X) Close Button */}
+      <div className="w-full bg-white text-slate-900 border-b border-slate-200/90 py-3 px-4 sm:px-8 flex items-center justify-between shadow-sm shrink-0 sticky top-0 z-50 pt-[calc(0.75rem+env(safe-area-inset-top,0px))]">
         <div className="max-w-6xl mx-auto w-full flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0 flex-1">
             <img
-              src="/namma_thanjai_logo_dark_bg.png"
+              src="/namma_thanjai_logo.png"
               alt="Namma Thanjai"
               className="h-8 w-auto object-contain cursor-pointer shrink-0"
               onClick={() => router.push("/")}
             />
-            <h1 className="font-heading font-black text-base sm:text-lg text-white tracking-tight truncate text-left">
+            <h1 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight truncate text-left">
               {config.title}
             </h1>
           </div>
@@ -804,7 +804,7 @@ export default function PostForm({ segment }: PostFormProps) {
                 router.push(config.redirectPath);
               }
             }}
-            className="w-9 h-9 rounded-full bg-white/10 hover:bg-rose-600 text-white border border-white/20 flex items-center justify-center transition-all cursor-pointer active:scale-95 shrink-0 ml-2"
+            className="w-9 h-9 rounded-full bg-slate-100 hover:bg-rose-50 border border-slate-200 flex items-center justify-center text-slate-700 hover:text-rose-600 transition-all cursor-pointer active:scale-95 shrink-0 ml-2"
             title="Close & Discard Form"
           >
             <X className="w-4.5 h-4.5 stroke-[2.5]" />

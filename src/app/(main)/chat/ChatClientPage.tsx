@@ -709,24 +709,24 @@ export default function ChatClientPage() {
         {/* LEFT COLUMN: Namma Thanjai Conversation List */}
         <div className={`w-full lg:w-[380px] border-r border-slate-200 flex-col bg-white ${showMobileChat ? "hidden lg:flex" : "flex"}`}>
           
-          {/* 1. LEFT PANEL HEADER: Logo on Left Side, Chats Title Center, Notification Bell on Right */}
-          <div className="bg-[#1E244A] text-white px-3.5 pt-[calc(0.75rem+env(safe-area-inset-top,0px))] pb-3 flex items-center justify-between border-b border-white/10 shrink-0 w-full min-h-[3.75rem]">
+          {/* 1. LEFT PANEL HEADER: White Header — Logo on Left Side, Chats Title Center, Notification Bell on Right */}
+          <div className="bg-white text-slate-900 px-3.5 pt-[calc(0.75rem+env(safe-area-inset-top,0px))] pb-3 flex items-center justify-between border-b border-slate-200/90 shadow-sm shrink-0 w-full min-h-[3.75rem]">
             {/* Left Side Logo */}
             <div
               onClick={() => router.push("/")}
               className="flex items-center gap-2 cursor-pointer shrink-0 group select-none"
             >
-              <img src="/namma_thanjai_logo_dark_bg.png" alt="Namma Thanjai Logo" className="h-8 w-auto object-contain transition-transform group-hover:scale-105" />
+              <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="h-8 w-auto object-contain transition-transform group-hover:scale-105" />
             </div>
 
             {/* Center Aligned Chats Title */}
-            <h1 className="font-heading font-black text-base sm:text-lg text-white tracking-tight text-center flex-1 min-w-0 mx-2">
+            <h1 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight text-center flex-1 min-w-0 mx-2">
               Chats
             </h1>
 
             {/* Right Side Notification Bell */}
-            <div className="flex items-center gap-2 text-white shrink-0">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" title="Real-time messaging active" />
+            <div className="flex items-center gap-2 text-slate-700 shrink-0">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" title="Real-time messaging active" />
               <button
                 type="button"
                 onClick={() => {
@@ -734,11 +734,10 @@ export default function ChatClientPage() {
                     window.dispatchEvent(new Event("namma_thanjai_open_notifications"));
                   }
                 }}
-                className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer relative shrink-0 border border-white/20"
+                className="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 border border-slate-200 flex items-center justify-center text-slate-700 transition-colors cursor-pointer"
                 title="Notifications"
-                aria-label="View notifications"
               >
-                <Bell className="w-4 h-4 text-white" />
+                <Bell className="w-4 h-4 text-slate-700 stroke-[2]" />
               </button>
             </div>
           </div>
@@ -858,12 +857,12 @@ export default function ChatClientPage() {
         {/* ========================================== */}
         <div className={`flex-1 flex-col bg-[#efeae2] relative ${showMobileChat ? "flex" : "hidden lg:flex"}`}>
           
-          {/* Active Chat Header Bar (Royal Navy #1E244A) with Safe Area Top Status Bar Inset */}
-          <div className="bg-[#1E244A] text-white px-3.5 pt-[calc(0.75rem+env(safe-area-inset-top,0px))] pb-3 flex items-center justify-between shadow-md shrink-0 border-b border-white/10 w-full min-h-[3.75rem] relative">
+          {/* Active Chat Header Bar (White bg-white) with Safe Area Top Status Bar Inset */}
+          <div className="bg-white text-slate-900 px-3.5 pt-[calc(0.75rem+env(safe-area-inset-top,0px))] pb-3 flex items-center justify-between shadow-sm shrink-0 border-b border-slate-200/90 w-full min-h-[3.75rem] relative">
             <button
               type="button"
               onClick={() => setShowMobileChat(false)}
-              className="lg:hidden p-1 text-white/90 hover:text-white hover:bg-white/10 rounded-lg cursor-pointer flex items-center gap-1 shrink-0 transition-colors absolute left-3.5 z-10"
+              className="lg:hidden p-1 text-slate-700 hover:text-slate-950 hover:bg-slate-100 rounded-lg cursor-pointer flex items-center gap-1 shrink-0 transition-colors absolute left-3.5 z-10"
               title="Back to Conversations"
             >
               <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
@@ -871,21 +870,21 @@ export default function ChatClientPage() {
 
             {/* Left Aligned Active Peer Info */}
             <div className="flex items-center gap-2.5 min-w-0 flex-1 pl-9 lg:pl-0 text-left">
-              <div className="w-9 h-9 rounded-full bg-white/20 text-white flex items-center justify-center font-black text-xs shrink-0 border-2 border-emerald-400/40 relative">
-                <User className="w-4 h-4 text-white" />
+              <div className="w-9 h-9 rounded-full bg-slate-100 text-slate-800 flex items-center justify-center font-black text-xs shrink-0 border border-slate-200 relative">
+                <User className="w-4 h-4 text-slate-700" />
               </div>
               
               <div className="min-w-0 flex flex-col justify-center items-start text-left">
                 <div className="flex items-center justify-start gap-1.5 min-w-0 text-left">
-                  <h3 className="font-heading font-black text-xs sm:text-sm text-white truncate leading-tight text-left">{activePeerName}</h3>
+                  <h3 className="font-heading font-black text-xs sm:text-sm text-slate-900 truncate leading-tight text-left">{activePeerName}</h3>
                   {activeChatId !== "namma_thanjai_system_welcome" && (
-                    <span className="text-[10px] font-mono text-emerald-100 bg-white/15 px-1.5 py-0.2 rounded font-bold shrink-0">
+                    <span className="text-[10px] font-mono text-emerald-800 bg-emerald-100 border border-emerald-200 px-1.5 py-0.2 rounded font-extrabold shrink-0">
                       {generate5DigitMemberId(activePeerId || activePeerPhone)}
                     </span>
                   )}
                 </div>
                 {activeChatId !== "namma_thanjai_system_welcome" && activeListingTitle && activeListingTitle !== "Welcome to Namma Thanjai" && (
-                  <p className="text-[11px] text-[#ffeeb3] font-bold truncate mt-0.5 text-left">
+                  <p className="text-[11px] text-amber-700 font-bold truncate mt-0.5 text-left">
                     Re: {activeListingTitle}
                   </p>
                 )}
