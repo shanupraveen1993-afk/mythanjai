@@ -16,6 +16,7 @@ interface ToastContextType {
     success: (message: string) => void;
     error: (message: string) => void;
     info: (message: string) => void;
+    dismiss: () => void;
   };
 }
 
@@ -28,14 +29,23 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
     setToasts((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
+  const dismissAll = useCallback(() => {
+    setToasts([]);
+  }, []);
+
   const addToast = useCallback((type: ToastType, message: string) => {
     const id = Math.random().toString(36).substring(2, 9);
-    setToasts((prev) => [...prev.slice(-4), { id, type, message }]);
+    // If exit confirmation toast, clear previous toasts to guarantee only 1 chip
+    if (message.includes("Press back again")) {
+      setToasts([{ id, type, message }]);
+    } else {
+      setToasts((prev) => [...prev.slice(-2), { id, type, message }]);
+    }
 
-    // Auto dismiss after 3.5 seconds
+    // Auto dismiss after 2.5 seconds
     setTimeout(() => {
       removeToast(id);
-    }, 3500);
+    }, 2500);
   }, [removeToast]);
 
   const toast = React.useMemo(
@@ -43,8 +53,9 @@ export function ToastProvider({ children }: { children: React.ReactNode }) {
       success: (msg: string) => addToast("success", msg),
       error: (msg: string) => addToast("error", msg),
       info: (msg: string) => addToast("info", msg),
+      dismiss: () => dismissAll(),
     }),
-    [addToast]
+    [addToast, dismissAll]
   );
 
   return (
@@ -109,6 +120,7 @@ export function useToast() {
         success: (msg: string) => console.log("[Toast Success]", msg),
         error: (msg: string) => console.error("[Toast Error]", msg),
         info: (msg: string) => console.info("[Toast Info]", msg),
+        dismiss: () => {},
       },
     };
   }

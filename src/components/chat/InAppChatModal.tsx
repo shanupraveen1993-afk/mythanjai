@@ -97,6 +97,21 @@ export default function InAppChatModal({
         text: inputText.trim(),
         timestamp: serverTimestamp(),
       });
+
+      // Push real-time alert to recipient's Notification Hub
+      if (sellerId) {
+        await addDoc(collection(db, "notifications"), {
+          type: "chat",
+          recipientId: sellerId,
+          title: `New Message regarding ${listingTitle}`,
+          message: `${profile?.displayName || "A buyer"}: "${inputText.trim()}"`,
+          senderPhone: profile?.phone || "",
+          actionUrl: `/chat`,
+          read: false,
+          timestamp: serverTimestamp(),
+        });
+      }
+
       setInputText("");
     } catch (err) {
       console.warn("Failed to send chat message to Firestore (using local preview):", err);

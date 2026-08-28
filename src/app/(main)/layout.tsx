@@ -134,12 +134,14 @@ function MainLayoutContent({
           if (pathname === "/" || pathname === "/home" || pathname === "/onboarding") {
             if (backPressCount === 0) {
               backPressCount = 1;
+              toast.dismiss();
               toast.info("Press back again to exit Namma Thanjai");
               backTimer = setTimeout(() => {
                 backPressCount = 0;
               }, 2500);
             } else {
               if (backTimer) clearTimeout(backTimer);
+              toast.dismiss();
               CapApp.exitApp();
             }
           } else {
