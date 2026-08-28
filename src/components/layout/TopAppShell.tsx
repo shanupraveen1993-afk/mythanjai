@@ -31,7 +31,7 @@ export default function TopAppShell({ children }: TopAppShellProps) {
 
   return (
     <div
-      className={`fixed top-0 left-0 right-0 z-50 w-full bg-[#0F172A] border-b border-slate-800/90 shadow-md transition-transform duration-300 ease-in-out ${
+      className={`fixed top-0 left-0 right-0 z-50 w-full bg-white/98 backdrop-blur-xl border-b border-slate-200/80 shadow-2xs transition-transform duration-300 ease-in-out ${
         shouldHide ? "-translate-y-full pointer-events-none" : "translate-y-0 pointer-events-auto"
       }`}
     >

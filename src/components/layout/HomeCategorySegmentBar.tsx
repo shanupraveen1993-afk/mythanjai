@@ -43,7 +43,7 @@ export default function HomeCategorySegmentBar() {
   ];
 
   return (
-    <div className="w-full md:hidden bg-[#0F172A] border-t border-slate-800/60 border-b border-slate-800/90 pt-1.5 pb-2 shadow-2xs">
+    <div className="w-full md:hidden bg-white border-t border-slate-200/60 border-b border-slate-200/80 pt-1.5 pb-2 shadow-2xs">
       <div className="w-full max-w-7xl mx-auto px-2 sm:px-4">
         <div className="grid grid-cols-4 gap-1.5 sm:gap-2.5 w-full max-w-2xl mx-auto">
           {segments.map((seg) => {
@@ -62,11 +62,11 @@ export default function HomeCategorySegmentBar() {
                 className={`py-2 px-1 rounded-2xl transition-all cursor-pointer flex flex-col items-center justify-center gap-1 w-full text-center select-none active:scale-95 ${
                   isActive
                     ? "bg-[#FBBF24] text-slate-950 font-black border-2 border-amber-500 shadow-md scale-[1.02]"
-                    : "bg-slate-800/90 hover:bg-slate-800 text-slate-100 font-bold border border-slate-700/80 shadow-2xs"
+                    : "bg-slate-100/90 hover:bg-slate-200/80 text-slate-700 font-bold border border-slate-200/80 shadow-2xs"
                 }`}
               >
-                <IconComp className={`w-4.5 h-4.5 transition-all duration-200 ${isActive ? "text-slate-950 fill-slate-950 stroke-[1.2]" : "text-slate-200 stroke-[2] fill-transparent"}`} />
-                <span className={`text-[11px] sm:text-xs leading-none truncate w-full ${isActive ? "font-black text-slate-950" : "font-bold text-slate-200"}`}>
+                <IconComp className={`w-4.5 h-4.5 transition-all duration-200 ${isActive ? "text-slate-950 fill-slate-950 stroke-[1.2]" : "text-slate-700 stroke-[2] fill-transparent"}`} />
+                <span className={`text-[11px] sm:text-xs leading-none truncate w-full ${isActive ? "font-black text-slate-950" : "font-bold text-slate-700"}`}>
                   {seg.label}
                 </span>
               </button>

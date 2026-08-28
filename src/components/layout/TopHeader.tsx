@@ -118,7 +118,7 @@ export default function TopHeader({
 
   return (
     <header
-      className={`relative w-full z-50 bg-[#0F172A] text-white flex-col justify-end ${
+      className={`relative w-full z-50 bg-white/98 text-slate-900 flex-col justify-end ${
         pathname?.startsWith("/post") ? "hidden" : pathname?.startsWith("/chat") ? "hidden md:flex" : "flex"
       }`}
       style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
@@ -196,11 +196,11 @@ export default function TopHeader({
         </div>
 
         {/* Mobile Header Center: Universal Search on Home Page OR Dynamic Page Title on Sub-Pages */}
-        <div className="flex md:hidden flex-1 min-w-0 mx-1.5 z-20 justify-center">
+        <div className="flex md:hidden flex-1 min-w-0 mx-1.5 z-20 justify-center text-center">
           {pathname === "/" || pathname.includes("/sell") || pathname.includes("/need") || pathname.includes("/services") || pathname.includes("/shops") || pathname.includes("/offers") || pathname.includes("/classifieds") ? (
             <UniversalSearchBar />
           ) : (
-            <span className="font-heading font-black text-sm sm:text-base text-white truncate tracking-tight text-center">
+            <span className="font-heading font-black text-sm sm:text-base text-slate-900 truncate tracking-tight text-center w-full">
               {getSubPageTitle()}
             </span>
           )}
