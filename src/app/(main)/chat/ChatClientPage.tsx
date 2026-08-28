@@ -710,23 +710,23 @@ export default function ChatClientPage() {
         <div className={`w-full lg:w-[380px] border-r border-slate-200 flex-col bg-white ${showMobileChat ? "hidden lg:flex" : "flex"}`}>
           
           {/* 1. LEFT PANEL HEADER: Logo on Left Side, Chats Title Center, Notification Bell on Right */}
-          <div className="bg-[#f0f2f5] px-3.5 pt-[calc(0.75rem+env(safe-area-inset-top,0px))] pb-3 flex items-center justify-between border-b border-slate-200/80 shrink-0 w-full min-h-[3.75rem]">
+          <div className="bg-[#1E244A] text-white px-3.5 pt-[calc(0.75rem+env(safe-area-inset-top,0px))] pb-3 flex items-center justify-between border-b border-white/10 shrink-0 w-full min-h-[3.75rem]">
             {/* Left Side Logo */}
             <div
               onClick={() => router.push("/")}
               className="flex items-center gap-2 cursor-pointer shrink-0 group select-none"
             >
-              <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="h-8 w-auto object-contain transition-transform group-hover:scale-105" />
+              <img src="/namma_thanjai_logo_dark_bg.png" alt="Namma Thanjai Logo" className="h-8 w-auto object-contain transition-transform group-hover:scale-105" />
             </div>
 
             {/* Center Aligned Chats Title */}
-            <h1 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight text-center flex-1 min-w-0 mx-2">
+            <h1 className="font-heading font-black text-base sm:text-lg text-white tracking-tight text-center flex-1 min-w-0 mx-2">
               Chats
             </h1>
 
             {/* Right Side Notification Bell */}
-            <div className="flex items-center gap-2 text-slate-600 shrink-0">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" title="Real-time messaging active" />
+            <div className="flex items-center gap-2 text-white shrink-0">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" title="Real-time messaging active" />
               <button
                 type="button"
                 onClick={() => {
@@ -734,11 +734,11 @@ export default function ChatClientPage() {
                     window.dispatchEvent(new Event("namma_thanjai_open_notifications"));
                   }
                 }}
-                className="w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 flex items-center justify-center transition-colors cursor-pointer relative shrink-0"
+                className="w-9 h-9 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer relative shrink-0 border border-white/20"
                 title="Notifications"
                 aria-label="View notifications"
               >
-                <Bell className="w-4 h-4 text-slate-700" />
+                <Bell className="w-4 h-4 text-white" />
               </button>
             </div>
           </div>
@@ -858,8 +858,8 @@ export default function ChatClientPage() {
         {/* ========================================== */}
         <div className={`flex-1 flex-col bg-[#efeae2] relative ${showMobileChat ? "flex" : "hidden lg:flex"}`}>
           
-          {/* Active Chat Header Bar (Deep Teal #075E54) with Safe Area Top Status Bar Inset */}
-          <div className="bg-[#075E54] text-white px-3.5 pt-[calc(0.75rem+env(safe-area-inset-top,0px))] pb-3 flex items-center justify-between shadow-md shrink-0 border-b border-[#054c44] w-full min-h-[3.75rem] relative">
+          {/* Active Chat Header Bar (Royal Navy #1E244A) with Safe Area Top Status Bar Inset */}
+          <div className="bg-[#1E244A] text-white px-3.5 pt-[calc(0.75rem+env(safe-area-inset-top,0px))] pb-3 flex items-center justify-between shadow-md shrink-0 border-b border-white/10 w-full min-h-[3.75rem] relative">
             <button
               type="button"
               onClick={() => setShowMobileChat(false)}
