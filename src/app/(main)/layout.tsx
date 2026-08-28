@@ -94,6 +94,7 @@ function MainLayoutContent({
   const [showWalkthrough, setShowWalkthrough] = useState(false);
   const [showPermissionsModal, setShowPermissionsModal] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
+  const [isOnboardingRedirecting, setIsOnboardingRedirecting] = useState<boolean>(false);
 
   useEffect(() => {
     setIsMounted(true);
@@ -109,13 +110,16 @@ function MainLayoutContent({
           .catch(() => {});
 
         if (!hasCompletedOnboarding && pathname !== "/onboarding") {
-          router.push("/onboarding");
+          setIsOnboardingRedirecting(true);
+          router.replace("/onboarding");
+        } else {
+          setIsOnboardingRedirecting(false);
         }
       }
     }
-  }, [pathname]);
+  }, [pathname, router]);
 
-  // Native Android Hardware Back Button Exit Confirmation Handler
+  // Native Android Hardware Back Button Exit Confirmation Handler (Exact 1-Time Confirmation)
   useEffect(() => {
     if (typeof window === "undefined") return;
     const isNative = Boolean((window as any).Capacitor?.isNativePlatform() || window.navigator.userAgent.includes("Capacitor"));
@@ -128,13 +132,13 @@ function MainLayoutContent({
       .then(({ App: CapApp }) => {
         const listenerPromise = CapApp.addListener("backButton", () => {
           if (pathname === "/" || pathname === "/home" || pathname === "/onboarding") {
-            backPressCount++;
-            if (backPressCount === 1) {
+            if (backPressCount === 0) {
+              backPressCount = 1;
               toast.info("Press back again to exit Namma Thanjai");
               backTimer = setTimeout(() => {
                 backPressCount = 0;
-              }, 2000);
-            } else if (backPressCount >= 2) {
+              }, 2500);
+            } else {
               if (backTimer) clearTimeout(backTimer);
               CapApp.exitApp();
             }
@@ -287,6 +291,17 @@ function MainLayoutContent({
     return (
       <div className="w-full min-h-screen bg-white flex items-center justify-center">
         <NativePermissionsModal isOpen={true} onComplete={handlePermissionsComplete} />
+      </div>
+    );
+  }
+
+  if (isOnboardingRedirecting) {
+    return (
+      <div className="fixed inset-0 z-[999999] bg-[#1E244A] flex flex-col items-center justify-center select-none">
+        <div className="flex flex-col items-center gap-3 animate-pulse">
+          <img src="/namma_thanjai_logo_dark_bg.png" alt="Namma Thanjai" className="h-20 w-auto object-contain" />
+          <span className="text-amber-400 font-heading font-black text-xs tracking-wider">தஞ்சாவூரின் #1 உள்ளூர் தளம்</span>
+        </div>
       </div>
     );
   }

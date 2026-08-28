@@ -1081,10 +1081,14 @@ export default function ChatClientPage() {
             </div>
           )}
 
-          {/* Message Input Form — Increased Height (48px input + 44px send button) */}
+          {/* Message Input Form — Increased Height & Clear of Bottom Tab Bar */}
           <form
             onSubmit={handleSendMessage}
-            className="p-2.5 sm:p-3 bg-[#f0f2f5] border-t border-slate-200/90 flex items-center gap-2.5 shrink-0 z-10 pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))]"
+            className={`p-2.5 sm:p-3 bg-[#f0f2f5] border-t border-slate-200/90 flex items-center gap-2.5 shrink-0 z-10 ${
+              showMobileChat
+                ? "pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))]"
+                : "pb-[calc(4.75rem+env(safe-area-inset-bottom,0px))] md:pb-3"
+            }`}
           >
             <input
               type="text"
