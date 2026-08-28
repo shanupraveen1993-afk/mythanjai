@@ -709,17 +709,23 @@ export default function ChatClientPage() {
         {/* LEFT COLUMN: Namma Thanjai Conversation List */}
         <div className={`w-full lg:w-[380px] border-r border-slate-200 flex-col bg-white ${showMobileChat ? "hidden lg:flex" : "flex"}`}>
           
-          {/* 1. LEFT PANEL HEADER */}
-          <div className="bg-[#f0f2f5] px-3.5 pt-[calc(0.75rem+env(safe-area-inset-top,0px))] pb-3 flex items-center justify-between border-b border-slate-200/80 shrink-0 w-full relative">
-            <button
-              type="button"
+          {/* 1. LEFT PANEL HEADER: Logo on Left Side, Chats Title Center, Notification Bell on Right */}
+          <div className="bg-[#f0f2f5] px-3.5 pt-[calc(0.75rem+env(safe-area-inset-top,0px))] pb-3 flex items-center justify-between border-b border-slate-200/80 shrink-0 w-full min-h-[3.75rem]">
+            {/* Left Side Logo */}
+            <div
               onClick={() => router.push("/")}
-              className="flex items-center justify-center gap-2 cursor-pointer shrink-0 group select-none text-center mx-auto"
+              className="flex items-center gap-2 cursor-pointer shrink-0 group select-none"
             >
               <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="h-8 w-auto object-contain transition-transform group-hover:scale-105" />
-              <h1 className="font-heading font-black text-lg text-slate-900 tracking-tight text-center">Chats</h1>
-            </button>
-            <div className="flex items-center gap-2 text-slate-600 absolute right-3.5">
+            </div>
+
+            {/* Center Aligned Chats Title */}
+            <h1 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight text-center flex-1 min-w-0 mx-2">
+              Chats
+            </h1>
+
+            {/* Right Side Notification Bell */}
+            <div className="flex items-center gap-2 text-slate-600 shrink-0">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" title="Real-time messaging active" />
               <button
                 type="button"
