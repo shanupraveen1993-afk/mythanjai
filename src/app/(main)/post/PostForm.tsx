@@ -1255,7 +1255,7 @@ export default function PostForm({ segment }: PostFormProps) {
                 {/* Description Input Container */}
                 <div className="flex flex-col gap-1.5 w-full relative">
                   <div className="flex items-center justify-between gap-2 flex-wrap">
-                    <label className="text-xs font-bold text-slate-800">
+                    <label className="text-xs font-semibold text-slate-700">
                       {segment === "service" ? "Work Experience & Skill Details (Optional)" : "Description or details (Optional)"}
                     </label>
                     <span className={`text-xs font-medium ${description.length >= config.maxDescChars ? "text-amber-600 font-bold" : "text-slate-400"}`}>

@@ -421,7 +421,7 @@ export default function ListingCard({ listing, isPreview }: { listing: ListingIt
               {/* Top Row: Category Name on Left, Price on Right */}
               <div className="flex items-center justify-between gap-2 w-full">
                 <CategoryIcon category={listing.category || listing.type} />
-                <div className="font-heading font-black text-lg sm:text-xl text-amber-600 tracking-tight shrink-0">
+                <div className="font-heading font-bold text-base sm:text-lg text-amber-600 tracking-tight shrink-0">
                   {formattedPrice}
                 </div>
               </div>
@@ -435,7 +435,7 @@ export default function ListingCard({ listing, isPreview }: { listing: ListingIt
 
           {/* ── MIDDLE SECTION: Fixed 3-Line Internal Scrollable Description Box ── */}
           <div className="h-[4.5rem] bg-slate-50/80 border border-slate-200/60 p-2.5 rounded-xl flex flex-col justify-start overflow-y-auto custom-scrollbar">
-            <p className="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed whitespace-pre-line">
+            <p className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed whitespace-pre-line">
               {listing.description || "No detailed description provided."}
             </p>
           </div>
@@ -443,7 +443,7 @@ export default function ListingCard({ listing, isPreview }: { listing: ListingIt
           {/* ── ROW 3: Location on Left + 3 Icon Buttons on Right (Hidden in Preview) ── */}
           <div className="flex items-center justify-between text-xs text-slate-600 border-t border-slate-100/90 pt-2 mt-1 gap-2">
             {/* Location Tag */}
-            <div className="flex items-center gap-1 text-xs text-slate-600 font-semibold truncate">
+            <div className="flex items-center gap-1 text-xs text-slate-600 font-medium truncate">
               <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
               <span className="truncate">{listing.location || "Medical College Rd, Thanjavur"}</span>
             </div>

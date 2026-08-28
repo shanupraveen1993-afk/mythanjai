@@ -89,7 +89,7 @@ export default function CategoryIcon({
   const IconComponent = getIcon();
 
   return (
-    <span className={`inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 truncate ${className}`}>
+    <span className={`inline-flex items-center gap-1.5 text-xs font-medium text-slate-600 truncate ${className}`}>
       <IconComponent className={iconClassName} />
       <span className="truncate">{category || "General"}</span>
     </span>

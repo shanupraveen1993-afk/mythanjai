@@ -213,7 +213,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
 
         {/* ── MIDDLE SECTION: Fixed 3-Line Internal Scrollable Description Box ── */}
         <div className="h-[4.5rem] bg-slate-50/80 border border-slate-200/60 p-2.5 rounded-xl flex flex-col justify-start overflow-y-auto custom-scrollbar">
-          <p className="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed whitespace-pre-line">
+          <p className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed whitespace-pre-line">
             {post.description || "Skilled trade professional serving Thanjavur region."}
           </p>
         </div>
@@ -221,7 +221,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
         {/* ── ROW 3: Location + Posted Date on Left + 3 Utility Icon Buttons on Right (Hidden in Preview) ── */}
         <div className="flex items-center justify-between text-xs text-slate-600 border-t border-slate-100/90 pt-2 mt-1 gap-2">
           {/* Location & Posted Month */}
-          <div className="flex items-center gap-1.5 text-[11px] text-slate-600 font-semibold truncate min-w-0">
+          <div className="flex items-center gap-1.5 text-[11px] text-slate-600 font-medium truncate min-w-0">
             <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
             <span className="truncate">{post.area_tag || "Thanjavur"}</span>
             <span className="text-slate-300">•</span>
