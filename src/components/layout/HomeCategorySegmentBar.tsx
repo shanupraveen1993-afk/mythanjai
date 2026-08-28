@@ -71,12 +71,12 @@ export default function HomeCategorySegmentBar() {
                 }}
                 className={`py-2 px-1 rounded-2xl transition-all cursor-pointer flex flex-col items-center justify-center gap-1 w-full text-center select-none active:scale-95 ${
                   isActive
-                    ? "bg-[#FBBF24] text-slate-950 font-black border-2 border-amber-600 shadow-md scale-[1.02]"
-                    : "bg-blue-800/50 hover:bg-blue-800/70 text-blue-100 font-medium border border-blue-700/60 shadow-2xs"
+                    ? "bg-[#FBBF24] text-slate-950 font-black border-2 border-amber-500 shadow-md scale-[1.02]"
+                    : "bg-[#E0F2FE] hover:bg-sky-200 text-sky-950 font-bold border border-sky-300 shadow-2xs"
                 }`}
               >
-                <IconComp className={`w-4.5 h-4.5 transition-all duration-200 ${isActive ? "text-slate-950 fill-slate-950 stroke-[1.5]" : "text-blue-100 stroke-[2] fill-transparent"}`} />
-                <span className={`text-[11px] sm:text-xs leading-none truncate w-full ${isActive ? "font-black text-slate-950" : "font-semibold text-blue-100"}`}>
+                <IconComp className={`w-4.5 h-4.5 transition-all duration-200 ${isActive ? "text-slate-950 fill-slate-950 stroke-[1.5]" : "text-sky-900 stroke-[2.2] fill-transparent"}`} />
+                <span className={`text-[11px] sm:text-xs leading-none truncate w-full ${isActive ? "font-black text-slate-950" : "font-extrabold text-sky-950"}`}>
                   {seg.label}
                 </span>
               </button>
