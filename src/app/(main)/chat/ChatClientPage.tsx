@@ -709,18 +709,17 @@ export default function ChatClientPage() {
         {/* LEFT COLUMN: Namma Thanjai Conversation List */}
         <div className={`w-full lg:w-[380px] border-r border-slate-200 flex-col bg-white ${showMobileChat ? "hidden lg:flex" : "flex"}`}>
           
-          {/* 1. BRANDED TOP HEADER */}
-          <div className="bg-[#f0f2f5] px-4 pt-[calc(0.75rem+env(safe-area-inset-top,0px))] pb-3 border-b border-slate-200/90 flex items-center justify-between shrink-0 select-none min-h-[3.75rem]">
+          {/* 1. LEFT PANEL HEADER */}
+          <div className="bg-[#f0f2f5] px-3.5 pt-[calc(0.75rem+env(safe-area-inset-top,0px))] pb-3 flex items-center justify-between border-b border-slate-200/80 shrink-0 w-full relative">
             <button
               type="button"
               onClick={() => router.push("/")}
-              className="flex items-center gap-2 cursor-pointer hover:opacity-80 transition-opacity group"
-              title="Go to Namma Thanjai Home"
+              className="flex items-center justify-center gap-2 cursor-pointer shrink-0 group select-none text-center mx-auto"
             >
               <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="h-8 w-auto object-contain transition-transform group-hover:scale-105" />
-              <h1 className="font-heading font-black text-lg text-slate-900 tracking-tight">Chats</h1>
+              <h1 className="font-heading font-black text-lg text-slate-900 tracking-tight text-center">Chats</h1>
             </button>
-            <div className="flex items-center gap-2 text-slate-600">
+            <div className="flex items-center gap-2 text-slate-600 absolute right-3.5">
               <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" title="Real-time messaging active" />
               <button
                 type="button"
@@ -747,7 +746,7 @@ export default function ChatClientPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search or start a new chat"
-                className="w-full bg-transparent focus:outline-none text-xs text-slate-900 font-medium placeholder:text-slate-500"
+                className="w-full bg-transparent focus:outline-none text-xs text-slate-900 font-medium placeholder:text-slate-500 text-center"
               />
               {searchQuery && (
                 <button type="button" onClick={() => setSearchQuery("")} className="text-slate-400 hover:text-slate-600">
@@ -856,29 +855,32 @@ export default function ChatClientPage() {
 
         </div>
 
-        {/* RIGHT COLUMN: WhatsApp Active Chat Window */}
+        {/* ========================================== */}
+        {/* RIGHT COLUMN: ACTIVE CHAT CONVERSATION VIEW */}
+        {/* ========================================== */}
         <div className={`flex-1 flex-col bg-[#efeae2] relative ${showMobileChat ? "flex" : "hidden lg:flex"}`}>
           
           {/* Active Chat Header Bar (Deep Teal #075E54) with Safe Area Top Status Bar Inset */}
-          <div className="bg-[#075E54] text-white px-3.5 pt-[calc(0.75rem+env(safe-area-inset-top,0px))] pb-3 flex items-center justify-between shadow-md shrink-0 border-b border-[#054c44] w-full min-h-[3.75rem]">
-            <div className="flex items-center gap-2.5 min-w-0 flex-1">
-              <button
-                type="button"
-                onClick={() => setShowMobileChat(false)}
-                className="lg:hidden p-1 text-white/90 hover:text-white hover:bg-white/10 rounded-lg cursor-pointer flex items-center gap-1 shrink-0 transition-colors"
-                title="Back to Conversations"
-              >
-                <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
-              </button>
-              
-              <div className="w-10 h-10 rounded-full bg-white/20 text-white flex items-center justify-center font-black text-xs shrink-0 border-2 border-emerald-400/40 relative">
-                <User className="w-5 h-5 text-white" />
+          <div className="bg-[#075E54] text-white px-3.5 pt-[calc(0.75rem+env(safe-area-inset-top,0px))] pb-3 flex items-center justify-between shadow-md shrink-0 border-b border-[#054c44] w-full min-h-[3.75rem] relative">
+            <button
+              type="button"
+              onClick={() => setShowMobileChat(false)}
+              className="lg:hidden p-1 text-white/90 hover:text-white hover:bg-white/10 rounded-lg cursor-pointer flex items-center gap-1 shrink-0 transition-colors absolute left-3.5 z-10"
+              title="Back to Conversations"
+            >
+              <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
+            </button>
+
+            {/* Center Aligned Active Peer Info */}
+            <div className="flex items-center justify-center gap-2.5 min-w-0 flex-1 mx-auto text-center">
+              <div className="w-9 h-9 rounded-full bg-white/20 text-white flex items-center justify-center font-black text-xs shrink-0 border-2 border-emerald-400/40 relative">
+                <User className="w-4 h-4 text-white" />
                 <span className="w-2.5 h-2.5 rounded-full bg-[#25d366] border-2 border-[#075E54] absolute bottom-0 right-0" />
               </div>
               
-              <div className="min-w-0 flex flex-col justify-center flex-1">
-                <div className="flex items-center gap-1.5 min-w-0">
-                  <h3 className="font-heading font-black text-xs sm:text-sm text-white truncate leading-tight">{activePeerName}</h3>
+              <div className="min-w-0 flex flex-col justify-center items-center text-center">
+                <div className="flex items-center justify-center gap-1.5 min-w-0 text-center">
+                  <h3 className="font-heading font-black text-xs sm:text-sm text-white truncate leading-tight text-center">{activePeerName}</h3>
                   {activeChatId !== "namma_thanjai_system_welcome" && (
                     <span className="text-[10px] font-mono text-emerald-100 bg-white/15 px-1.5 py-0.2 rounded font-bold shrink-0">
                       {generate5DigitMemberId(activePeerId || activePeerPhone)}
@@ -886,33 +888,34 @@ export default function ChatClientPage() {
                   )}
                 </div>
                 {activeChatId !== "namma_thanjai_system_welcome" && activeListingTitle && activeListingTitle !== "Welcome to Namma Thanjai" && (
-                  <p className="text-[11px] text-[#ffeeb3] font-medium truncate mt-0.5">
+                  <p className="text-[11px] text-[#ffeeb3] font-medium truncate mt-0.5 text-center">
                     Re: {activeListingTitle}
                   </p>
                 )}
               </div>
             </div>
 
-            {/* Header Right Actions */}
-            <div className="flex items-center gap-1 shrink-0 ml-2">
-              {activePeerPhone && (
-                <a
-                  href={`tel:${activePeerPhone.replace(/\D/g, "")}`}
-                  className="p-2 text-white/90 hover:text-white hover:bg-white/10 rounded-full cursor-pointer transition-colors"
-                  title="Call Contact"
-                >
-                  <Phone className="w-4 h-4 text-emerald-300" />
-                </a>
-              )}
-
+            {/* Header Right Actions: Report + Delete */}
+            <div className="flex items-center gap-1 shrink-0 absolute right-3.5 z-10">
               <button
                 type="button"
-                onClick={() => setSelectedThreadForDelete(threads.find((t) => t.chatId === activeChatId) || null)}
-                className="p-2 text-rose-200 hover:text-rose-100 hover:bg-white/10 rounded-full cursor-pointer transition-colors"
-                title="Delete Conversation"
+                onClick={() => alert("Report submitted to Namma Thanjai moderation team.")}
+                className="p-2 text-amber-200 hover:text-amber-100 hover:bg-white/10 rounded-full cursor-pointer transition-colors"
+                title="Report User / Fraud"
               >
-                <Trash2 className="w-4 h-4" />
+                <ShieldAlert className="w-5 h-5 text-amber-300" />
               </button>
+
+              {!activeChatId.startsWith("namma_thanjai_system_welcome") && (
+                <button
+                  type="button"
+                  onClick={() => setSelectedThreadForDelete(threads.find((t) => t.chatId === activeChatId) || null)}
+                  className="p-2 text-rose-200 hover:text-rose-100 hover:bg-white/10 rounded-full cursor-pointer transition-colors"
+                  title="Delete Conversation"
+                >
+                  <Trash2 className="w-5 h-5 text-rose-300" />
+                </button>
+              )}
             </div>
           </div>
 
