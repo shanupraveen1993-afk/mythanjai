@@ -93,7 +93,7 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
 
   return (
     <nav
-        className={`md:hidden fixed bottom-0 left-0 right-0 z-40 w-full bg-white text-slate-800 border-t border-slate-200/90 shadow-[0_-8px_30px_rgba(0,0,0,0.1)] select-none transition-transform duration-300 ease-in-out ${
+        className={`md:hidden fixed bottom-0 left-0 right-0 z-40 w-full bg-[#1E244A] text-white border-t border-white/10 shadow-[0_-8px_30px_rgba(0,0,0,0.45)] select-none transition-transform duration-300 ease-in-out ${
           shouldHide ? "translate-y-full pointer-events-none" : "translate-y-0 pointer-events-auto"
         }`}
         style={{ paddingBottom: "max(var(--safe-bottom), 8px)" }}
@@ -123,8 +123,8 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
               onClick={() => router.push(item.route)}
               className={`flex items-center gap-2 rounded-full min-h-[48px] min-w-[48px] justify-center transition-all duration-300 ease-out cursor-pointer select-none active:scale-95 ${
                 isActive
-                  ? "bg-[#FBBF24] text-slate-950 px-4 py-2 font-heading font-black text-[13px] sm:text-sm shadow-md scale-105 border border-amber-400"
-                  : "text-slate-600 hover:text-slate-950 font-bold p-2"
+                  ? "bg-white text-[#1E244A] px-4 py-2 font-heading font-black text-[13px] sm:text-sm shadow-md scale-105 border border-white/90"
+                  : "text-slate-300 hover:text-white font-bold p-2"
               }`}
               title={item.label}
               aria-label={item.label}
@@ -132,12 +132,12 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
               <Icon
                 className={`transition-all duration-300 ${
                   isActive
-                    ? "w-5 h-5 fill-slate-950 text-slate-950 stroke-[1.5]"
-                    : "w-6 h-6 text-slate-600 stroke-[2] fill-transparent hover:text-slate-950"
+                    ? "w-5 h-5 fill-[#1E244A] text-[#1E244A] stroke-[1.5]"
+                    : "w-6 h-6 text-slate-300 stroke-[2] fill-transparent hover:text-white"
                 }`}
               />
               {isActive && (
-                <span className="truncate max-w-[100px] leading-none text-[13px] sm:text-sm font-black tracking-tight text-slate-950 animate-fade-in">
+                <span className="truncate max-w-[100px] leading-none text-[13px] sm:text-sm font-black tracking-tight text-[#1E244A] animate-fade-in">
                   {item.label}
                 </span>
               )}
