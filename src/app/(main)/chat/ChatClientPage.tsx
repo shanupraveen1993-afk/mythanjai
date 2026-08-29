@@ -197,11 +197,10 @@ export default function ChatClientPage() {
         snapshot.forEach((docSnap) => {
           const data = docSnap.data();
           const participants = data.participants || [];
-          const isUserParticipant =
+          const isUserParticipant = Boolean(
             (currentUid && participants.includes(currentUid)) ||
-            (currentPhone && participants.includes(currentPhone)) ||
-            participants.includes("guest_user") ||
-            !currentUid;
+            (currentPhone && (participants.includes(currentPhone) || data.buyerPhone === currentPhone || data.sellerPhone === currentPhone))
+          );
 
           if (isUserParticipant) {
             const isBuyer = data.buyerId === currentUid;

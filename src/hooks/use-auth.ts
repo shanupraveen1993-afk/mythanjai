@@ -122,7 +122,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
           }
         } catch (error) {
           console.error("Error fetching user profile:", error);
-          const fallbackMemberId = localMemberId || (activeVerifiedPhone ? `NT-${activeVerifiedPhone.slice(-10)}` : `NT-${currentUser.uid.slice(-6).toUpperCase()}`);
+          const fallbackMemberId = `NT-${activeVerifiedPhone.slice(-5)}`;
           if (activeVerifiedPhone) {
             setProfile({
               uid: currentUser.uid,
@@ -136,7 +136,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         }
       } else {
         if (activeVerifiedPhone) {
-          const fallbackMemberId = localMemberId || `NT-${activeVerifiedPhone.slice(-10)}`;
+          const fallbackMemberId = `NT-${activeVerifiedPhone.slice(-5)}`;
           setProfile({
             uid: "saved_session",
             memberId: fallbackMemberId,
@@ -231,7 +231,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
     const cleanedPhone = phone.replace(/\D/g, "");
     const targetPhone = cleanedPhone.length === 10 ? `91${cleanedPhone}` : cleanedPhone;
-    const existingMemberId = profile?.memberId || (typeof window !== "undefined" ? localStorage.getItem("namma_thanjai_member_id") : null) || `NT-${targetPhone.slice(-10)}`;
+    const existingMemberId = `NT-${targetPhone.slice(-5)}`;
 
     if (typeof window !== "undefined") {
       localStorage.setItem("my_thanjai_verified", "true");
