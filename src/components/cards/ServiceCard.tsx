@@ -234,30 +234,30 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
               <button
                 type="button"
                 onClick={handleToggleSave}
-                className={`w-7 h-7 rounded-xl border flex items-center justify-center transition-colors cursor-pointer ${
+                className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer border-0 ${
                   saved
-                    ? "bg-amber-50 border-amber-300 text-amber-600"
-                    : "border-slate-200 bg-white text-slate-500 hover:text-slate-800"
+                    ? "bg-amber-50 text-amber-600"
+                    : "bg-transparent text-slate-500 hover:text-slate-900 hover:bg-slate-100/80"
                 }`}
                 title="Save Provider"
               >
-                <Bookmark className={`w-3.5 h-3.5 ${saved ? "fill-amber-600" : ""}`} />
+                <Bookmark className={`w-5 h-5 stroke-[2] ${saved ? "fill-amber-600" : ""}`} />
               </button>
               <button
                 type="button"
                 onClick={handleShare}
-                className="w-7 h-7 rounded-xl border border-slate-200 bg-white text-slate-500 hover:text-slate-800 flex items-center justify-center transition-colors cursor-pointer"
+                className="w-8 h-8 rounded-full border-0 bg-transparent text-slate-500 hover:text-slate-900 hover:bg-slate-100/80 flex items-center justify-center transition-colors cursor-pointer"
                 title="Share via WhatsApp"
               >
-                <Share2 className="w-3.5 h-3.5" />
+                <Share2 className="w-5 h-5 stroke-[2]" />
               </button>
               <button
                 type="button"
                 onClick={handleReport}
-                className="w-7 h-7 rounded-xl border border-slate-200 bg-white text-slate-400 hover:text-rose-500 hover:border-rose-200 flex items-center justify-center transition-colors cursor-pointer"
+                className="w-8 h-8 rounded-full border-0 bg-transparent text-slate-400 hover:text-rose-600 hover:bg-rose-50 flex items-center justify-center transition-colors cursor-pointer"
                 title="Report Provider"
               >
-                <Flag className="w-3.5 h-3.5" />
+                <Flag className="w-5 h-5 stroke-[2]" />
               </button>
             </div>
           )}

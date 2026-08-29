@@ -1001,7 +1001,6 @@ export default function ChatClientPage() {
 
                       <div className="flex items-center justify-end gap-1 mt-1 text-[10px] text-slate-400 font-semibold leading-none">
                         <span>{formatTime(msg.timestamp)}</span>
-                        {isMe && <CheckCheck className="w-3.5 h-3.5 text-[#34b7f1] stroke-[2.5]" />}
                       </div>
 
                       {activeChatId === "nt_service_assistant" && msgIndex === messages.length - 1 && (
