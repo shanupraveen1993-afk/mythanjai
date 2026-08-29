@@ -22,7 +22,7 @@ import {
   Users,
 } from "lucide-react";
 
-type OnboardingStage = "splash" | "walkthrough1" | "walkthrough2" | "login";
+type OnboardingStage = "splash" | "walkthrough1" | "login";
 
 export default function OnboardingClientPage() {
   const router = useRouter();
@@ -83,45 +83,29 @@ export default function OnboardingClientPage() {
       <div className="absolute bottom-0 right-0 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
 
       {/* ========================================================= */}
-      {/* STAGE 1: SPLASH SCREEN (2.2s Animated Screen)            */}
+      {/* STAGE 1: SPLASH SCREEN (CLEAN & SHARP - NO EXTRA CONTENT) */}
       {/* ========================================================= */}
       {stage === "splash" && (
         <div 
           onClick={() => setStage("walkthrough1")}
-          className="flex-1 flex flex-col items-center justify-between text-center gap-8 cursor-pointer animate-fade-in py-8 my-auto"
+          className="flex-1 flex flex-col items-center justify-between text-center gap-8 cursor-pointer animate-fade-in py-12 my-auto"
         >
           <div className="my-auto flex flex-col items-center gap-6">
             {/* Glowing Logo Badge */}
             <div className="relative group">
               <div className="absolute -inset-3 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 rounded-3xl blur-lg opacity-80 animate-pulse" />
-              <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl bg-[#121633] p-4 shadow-2xl border-2 border-amber-400 flex items-center justify-center relative z-10">
-                <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="w-full h-full object-contain animate-scale-up" />
+              <div className="w-32 h-32 rounded-3xl bg-[#121633] p-4 shadow-2xl border-2 border-amber-400 flex items-center justify-center relative z-10">
+                <img src="/namma_thanjai_logo_dark_bg.png" alt="Namma Thanjai Logo" className="w-full h-full object-contain animate-scale-up" />
               </div>
             </div>
 
-            {/* Brand Title & Tamil Badge */}
+            {/* Brand Title */}
             <div className="flex flex-col items-center gap-2 max-w-sm px-4">
               <h1 className="font-heading font-black text-3xl sm:text-4xl text-white tracking-tight">
                 Namma Thanjai
               </h1>
-              <span className="bg-[#FBBF24] text-slate-950 font-heading font-black text-xs uppercase tracking-wider px-4 py-1.5 rounded-full shadow-lg border border-amber-300">
-                தஞ்சாவூரின் #1 உள்ளூர் தளம்
-              </span>
-              <p className="text-xs sm:text-sm text-amber-200/90 font-semibold mt-1">
-                Thanjavur's Premier Local Classifieds &amp; Service Network
-              </p>
-            </div>
-
-            {/* Feature Pills */}
-            <div className="flex items-center justify-center flex-wrap gap-2 pt-2">
-              <span className="text-[11px] font-bold text-amber-200 bg-white/10 px-3 py-1 rounded-full border border-white/15">
-                Marketplace
-              </span>
-              <span className="text-[11px] font-bold text-amber-200 bg-white/10 px-3 py-1 rounded-full border border-white/15">
-                Need Requests
-              </span>
-              <span className="text-[11px] font-bold text-amber-200 bg-white/10 px-3 py-1 rounded-full border border-white/15">
-                Local Services
+              <span className="bg-[#FBBF24] text-slate-950 font-heading font-black text-xs uppercase tracking-wider px-4 py-1 rounded-full shadow-lg border border-amber-300">
+                தஞ்சாவூர்
               </span>
             </div>
           </div>
@@ -131,141 +115,72 @@ export default function OnboardingClientPage() {
             <div className="w-full h-1.5 bg-white/15 rounded-full overflow-hidden relative">
               <div className="h-full bg-gradient-to-r from-amber-400 to-yellow-300 rounded-full animate-pulse w-3/4" />
             </div>
-            <span className="text-[11px] text-slate-300 font-medium">Loading Namma Thanjai...</span>
+            <span className="text-[11px] text-slate-300 font-medium">Opening...</span>
           </div>
         </div>
       )}
 
       {/* ========================================================= */}
-      {/* STAGE 2: WALKTHROUGH 1 (BUY & SELL MARKETPLACE)           */}
+      {/* STAGE 2: SINGLE WALKTHROUGH SCREEN (SIMPLE, PRECISE & SHARP) */}
       {/* ========================================================= */}
       {stage === "walkthrough1" && (
         <div className="flex-1 flex flex-col items-center justify-between max-w-md mx-auto w-full py-6 animate-fade-in">
-          {/* Top Progress Dots */}
-          <div className="flex items-center gap-2 pt-2">
-            <div className="w-8 h-2 rounded-full bg-amber-400 transition-all" />
-            <div className="w-2 h-2 rounded-full bg-white/20 transition-all" />
-            <div className="w-2 h-2 rounded-full bg-white/20 transition-all" />
+          {/* Header */}
+          <div className="w-full text-center pt-2">
+            <span className="text-[10px] font-black tracking-widest text-amber-400 uppercase bg-amber-400/10 px-3.5 py-1 rounded-full border border-amber-400/20">
+              WELCOME TO NAMMA THANJAI
+            </span>
+            <h2 className="font-heading font-black text-2xl sm:text-3xl text-white tracking-tight mt-3">
+              Thanjavur's Local Hub
+            </h2>
           </div>
 
-          {/* Center Content Card */}
-          <div className="flex flex-col items-center text-center gap-6 my-auto py-8">
-            <div className="w-28 h-28 rounded-3xl bg-amber-400/15 border-2 border-amber-400/40 p-6 flex items-center justify-center shadow-xl text-amber-400 relative">
-              <ShoppingBag className="w-14 h-14 stroke-[1.8] text-amber-400" />
-              <span className="absolute -bottom-2 -right-2 bg-amber-400 text-slate-950 p-2 rounded-2xl shadow-md">
-                <Tag className="w-5 h-5 stroke-[2.5]" />
-              </span>
+          {/* 2 Precise Category Highlights */}
+          <div className="w-full flex flex-col gap-4 my-auto py-4">
+            {/* Category 1: Buy, Sell & Wanted */}
+            <div className="bg-white/10 border border-white/15 p-4 rounded-2xl flex items-center gap-4 text-left shadow-lg">
+              <div className="w-12 h-12 rounded-xl bg-[#FBBF24] text-slate-950 flex items-center justify-center shrink-0 shadow-md">
+                <ShoppingBag className="w-6 h-6 stroke-[2.2]" />
+              </div>
+              <div className="flex flex-col">
+                <h3 className="font-heading font-black text-base text-white">Buy, Sell &amp; Wanted</h3>
+                <p className="text-xs text-slate-300 font-medium mt-0.5">Post ads to sell or request items you need locally</p>
+              </div>
             </div>
 
-            <div className="flex flex-col items-center gap-2">
-              <span className="text-[10px] font-black tracking-widest text-amber-400 uppercase bg-amber-400/10 px-3 py-1 rounded-full border border-amber-400/20">
-                WALKTHROUGH 1 OF 2 • MARKETPLACE
-              </span>
-              <h2 className="font-heading font-black text-2xl sm:text-3xl text-white tracking-tight">
-                Buy &amp; Sell Locally in Thanjavur
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-300 font-medium leading-relaxed max-w-xs mt-1">
-                Post items for sale, find used cars, bikes, mobiles, electronics &amp; furniture directly from trusted local neighbours.
-              </p>
-            </div>
-
-            {/* Feature Highlights */}
-            <div className="w-full flex flex-col gap-2.5 text-left bg-white/5 border border-white/10 p-4 rounded-2xl">
-              <div className="flex items-center gap-2.5 text-xs font-bold text-amber-200">
-                <Check className="w-4 h-4 text-amber-400 stroke-[3] shrink-0" />
-                <span>Direct Buyer to Seller Chat (Zero Brokerage)</span>
+            {/* Category 2: Local Services & Offers */}
+            <div className="bg-white/10 border border-white/15 p-4 rounded-2xl flex items-center gap-4 text-left shadow-lg">
+              <div className="w-12 h-12 rounded-xl bg-emerald-400 text-slate-950 flex items-center justify-center shrink-0 shadow-md">
+                <Wrench className="w-6 h-6 stroke-[2.2]" />
               </div>
-              <div className="flex items-center gap-2.5 text-xs font-bold text-amber-200">
-                <Check className="w-4 h-4 text-amber-400 stroke-[3] shrink-0" />
-                <span>Instant Phone &amp; WhatsApp Contact</span>
-              </div>
-              <div className="flex items-center gap-2.5 text-xs font-bold text-amber-200">
-                <Check className="w-4 h-4 text-amber-400 stroke-[3] shrink-0" />
-                <span>Verified Thanjavur Local Listings</span>
+              <div className="flex flex-col">
+                <h3 className="font-heading font-black text-base text-white">Services &amp; Store Offers</h3>
+                <p className="text-xs text-slate-300 font-medium mt-0.5">Find local skilled services &amp; exclusive shop deals</p>
               </div>
             </div>
           </div>
 
           {/* Bottom Action Button */}
-          <div className="w-full flex flex-col gap-3">
-            <button
-              type="button"
-              onClick={() => setStage("walkthrough2")}
-              className="w-full py-4 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-sm uppercase tracking-wider rounded-2xl flex items-center justify-center gap-2 shadow-xl cursor-pointer transition-all active:scale-98"
-            >
-              <span>Next: Local Services →</span>
-              <ChevronRight className="w-5 h-5 text-slate-950 stroke-[3]" />
-            </button>
-            <button
-              type="button"
-              onClick={() => setStage("login")}
-              className="text-xs text-slate-400 font-bold hover:text-white transition-colors py-1"
-            >
-              Skip Walkthrough
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* ========================================================= */}
-      {/* STAGE 3: WALKTHROUGH 2 (LOCAL SERVICES & STORE OFFERS)    */}
-      {/* ========================================================= */}
-      {stage === "walkthrough2" && (
-        <div className="flex-1 flex flex-col items-center justify-between max-w-md mx-auto w-full py-6 animate-fade-in">
-          {/* Top Progress Dots */}
-          <div className="flex items-center gap-2 pt-2">
-            <div className="w-2 h-2 rounded-full bg-white/20 transition-all" />
-            <div className="w-8 h-2 rounded-full bg-amber-400 transition-all" />
-            <div className="w-2 h-2 rounded-full bg-white/20 transition-all" />
-          </div>
-
-          {/* Center Content Card */}
-          <div className="flex flex-col items-center text-center gap-6 my-auto py-8">
-            <div className="w-28 h-28 rounded-3xl bg-emerald-400/15 border-2 border-emerald-400/40 p-6 flex items-center justify-center shadow-xl text-emerald-400 relative">
-              <Wrench className="w-14 h-14 stroke-[1.8] text-emerald-400" />
-              <span className="absolute -bottom-2 -right-2 bg-emerald-400 text-slate-950 p-2 rounded-2xl shadow-md">
-                <Store className="w-5 h-5 stroke-[2.5]" />
-              </span>
-            </div>
-
-            <div className="flex flex-col items-center gap-2">
-              <span className="text-[10px] font-black tracking-widest text-emerald-400 uppercase bg-emerald-400/10 px-3 py-1 rounded-full border border-emerald-400/20">
-                WALKTHROUGH 2 OF 2 • SERVICES &amp; OFFERS
-              </span>
-              <h2 className="font-heading font-black text-2xl sm:text-3xl text-white tracking-tight">
-                Local Services &amp; Store Offers
-              </h2>
-              <p className="text-xs sm:text-sm text-slate-300 font-medium leading-relaxed max-w-xs mt-1">
-                Discover trusted local plumbers, electricians, AC mechanics, drivers &amp; exclusive discount flyers from your favourite Thanjavur stores.
-              </p>
-            </div>
-
-            {/* Feature Highlights */}
-            <div className="w-full flex flex-col gap-2.5 text-left bg-white/5 border border-white/10 p-4 rounded-2xl">
-              <div className="flex items-center gap-2.5 text-xs font-bold text-emerald-200">
-                <Check className="w-4 h-4 text-emerald-400 stroke-[3] shrink-0" />
-                <span>50+ Local Trades &amp; Skilled Technician Profiles</span>
-              </div>
-              <div className="flex items-center gap-2.5 text-xs font-bold text-emerald-200">
-                <Check className="w-4 h-4 text-emerald-400 stroke-[3] shrink-0" />
-                <span>Daily Retail Deals &amp; Store Discount Flyers</span>
-              </div>
-              <div className="flex items-center gap-2.5 text-xs font-bold text-emerald-200">
-                <Check className="w-4 h-4 text-emerald-400 stroke-[3] shrink-0" />
-                <span>Direct Contact with Local Business Owners</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom Action Button */}
-          <div className="w-full flex flex-col gap-3">
+          <div className="w-full flex flex-col gap-2.5">
             <button
               type="button"
               onClick={() => setStage("login")}
               className="w-full py-4 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-sm uppercase tracking-wider rounded-2xl flex items-center justify-center gap-2 shadow-xl cursor-pointer transition-all active:scale-98"
             >
-              <span>Get Started / Login →</span>
+              <span>Get Started →</span>
               <ArrowRight className="w-5 h-5 text-slate-950 stroke-[3]" />
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                if (typeof window !== "undefined") {
+                  localStorage.setItem("namma_thanjai_onboarding_completed_v10", "true");
+                }
+                router.push("/");
+              }}
+              className="text-xs text-slate-400 font-bold hover:text-white transition-colors py-1 text-center"
+            >
+              Skip
             </button>
           </div>
         </div>
