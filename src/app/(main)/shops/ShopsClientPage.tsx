@@ -96,9 +96,12 @@ export default function ShopsClientPage() {
           <button onClick={handlePostOffer} className="btn-tertiary text-xs px-4 py-2 uppercase tracking-wider cursor-pointer">+ Post Offer</button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 sm:gap-4">
           {filteredPosts.map((post, idx) => (
-            <ShopCard key={post.id} post={post} index={idx} isGuest={!isAuthVerified} />
+            <React.Fragment key={post.id}>
+              {idx > 0 && <div className="h-3 bg-slate-100 border-y border-slate-200/80 -mx-3 my-0 sm:hidden" />}
+              <ShopCard post={post} index={idx} isGuest={!isAuthVerified} />
+            </React.Fragment>
           ))}
         </div>
       )}
