@@ -435,8 +435,8 @@ export default function ListingCard({ listing, isPreview }: { listing: ListingIt
           </div>
 
           {/* ── MIDDLE SECTION: Smart Responsive Description Box (4 Lines Desktop / Up to 10 Lines Mobile App) ── */}
-          <div className="bg-slate-50/80 border border-slate-200/60 p-2.5 rounded-xl flex flex-col justify-start overflow-y-auto max-h-[16em] custom-scrollbar">
-            <p className="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed whitespace-pre-line line-clamp-4 md:line-clamp-4">
+          <div className="bg-slate-50/80 border border-slate-200/60 p-2.5 rounded-xl flex flex-col justify-start overflow-y-auto max-h-[18em] custom-scrollbar">
+            <p className="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed whitespace-pre-line line-clamp-10 md:line-clamp-4">
               {listing.description || "No detailed description provided."}
             </p>
           </div>
@@ -514,39 +514,63 @@ export default function ListingCard({ listing, isPreview }: { listing: ListingIt
               </button>
             ) : (
               <>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (isPreview) return;
-                    if (!isVerified) {
-                      if (typeof window !== "undefined") {
-                        window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+                {listing.show_phone === false || !listing.phone ? (
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (isPreview) return;
+                      if (!isVerified) {
+                        if (typeof window !== "undefined") {
+                          window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+                        }
+                        return;
                       }
-                      return;
-                    }
-                    router.push(`/chat?listingId=${listing.id}&sellerId=${listing.seller_id || ""}&title=${encodeURIComponent(listing.title)}`);
-                  }}
-                  className={`w-[128px] shrink-0 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors whitespace-nowrap ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
-                >
-                  <MessageSquare className="w-4 h-4 text-[#0F172A] shrink-0 stroke-[2.5]" />
-                  <span>Chat</span>
-                </button>
-
-                {(listing.show_phone !== false) && (
-                  <a
-                    href={isPreview ? "#" : callUrl}
-                    onClick={(e) => { if (isPreview) e.preventDefault(); e.stopPropagation(); }}
-                    className={`w-[128px] shrink-0 bg-[#1F244A] hover:bg-[#151936] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors whitespace-nowrap ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
+                      router.push(`/chat?listingId=${listing.id}&sellerId=${listing.seller_id || ""}&title=${encodeURIComponent(listing.title)}`);
+                    }}
+                    className={`w-full bg-[#1F244A] hover:bg-[#151936] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-md cursor-pointer transition-colors whitespace-nowrap ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
                   >
-                    <Phone className="w-4 h-4 text-white shrink-0" />
-                    <span>Call</span>
-                  </a>
+                    <MessageSquare className="w-4 h-4 text-white shrink-0 stroke-[2.5]" />
+                    <span>Chat with Seller</span>
+                  </button>
+                ) : (
+                  <>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        if (isPreview) return;
+                        if (!isVerified) {
+                          if (typeof window !== "undefined") {
+                            window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+                          }
+                          return;
+                        }
+                        router.push(`/chat?listingId=${listing.id}&sellerId=${listing.seller_id || ""}&title=${encodeURIComponent(listing.title)}`);
+                      }}
+                      className={`w-[128px] shrink-0 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors whitespace-nowrap ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
+                    >
+                      <MessageSquare className="w-4 h-4 text-[#0F172A] shrink-0 stroke-[2.5]" />
+                      <span>Chat</span>
+                    </button>
+
+                    <a
+                      href={isPreview ? "#" : callUrl}
+                      onClick={(e) => { if (isPreview) e.preventDefault(); e.stopPropagation(); }}
+                      className={`w-[128px] shrink-0 bg-[#1F244A] hover:bg-[#151936] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors whitespace-nowrap ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
+                    >
+                      <Phone className="w-4 h-4 text-white shrink-0" />
+                      <span>Call</span>
+                    </a>
+                  </>
                 )}
               </>
             )}
           </div>
         </div>
+        
+        {/* Facebook-Style Mobile Card Separator Bar */}
+        <div className="w-full h-2.5 bg-[#F0F2F5] border-y border-[#E4E6EB] mt-3 block sm:hidden" />
       </div>
 
       {/* In-App Chat Modal */}

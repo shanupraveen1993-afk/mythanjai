@@ -212,8 +212,8 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
         </div>
 
         {/* ── MIDDLE SECTION: Smart Responsive Description Box (4 Lines Desktop / Up to 10 Lines Mobile App) ── */}
-        <div className="bg-slate-50/80 border border-slate-200/60 p-2.5 rounded-xl flex flex-col justify-start overflow-y-auto max-h-[16em] custom-scrollbar">
-          <p className="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed whitespace-pre-line line-clamp-4 md:line-clamp-4">
+        <div className="bg-slate-50/80 border border-slate-200/60 p-2.5 rounded-xl flex flex-col justify-start overflow-y-auto max-h-[18em] custom-scrollbar">
+          <p className="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed whitespace-pre-line line-clamp-10 md:line-clamp-4">
             {post.description || "Skilled trade professional serving Thanjavur region."}
           </p>
         </div>
@@ -292,59 +292,85 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
             </button>
           ) : (
             <>
-              {/* 1. Black Outline Chat Button with Real-Time Notification */}
-              <button
-                type="button"
-                onClick={async (e) => {
-                  e.stopPropagation();
-                  if (isPreview) return;
-                  if (!isVerified) {
-                    if (typeof window !== "undefined") {
-                      window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+              {!post.phone ? (
+                <button
+                  type="button"
+                  onClick={async (e) => {
+                    e.stopPropagation();
+                    if (isPreview) return;
+                    if (!isVerified) {
+                      if (typeof window !== "undefined") {
+                        window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+                      }
+                      return;
                     }
-                    return;
-                  }
-                  const buyerPhone = profile?.phone ? `+91 ${profile.phone.replace(/\D/g, "").slice(-10)}` : "Registered User";
-                  const chatMsg = `Hello! I am interested in your service "${post.name}". Please call me back when free.`;
+                    const chatMsg = `Hello! I am interested in your service "${post.name}". Please call me back when free.`;
+                    router.push(`/chat?listingId=${post.id}&sellerId=${post.userId || ""}&title=${encodeURIComponent(post.name)}&autoMsg=${encodeURIComponent(chatMsg)}&autoSend=true`);
+                  }}
+                  className={`w-full bg-[#1F244A] hover:bg-[#151936] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-md cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
+                >
+                  <MessageSquare className="w-4 h-4 text-white shrink-0 stroke-[2.5]" />
+                  <span>Chat with Provider</span>
+                </button>
+              ) : (
+                <>
+                  {/* 1. Black Outline Chat Button with Real-Time Notification */}
+                  <button
+                    type="button"
+                    onClick={async (e) => {
+                      e.stopPropagation();
+                      if (isPreview) return;
+                      if (!isVerified) {
+                        if (typeof window !== "undefined") {
+                          window.dispatchEvent(new Event("namma_thanjai_open_signin"));
+                        }
+                        return;
+                      }
+                      const chatMsg = `Hello! I am interested in your service "${post.name}". Please call me back when free.`;
 
-                  // Push real-time notification to service provider's notification hub
-                  try {
-                    const { collection, addDoc, serverTimestamp } = await import("firebase/firestore");
-                    const { db } = await import("@/lib/firebase");
-                    const notifRef = collection(db, "notifications");
-                    await addDoc(notifRef, {
-                      recipientId: post.userId || post.phone || "provider",
-                      recipientPhone: post.phone,
-                      senderName: profile?.displayName || "Interested Client",
-                      type: "chat",
-                      title: `New Service Inquiry for ${post.name}`,
-                      message: `"${chatMsg}"`,
-                      read: false,
-                      timestamp: serverTimestamp(),
-                    });
-                  } catch (err) {}
+                      // Push real-time notification to service provider's notification hub
+                      try {
+                        const { collection, addDoc, serverTimestamp } = await import("firebase/firestore");
+                        const { db } = await import("@/lib/firebase");
+                        const notifRef = collection(db, "notifications");
+                        await addDoc(notifRef, {
+                          recipientId: post.userId || post.phone || "provider",
+                          recipientPhone: post.phone,
+                          senderName: profile?.displayName || "Interested Client",
+                          type: "chat",
+                          title: `New Service Inquiry for ${post.name}`,
+                          message: `"${chatMsg}"`,
+                          read: false,
+                          timestamp: serverTimestamp(),
+                        });
+                      } catch (err) {}
 
-                  router.push(`/chat?listingId=${post.id}&sellerId=${post.userId || ""}&title=${encodeURIComponent(post.name)}&autoMsg=${encodeURIComponent(chatMsg)}&autoSend=true`);
-                }}
-                className={`w-[128px] shrink-0 border-2 border-slate-900 bg-white hover:bg-slate-50 text-slate-900 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
-              >
-                <MessageSquare className="w-4 h-4 text-slate-900 shrink-0 stroke-[2.5]" />
-                <span>Chat</span>
-              </button>
+                      router.push(`/chat?listingId=${post.id}&sellerId=${post.userId || ""}&title=${encodeURIComponent(post.name)}&autoMsg=${encodeURIComponent(chatMsg)}&autoSend=true`);
+                    }}
+                    className={`w-[128px] shrink-0 border-2 border-slate-900 bg-white hover:bg-slate-50 text-slate-900 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
+                  >
+                    <MessageSquare className="w-4 h-4 text-slate-900 shrink-0 stroke-[2.5]" />
+                    <span>Chat</span>
+                  </button>
 
-              {/* 2. Deep Royal Navy #1F244A Call Button */}
-              <button
-                type="button"
-                onClick={(e) => { if (isPreview) return; handleOpenPreContactModal(e, "call"); }}
-                className={`w-[128px] shrink-0 bg-[#1F244A] hover:bg-[#151936] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
-              >
-                <Phone className="w-4 h-4 text-white shrink-0" />
-                <span>Call</span>
-              </button>
+                  {/* 2. Deep Royal Navy #1F244A Call Button */}
+                  <button
+                    type="button"
+                    onClick={(e) => { if (isPreview) return; handleOpenPreContactModal(e, "call"); }}
+                    className={`w-[128px] shrink-0 bg-[#1F244A] hover:bg-[#151936] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
+                  >
+                    <Phone className="w-4 h-4 text-white shrink-0" />
+                    <span>Call</span>
+                  </button>
+                </>
+              )}
             </>
           )}
         </div>
       </div>
+
+      {/* Facebook-Style Mobile Card Separator Bar */}
+      <div className="w-full h-2.5 bg-[#F0F2F5] border-y border-[#E4E6EB] mt-3 block sm:hidden" />
 
       {/* Pre-Contact Safety Rules Modal */}
       {isPreContactOpen && (

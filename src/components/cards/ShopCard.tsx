@@ -254,8 +254,8 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
                 </span>
               </div>
               {post.offer_description && (
-                <div className="bg-white/90 p-2 rounded-lg border border-blue-100 overflow-y-auto max-h-[16em] custom-scrollbar">
-                  <p className="text-xs text-slate-700 font-medium leading-relaxed whitespace-pre-line line-clamp-4 md:line-clamp-4">
+                <div className="bg-white/90 p-2 rounded-lg border border-blue-100 overflow-y-auto max-h-[18em] custom-scrollbar">
+                  <p className="text-xs text-slate-700 font-medium leading-relaxed whitespace-pre-line line-clamp-10 md:line-clamp-4">
                     {post.offer_description}
                   </p>
                 </div>
@@ -326,31 +326,49 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
                 </button>
               ) : (
                 <>
-                  <a
-                    href={isPreview ? "#" : directionUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    onClick={(e) => { if (isPreview) e.preventDefault(); }}
-                    className={`w-[128px] shrink-0 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
-                  >
-                    <Navigation className="w-4 h-4 text-[#0F172A] shrink-0" />
-                    <span>Visit Store</span>
-                  </a>
-                  {(post as any).is_available_now !== false && post.show_phone !== false && (
+                  {!post.phone ? (
                     <a
-                      href={isPreview ? "#" : callUrl}
-                      onClick={(e) => { if (isPreview) e.preventDefault(); e.stopPropagation(); }}
-                      className={`w-[128px] shrink-0 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
+                      href={isPreview ? "#" : directionUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={(e) => { if (isPreview) e.preventDefault(); }}
+                      className={`w-full bg-[#1F244A] hover:bg-[#151936] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-md cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
                     >
-                      <Phone className="w-4 h-4 text-white shrink-0" />
-                      <span>Call Shop</span>
+                      <Navigation className="w-4 h-4 text-white shrink-0" />
+                      <span>Visit Store</span>
                     </a>
+                  ) : (
+                    <>
+                      <a
+                        href={isPreview ? "#" : directionUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => { if (isPreview) e.preventDefault(); }}
+                        className={`w-[128px] shrink-0 border-2 border-[#0F172A] text-[#0F172A] bg-white hover:bg-slate-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
+                      >
+                        <Navigation className="w-4 h-4 text-[#0F172A] shrink-0" />
+                        <span>Visit Store</span>
+                      </a>
+                      {(post as any).is_available_now !== false && post.show_phone !== false && (
+                        <a
+                          href={isPreview ? "#" : callUrl}
+                          onClick={(e) => { if (isPreview) e.preventDefault(); e.stopPropagation(); }}
+                          className={`w-[128px] shrink-0 bg-[#1F244A] hover:bg-[#151936] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
+                        >
+                          <Phone className="w-4 h-4 text-white shrink-0" />
+                          <span>Call Shop</span>
+                        </a>
+                      )}
+                    </>
                   )}
                 </>
               )}
             </div>
           </div>
         </div>
+        
+        {/* Facebook-Style Mobile Card Separator Bar */}
+        <div className="w-full h-2.5 bg-[#F0F2F5] border-y border-[#E4E6EB] mt-3 block sm:hidden" />
       </div>
     );
   }
