@@ -95,7 +95,7 @@ export default function OnboardingClientPage() {
             <div className="relative group">
               <div className="absolute -inset-3 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 rounded-3xl blur-lg opacity-80 animate-pulse" />
               <div className="w-32 h-32 rounded-3xl bg-[#121633] p-4 shadow-2xl border-2 border-amber-400 flex items-center justify-center relative z-10">
-                <img src="/namma_thanjai_logo_dark_bg.png" alt="Namma Thanjai Logo" className="w-full h-full object-contain animate-scale-up" />
+                <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="w-full h-full object-contain animate-scale-up" />
               </div>
             </div>
 

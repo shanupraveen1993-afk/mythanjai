@@ -161,28 +161,25 @@ export default function TopHeader({
           </div>
         </div>
 
-        {/* Desktop Header Center: 4 Category Tabs */}
+        {/* Desktop Header Center: 4 Category Tabs (Horizontal Pill Nav Bar) */}
         <div className="hidden md:flex items-center justify-center z-20 flex-1 min-w-0 mx-2">
-          <div className="flex items-center gap-3.5 bg-slate-100/90 p-2 rounded-2xl border border-slate-200/90 font-heading shadow-2xs">
+          <div className="flex items-center gap-1.5 bg-slate-100/90 p-1.5 rounded-2xl border border-slate-200/90 font-heading shadow-2xs">
             {/* Buy Tab */}
             {(() => {
               const isActive = pathname === "/" || pathname === "/home" || pathname.includes("/sell");
               return (
-                <div className="flex flex-col items-center gap-1">
-                  <button
-                    type="button"
-                    onClick={() => router.push("/")}
-                    title="Buy"
-                    className={`w-10 h-10 rounded-[14px] transition-all cursor-pointer flex items-center justify-center select-none active:scale-95 ${
-                      isActive
-                        ? "bg-[#FBBF24] text-slate-950 border-2 border-amber-400 shadow-md scale-105"
-                        : "bg-[#1F244A] text-white shadow-2xs hover:bg-[#151936]"
-                    }`}
-                  >
-                    <Tag className="w-4.5 h-4.5 stroke-[2.2]" />
-                  </button>
-                  <span className={`text-[11px] leading-none ${isActive ? "font-black text-slate-950" : "font-extrabold text-slate-800"}`}>Buy</span>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => router.push("/")}
+                  className={`px-3.5 py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 select-none ${
+                    isActive
+                      ? "bg-[#FBBF24] text-slate-950 border border-amber-400 shadow-2xs scale-102"
+                      : "bg-[#1F244A] text-white hover:bg-[#151936]"
+                  }`}
+                >
+                  <Tag className="w-3.5 h-3.5 stroke-[2.5]" />
+                  <span>Buy</span>
+                </button>
               );
             })()}
 
@@ -190,21 +187,18 @@ export default function TopHeader({
             {(() => {
               const isActive = pathname.includes("/need");
               return (
-                <div className="flex flex-col items-center gap-1">
-                  <button
-                    type="button"
-                    onClick={() => router.push("/need")}
-                    title="Wanted"
-                    className={`w-10 h-10 rounded-[14px] transition-all cursor-pointer flex items-center justify-center select-none active:scale-95 ${
-                      isActive
-                        ? "bg-[#FBBF24] text-slate-950 border-2 border-amber-400 shadow-md scale-105"
-                        : "bg-[#1F244A] text-white shadow-2xs hover:bg-[#151936]"
-                    }`}
-                  >
-                    <Search className="w-4.5 h-4.5 stroke-[2.2]" />
-                  </button>
-                  <span className={`text-[11px] leading-none ${isActive ? "font-black text-slate-950" : "font-extrabold text-slate-800"}`}>Wanted</span>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => router.push("/need")}
+                  className={`px-3.5 py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 select-none ${
+                    isActive
+                      ? "bg-[#FBBF24] text-slate-950 border border-amber-400 shadow-2xs scale-102"
+                      : "bg-[#1F244A] text-white hover:bg-[#151936]"
+                  }`}
+                >
+                  <Search className="w-3.5 h-3.5 stroke-[2.5]" />
+                  <span>Wanted</span>
+                </button>
               );
             })()}
 
@@ -212,21 +206,18 @@ export default function TopHeader({
             {(() => {
               const isActive = pathname.includes("/services");
               return (
-                <div className="flex flex-col items-center gap-1">
-                  <button
-                    type="button"
-                    onClick={() => router.push("/services")}
-                    title="Services"
-                    className={`w-10 h-10 rounded-[14px] transition-all cursor-pointer flex items-center justify-center select-none active:scale-95 ${
-                      isActive
-                        ? "bg-[#FBBF24] text-slate-950 border-2 border-amber-400 shadow-md scale-105"
-                        : "bg-[#1F244A] text-white shadow-2xs hover:bg-[#151936]"
-                    }`}
-                  >
-                    <Wrench className="w-4.5 h-4.5 stroke-[2.2]" />
-                  </button>
-                  <span className={`text-[11px] leading-none ${isActive ? "font-black text-slate-950" : "font-extrabold text-slate-800"}`}>Services</span>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => router.push("/services")}
+                  className={`px-3.5 py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 select-none ${
+                    isActive
+                      ? "bg-[#FBBF24] text-slate-950 border border-amber-400 shadow-2xs scale-102"
+                      : "bg-[#1F244A] text-white hover:bg-[#151936]"
+                  }`}
+                >
+                  <Wrench className="w-3.5 h-3.5 stroke-[2.5]" />
+                  <span>Services</span>
+                </button>
               );
             })()}
 
@@ -234,21 +225,18 @@ export default function TopHeader({
             {(() => {
               const isActive = pathname.includes("/shops") || pathname.includes("/offers");
               return (
-                <div className="flex flex-col items-center gap-1">
-                  <button
-                    type="button"
-                    onClick={() => router.push("/shops")}
-                    title="Offers"
-                    className={`w-10 h-10 rounded-[14px] transition-all cursor-pointer flex items-center justify-center select-none active:scale-95 ${
-                      isActive
-                        ? "bg-[#FBBF24] text-slate-950 border-2 border-amber-400 shadow-md scale-105"
-                        : "bg-[#1F244A] text-white shadow-2xs hover:bg-[#151936]"
-                    }`}
-                  >
-                    <Store className="w-4.5 h-4.5 stroke-[2.2]" />
-                  </button>
-                  <span className={`text-[11px] leading-none ${isActive ? "font-black text-slate-950" : "font-extrabold text-slate-800"}`}>Offers</span>
-                </div>
+                <button
+                  type="button"
+                  onClick={() => router.push("/shops")}
+                  className={`px-3.5 py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 select-none ${
+                    isActive
+                      ? "bg-[#FBBF24] text-slate-950 border border-amber-400 shadow-2xs scale-102"
+                      : "bg-[#1F244A] text-white hover:bg-[#151936]"
+                  }`}
+                >
+                  <Store className="w-3.5 h-3.5 stroke-[2.5]" />
+                  <span>Offers</span>
+                </button>
               );
             })()}
           </div>
