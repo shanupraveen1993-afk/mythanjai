@@ -812,13 +812,11 @@ export default function ChatClientPage() {
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-1.5 min-w-0">
-                        <h3 className="font-extrabold text-sm sm:text-base text-slate-900 truncate">{t.peerName}</h3>
-                        {t.isSystemThread ? (
-                          <span className="bg-amber-400 text-slate-950 text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase">Official</span>
-                        ) : (
-                          <span className="text-[10px] font-mono text-slate-500 bg-slate-100 px-1 py-0.2 rounded font-semibold shrink-0">
-                            {generate5DigitMemberId(t.peerId || t.peerPhone)}
-                          </span>
+                        <h3 className="font-extrabold text-sm sm:text-base text-slate-900 truncate">
+                          {t.peerName} {!t.isSystemThread && `(ID: ${generate5DigitMemberId(t.peerId || t.peerPhone)})`}
+                        </h3>
+                        {t.isSystemThread && (
+                          <span className="bg-amber-400 text-slate-950 text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase">Official Admin</span>
                         )}
                       </div>
                       <span className="text-xs text-[#00a884] font-bold shrink-0 ml-1">

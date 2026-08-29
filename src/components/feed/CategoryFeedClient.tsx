@@ -320,9 +320,9 @@ export default function CategoryFeedClient({ segmentType }: CategoryFeedClientPr
                 <div className="transition-all duration-300">
                   {renderCard(post, index)}
                 </div>
-                {/* Crisp 2px Light-Grey Separator Line between post cards on Mobile App / APK */}
+                {/* Crisp 100% Visible Light-Grey Separator Bar between post cards on Mobile App / APK */}
                 {index < sortedPosts.length - 1 && (
-                  <div className="block md:hidden h-[2px] bg-slate-200/90 w-full my-1.5" />
+                  <div className="block md:hidden h-2.5 bg-slate-200/90 border-y border-slate-300/80 w-full my-0" />
                 )}
               </React.Fragment>
             ))}
