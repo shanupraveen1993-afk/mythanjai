@@ -292,6 +292,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
             </button>
           ) : (
             <>
+              {/* 1. Chat Button */}
               <button
                 type="button"
                 onClick={(e) => {
@@ -304,15 +305,16 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
                     return;
                   }
                   const buyerPhone = profile?.phone ? `+91 ${profile.phone.replace(/\D/g, "").slice(-10)}` : "Registered User";
-                  const callMsg = `📞 Call Back Request: Hello, a buyer (${buyerPhone}) requested a call back regarding your listing "${post.name}". Please call them back when free.`;
-                  router.push(`/chat?listingId=${post.id}&sellerId=${post.userId || ""}&title=${encodeURIComponent(post.name)}&autoMsg=${encodeURIComponent(callMsg)}&autoSend=true`);
+                  const chatMsg = `Hello! I am interested in your service "${post.name}". Is it available?`;
+                  router.push(`/chat?listingId=${post.id}&sellerId=${post.userId || ""}&title=${encodeURIComponent(post.name)}&autoMsg=${encodeURIComponent(chatMsg)}&autoSend=true`);
                 }}
-                className={`w-[128px] shrink-0 border-2 border-amber-500 text-amber-900 bg-amber-50 hover:bg-amber-100 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
+                className={`w-[128px] shrink-0 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 border border-amber-400/80 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
               >
-                <Phone className="w-4 h-4 text-amber-700 shrink-0 stroke-[2.5]" />
-                <span>Call Back</span>
+                <MessageSquare className="w-4 h-4 text-slate-950 shrink-0 stroke-[2.5]" />
+                <span>Chat</span>
               </button>
 
+              {/* 2. Call Button */}
               <button
                 type="button"
                 onClick={(e) => { if (isPreview) return; handleOpenPreContactModal(e, "call"); }}
