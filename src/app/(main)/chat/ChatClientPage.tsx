@@ -110,6 +110,68 @@ const SCAM_KEYWORDS = [
   "google pay",
 ];
 
+const TAMIL_DAILY_QUOTES = [
+  "முயற்சி தன்மெய் வருத்தக் கூலி தரும். – திருவள்ளுவர்",
+  "தோல்வி என்பது முடிவு அல்ல, புதிய தொடக்கத்தின் முகவுரை.",
+  "நல்ல எண்ணங்களே நல்வாழ்வின் அடித்தளம்.",
+  "அன்பும் அறனும் உடைத்தாயின் இல்வாழ்க்கை பண்பும் பயனும் அது. – திருவள்ளுவர்",
+  "உன்னை அறிந்தால் நீ வாழலாம், உலகம் உன்னை வணங்கும்.",
+  "உழைப்பே உயர்வு தரும்; உழைப்பவனுக்கே உலகம் சொந்தம்.",
+  "கற்றது கைமண் அளவு, கல்லாதது உலகளவு. – ஔவையார்",
+  "நம்பிக்கை தான் வாழ்க்கையின் வெற்றிச் சக்கரம்.",
+  "செயலின் முடிவே உனது உண்மையான முகத்தைக் காட்டும்.",
+  "இன்றைய சிறு சேமிப்பே நாளைய பெரிய பாதுகாப்பு.",
+  "தன் கையே தனக்கு உதவி.",
+  "பொறுமை கடலினும் பெரியது; அமைதியே பேரறிவு.",
+  "உண்மையான நட்பு காலத்தால் அழியாத செல்வம்.",
+  "எண்ணம்போல் வாழ்க்கை அமையும்; நன்மையே நினைப்போம்.",
+  "தோல்வியைக் கண்டு அஞ்சாதே, அது வெற்றிக்கானப் படிக்கட்டு.",
+  "அறிவும் அன்பும் இணைந்தால் சாதிக்க முடியாதது எதுவுமில்லை.",
+  "காலம் பொன் போன்றது; அதைப் பயனுள்ளதாக மாற்றுவோம்.",
+  "நல்ல சிந்தனை நல்வாழ்வுக்கு நல்வழி காட்டும்.",
+  "தன்னம்பிக்கை உள்ளவனுக்கு தடைகளும் படிக்கட்டுகளே.",
+  "இன்சொல் பேசுவது அறத்தின் முதல் படி.",
+  "ஒழுக்கமே மனிதனின் உண்மையான அழகு.",
+  "உதவி செய்தலை கடமையாகக் கருதுவோம்.",
+  "கற்பது என்றும் முடிவதில்லை; ஒவ்வொரு நாளும் புதிதாகக் கற்போம்.",
+  "வாய்மையே வெல்லும்; தர்மம் என்றும் அழியாது.",
+  "சிறு துளி பெரு வெள்ளம்; சிறு முயற்சியே பெரிய வெற்றி.",
+  "விடாமுயற்சி விஸ்வரூப வெற்றி தரும்.",
+  "நன்றாகப் பேசுவதை விட நன்றாகச் செய்வது மேலானது.",
+  "மற்றவர் தவறில் இருந்து பாடம் கற்பதே பேரறிவு.",
+  "தஞ்சையின் கம்பீரமும் நம் பாரம்பரியமும் என்றும் நம் பெருமை!",
+  "உண்மையான செல்வம் நல்ல எண்ணங்களும் நற்செயல்களுமே.",
+  "புன்னகையே மனிதனின் மிகப்பெரிய ஆயுதம்.",
+  "கடமையை செய்; பலனை எதிர்பாராதே.",
+  "சாதிக்க பிறந்தவர்கள் நாம்; ஒவ்வொரு நொடியும் பயனுள்ளதாக்குவோம்.",
+  "இயற்கையை நேசிப்போம்; சுற்றுப்புறத்தை தூய்மையாக வைப்போம்.",
+  "அடைமழைக்குப் பின் பிரகாசிக்கும் சூரியனைப் போல் சோதனைக்குப் பின் சாதனை வரும்.",
+  "தாயின் அன்பும் தந்தையின் வழிகாட்டலும் வாழ்வின் இரு கண்கள்.",
+  "அறியாமை அகற்றுவதே மெய்யான ஒளி.",
+  "நேர்மையான உழைப்பிற்கு என்றும் வீழ்ச்சியில்லை.",
+  "நல்ல நண்பர்கள் கிடைத்தலே பெருஞ்செல்வம்.",
+  "நாளை என்பதில்லை, இன்றே தொடங்குவோம்!",
+  "மன அமைதியே மனிதனின் உண்மையான பேரானந்தம்.",
+  "கோபத்தை வெல்பவனே மெய்யான வீரன்.",
+  "உறவுகளை மதிப்போம்; அன்பைப் பரப்புவோம்.",
+  "மாற்றம் ஒன்றே மாறாதது; நேர்மறை மாற்றத்தை வரவேற்போம்.",
+  "முன்னேற்றத்தின் ரகசியம் முதல் அடியை எடுத்து வைப்பதே.",
+  "நம் மண்ணின் பெருமையை உலகறியச் செய்வோம்.",
+  "எளிமையே உண்மையான கம்பீரம்.",
+  "அறிவே ஆற்றல்; கல்வியே நிலையான செல்வம்.",
+  "ஒற்றுமையே வலிமை; இணைந்து வாழ்வோம்!",
+  "நம்ம தஞ்சை மண் - வீரம், பண்பாடு, மற்றும் பாசத்தின் பிறப்பிடம்! 🌾"
+];
+
+function getTodayTamilQuote(): string {
+  const now = new Date();
+  const start = new Date(now.getFullYear(), 0, 0);
+  const diff = now.getTime() - start.getTime();
+  const oneDay = 1000 * 60 * 60 * 24;
+  const dayOfYear = Math.floor(diff / oneDay);
+  return TAMIL_DAILY_QUOTES[dayOfYear % TAMIL_DAILY_QUOTES.length];
+}
+
 export default function ChatClientPage() {
   const { toast } = useToast();
   const router = useRouter();
@@ -352,16 +414,23 @@ export default function ChatClientPage() {
         {
           id: "sys_welcome_1",
           senderId: "namma_thanjai_official",
-          senderName: "Namma Thanjai",
-          text: "Vanakkam! Welcome to Namma Thanjai. 🙏",
+          senderName: "Namma Thanjai Team",
+          text: "Vanakkam! Welcome to Namma Thanjai Support & Community. 🙏",
           timestamp: new Date("2026-08-01T10:00:00"),
         },
         {
           id: "sys_welcome_2",
           senderId: "namma_thanjai_official",
-          senderName: "Namma Thanjai",
-          text: "You can chat directly with verified sellers, buyers, and local service providers in Thanjavur right here safely.",
+          senderName: "Namma Thanjai Team",
+          text: "உங்கள் கருத்துக்களையும் ஆலோசனைகளையும் இங்கே தமிழில் பகிரலாம். நம்ம தஞ்சை குழு உங்களுக்கு உதவ தயார்! 🙏\n\n(Please share your feedback & suggestions here in Tamil. Namma Thanjai team is ready to help!)",
           timestamp: new Date("2026-08-01T10:01:00"),
+        },
+        {
+          id: "sys_daily_quote",
+          senderId: "namma_thanjai_official",
+          senderName: "Namma Thanjai Team",
+          text: `🌟 இன்றைய தமிழ் பொன்மொழி (Today's Tamil Quote):\n\n"${getTodayTamilQuote()}"\n\n— நம்ம தஞ்சை குழுவின் நல்வாழ்த்துக்கள்! ✨`,
+          timestamp: new Date(),
         },
       ]);
       return;
@@ -817,7 +886,7 @@ export default function ChatClientPage() {
                             : `${t.peerName} (${generate5DigitMemberId(t.peerId || t.peerPhone)})${t.listingTitle && t.listingTitle !== "Welcome to Namma Thanjai" ? ` • Re: ${t.listingTitle}` : ""}`}
                         </h3>
                         {t.isSystemThread && (
-                          <span className="bg-amber-400 text-slate-950 text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase shrink-0">Official Admin</span>
+                          <span className="bg-amber-400 text-slate-950 text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase shrink-0">Admin</span>
                         )}
                       </div>
                       <span className="text-xs text-[#00a884] font-bold shrink-0">
