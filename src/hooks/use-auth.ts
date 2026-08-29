@@ -282,11 +282,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signOutUser = async () => {
     if (typeof window !== "undefined") {
-      localStorage.removeItem("my_thanjai_verified");
-      localStorage.removeItem("namma_thanjai_verified");
-      localStorage.removeItem("namma_thanjai_user_verified");
-      localStorage.removeItem("my_thanjai_phone");
-      localStorage.removeItem("namma_thanjai_phone");
+      Object.keys(localStorage).forEach((key) => {
+        if (key.startsWith("namma_thanjai_") || key.startsWith("my_thanjai_")) {
+          localStorage.removeItem(key);
+        }
+      });
       try {
         document.cookie = "namma_thanjai_verified=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
         document.cookie = "namma_thanjai_phone=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";

@@ -811,25 +811,20 @@ export default function ChatClientPage() {
                   {/* Thread Info */}
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-1.5 min-w-0">
+                      <div className="flex items-center gap-1.5 min-w-0 flex-1 mr-2">
                         <h3 className="font-extrabold text-sm sm:text-base text-slate-900 truncate">
-                          {t.peerName} {!t.isSystemThread && `(ID: ${generate5DigitMemberId(t.peerId || t.peerPhone)})`}
+                          {t.isSystemThread
+                            ? t.peerName
+                            : `${t.peerName} (${generate5DigitMemberId(t.peerId || t.peerPhone)})${t.listingTitle && t.listingTitle !== "Welcome to Namma Thanjai" ? ` • Re: ${t.listingTitle}` : ""}`}
                         </h3>
                         {t.isSystemThread && (
-                          <span className="bg-amber-400 text-slate-950 text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase">Official Admin</span>
+                          <span className="bg-amber-400 text-slate-950 text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase shrink-0">Official Admin</span>
                         )}
                       </div>
-                      <span className="text-xs text-[#00a884] font-bold shrink-0 ml-1">
+                      <span className="text-xs text-[#00a884] font-bold shrink-0">
                         {formatTime(t.lastTimestamp)}
                       </span>
                     </div>
-                    
-                    {/* Ad Title Subtitle */}
-                    {!t.isSystemThread && t.listingTitle && t.listingTitle !== "Welcome to Namma Thanjai" && (
-                      <p className="text-xs font-semibold text-slate-500 truncate mt-0.5">
-                        Re: {t.listingTitle}
-                      </p>
-                    )}
 
                     {/* Last Message Preview */}
                     <div className="flex items-center justify-between mt-0.5">

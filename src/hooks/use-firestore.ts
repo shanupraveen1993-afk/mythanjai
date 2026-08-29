@@ -32,7 +32,7 @@ export function useFirestore<T = any>({
   onlyUserPosted = null,
   postType = null,
 }: UseFirestoreOptions) {
-  const cacheKey = `namma_thanjai_cache_${collectionName}_${postType || "all"}_${category}`;
+  const cacheKey = `namma_thanjai_cache_${collectionName}_${postType || "all"}_${category}_${onlyUserPosted || "public"}`;
 
   // Synchronous Initial State Hydration (0ms Instant Load — Zero Spinner Flash)
   const [data, setData] = useState<T[]>(() => {

@@ -89,12 +89,19 @@ function MainLayoutContent({
   const [selectedArea, setSelectedArea] = useState<TanjoreLocality | "All Areas">("All Areas");
   const [isSignInOpen, setIsSignInOpen] = useState(false);
 
-  // Startup Flow State: Native Splash (APK Only) -> Walkthrough -> Permissions -> Home
+  // Startup Flow State: Synchronous Cold Boot Splash (APK Only) -> Home
   const [showSplash, setShowSplash] = useState<boolean>(false);
   const [showWalkthrough, setShowWalkthrough] = useState(false);
   const [showPermissionsModal, setShowPermissionsModal] = useState(false);
   const [isMounted, setIsMounted] = useState(false);
-  const [isOnboardingRedirecting, setIsOnboardingRedirecting] = useState<boolean>(false);
+  const [isOnboardingRedirecting, setIsOnboardingRedirecting] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      const isNative = Boolean((window as any).Capacitor?.isNativePlatform() || window.navigator.userAgent.includes("Capacitor"));
+      const hasCompletedOnboarding = Boolean(localStorage.getItem("namma_thanjai_onboarding_completed_v10"));
+      return isNative && !hasCompletedOnboarding;
+    }
+    return false;
+  });
 
   useEffect(() => {
     setIsMounted(true);
