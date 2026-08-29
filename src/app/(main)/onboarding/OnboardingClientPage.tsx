@@ -95,7 +95,7 @@ export default function OnboardingClientPage() {
             <div className="relative group">
               <div className="absolute -inset-3 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 rounded-3xl blur-lg opacity-80 animate-pulse" />
               <div className="w-28 h-28 sm:w-32 sm:h-32 rounded-3xl bg-[#121633] p-4 shadow-2xl border-2 border-amber-400 flex items-center justify-center relative z-10">
-                <img src="/namma_thanjai_logo_dark_bg.png" alt="Namma Thanjai Logo" className="w-full h-full object-contain animate-scale-up" />
+                <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="w-full h-full object-contain animate-scale-up" />
               </div>
             </div>
 
@@ -279,7 +279,7 @@ export default function OnboardingClientPage() {
           {/* Top Header Logo */}
           <div className="w-full flex flex-col items-center text-center gap-3 pt-2 relative z-10">
             <div className="w-20 h-20 rounded-3xl bg-[#121633] p-3 shadow-2xl border-2 border-amber-400/80 flex items-center justify-center">
-              <img src="/namma_thanjai_logo_dark_bg.png" alt="Namma Thanjai Logo" className="w-full h-full object-contain" />
+              <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="w-full h-full object-contain" />
             </div>
             <div className="flex flex-col items-center">
               <h1 className="font-heading font-black text-2xl sm:text-3xl text-white tracking-tight">

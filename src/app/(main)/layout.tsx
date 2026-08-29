@@ -308,7 +308,7 @@ function MainLayoutContent({
     return (
       <div className="fixed inset-0 z-[999999] bg-[#1E244A] flex flex-col items-center justify-center select-none">
         <div className="flex flex-col items-center gap-3 animate-pulse">
-          <img src="/namma_thanjai_logo_dark_bg.png" alt="Namma Thanjai" className="h-20 w-auto object-contain" />
+          <img src="/namma_thanjai_logo.png" alt="Namma Thanjai" className="h-20 w-auto object-contain" />
           <span className="text-amber-400 font-heading font-black text-xs tracking-wider">தஞ்சாவூரின் #1 உள்ளூர் தளம்</span>
         </div>
       </div>
