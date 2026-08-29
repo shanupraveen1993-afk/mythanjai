@@ -199,7 +199,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
 
         {/* ── MIDDLE SECTION: Smart Responsive 1-to-3 Line Scrollable Description Box ── */}
         <div className="min-h-[3rem] max-h-[4.5rem] bg-slate-50/80 border border-slate-200/60 p-2.5 rounded-xl flex flex-col justify-start overflow-y-auto custom-scrollbar">
-          <p className="text-xs sm:text-sm text-slate-600 font-normal leading-relaxed whitespace-pre-line">
+          <p className="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed whitespace-pre-line">
             {post.description || "No specific requirement details provided."}
           </p>
         </div>
