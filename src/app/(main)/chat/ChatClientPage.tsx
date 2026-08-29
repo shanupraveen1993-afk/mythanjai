@@ -317,9 +317,9 @@ export default function ChatClientPage() {
   // Initialize active chat room when navigating from an ad card
   useEffect(() => {
     if (queryListingId || querySellerId || (queryTitle && queryTitle !== "Classified Item")) {
-      const currentUserId = user?.uid || "guest_user";
+      const currentBuyerKey = profile?.phone ? profile.phone.replace(/\D/g, "") : (user?.uid || "guest_user");
       const sellerId = querySellerId || "seller_contact";
-      const generatedChatId = `${queryListingId || "post"}_${[currentUserId, sellerId].sort().join("_")}`;
+      const generatedChatId = `${queryListingId || "post"}_${currentBuyerKey}_${sellerId}`;
 
       setActiveChatId(generatedChatId);
       setActiveListingTitle(queryTitle);

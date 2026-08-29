@@ -163,7 +163,7 @@ export default function TopHeader({
 
         {/* Desktop Header Center: 4 Category Tabs */}
         <div className="hidden md:flex items-center justify-center z-20 flex-1 min-w-0 mx-2">
-          <div className="flex items-center gap-1.5 bg-slate-100/80 p-1.5 rounded-full border border-slate-200 font-heading shadow-2xs">
+          <div className="flex items-center gap-2 bg-slate-100/90 p-1.5 rounded-2xl border border-slate-200/90 font-heading shadow-2xs">
             {/* Buy Tab */}
             {(() => {
               const isActive = pathname === "/" || pathname === "/home" || pathname.includes("/sell");
@@ -171,13 +171,15 @@ export default function TopHeader({
                 <button
                   type="button"
                   onClick={() => router.push("/")}
-                  className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  className={`px-3.5 py-1.5 rounded-xl text-[11px] font-black transition-all cursor-pointer flex flex-col items-center justify-center gap-1 min-w-[64px] ${
                     isActive
-                      ? "bg-[#FBBF24] text-slate-950 border border-amber-400/90 shadow-2xs"
-                      : "bg-amber-50/60 hover:bg-amber-100/80 text-slate-800 border border-amber-200/50 transition-colors"
+                      ? "bg-[#FBBF24] text-slate-950 border border-amber-400/90 shadow-2xs scale-105"
+                      : "bg-white hover:bg-amber-50 text-slate-700 border border-slate-200/80 transition-colors"
                   }`}
                 >
-                  <Tag className={`w-4 h-4 ${isActive ? "text-slate-900" : "text-amber-800 animate-icon-wiggle"}`} />
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center ${isActive ? "bg-slate-950 text-amber-400" : "bg-amber-100 text-amber-800"}`}>
+                    <Tag className="w-3.5 h-3.5 stroke-[2.5]" />
+                  </div>
                   <span>Buy</span>
                 </button>
               );
@@ -190,13 +192,15 @@ export default function TopHeader({
                 <button
                   type="button"
                   onClick={() => router.push("/need")}
-                  className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  className={`px-3.5 py-1.5 rounded-xl text-[11px] font-black transition-all cursor-pointer flex flex-col items-center justify-center gap-1 min-w-[64px] ${
                     isActive
-                      ? "bg-[#FBBF24] text-slate-950 border border-amber-400/90 shadow-2xs"
-                      : "bg-amber-50/60 hover:bg-amber-100/80 text-slate-800 border border-amber-200/50 transition-colors"
+                      ? "bg-[#FBBF24] text-slate-950 border border-amber-400/90 shadow-2xs scale-105"
+                      : "bg-white hover:bg-amber-50 text-slate-700 border border-slate-200/80 transition-colors"
                   }`}
                 >
-                  <Search className={`w-4 h-4 ${isActive ? "text-slate-900" : "text-amber-800 animate-icon-float"}`} />
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center ${isActive ? "bg-slate-950 text-amber-400" : "bg-amber-100 text-amber-800"}`}>
+                    <Search className="w-3.5 h-3.5 stroke-[2.5]" />
+                  </div>
                   <span>Wanted</span>
                 </button>
               );
@@ -209,13 +213,15 @@ export default function TopHeader({
                 <button
                   type="button"
                   onClick={() => router.push("/services")}
-                  className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  className={`px-3.5 py-1.5 rounded-xl text-[11px] font-black transition-all cursor-pointer flex flex-col items-center justify-center gap-1 min-w-[64px] ${
                     isActive
-                      ? "bg-[#FBBF24] text-slate-950 border border-amber-400/90 shadow-2xs"
-                      : "bg-amber-50/60 hover:bg-amber-100/80 text-slate-800 border border-amber-200/50 transition-colors"
+                      ? "bg-[#FBBF24] text-slate-950 border border-amber-400/90 shadow-2xs scale-105"
+                      : "bg-white hover:bg-amber-50 text-slate-700 border border-slate-200/80 transition-colors"
                   }`}
                 >
-                  <Wrench className={`w-4 h-4 ${isActive ? "text-slate-900" : "text-amber-800 animate-icon-wiggle"}`} />
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center ${isActive ? "bg-slate-950 text-amber-400" : "bg-amber-100 text-amber-800"}`}>
+                    <Wrench className="w-3.5 h-3.5 stroke-[2.5]" />
+                  </div>
                   <span>Services</span>
                 </button>
               );
@@ -228,13 +234,15 @@ export default function TopHeader({
                 <button
                   type="button"
                   onClick={() => router.push("/shops")}
-                  className={`px-4 py-1.5 rounded-full text-xs sm:text-sm font-extrabold transition-all cursor-pointer flex items-center gap-1.5 ${
+                  className={`px-3.5 py-1.5 rounded-xl text-[11px] font-black transition-all cursor-pointer flex flex-col items-center justify-center gap-1 min-w-[64px] ${
                     isActive
-                      ? "bg-[#FBBF24] text-slate-950 border border-amber-400/90 shadow-2xs"
-                      : "bg-amber-50/60 hover:bg-amber-100/80 text-slate-800 border border-amber-200/50 transition-colors"
+                      ? "bg-[#FBBF24] text-slate-950 border border-amber-400/90 shadow-2xs scale-105"
+                      : "bg-white hover:bg-amber-50 text-slate-700 border border-slate-200/80 transition-colors"
                   }`}
                 >
-                  <Store className={`w-4 h-4 ${isActive ? "text-slate-900" : "text-amber-800 animate-icon-float"}`} />
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center ${isActive ? "bg-slate-950 text-amber-400" : "bg-amber-100 text-amber-800"}`}>
+                    <Store className="w-3.5 h-3.5 stroke-[2.5]" />
+                  </div>
                   <span>Offers</span>
                 </button>
               );

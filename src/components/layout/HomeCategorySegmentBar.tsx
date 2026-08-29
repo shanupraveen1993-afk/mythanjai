@@ -59,22 +59,16 @@ export default function HomeCategorySegmentBar() {
                   }
                   router.push(seg.route);
                 }}
-                className={`py-2 px-1 rounded-xl transition-all cursor-pointer flex flex-col items-center justify-center gap-1 w-full text-center select-none active:scale-95 ${
+                className={`py-2 px-1 rounded-2xl transition-all cursor-pointer flex flex-col items-center justify-center gap-1.5 w-full text-center select-none active:scale-95 ${
                   isActive
-                    ? "bg-[#FBBF24] text-slate-950 font-black border border-amber-400 shadow-sm scale-102"
-                    : "bg-amber-50/70 text-slate-800 font-bold border border-amber-200/60 hover:bg-amber-100/80 hover:border-amber-300/80 shadow-2xs"
+                    ? "bg-[#FBBF24] text-slate-950 font-black border border-amber-400/90 shadow-2xs scale-102"
+                    : "bg-white text-slate-700 font-bold border border-slate-200/90 hover:bg-amber-50 shadow-2xs"
                 }`}
               >
-                <IconComp
-                  className={`w-4.5 h-4.5 transition-all duration-300 shrink-0 ${
-                    isActive
-                      ? "text-slate-950 fill-slate-950/20 stroke-[2.5]"
-                      : seg.id === "need" || seg.id === "shops"
-                      ? "text-amber-700 stroke-[2] fill-transparent animate-icon-float"
-                      : "text-amber-700 stroke-[2] fill-transparent animate-icon-wiggle"
-                  }`}
-                />
-                <span className={`text-[11px] sm:text-xs leading-none truncate w-full ${isActive ? "font-black text-slate-950" : "font-bold text-slate-700"}`}>
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${isActive ? "bg-slate-950 text-amber-400" : "bg-amber-100 text-amber-800"}`}>
+                  <IconComp className="w-3.5 h-3.5 stroke-[2.5]" />
+                </div>
+                <span className={`text-[11px] leading-none truncate w-full ${isActive ? "font-black text-slate-950" : "font-extrabold text-slate-800"}`}>
                   {seg.label}
                 </span>
               </button>

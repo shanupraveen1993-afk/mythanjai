@@ -292,10 +292,10 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
             </button>
           ) : (
             <>
-              {/* 1. Chat Button */}
+              {/* 1. Black Outline Chat Button with Real-Time Notification */}
               <button
                 type="button"
-                onClick={(e) => {
+                onClick={async (e) => {
                   e.stopPropagation();
                   if (isPreview) return;
                   if (!isVerified) {
@@ -305,20 +305,38 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
                     return;
                   }
                   const buyerPhone = profile?.phone ? `+91 ${profile.phone.replace(/\D/g, "").slice(-10)}` : "Registered User";
-                  const chatMsg = `Hello! I am interested in your service "${post.name}". Is it available?`;
+                  const chatMsg = `Hello! I am interested in your service "${post.name}". Please call me back when free.`;
+
+                  // Push real-time notification to service provider's notification hub
+                  try {
+                    const { collection, addDoc, serverTimestamp } = await import("firebase/firestore");
+                    const { db } = await import("@/lib/firebase");
+                    const notifRef = collection(db, "notifications");
+                    await addDoc(notifRef, {
+                      recipientId: post.userId || post.phone || "provider",
+                      recipientPhone: post.phone,
+                      senderName: profile?.displayName || "Interested Client",
+                      type: "chat",
+                      title: `New Service Inquiry for ${post.name}`,
+                      message: `"${chatMsg}"`,
+                      read: false,
+                      timestamp: serverTimestamp(),
+                    });
+                  } catch (err) {}
+
                   router.push(`/chat?listingId=${post.id}&sellerId=${post.userId || ""}&title=${encodeURIComponent(post.name)}&autoMsg=${encodeURIComponent(chatMsg)}&autoSend=true`);
                 }}
-                className={`w-[128px] shrink-0 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 border border-amber-400/80 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
+                className={`w-[128px] shrink-0 border-2 border-slate-900 bg-white hover:bg-slate-50 text-slate-900 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
               >
-                <MessageSquare className="w-4 h-4 text-slate-950 shrink-0 stroke-[2.5]" />
+                <MessageSquare className="w-4 h-4 text-slate-900 shrink-0 stroke-[2.5]" />
                 <span>Chat</span>
               </button>
 
-              {/* 2. Call Button */}
+              {/* 2. Deep Royal Navy #1F244A Call Button */}
               <button
                 type="button"
                 onClick={(e) => { if (isPreview) return; handleOpenPreContactModal(e, "call"); }}
-                className={`w-[128px] shrink-0 bg-[#1d4ed8] hover:bg-[#1e40af] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
+                className={`w-[128px] shrink-0 bg-[#1F244A] hover:bg-[#151936] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
               >
                 <Phone className="w-4 h-4 text-white shrink-0" />
                 <span>Call</span>

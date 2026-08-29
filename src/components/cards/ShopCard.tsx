@@ -465,9 +465,9 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
                 <a
                   href={isPreview ? "#" : callUrl}
                   onClick={(e) => { if (isPreview) e.preventDefault(); e.stopPropagation(); }}
-                  className={`w-[128px] shrink-0 bg-amber-500 hover:bg-amber-600 text-slate-950 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
+                  className={`w-[128px] shrink-0 bg-[#1F244A] hover:bg-[#151936] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
                 >
-                  <Phone className="w-4 h-4 text-slate-950 shrink-0" />
+                  <Phone className="w-4 h-4 text-white shrink-0" />
                   <span>Call Shop</span>
                 </a>
               )}
