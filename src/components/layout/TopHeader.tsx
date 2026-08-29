@@ -177,8 +177,8 @@ export default function TopHeader({
                       : "bg-white hover:bg-amber-50 text-slate-700 border border-slate-200/80 transition-colors"
                   }`}
                 >
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center p-0.5 shadow-2xs overflow-hidden ${isActive ? "bg-white border-2 border-amber-400" : "bg-white border border-slate-200"}`}>
-                    <img src="/namma_thanjai_logo.png" alt="Buy" className="w-full h-full object-contain" />
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center shadow-2xs ${isActive ? "bg-slate-950 text-amber-400" : "bg-amber-100 text-amber-800"}`}>
+                    <Tag className="w-3.5 h-3.5 stroke-[2.5]" />
                   </div>
                   <span>Buy</span>
                 </button>
@@ -198,8 +198,8 @@ export default function TopHeader({
                       : "bg-white hover:bg-amber-50 text-slate-700 border border-slate-200/80 transition-colors"
                   }`}
                 >
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center p-0.5 shadow-2xs overflow-hidden ${isActive ? "bg-white border-2 border-amber-400" : "bg-white border border-slate-200"}`}>
-                    <img src="/namma_thanjai_logo.png" alt="Wanted" className="w-full h-full object-contain" />
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center shadow-2xs ${isActive ? "bg-slate-950 text-amber-400" : "bg-amber-100 text-amber-800"}`}>
+                    <Search className="w-3.5 h-3.5 stroke-[2.5]" />
                   </div>
                   <span>Wanted</span>
                 </button>
@@ -219,8 +219,8 @@ export default function TopHeader({
                       : "bg-white hover:bg-amber-50 text-slate-700 border border-slate-200/80 transition-colors"
                   }`}
                 >
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center p-0.5 shadow-2xs overflow-hidden ${isActive ? "bg-white border-2 border-amber-400" : "bg-white border border-slate-200"}`}>
-                    <img src="/namma_thanjai_logo.png" alt="Services" className="w-full h-full object-contain" />
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center shadow-2xs ${isActive ? "bg-slate-950 text-amber-400" : "bg-amber-100 text-amber-800"}`}>
+                    <Wrench className="w-3.5 h-3.5 stroke-[2.5]" />
                   </div>
                   <span>Services</span>
                 </button>
@@ -240,8 +240,8 @@ export default function TopHeader({
                       : "bg-white hover:bg-amber-50 text-slate-700 border border-slate-200/80 transition-colors"
                   }`}
                 >
-                  <div className={`w-7 h-7 rounded-full flex items-center justify-center p-0.5 shadow-2xs overflow-hidden ${isActive ? "bg-white border-2 border-amber-400" : "bg-white border border-slate-200"}`}>
-                    <img src="/namma_thanjai_logo.png" alt="Offers" className="w-full h-full object-contain" />
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center shadow-2xs ${isActive ? "bg-slate-950 text-amber-400" : "bg-amber-100 text-amber-800"}`}>
+                    <Store className="w-3.5 h-3.5 stroke-[2.5]" />
                   </div>
                   <span>Offers</span>
                 </button>
