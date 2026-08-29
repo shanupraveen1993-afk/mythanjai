@@ -218,21 +218,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const updatePhone = async (phone: string) => {
-    let activeUser = user;
-    if (!activeUser) {
-      try {
-        const cred = await signInAnonymously(auth);
-        activeUser = cred.user;
-        setUser(activeUser);
-      } catch (e) {
-        console.error("Anonymous sign in failed inside updatePhone", e);
-      }
-    }
-
     const cleanedPhone = phone.replace(/\D/g, "");
     const targetPhone = cleanedPhone.length === 10 ? `91${cleanedPhone}` : cleanedPhone;
     const existingMemberId = `NT-${targetPhone.slice(-5)}`;
 
+    // 1. INSTANT LOCAL STATE UPDATE (0.0ms delay)
     if (typeof window !== "undefined") {
       localStorage.setItem("my_thanjai_verified", "true");
       localStorage.setItem("namma_thanjai_verified", "true");
@@ -244,40 +234,42 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         document.cookie = `namma_thanjai_verified=true; path=/; max-age=${10 * 365 * 86400}; SameSite=Lax`;
         document.cookie = `namma_thanjai_phone=${targetPhone}; path=/; max-age=${10 * 365 * 86400}; SameSite=Lax`;
       } catch (e) {}
+      window.dispatchEvent(new Event("namma_thanjai_auth_changed"));
     }
 
-    try {
-      if (activeUser) {
-        const userRef = doc(db, "users", activeUser.uid);
-        await setDoc(userRef, {
-          uid: activeUser.uid,
-          memberId: existingMemberId,
-          phone: targetPhone,
-          isVerified: true,
-        }, { merge: true });
-      }
+    setProfile((prev) => ({
+      uid: user?.uid || prev?.uid || `user_${targetPhone}`,
+      memberId: existingMemberId,
+      phone: targetPhone,
+      isVerified: true,
+      displayName: prev?.displayName || "Namma Thanjai User",
+      createdAt: prev?.createdAt || new Date(),
+    }));
 
-      setProfile((prev) => ({
-        uid: activeUser?.uid || prev?.uid || "mock_uid",
-        memberId: existingMemberId,
-        phone: targetPhone,
-        isVerified: true,
-        displayName: prev?.displayName || "Namma Thanjai User",
-        createdAt: prev?.createdAt || new Date(),
-      }));
-      return { success: true };
-    } catch (error: any) {
-      console.warn("Firestore update failed, falling back to local state mock:", error);
-      setProfile((prev) => ({
-        uid: activeUser?.uid || prev?.uid || "mock_uid",
-        memberId: existingMemberId,
-        phone: targetPhone,
-        isVerified: true,
-        displayName: prev?.displayName || "Namma Thanjai User",
-        createdAt: prev?.createdAt || new Date(),
-      }));
-      return { success: true };
-    }
+    // 2. NON-BLOCKING BACKGROUND FIREBASE SYNC
+    (async () => {
+      try {
+        let activeUser = user;
+        if (!activeUser) {
+          try {
+            const cred = await signInAnonymously(auth);
+            activeUser = cred.user;
+            setUser(activeUser);
+          } catch (e) {}
+        }
+        if (activeUser) {
+          const userRef = doc(db, "users", activeUser.uid);
+          await setDoc(userRef, {
+            uid: activeUser.uid,
+            memberId: existingMemberId,
+            phone: targetPhone,
+            isVerified: true,
+          }, { merge: true });
+        }
+      } catch (e) {}
+    })();
+
+    return { success: true };
   };
 
   const signOutUser = async () => {

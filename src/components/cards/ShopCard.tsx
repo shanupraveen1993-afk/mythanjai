@@ -254,8 +254,8 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
                 </span>
               </div>
               {post.offer_description && (
-                <div className="min-h-[3rem] max-h-[4.5rem] bg-white/90 p-2 rounded-lg border border-blue-100 overflow-y-auto custom-scrollbar">
-                  <p className="text-xs text-slate-700 font-medium leading-relaxed whitespace-pre-line">
+                <div className="bg-white/90 p-2 rounded-lg border border-blue-100 overflow-y-auto max-h-[16em] custom-scrollbar">
+                  <p className="text-xs text-slate-700 font-medium leading-relaxed whitespace-pre-line line-clamp-4 md:line-clamp-4">
                     {post.offer_description}
                   </p>
                 </div>
