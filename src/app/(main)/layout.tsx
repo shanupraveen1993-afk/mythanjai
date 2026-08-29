@@ -132,31 +132,6 @@ function MainLayoutContent({
     const isNative = Boolean((window as any).Capacitor?.isNativePlatform() || window.navigator.userAgent.includes("Capacitor"));
     if (!isNative) return;
 
-    let backPressCount = 0;
-    let backTimer: any = null;
-
-    import("@capacitor/app")
-      .then(({ App: CapApp }) => {
-        const listenerPromise = CapApp.addListener("backButton", () => {
-          if (pathname === "/" || pathname === "/home" || pathname === "/onboarding") {
-            if (backPressCount === 0) {
-              backPressCount = 1;
-              toast.dismiss();
-              toast.info("Press back again to exit Namma Thanjai");
-              backTimer = setTimeout(() => {
-                backPressCount = 0;
-              }, 2500);
-            } else {
-              if (backTimer) clearTimeout(backTimer);
-              toast.dismiss();
-              CapApp.exitApp();
-            }
-          } else {
-            router.push("/");
-          }
-        });
-      })
-      .catch(() => {});
   }, [pathname, toast, router]);
 
   const handleWalkthroughComplete = () => {

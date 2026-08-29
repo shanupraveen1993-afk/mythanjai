@@ -65,8 +65,8 @@ export default function HomeCategorySegmentBar() {
                     : "bg-white text-slate-700 font-bold border border-slate-200/90 hover:bg-amber-50 shadow-2xs"
                 }`}
               >
-                <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${isActive ? "bg-slate-950 text-amber-400" : "bg-amber-100 text-amber-800"}`}>
-                  <IconComp className="w-3.5 h-3.5 stroke-[2.5]" />
+                <div className={`w-7 h-7 rounded-full flex items-center justify-center p-0.5 shrink-0 overflow-hidden ${isActive ? "bg-white border-2 border-amber-400" : "bg-white border border-slate-200"}`}>
+                  <img src="/namma_thanjai_logo.png" alt={seg.label} className="w-full h-full object-contain" />
                 </div>
                 <span className={`text-[11px] leading-none truncate w-full ${isActive ? "font-black text-slate-950" : "font-extrabold text-slate-800"}`}>
                   {seg.label}

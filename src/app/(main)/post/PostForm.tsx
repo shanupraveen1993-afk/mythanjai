@@ -685,14 +685,14 @@ export default function PostForm({ segment }: PostFormProps) {
       // ONLY WHEN FIRESTORE SUCCEEDS: Show success and navigate
       setSuccess(true);
       setLoading(false);
-      toast.success(editId ? "Post updated in Firebase!" : "Post published to Firebase!");
+      toast.success(editId ? "Ad updated successfully! 🎉" : "Ad published successfully! 🎉");
       router.push(config.redirectPath);
 
     } catch (firestoreError: any) {
       // ON FIRESTORE FAILURE: DO NOT save to localStorage, DO NOT redirect, DO NOT show success
       console.error("Firestore persistence error:", firestoreError);
       setLoading(false);
-      const errMsg = `Firebase Publish Failed: ${firestoreError?.message || "Cloud database write rejected."} Please check your connection and try again.`;
+      const errMsg = `Publish Failed: ${firestoreError?.message || "Connection error."} Please check your connection and try again.`;
       setValidationError(errMsg);
       toast.error(errMsg);
     }
