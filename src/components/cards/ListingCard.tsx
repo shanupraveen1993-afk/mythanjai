@@ -456,34 +456,34 @@ export default function ListingCard({ listing, isPreview }: { listing: ListingIt
                 <button
                   type="button"
                   onClick={handleSaveToggle}
-                  className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer border-0 ${
+                  className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors cursor-pointer border-0 ${
                     isSaved
                       ? "bg-amber-50 text-amber-600"
                       : "bg-transparent text-slate-500 hover:text-slate-900 hover:bg-slate-100/80"
                   }`}
                   title={isSaved ? "Saved" : "Save Listing"}
                 >
-                  <Bookmark className={`w-5 h-5 stroke-[2] ${isSaved ? "fill-amber-600" : ""}`} />
+                  <Bookmark className={`w-4 h-4 stroke-[1.8] ${isSaved ? "fill-amber-600" : ""}`} />
                 </button>
 
                 {/* 2nd: Share */}
                 <button
                   type="button"
                   onClick={handleShare}
-                  className="w-8 h-8 rounded-full border-0 bg-transparent text-slate-500 hover:text-slate-900 hover:bg-slate-100/80 flex items-center justify-center transition-colors cursor-pointer"
+                  className="w-7 h-7 rounded-full border-0 bg-transparent text-slate-500 hover:text-slate-900 hover:bg-slate-100/80 flex items-center justify-center transition-colors cursor-pointer"
                   title="Share Listing"
                 >
-                  <Share2 className="w-5 h-5 stroke-[2]" />
+                  <Share2 className="w-4 h-4 stroke-[1.8]" />
                 </button>
 
                 {/* 3rd: Report */}
                 <button
                   type="button"
                   onClick={handleReportListing}
-                  className="w-8 h-8 rounded-full border-0 bg-transparent text-slate-400 hover:text-rose-600 hover:bg-rose-50 flex items-center justify-center transition-colors cursor-pointer"
+                  className="w-7 h-7 rounded-full border-0 bg-transparent text-slate-400 hover:text-rose-600 hover:bg-rose-50 flex items-center justify-center transition-colors cursor-pointer"
                   title="Report Listing"
                 >
-                  <Flag className="w-5 h-5 stroke-[2]" />
+                  <Flag className="w-4 h-4 stroke-[1.8]" />
                 </button>
               </div>
             )}

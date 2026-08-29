@@ -219,34 +219,34 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
               <button
                 type="button"
                 onClick={handleToggleSave}
-                className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors cursor-pointer border-0 ${
+                className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors cursor-pointer border-0 ${
                   saved
                     ? "bg-amber-50 text-amber-600"
                     : "bg-transparent text-slate-500 hover:text-slate-900 hover:bg-slate-100/80"
                 }`}
                 title="Save Requirement"
               >
-                <Bookmark className={`w-5 h-5 stroke-[2] ${saved ? "fill-amber-600" : ""}`} />
+                <Bookmark className={`w-4 h-4 stroke-[1.8] ${saved ? "fill-amber-600" : ""}`} />
               </button>
 
               {/* 2nd: Share */}
               <button
                 type="button"
                 onClick={handleSharePost}
-                className="w-8 h-8 rounded-full border-0 bg-transparent text-slate-500 hover:text-slate-900 hover:bg-slate-100/80 flex items-center justify-center transition-colors cursor-pointer"
+                className="w-7 h-7 rounded-full border-0 bg-transparent text-slate-500 hover:text-slate-900 hover:bg-slate-100/80 flex items-center justify-center transition-colors cursor-pointer"
                 title="Share Requirement"
               >
-                <Share2 className="w-5 h-5 stroke-[2]" />
+                <Share2 className="w-4 h-4 stroke-[1.8]" />
               </button>
 
               {/* 3rd: Report */}
               <button
                 type="button"
                 onClick={handleReport}
-                className="w-8 h-8 rounded-full border-0 bg-transparent text-slate-400 hover:text-rose-600 hover:bg-rose-50 flex items-center justify-center transition-colors cursor-pointer"
+                className="w-7 h-7 rounded-full border-0 bg-transparent text-slate-400 hover:text-rose-600 hover:bg-rose-50 flex items-center justify-center transition-colors cursor-pointer"
                 title="Report Requirement"
               >
-                <Flag className="w-5 h-5 stroke-[2]" />
+                <Flag className="w-4 h-4 stroke-[1.8]" />
               </button>
             </div>
           )}
