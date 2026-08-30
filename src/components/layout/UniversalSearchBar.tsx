@@ -108,8 +108,7 @@ export default function UniversalSearchBar() {
 
   return (
     <div ref={containerRef} className="relative w-full max-w-lg">
-      <form onSubmit={handleFormSubmit} className="relative flex items-center w-full h-10 sm:h-10.5 bg-white border border-slate-200 focus-within:border-[#1F244A] rounded-xl pl-3 pr-1 shadow-2xs transition-all overflow-hidden">
-        <Search className="w-4 h-4 text-slate-400 shrink-0 mr-2" />
+      <form onSubmit={handleFormSubmit} className="relative flex items-center w-full h-10 sm:h-10.5 bg-white border border-slate-200 focus-within:border-[#1F244A] rounded-xl pl-3.5 pr-1 shadow-2xs transition-all overflow-hidden">
         <input
           type="text"
           value={searchTerm}
@@ -133,10 +132,10 @@ export default function UniversalSearchBar() {
         ) : null}
         <button
           type="submit"
-          className="bg-[#1F244A] hover:bg-[#151936] text-white px-2.5 sm:px-3 py-1.5 rounded-lg flex items-center justify-center cursor-pointer transition-all shrink-0 active:scale-95 shadow-2xs"
+          className="bg-[#1F244A] hover:bg-[#151936] text-white px-3 sm:px-4 py-1.5 rounded-lg text-xs font-black cursor-pointer transition-all shrink-0 active:scale-95 shadow-2xs"
           title="Search"
         >
-          <Search className="w-3.5 h-3.5 text-white stroke-[2.5]" />
+          Search
         </button>
       </form>
 

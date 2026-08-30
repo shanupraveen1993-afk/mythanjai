@@ -138,7 +138,7 @@ export default function TopHeader({
 
   return (
     <header
-      className={`relative w-full z-50 bg-[#1F244A]/[0.03] backdrop-blur-xl text-slate-900 flex-col justify-end border-b border-slate-200/90 shadow-2xs rounded-b-2xl sm:rounded-b-3xl overflow-hidden ${
+      className={`relative w-full z-50 bg-[#1F244A]/[0.03] backdrop-blur-xl text-slate-900 flex-col justify-end border-b border-slate-200/90 shadow-2xs rounded-b-2xl sm:rounded-b-3xl md:rounded-b-none overflow-hidden ${
         pathname?.startsWith("/post") ? "hidden" : pathname?.startsWith("/chat") ? "hidden md:flex" : "flex"
       }`}
       style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
