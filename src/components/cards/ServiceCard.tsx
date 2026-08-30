@@ -369,9 +369,6 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
         </div>
       </div>
 
-      {/* Facebook-Style Mobile Card Separator Bar */}
-      <div className="w-full h-2.5 bg-[#F0F2F5] border-y border-[#E4E6EB] mt-3 block sm:hidden" />
-
       {/* Pre-Contact Safety Rules Modal */}
       {isPreContactOpen && (
         <PreContactVerificationModal

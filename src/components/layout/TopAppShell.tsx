@@ -45,16 +45,8 @@ export default function TopAppShell({ children }: TopAppShellProps) {
     setShouldHide(false);
   }, [pathname]);
 
-  // Rule 2: Synchronize scroll direction state (Website: Always Fixed Visible; Mobile APK: Scroll Hide)
+  // Rule 2: Synchronize scroll direction state (Hide on scroll down, show on scroll up for Mobile Web App & Native APK App)
   useEffect(() => {
-    if (typeof window !== "undefined") {
-      const isNative = Boolean((window as any).Capacitor?.isNativePlatform() || window.navigator.userAgent.includes("Capacitor"));
-      if (!isNative) {
-        setShouldHide(false);
-        return;
-      }
-    }
-
     if (isAtTop) {
       setShouldHide(false);
     } else if (scrollDirection === "down") {
@@ -67,7 +59,9 @@ export default function TopAppShell({ children }: TopAppShellProps) {
   return (
     <div
       ref={shellRef}
-      className="fixed top-0 left-0 right-0 z-50 w-full bg-white/98 backdrop-blur-xl border-b border-slate-200/90 shadow-sm rounded-b-2xl sm:rounded-b-3xl transition-all duration-200 ease-in-out"
+      className={`fixed top-0 left-0 right-0 z-50 w-full bg-white/98 backdrop-blur-xl border-b border-slate-200/90 shadow-sm rounded-b-2xl sm:rounded-b-3xl transition-transform duration-300 ease-in-out ${
+        shouldHide ? "-translate-y-full pointer-events-none" : "translate-y-0 pointer-events-auto"
+      }`}
     >
       {children}
     </div>
