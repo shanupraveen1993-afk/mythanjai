@@ -310,7 +310,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
                   className={`w-full bg-[#1F244A] hover:bg-[#151936] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-md cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
                 >
                   <MessageSquare className="w-4 h-4 text-white shrink-0 stroke-[2.5]" />
-                  <span>Chat with Provider</span>
+                  <span>Chat</span>
                 </button>
               ) : (
                 <>

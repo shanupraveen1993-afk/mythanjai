@@ -292,7 +292,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
                   className="w-full bg-[#1F244A] hover:bg-[#151936] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-md cursor-pointer transition-colors"
                 >
                   <MessageSquare className="w-4 h-4 text-white shrink-0" />
-                  <span>Chat with Buyer</span>
+                  <span>Chat</span>
                 </button>
               ) : (
                 <>
