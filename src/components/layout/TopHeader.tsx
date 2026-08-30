@@ -161,9 +161,9 @@ export default function TopHeader({
           </div>
         </div>
 
-        {/* Desktop Header Center: 4 Category Tabs (Horizontal Pill Nav Bar) */}
+        {/* Desktop Header Center: 4 Category Tabs (Modern Segmented Underline Nav Bar) */}
         <div className="hidden md:flex items-center justify-center z-20 flex-1 min-w-0 mx-2">
-          <div className="flex items-center gap-1.5 bg-slate-100/90 p-1.5 rounded-2xl border border-slate-200/90 font-heading shadow-2xs">
+          <div className="flex items-center gap-1 sm:gap-2 border-b border-transparent font-heading">
             {/* Buy Tab */}
             {(() => {
               const isActive = pathname === "/" || pathname === "/home" || pathname.includes("/sell");
@@ -171,13 +171,13 @@ export default function TopHeader({
                 <button
                   type="button"
                   onClick={() => router.push("/")}
-                  className={`px-3.5 py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 select-none ${
+                  className={`px-3.5 py-2 text-xs sm:text-sm font-black transition-all cursor-pointer flex items-center gap-1.5 select-none relative ${
                     isActive
-                      ? "bg-[#FBBF24] text-slate-950 border border-amber-400 shadow-2xs scale-102"
-                      : "bg-[#1F244A] text-white hover:bg-[#151936]"
+                      ? "text-[#1F244A] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#1F244A] after:rounded-full"
+                      : "text-slate-600 hover:text-slate-900"
                   }`}
                 >
-                  <Tag className="w-3.5 h-3.5 stroke-[2.5]" />
+                  <Tag className={`w-3.5 h-3.5 ${isActive ? "text-[#1F244A] stroke-[2.5]" : "text-slate-500 stroke-[2]"}`} />
                   <span>Buy</span>
                 </button>
               );
@@ -190,13 +190,13 @@ export default function TopHeader({
                 <button
                   type="button"
                   onClick={() => router.push("/need")}
-                  className={`px-3.5 py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 select-none ${
+                  className={`px-3.5 py-2 text-xs sm:text-sm font-black transition-all cursor-pointer flex items-center gap-1.5 select-none relative ${
                     isActive
-                      ? "bg-[#FBBF24] text-slate-950 border border-amber-400 shadow-2xs scale-102"
-                      : "bg-[#1F244A] text-white hover:bg-[#151936]"
+                      ? "text-[#1F244A] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#1F244A] after:rounded-full"
+                      : "text-slate-600 hover:text-slate-900"
                   }`}
                 >
-                  <Search className="w-3.5 h-3.5 stroke-[2.5]" />
+                  <Search className={`w-3.5 h-3.5 ${isActive ? "text-[#1F244A] stroke-[2.5]" : "text-slate-500 stroke-[2]"}`} />
                   <span>Wanted</span>
                 </button>
               );
@@ -209,13 +209,13 @@ export default function TopHeader({
                 <button
                   type="button"
                   onClick={() => router.push("/services")}
-                  className={`px-3.5 py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 select-none ${
+                  className={`px-3.5 py-2 text-xs sm:text-sm font-black transition-all cursor-pointer flex items-center gap-1.5 select-none relative ${
                     isActive
-                      ? "bg-[#FBBF24] text-slate-950 border border-amber-400 shadow-2xs scale-102"
-                      : "bg-[#1F244A] text-white hover:bg-[#151936]"
+                      ? "text-[#1F244A] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#1F244A] after:rounded-full"
+                      : "text-slate-600 hover:text-slate-900"
                   }`}
                 >
-                  <Wrench className="w-3.5 h-3.5 stroke-[2.5]" />
+                  <Wrench className={`w-3.5 h-3.5 ${isActive ? "text-[#1F244A] stroke-[2.5]" : "text-slate-500 stroke-[2]"}`} />
                   <span>Services</span>
                 </button>
               );
@@ -228,13 +228,13 @@ export default function TopHeader({
                 <button
                   type="button"
                   onClick={() => router.push("/shops")}
-                  className={`px-3.5 py-2 rounded-xl text-xs font-black transition-all cursor-pointer flex items-center gap-1.5 select-none ${
+                  className={`px-3.5 py-2 text-xs sm:text-sm font-black transition-all cursor-pointer flex items-center gap-1.5 select-none relative ${
                     isActive
-                      ? "bg-[#FBBF24] text-slate-950 border border-amber-400 shadow-2xs scale-102"
-                      : "bg-[#1F244A] text-white hover:bg-[#151936]"
+                      ? "text-[#1F244A] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#1F244A] after:rounded-full"
+                      : "text-slate-600 hover:text-slate-900"
                   }`}
                 >
-                  <Store className="w-3.5 h-3.5 stroke-[2.5]" />
+                  <Store className={`w-3.5 h-3.5 ${isActive ? "text-[#1F244A] stroke-[2.5]" : "text-slate-500 stroke-[2]"}`} />
                   <span>Offers</span>
                 </button>
               );
