@@ -23,6 +23,7 @@ import {
   Bell,
   Paperclip,
   Smile,
+  Loader2,
 } from "lucide-react";
 import NotificationDrawer from "@/components/modals/NotificationDrawer";
 import {
@@ -175,7 +176,40 @@ function getTodayTamilQuote(): string {
 export default function ChatClientPage() {
   const { toast } = useToast();
   const router = useRouter();
-  const { user, profile, isVerified } = useAuth();
+  const { user, profile, isVerified, updatePhone } = useAuth();
+
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneUpdating, setPhoneUpdating] = useState(false);
+
+  const handleDirectLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
+    const cleanPhone = phoneNumber.replace(/\D/g, "");
+    if (!cleanPhone || cleanPhone.length !== 10) {
+      toast.error("Please enter a valid 10-digit mobile number.");
+      return;
+    }
+
+    setPhoneUpdating(true);
+    try {
+      const result = await updatePhone(cleanPhone);
+      if (result?.success) {
+        toast.success("WhatsApp Number Verified Successfully!");
+        if (typeof window !== "undefined") {
+          localStorage.setItem("namma_thanjai_user_verified", "true");
+          localStorage.setItem("namma_thanjai_verified", "true");
+          localStorage.setItem("my_thanjai_verified", "true");
+          localStorage.setItem("namma_thanjai_phone", cleanPhone);
+          window.dispatchEvent(new Event("namma_thanjai_auth_changed"));
+        }
+      } else {
+        toast.error("Verification failed. Please check number.");
+      }
+    } catch (err: any) {
+      toast.error("Error: " + (err?.message || "Verification failed"));
+    } finally {
+      setPhoneUpdating(false);
+    }
+  };
 
   const [queryListingId, setQueryListingId] = useState<string>("");
   const [querySellerId, setQuerySellerId] = useState<string>("");
@@ -712,29 +746,50 @@ export default function ChatClientPage() {
 
   if (!isVerified) {
     return (
-      <div className="w-full max-w-md mx-auto py-12 px-6 flex flex-col items-center justify-center text-center gap-4 bg-white rounded-2xl border border-slate-200 shadow-2xs my-8 font-sans">
-        <div className="w-16 h-16 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600">
-          <MessageSquare className="w-8 h-8 stroke-[2.5]" />
+      <div className="w-full max-w-md mx-auto py-10 px-6 flex flex-col items-center justify-center text-center gap-5 bg-white rounded-3xl border border-slate-200/90 shadow-xl my-10 font-sans">
+        {/* Logo Header */}
+        <div className="w-16 h-16 rounded-2xl bg-slate-100 p-2.5 shadow-xs border border-slate-200 flex items-center justify-center">
+          <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="w-full h-full object-contain" />
         </div>
+
         <div className="flex flex-col gap-1 max-w-xs">
-          <h2 className="font-heading font-black text-xl text-slate-900">Direct Messages</h2>
-          <p className="text-blue-700 font-extrabold text-xs">செய்திகளை அணுக உள்நுழையவும்</p>
-          <p className="text-slate-600 text-xs mt-1 leading-relaxed">
-            Verify your WhatsApp mobile number to chat directly with buyers and sellers across Thanjavur.
+          <h2 className="font-heading font-black text-lg sm:text-xl text-slate-900">Enter Mobile Number to Access Chat</h2>
+          <p className="text-amber-600 font-bold text-xs">செய்திகளை அணுக கைபேசி எண்</p>
+          <p className="text-slate-500 text-xs mt-1 leading-relaxed">
+            Verify your 10-digit mobile number to chat directly with buyers and sellers in Thanjavur.
           </p>
         </div>
-        <button
-          type="button"
-          onClick={() => {
-            if (typeof window !== "undefined") {
-              window.dispatchEvent(new Event("namma_thanjai_open_signin"));
-            }
-          }}
-          className="mt-2 w-full bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-sm py-3 px-6 rounded-2xl shadow-md cursor-pointer transition-all flex items-center justify-center gap-2 active:scale-[0.98]"
-        >
-          <MessageSquare className="w-5 h-5 fill-white stroke-[2.5]" />
-          <span>Sign In / Verify</span>
-        </button>
+
+        <form onSubmit={handleDirectLogin} className="w-full flex flex-col gap-4">
+          <div className="flex items-center gap-2 bg-slate-50 border-2 border-slate-300 focus-within:border-[#1F244A] focus-within:bg-white rounded-2xl px-3.5 py-3 transition-all shadow-2xs">
+            <span className="font-heading font-black text-sm text-slate-700 select-none shrink-0">+91</span>
+            <div className="w-[1px] h-5 bg-slate-300 shrink-0" />
+            <input
+              type="tel"
+              maxLength={10}
+              value={phoneNumber}
+              onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, ""))}
+              placeholder="10-digit mobile number"
+              className="w-full bg-transparent border-none outline-none font-heading font-extrabold text-sm sm:text-base text-slate-900 placeholder:text-slate-400 placeholder:font-medium"
+              required
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={phoneUpdating || phoneNumber.length !== 10}
+            className="w-full bg-[#1F244A] hover:bg-[#151936] text-white font-heading font-black text-sm py-3.5 px-6 rounded-2xl shadow-md cursor-pointer transition-all flex items-center justify-center gap-2 active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            {phoneUpdating ? (
+              <>
+                <Loader2 className="w-5 h-5 animate-spin text-white" />
+                <span>Verifying...</span>
+              </>
+            ) : (
+              <span>Verify &amp; Open Chat • சரிபார்க்கவும்</span>
+            )}
+          </button>
+        </form>
       </div>
     );
   }
