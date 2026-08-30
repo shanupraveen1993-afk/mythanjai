@@ -333,9 +333,7 @@ function MainLayoutContent({
         className={`flex-1 w-full flex flex-col p-0 m-0 bg-[#f8fafc] ${isChatRoute ? "h-[100dvh] max-h-[100dvh] overflow-hidden pb-0" : "pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] md:pb-8"}`}
         style={{
           paddingTop: !isOnboardingView && !isChatRoute && !isPostRoute
-            ? isFeedPage
-              ? "calc(var(--top-shell-height, 9.5rem) + 12px)"
-              : "calc(var(--top-shell-height, 3.5rem) + 12px)"
+            ? "var(--top-shell-height, 120px)"
             : undefined,
         }}
       >

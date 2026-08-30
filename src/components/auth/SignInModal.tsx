@@ -82,7 +82,7 @@ export default function SignInModal({ isOpen, onClose }: SignInModalProps) {
     }
   };
 
-  if (!isOpen) return null;
+  if (!isOpen || (typeof window !== "undefined" && window.location.pathname.includes("/onboarding"))) return null;
 
   return (
     <div className="fixed inset-0 z-[999999] flex items-end sm:items-center justify-center bg-slate-950/70 backdrop-blur-sm p-0 animate-fade-in">

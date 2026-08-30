@@ -152,7 +152,7 @@ export default function TopHeader({
             className="flex items-center cursor-pointer shrink-0 group select-none"
           >
             <div className="h-8 sm:h-9 w-auto flex items-center justify-center shrink-0">
-              <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="h-full w-auto object-contain max-h-8 sm:max-h-9" />
+              <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="h-full w-auto object-contain max-h-8 sm:max-h-9 rounded-xl shadow-2xs border border-slate-200/60" />
             </div>
           </div>
           {/* Desktop Search Bar (Left Aligned Next to Logo) */}

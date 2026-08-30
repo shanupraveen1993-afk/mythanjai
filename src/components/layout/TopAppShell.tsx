@@ -67,7 +67,7 @@ export default function TopAppShell({ children }: TopAppShellProps) {
   return (
     <div
       ref={shellRef}
-      className="sticky top-0 left-0 right-0 z-50 w-full bg-white/98 backdrop-blur-xl border-b border-slate-200/90 shadow-md rounded-b-2xl sm:rounded-b-3xl transition-all duration-200 ease-in-out"
+      className="fixed top-0 left-0 right-0 z-50 w-full bg-white/98 backdrop-blur-xl border-b border-slate-200/90 shadow-sm rounded-b-2xl sm:rounded-b-3xl transition-all duration-200 ease-in-out"
     >
       {children}
     </div>
