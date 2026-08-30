@@ -108,29 +108,36 @@ export default function UniversalSearchBar() {
 
   return (
     <div ref={containerRef} className="relative w-full max-w-lg">
-      <form onSubmit={handleFormSubmit} className="relative flex items-center w-full h-10 bg-white border border-slate-200 focus-within:border-amber-400 rounded-xl px-3.5 shadow-2xs transition-all">
-        <Search className="w-4 h-4 text-slate-400 shrink-0 mr-2.5" />
+      <form onSubmit={handleFormSubmit} className="relative flex items-center w-full h-10 sm:h-10.5 bg-white border border-slate-200 focus-within:border-[#1F244A] rounded-xl pl-3 pr-1 shadow-2xs transition-all overflow-hidden">
+        <Search className="w-4 h-4 text-slate-400 shrink-0 mr-2" />
         <input
           type="text"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           onFocus={() => searchTerm.trim().length >= 2 && setIsOpen(true)}
-          placeholder="Search Buy, Wanted, Services, Offers across Thanjavur..."
+          placeholder="Search Buy, Wanted, Services, Offers..."
           autoComplete="off"
-          className="w-full bg-transparent text-xs text-slate-900 placeholder:font-normal font-medium placeholder-slate-400 focus:outline-none tracking-normal"
+          className="w-full bg-transparent text-xs sm:text-sm text-slate-900 placeholder:font-normal font-medium placeholder-slate-400 focus:outline-none tracking-normal pr-2"
         />
-        {searchTerm && (
+        {searchTerm ? (
           <button
             type="button"
             onClick={() => {
               setSearchTerm("");
               setIsOpen(false);
             }}
-            className="p-1 rounded-full text-slate-400 hover:text-slate-600 transition-colors cursor-pointer"
+            className="p-1.5 rounded-full text-slate-400 hover:text-slate-600 transition-colors cursor-pointer mr-1"
           >
             <X className="w-3.5 h-3.5" />
           </button>
-        )}
+        ) : null}
+        <button
+          type="submit"
+          className="bg-[#1F244A] hover:bg-[#151936] text-white px-2.5 sm:px-3 py-1.5 rounded-lg flex items-center justify-center cursor-pointer transition-all shrink-0 active:scale-95 shadow-2xs"
+          title="Search"
+        >
+          <Search className="w-3.5 h-3.5 text-white stroke-[2.5]" />
+        </button>
       </form>
 
       {/* Universal Search Results Dropdown Overlay */}
