@@ -155,8 +155,8 @@ export default function TopHeader({
               <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="h-full w-auto object-contain max-h-8 sm:max-h-9 rounded-xl shadow-2xs border border-slate-200/60" />
             </div>
           </div>
-          {/* Desktop Search Bar (Left Aligned Next to Logo) */}
-          <div className="hidden md:block w-48 lg:w-60 shrink-0">
+          {/* Desktop Search Bar (Left Aligned Directly Next to Logo) */}
+          <div className="hidden md:block w-64 lg:w-80 shrink-0">
             <UniversalSearchBar />
           </div>
         </div>

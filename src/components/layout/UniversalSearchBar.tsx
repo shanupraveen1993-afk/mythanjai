@@ -107,16 +107,17 @@ export default function UniversalSearchBar() {
   const totalMatches = results.classifieds.length + results.services.length + results.shops.length;
 
   return (
-    <div ref={containerRef} className="relative w-full max-w-lg">
-      <form onSubmit={handleFormSubmit} className="relative flex items-center w-full h-10 sm:h-10.5 bg-white border border-slate-200 focus-within:border-[#1F244A] rounded-xl pl-3.5 pr-1 shadow-2xs transition-all overflow-hidden">
+    <div ref={containerRef} className="relative w-full">
+      <form onSubmit={handleFormSubmit} className="relative flex items-center w-full h-10 bg-slate-100/90 hover:bg-slate-100 focus-within:bg-white border border-slate-200/90 focus-within:border-slate-400 rounded-xl px-3 shadow-2xs transition-all overflow-hidden">
+        <Search className="w-4 h-4 text-slate-400 shrink-0 mr-2" />
         <input
           type="text"
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
           onFocus={() => searchTerm.trim().length >= 2 && setIsOpen(true)}
-          placeholder="Search Buy, Wanted, Services, Offers..."
+          placeholder="Search items, services, shop offers..."
           autoComplete="off"
-          className="w-full bg-transparent text-xs sm:text-sm text-slate-900 placeholder:font-normal font-medium placeholder-slate-400 focus:outline-none tracking-normal pr-2"
+          className="w-full bg-transparent text-xs sm:text-sm text-slate-900 placeholder:font-normal font-medium placeholder-slate-400 focus:outline-none tracking-normal pr-1"
         />
         {searchTerm ? (
           <button
@@ -125,18 +126,11 @@ export default function UniversalSearchBar() {
               setSearchTerm("");
               setIsOpen(false);
             }}
-            className="p-1.5 rounded-full text-slate-400 hover:text-slate-600 transition-colors cursor-pointer mr-1"
+            className="p-1 rounded-full text-slate-400 hover:text-slate-600 transition-colors cursor-pointer shrink-0"
           >
             <X className="w-3.5 h-3.5" />
           </button>
         ) : null}
-        <button
-          type="submit"
-          className="bg-[#1F244A] hover:bg-[#151936] text-white px-3 sm:px-4 py-1.5 rounded-lg text-xs font-black cursor-pointer transition-all shrink-0 active:scale-95 shadow-2xs"
-          title="Search"
-        >
-          Search
-        </button>
       </form>
 
       {/* Universal Search Results Dropdown Overlay */}
