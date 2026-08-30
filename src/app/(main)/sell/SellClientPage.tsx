@@ -13,8 +13,6 @@ import { useAuth } from "@/hooks/use-auth";
 import UniversalSearchBarRow from "@/components/layout/UniversalSearchBarRow";
 
 
-import FirstSessionWelcomeBanner from "@/components/home/FirstSessionWelcomeBanner";
-
 export default function SellClientPage() {
   const router = useRouter();
   const { user, profile, isVerified } = useAuth();
@@ -101,7 +99,6 @@ export default function SellClientPage() {
 
   return (
     <div className="flex flex-col gap-0 pb-6 sm:pb-10 w-full font-sans">
-      <FirstSessionWelcomeBanner />
       <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 flex flex-col gap-3.5 pt-2 sm:pt-4">
         {/* 1. TITLE BAR */}
         <div className="py-1 flex items-center justify-between gap-3 w-full">
