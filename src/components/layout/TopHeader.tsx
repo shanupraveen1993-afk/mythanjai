@@ -171,7 +171,7 @@ export default function TopHeader({
                 <button
                   type="button"
                   onClick={() => router.push("/")}
-                  className={`px-3.5 py-2 text-xs sm:text-sm font-black transition-all cursor-pointer flex items-center gap-1.5 select-none relative ${
+                  className={`px-3.5 py-2 text-xs sm:text-sm font-black transition-all cursor-pointer flex items-center gap-1.5 select-none relative whitespace-nowrap ${
                     isActive
                       ? "text-[#1F244A] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#1F244A] after:rounded-full"
                       : "text-slate-600 hover:text-slate-900"
@@ -190,7 +190,7 @@ export default function TopHeader({
                 <button
                   type="button"
                   onClick={() => router.push("/need")}
-                  className={`px-3.5 py-2 text-xs sm:text-sm font-black transition-all cursor-pointer flex items-center gap-1.5 select-none relative ${
+                  className={`px-3.5 py-2 text-xs sm:text-sm font-black transition-all cursor-pointer flex items-center gap-1.5 select-none relative whitespace-nowrap ${
                     isActive
                       ? "text-[#1F244A] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#1F244A] after:rounded-full"
                       : "text-slate-600 hover:text-slate-900"
@@ -202,40 +202,40 @@ export default function TopHeader({
               );
             })()}
 
-            {/* Local Services Tab */}
+            {/* Service Tab */}
             {(() => {
               const isActive = pathname.includes("/services");
               return (
                 <button
                   type="button"
                   onClick={() => router.push("/services")}
-                  className={`px-3.5 py-2 text-xs sm:text-sm font-black transition-all cursor-pointer flex items-center gap-1.5 select-none relative ${
+                  className={`px-3.5 py-2 text-xs sm:text-sm font-black transition-all cursor-pointer flex items-center gap-1.5 select-none relative whitespace-nowrap ${
                     isActive
                       ? "text-[#1F244A] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#1F244A] after:rounded-full"
                       : "text-slate-600 hover:text-slate-900"
                   }`}
                 >
                   <Wrench className={`w-3.5 h-3.5 ${isActive ? "text-[#1F244A] stroke-[2.5]" : "text-slate-500 stroke-[2]"}`} />
-                  <span>Local Services</span>
+                  <span>Service</span>
                 </button>
               );
             })()}
 
-            {/* Local Offers Tab */}
+            {/* Offer Tab */}
             {(() => {
               const isActive = pathname.includes("/shops") || pathname.includes("/offers");
               return (
                 <button
                   type="button"
                   onClick={() => router.push("/shops")}
-                  className={`px-3.5 py-2 text-xs sm:text-sm font-black transition-all cursor-pointer flex items-center gap-1.5 select-none relative ${
+                  className={`px-3.5 py-2 text-xs sm:text-sm font-black transition-all cursor-pointer flex items-center gap-1.5 select-none relative whitespace-nowrap ${
                     isActive
                       ? "text-[#1F244A] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#1F244A] after:rounded-full"
                       : "text-slate-600 hover:text-slate-900"
                   }`}
                 >
                   <Store className={`w-3.5 h-3.5 ${isActive ? "text-[#1F244A] stroke-[2.5]" : "text-slate-500 stroke-[2]"}`} />
-                  <span>Local Offers</span>
+                  <span>Offer</span>
                 </button>
               );
             })()}
