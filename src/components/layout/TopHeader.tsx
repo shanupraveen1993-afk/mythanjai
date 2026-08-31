@@ -161,9 +161,9 @@ export default function TopHeader({
           </div>
         </div>
 
-        {/* Desktop Header Center: 4 Category Tabs (Modern Segmented Underline Nav Bar) */}
-        <div className="hidden md:flex items-center justify-center z-20 flex-1 min-w-0 mx-2">
-          <div className="flex items-center gap-1 sm:gap-2 border-b border-transparent font-heading">
+        {/* Desktop Header Center: 4 Category Tabs (Center Aligned Segmented Filled Pill Nav Bar) */}
+        <div className="hidden md:flex items-center justify-center z-20 flex-1 min-w-0 mx-4">
+          <div className="flex items-center gap-1.5 font-heading bg-slate-100/80 p-1 rounded-full border border-slate-200/80">
             {/* For Sale Tab */}
             {(() => {
               const isActive = pathname === "/" || pathname === "/home" || pathname.includes("/sell");
@@ -171,13 +171,13 @@ export default function TopHeader({
                 <button
                   type="button"
                   onClick={() => router.push("/")}
-                  className={`px-3.5 py-2 text-xs sm:text-sm font-black transition-all cursor-pointer flex items-center gap-1.5 select-none relative whitespace-nowrap ${
+                  className={`px-4 py-1.5 text-xs sm:text-sm font-black transition-all cursor-pointer flex items-center gap-1.5 select-none rounded-full whitespace-nowrap ${
                     isActive
-                      ? "text-[#1F244A] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#1F244A] after:rounded-full"
-                      : "text-slate-600 hover:text-slate-900"
+                      ? "bg-[#0F172A] text-white shadow-2xs"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60"
                   }`}
                 >
-                  <Tag className={`w-3.5 h-3.5 ${isActive ? "text-[#1F244A] stroke-[2.5]" : "text-slate-500 stroke-[2]"}`} />
+                  <Tag className={`w-3.5 h-3.5 ${isActive ? "text-amber-400 stroke-[2.5]" : "text-slate-500 stroke-[2]"}`} />
                   <span>For Sale</span>
                 </button>
               );
@@ -190,13 +190,13 @@ export default function TopHeader({
                 <button
                   type="button"
                   onClick={() => router.push("/need")}
-                  className={`px-3.5 py-2 text-xs sm:text-sm font-black transition-all cursor-pointer flex items-center gap-1.5 select-none relative whitespace-nowrap ${
+                  className={`px-4 py-1.5 text-xs sm:text-sm font-black transition-all cursor-pointer flex items-center gap-1.5 select-none rounded-full whitespace-nowrap ${
                     isActive
-                      ? "text-[#1F244A] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#1F244A] after:rounded-full"
-                      : "text-slate-600 hover:text-slate-900"
+                      ? "bg-[#0F172A] text-white shadow-2xs"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60"
                   }`}
                 >
-                  <Search className={`w-3.5 h-3.5 ${isActive ? "text-[#1F244A] stroke-[2.5]" : "text-slate-500 stroke-[2]"}`} />
+                  <Search className={`w-3.5 h-3.5 ${isActive ? "text-amber-400 stroke-[2.5]" : "text-slate-500 stroke-[2]"}`} />
                   <span>Wanted</span>
                 </button>
               );
@@ -209,13 +209,13 @@ export default function TopHeader({
                 <button
                   type="button"
                   onClick={() => router.push("/services")}
-                  className={`px-3.5 py-2 text-xs sm:text-sm font-black transition-all cursor-pointer flex items-center gap-1.5 select-none relative whitespace-nowrap ${
+                  className={`px-4 py-1.5 text-xs sm:text-sm font-black transition-all cursor-pointer flex items-center gap-1.5 select-none rounded-full whitespace-nowrap ${
                     isActive
-                      ? "text-[#1F244A] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#1F244A] after:rounded-full"
-                      : "text-slate-600 hover:text-slate-900"
+                      ? "bg-[#0F172A] text-white shadow-2xs"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60"
                   }`}
                 >
-                  <Wrench className={`w-3.5 h-3.5 ${isActive ? "text-[#1F244A] stroke-[2.5]" : "text-slate-500 stroke-[2]"}`} />
+                  <Wrench className={`w-3.5 h-3.5 ${isActive ? "text-amber-400 stroke-[2.5]" : "text-slate-500 stroke-[2]"}`} />
                   <span>Service</span>
                 </button>
               );
@@ -228,13 +228,13 @@ export default function TopHeader({
                 <button
                   type="button"
                   onClick={() => router.push("/shops")}
-                  className={`px-3.5 py-2 text-xs sm:text-sm font-black transition-all cursor-pointer flex items-center gap-1.5 select-none relative whitespace-nowrap ${
+                  className={`px-4 py-1.5 text-xs sm:text-sm font-black transition-all cursor-pointer flex items-center gap-1.5 select-none rounded-full whitespace-nowrap ${
                     isActive
-                      ? "text-[#1F244A] after:absolute after:bottom-0 after:left-0 after:right-0 after:h-0.5 after:bg-[#1F244A] after:rounded-full"
-                      : "text-slate-600 hover:text-slate-900"
+                      ? "bg-[#0F172A] text-white shadow-2xs"
+                      : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60"
                   }`}
                 >
-                  <Store className={`w-3.5 h-3.5 ${isActive ? "text-[#1F244A] stroke-[2.5]" : "text-slate-500 stroke-[2]"}`} />
+                  <Store className={`w-3.5 h-3.5 ${isActive ? "text-amber-400 stroke-[2.5]" : "text-slate-500 stroke-[2]"}`} />
                   <span>Offer</span>
                 </button>
               );
@@ -276,7 +276,7 @@ export default function TopHeader({
             </div>
           </div>
 
-          {/* Desktop Website Only: Fixed "+ Post" Button (Hidden on chat, profile, listings, post, search) */}
+          {/* Desktop Website Only: Fixed "+ Post" Button (Clean Single Plus Icon) */}
           {!pathname.includes("/chat") &&
             !pathname.includes("/profile") &&
             !pathname.includes("/listings") &&
@@ -285,11 +285,11 @@ export default function TopHeader({
               <button
                 type="button"
                 onClick={handleDynamicPostClick}
-                className="hidden md:flex bg-amber-400 hover:bg-amber-500 text-slate-950 text-xs sm:text-sm px-4 py-2 rounded-full font-heading font-black shrink-0 items-center gap-1 shadow-xs cursor-pointer select-none active:scale-[0.97] transition-all border border-amber-400"
+                className="hidden md:flex bg-amber-400 hover:bg-amber-500 text-slate-950 text-xs sm:text-sm px-4 py-2 rounded-full font-heading font-black shrink-0 items-center gap-1.5 shadow-xs cursor-pointer select-none active:scale-[0.97] transition-all border border-amber-400"
                 title="Post a Listing"
               >
                 <Plus className="w-4 h-4 stroke-[3] text-slate-950" />
-                <span>+ Post</span>
+                <span>Post</span>
               </button>
             )}
 
