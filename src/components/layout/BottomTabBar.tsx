@@ -19,46 +19,45 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
   const { t } = useLanguage();
   const { scrollDirection, isAtTop } = useScrollDirection();
   const [shouldHide, setShouldHide] = useState(false);
+  const [isIndividualChatOpen, setIsIndividualChatOpen] = useState(false);
 
+  // Detect if an individual chat conversation thread is currently active
   useEffect(() => {
-    setShouldHide(false);
-  }, [pathname]);
+    const checkChatThreadState = () => {
+      if (pathname.startsWith("/chat")) {
+        if (typeof window !== "undefined") {
+          const search = window.location.search;
+          const hasQueryParams =
+            search.includes("listingId") ||
+            search.includes("sellerId") ||
+            search.includes("threadId") ||
+            search.includes("chatId");
 
-  useEffect(() => {
-    if (isAtTop) {
-      setShouldHide(false);
-    } else if (scrollDirection === "down") {
-      setShouldHide(true);
-    } else if (scrollDirection === "up") {
-      setShouldHide(false);
-    }
-  }, [scrollDirection, isAtTop]);
+          const isMobileThreadActive =
+            sessionStorage.getItem("namma_thanjai_active_chat_thread") === "true";
 
-  useEffect(() => {
-    try {
-      router.prefetch("/");
-      router.prefetch("/chat");
-      router.prefetch("/post");
-      router.prefetch("/profile");
-    } catch (e) {}
-  }, [router]);
+          setIsIndividualChatOpen(hasQueryParams || isMobileThreadActive);
+        }
+      } else {
+        setIsIndividualChatOpen(false);
+      }
+    };
 
-  const getDynamicPostRoute = () => {
-    if (pathname.includes("/need")) return "/post/need";
-    if (pathname.includes("/service")) return "/post/service";
-    if (pathname.includes("/shops") || pathname.includes("/offer")) return "/post/offer";
-    if (pathname.includes("/sell")) return "/post/sell";
+    checkChatThreadState();
 
     if (typeof window !== "undefined") {
-      const activePill = localStorage.getItem("namma_thanjai_active_segment");
-      if (activePill === "need") return "/post/need";
-      if (activePill === "service") return "/post/service";
-      if (activePill === "offer") return "/post/offer";
-      if (activePill === "sell") return "/post/sell";
+      window.addEventListener("namma_thanjai_chat_thread_changed", checkChatThreadState);
+      return () => window.removeEventListener("namma_thanjai_chat_thread_changed", checkChatThreadState);
     }
+  }, [pathname]);
 
-    return "/post/sell";
-  };
+  // Hide Bottom Navigation on specific routes
+  const isHiddenRoute =
+    pathname.startsWith("/post") ||
+    pathname.startsWith("/search") ||
+    (pathname.startsWith("/chat") && isIndividualChatOpen);
+
+  if (isHiddenRoute) return null;
 
   const navItems = [
     {
@@ -66,28 +65,24 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
       label: t("home") || "Home",
       icon: Home,
       route: "/",
-      isCenter: false,
     },
     {
       id: "chat",
       label: "Chat",
       icon: MessageSquare,
       route: "/chat",
-      isCenter: false,
     },
     {
       id: "listings",
-      label: "My Ads",
+      label: "My Posts",
       icon: Package,
       route: "/listings",
-      isCenter: false,
     },
     {
       id: "profile",
       label: "Profile",
       icon: User,
       route: "/profile",
-      isCenter: false,
     },
   ];
 

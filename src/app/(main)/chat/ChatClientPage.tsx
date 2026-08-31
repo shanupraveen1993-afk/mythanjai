@@ -230,6 +230,16 @@ export default function ChatClientPage() {
   const [scamAlertTriggered, setScamAlertTriggered] = useState(false);
   const [detectedKeyword, setDetectedKeyword] = useState("");
   const [showMobileChat, setShowMobileChat] = useState(false);
+
+  // Synchronize showMobileChat state with sessionStorage & broadcast event to BottomTabBar
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const hasQuery = window.location.search.includes("listingId") || window.location.search.includes("sellerId");
+      const isThreadOpen = showMobileChat || hasQuery;
+      sessionStorage.setItem("namma_thanjai_active_chat_thread", isThreadOpen ? "true" : "false");
+      window.dispatchEvent(new Event("namma_thanjai_chat_thread_changed"));
+    }
+  }, [showMobileChat]);
   const [activeFilter, setActiveFilter] = useState<"all" | "unread" | "ads">("all");
   const [searchQuery, setSearchQuery] = useState("");
 
