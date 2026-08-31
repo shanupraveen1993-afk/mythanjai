@@ -255,6 +255,11 @@ export default function ChatClientPage() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
+      const chatId = params.get("chatId") || params.get("threadId") || "";
+      if (chatId) {
+        setActiveChatId(chatId);
+        setShowMobileChat(true);
+      }
       const listingId = params.get("listingId") || "";
       setQueryListingId(listingId);
       const sellerId = params.get("sellerId") || "";
@@ -273,7 +278,7 @@ export default function ChatClientPage() {
       const autoSend = params.get("autoSend") === "true";
       setQueryAutoSend(autoSend);
 
-      if (listingId || sellerId) {
+      if (listingId || sellerId || chatId) {
         setShowMobileChat(true);
       }
     }
