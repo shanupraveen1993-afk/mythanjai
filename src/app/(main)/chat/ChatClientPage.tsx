@@ -394,6 +394,11 @@ export default function ChatClientPage() {
         } else {
           setInputText("");
         }
+
+        // Clean up URL query parameters so returning to this chat room leaves input 100% empty
+        if (typeof window !== "undefined" && window.location.search) {
+          window.history.replaceState({}, document.title, window.location.pathname);
+        }
       }
 
       setThreads((prev) => {
@@ -534,6 +539,10 @@ export default function ChatClientPage() {
     const currentText = inputText.trim();
     setInputText("");
     setQueryAutoMsg("");
+    setQueryTitle("");
+    if (typeof window !== "undefined" && window.location.search) {
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
     try {
       const currentUid = user?.uid || (profile?.phone ? `phone_${profile.phone.replace(/\D/g, "")}` : "guest_user");
       const currentName = profile?.displayName || user?.displayName || "User";
