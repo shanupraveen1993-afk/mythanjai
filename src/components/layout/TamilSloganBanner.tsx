@@ -59,16 +59,16 @@ export default function TamilSloganBanner() {
 
   return (
     <div 
-      className="w-full bg-[#121633] text-white border-b border-white/10 py-1.5 px-3 sm:px-8 text-center font-sans shadow-xs select-none relative transition-all z-10"
+      className="w-full bg-[#121633] text-white border-b border-white/10 py-2 px-3.5 sm:px-8 text-center font-sans shadow-xs select-none relative transition-all z-10"
     >
       <div className="max-w-7xl mx-auto flex items-center justify-center gap-1.5 py-0.5 relative z-10 pr-6 sm:pr-0">
         <span className="inline-flex items-center shrink-0 p-1 bg-amber-400/10 rounded-md border border-amber-400/20">{content.icon}</span>
-        <p className="font-heading text-[11px] sm:text-[13px] tracking-normal leading-tight flex items-center flex-wrap justify-center gap-1 sm:gap-2 line-clamp-2">
+        <p className="font-heading text-[11px] sm:text-[13px] tracking-normal leading-normal flex items-center flex-wrap justify-center gap-1 sm:gap-2 line-clamp-2">
           <span className="font-heading font-black tracking-wider shrink-0 uppercase text-[9px] sm:text-[11px] bg-amber-400/15 text-amber-300 px-1.5 py-0.5 rounded border border-amber-400/30">
             {content.title}
           </span>
           <span className="text-slate-400 font-bold hidden sm:inline">—</span>
-          <span className="text-slate-200 font-semibold font-tamil leading-tight line-clamp-2">
+          <span className="text-slate-200 font-semibold font-tamil leading-normal sm:leading-relaxed line-clamp-2">
             {content.text}
           </span>
         </p>
