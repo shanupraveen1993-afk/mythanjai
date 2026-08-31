@@ -47,6 +47,7 @@ import ListingCard from "@/components/cards/ListingCard";
 import ServiceCard from "@/components/cards/ServiceCard";
 import ShopCard from "@/components/cards/ShopCard";
 import LocalitySelector from "@/components/forms/LocalitySelector";
+import DraftProtectionModal from "@/components/modals/DraftProtectionModal";
 import { NeedOrSalePost, ServiceProviderPost, ShopPost, OfferPost } from "@/types";
 
 type SegmentType = "sell" | "need" | "service" | "offer";
@@ -185,8 +186,87 @@ export default function PostForm({ segment }: PostFormProps) {
     return () => clearTimeout(timer);
   }, [description]);
 
-  // Form submission handler
-  // Unauthenticated Guest Protection: Handled on submit so guests can draft their post freely
+  // Segment-Specific Draft Key
+  const draftKey = `namma_thanjai_draft_${segment}`;
+  const [showDraftModal, setShowDraftModal] = useState(false);
+
+  // Dynamic isDirty State Calculation
+  const isDirty = useMemo(() => {
+    return (
+      title.trim() !== "" ||
+      description.trim() !== "" ||
+      price.trim() !== "" ||
+      p1Area !== "" ||
+      p2Specific.trim() !== ""
+    );
+  }, [title, description, price, p1Area, p2Specific]);
+
+  // Restore Segment Draft on Mount
+  useEffect(() => {
+    if (typeof window !== "undefined" && !editId) {
+      try {
+        const savedDraftRaw = localStorage.getItem(draftKey);
+        if (savedDraftRaw) {
+          const saved = JSON.parse(savedDraftRaw);
+          if (saved.title) setTitle(saved.title);
+          if (saved.description) {
+            setDescription(saved.description);
+            setPreviewDescription(saved.description);
+          }
+          if (saved.category) setCategory(saved.category);
+          if (saved.p1Area) setP1Area(saved.p1Area);
+          if (saved.p2Specific) setP2Specific(saved.p2Specific);
+          if (saved.price) setPrice(saved.price);
+          if (saved.phone) setPhone(saved.phone);
+          if (saved.validFrom) setValidFrom(saved.validFrom);
+          if (saved.validTo) setValidTo(saved.validTo);
+          toast.success("Draft restored from your last session!");
+        }
+      } catch (e) {}
+    }
+  }, [draftKey, editId]);
+
+  // Handle Back Button Press
+  const handleBackClick = () => {
+    if (isDirty) {
+      setShowDraftModal(true);
+    } else {
+      router.push(config.redirectPath);
+    }
+  };
+
+  // Handle Save Draft Action
+  const handleSaveDraft = () => {
+    if (typeof window !== "undefined") {
+      try {
+        const draftData = {
+          title,
+          description,
+          category,
+          p1Area,
+          p2Specific,
+          price,
+          phone,
+          validFrom,
+          validTo,
+          savedAt: new Date().toISOString(),
+        };
+        localStorage.setItem(draftKey, JSON.stringify(draftData));
+        toast.success("Draft saved successfully!");
+      } catch (e) {}
+    }
+    setShowDraftModal(false);
+    router.push(config.redirectPath);
+  };
+
+  // Handle Discard Action
+  const handleDiscard = () => {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(draftKey);
+    }
+    setShowDraftModal(false);
+    router.push(config.redirectPath);
+  };
 
   // Comprehensive Edit Mode Data Loader (Firestore + LocalStorage Fallback)
   useEffect(() => {
@@ -785,6 +865,12 @@ export default function PostForm({ segment }: PostFormProps) {
 
   return (
     <div className="w-full flex flex-col gap-0 font-sans min-h-screen bg-[#f8fafc]">
+      <DraftProtectionModal
+        isOpen={showDraftModal}
+        onSaveDraft={handleSaveDraft}
+        onDiscard={handleDiscard}
+        onCancel={() => setShowDraftModal(false)}
+      />
       {/* Full-Width White Post Form Header Bar — Back Button + Left-Aligned Title + Right (X) Discard Button */}
       <div className="w-full bg-white text-slate-900 border-b border-slate-200/90 py-3 px-4 sm:px-8 flex items-center justify-between shadow-sm shrink-0 sticky top-0 z-50 pt-[calc(0.75rem+env(safe-area-inset-top,0px))]">
         <div className="max-w-6xl mx-auto w-full flex items-center justify-between gap-4">
@@ -792,15 +878,7 @@ export default function PostForm({ segment }: PostFormProps) {
             {/* Mobile Web App & APK: Back Button */}
             <button
               type="button"
-              onClick={() => {
-                if (title.trim() || description.trim()) {
-                  if (window.confirm("Discard draft and return to feed?")) {
-                    router.push(config.redirectPath);
-                  }
-                } else {
-                  router.push(config.redirectPath);
-                }
-              }}
+              onClick={handleBackClick}
               className="md:hidden px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-heading font-bold text-xs sm:text-sm flex items-center gap-1.5 border border-slate-200 transition-all cursor-pointer active:scale-95 shrink-0"
               title="Back to feed"
             >
@@ -813,7 +891,7 @@ export default function PostForm({ segment }: PostFormProps) {
               src="/namma_thanjai_logo.png"
               alt="Namma Thanjai"
               className="hidden md:block h-8 w-auto object-contain cursor-pointer shrink-0"
-              onClick={() => router.push("/")}
+              onClick={handleBackClick}
             />
 
             <h1 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight truncate text-left">
@@ -823,15 +901,7 @@ export default function PostForm({ segment }: PostFormProps) {
 
           <button
             type="button"
-            onClick={() => {
-              if (title.trim() || description.trim()) {
-                if (window.confirm("Discard listing draft and return to feed?")) {
-                  router.push(config.redirectPath);
-                }
-              } else {
-                router.push(config.redirectPath);
-              }
-            }}
+            onClick={handleBackClick}
             className="w-9 h-9 rounded-full bg-slate-100 hover:bg-rose-50 border border-slate-200 flex items-center justify-center text-slate-700 hover:text-rose-600 transition-all cursor-pointer active:scale-95 shrink-0 ml-2"
             title="Close & Discard Form"
           >
