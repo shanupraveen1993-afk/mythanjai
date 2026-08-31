@@ -20,17 +20,14 @@ export default function LocalitySelector({
   return (
     <div className="flex flex-col gap-4 w-full">
       {/* P1: Major Town / Area Dropdown */}
-      <div className="w-full flex flex-col gap-1">
-        <label className="text-[11px] font-black text-slate-700 uppercase tracking-wider">
-          Select Area / Town (P1) <span className="text-red-500">*</span>
-        </label>
+      <div className="w-full">
         <select
           required
           value={p1Area}
           onChange={(e) => setP1Area(e.target.value)}
           className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 cursor-pointer transition-colors"
         >
-          <option value="">-- Select Area / Town (P1) --</option>
+          <option value="">Select Area / Town (P1) *</option>
           {THANJAVUR_TOWNS.map((town) => (
             <option key={town} value={town}>
               {town}
