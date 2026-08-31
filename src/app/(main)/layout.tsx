@@ -90,7 +90,14 @@ function MainLayoutContent({
   const [isSignInOpen, setIsSignInOpen] = useState(false);
 
   // Startup Flow State: Synchronous Cold Boot Splash (APK Only) -> Home
-  const [showSplash, setShowSplash] = useState<boolean>(false);
+  const [showSplash, setShowSplash] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      const isNative = Boolean((window as any).Capacitor?.isNativePlatform() || window.navigator.userAgent.includes("Capacitor"));
+      const splashShown = sessionStorage.getItem("namma_thanjai_splash_shown_v1");
+      return isNative && !splashShown;
+    }
+    return false;
+  });
   const [showWalkthrough, setShowWalkthrough] = useState(false);
   const [showPermissionsModal, setShowPermissionsModal] = useState(false);
   const [isMounted, setIsMounted] = useState(false);

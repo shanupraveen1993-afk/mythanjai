@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "368011719475",
+    "project_id": "mythanjai-40db2",
+    "storage_bucket": "mythanjai-40db2.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:368011719475:android:d6fb6d327b6fd055fa0446",
+        "android_client_info": {
+          "package_name": "com.nammathanjai.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "368011719475-l3e994noo0v3par2bi90fpuv64aqc3bi.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB77Oo9yWM5vcN56UG2b9EG0S0IewVohf4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "368011719475-l3e994noo0v3par2bi90fpuv64aqc3bi.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -91,34 +91,39 @@ export function useNativeApp() {
       })
       .catch(() => {});
 
-    // 4. Android Native Push Notifications Listener
-    import("@capacitor/push-notifications")
-      .then(({ PushNotifications }) => {
-        PushNotifications.requestPermissions().then((result) => {
-          if (result.receive === "granted") {
-            PushNotifications.register().catch(() => {});
-          }
-        }).catch(() => {});
+    // 4. Android Native Push Notifications Listener (Safe Delayed Initialization)
+    const pushTimer = setTimeout(() => {
+      import("@capacitor/push-notifications")
+        .then(({ PushNotifications }) => {
+          PushNotifications.requestPermissions()
+            .then((result) => {
+              if (result.receive === "granted") {
+                PushNotifications.register().catch(() => {});
+              }
+            })
+            .catch(() => {});
 
-        PushNotifications.addListener("pushNotificationReceived", (notification) => {
-          if (typeof window !== "undefined") {
-            window.dispatchEvent(
-              new CustomEvent("namma_thanjai_toast", {
-                detail: { message: `${notification.title}: ${notification.body}`, type: "info" },
-              })
-            );
-          }
-        }).catch(() => {});
+          PushNotifications.addListener("pushNotificationReceived", (notification) => {
+            if (typeof window !== "undefined") {
+              window.dispatchEvent(
+                new CustomEvent("namma_thanjai_toast", {
+                  detail: { message: `${notification.title}: ${notification.body}`, type: "info" },
+                })
+              );
+            }
+          }).catch(() => {});
 
-        PushNotifications.addListener("pushNotificationActionPerformed", (action) => {
-          if (action.notification.data?.actionUrl) {
-            router.push(action.notification.data.actionUrl);
-          }
-        }).catch(() => {});
-      })
-      .catch(() => {});
+          PushNotifications.addListener("pushNotificationActionPerformed", (action) => {
+            if (action.notification.data?.actionUrl) {
+              router.push(action.notification.data.actionUrl);
+            }
+          }).catch(() => {});
+        })
+        .catch(() => {});
+    }, 1500);
 
     return () => {
+      clearTimeout(pushTimer);
       if (backListener && typeof backListener.remove === "function") {
         backListener.remove();
       }
