@@ -2,18 +2,32 @@
 
 import React, { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
-import { Search, MapPin, MessageSquare, Phone, Building, Wrench, Store, ArrowLeft, Loader2 } from "lucide-react";
+import {
+  Search,
+  MapPin,
+  MessageSquare,
+  Phone,
+  Building,
+  Wrench,
+  Store,
+  ArrowLeft,
+  ArrowRight,
+  Loader2,
+  Package,
+} from "lucide-react";
 import { collection, query, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 function SearchContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
-  const initialQuery = searchParams.get("q") || "";
 
-  const [searchTerm, setSearchTerm] = useState(initialQuery);
+  const queryParam = searchParams ? searchParams.get("q") || "" : "";
+  const catParam = searchParams ? searchParams.get("cat") || "" : "";
+
+  const [searchTerm, setSearchTerm] = useState(queryParam);
+  const [activeCategory, setActiveCategory] = useState<string>(catParam);
   const [loading, setLoading] = useState(false);
-  const [activeTab, setActiveTab] = useState<"all" | "sell" | "need" | "services" | "offers">("all");
 
   const [results, setResults] = useState<{
     sell: any[];
@@ -22,10 +36,13 @@ function SearchContent() {
     offers: any[];
   }>({ sell: [], need: [], services: [], offers: [] });
 
+  // Sync state with URL params
   useEffect(() => {
-    setSearchTerm(initialQuery);
-  }, [initialQuery]);
+    setSearchTerm(queryParam);
+    setActiveCategory(catParam);
+  }, [queryParam, catParam]);
 
+  // Execute District-Wide Search across all 4 collections
   useEffect(() => {
     if (!searchTerm.trim()) {
       setResults({ sell: [], need: [], services: [], offers: [] });
@@ -95,27 +112,50 @@ function SearchContent() {
 
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (searchTerm.trim()) {
-      router.push(`/search?q=${encodeURIComponent(searchTerm.trim())}`);
-    }
+    if (!searchTerm.trim()) return;
+    const catQuery = activeCategory ? `&cat=${activeCategory}` : "";
+    router.push(`/search?q=${encodeURIComponent(searchTerm.trim())}${catQuery}`);
+  };
+
+  const handleCategorySwitch = (catKey: string) => {
+    setActiveCategory(catKey);
+    const catQuery = catKey ? `&cat=${catKey}` : "";
+    router.push(`/search?q=${encodeURIComponent(searchTerm.trim())}${catQuery}`);
   };
 
   const totalResults =
     results.sell.length + results.need.length + results.services.length + results.offers.length;
 
+  const isFullCategoryView = Boolean(activeCategory && activeCategory !== "all");
+
   return (
     <div className="w-full min-h-screen bg-[#f8fafc] text-slate-900 font-sans pb-24">
-      {/* Top Search Header */}
-      <div className="bg-white border-b border-slate-200 sticky top-14 z-30 shadow-2xs py-3 px-4 sm:px-6 lg:px-8">
+      {/* 13A Sticky Top Search Header */}
+      <div className="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-xs py-3 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex flex-col gap-3">
           <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={() => {
+                if (isFullCategoryView) {
+                  handleCategorySwitch("");
+                } else {
+                  router.push("/");
+                }
+              }}
+              className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors cursor-pointer shrink-0"
+              title="Back"
+            >
+              <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
+            </button>
+
             <form onSubmit={handleSearchSubmit} className="flex-1 relative flex items-center">
               <Search className="w-4 h-4 text-slate-400 absolute left-3.5" />
               <input
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search Thanjavur (e.g. Car, Rental, Electrician, Offer)..."
+                placeholder="Search products, services & offers in Thanjavur..."
                 className="w-full bg-slate-100 hover:bg-slate-50 focus:bg-white border border-slate-250 focus:border-amber-400 rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm font-black text-slate-900 focus:outline-none transition-all shadow-2xs"
               />
               <button
@@ -127,21 +167,21 @@ function SearchContent() {
             </form>
           </div>
 
-          {/* Category Filter Tabs */}
+          {/* 13C Horizontal Category Switcher (Retained on Full Category Results) */}
           <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pt-1">
             {[
-              { id: "all", label: `All Results (${totalResults})` },
-              { id: "sell", label: `Sell (${results.sell.length})` },
-              { id: "need", label: `Need (${results.need.length})` },
-              { id: "services", label: `Services (${results.services.length})` },
-              { id: "offers", label: `Offers (${results.offers.length})` },
+              { id: "", label: `All (${totalResults})` },
+              { id: "sell", label: `For Sale (${results.sell.length})` },
+              { id: "need", label: `Wanted (${results.need.length})` },
+              { id: "services", label: `Local Services (${results.services.length})` },
+              { id: "offers", label: `Local Offers (${results.offers.length})` },
             ].map((tab) => (
               <button
                 key={tab.id}
-                onClick={() => setActiveTab(tab.id as any)}
-                className={`px-3 py-1.5 rounded-lg text-xs font-black shrink-0 transition-all cursor-pointer ${
-                  activeTab === tab.id
-                    ? "bg-[#0F172A] text-white shadow-2xs"
+                onClick={() => handleCategorySwitch(tab.id)}
+                className={`px-3 py-1.5 rounded-xl text-xs font-heading font-bold shrink-0 transition-all cursor-pointer ${
+                  activeCategory === tab.id
+                    ? "bg-[#0F172A] text-white shadow-2xs font-black"
                     : "bg-slate-100 text-slate-700 hover:bg-slate-200"
                 }`}
               >
@@ -152,296 +192,256 @@ function SearchContent() {
         </div>
       </div>
 
-      {/* Main Results Container */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 flex flex-col gap-6">
+      {/* Main Container */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 flex flex-col gap-6 font-sans">
         {loading ? (
           <div className="flex flex-col items-center justify-center py-16 gap-3 text-slate-500">
             <Loader2 className="w-7 h-7 animate-spin text-slate-900" />
-            <p className="text-xs font-black">Searching Thanjavur Directory...</p>
+            <p className="text-xs font-black">Searching across Thanjavur District...</p>
           </div>
         ) : !searchTerm.trim() ? (
-          <div className="bg-white border border-slate-200 rounded-2xl p-8 text-center flex flex-col items-center gap-3">
+          <div className="bg-white border border-slate-200 rounded-2xl p-8 text-center flex flex-col items-center gap-3 shadow-xs">
             <Search className="w-10 h-10 text-slate-300 stroke-[1.5]" />
-            <h3 className="font-heading font-black text-base text-slate-900">Universal Search</h3>
+            <h3 className="font-heading font-black text-base text-slate-900">District-Wide Search</h3>
             <p className="text-xs text-slate-500 max-w-md">
-              Type any keyword above (such as "Car", "Plot", "Electrician", "House for Rent") to search across all Thanjavur listings.
+              Type any term above to search products, needs, local services &amp; store deals across all of Thanjavur District.
             </p>
           </div>
         ) : totalResults === 0 ? (
-          <div className="bg-white border border-slate-200 rounded-2xl p-8 text-center flex flex-col items-center gap-3">
+          <div className="bg-white border border-slate-200 rounded-2xl p-8 text-center flex flex-col items-center gap-3 shadow-xs">
             <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center text-slate-400 font-bold">
               🔍
             </div>
             <h3 className="font-heading font-black text-base text-slate-900">No Listings Found</h3>
             <p className="text-xs text-slate-500 max-w-md">
-              No matching listings found for "{searchTerm}". Be the first to post in Thanjavur!
+              No matching listings found for "{searchTerm}" in Thanjavur District.
             </p>
-            <button
-              onClick={() => router.push("/post/sell")}
-              className="mt-2 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-5 py-2.5 rounded-xl cursor-pointer transition-all shadow-2xs"
-            >
-              + Post New Ad
-            </button>
           </div>
-        ) : (
+        ) : !isFullCategoryView ? (
+          /* 13B — SEARCH OVERVIEW (4 Vertical Sections with 2 previews each + View All →) */
           <div className="flex flex-col gap-8">
-            {/* 1. SELL RESULTS */}
-            {(activeTab === "all" || activeTab === "sell") && results.sell.length > 0 && (
-              <section className="flex flex-col gap-3">
-                <div className="flex items-center gap-2 border-b border-slate-200 pb-2">
-                  <Building className="w-4 h-4 text-slate-900" />
-                  <h2 className="font-heading font-black text-sm text-slate-950 uppercase tracking-wider">
-                    Sell Listings (விற்பனை) ({results.sell.length})
-                  </h2>
+            {/* 1. FOR SALE */}
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs flex flex-col gap-4">
+              <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
+                <div className="flex items-center gap-2">
+                  <Package className="w-4.5 h-4.5 text-amber-600 stroke-[2.5]" />
+                  <h3 className="font-heading font-black text-base text-slate-900">FOR SALE ({results.sell.length})</h3>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {results.sell.map((item) => (
+                <button
+                  type="button"
+                  onClick={() => handleCategorySwitch("sell")}
+                  className="text-xs font-heading font-bold text-amber-700 hover:text-amber-800 flex items-center gap-1 cursor-pointer"
+                >
+                  <span>View All</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              {results.sell.length === 0 ? (
+                <p className="text-xs text-slate-400 italic">No sale items matching "{searchTerm}"</p>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {results.sell.slice(0, 2).map((item) => (
                     <div
                       key={item.id}
                       onClick={() => router.push(`/sell`)}
-                      className="bg-white border border-slate-200 rounded-xl p-4 flex flex-col justify-between gap-3 shadow-2xs hover:border-slate-300 transition-all cursor-pointer"
+                      className="bg-slate-50 hover:bg-slate-100/80 border border-slate-200 rounded-xl p-3.5 flex items-start gap-3 cursor-pointer transition-all"
                     >
-                      <div className="flex flex-col gap-1">
-                        <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-bold bg-slate-100 text-slate-800 border border-slate-200 px-2 py-0.5 rounded">
-                            {item.category || "Sell"}
-                          </span>
-                          {item.price && (
-                            <span className="font-heading font-black text-xs text-slate-900">
-                              ₹{Number(item.price).toLocaleString("en-IN")}
-                            </span>
-                          )}
-                        </div>
-                        <h3 className="font-heading font-bold text-xs text-slate-900 line-clamp-1 mt-1">
-                          {item.title}
-                        </h3>
-                        <p className="text-[11px] text-slate-500 line-clamp-2">{item.description}</p>
-                      </div>
-
-                      <div className="flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-100">
-                        <span className="flex items-center gap-1">
-                          <MapPin className="w-3 h-3 text-slate-400" />
-                          {item.area_tag || "Thanjavur"}
+                      <img
+                        src={item.image_url || (Array.isArray(item.image_urls) && item.image_urls[0]) || "/placeholder.webp"}
+                        alt={item.title}
+                        className="w-16 h-16 rounded-lg object-cover bg-white border border-slate-200 shrink-0"
+                      />
+                      <div className="flex flex-col gap-1 min-w-0 flex-1">
+                        <span className="text-[10px] font-bold text-amber-700">{item.category || "For Sale"}</span>
+                        <h4 className="font-heading font-black text-xs text-slate-900 truncate">{item.title}</h4>
+                        {item.price && <span className="font-heading font-black text-xs text-emerald-700">₹{item.price}</span>}
+                        <span className="text-[10px] text-slate-500 flex items-center gap-1 truncate">
+                          <MapPin className="w-3 h-3 text-amber-600 shrink-0" />
+                          <span className="truncate">{item.area_tag || "Thanjavur"}</span>
                         </span>
-                        <div className="flex items-center gap-1.5">
-                          <a
-                            href={`https://wa.me/${(item.phone || "919994837342").replace(/\D/g, "")}?text=${encodeURIComponent(`Hi, I saw your listing "${item.title}" on Namma Thanjai.`)}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="p-1.5 rounded-lg bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-250 transition-colors"
-                            title="WhatsApp"
-                          >
-                            <MessageSquare className="w-3.5 h-3.5 text-slate-800" />
-                          </a>
-                          <a
-                            href={`tel:${item.phone || "919994837342"}`}
-                            onClick={(e) => e.stopPropagation()}
-                            className="p-1.5 rounded-lg bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-250 transition-colors"
-                            title="Call"
-                          >
-                            <Phone className="w-3.5 h-3.5 text-slate-800" />
-                          </a>
-                        </div>
                       </div>
                     </div>
                   ))}
                 </div>
-              </section>
-            )}
+              )}
+            </div>
 
-            {/* 2. NEED RESULTS */}
-            {(activeTab === "all" || activeTab === "need") && results.need.length > 0 && (
-              <section className="flex flex-col gap-3">
-                <div className="flex items-center gap-2 border-b border-slate-200 pb-2">
-                  <Search className="w-4 h-4 text-slate-900" />
-                  <h2 className="font-heading font-black text-sm text-slate-950 uppercase tracking-wider">
-                    Need Requirements (தேவைகள்) ({results.need.length})
-                  </h2>
+            {/* 2. WANTED */}
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs flex flex-col gap-4">
+              <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
+                <div className="flex items-center gap-2">
+                  <Search className="w-4.5 h-4.5 text-amber-600 stroke-[2.5]" />
+                  <h3 className="font-heading font-black text-base text-slate-900">WANTED ({results.need.length})</h3>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {results.need.map((item) => (
+                <button
+                  type="button"
+                  onClick={() => handleCategorySwitch("need")}
+                  className="text-xs font-heading font-bold text-amber-700 hover:text-amber-800 flex items-center gap-1 cursor-pointer"
+                >
+                  <span>View All</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              {results.need.length === 0 ? (
+                <p className="text-xs text-slate-400 italic">No wanted items matching "{searchTerm}"</p>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {results.need.slice(0, 2).map((item) => (
                     <div
                       key={item.id}
                       onClick={() => router.push(`/need`)}
-                      className="bg-white border border-slate-200 rounded-xl p-4 flex flex-col justify-between gap-3 shadow-2xs hover:border-slate-300 transition-all cursor-pointer"
+                      className="bg-slate-50 hover:bg-slate-100/80 border border-slate-200 rounded-xl p-3.5 flex items-start gap-3 cursor-pointer transition-all"
                     >
-                      <div className="flex flex-col gap-1">
-                        <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-bold bg-slate-100 text-slate-800 border border-slate-200 px-2 py-0.5 rounded">
-                            {item.category || "Need"}
-                          </span>
-                          {item.price && (
-                            <span className="font-heading font-black text-xs text-slate-900">
-                              Budget: ₹{Number(item.price).toLocaleString("en-IN")}
-                            </span>
-                          )}
-                        </div>
-                        <h3 className="font-heading font-bold text-xs text-slate-900 line-clamp-1 mt-1">
-                          {item.title}
-                        </h3>
-                        <p className="text-[11px] text-slate-500 line-clamp-2">{item.description}</p>
-                      </div>
-
-                      <div className="flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-100">
-                        <span className="flex items-center gap-1">
-                          <MapPin className="w-3 h-3 text-slate-400" />
-                          {item.area_tag || "Thanjavur"}
+                      <div className="flex flex-col gap-1 min-w-0 flex-1">
+                        <span className="text-[10px] font-bold text-amber-700">{item.category || "Wanted"}</span>
+                        <h4 className="font-heading font-black text-xs text-slate-900 truncate">{item.title}</h4>
+                        {item.price && <span className="font-heading font-black text-xs text-emerald-700">Budget: ₹{item.price}</span>}
+                        <span className="text-[10px] text-slate-500 flex items-center gap-1 truncate">
+                          <MapPin className="w-3 h-3 text-amber-600 shrink-0" />
+                          <span className="truncate">{item.area_tag || "Thanjavur"}</span>
                         </span>
-                        <div className="flex items-center gap-1.5">
-                          <a
-                            href={`https://wa.me/${(item.phone || "919994837342").replace(/\D/g, "")}?text=${encodeURIComponent(`Hi, I saw your requirement "${item.title}" on Namma Thanjai.`)}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="p-1.5 rounded-lg bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-250 transition-colors"
-                            title="WhatsApp"
-                          >
-                            <MessageSquare className="w-3.5 h-3.5 text-slate-800" />
-                          </a>
-                          <a
-                            href={`tel:${item.phone || "919994837342"}`}
-                            onClick={(e) => e.stopPropagation()}
-                            className="p-1.5 rounded-lg bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-250 transition-colors"
-                            title="Call"
-                          >
-                            <Phone className="w-3.5 h-3.5 text-slate-800" />
-                          </a>
-                        </div>
                       </div>
                     </div>
                   ))}
                 </div>
-              </section>
-            )}
+              )}
+            </div>
 
-            {/* 3. SERVICE RESULTS */}
-            {(activeTab === "all" || activeTab === "services") && results.services.length > 0 && (
-              <section className="flex flex-col gap-3">
-                <div className="flex items-center gap-2 border-b border-slate-200 pb-2">
-                  <Wrench className="w-4 h-4 text-slate-900" />
-                  <h2 className="font-heading font-black text-sm text-slate-950 uppercase tracking-wider">
-                    Service Providers (சேவைகள்) ({results.services.length})
-                  </h2>
+            {/* 3. LOCAL SERVICES */}
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs flex flex-col gap-4">
+              <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
+                <div className="flex items-center gap-2">
+                  <Wrench className="w-4.5 h-4.5 text-amber-600 stroke-[2.5]" />
+                  <h3 className="font-heading font-black text-base text-slate-900">LOCAL SERVICES ({results.services.length})</h3>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {results.services.map((item) => (
+                <button
+                  type="button"
+                  onClick={() => handleCategorySwitch("services")}
+                  className="text-xs font-heading font-bold text-amber-700 hover:text-amber-800 flex items-center gap-1 cursor-pointer"
+                >
+                  <span>View All</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              {results.services.length === 0 ? (
+                <p className="text-xs text-slate-400 italic">No services matching "{searchTerm}"</p>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {results.services.slice(0, 2).map((item) => (
                     <div
                       key={item.id}
                       onClick={() => router.push(`/services`)}
-                      className="bg-white border border-slate-200 rounded-xl p-4 flex flex-col justify-between gap-3 shadow-2xs hover:border-slate-300 transition-all cursor-pointer"
+                      className="bg-slate-50 hover:bg-slate-100/80 border border-slate-200 rounded-xl p-3.5 flex items-start gap-3 cursor-pointer transition-all"
                     >
-                      <div className="flex flex-col gap-1">
-                        <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-bold bg-slate-100 text-slate-800 border border-slate-200 px-2 py-0.5 rounded">
-                            {item.skill_category || "Service"}
-                          </span>
-                          {item.experience && (
-                            <span className="text-[10px] font-bold text-slate-500">{item.experience}</span>
-                          )}
-                        </div>
-                        <h3 className="font-heading font-bold text-xs text-slate-900 line-clamp-1 mt-1">
-                          {item.name}
-                        </h3>
-                        <p className="text-[11px] text-slate-500 line-clamp-2">{item.description}</p>
-                      </div>
-
-                      <div className="flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-100">
-                        <span className="flex items-center gap-1">
-                          <MapPin className="w-3 h-3 text-slate-400" />
-                          {item.area_tag || "Thanjavur"}
+                      <div className="flex flex-col gap-1 min-w-0 flex-1">
+                        <span className="text-[10px] font-bold text-amber-700">{item.skill_category || "Service"}</span>
+                        <h4 className="font-heading font-black text-xs text-slate-900 truncate">{item.name}</h4>
+                        <span className="text-[10px] text-slate-500 flex items-center gap-1 truncate">
+                          <MapPin className="w-3 h-3 text-amber-600 shrink-0" />
+                          <span className="truncate">{item.area_tag || "Thanjavur"}</span>
                         </span>
-                        <div className="flex items-center gap-1.5">
-                          <a
-                            href={`https://wa.me/${(item.phone || "919994837342").replace(/\D/g, "")}?text=${encodeURIComponent(`Hi, I saw your service "${item.name}" on Namma Thanjai.`)}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="p-1.5 rounded-lg bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-250 transition-colors"
-                            title="WhatsApp"
-                          >
-                            <MessageSquare className="w-3.5 h-3.5 text-slate-800" />
-                          </a>
-                          <a
-                            href={`tel:${item.phone || "919994837342"}`}
-                            onClick={(e) => e.stopPropagation()}
-                            className="p-1.5 rounded-lg bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-250 transition-colors"
-                            title="Call"
-                          >
-                            <Phone className="w-3.5 h-3.5 text-slate-800" />
-                          </a>
-                        </div>
                       </div>
                     </div>
                   ))}
                 </div>
-              </section>
-            )}
+              )}
+            </div>
 
-            {/* 4. OFFER RESULTS */}
-            {(activeTab === "all" || activeTab === "offers") && results.offers.length > 0 && (
-              <section className="flex flex-col gap-3">
-                <div className="flex items-center gap-2 border-b border-slate-200 pb-2">
-                  <Store className="w-4 h-4 text-slate-900" />
-                  <h2 className="font-heading font-black text-sm text-slate-950 uppercase tracking-wider">
-                    Local Offers (சலுகைகள்) ({results.offers.length})
-                  </h2>
+            {/* 4. LOCAL OFFERS */}
+            <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs flex flex-col gap-4">
+              <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
+                <div className="flex items-center gap-2">
+                  <Store className="w-4.5 h-4.5 text-amber-600 stroke-[2.5]" />
+                  <h3 className="font-heading font-black text-base text-slate-900">LOCAL OFFERS ({results.offers.length})</h3>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {results.offers.map((item) => (
+                <button
+                  type="button"
+                  onClick={() => handleCategorySwitch("offers")}
+                  className="text-xs font-heading font-bold text-amber-700 hover:text-amber-800 flex items-center gap-1 cursor-pointer"
+                >
+                  <span>View All</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
+
+              {results.offers.length === 0 ? (
+                <p className="text-xs text-slate-400 italic">No offers matching "{searchTerm}"</p>
+              ) : (
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {results.offers.slice(0, 2).map((item) => (
                     <div
                       key={item.id}
                       onClick={() => router.push(`/shops`)}
-                      className="bg-white border border-slate-200 rounded-xl p-4 flex flex-col justify-between gap-3 shadow-2xs hover:border-slate-300 transition-all cursor-pointer"
+                      className="bg-slate-50 hover:bg-slate-100/80 border border-slate-200 rounded-xl p-3.5 flex items-start gap-3 cursor-pointer transition-all"
                     >
-                      <div className="flex flex-col gap-1">
-                        <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-bold bg-slate-100 text-slate-800 border border-slate-200 px-2 py-0.5 rounded">
-                            {item.category || "Offer"}
-                          </span>
-                          {item.offer_title && (
-                            <span className="font-heading font-bold text-xs text-slate-900 line-clamp-1">
-                              {item.offer_title}
-                            </span>
-                          )}
-                        </div>
-                        <h3 className="font-heading font-extrabold text-xs text-slate-900 line-clamp-1 mt-1">
-                          {item.shop_name}
-                        </h3>
-                        <p className="text-[11px] text-slate-500 line-clamp-2">{item.offer_description || item.address_text}</p>
-                      </div>
-
-                      <div className="flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-100">
-                        <span className="flex items-center gap-1">
-                          <MapPin className="w-3 h-3 text-slate-400" />
-                          {item.area_tag || "Thanjavur"}
+                      <div className="flex flex-col gap-1 min-w-0 flex-1">
+                        <span className="text-[10px] font-bold text-amber-700">{item.category || "Offer"}</span>
+                        <h4 className="font-heading font-black text-xs text-slate-900 truncate">{item.offer_title || item.shop_name}</h4>
+                        <span className="text-[10px] text-slate-500 flex items-center gap-1 truncate">
+                          <MapPin className="w-3 h-3 text-amber-600 shrink-0" />
+                          <span className="truncate">{item.area_tag || "Thanjavur"}</span>
                         </span>
-                        <div className="flex items-center gap-1.5">
-                          <a
-                            href={`https://wa.me/${(item.phone || "919994837342").replace(/\D/g, "")}?text=${encodeURIComponent(`Hi, I saw your offer "${item.offer_title || item.shop_name}" on Namma Thanjai.`)}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="p-1.5 rounded-lg bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-250 transition-colors"
-                            title="WhatsApp"
-                          >
-                            <MessageSquare className="w-3.5 h-3.5 text-slate-800" />
-                          </a>
-                          <a
-                            href={`tel:${item.phone || "919994837342"}`}
-                            onClick={(e) => e.stopPropagation()}
-                            className="p-1.5 rounded-lg bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-250 transition-colors"
-                            title="Call"
-                          >
-                            <Phone className="w-3.5 h-3.5 text-slate-800" />
-                          </a>
-                        </div>
                       </div>
                     </div>
                   ))}
                 </div>
-              </section>
-            )}
+              )}
+            </div>
+          </div>
+        ) : (
+          /* 13C — FULL CATEGORY SEARCH RESULTS GRID */
+          <div className="flex flex-col gap-4">
+            <h2 className="font-heading font-black text-base text-slate-900">
+              Showing {activeCategory.toUpperCase()} results for "{searchTerm}"
+            </h2>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {(activeCategory === "sell" ? results.sell : activeCategory === "need" ? results.need : activeCategory === "services" ? results.services : results.offers).map((item) => (
+                <div
+                  key={item.id}
+                  onClick={() => router.push(activeCategory === "sell" ? "/sell" : activeCategory === "need" ? "/need" : activeCategory === "services" ? "/services" : "/shops")}
+                  className="bg-white border border-slate-200 rounded-2xl p-4 flex flex-col justify-between gap-3 shadow-xs hover:border-amber-400 transition-all cursor-pointer"
+                >
+                  <div className="flex flex-col gap-1.5">
+                    <span className="text-[10px] font-bold bg-slate-100 text-slate-800 border border-slate-200 px-2 py-0.5 rounded w-fit">
+                      {item.category || item.skill_category || activeCategory.toUpperCase()}
+                    </span>
+                    <h3 className="font-heading font-black text-sm text-slate-900 line-clamp-1">
+                      {item.title || item.name || item.offer_title || item.shop_name}
+                    </h3>
+                    <p className="text-xs text-slate-500 line-clamp-2">{item.description || item.offer_description}</p>
+                  </div>
+
+                  <div className="flex items-center justify-between text-xs text-slate-500 pt-2 border-t border-slate-100">
+                    <span className="flex items-center gap-1 truncate">
+                      <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
+                      <span className="truncate">{item.area_tag || "Thanjavur"}</span>
+                    </span>
+                    <div className="flex items-center gap-1.5">
+                      <a
+                        href={`https://wa.me/${(item.phone || "919994837342").replace(/\D/g, "")}?text=${encodeURIComponent(`Hi, I saw your listing on Namma Thanjai.`)}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={(e) => e.stopPropagation()}
+                        className="p-1.5 rounded-lg bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-250 transition-colors"
+                      >
+                        <MessageSquare className="w-3.5 h-3.5 text-slate-800" />
+                      </a>
+                      <a
+                        href={`tel:${item.phone || "919994837342"}`}
+                        onClick={(e) => e.stopPropagation()}
+                        className="p-1.5 rounded-lg bg-slate-100 text-slate-800 hover:bg-slate-200 border border-slate-250 transition-colors"
+                      >
+                        <Phone className="w-3.5 h-3.5 text-slate-800" />
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
           </div>
         )}
       </div>
