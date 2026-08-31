@@ -30,6 +30,9 @@ export default function UniversalSearchBar() {
   }, []);
 
   const handleLaunchSearch = () => {
+    if (typeof window !== "undefined") {
+      sessionStorage.setItem("namma_thanjai_search_referrer", window.location.pathname);
+    }
     router.push("/search");
   };
 

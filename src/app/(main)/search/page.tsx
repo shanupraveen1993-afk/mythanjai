@@ -203,14 +203,21 @@ function SearchContent() {
       <div className="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-xs py-3 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex flex-col gap-3">
           <div className="flex items-center gap-3">
-            {/* Back Button */}
+            {/* Smart Back Button — Returns to previous marketplace page */}
             <button
               type="button"
               onClick={() => {
                 if (isFullCategoryView) {
                   handleCategorySwitch("");
                 } else {
-                  router.push("/");
+                  const referrer = typeof window !== "undefined" ? sessionStorage.getItem("namma_thanjai_search_referrer") : null;
+                  if (referrer && referrer !== "/search" && referrer !== "/onboarding") {
+                    router.push(referrer);
+                  } else if (typeof window !== "undefined" && window.history.length > 1) {
+                    router.back();
+                  } else {
+                    router.push("/");
+                  }
                 }
               }}
               className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors cursor-pointer shrink-0"

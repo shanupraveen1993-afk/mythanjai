@@ -244,6 +244,7 @@ function MainLayoutContent({
   const isLandingMode = pathname === "/" || pathname === "/onboarding";
   const isChatRoute = pathname === "/chat";
   const isPostRoute = pathname.startsWith("/post");
+  const isSearchRoute = pathname.includes("/search");
   const isFeedPage = pathname === "/" || pathname === "/home" || pathname.includes("/sell") || pathname.includes("/need") || pathname.includes("/services") || pathname.includes("/shops") || pathname.includes("/offers") || pathname.includes("/classifieds");
   const isStandaloneView = false;
   const isOnboardingView = pathname === "/onboarding";
@@ -296,8 +297,8 @@ function MainLayoutContent({
         <SearchParamSync onAreaSync={setSelectedArea} onAuthSync={setIsSignInOpen} />
       </React.Suspense>
 
-      {/* Unified Top App Shell — TopHeader + CategoryBar (Feed pages only) move as ONE UNIT */}
-      {!isOnboardingView && !isChatRoute && !isPostRoute && (
+      {/* Unified Top App Shell — Hidden on /search so search screen takes full header space */}
+      {!isOnboardingView && !isChatRoute && !isPostRoute && !isSearchRoute && (
         <TopAppShell>
           <React.Suspense fallback={null}>
             <TopHeader
@@ -332,7 +333,7 @@ function MainLayoutContent({
       <main
         className={`flex-1 w-full flex flex-col p-0 m-0 bg-[#f8fafc] ${isChatRoute ? "h-[100dvh] max-h-[100dvh] overflow-hidden pb-0" : "pb-[calc(5.5rem+env(safe-area-inset-bottom,0px))] md:pb-8"}`}
         style={{
-          paddingTop: !isOnboardingView && !isChatRoute && !isPostRoute
+          paddingTop: !isOnboardingView && !isChatRoute && !isPostRoute && !isSearchRoute
             ? "var(--top-shell-height, 120px)"
             : undefined,
         }}
@@ -344,7 +345,7 @@ function MainLayoutContent({
         </div>
 
         {/* Footer — desktop only */}
-        {!isChatRoute && !isOnboardingView && !isPostRoute && (
+        {!isChatRoute && !isOnboardingView && !isPostRoute && !isSearchRoute && (
           <React.Suspense fallback={null}>
             <div className="hidden md:block mt-auto pt-8">
               <Footer />
