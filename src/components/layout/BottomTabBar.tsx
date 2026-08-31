@@ -145,7 +145,7 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
             <button
               key={item.id}
               onClick={() => router.push(item.route)}
-              className={`flex items-center gap-2 rounded-full min-h-[48px] min-w-[48px] justify-center transition-all duration-300 ease-out cursor-pointer select-none active:scale-95 ${
+              className={`flex items-center gap-2 rounded-full min-h-[48px] min-w-[48px] justify-center transition-all duration-300 ease-out cursor-pointer select-none active:scale-95 relative ${
                 isActive
                   ? "bg-white text-[#1E244A] px-4 py-2 font-heading font-black text-[13px] sm:text-sm shadow-md scale-105 border border-white/90"
                   : "text-slate-300 hover:text-white font-bold p-2"
@@ -153,13 +153,18 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
               title={item.label}
               aria-label={item.label}
             >
-              <Icon
-                className={`transition-all duration-300 ${
-                  isActive
-                    ? "w-5 h-5 fill-[#1E244A] text-[#1E244A] stroke-[1.5]"
-                    : "w-6 h-6 text-slate-300 stroke-[2] fill-transparent hover:text-white"
-                }`}
-              />
+              <div className="relative flex items-center justify-center">
+                <Icon
+                  className={`transition-all duration-300 ${
+                    isActive
+                      ? "w-5 h-5 fill-[#1E244A] text-[#1E244A] stroke-[1.5]"
+                      : "w-6 h-6 text-slate-300 stroke-[2] fill-transparent hover:text-white"
+                  }`}
+                />
+                {item.id === "chat" && (
+                  <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-rose-500 rounded-full border border-[#1E244A] animate-pulse" />
+                )}
+              </div>
               {isActive && (
                 <span className="truncate max-w-[100px] leading-none text-[13px] sm:text-sm font-black tracking-tight text-[#1E244A] animate-fade-in">
                   {item.label}
