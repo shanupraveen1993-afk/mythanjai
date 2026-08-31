@@ -63,12 +63,8 @@ export default function TamilSloganBanner() {
     >
       <div className="max-w-7xl mx-auto flex items-center justify-center gap-1.5 py-0.5 relative z-10 pr-6 sm:pr-0">
         <span className="inline-flex items-center shrink-0 p-1 bg-amber-400/10 rounded-md border border-amber-400/20">{content.icon}</span>
-        <p className="font-heading text-[11px] sm:text-[13px] tracking-normal leading-normal flex items-center flex-wrap justify-center gap-1 sm:gap-2 line-clamp-2">
-          <span className="font-heading font-black tracking-wider shrink-0 uppercase text-[9px] sm:text-[11px] bg-amber-400/15 text-amber-300 px-1.5 py-0.5 rounded border border-amber-400/30">
-            {content.title}
-          </span>
-          <span className="text-slate-400 font-bold hidden sm:inline">—</span>
-          <span className="text-slate-200 font-semibold font-tamil leading-normal sm:leading-relaxed line-clamp-2">
+        <p className="font-heading text-xs sm:text-sm tracking-normal leading-normal flex items-center justify-center text-center">
+          <span className="text-slate-100 font-semibold font-tamil leading-normal sm:leading-relaxed">
             {content.text}
           </span>
         </p>

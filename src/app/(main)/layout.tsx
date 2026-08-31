@@ -97,7 +97,14 @@ function MainLayoutContent({
   const [isOnboardingRedirecting, setIsOnboardingRedirecting] = useState<boolean>(() => {
     if (typeof window !== "undefined") {
       const isNative = Boolean((window as any).Capacitor?.isNativePlatform() || window.navigator.userAgent.includes("Capacitor"));
-      const hasCompletedOnboarding = Boolean(localStorage.getItem("namma_thanjai_onboarding_completed_v10"));
+      const hasCompletedOnboarding = Boolean(
+        localStorage.getItem("namma_thanjai_onboarding_completed_v10") ||
+        localStorage.getItem("namma_thanjai_onboarding_completed_v4") ||
+        localStorage.getItem("namma_thanjai_onboarding_completed") === "true" ||
+        localStorage.getItem("namma_thanjai_user_verified") === "true" ||
+        localStorage.getItem("namma_thanjai_verified") === "true" ||
+        localStorage.getItem("my_thanjai_verified") === "true"
+      );
       return isNative && !hasCompletedOnboarding;
     }
     return false;
@@ -107,7 +114,14 @@ function MainLayoutContent({
     setIsMounted(true);
     if (typeof window !== "undefined") {
       const isNative = Boolean((window as any).Capacitor?.isNativePlatform() || window.navigator.userAgent.includes("Capacitor"));
-      const hasCompletedOnboarding = Boolean(localStorage.getItem("namma_thanjai_onboarding_completed_v10"));
+      const hasCompletedOnboarding = Boolean(
+        localStorage.getItem("namma_thanjai_onboarding_completed_v10") ||
+        localStorage.getItem("namma_thanjai_onboarding_completed_v4") ||
+        localStorage.getItem("namma_thanjai_onboarding_completed") === "true" ||
+        localStorage.getItem("namma_thanjai_user_verified") === "true" ||
+        localStorage.getItem("namma_thanjai_verified") === "true" ||
+        localStorage.getItem("my_thanjai_verified") === "true"
+      );
 
       if (isNative) {
         import("@capacitor/splash-screen")
