@@ -1,32 +1,38 @@
 "use client";
 
-import React, { useState, useEffect, Suspense } from "react";
+import React, { useState, useEffect, useRef, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
   Search,
   MapPin,
   MessageSquare,
   Phone,
-  Building,
-  Wrench,
-  Store,
   ArrowLeft,
   ArrowRight,
   Loader2,
   Package,
+  Wrench,
+  Store,
+  Clock,
+  Trash2,
+  X,
 } from "lucide-react";
 import { collection, query, getDocs } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
+const RECENT_SEARCHES_KEY = "namma_thanjai_recent_searches";
+
 function SearchContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const queryParam = searchParams ? searchParams.get("q") || "" : "";
   const catParam = searchParams ? searchParams.get("cat") || "" : "";
 
   const [searchTerm, setSearchTerm] = useState(queryParam);
   const [activeCategory, setActiveCategory] = useState<string>(catParam);
+  const [recentSearches, setRecentSearches] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
 
   const [results, setResults] = useState<{
@@ -36,11 +42,66 @@ function SearchContent() {
     offers: any[];
   }>({ sell: [], need: [], services: [], offers: [] });
 
+  // Load Recent Searches from localStorage on mount
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const stored = JSON.parse(localStorage.getItem(RECENT_SEARCHES_KEY) || "[]");
+        if (Array.isArray(stored)) {
+          setRecentSearches(stored);
+        }
+      } catch (e) {
+        setRecentSearches([]);
+      }
+    }
+  }, []);
+
+  // Auto-focus search input with blinking cursor on page load
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    }, 100);
+    return () => clearTimeout(timer);
+  }, []);
+
   // Sync state with URL params
   useEffect(() => {
     setSearchTerm(queryParam);
     setActiveCategory(catParam);
   }, [queryParam, catParam]);
+
+  // Helper to save a query term into recent searches (Deduplicated, max 10, top of list)
+  const saveRecentSearch = (term: string) => {
+    const cleaned = term.trim();
+    if (!cleaned) return;
+    try {
+      const filtered = recentSearches.filter((item) => item.toLowerCase() !== cleaned.toLowerCase());
+      const updated = [cleaned, ...filtered].slice(0, 10);
+      setRecentSearches(updated);
+      if (typeof window !== "undefined") {
+        localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(updated));
+      }
+    } catch (e) {}
+  };
+
+  // Clear all recent searches
+  const handleClearRecentSearches = () => {
+    setRecentSearches([]);
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(RECENT_SEARCHES_KEY);
+    }
+  };
+
+  // Remove individual recent search item
+  const handleRemoveRecentSearch = (termToRemove: string) => {
+    const updated = recentSearches.filter((item) => item !== termToRemove);
+    setRecentSearches(updated);
+    if (typeof window !== "undefined") {
+      localStorage.setItem(RECENT_SEARCHES_KEY, JSON.stringify(updated));
+    }
+  };
 
   // Execute District-Wide Search across all 4 collections
   useEffect(() => {
@@ -113,8 +174,16 @@ function SearchContent() {
   const handleSearchSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!searchTerm.trim()) return;
+    saveRecentSearch(searchTerm.trim());
     const catQuery = activeCategory ? `&cat=${activeCategory}` : "";
     router.push(`/search?q=${encodeURIComponent(searchTerm.trim())}${catQuery}`);
+  };
+
+  const handleRecentSearchClick = (term: string) => {
+    setSearchTerm(term);
+    saveRecentSearch(term);
+    const catQuery = activeCategory ? `&cat=${activeCategory}` : "";
+    router.push(`/search?q=${encodeURIComponent(term)}${catQuery}`);
   };
 
   const handleCategorySwitch = (catKey: string) => {
@@ -129,11 +198,12 @@ function SearchContent() {
   const isFullCategoryView = Boolean(activeCategory && activeCategory !== "all");
 
   return (
-    <div className="w-full min-h-screen bg-[#f8fafc] text-slate-900 font-sans pb-24">
-      {/* 13A Sticky Top Search Header */}
+    <div className="w-full min-h-screen bg-white text-slate-900 font-sans pb-24">
+      {/* 13A Sticky Top Search Header Bar */}
       <div className="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-xs py-3 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex flex-col gap-3">
           <div className="flex items-center gap-3">
+            {/* Back Button */}
             <button
               type="button"
               onClick={() => {
@@ -149,63 +219,112 @@ function SearchContent() {
               <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
             </button>
 
+            {/* Focused Search Input */}
             <form onSubmit={handleSearchSubmit} className="flex-1 relative flex items-center">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3.5" />
               <input
+                ref={inputRef}
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search products, services & offers in Thanjavur..."
-                className="w-full bg-slate-100 hover:bg-slate-50 focus:bg-white border border-slate-250 focus:border-amber-400 rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm font-black text-slate-900 focus:outline-none transition-all shadow-2xs"
+                placeholder="Search products, services & offers..."
+                className="w-full bg-slate-100 hover:bg-slate-50 focus:bg-white border border-slate-250 focus:border-amber-400 rounded-xl pl-4 pr-10 py-2.5 text-xs sm:text-sm font-black text-slate-900 focus:outline-none transition-all shadow-2xs"
               />
               <button
                 type="submit"
-                className="ml-2 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-4 py-2.5 rounded-xl cursor-pointer transition-colors shrink-0 shadow-2xs"
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-slate-500 hover:text-slate-950 cursor-pointer"
+                title="Execute Search"
               >
-                Search
+                <Search className="w-4 h-4 stroke-[2.5]" />
               </button>
             </form>
           </div>
 
           {/* 13C Horizontal Category Switcher (Retained on Full Category Results) */}
-          <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pt-1">
-            {[
-              { id: "", label: `All (${totalResults})` },
-              { id: "sell", label: `For Sale (${results.sell.length})` },
-              { id: "need", label: `Wanted (${results.need.length})` },
-              { id: "services", label: `Local Services (${results.services.length})` },
-              { id: "offers", label: `Local Offers (${results.offers.length})` },
-            ].map((tab) => (
-              <button
-                key={tab.id}
-                onClick={() => handleCategorySwitch(tab.id)}
-                className={`px-3 py-1.5 rounded-xl text-xs font-heading font-bold shrink-0 transition-all cursor-pointer ${
-                  activeCategory === tab.id
-                    ? "bg-[#0F172A] text-white shadow-2xs font-black"
-                    : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                }`}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
+          {searchTerm.trim() !== "" && (
+            <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pt-1">
+              {[
+                { id: "", label: `All (${totalResults})` },
+                { id: "sell", label: `For Sale (${results.sell.length})` },
+                { id: "need", label: `Wanted (${results.need.length})` },
+                { id: "services", label: `Local Services (${results.services.length})` },
+                { id: "offers", label: `Local Offers (${results.offers.length})` },
+              ].map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => handleCategorySwitch(tab.id)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-heading font-bold shrink-0 transition-all cursor-pointer ${
+                    activeCategory === tab.id
+                      ? "bg-[#0F172A] text-white shadow-2xs font-black"
+                      : "bg-slate-100 text-slate-700 hover:bg-slate-200"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
       {/* Main Container */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-6 flex flex-col gap-6 font-sans">
-        {loading ? (
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-5 flex flex-col gap-6 font-sans">
+        
+        {/* RECENT SEARCHES SECTION (Shows when search input is empty) */}
+        {!searchTerm.trim() ? (
+          <div className="flex flex-col gap-4 max-w-xl mx-auto w-full pt-2">
+            <div className="flex items-center justify-between border-b border-slate-100 pb-2">
+              <h3 className="font-heading font-black text-sm text-slate-900 tracking-tight">
+                Recent Searches
+              </h3>
+              {recentSearches.length > 0 && (
+                <button
+                  type="button"
+                  onClick={handleClearRecentSearches}
+                  className="text-xs font-bold text-slate-400 hover:text-rose-600 transition-colors cursor-pointer"
+                >
+                  Clear
+                </button>
+              )}
+            </div>
+
+            {recentSearches.length === 0 ? (
+              <div className="text-xs font-medium text-slate-400 py-6 text-center italic">
+                No recent searches
+              </div>
+            ) : (
+              <div className="flex flex-col gap-1 w-full">
+                {recentSearches.map((term) => (
+                  <div
+                    key={term}
+                    className="flex items-center justify-between p-3 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-200/80 transition-all group cursor-pointer"
+                    onClick={() => handleRecentSearchClick(term)}
+                  >
+                    <div className="flex items-center gap-3 min-w-0">
+                      <Search className="w-4 h-4 text-slate-400 group-hover:text-slate-700 shrink-0 stroke-[2]" />
+                      <span className="text-xs sm:text-sm font-bold text-slate-800 truncate">
+                        {term}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleRemoveRecentSearch(term);
+                      }}
+                      className="p-1 rounded-full text-slate-300 hover:text-rose-600 transition-colors"
+                      title="Remove"
+                    >
+                      <X className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        ) : loading ? (
           <div className="flex flex-col items-center justify-center py-16 gap-3 text-slate-500">
             <Loader2 className="w-7 h-7 animate-spin text-slate-900" />
             <p className="text-xs font-black">Searching across Thanjavur District...</p>
-          </div>
-        ) : !searchTerm.trim() ? (
-          <div className="bg-white border border-slate-200 rounded-2xl p-8 text-center flex flex-col items-center gap-3 shadow-xs">
-            <Search className="w-10 h-10 text-slate-300 stroke-[1.5]" />
-            <h3 className="font-heading font-black text-base text-slate-900">District-Wide Search</h3>
-            <p className="text-xs text-slate-500 max-w-md">
-              Type any term above to search products, needs, local services &amp; store deals across all of Thanjavur District.
-            </p>
           </div>
         ) : totalResults === 0 ? (
           <div className="bg-white border border-slate-200 rounded-2xl p-8 text-center flex flex-col items-center gap-3 shadow-xs">
