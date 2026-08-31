@@ -164,7 +164,7 @@ export default function TopHeader({
         {/* Desktop Header Center: 4 Category Tabs (Modern Segmented Underline Nav Bar) */}
         <div className="hidden md:flex items-center justify-center z-20 flex-1 min-w-0 mx-2">
           <div className="flex items-center gap-1 sm:gap-2 border-b border-transparent font-heading">
-            {/* Buy Tab */}
+            {/* For Sale Tab */}
             {(() => {
               const isActive = pathname === "/" || pathname === "/home" || pathname.includes("/sell");
               return (
@@ -178,7 +178,7 @@ export default function TopHeader({
                   }`}
                 >
                   <Tag className={`w-3.5 h-3.5 ${isActive ? "text-[#1F244A] stroke-[2.5]" : "text-slate-500 stroke-[2]"}`} />
-                  <span>Buy</span>
+                  <span>For Sale</span>
                 </button>
               );
             })()}
@@ -202,7 +202,7 @@ export default function TopHeader({
               );
             })()}
 
-            {/* Services Tab */}
+            {/* Local Services Tab */}
             {(() => {
               const isActive = pathname.includes("/services");
               return (
@@ -216,12 +216,12 @@ export default function TopHeader({
                   }`}
                 >
                   <Wrench className={`w-3.5 h-3.5 ${isActive ? "text-[#1F244A] stroke-[2.5]" : "text-slate-500 stroke-[2]"}`} />
-                  <span>Services</span>
+                  <span>Local Services</span>
                 </button>
               );
             })()}
 
-            {/* Offers Tab */}
+            {/* Local Offers Tab */}
             {(() => {
               const isActive = pathname.includes("/shops") || pathname.includes("/offers");
               return (
@@ -235,7 +235,7 @@ export default function TopHeader({
                   }`}
                 >
                   <Store className={`w-3.5 h-3.5 ${isActive ? "text-[#1F244A] stroke-[2.5]" : "text-slate-500 stroke-[2]"}`} />
-                  <span>Offers</span>
+                  <span>Local Offers</span>
                 </button>
               );
             })()}

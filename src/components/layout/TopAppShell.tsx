@@ -41,12 +41,26 @@ export default function TopAppShell({ children }: TopAppShellProps) {
   }, [children, pathname]);
 
   // Rule 1: Reset top shell to fully visible on route changes
+  // Rule: Sticky Scroll-Hide Header ONLY on the exact 4 marketplace feed routes
+  const isMarketplaceFeed =
+    pathname === "/" ||
+    pathname === "/sell" ||
+    pathname === "/need" ||
+    pathname === "/services" ||
+    pathname === "/shops";
+
   useEffect(() => {
+    // Reset hide state on route change
     setShouldHide(false);
   }, [pathname]);
 
-  // Rule 2: Synchronize scroll direction state (Hide on scroll down, show on scroll up for Mobile Web App & Native APK App)
+  // Synchronize scroll hiding ONLY for Marketplace Feed pages
   useEffect(() => {
+    if (!isMarketplaceFeed) {
+      setShouldHide(false);
+      return;
+    }
+
     if (isAtTop) {
       setShouldHide(false);
     } else if (scrollDirection === "down") {
@@ -54,7 +68,7 @@ export default function TopAppShell({ children }: TopAppShellProps) {
     } else if (scrollDirection === "up") {
       setShouldHide(false);
     }
-  }, [scrollDirection, isAtTop]);
+  }, [scrollDirection, isAtTop, isMarketplaceFeed]);
 
   return (
     <div
