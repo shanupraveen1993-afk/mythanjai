@@ -91,8 +91,37 @@ export function useNativeApp() {
       })
       .catch(() => {});
 
-    // 4. Android Native Push Notifications Listener (Safe Delayed Initialization)
+    // 4. Android Native Push & Local Notifications Listener for System Status Bar Alerts
     const pushTimer = setTimeout(() => {
+      // A. Request Native Local Notifications Permission for Android System Status Bar
+      import("@capacitor/local-notifications")
+        .then(({ LocalNotifications }) => {
+          LocalNotifications.requestPermissions()
+            .then((permResult) => {
+              if (permResult.display === "granted") {
+                // Ensure notification channel is created for Android 8+
+                LocalNotifications.createChannel({
+                  id: "namma_thanjai_alerts",
+                  name: "Namma Thanjai System Alerts",
+                  description: "Real-time chat and listing alerts for Namma Thanjai",
+                  importance: 5,
+                  visibility: 1,
+                  sound: "default",
+                  vibration: true,
+                }).catch(() => {});
+              }
+            })
+            .catch(() => {});
+
+          LocalNotifications.addListener("localNotificationActionPerformed", (action) => {
+            if (action.notification.extra?.actionUrl) {
+              router.push(action.notification.extra.actionUrl);
+            }
+          }).catch(() => {});
+        })
+        .catch(() => {});
+
+      // B. Request Push Notifications Permission
       import("@capacitor/push-notifications")
         .then(({ PushNotifications }) => {
           PushNotifications.requestPermissions()
