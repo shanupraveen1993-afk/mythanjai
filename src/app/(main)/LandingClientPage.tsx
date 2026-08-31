@@ -18,7 +18,7 @@ import {
   Bookmark,
   Loader2,
 } from "lucide-react";
-import { collection, query, getDocs } from "firebase/firestore";
+import { collection, query, getDocs, limit } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 import GetAppHomeBanner from "@/components/layout/GetAppHomeBanner";
@@ -47,9 +47,9 @@ export default function LandingClientPage() {
       setLoadingData(true);
       try {
         const [classifiedsSnap, servicesSnap, shopsSnap] = await Promise.all([
-          getDocs(query(collection(db, "needs_and_sales"))).catch(() => ({ docs: [] })),
-          getDocs(query(collection(db, "services"))).catch(() => ({ docs: [] })),
-          getDocs(query(collection(db, "shops"))).catch(() => ({ docs: [] })),
+          getDocs(query(collection(db, "needs_and_sales"), limit(16))).catch(() => ({ docs: [] })),
+          getDocs(query(collection(db, "services"), limit(8))).catch(() => ({ docs: [] })),
+          getDocs(query(collection(db, "shops"), limit(8))).catch(() => ({ docs: [] })),
         ]);
 
         const sells: any[] = [];
@@ -74,25 +74,10 @@ export default function LandingClientPage() {
           });
 
         if (isMounted) {
-          setLiveSellPosts(filterActiveOnly(sells));
-          setLiveNeedPosts(filterActiveOnly(needs));
-          setLiveServicePosts(filterActiveOnly(services));
-          setLiveOfferPosts(filterActiveOnly(offers));
-
-          // Dynamic Matchmaker Logic
-          if (activeSellOrNeedPost) {
-            const targetType = activeSellOrNeedPost.type === "SELL" ? "NEED" : "SELL";
-            const targetCategory = activeSellOrNeedPost.category?.toLowerCase() || "";
-            const matches = classifiedsSnap.docs
-              .map((docSnap) => ({ id: docSnap.id, ...docSnap.data() }))
-              .filter((p: any) => {
-                if (targetType === "NEED") return p.type === "NEED" || p.category === "NEED";
-                return p.type === "SELL" || p.type !== "NEED";
-              })
-              .filter((p: any) => !targetCategory || (p.category || "").toLowerCase().includes(targetCategory));
-
-            setMatchedPosts(matches.slice(0, 4));
-          }
+          setLiveSellPosts(filterActiveOnly(sells).slice(0, 6));
+          setLiveNeedPosts(filterActiveOnly(needs).slice(0, 6));
+          setLiveServicePosts(filterActiveOnly(services).slice(0, 6));
+          setLiveOfferPosts(filterActiveOnly(offers).slice(0, 6));
         }
       } catch (err) {
         console.error("Failed to fetch live listings:", err);
@@ -105,7 +90,7 @@ export default function LandingClientPage() {
     return () => {
       isMounted = false;
     };
-  }, [activeSellOrNeedPost]);
+  }, []);
 
   return (
     <div className="w-full flex flex-col gap-4 text-slate-900 font-sans pb-6 sm:pb-10 bg-[#f8fafc] min-h-screen">

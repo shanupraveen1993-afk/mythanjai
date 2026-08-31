@@ -82,8 +82,8 @@ export function useFirestore<T = any>({
         constraints.push(where("userId", "==", onlyUserPosted));
       }
 
-      // Limit results to last 150 items (fastest transfer)
-      constraints.push(limit(150));
+      // Limit initial feed transfer to 20 items max (instant payload)
+      constraints.push(limit(20));
 
       q = query(colRef, ...constraints);
     } catch (err: any) {
