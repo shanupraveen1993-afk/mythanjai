@@ -57,6 +57,39 @@ export default function TopHeader({
     setShowDownloadBtn(false);
   };
 
+  const [unreadChatCount, setUnreadChatCount] = useState<number>(0);
+
+  // Dynamic real-time snapshot listener for unread chat messages for logged in user
+  useEffect(() => {
+    if (!user && !profile?.phone) { setUnreadChatCount(0); return; }
+    let unsubscribe: any = null;
+    const cleanPhone = (profile?.phone || "").replace(/\D/g, "").slice(-10);
+    const memberId = profile?.memberId || "";
+
+    import("firebase/firestore").then(({ collection, onSnapshot }) => {
+      import("@/lib/firebase").then(({ db }) => {
+        const notifRef = collection(db, "notifications");
+        unsubscribe = onSnapshot(notifRef, (snapshot) => {
+          let count = 0;
+          snapshot.forEach((docSnap) => {
+            const d = docSnap.data();
+            const recipPhone = (d.recipientPhone || "").replace(/\D/g, "").slice(-10);
+            const isRecip = (user?.uid && d.recipientId === user.uid) ||
+              (memberId && d.recipientId === memberId) ||
+              (cleanPhone && recipPhone === cleanPhone) ||
+              d.recipientId === "all";
+            if (isRecip && !d.read) {
+              count++;
+            }
+          });
+          setUnreadChatCount(count);
+        });
+      });
+    });
+
+    return () => { if (unsubscribe) unsubscribe(); };
+  }, [user, profile?.phone, profile?.memberId]);
+
   useEffect(() => {
     if (typeof window !== "undefined") {
       const params = new URLSearchParams(window.location.search);
@@ -293,7 +326,11 @@ export default function TopHeader({
                   aria-label="View messages"
                 >
                   <MessageSquare className={`w-4 h-4 ${pathname === "/chat" ? "text-slate-950 stroke-[2.5]" : "text-slate-700 stroke-[2]"}`} />
-                  <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-rose-500 rounded-full border border-white animate-pulse" />
+                  {unreadChatCount > 0 && (
+                    <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-rose-500 text-white text-[10px] font-black rounded-full border border-white flex items-center justify-center animate-pulse">
+                      {unreadChatCount}
+                    </span>
+                  )}
                 </button>
                 <div className="absolute top-full mt-1.5 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 bg-slate-900 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow-md whitespace-nowrap z-[99999]">
                   Chat

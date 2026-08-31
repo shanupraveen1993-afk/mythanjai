@@ -20,6 +20,33 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
   const { scrollDirection, isAtTop } = useScrollDirection();
   const [shouldHide, setShouldHide] = useState(false);
   const [isIndividualChatOpen, setIsIndividualChatOpen] = useState(false);
+  const [hasUnreadMessages, setHasUnreadMessages] = useState(false);
+
+  // Dynamic real-time snapshot listener for unread chat messages for logged in user
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    let unsubscribe: any = null;
+    const cleanPhone = (localStorage.getItem("namma_thanjai_phone") || localStorage.getItem("my_thanjai_phone") || "").replace(/\D/g, "").slice(-10);
+
+    import("firebase/firestore").then(({ collection, onSnapshot }) => {
+      import("@/lib/firebase").then(({ db }) => {
+        const notifRef = collection(db, "notifications");
+        unsubscribe = onSnapshot(notifRef, (snapshot) => {
+          let foundUnread = false;
+          snapshot.forEach((docSnap) => {
+            const d = docSnap.data();
+            const recipPhone = (d.recipientPhone || "").replace(/\D/g, "").slice(-10);
+            if (!d.read && (cleanPhone && recipPhone === cleanPhone || d.recipientId === "all")) {
+              foundUnread = true;
+            }
+          });
+          setHasUnreadMessages(foundUnread);
+        });
+      });
+    });
+
+    return () => { if (unsubscribe) unsubscribe(); };
+  }, []);
 
   // Detect if an individual chat conversation thread is currently active
   useEffect(() => {
@@ -161,7 +188,7 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
                       : "w-6 h-6 text-slate-300 stroke-[2] fill-transparent hover:text-white"
                   }`}
                 />
-                {item.id === "chat" && (
+                {item.id === "chat" && hasUnreadMessages && (
                   <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-rose-500 rounded-full border border-[#1E244A] animate-pulse" />
                 )}
               </div>
