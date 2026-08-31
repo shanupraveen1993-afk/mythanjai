@@ -179,10 +179,11 @@ export function useFirestore<T = any>({
       }
     };
 
-    // Try real-time listener first
     const unsubscribe = onSnapshot(
       q,
-      processSnapshot,
+      (snapshot) => {
+        processSnapshot(snapshot);
+      },
       async (snapshotErr) => {
         console.warn("useFirestore: onSnapshot fallback to getDocs:", snapshotErr);
         try {
@@ -203,5 +204,43 @@ export function useFirestore<T = any>({
     };
   }, [collectionName, category, areaTag, postType, onlyUserPosted, cacheKey]);
 
-  return { data: data || [], loading, error };
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [hasMore, setHasMore] = useState(true);
+
+  const loadMore = async () => {
+    if (loadingMore || !hasMore || !data || data.length === 0) return;
+    setLoadingMore(true);
+    try {
+      const { collection, query, getDocs, limit, where } = await import("firebase/firestore");
+      const colRef = collection(db, collectionName);
+      const constraints: any[] = [];
+      if (onlyUserPosted) constraints.push(where("userId", "==", onlyUserPosted));
+      constraints.push(limit(40));
+
+      const snapshot = await getDocs(query(colRef, ...constraints));
+      const nextItems: any[] = [];
+      const seenIds = new Set(data.map((item: any) => item.id));
+
+      snapshot.forEach((docSnap) => {
+        if (!seenIds.has(docSnap.id)) {
+          const docData = docSnap.data();
+          if (!docData.is_sold && !docData.is_inactive && docData.status !== "inactive") {
+            nextItems.push({ id: docSnap.id, ...docData });
+          }
+        }
+      });
+
+      if (nextItems.length === 0) {
+        setHasMore(false);
+      } else {
+        setData((prev) => [...prev, ...nextItems as T[]]);
+      }
+    } catch (e) {
+      console.warn("loadMore pagination note:", e);
+    } finally {
+      setLoadingMore(false);
+    }
+  };
+
+  return { data: data || [], loading, error, loadMore, hasMore, loadingMore };
 }
