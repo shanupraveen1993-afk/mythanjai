@@ -294,6 +294,8 @@ export default function ChatClientPage() {
   useEffect(() => {
     const currentUid = user?.uid;
     const currentPhone = profile?.phone ? profile.phone.replace(/\D/g, "") : "";
+    const cleanCurrentPhone = currentPhone.slice(-10);
+    const currentMemberId = profile?.memberId || "";
 
     const chatsRef = collection(db, "chats");
     const unsubscribe = onSnapshot(
@@ -302,10 +304,18 @@ export default function ChatClientPage() {
         const userThreads: ChatThread[] = [];
         snapshot.forEach((docSnap) => {
           const data = docSnap.data();
-          const participants = data.participants || [];
+          const participants: string[] = (data.participants || []).map((p: any) => String(p));
+          const cleanBuyerPhone = (data.buyerPhone || "").replace(/\D/g, "").slice(-10);
+          const cleanSellerPhone = (data.sellerPhone || "").replace(/\D/g, "").slice(-10);
+
           const isUserParticipant = Boolean(
             (currentUid && participants.includes(currentUid)) ||
-            (currentPhone && (participants.includes(currentPhone) || data.buyerPhone === currentPhone || data.sellerPhone === currentPhone))
+            (currentMemberId && (participants.includes(currentMemberId) || data.buyerId === currentMemberId || data.sellerId === currentMemberId)) ||
+            (cleanCurrentPhone && (
+              participants.some((p) => p.replace(/\D/g, "").endsWith(cleanCurrentPhone)) ||
+              cleanBuyerPhone === cleanCurrentPhone ||
+              cleanSellerPhone === cleanCurrentPhone
+            ))
           );
 
           if (isUserParticipant) {
@@ -572,7 +582,17 @@ export default function ChatClientPage() {
           sellerPhone: activePeerPhone,
           lastMessage: currentText,
           lastTimestamp: serverTimestamp(),
-          participants: Array.from(new Set([currentUid, activePeerId, currentPhone].filter(Boolean))),
+          participants: Array.from(
+            new Set(
+              [
+                currentUid,
+                profile?.memberId,
+                currentPhone ? currentPhone.slice(-10) : "",
+                activePeerId,
+                activePeerPhone ? activePeerPhone.replace(/\D/g, "").slice(-10) : ""
+              ].filter(Boolean)
+            )
+          ),
         },
         { merge: true }
       );

@@ -42,7 +42,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
     return null;
   });
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      const storedVerified = localStorage.getItem("my_thanjai_verified") === "true" ||
+                             localStorage.getItem("namma_thanjai_verified") === "true" ||
+                             localStorage.getItem("namma_thanjai_user_verified") === "true";
+      const storedPhone = (localStorage.getItem("my_thanjai_phone") || localStorage.getItem("namma_thanjai_phone") || "").replace(/\D/g, "");
+      if (storedVerified && storedPhone && storedPhone.length >= 10 && storedPhone !== "9876543210") {
+        return false;
+      }
+    }
+    return true;
+  });
 
   useEffect(() => {
     if (typeof window !== "undefined") {

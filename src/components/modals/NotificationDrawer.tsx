@@ -45,8 +45,10 @@ export default function NotificationDrawer() {
   useEffect(() => {
     const currentUid = user?.uid || "";
     const currentPhone = profile?.phone ? profile.phone.replace(/\D/g, "") : "";
+    const cleanCurrentPhone = currentPhone.slice(-10);
+    const currentMemberId = profile?.memberId || "";
 
-    if (!currentUid && !currentPhone) return;
+    if (!currentUid && !cleanCurrentPhone && !currentMemberId) return;
 
     const notifRef = collection(db, "notifications");
     const unsubscribe = onSnapshot(
@@ -55,9 +57,16 @@ export default function NotificationDrawer() {
         const list: NotificationItem[] = [];
         snapshot.forEach((docSnap) => {
           const data = docSnap.data();
-          const isRecipient =
+          const cleanRecipPhone = (data.recipientPhone || "").replace(/\D/g, "").slice(-10);
+
+          const isRecipient = Boolean(
             (currentUid && data.recipientId === currentUid) ||
-            (currentPhone && data.recipientPhone && data.recipientPhone.replace(/\D/g, "").includes(currentPhone));
+            (currentMemberId && (data.recipientId === currentMemberId || data.recipientPhone === currentMemberId)) ||
+            (cleanCurrentPhone && (
+              cleanRecipPhone === cleanCurrentPhone ||
+              (data.recipientId && String(data.recipientId).replace(/\D/g, "").endsWith(cleanCurrentPhone))
+            ))
+          );
 
           if (isRecipient) {
             list.push({
