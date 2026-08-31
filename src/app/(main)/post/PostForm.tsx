@@ -167,6 +167,8 @@ export default function PostForm({ segment }: PostFormProps) {
   const [validFrom, setValidFrom] = useState("");
   const [validTo, setValidTo] = useState("");
   const [showPhone, setShowPhone] = useState(false);
+  const [phone2, setPhone2] = useState("");
+  const [address, setAddress] = useState("");
 
   // AI Description & OCR State
   const [previewDescription, setPreviewDescription] = useState("");
@@ -460,11 +462,13 @@ export default function PostForm({ segment }: PostFormProps) {
         const res = await fetch(apiEndpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ imageBase64: compressed.base64, mimeType: compressed.blob.type }) });
         const result = await res.json();
         if (result.success && result.data) {
-          const { shop_name, detected_area, phone: ocrPhone } = result.data;
+          const { shop_name, detected_area, phone: ocrPhone, phone2: ocrPhone2, address_text } = result.data;
           if (shop_name) setTitle(shop_name);
           if (detected_area) setArea(detected_area);
           if (ocrPhone) setPhone(ocrPhone);
-          toast.success("✓ Auto-filled Store Name, Location & Phone!");
+          if (ocrPhone2) setPhone2(ocrPhone2);
+          if (address_text) setAddress(address_text);
+          toast.success("✓ Auto-filled Store Name, Address & Contact Phones from Visiting Card!");
         }
       } catch (err) {
         console.warn("OCR auto-extraction skipped:", err);
@@ -673,15 +677,15 @@ export default function PostForm({ segment }: PostFormProps) {
           seller_id: uid,
           shop_name: title.trim(),
           category: category || "Retail Deals",
-          locality_p1: p1Area,
-          locality_p2: p2Specific.trim(),
-          address_text: finalArea,
+          address_text: address || finalArea,
           area_tag: finalArea,
           phone: phone || "9876543210",
+          phone2: phone2 || "",
           show_phone: Boolean(showPhone),
           offer_title: title.trim(),
           offer_description: cleanDesc,
           valid_from: validFrom || null,
+          valid_to: validTo || null,
           image_url: cloudImageUrl || "",
           image_urls: finalImageUrls,
           is_verified: true,
@@ -1181,24 +1185,21 @@ export default function PostForm({ segment }: PostFormProps) {
                   </div>
                 </div>
 
-                {/* 5. MANDATORY 2-TIER LOCALITY SELECTOR (FOR OFFER) */}
-                <div className="w-full">
-                  <LocalitySelector
-                    p1Area={p1Area}
-                    setP1Area={setP1Area}
-                    p2Specific={p2Specific}
-                    setP2Specific={setP2Specific}
-                  />
-                </div>
-
-                {/* 6. OFFER PHONE INPUT LINE */}
-                <div className="w-full">
+                {/* 6. OFFER PHONE INPUT LINE (PRIMARY PHONE + SECONDARY PHONE FROM VISITING CARD) */}
+                <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <input
                     type="tel"
                     required
-                    placeholder="📞 Contact phone number * (e.g. 9994837342)"
+                    placeholder="📞 Primary Phone 1 * (e.g. 9994837342)"
                     value={phone}
                     onChange={(e) => { userEditedPhone.current = true; setPhone(e.target.value); }}
+                    className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal"
+                  />
+                  <input
+                    type="tel"
+                    placeholder="📞 Secondary Phone 2 (Optional)"
+                    value={phone2 || ""}
+                    onChange={(e) => setPhone2(e.target.value)}
                     className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal"
                   />
                 </div>

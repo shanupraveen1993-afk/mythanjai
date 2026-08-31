@@ -26,14 +26,15 @@ export async function POST(request: NextRequest) {
       {
         "shop_name": "Extracted Shop/Business Name",
         "category": "Must match the closest item from this list: ${SHOP_CATEGORIES.join(", ")}",
-        "phone": "Extracted 10-digit phone number without spaces or country code (or empty string if missing)",
-        "address_text": "Extracted full address line in Tamil or English",
+        "phone": "Extracted primary 10-digit phone number without spaces or country code",
+        "phone2": "Extracted secondary 10-digit phone number if present on visiting card (or empty string)",
+        "address_text": "Extracted full street address line in Tamil or English",
         "detected_area": "Must match the closest Tanjore area from this list: ${TANJORE_LOCALITIES.join(", ")}"
       }
 
       CRITICAL RULES:
       1. Return ONLY valid raw JSON. No markdown formatting, no code blocks (like \`\`\`json), no conversational text.
-      2. If phone has multiple numbers, pick the primary contact number (e.g. 10 digits).
+      2. If visiting card has two phone numbers, extract primary into "phone" and secondary into "phone2".
       3. If detected_area is unclear, default to "Tanjore Town (General)".
     `;
 

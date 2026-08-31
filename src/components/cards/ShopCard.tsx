@@ -359,6 +359,16 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
                           <span>Call Shop</span>
                         </a>
                       )}
+                      {(post as any).phone2 && (post as any).show_phone !== false && (
+                        <a
+                          href={isPreview ? "#" : `tel:${String((post as any).phone2).replace(/\D/g, "")}`}
+                          onClick={(e) => { if (isPreview) e.preventDefault(); e.stopPropagation(); }}
+                          className={`w-[128px] shrink-0 border-2 border-emerald-600 bg-emerald-50 text-emerald-900 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
+                        >
+                          <Phone className="w-4 h-4 text-emerald-700 shrink-0" />
+                          <span>Call Alt</span>
+                        </a>
+                      )}
                     </>
                   )}
                 </>
