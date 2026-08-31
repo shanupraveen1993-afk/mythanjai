@@ -60,6 +60,10 @@ export default function NotificationDrawer() {
           const cleanRecipPhone = (data.recipientPhone || "").replace(/\D/g, "").slice(-10);
 
           const isRecipient = Boolean(
+            data.recipientId === "all" ||
+            data.recipientId === "broadcast" ||
+            data.recipientPhone === "all" ||
+            !data.recipientId ||
             (currentUid && data.recipientId === currentUid) ||
             (currentMemberId && (data.recipientId === currentMemberId || data.recipientPhone === currentMemberId)) ||
             (cleanCurrentPhone && (
