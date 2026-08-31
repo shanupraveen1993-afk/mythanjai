@@ -1245,120 +1245,76 @@ export default function PostForm({ segment }: PostFormProps) {
                   </span>
                 </div>
 
-                {/* SERVICE LOCATION & AVAILABILITY */}
+                {/* SERVICE AVAILABILITY */}
                 {segment === "service" && (
-                  <div className="flex flex-col gap-3">
-                    <select
-                      required
-                      value={area}
-                      onChange={(e) => setArea(e.target.value)}
-                      className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors cursor-pointer"
-                    >
-                      <option value="" disabled>Select Location *</option>
-                      {THANJAVUR_TOWNS.map((town) => (
-                        <option key={town} value={town}>{town}</option>
-                      ))}
-                    </select>
-
-                    {/* Combined Availability Single Pill Toggle */}
-                    <div className="flex flex-col gap-1.5">
-                      <div className="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-xl border border-slate-200">
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setAllWorkingDays("Yes");
-                            setSundayLeave("No");
-                          }}
-                          className={`py-2 px-3 rounded-lg text-xs font-bold transition-all cursor-pointer text-center ${
-                            allWorkingDays === "Yes"
-                              ? "bg-amber-400 text-slate-950 font-black border border-amber-500 shadow-xs"
-                              : "text-slate-600 hover:text-slate-900"
-                          }`}
-                        >
-                          Available 7 Days
-                        </button>
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setAllWorkingDays("No");
-                            setSundayLeave("Yes");
-                          }}
-                          className={`py-2 px-3 rounded-lg text-xs font-bold transition-all cursor-pointer text-center ${
-                            sundayLeave === "Yes"
-                              ? "bg-amber-400 text-slate-950 font-black border border-amber-500 shadow-xs"
-                              : "text-slate-600 hover:text-slate-900"
-                          }`}
-                        >
-                          Sunday Holiday
-                        </button>
-                      </div>
+                  <div className="flex flex-col gap-1.5">
+                    <div className="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-xl border border-slate-200">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setAllWorkingDays("Yes");
+                          setSundayLeave("No");
+                        }}
+                        className={`py-2 px-3 rounded-lg text-xs font-bold transition-all cursor-pointer text-center ${
+                          allWorkingDays === "Yes"
+                            ? "bg-amber-400 text-slate-950 font-black border border-amber-500 shadow-xs"
+                            : "text-slate-600 hover:text-slate-900"
+                        }`}
+                      >
+                        Available 7 Days
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setAllWorkingDays("No");
+                          setSundayLeave("Yes");
+                        }}
+                        className={`py-2 px-3 rounded-lg text-xs font-bold transition-all cursor-pointer text-center ${
+                          sundayLeave === "Yes"
+                            ? "bg-amber-400 text-slate-950 font-black border border-amber-500 shadow-xs"
+                            : "text-slate-600 hover:text-slate-900"
+                        }`}
+                      >
+                        Sunday Holiday
+                      </button>
                     </div>
                   </div>
                 )}
 
-                {/* PRICE & DEDICATED FREEFORM TYPING LOCATION (FOR SELL) */}
+                {/* PRICE (FOR SELL) */}
                 {segment === "sell" && (
-                  <>
-                    <div className="relative w-full">
-                      <input
-                        type="text"
-                        maxLength={12}
-                        placeholder="Price or Rate (e.g. 5000, 5000rs)"
-                        value={price}
-                        onChange={(e) => setPrice(e.target.value)}
-                        className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal pr-20"
-                      />
-                      {formattedPriceBadge && (
-                        <span className="absolute right-0 top-2.5 text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
-                          {formattedPriceBadge}
-                        </span>
-                      )}
-                    </div>
-
-                    <div className="w-full">
-                      <input
-                        type="text"
-                        required
-                        placeholder="Enter location / area *"
-                        value={area}
-                        onChange={(e) => setArea(e.target.value)}
-                        className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal"
-                      />
-                    </div>
-                  </>
+                  <div className="relative w-full">
+                    <input
+                      type="text"
+                      maxLength={12}
+                      placeholder="Price or Rate (e.g. 5000, 5000rs)"
+                      value={price}
+                      onChange={(e) => setPrice(e.target.value)}
+                      className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal pr-20"
+                    />
+                    {formattedPriceBadge && (
+                      <span className="absolute right-0 top-2.5 text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                        {formattedPriceBadge}
+                      </span>
+                    )}
+                  </div>
                 )}
 
-                {/* BUDGET & THANJAVUR TOWN DROPDOWN (FOR NEED) */}
+                {/* BUDGET (FOR NEED) */}
                 {segment === "need" && (
-                  <>
-                    <div className="w-full">
-                      <input
-                        type="text"
-                        maxLength={12}
-                        placeholder="Budget (e.g. 5000, 5000rs - Optional)"
-                        value={price}
-                        onChange={(e) => setPrice(e.target.value)}
-                        className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal"
-                      />
-                    </div>
-
-                    <div className="w-full">
-                      <select
-                        required
-                        value={area}
-                        onChange={(e) => setArea(e.target.value)}
-                        className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors cursor-pointer"
-                      >
-                        <option value="" disabled>Select Location *</option>
-                        {THANJAVUR_TOWNS.map((town) => (
-                          <option key={town} value={town}>{town}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </>
+                  <div className="w-full">
+                    <input
+                      type="text"
+                      maxLength={12}
+                      placeholder="Budget (e.g. 5000, 5000rs - Optional)"
+                      value={price}
+                      onChange={(e) => setPrice(e.target.value)}
+                      className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal"
+                    />
+                  </div>
                 )}
 
-                {/* MANDATORY 2-TIER LOCALITY SELECTOR */}
+                {/* MANDATORY 2-TIER LOCALITY SELECTOR (FOR SELL, NEED, SERVICE) */}
                 <div className="w-full">
                   <LocalitySelector
                     p1Area={p1Area}

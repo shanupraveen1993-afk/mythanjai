@@ -18,24 +18,19 @@ export default function LocalitySelector({
   setP2Specific,
 }: LocalitySelectorProps) {
   return (
-    <div className="flex flex-col gap-3 bg-slate-50 border border-slate-200/90 rounded-2xl p-4">
-      <div className="flex items-center gap-2 text-slate-900 font-heading font-black text-xs sm:text-sm">
-        <MapPin className="w-4 h-4 text-amber-600 stroke-[2.5]" />
-        <span>Area / Locality <span className="text-red-500">*</span></span>
-      </div>
-
+    <div className="flex flex-col gap-4 w-full">
       {/* P1: Major Town / Area Dropdown */}
-      <div className="flex flex-col gap-1">
-        <label className="text-[11px] font-bold text-slate-600">
+      <div className="w-full flex flex-col gap-1">
+        <label className="text-[11px] font-black text-slate-700 uppercase tracking-wider">
           Select Area / Town (P1) <span className="text-red-500">*</span>
         </label>
         <select
           required
           value={p1Area}
           onChange={(e) => setP1Area(e.target.value)}
-          className="w-full bg-white border border-slate-300 text-slate-900 rounded-xl px-3 py-2.5 text-xs sm:text-sm font-bold focus:ring-2 focus:ring-amber-400 focus:outline-none cursor-pointer"
+          className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 cursor-pointer transition-colors"
         >
-          <option value="">-- Select Area / Town --</option>
+          <option value="">-- Select Area / Town (P1) --</option>
           {THANJAVUR_TOWNS.map((town) => (
             <option key={town} value={town}>
               {town}
@@ -45,8 +40,8 @@ export default function LocalitySelector({
       </div>
 
       {/* P2: Specific Location / Street / Landmark */}
-      <div className="flex flex-col gap-1">
-        <label className="text-[11px] font-bold text-slate-600">
+      <div className="w-full flex flex-col gap-1">
+        <label className="text-[11px] font-black text-slate-700 uppercase tracking-wider">
           Specific Street / Landmark (P2) <span className="text-red-500">*</span>
         </label>
         <input
@@ -55,7 +50,7 @@ export default function LocalitySelector({
           value={p2Specific}
           onChange={(e) => setP2Specific(e.target.value)}
           placeholder="e.g. Ramnagar Street, Near Head Post Office"
-          className="w-full bg-white border border-slate-300 text-slate-900 rounded-xl px-3 py-2.5 text-xs sm:text-sm font-medium focus:ring-2 focus:ring-amber-400 focus:outline-none"
+          className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal"
         />
       </div>
     </div>
