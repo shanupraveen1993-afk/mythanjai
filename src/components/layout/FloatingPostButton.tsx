@@ -60,19 +60,17 @@ export default function FloatingPostButton() {
 
   return (
     <div
-      className={`fixed left-1/2 -translate-x-1/2 bottom-[calc(4.75rem+max(env(safe-area-inset-bottom,0px),10px))] z-40 md:hidden select-none transition-all duration-300 ease-in-out active:scale-95 ${
-        shouldHide ? "translate-y-[250%] opacity-0 pointer-events-none" : "translate-y-0 opacity-100 pointer-events-auto"
-      }`}
+      className="fixed left-1/2 -translate-x-1/2 bottom-[calc(4.75rem+max(env(safe-area-inset-bottom,0px),10px))] z-40 md:hidden select-none active:scale-95 transition-transform duration-200 ease-in-out"
     >
       <button
         type="button"
         onClick={handlePostClick}
-        className="bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs sm:text-sm rounded-full shadow-lg shadow-amber-500/20 border-2 border-white flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap px-5 py-2.5 transition-all duration-300"
+        className="bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs sm:text-sm rounded-full shadow-lg shadow-amber-500/20 border-2 border-white flex items-center justify-center gap-1.5 cursor-pointer whitespace-nowrap px-5 py-2.5 transition-all duration-200"
         aria-label={buttonConfig.label}
         title={buttonConfig.label}
       >
         <Plus className="w-5 h-5 stroke-[3] text-slate-950 shrink-0" />
-        <span className="truncate transition-all duration-300">{buttonConfig.label}</span>
+        <span className="truncate">{buttonConfig.label}</span>
       </button>
     </div>
   );

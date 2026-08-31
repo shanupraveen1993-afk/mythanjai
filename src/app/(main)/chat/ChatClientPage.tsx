@@ -948,7 +948,7 @@ export default function ChatClientPage() {
                         <h3 className="font-extrabold text-sm sm:text-base text-slate-900 truncate">
                           {t.isSystemThread
                             ? t.peerName
-                            : `${t.peerName} (${generate5DigitMemberId(t.peerId || t.peerPhone)})${t.listingTitle && t.listingTitle !== "Welcome to Namma Thanjai" ? ` • Re: ${t.listingTitle}` : ""}`}
+                            : (profile as any)?.nt_id || generate5DigitMemberId(t.peerId || t.peerPhone)}
                         </h3>
                         {t.isSystemThread && (
                           <span className="bg-amber-400 text-slate-950 text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase shrink-0">Admin</span>
@@ -959,9 +959,11 @@ export default function ChatClientPage() {
                       </span>
                     </div>
 
-                    {/* Last Message Preview */}
+                    {/* Line 2: Listing Title */}
                     <div className="flex items-center justify-between mt-0.5">
-                      <p className="text-xs sm:text-sm text-slate-600 font-medium truncate">{t.lastMessage}</p>
+                      <p className="text-xs sm:text-sm text-slate-600 font-medium truncate">
+                        {t.listingTitle && t.listingTitle !== "Welcome to Namma Thanjai" ? t.listingTitle : t.lastMessage}
+                      </p>
                     </div>
                   </div>
 

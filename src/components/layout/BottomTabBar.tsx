@@ -51,10 +51,36 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
     }
   }, [pathname]);
 
-  // Hide Bottom Navigation on specific routes
+  const [isInputFocused, setIsInputFocused] = useState(false);
+
+  // Hide bottom tab bar when any input field (like chat search) is focused on mobile
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handleFocusIn = (e: FocusEvent) => {
+      const target = e.target as HTMLElement;
+      if (target && (target.tagName === "INPUT" || target.tagName === "TEXTAREA" || target.isContentEditable)) {
+        setIsInputFocused(true);
+      }
+    };
+
+    const handleFocusOut = () => {
+      setIsInputFocused(false);
+    };
+
+    window.addEventListener("focusin", handleFocusIn);
+    window.addEventListener("focusout", handleFocusOut);
+    return () => {
+      window.removeEventListener("focusin", handleFocusIn);
+      window.removeEventListener("focusout", handleFocusOut);
+    };
+  }, []);
+
+  // Hide Bottom Navigation on specific routes or when keyboard/input is focused
   const isHiddenRoute =
     pathname.startsWith("/post") ||
     pathname.startsWith("/search") ||
+    isInputFocused ||
     (pathname.startsWith("/chat") && isIndividualChatOpen);
 
   if (isHiddenRoute) return null;
