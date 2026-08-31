@@ -46,8 +46,7 @@ import {
 import ListingCard from "@/components/cards/ListingCard";
 import ServiceCard from "@/components/cards/ServiceCard";
 import ShopCard from "@/components/cards/ShopCard";
-
-import ThanjavurLocationInput from "@/components/location/ThanjavurLocationInput";
+import LocalitySelector from "@/components/forms/LocalitySelector";
 import { NeedOrSalePost, ServiceProviderPost, ShopPost, OfferPost } from "@/types";
 
 type SegmentType = "sell" | "need" | "service" | "offer";
@@ -140,6 +139,14 @@ export default function PostForm({ segment }: PostFormProps) {
   // Form Fields
   const [phone, setPhone] = useState("");
   const [area, setArea] = useState<string>("");
+  const [p1Area, setP1Area] = useState<string>("");
+  const [p2Specific, setP2Specific] = useState<string>("");
+
+  useEffect(() => {
+    if (p1Area || p2Specific) {
+      setArea(p2Specific.trim() ? `${p1Area} - ${p2Specific.trim()}` : p1Area);
+    }
+  }, [p1Area, p2Specific]);
   const [category, setCategory] = useState<string>(segment === "service" ? "" : config.categories[0]);
   const [subCategory, setSubCategory] = useState<string>("");
   const [title, setTitle] = useState("");
@@ -1274,6 +1281,16 @@ export default function PostForm({ segment }: PostFormProps) {
                     </div>
                   </>
                 )}
+
+                {/* MANDATORY 2-TIER LOCALITY SELECTOR */}
+                <div className="w-full">
+                  <LocalitySelector
+                    p1Area={p1Area}
+                    setP1Area={setP1Area}
+                    p2Specific={p2Specific}
+                    setP2Specific={setP2Specific}
+                  />
+                </div>
 
                 {/* CONTACT PHONE INPUT LINE */}
                 <div className="w-full">

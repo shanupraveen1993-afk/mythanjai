@@ -5,7 +5,6 @@ import { TanjoreLocality } from "@/lib/constants";
 export interface UserProfile {
   uid: string;
   memberId?: string; // Permanent Immutable Member ID (e.g. NT-9994837342)
-  nt_id?: string; // Permanent Unique NT ID (e.g. NT-45218)
   phone: string;
   isVerified: boolean;
   createdAt: any; // Firestore Timestamp

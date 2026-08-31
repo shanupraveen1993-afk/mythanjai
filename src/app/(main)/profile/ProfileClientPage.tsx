@@ -578,11 +578,11 @@ function ProfileContent() {
                   {/* Clean Metadata Permanent NT ID */}
                   <div className="flex items-center gap-2 text-xs font-mono text-slate-600">
                     <span className="font-medium text-[11px] text-slate-400 uppercase tracking-wide font-sans">Namma Thanjai ID:</span>
-                    <span className="font-bold text-slate-800">{profile?.nt_id || profile?.memberId || "Loading..."}</span>
+                    <span className="font-bold text-slate-800">{(profile as any)?.nt_id || profile?.memberId || "Loading..."}</span>
                     <button
                       type="button"
                       onClick={() => {
-                        const idToCopy = profile?.nt_id || profile?.memberId || "";
+                        const idToCopy = (profile as any)?.nt_id || profile?.memberId || "";
                         if (idToCopy) {
                           navigator.clipboard.writeText(idToCopy);
                           toast.success("Namma Thanjai ID copied!");
