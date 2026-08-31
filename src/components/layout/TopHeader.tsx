@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { MapPin, Plus, User, ShieldCheck, Check, MessageSquare, Globe, Download, Menu, X, ArrowLeft, Package, Tag, Search, Wrench, Store } from "lucide-react";
+import { MapPin, Plus, User, ShieldCheck, Check, MessageSquare, Globe, Download, Menu, X, ArrowLeft, Package, Bookmark, Tag, Search, Wrench, Store } from "lucide-react";
 import { TANJORE_LOCALITIES, TanjoreLocality } from "@/lib/constants";
 import SearchableAreaDropdown from "./SearchableAreaDropdown";
 import { AppTab } from "./BottomTabBar";
@@ -276,10 +276,26 @@ export default function TopHeader({
             </div>
           </div>
 
-          {/* Desktop Website Only: Chat, My Ads & Profile Icon-Only Buttons */}
-          <div className="hidden md:flex items-center gap-2">
+          {/* Desktop Website Only: Fixed "+ Post" Button (Hidden on chat, profile, listings, post, search) */}
+          {!pathname.includes("/chat") &&
+            !pathname.includes("/profile") &&
+            !pathname.includes("/listings") &&
+            !pathname.includes("/search") &&
+            !pathname.includes("/post") && (
+              <button
+                type="button"
+                onClick={handleDynamicPostClick}
+                className="hidden md:flex bg-amber-400 hover:bg-amber-500 text-slate-950 text-xs sm:text-sm px-4 py-2 rounded-full font-heading font-black shrink-0 items-center gap-1 shadow-xs cursor-pointer select-none active:scale-[0.97] transition-all border border-amber-400"
+                title="Post a Listing"
+              >
+                <Plus className="w-4 h-4 stroke-[3] text-slate-950" />
+                <span>+ Post</span>
+              </button>
+            )}
 
-            {/* 1. Chat Button (First) */}
+          {/* Desktop Website Only: Clean Icon Cluster & Profile Menu */}
+          <div className="hidden md:flex items-center gap-2">
+            {/* Chat Icon */}
             {!pathname.includes("/post") && (
               <div className="relative group flex items-center justify-center">
                 <button
@@ -301,66 +317,64 @@ export default function TopHeader({
               </div>
             )}
 
-            {/* 2. My Ads Button (Second - Icon Only) */}
+            {/* Profile Dropdown Menu (Contains My Posts & Saved) */}
             {!pathname.includes("/post") && (
               <div className="relative group flex items-center justify-center">
                 <button
                   type="button"
-                  onClick={() => router.push("/listings")}
-                  className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border shrink-0 ${
-                    pathname.startsWith("/listings")
-                      ? "bg-[#FBBF24] text-slate-950 border-amber-400 shadow-xs"
-                      : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
-                  }`}
-                  title="My Ads"
-                  aria-label="View my ads"
-                >
-                  <Package className={`w-4 h-4 ${pathname.startsWith("/listings") ? "text-slate-950 stroke-[2.5]" : "text-slate-700 stroke-[2]"}`} />
-                </button>
-                <div className="absolute top-full mt-1.5 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 bg-slate-900 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow-md whitespace-nowrap z-50">
-                  My Ads
-                </div>
-              </div>
-            )}
-
-            {/* 3. Profile Button (Third) */}
-            {!pathname.includes("/post") && (
-              <div className="relative group flex items-center justify-center">
-                <button
-                  type="button"
-                  onClick={() => {
-                    onTabChange?.("profile");
-                    router.push("/profile");
-                  }}
+                  onClick={() => router.push("/profile")}
                   className={`flex items-center justify-center w-9 h-9 rounded-full transition-all cursor-pointer border shrink-0 ${
-                    pathname === "/profile" && !pathname.includes("tab=")
+                    pathname.includes("/profile") || pathname.includes("/listings")
                       ? "bg-[#FBBF24] text-slate-950 border-amber-400 shadow-xs"
                       : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
                   }`}
-                  title="Profile"
-                  aria-label="View profile"
+                  title="Profile & My Posts"
+                  aria-label="View profile menu"
                 >
-                  <User className={`w-4 h-4 ${pathname === "/profile" && !pathname.includes("tab=") ? "text-slate-950 stroke-[2.5]" : "text-slate-700 stroke-[2]"}`} />
+                  <User className={`w-4 h-4 ${pathname.includes("/profile") || pathname.includes("/listings") ? "text-slate-950 stroke-[2.5]" : "text-slate-700 stroke-[2]"}`} />
                 </button>
-                <div className="absolute top-full mt-1.5 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 bg-slate-900 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow-md whitespace-nowrap z-50">
-                  Profile
+
+                {/* Profile Hover Dropdown Card */}
+                <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-slate-200 rounded-2xl shadow-xl p-2 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-all duration-150 flex flex-col gap-1 z-50">
+                  <button
+                    type="button"
+                    onClick={() => router.push("/profile")}
+                    className="w-full px-3 py-2 text-left text-xs font-bold text-slate-800 hover:bg-slate-100 rounded-xl flex items-center justify-between transition-colors cursor-pointer"
+                  >
+                    <span className="flex items-center gap-2">
+                      <User className="w-3.5 h-3.5 text-slate-500" />
+                      <span>My Profile</span>
+                    </span>
+                    <span className="text-slate-400 text-[10px]">→</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => router.push("/listings")}
+                    className="w-full px-3 py-2 text-left text-xs font-bold text-slate-800 hover:bg-slate-100 rounded-xl flex items-center justify-between transition-colors cursor-pointer"
+                  >
+                    <span className="flex items-center gap-2">
+                      <Package className="w-3.5 h-3.5 text-amber-600" />
+                      <span>My Posts</span>
+                    </span>
+                    <span className="text-slate-400 text-[10px]">→</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => router.push("/listings?tab=saved")}
+                    className="w-full px-3 py-2 text-left text-xs font-bold text-slate-800 hover:bg-slate-100 rounded-xl flex items-center justify-between transition-colors cursor-pointer"
+                  >
+                    <span className="flex items-center gap-2">
+                      <Bookmark className="w-3.5 h-3.5 text-amber-600" />
+                      <span>Saved</span>
+                    </span>
+                    <span className="text-slate-400 text-[10px]">→</span>
+                  </button>
                 </div>
               </div>
             )}
           </div>
-
-          {/* Desktop Website Only: Golden Yellow Post Ad Button */}
-          {!pathname.includes("/chat") && !pathname.includes("/profile") && !pathname.includes("/listings") && !pathname.includes("/post") && (
-            <button
-              type="button"
-              onClick={handleDynamicPostClick}
-              className="hidden md:flex bg-amber-400 hover:bg-amber-500 text-slate-950 text-xs sm:text-sm px-4 sm:px-5 py-1.5 sm:py-2 rounded-full font-heading font-black shrink-0 items-center gap-1.5 shadow-2xs cursor-pointer select-none touch-manipulation active:scale-[0.97] transition-all border border-amber-400 ml-1"
-              title={postInfo.desktopLabel}
-            >
-              <Plus className="w-4 h-4 stroke-[3] text-slate-950" />
-              <span>{postInfo.desktopLabel}</span>
-            </button>
-          )}
         </div>
       </div>
     </header>

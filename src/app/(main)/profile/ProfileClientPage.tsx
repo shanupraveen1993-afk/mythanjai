@@ -612,15 +612,28 @@ function ProfileContent() {
               </div>
             </div>
 
-            {/* Quick Stats Grid */}
+            {/* Quick Stats & Navigation Cards Grid */}
             <div className="grid grid-cols-2 gap-2 pt-3 border-t border-slate-100">
-              <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-2.5 flex flex-col items-center text-center">
-                <span className="font-heading font-black text-lg text-slate-900">{myPosts.length}</span>
-                <span className="text-[11px] font-semibold text-slate-500">My Posted Ads</span>
+              <div
+                onClick={() => router.push("/listings")}
+                className="bg-slate-50 hover:bg-slate-100/90 border border-slate-200/80 rounded-xl p-2.5 flex flex-col items-center text-center cursor-pointer transition-all group"
+              >
+                <div className="flex items-center gap-1">
+                  <span className="font-heading font-black text-lg text-slate-900">{myPosts.length}</span>
+                  <span className="text-slate-400 group-hover:text-slate-700 text-xs font-bold transition-colors">→</span>
+                </div>
+                <span className="text-[11px] font-bold text-slate-600 group-hover:text-slate-900 transition-colors">My Posts</span>
               </div>
-              <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-2.5 flex flex-col items-center text-center">
-                <span className="font-heading font-black text-lg text-slate-900">{savedPosts.length}</span>
-                <span className="text-[11px] font-semibold text-slate-500">Saved Ads</span>
+
+              <div
+                onClick={() => router.push("/listings?tab=saved")}
+                className="bg-slate-50 hover:bg-slate-100/90 border border-slate-200/80 rounded-xl p-2.5 flex flex-col items-center text-center cursor-pointer transition-all group"
+              >
+                <div className="flex items-center gap-1">
+                  <span className="font-heading font-black text-lg text-slate-900">{savedPosts.length}</span>
+                  <span className="text-slate-400 group-hover:text-slate-700 text-xs font-bold transition-colors">→</span>
+                </div>
+                <span className="text-[11px] font-bold text-slate-600 group-hover:text-slate-900 transition-colors">Saved</span>
               </div>
             </div>
 
