@@ -420,13 +420,6 @@ function ProfileContent() {
     );
   }
 
-  // Auto-open Sign In Modal immediately for unverified users (1-Step Direct Sign In Flow)
-  useEffect(() => {
-    if (!isVerified && typeof window !== "undefined") {
-      window.dispatchEvent(new Event("namma_thanjai_open_signin"));
-    }
-  }, [isVerified]);
-
   if (!isVerified) {
     return (
       <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 pt-4 pb-6 sm:pb-10 font-sans">
@@ -448,10 +441,10 @@ function ProfileContent() {
                 window.dispatchEvent(new Event("namma_thanjai_open_signin"));
               }
             }}
-            className="mt-2 w-full max-w-xs bg-[#128C7E] hover:bg-[#075e54] text-white font-heading font-black text-sm py-3.5 px-6 rounded-2xl shadow-md cursor-pointer transition-all flex items-center justify-center gap-2 active:scale-[0.98]"
+            className="mt-2 w-full max-w-xs bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs uppercase tracking-wider py-4 px-6 rounded-xl shadow-md cursor-pointer transition-all flex items-center justify-center gap-2 active:scale-[0.98] border border-amber-400"
           >
-            <MessageSquare className="w-5 h-5 fill-white stroke-[2.5]" />
-            <span>Sign In / Verify</span>
+            <Phone className="w-4 h-4 stroke-[2.5]" />
+            <span>Sign In with Mobile Number</span>
           </button>
         </div>
       </div>
@@ -460,70 +453,6 @@ function ProfileContent() {
 
   return (
     <div className="w-full max-w-7xl mx-auto flex flex-col gap-4 pt-3 sm:pt-4 pb-6 sm:pb-10 font-sans px-2.5 sm:px-6 lg:px-8">
-
-
-
-
-      {/* WhatsApp OTP Verification Modal */}
-      {verificationPending && (
-        <div className="fixed inset-0 z-[99999] bg-slate-950/75 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white border border-slate-200 w-full max-w-sm rounded-2xl p-5 shadow-lg flex flex-col gap-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <div className="w-8 h-8 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
-                  <Zap className="w-4 h-4" />
-                </div>
-                <h3 className="font-heading font-black text-sm text-slate-900">Verify WhatsApp Number</h3>
-              </div>
-              <button onClick={() => setVerificationPending(false)} className="text-slate-400 hover:text-slate-700 p-1">
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            {step === "phone" ? (
-              <form onSubmit={handleSendOtp} className="flex flex-col gap-3">
-                <p className="text-xs text-slate-600 font-medium">Enter your 10-digit mobile number to receive a verification OTP via WhatsApp:</p>
-                <div className="relative">
-                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-black text-amber-600">+91</span>
-                  <input
-                    type="tel"
-                    required
-                    value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value.replace(/\D/g, "").slice(0, 10))}
-                    placeholder="10-digit WhatsApp number"
-                    disabled={phoneUpdating}
-                    className="w-full bg-slate-50 border border-slate-300 text-slate-900 rounded-xl pl-11 pr-3 py-2.5 text-sm focus:ring-2 focus:ring-amber-400 focus:outline-none font-bold"
-                  />
-                </div>
-                <button type="submit" disabled={phoneUpdating} className="w-full py-2.5 btn-primary text-xs font-black flex items-center justify-center gap-2 cursor-pointer">
-                  <Zap className="w-4 h-4 fill-slate-950" />
-                  <span>Send WhatsApp OTP</span>
-                </button>
-              </form>
-            ) : (
-              <form onSubmit={handleVerifyOtp} className="flex flex-col gap-3">
-                <p className="text-xs font-bold text-slate-500 uppercase tracking-wider">OTP sent to +91 {phoneNumber}</p>
-                <input
-                  type="text"
-                  required
-                  maxLength={6}
-                  value={otpCode}
-                  onChange={(e) => setOtpCode(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                  placeholder="Enter 6-digit OTP (123456 for test)"
-                  disabled={phoneUpdating}
-                  className="w-full bg-slate-50 border border-slate-300 text-slate-900 text-center tracking-[0.5em] font-extrabold rounded-xl py-2.5 text-base focus:ring-2 focus:ring-amber-400 focus:outline-none"
-                />
-                <button type="submit" disabled={phoneUpdating} className="w-full py-2.5 btn-primary text-xs font-black flex items-center justify-center gap-2 cursor-pointer">
-                  {phoneUpdating ? <Loader2 className="w-4 h-4 animate-spin" /> : <><CheckCircle className="w-4 h-4" /><span>Verify & Unlock</span></>}
-                </button>
-                <button type="button" onClick={() => setStep("phone")} className="text-xs font-bold text-slate-500 hover:text-slate-800 text-center cursor-pointer">
-                  ← Change Mobile Number
-                </button>
-              </form>
-            )}
-          </div>
-        </div>
-      )}
 
       {/* MODERN 2-COLUMN DASHBOARD LAYOUT */}
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
