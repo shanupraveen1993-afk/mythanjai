@@ -121,7 +121,7 @@ export function useNativeApp() {
         })
         .catch(() => {});
 
-      // B. Request Push Notifications Permission
+      // B. Request Push Notifications Permission & Save FCM Device Token for Screen-OFF Push
       import("@capacitor/push-notifications")
         .then(({ PushNotifications }) => {
           PushNotifications.requestPermissions()
@@ -131,6 +131,22 @@ export function useNativeApp() {
               }
             })
             .catch(() => {});
+
+          // Save FCM Device Token for Screen-OFF Push Alerts
+          PushNotifications.addListener("registration", async (token) => {
+            if (typeof window !== "undefined" && token?.value) {
+              localStorage.setItem("namma_thanjai_fcm_token", token.value);
+              const userPhone = localStorage.getItem("namma_thanjai_phone") || localStorage.getItem("my_thanjai_phone");
+              if (userPhone) {
+                try {
+                  const { collection, addDoc, setDoc, doc } = await import("firebase/firestore");
+                  const { db } = await import("@/lib/firebase");
+                  const tokenDocRef = doc(db, "user_fcm_tokens", userPhone.replace(/\D/g, "").slice(-10));
+                  await setDoc(tokenDocRef, { fcmToken: token.value, updatedAt: new Date().toISOString() }, { merge: true });
+                } catch (e) {}
+              }
+            }
+          }).catch(() => {});
 
           PushNotifications.addListener("pushNotificationReceived", (notification) => {
             if (typeof window !== "undefined") {
@@ -142,9 +158,16 @@ export function useNativeApp() {
             }
           }).catch(() => {});
 
+          // Exact Conversation Deep-Link Routing on Push Tap (Screen OFF or Background)
           PushNotifications.addListener("pushNotificationActionPerformed", (action) => {
-            if (action.notification.data?.actionUrl) {
-              router.push(action.notification.data.actionUrl);
+            const actionUrl = action.notification.data?.actionUrl || action.notification.data?.url || "/chat";
+            const chatId = action.notification.data?.chatId || action.notification.data?.threadId;
+            if (chatId) {
+              router.push(`/chat?chatId=${encodeURIComponent(chatId)}`);
+            } else if (actionUrl) {
+              router.push(actionUrl);
+            } else {
+              router.push("/chat");
             }
           }).catch(() => {});
         })

@@ -573,6 +573,20 @@ export default function ChatClientPage() {
             read: false,
             timestamp: serverTimestamp(),
           });
+
+          // Trigger high-priority FCM Push Notification for Screen-OFF Delivery
+          fetch("/api/send-push", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              recipientId: activePeerId,
+              recipientPhone: activePeerPhone,
+              title: `💬 New message from ${currentName}`,
+              message: currentText.slice(0, 60),
+              chatId: activeChatId,
+              actionUrl: `/chat?chatId=${activeChatId}`,
+            }),
+          }).catch(() => {});
         } catch (e) {}
       }
 

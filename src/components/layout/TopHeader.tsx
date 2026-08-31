@@ -284,7 +284,7 @@ export default function TopHeader({
                 <button
                   type="button"
                   onClick={() => router.push("/chat")}
-                  className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border shrink-0 ${
+                  className={`w-9 h-9 rounded-full flex items-center justify-center transition-all cursor-pointer border shrink-0 relative ${
                     pathname === "/chat"
                       ? "bg-[#FBBF24] text-slate-950 border-amber-400 shadow-xs"
                       : "bg-slate-100 hover:bg-slate-200 text-slate-700 border-slate-200"
@@ -293,6 +293,7 @@ export default function TopHeader({
                   aria-label="View messages"
                 >
                   <MessageSquare className={`w-4 h-4 ${pathname === "/chat" ? "text-slate-950 stroke-[2.5]" : "text-slate-700 stroke-[2]"}`} />
+                  <span className="absolute -top-0.5 -right-0.5 w-2.5 h-2.5 bg-rose-500 rounded-full border border-white animate-pulse" />
                 </button>
                 <div className="absolute top-full mt-1.5 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 bg-slate-900 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow-md whitespace-nowrap z-[99999]">
                   Chat
