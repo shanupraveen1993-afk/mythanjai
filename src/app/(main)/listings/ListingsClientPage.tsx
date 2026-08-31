@@ -360,7 +360,7 @@ function ListingsContent() {
 
   return (
     <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 pt-3 sm:pt-4 pb-6 sm:pb-10 flex flex-col gap-4 font-sans">
-      {/* 2 Navigation Tabs: My Posted Ads | Saved Items */}
+      {/* 2 Navigation Tabs: My Posts | Saved */}
       <div className="flex items-center gap-6 border-b border-slate-200 pb-1">
         <button
           type="button"
@@ -372,7 +372,7 @@ function ListingsContent() {
           }`}
         >
           <Package className="w-4.5 h-4.5 text-amber-500" />
-          <span>My Ads ({myPosts.length})</span>
+          <span>My Posts ({myPosts.length})</span>
         </button>
 
         <button
@@ -385,7 +385,7 @@ function ListingsContent() {
           }`}
         >
           <Bookmark className="w-4.5 h-4.5 text-amber-500" />
-          <span>Saved Items ({savedPosts.length})</span>
+          <span>Saved ({savedPosts.length})</span>
         </button>
       </div>
 
@@ -398,14 +398,8 @@ function ListingsContent() {
         myPosts.length === 0 ? (
           <div className="w-full bg-white rounded-2xl border border-slate-200/90 p-8 text-center flex flex-col items-center gap-3 shadow-xs">
             <ShoppingBag className="w-10 h-10 text-slate-300 stroke-[1.5]" />
-            <h3 className="font-heading font-black text-base text-slate-800">You haven't posted any ads yet</h3>
-            <p className="text-xs text-slate-500 max-w-sm">Sell unused items, request requirements, or offer services to local buyers in Thanjavur.</p>
-            <button
-              onClick={() => router.push("/post/sell")}
-              className="mt-2 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-5 py-3 rounded-xl cursor-pointer shadow-sm border border-amber-400"
-            >
-              + Create First Free Ad
-            </button>
+            <h3 className="font-heading font-black text-base text-slate-800">No posts yet</h3>
+            <p className="text-xs text-slate-500 max-w-sm">Post listings directly from the marketplace sections (+ Post for Sale, + Post a Need, + Offer a Service, + Add Store Offer).</p>
           </div>
         ) : (
           <div className="w-full flex flex-col gap-6">
