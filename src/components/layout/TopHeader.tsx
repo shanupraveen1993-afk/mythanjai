@@ -271,27 +271,10 @@ export default function TopHeader({
             >
               <Bell className="w-4 h-4 text-slate-700 stroke-[2.2]" />
             </button>
-            <div className="absolute top-full mt-1.5 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 bg-slate-900 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow-md whitespace-nowrap z-50">
+            <div className="absolute top-full mt-1.5 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 bg-slate-900 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow-md whitespace-nowrap z-[99999]">
               Notifications
             </div>
           </div>
-
-          {/* Desktop Website Only: Fixed "+ Post" Button (Clean Single Plus Icon) */}
-          {!pathname.includes("/chat") &&
-            !pathname.includes("/profile") &&
-            !pathname.includes("/listings") &&
-            !pathname.includes("/search") &&
-            !pathname.includes("/post") && (
-              <button
-                type="button"
-                onClick={handleDynamicPostClick}
-                className="hidden md:flex bg-amber-400 hover:bg-amber-500 text-slate-950 text-xs sm:text-sm px-4 py-2 rounded-full font-heading font-black shrink-0 items-center gap-1.5 shadow-xs cursor-pointer select-none active:scale-[0.97] transition-all border border-amber-400"
-                title="Post a Listing"
-              >
-                <Plus className="w-4 h-4 stroke-[3] text-slate-950" />
-                <span>Post</span>
-              </button>
-            )}
 
           {/* Desktop Website Only: Clean Icon Cluster & Profile Menu */}
           <div className="hidden md:flex items-center gap-2">
@@ -311,7 +294,7 @@ export default function TopHeader({
                 >
                   <MessageSquare className={`w-4 h-4 ${pathname === "/chat" ? "text-slate-950 stroke-[2.5]" : "text-slate-700 stroke-[2]"}`} />
                 </button>
-                <div className="absolute top-full mt-1.5 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 bg-slate-900 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow-md whitespace-nowrap z-50">
+                <div className="absolute top-full mt-1.5 opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity duration-200 bg-slate-900 text-white text-[10px] font-extrabold px-2 py-0.5 rounded-md shadow-md whitespace-nowrap z-[99999]">
                   Chat
                 </div>
               </div>
@@ -335,7 +318,7 @@ export default function TopHeader({
                 </button>
 
                 {/* Profile Hover Dropdown Card */}
-                <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-slate-200 rounded-2xl shadow-xl p-2 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-all duration-150 flex flex-col gap-1 z-50">
+                <div className="absolute right-0 top-full mt-2 w-48 bg-white border border-slate-200 rounded-2xl shadow-xl p-2 opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-all duration-150 flex flex-col gap-1 z-[99999]">
                   <button
                     type="button"
                     onClick={() => router.push("/profile")}
@@ -375,6 +358,23 @@ export default function TopHeader({
               </div>
             )}
           </div>
+
+          {/* Desktop Website Only: Fixed "+ Post" Button (VERY FAR RIGHT LAST ITEM) */}
+          {!pathname.includes("/chat") &&
+            !pathname.includes("/profile") &&
+            !pathname.includes("/listings") &&
+            !pathname.includes("/search") &&
+            !pathname.includes("/post") && (
+              <button
+                type="button"
+                onClick={handleDynamicPostClick}
+                className="hidden md:flex bg-amber-400 hover:bg-amber-500 text-slate-950 text-xs sm:text-sm px-4 py-2 rounded-full font-heading font-black shrink-0 items-center gap-1.5 shadow-xs cursor-pointer select-none active:scale-[0.97] transition-all border border-amber-400 ml-1"
+                title="Post a Listing"
+              >
+                <Plus className="w-4 h-4 stroke-[3] text-slate-950" />
+                <span>Post</span>
+              </button>
+            )}
         </div>
       </div>
     </header>

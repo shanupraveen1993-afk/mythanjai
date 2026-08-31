@@ -77,8 +77,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             try {
               const { collection, query, where, getDocs } = await import("firebase/firestore");
               const q = query(collection(db, "users"), where("phone", "==", activeVerifiedPhone));
-              const querySnap = await getDocs(q);
-              if (!querySnap.empty) {
+              const queryPromise = getDocs(q);
+              const timeoutPromise = new Promise<null>((resolve) => setTimeout(() => resolve(null), 1000));
+              const querySnap = await Promise.race([queryPromise, timeoutPromise]) as any;
+              if (querySnap && !querySnap.empty) {
                 userProfileData = querySnap.docs[0].data() as UserProfile;
               }
             } catch (e) {}
