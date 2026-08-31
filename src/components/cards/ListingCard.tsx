@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Share2, Bookmark, Phone, MessageSquare, MapPin, Calendar, Flag, X, ChevronLeft, ChevronRight, Camera, Pencil, Eye } from "lucide-react";
-import { doc, updateDoc, increment } from "firebase/firestore";
+import { doc, updateDoc, increment, setDoc, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/hooks/use-auth";
 import { formatRelativeTime, formatIndianCurrencyText } from "@/lib/constants";
@@ -273,10 +273,11 @@ export default function ListingCard({ listing, isPreview }: { listing: ListingIt
     const nextState = !isSaved;
     setIsSaved(nextState);
     try {
-      const saved: any[] = JSON.parse(localStorage.getItem("namma_thanjai_saved_posts") || "[]");
-      if (nextState) {
-        if (!saved.some((s: any) => s.id === listing.id)) {
-          saved.unshift({
+      const userId = user?.uid;
+      if (userId) {
+        const docRef = doc(db, "users", userId, "saved_items", listing.id);
+        if (nextState) {
+          await setDoc(docRef, {
             id: listing.id,
             title: listing.title,
             price: listing.price,
@@ -288,15 +289,12 @@ export default function ListingCard({ listing, isPreview }: { listing: ListingIt
             colName: "needs_and_sales",
             saved_at: new Date().toISOString(),
           });
+          toast.success("Listing saved to your profile!");
+        } else {
+          await deleteDoc(docRef);
+          toast.info("Listing removed from saved.");
         }
-        toast.success("Listing saved to your profile!");
-      } else {
-        const updated = saved.filter((s: any) => s.id !== listing.id);
-        localStorage.setItem("namma_thanjai_saved_posts", JSON.stringify(updated));
-        toast.info("Listing removed from saved.");
-        return;
       }
-      localStorage.setItem("namma_thanjai_saved_posts", JSON.stringify(saved));
     } catch (e) {}
   };
 

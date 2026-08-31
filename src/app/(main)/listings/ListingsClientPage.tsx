@@ -143,33 +143,18 @@ function ListingsContent() {
           })
         );
 
-        // 2. Include posts created in local tracker if not already loaded
-        if (typeof window !== "undefined") {
-          try {
-            const localTracker: any[] = JSON.parse(localStorage.getItem("namma_thanjai_my_posts") || "[]");
-            localTracker.forEach((localItem) => {
-              if (localItem && localItem.id && !seenIds.has(localItem.id)) {
-                seenIds.add(localItem.id);
-                combinedMyPosts.push(localItem);
-              }
+        // 2. Load Saved Items from Cloud Firestore user subcollection
+        if (userId) {
+          const savedSnap = await getDocs(collection(db, "users", userId, "saved_items")).catch(() => null);
+          if (savedSnap && !savedSnap.empty) {
+            const savedList: any[] = [];
+            savedSnap.forEach((docSnap) => {
+              savedList.push({ id: docSnap.id, ...docSnap.data() });
             });
-          } catch (e) {}
-        }
-
-        setMyPosts(combinedMyPosts);
-
-        // Load Saved Bookmarks
-        if (typeof window !== "undefined") {
-          try {
-            const saved1 = JSON.parse(localStorage.getItem("namma_thanjai_saved_posts") || "[]");
-            const saved2 = JSON.parse(localStorage.getItem("my_thanjai_saved_posts") || "[]");
-            const combined = [...saved1, ...saved2];
-            const uniqueSaved = Array.from(new Map(combined.map((item: any) => [item.id, item])).values());
-            setSavedPosts(uniqueSaved);
-          } catch (e) {
-            setSavedPosts([]);
+            setSavedPosts(savedList);
           }
         }
+        setMyPosts(combinedMyPosts);
       } catch (error) {
         console.error("Error fetching listings:", error);
       } finally {
