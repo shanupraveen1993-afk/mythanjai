@@ -71,10 +71,24 @@ export default function ShopsClientPage() {
     return list;
   }, [allPosts, selectedCategory, sortBy]);
 
+  // Highlight ID Auto-Scroll: Bring clicked sample item to top first-fold
+  useEffect(() => {
+    if (typeof window !== "undefined" && filteredPosts.length > 0) {
+      const params = new URLSearchParams(window.location.search);
+      const highlightId = params.get("highlightId");
+      if (highlightId) {
+        setTimeout(() => {
+          const el = document.getElementById(`post-${highlightId}`);
+          if (el) {
+            el.scrollIntoView({ behavior: "smooth", block: "start" });
+          }
+        }, 200);
+      }
+    }
+  }, [filteredPosts]);
+
   return (
     <div className="flex flex-col gap-0 pb-6 sm:pb-10 w-full font-sans">
-
-
       <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 flex flex-col gap-3.5 pt-2 sm:pt-4">
         {/* 1. TITLE BAR */}
         <div className="py-1 flex items-center justify-between gap-3 w-full">
@@ -100,7 +114,9 @@ export default function ShopsClientPage() {
           {filteredPosts.map((post, idx) => (
             <React.Fragment key={post.id}>
               {idx > 0 && <div className="h-3 bg-slate-100 border-y border-slate-200/80 -mx-3 my-0 sm:hidden" />}
-              <ShopCard post={post} index={idx} isGuest={!isAuthVerified} />
+              <div id={`post-${post.id}`} className="w-full scroll-mt-24">
+                <ShopCard post={post} index={idx} isGuest={!isAuthVerified} />
+              </div>
             </React.Fragment>
           ))}
         </div>

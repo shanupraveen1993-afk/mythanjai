@@ -384,7 +384,7 @@ function SearchContent() {
                   {results.need.slice(0, 2).map((item) => (
                     <div
                       key={item.id}
-                      onClick={() => router.push(`/need`)}
+                      onClick={() => router.push(`/need?highlightId=${item.id}`)}
                       className="bg-slate-50 hover:bg-slate-100/80 border border-slate-200 rounded-xl p-3.5 flex items-start gap-3 cursor-pointer transition-all"
                     >
                       <div className="flex flex-col gap-1 min-w-0 flex-1">
@@ -424,7 +424,7 @@ function SearchContent() {
                   {results.services.slice(0, 2).map((item) => (
                     <div
                       key={item.id}
-                      onClick={() => router.push(`/services`)}
+                      onClick={() => router.push(`/services?highlightId=${item.id}`)}
                       className="bg-slate-50 hover:bg-slate-100/80 border border-slate-200 rounded-xl p-3.5 flex items-start gap-3 cursor-pointer transition-all"
                     >
                       <div className="flex flex-col gap-1 min-w-0 flex-1">
@@ -463,7 +463,7 @@ function SearchContent() {
                   {results.offers.slice(0, 2).map((item) => (
                     <div
                       key={item.id}
-                      onClick={() => router.push(`/shops`)}
+                      onClick={() => router.push(`/shops?highlightId=${item.id}`)}
                       className="bg-slate-50 hover:bg-slate-100/80 border border-slate-200 rounded-xl p-3.5 flex items-start gap-3 cursor-pointer transition-all"
                     >
                       <div className="flex flex-col gap-1 min-w-0 flex-1">
