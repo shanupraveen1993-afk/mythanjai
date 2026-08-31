@@ -289,7 +289,7 @@ export default function NeedCard({ post, onShare, isPreview = false }: NeedCardP
                     }
                     router.push(`/chat?listingId=${post.id}&sellerId=${post.userId || ""}&title=${encodeURIComponent(post.title)}`);
                   }}
-                  className="w-full bg-[#1F244A] hover:bg-[#151936] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-md cursor-pointer transition-colors"
+                  className="w-[110px] sm:w-[128px] shrink-0 bg-[#1F244A] hover:bg-[#151936] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-md cursor-pointer transition-colors"
                 >
                   <MessageSquare className="w-4 h-4 text-white shrink-0" />
                   <span>Chat</span>

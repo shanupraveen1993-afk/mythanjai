@@ -13,8 +13,6 @@ import {
   Package,
   Wrench,
   Store,
-  Clock,
-  Trash2,
   X,
 } from "lucide-react";
 import { collection, query, getDocs } from "firebase/firestore";
@@ -72,7 +70,7 @@ function SearchContent() {
     setActiveCategory(catParam);
   }, [queryParam, catParam]);
 
-  // Helper to save a query term into recent searches (Deduplicated, max 10, top of list)
+  // Helper to save a query term into recent searches
   const saveRecentSearch = (term: string) => {
     const cleaned = term.trim();
     if (!cleaned) return;
@@ -199,77 +197,50 @@ function SearchContent() {
 
   return (
     <div className="w-full min-h-screen bg-white text-slate-900 font-sans pb-24">
-      {/* 13A Sticky Top Search Header Bar */}
+      {/* Dedicated Search Header Bar (No Horizontal Tabs) */}
       <div className="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-xs py-3 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto flex flex-col gap-3">
-          <div className="flex items-center gap-3">
-            {/* Smart Back Button — Returns to previous marketplace page */}
-            <button
-              type="button"
-              onClick={() => {
-                if (isFullCategoryView) {
-                  handleCategorySwitch("");
+        <div className="max-w-7xl mx-auto flex items-center gap-3">
+          {/* Smart Back Button */}
+          <button
+            type="button"
+            onClick={() => {
+              if (isFullCategoryView) {
+                handleCategorySwitch("");
+              } else {
+                const referrer = typeof window !== "undefined" ? sessionStorage.getItem("namma_thanjai_search_referrer") : null;
+                if (referrer && referrer !== "/search" && referrer !== "/onboarding") {
+                  router.push(referrer);
+                } else if (typeof window !== "undefined" && window.history.length > 1) {
+                  router.back();
                 } else {
-                  const referrer = typeof window !== "undefined" ? sessionStorage.getItem("namma_thanjai_search_referrer") : null;
-                  if (referrer && referrer !== "/search" && referrer !== "/onboarding") {
-                    router.push(referrer);
-                  } else if (typeof window !== "undefined" && window.history.length > 1) {
-                    router.back();
-                  } else {
-                    router.push("/");
-                  }
+                  router.push("/");
                 }
-              }}
-              className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors cursor-pointer shrink-0"
-              title="Back"
+              }
+            }}
+            className="p-2 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 transition-colors cursor-pointer shrink-0"
+            title="Back"
+          >
+            <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
+          </button>
+
+          {/* Focused Search Input */}
+          <form onSubmit={handleSearchSubmit} className="flex-1 relative flex items-center">
+            <input
+              ref={inputRef}
+              type="text"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              placeholder="Search products, services & offers..."
+              className="w-full bg-slate-100 hover:bg-slate-50 focus:bg-white border border-slate-250 focus:border-amber-400 rounded-xl pl-4 pr-10 py-2.5 text-xs sm:text-sm font-black text-slate-900 focus:outline-none transition-all shadow-2xs"
+            />
+            <button
+              type="submit"
+              className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-slate-500 hover:text-slate-950 cursor-pointer"
+              title="Execute Search"
             >
-              <ArrowLeft className="w-5 h-5 stroke-[2.5]" />
+              <Search className="w-4 h-4 stroke-[2.5]" />
             </button>
-
-            {/* Focused Search Input */}
-            <form onSubmit={handleSearchSubmit} className="flex-1 relative flex items-center">
-              <input
-                ref={inputRef}
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Search products, services & offers..."
-                className="w-full bg-slate-100 hover:bg-slate-50 focus:bg-white border border-slate-250 focus:border-amber-400 rounded-xl pl-4 pr-10 py-2.5 text-xs sm:text-sm font-black text-slate-900 focus:outline-none transition-all shadow-2xs"
-              />
-              <button
-                type="submit"
-                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-slate-500 hover:text-slate-950 cursor-pointer"
-                title="Execute Search"
-              >
-                <Search className="w-4 h-4 stroke-[2.5]" />
-              </button>
-            </form>
-          </div>
-
-          {/* 13C Horizontal Category Switcher (Retained on Full Category Results) */}
-          {searchTerm.trim() !== "" && (
-            <div className="flex items-center gap-2 overflow-x-auto scrollbar-none pt-1">
-              {[
-                { id: "", label: `All (${totalResults})` },
-                { id: "sell", label: `For Sale (${results.sell.length})` },
-                { id: "need", label: `Wanted (${results.need.length})` },
-                { id: "services", label: `Local Services (${results.services.length})` },
-                { id: "offers", label: `Local Offers (${results.offers.length})` },
-              ].map((tab) => (
-                <button
-                  key={tab.id}
-                  onClick={() => handleCategorySwitch(tab.id)}
-                  className={`px-3 py-1.5 rounded-xl text-xs font-heading font-bold shrink-0 transition-all cursor-pointer ${
-                    activeCategory === tab.id
-                      ? "bg-[#0F172A] text-white shadow-2xs font-black"
-                      : "bg-slate-100 text-slate-700 hover:bg-slate-200"
-                  }`}
-                >
-                  {tab.label}
-                </button>
-              ))}
-            </div>
-          )}
+          </form>
         </div>
       </div>
 
@@ -344,28 +315,26 @@ function SearchContent() {
             </p>
           </div>
         ) : !isFullCategoryView ? (
-          /* 13B — SEARCH OVERVIEW (4 Vertical Sections with 2 previews each + View All →) */
+          /* 13B — SEARCH OVERVIEW (Only show categories with > 0 results) */
           <div className="flex flex-col gap-8">
-            {/* 1. FOR SALE */}
-            <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs flex flex-col gap-4">
-              <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
-                <div className="flex items-center gap-2">
-                  <Package className="w-4.5 h-4.5 text-amber-600 stroke-[2.5]" />
-                  <h3 className="font-heading font-black text-base text-slate-900">FOR SALE ({results.sell.length})</h3>
+            {/* 1. FOR SALE (Only rendered if results exist) */}
+            {results.sell.length > 0 && (
+              <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs flex flex-col gap-4">
+                <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
+                  <div className="flex items-center gap-2">
+                    <Package className="w-4.5 h-4.5 text-amber-600 stroke-[2.5]" />
+                    <h3 className="font-heading font-black text-base text-slate-900">FOR SALE ({results.sell.length})</h3>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleCategorySwitch("sell")}
+                    className="text-xs font-heading font-bold text-amber-700 hover:text-amber-800 flex items-center gap-1 cursor-pointer"
+                  >
+                    <span>View All</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
                 </div>
-                <button
-                  type="button"
-                  onClick={() => handleCategorySwitch("sell")}
-                  className="text-xs font-heading font-bold text-amber-700 hover:text-amber-800 flex items-center gap-1 cursor-pointer"
-                >
-                  <span>View All</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
-              </div>
 
-              {results.sell.length === 0 ? (
-                <p className="text-xs text-slate-400 italic">No sale items matching "{searchTerm}"</p>
-              ) : (
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {results.sell.slice(0, 2).map((item) => (
                     <div
@@ -390,29 +359,27 @@ function SearchContent() {
                     </div>
                   ))}
                 </div>
-              )}
-            </div>
-
-            {/* 2. WANTED */}
-            <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs flex flex-col gap-4">
-              <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
-                <div className="flex items-center gap-2">
-                  <Search className="w-4.5 h-4.5 text-amber-600 stroke-[2.5]" />
-                  <h3 className="font-heading font-black text-base text-slate-900">WANTED ({results.need.length})</h3>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => handleCategorySwitch("need")}
-                  className="text-xs font-heading font-bold text-amber-700 hover:text-amber-800 flex items-center gap-1 cursor-pointer"
-                >
-                  <span>View All</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
               </div>
+            )}
 
-              {results.need.length === 0 ? (
-                <p className="text-xs text-slate-400 italic">No wanted items matching "{searchTerm}"</p>
-              ) : (
+            {/* 2. WANTED (Only rendered if results exist) */}
+            {results.need.length > 0 && (
+              <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs flex flex-col gap-4">
+                <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
+                  <div className="flex items-center gap-2">
+                    <Search className="w-4.5 h-4.5 text-amber-600 stroke-[2.5]" />
+                    <h3 className="font-heading font-black text-base text-slate-900">WANTED ({results.need.length})</h3>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleCategorySwitch("need")}
+                    className="text-xs font-heading font-bold text-amber-700 hover:text-amber-800 flex items-center gap-1 cursor-pointer"
+                  >
+                    <span>View All</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {results.need.slice(0, 2).map((item) => (
                     <div
@@ -432,29 +399,27 @@ function SearchContent() {
                     </div>
                   ))}
                 </div>
-              )}
-            </div>
-
-            {/* 3. LOCAL SERVICES */}
-            <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs flex flex-col gap-4">
-              <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
-                <div className="flex items-center gap-2">
-                  <Wrench className="w-4.5 h-4.5 text-amber-600 stroke-[2.5]" />
-                  <h3 className="font-heading font-black text-base text-slate-900">LOCAL SERVICES ({results.services.length})</h3>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => handleCategorySwitch("services")}
-                  className="text-xs font-heading font-bold text-amber-700 hover:text-amber-800 flex items-center gap-1 cursor-pointer"
-                >
-                  <span>View All</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
               </div>
+            )}
 
-              {results.services.length === 0 ? (
-                <p className="text-xs text-slate-400 italic">No services matching "{searchTerm}"</p>
-              ) : (
+            {/* 3. LOCAL SERVICES (Only rendered if results exist) */}
+            {results.services.length > 0 && (
+              <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs flex flex-col gap-4">
+                <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
+                  <div className="flex items-center gap-2">
+                    <Wrench className="w-4.5 h-4.5 text-amber-600 stroke-[2.5]" />
+                    <h3 className="font-heading font-black text-base text-slate-900">LOCAL SERVICES ({results.services.length})</h3>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleCategorySwitch("services")}
+                    className="text-xs font-heading font-bold text-amber-700 hover:text-amber-800 flex items-center gap-1 cursor-pointer"
+                  >
+                    <span>View All</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {results.services.slice(0, 2).map((item) => (
                     <div
@@ -473,29 +438,27 @@ function SearchContent() {
                     </div>
                   ))}
                 </div>
-              )}
-            </div>
-
-            {/* 4. LOCAL OFFERS */}
-            <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs flex flex-col gap-4">
-              <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
-                <div className="flex items-center gap-2">
-                  <Store className="w-4.5 h-4.5 text-amber-600 stroke-[2.5]" />
-                  <h3 className="font-heading font-black text-base text-slate-900">LOCAL OFFERS ({results.offers.length})</h3>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => handleCategorySwitch("offers")}
-                  className="text-xs font-heading font-bold text-amber-700 hover:text-amber-800 flex items-center gap-1 cursor-pointer"
-                >
-                  <span>View All</span>
-                  <ArrowRight className="w-3.5 h-3.5" />
-                </button>
               </div>
+            )}
 
-              {results.offers.length === 0 ? (
-                <p className="text-xs text-slate-400 italic">No offers matching "{searchTerm}"</p>
-              ) : (
+            {/* 4. LOCAL OFFERS (Only rendered if results exist) */}
+            {results.offers.length > 0 && (
+              <div className="bg-white border border-slate-200/90 rounded-2xl p-5 shadow-xs flex flex-col gap-4">
+                <div className="flex items-center justify-between border-b border-slate-200/80 pb-3">
+                  <div className="flex items-center gap-2">
+                    <Store className="w-4.5 h-4.5 text-amber-600 stroke-[2.5]" />
+                    <h3 className="font-heading font-black text-base text-slate-900">LOCAL OFFERS ({results.offers.length})</h3>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => handleCategorySwitch("offers")}
+                    className="text-xs font-heading font-bold text-amber-700 hover:text-amber-800 flex items-center gap-1 cursor-pointer"
+                  >
+                    <span>View All</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   {results.offers.slice(0, 2).map((item) => (
                     <div
@@ -514,8 +477,8 @@ function SearchContent() {
                     </div>
                   ))}
                 </div>
-              )}
-            </div>
+              </div>
+            )}
           </div>
         ) : (
           /* 13C — FULL CATEGORY SEARCH RESULTS GRID */

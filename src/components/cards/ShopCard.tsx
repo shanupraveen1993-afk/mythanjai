@@ -332,7 +332,7 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
                       target="_blank"
                       rel="noopener noreferrer"
                       onClick={(e) => { if (isPreview) e.preventDefault(); }}
-                      className={`w-full bg-[#1F244A] hover:bg-[#151936] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-md cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
+                      className={`w-[110px] sm:w-[128px] shrink-0 bg-[#1F244A] hover:bg-[#151936] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-md cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
                     >
                       <Navigation className="w-4 h-4 text-white shrink-0" />
                       <span>Visit Store</span>

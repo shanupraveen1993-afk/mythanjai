@@ -307,7 +307,7 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
                     const chatMsg = `Hello! I am interested in your service "${post.name}". Please call me back when free.`;
                     router.push(`/chat?listingId=${post.id}&sellerId=${post.userId || ""}&title=${encodeURIComponent(post.name)}&autoMsg=${encodeURIComponent(chatMsg)}&autoSend=true`);
                   }}
-                  className={`w-full bg-[#1F244A] hover:bg-[#151936] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-md cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
+                  className={`w-[110px] sm:w-[128px] shrink-0 bg-[#1F244A] hover:bg-[#151936] text-white font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-md cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}
                 >
                   <MessageSquare className="w-4 h-4 text-white shrink-0 stroke-[2.5]" />
                   <span>Chat</span>
