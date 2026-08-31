@@ -948,7 +948,7 @@ export default function ChatClientPage() {
                         <h3 className="font-extrabold text-sm sm:text-base text-slate-900 truncate">
                           {t.isSystemThread
                             ? t.peerName
-                            : (profile as any)?.nt_id || generate5DigitMemberId(t.peerId || t.peerPhone)}
+                            : t.peerId && t.peerId.startsWith("NT-") ? t.peerId : generate5DigitMemberId(t.peerId || t.peerPhone || t.chatId)}
                         </h3>
                         {t.isSystemThread && (
                           <span className="bg-amber-400 text-slate-950 text-[9px] font-black px-1.5 py-0.2 rounded-full uppercase shrink-0">Admin</span>

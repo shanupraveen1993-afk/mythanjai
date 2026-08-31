@@ -631,6 +631,8 @@ export default function PostForm({ segment }: PostFormProps) {
           title: title.trim(),
           description: cleanDesc,
           raw_text: cleanDesc,
+          locality_p1: p1Area,
+          locality_p2: p2Specific.trim(),
           area_tag: finalArea,
           category: category || "General",
           price: price ? price : null,
@@ -650,6 +652,8 @@ export default function PostForm({ segment }: PostFormProps) {
           skill_category: category || "General Service",
           sub_category: subCategory || "",
           description: cleanDesc,
+          locality_p1: p1Area,
+          locality_p2: p2Specific.trim(),
           area_tag: finalArea,
           phone: phone || "9876543210",
           show_phone: Boolean(showPhone),
@@ -669,6 +673,8 @@ export default function PostForm({ segment }: PostFormProps) {
           seller_id: uid,
           shop_name: title.trim(),
           category: category || "Retail Deals",
+          locality_p1: p1Area,
+          locality_p2: p2Specific.trim(),
           address_text: finalArea,
           area_tag: finalArea,
           phone: phone || "9876543210",
@@ -785,7 +791,9 @@ export default function PostForm({ segment }: PostFormProps) {
     }
   };
 
-  // Direct 1:1 Live Preview Cards Data
+  // Direct 1:1 Live Preview Cards Data with Instant P1/P2 Locality Binding
+  const currentDisplayArea = p2Specific.trim() ? `${p1Area ? `${p1Area}, ` : ""}${p2Specific.trim()}` : p1Area || TANJORE_LOCALITIES[0];
+
   const previewSellOrNeedPost = useMemo<NeedOrSalePost>(() => {
     const activeCover = (imagePreviews && imagePreviews.length > 0) ? imagePreviews[0] : (imagePreview || "");
     return {
@@ -795,7 +803,7 @@ export default function PostForm({ segment }: PostFormProps) {
       raw_text: description.trim(),
       title: title.trim() || (segment === "sell" ? "Your Item Title" : "Your Requirement"),
       description: previewDescription || description.trim() || "Live preview description will appear here...",
-      area_tag: area || TANJORE_LOCALITIES[0],
+      area_tag: currentDisplayArea,
       price: price || "",
       phone: phone || profile?.phone || "",
       image_url: activeCover,
@@ -806,7 +814,7 @@ export default function PostForm({ segment }: PostFormProps) {
       created_at: new Date() as any,
       expires_at: new Date(Date.now() + 30 * 86400000) as any,
     };
-  }, [title, description, previewDescription, area, price, phone, profile, imagePreview, imagePreviews, segment, user, showPhone]);
+  }, [title, description, previewDescription, currentDisplayArea, price, phone, profile, imagePreview, imagePreviews, segment, user, showPhone]);
 
   const previewServicePost = useMemo<ServiceProviderPost>(() => {
     return {
@@ -816,7 +824,7 @@ export default function PostForm({ segment }: PostFormProps) {
       experience: allWorkingDays === "Yes" ? "All Working Days" : "Flexible Days",
       working_hours: sundayLeave === "Yes" ? "Sunday Off" : "Open 7 Days",
       phone: phone || "",
-      area_tag: area || TANJORE_LOCALITIES[0],
+      area_tag: currentDisplayArea,
       rating: 5.0,
       description: previewDescription || "Your trade service details...",
       image_url: imagePreview || "",
@@ -824,20 +832,20 @@ export default function PostForm({ segment }: PostFormProps) {
       is_verified: true,
       created_at: new Date() as any,
     };
-  }, [title, description, previewDescription, area, allWorkingDays, sundayLeave, phone, imagePreview, user]);
+  }, [title, description, previewDescription, currentDisplayArea, allWorkingDays, sundayLeave, phone, imagePreview, user]);
 
   const previewShopPost = useMemo<ShopPost>(() => {
     return {
       id: "preview_shop",
       userId: user?.uid || "preview_user",
       shop_name: title.trim() || "Your Store Name",
-      address_text: area ? `${area}, Thanjavur` : "Thanjavur",
+      address_text: currentDisplayArea,
       landmark: "Near Main Road",
       hours: "Valid 30 Days",
       valid_from: validFrom || undefined,
       valid_to: validTo || undefined,
       phone: phone || "",
-      area_tag: area || TANJORE_LOCALITIES[0],
+      area_tag: currentDisplayArea,
       offer_title: title.trim() || "Store Offer",
       offer_description: previewDescription || description.trim() || "Special offer details...",
       image_url: imagePreview || "",
@@ -848,7 +856,7 @@ export default function PostForm({ segment }: PostFormProps) {
       category: category || config.categories[0] || "General",
       created_at: new Date() as any,
     };
-  }, [title, description, previewDescription, area, validFrom, validTo, showPhone, phone, imagePreview, user]);
+  }, [title, description, previewDescription, currentDisplayArea, validFrom, validTo, showPhone, phone, imagePreview, user]);
 
 
   const formattedPriceBadge = formatIndianCurrencyText(price);
@@ -1173,15 +1181,13 @@ export default function PostForm({ segment }: PostFormProps) {
                   </div>
                 </div>
 
-                {/* 5. ADDRESS LINE — Freeform Location Input (FOR OFFER) */}
+                {/* 5. MANDATORY 2-TIER LOCALITY SELECTOR (FOR OFFER) */}
                 <div className="w-full">
-                  <input
-                    type="text"
-                    required
-                    placeholder="Enter location / area *"
-                    value={area}
-                    onChange={(e) => setArea(e.target.value)}
-                    className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal"
+                  <LocalitySelector
+                    p1Area={p1Area}
+                    setP1Area={setP1Area}
+                    p2Specific={p2Specific}
+                    setP2Specific={setP2Specific}
                   />
                 </div>
 
