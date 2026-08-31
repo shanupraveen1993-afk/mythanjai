@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { useAuth } from "@/hooks/use-auth";
 import { db } from "@/lib/firebase";
+import { getOrAssignUserNTID } from "@/lib/user-identity";
 import {
   collection,
   query,
@@ -159,9 +160,10 @@ function ProfileContent() {
     }
   }, []);
 
-  // Listen to Firestore profile changes in real-time safely
+  // Listen to Firestore profile changes in real-time safely and ensure NT-ID exists
   useEffect(() => {
     if (!user || !user.uid) return;
+    getOrAssignUserNTID(user.uid).catch((err) => console.warn("NT-ID sync note:", err));
     try {
       const docRef = doc(db, "users", user.uid);
       const unsubscribe = onSnapshot(
@@ -573,19 +575,21 @@ function ProfileContent() {
                     {isDbVerified && phoneNumber ? `+91 ${phoneNumber}` : "Guest / Unverified"}
                   </p>
 
-                  {/* Clean Metadata Member ID */}
+                  {/* Clean Metadata Permanent NT ID */}
                   <div className="flex items-center gap-2 text-xs font-mono text-slate-600">
-                    <span className="font-medium text-[11px] text-slate-400 uppercase tracking-wide font-sans">ID:</span>
-                    <span className="font-bold text-slate-800">{profile?.memberId || `NT-${(profile?.phone || "USER").slice(-10)}`}</span>
+                    <span className="font-medium text-[11px] text-slate-400 uppercase tracking-wide font-sans">Namma Thanjai ID:</span>
+                    <span className="font-bold text-slate-800">{profile?.nt_id || profile?.memberId || "Loading..."}</span>
                     <button
                       type="button"
                       onClick={() => {
-                        const idToCopy = profile?.memberId || `NT-${(profile?.phone || "USER").slice(-10)}`;
-                        navigator.clipboard.writeText(idToCopy);
-                        toast.success("Member ID copied!");
+                        const idToCopy = profile?.nt_id || profile?.memberId || "";
+                        if (idToCopy) {
+                          navigator.clipboard.writeText(idToCopy);
+                          toast.success("Namma Thanjai ID copied!");
+                        }
                       }}
                       className="text-slate-400 hover:text-slate-700 text-[11px] font-sans font-bold hover:underline cursor-pointer"
-                      title="Copy Member ID"
+                      title="Copy Namma Thanjai ID"
                     >
                       Copy
                     </button>

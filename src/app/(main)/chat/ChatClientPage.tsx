@@ -1008,19 +1008,19 @@ export default function ChatClientPage() {
               </div>
               
               <div className="min-w-0 flex flex-col justify-center items-start text-left">
-                <div className="flex items-center justify-start gap-1.5 min-w-0 text-left">
-                  <h3 className="font-heading font-black text-xs sm:text-sm text-slate-900 truncate leading-tight text-left">{activePeerName}</h3>
+                <h3 className="font-heading font-black text-xs sm:text-sm text-slate-900 truncate leading-tight text-left">
+                  {activeListingTitle && activeListingTitle !== "Welcome to Namma Thanjai" ? activeListingTitle : activePeerName}
+                </h3>
+                <div className="flex items-center justify-start gap-1.5 min-w-0 text-left mt-0.5">
+                  <span className="text-[11px] font-semibold text-slate-600 truncate">
+                    {activePeerName}
+                  </span>
                   {activeChatId !== "namma_thanjai_system_welcome" && (
                     <span className="text-[10px] font-mono text-emerald-800 bg-emerald-100 border border-emerald-200 px-1.5 py-0.2 rounded font-extrabold shrink-0">
-                      {generate5DigitMemberId(activePeerId || activePeerPhone)}
+                      ({generate5DigitMemberId(activePeerId || activePeerPhone)})
                     </span>
                   )}
                 </div>
-                {activeChatId !== "namma_thanjai_system_welcome" && activeListingTitle && activeListingTitle !== "Welcome to Namma Thanjai" && (
-                  <p className="text-[11px] text-amber-700 font-bold truncate mt-0.5 text-left">
-                    Re: {activeListingTitle}
-                  </p>
-                )}
               </div>
             </div>
 
