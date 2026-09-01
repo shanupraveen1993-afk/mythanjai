@@ -25,6 +25,17 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
   const [isIndividualChatOpen, setIsIndividualChatOpen] = useState(false);
   const [hasUnreadMessages, setHasUnreadMessages] = useState(false);
 
+  // Synchronize scroll hide/show for bottom navigation on Home / feed pages
+  useEffect(() => {
+    if (isAtTop) {
+      setShouldHide(false);
+    } else if (scrollDirection === "down") {
+      setShouldHide(true);
+    } else if (scrollDirection === "up") {
+      setShouldHide(false);
+    }
+  }, [scrollDirection, isAtTop]);
+
   // Dynamic real-time snapshot listener for unread chat messages & notifications for logged in user
   useEffect(() => {
     if (typeof window === "undefined") return;
