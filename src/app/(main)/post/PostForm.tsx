@@ -843,13 +843,14 @@ export default function PostForm({ segment }: PostFormProps) {
       id: "preview_shop",
       userId: user?.uid || "preview_user",
       shop_name: title.trim() || "Your Store Name",
-      address_text: currentDisplayArea,
+      address_text: address.trim() || currentDisplayArea,
       landmark: "Near Main Road",
       hours: "Valid 30 Days",
       valid_from: validFrom || undefined,
       valid_to: validTo || undefined,
       phone: phone || "",
-      area_tag: currentDisplayArea,
+      phone2: phone2 || "",
+      area_tag: address.trim() || currentDisplayArea,
       offer_title: title.trim() || "Store Offer",
       offer_description: previewDescription || description.trim() || "Special offer details...",
       image_url: imagePreview || "",
@@ -860,7 +861,7 @@ export default function PostForm({ segment }: PostFormProps) {
       category: category || config.categories[0] || "General",
       created_at: new Date() as any,
     };
-  }, [title, description, previewDescription, currentDisplayArea, validFrom, validTo, showPhone, phone, imagePreview, user]);
+  }, [title, address, description, previewDescription, currentDisplayArea, validFrom, validTo, showPhone, phone, phone2, imagePreview, user]);
 
 
   const formattedPriceBadge = formatIndianCurrencyText(price);
@@ -1073,18 +1074,19 @@ export default function PostForm({ segment }: PostFormProps) {
             {/* OFFER FORM INPUTS */}
             {segment === "offer" ? (
               <>
-                {/* 1. UPLOAD VISITING CARD / FLYER PHOTO (TOP - OPTIONAL) */}
-                <div className="w-full bg-slate-50 border-2 border-dashed border-slate-300 hover:border-slate-400 p-4 rounded-xl flex flex-col items-center justify-center text-center gap-2 transition-all group relative">
+                {/* 1. VISITING CARD PHOTO CAPTURE FRAME (DUAL UPLOAD & CAMERA OPTIONS) */}
+                <div className="w-full bg-amber-500/5 border-2 border-dashed border-amber-400 p-4 sm:p-5 rounded-2xl flex flex-col items-center justify-center text-center gap-3 transition-all relative">
                   {isOcrScanning && (
-                    <div className="absolute inset-0 bg-white/90 backdrop-blur-xs rounded-xl z-20 flex flex-col items-center justify-center gap-2">
-                      <Loader2 className="w-6 h-6 animate-spin text-slate-800" />
-                      <span className="text-xs font-bold text-slate-800">Reading Store Name &amp; Location from Card...</span>
+                    <div className="absolute inset-0 bg-white/90 backdrop-blur-xs rounded-2xl z-20 flex flex-col items-center justify-center gap-2">
+                      <Loader2 className="w-7 h-7 animate-spin text-amber-600" />
+                      <span className="text-xs font-black text-slate-900">Scanning Shop Name, Address &amp; Contact Phones...</span>
                     </div>
                   )}
+
                   {imagePreview ? (
-                    <div className="relative w-full max-h-48 rounded-xl overflow-hidden border border-slate-200 shadow-sm">
-                      <img src={imagePreview} alt="Visiting card preview" className="w-full h-48 object-cover" />
-                      <div className="absolute bottom-2 right-2 flex items-center gap-2">
+                    <div className="relative w-full max-h-52 rounded-xl overflow-hidden border border-slate-200 shadow-sm">
+                      <img src={imagePreview} alt="Visiting card preview" className="w-full h-52 object-cover" />
+                      <div className="absolute bottom-2 right-2 flex items-center gap-2 z-10">
                         <button
                           type="button"
                           onClick={() => {
@@ -1097,36 +1099,43 @@ export default function PostForm({ segment }: PostFormProps) {
                           <span>Remove</span>
                         </button>
                         <label className="bg-slate-950/85 hover:bg-slate-950 text-white text-xs font-bold px-3 py-1.5 rounded-lg cursor-pointer flex items-center gap-1 backdrop-blur-xs shadow">
-                          <Camera className="w-3.5 h-3.5" />
-                          <span>Change Photo</span>
+                          <Camera className="w-3.5 h-3.5 text-amber-400" />
+                          <span>Retake Photo</span>
                           <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
                         </label>
                       </div>
                     </div>
                   ) : (
-                    <label className="w-full flex flex-col items-center justify-center gap-2 cursor-pointer py-2">
-                      <div className="w-10 h-10 rounded-lg bg-slate-900 text-white flex items-center justify-center font-bold shadow-sm group-hover:scale-105 transition-transform">
-                        <Camera className="w-5 h-5 stroke-[2.5]" />
-                      </div>
-                      <div className="flex flex-col items-center">
-                        <span className="font-heading font-bold text-xs text-slate-900">
-                          Upload Visiting Card / Flyer Photo (Optional)
+                    <div className="w-full flex flex-col items-center justify-center gap-3 py-2">
+                      {/* CARD POSITIONING FRAME OVERLAY */}
+                      <div className="w-full max-w-sm aspect-[1.58/1] border-2 border-dashed border-amber-500 rounded-xl bg-white/80 p-4 flex flex-col items-center justify-center gap-1.5 shadow-2xs relative">
+                        <div className="w-10 h-10 rounded-full bg-amber-500 text-slate-950 flex items-center justify-center font-black shadow-xs">
+                          <Camera className="w-5 h-5 stroke-[2.5]" />
+                        </div>
+                        <span className="font-heading font-black text-xs text-slate-900">
+                          Align Visiting Card Inside Frame
                         </span>
-                        <span className="text-xs text-slate-500 mt-0.5 max-w-sm font-medium">
-                          Fills Store Name &amp; Location directly into Live Preview!
+                        <span className="text-[11px] text-slate-500 font-medium leading-tight">
+                          Position card flat for auto-reading Shop Name, Location &amp; Dual Phones
                         </span>
                       </div>
-                      <span className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-black text-xs px-3.5 py-1.5 rounded-lg transition-all border border-amber-400 shadow-2xs mt-0.5">
-                        Upload Card Photo →
-                      </span>
-                      <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
-                    </label>
+
+                      {/* DUAL ACTION BUTTONS: GALLERY UPLOAD OR DIRECT CAMERA */}
+                      <div className="flex flex-wrap items-center justify-center gap-2.5 w-full pt-1">
+                        <label className="bg-slate-900 hover:bg-slate-800 text-white font-heading font-extrabold text-xs px-4 py-2.5 rounded-xl transition-all shadow-xs cursor-pointer flex items-center gap-1.5 active:scale-95">
+                          <span>📁 Upload from Gallery</span>
+                          <input type="file" accept="image/*" onChange={handleImageChange} className="hidden" />
+                        </label>
+
+                        <label className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-heading font-black text-xs px-4 py-2.5 rounded-xl transition-all border border-amber-400 shadow-xs cursor-pointer flex items-center gap-1.5 active:scale-95">
+                          <Camera className="w-4 h-4 text-slate-950 stroke-[2.5]" />
+                          <span>📷 Take Camera Photo</span>
+                          <input type="file" accept="image/*" capture="environment" onChange={handleImageChange} className="hidden" />
+                        </label>
+                      </div>
+                    </div>
                   )}
                 </div>
-
-
-
-
 
                 {/* 2. SHOP NAME LINE */}
                 <div className="relative w-full">
@@ -1142,6 +1151,18 @@ export default function PostForm({ segment }: PostFormProps) {
                   <span className="absolute right-0 top-3 text-[11px] font-medium text-slate-400">
                     {title.length}/{config.maxTitleChars}
                   </span>
+                </div>
+
+                {/* 3. LOCATION / SHOP ADDRESS LINE (AUTO-FILLED BY AI OCR OR MANUAL TYPING) */}
+                <div className="relative w-full">
+                  <input
+                    type="text"
+                    required
+                    placeholder="📍 Shop Location / Full Address * (e.g. Medical College Road, Thanjavur)"
+                    value={address}
+                    onChange={(e) => setAddress(e.target.value)}
+                    className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal"
+                  />
                 </div>
 
                 {/* 3. OFFER DESCRIPTION LINE */}
