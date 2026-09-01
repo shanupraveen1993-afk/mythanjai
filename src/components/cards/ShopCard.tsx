@@ -255,10 +255,10 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
           )}
 
           {/* Location + Action Buttons Row */}
-          <div className="flex items-center justify-between text-xs text-slate-600 pt-1 mt-0.5 gap-2">
-            <div className="flex items-center text-slate-600 text-xs font-medium gap-1 min-w-0 truncate">
-              <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-              <span className="font-medium text-slate-600 text-xs line-clamp-1 truncate">{post.address_text || post.area_tag || "Thanjavur"}</span>
+          <div className="flex items-start justify-between text-xs text-slate-600 pt-1 mt-0.5 gap-2 min-h-[2.25rem]">
+            <div className="flex items-start text-slate-600 text-xs font-medium gap-1 min-w-0 flex-1">
+              <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0 mt-0.5" />
+              <span className="font-medium text-slate-600 text-xs line-clamp-2 leading-tight">{post.address_text || post.area_tag || "Thanjavur"}</span>
             </div>
 
             {/* 3 Square Action Icon Buttons (Save, Share, Report) - Hidden on Own Posts & Live Preview */}

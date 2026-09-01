@@ -10,16 +10,22 @@ export default function TamilSloganBanner() {
 
   useEffect(() => {
     if (typeof window !== "undefined") {
-      const dismissed = localStorage.getItem("namma_thanjai_banner_dismissed") === "true";
+      const userPhone = (localStorage.getItem("namma_thanjai_phone") || localStorage.getItem("my_thanjai_phone") || "guest").replace(/\D/g, "");
+      const dismissedKey = `namma_thanjai_banner_dismissed_${userPhone}`;
+      const impressionKey = `namma_thanjai_banner_impressions_${userPhone}`;
+
+      const isDismissedStored = localStorage.getItem(dismissedKey) === "true" || localStorage.getItem("namma_thanjai_banner_dismissed") === "true";
       
-      let visitCount = parseInt(localStorage.getItem("namma_thanjai_app_visit_count") || "0", 10);
+      let impressions = parseInt(localStorage.getItem(impressionKey) || localStorage.getItem("namma_thanjai_app_visit_count") || "0", 10);
+      
       if (!sessionStorage.getItem("namma_thanjai_session_counted")) {
         sessionStorage.setItem("namma_thanjai_session_counted", "true");
-        visitCount += 1;
-        localStorage.setItem("namma_thanjai_app_visit_count", visitCount.toString());
+        impressions += 1;
+        localStorage.setItem(impressionKey, impressions.toString());
       }
 
-      if (dismissed || visitCount >= 3) {
+      // Show on 1st & 2nd visit, hide on 3rd visit (impressions >= 3) or if closed
+      if (isDismissedStored || impressions >= 3) {
         setIsDismissed(true);
       }
     }
@@ -28,6 +34,8 @@ export default function TamilSloganBanner() {
   const handleDismiss = () => {
     setIsDismissed(true);
     if (typeof window !== "undefined") {
+      const userPhone = (localStorage.getItem("namma_thanjai_phone") || localStorage.getItem("my_thanjai_phone") || "guest").replace(/\D/g, "");
+      localStorage.setItem(`namma_thanjai_banner_dismissed_${userPhone}`, "true");
       localStorage.setItem("namma_thanjai_banner_dismissed", "true");
     }
   };
