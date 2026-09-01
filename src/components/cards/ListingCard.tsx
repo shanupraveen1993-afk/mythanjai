@@ -444,9 +444,9 @@ export default function ListingCard({ listing, isPreview }: { listing: ListingIt
             </div>
           </div>
 
-          {/* ── MIDDLE SECTION: Smart Responsive Description Box (4 Lines Desktop / Up to 10 Lines Mobile App) ── */}
-          <div className="bg-slate-50/80 border border-slate-200/60 p-2.5 rounded-xl flex flex-col justify-start overflow-y-auto max-h-[18em] custom-scrollbar">
-            <p className="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed whitespace-pre-line line-clamp-10 md:line-clamp-4">
+          {/* ── MIDDLE SECTION: Smart Responsive Scrollable Description Box ── */}
+          <div className="bg-slate-50/80 border border-slate-200/60 p-2.5 rounded-xl flex flex-col justify-start overflow-y-auto max-h-[7.5em] sm:max-h-[14em] custom-scrollbar">
+            <p className="text-xs sm:text-sm text-slate-700 font-medium leading-relaxed whitespace-pre-line">
               {listing.description || "No detailed description provided."}
             </p>
           </div>

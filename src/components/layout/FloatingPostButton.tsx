@@ -65,12 +65,12 @@ export default function FloatingPostButton() {
       <button
         type="button"
         onClick={handlePostClick}
-        className="bg-amber-500 hover:bg-amber-400 text-slate-950 font-heading font-black text-sm rounded-full shadow-xl shadow-amber-500/35 border-2 border-slate-950 flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap px-6 py-3 transition-all duration-200"
+        className="bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-sm rounded-full shadow-xl shadow-amber-500/35 border-2 border-slate-950 flex items-center justify-center gap-2 cursor-pointer whitespace-nowrap px-6 py-3 transition-all duration-200 relative overflow-hidden before:absolute before:inset-0 before:-translate-x-full before:animate-[shimmer_2.5s_infinite] before:bg-gradient-to-r before:from-transparent before:via-white/60 before:to-transparent"
         aria-label={buttonConfig.label}
         title={buttonConfig.label}
       >
-        <Plus className="w-5.5 h-5.5 stroke-[3] text-slate-950 shrink-0" />
-        <span className="truncate">{buttonConfig.label}</span>
+        <Plus className="w-5.5 h-5.5 stroke-[3] text-slate-950 shrink-0 relative z-10" />
+        <span className="truncate relative z-10">{buttonConfig.label}</span>
       </button>
     </div>
   );

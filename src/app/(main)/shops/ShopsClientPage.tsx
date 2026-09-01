@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useFirestore } from "@/hooks/use-firestore";
 import ShopCard from "@/components/cards/ShopCard";
 import { ShopPost } from "@/types";
-import { Plus, Loader2, Store, ArrowUpDown, UserCheck, MessageSquare } from "lucide-react";
+import { Plus, Loader2, Store, ArrowUpDown, UserCheck, MessageSquare, Search } from "lucide-react";
 import { SHOP_CATEGORIES } from "@/lib/constants";
 import CustomDropdown from "@/components/ui/CustomDropdown";
 import { Filter } from "lucide-react";
@@ -17,12 +17,7 @@ import UniversalSearchBarRow from "@/components/layout/UniversalSearchBarRow";
 export default function ShopsClientPage() {
   const router = useRouter();
   const { user, profile, isVerified } = useAuth();
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
-
-  const categoryOptions = React.useMemo(() => [
-    { label: "All Offers", value: "All" },
-    ...SHOP_CATEGORIES.map((cat) => ({ label: cat, value: cat })),
-  ], []);
+  const [searchQuery, setSearchQuery] = useState<string>("");
 
   const isAuthVerified = isVerified;
 
@@ -36,7 +31,6 @@ export default function ShopsClientPage() {
     }
     router.push("/post/offer");
   };
-  const [sortBy, setSortBy] = useState<"recent" | "name">("recent");
 
   const { data: firestorePosts, loading } = useFirestore<ShopPost>({
     collectionName: "shops",
@@ -44,8 +38,6 @@ export default function ShopsClientPage() {
     category: "All",
   });
 
-  // Public feed: ONLY Firestore data — no localStorage merge.
-  // Published post data is strictly managed via Firestore live queries.
   const allPosts = React.useMemo(() => {
     return firestorePosts || [];
   }, [firestorePosts]);
@@ -59,17 +51,20 @@ export default function ShopsClientPage() {
       return true;
     });
 
-    if (selectedCategory !== "All") {
+    if (searchQuery.trim()) {
+      const q = searchQuery.toLowerCase().trim();
       list = list.filter(
-        (p) => (p.category || "").toLowerCase() === selectedCategory.toLowerCase()
+        (p) =>
+          (p.shop_name || "").toLowerCase().includes(q) ||
+          (p.offer_title || "").toLowerCase().includes(q) ||
+          (p.offer_description || "").toLowerCase().includes(q) ||
+          (p.address_text || "").toLowerCase().includes(q) ||
+          (p.area_tag || "").toLowerCase().includes(q)
       );
     }
 
-    if (sortBy === "name") {
-      list.sort((a, b) => (a.shop_name || "").localeCompare(b.shop_name || ""));
-    }
     return list;
-  }, [allPosts, selectedCategory, sortBy]);
+  }, [allPosts, searchQuery]);
 
   // Highlight ID Auto-Scroll: Bring clicked sample item to top first-fold
   useEffect(() => {
@@ -89,7 +84,29 @@ export default function ShopsClientPage() {
 
   return (
     <div className="flex flex-col gap-0 pb-6 sm:pb-10 w-full font-sans">
-      <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 flex flex-col gap-3.5 pt-2 sm:pt-4">
+      <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 flex flex-col gap-3 pt-2 sm:pt-4">
+        
+        {/* SEARCH BAR ABOVE TITLE */}
+        <div className="w-full bg-white border border-slate-200/90 rounded-2xl p-2.5 shadow-2xs flex items-center gap-2">
+          <Search className="w-4.5 h-4.5 text-amber-600 stroke-[2.5] shrink-0 ml-2" />
+          <input
+            type="text"
+            placeholder="Search stores, offers, discounts or areas in Thanjavur..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="w-full py-1.5 px-2 text-xs sm:text-sm font-semibold bg-transparent border-0 focus:outline-none text-slate-900 placeholder:text-slate-400"
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              onClick={() => setSearchQuery("")}
+              className="text-xs text-slate-400 hover:text-slate-600 font-bold px-2 py-1 cursor-pointer"
+            >
+              Clear
+            </button>
+          )}
+        </div>
+
         {/* 1. TITLE BAR */}
         <div className="py-1 flex items-center justify-between gap-3 w-full">
           <h2 className="font-heading font-black text-base sm:text-lg text-slate-900 tracking-tight">

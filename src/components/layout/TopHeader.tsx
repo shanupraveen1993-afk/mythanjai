@@ -267,7 +267,7 @@ export default function TopHeader({
                       : "text-slate-600 hover:text-slate-900 hover:bg-slate-200/60"
                   }`}
                 >
-                  <Store className={`w-3.5 h-3.5 ${isActive ? "text-amber-400 stroke-[2.5]" : "text-slate-500 stroke-[2]"}`} />
+                  <Store className={`w-3.5 h-3.5 animate-bounce ${isActive ? "text-amber-400 stroke-[2.5]" : "text-amber-600 stroke-[2.5]"}`} />
                   <span>Offer</span>
                 </button>
               );
