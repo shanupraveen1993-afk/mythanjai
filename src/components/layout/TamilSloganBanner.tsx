@@ -11,7 +11,17 @@ export default function TamilSloganBanner() {
   useEffect(() => {
     if (typeof window !== "undefined") {
       const dismissed = localStorage.getItem("namma_thanjai_banner_dismissed") === "true";
-      setIsDismissed(dismissed);
+      
+      let visitCount = parseInt(localStorage.getItem("namma_thanjai_app_visit_count") || "0", 10);
+      if (!sessionStorage.getItem("namma_thanjai_session_counted")) {
+        sessionStorage.setItem("namma_thanjai_session_counted", "true");
+        visitCount += 1;
+        localStorage.setItem("namma_thanjai_app_visit_count", visitCount.toString());
+      }
+
+      if (dismissed || visitCount >= 3) {
+        setIsDismissed(true);
+      }
     }
   }, []);
 

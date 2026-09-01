@@ -417,9 +417,21 @@ export default function ListingCard({ listing, isPreview }: { listing: ListingIt
 
             {/* RIGHT COLUMN: Category Badge (left) + Price (right) + Title (Directly Underneath) */}
             <div className="flex-1 min-w-0 flex flex-col justify-start gap-0">
-              {/* Top Row: Category Name on Left, Price on Right */}
+              {/* Top Row: Category Name on Left + Bookmark Save Icon, Price on Right */}
               <div className="flex items-center justify-between gap-2 w-full mb-0.5">
-                <CategoryIcon category={listing.category || listing.type} />
+                <div className="flex items-center gap-2 min-w-0">
+                  <CategoryIcon category={listing.category || listing.type} />
+                  {!isOwnPost && !isPreview && (
+                    <button
+                      type="button"
+                      onClick={handleSaveToggle}
+                      className="p-1 text-slate-400 hover:text-amber-500 transition-colors cursor-pointer"
+                      title={isSaved ? "Saved" : "Save post"}
+                    >
+                      <Bookmark className={`w-4 h-4 ${isSaved ? "fill-amber-500 text-amber-500" : "text-slate-400"}`} />
+                    </button>
+                  )}
+                </div>
                 <div className="font-heading font-black text-base sm:text-lg text-amber-700 tracking-tight shrink-0">
                   {formattedPrice}
                 </div>
@@ -439,12 +451,12 @@ export default function ListingCard({ listing, isPreview }: { listing: ListingIt
             </p>
           </div>
 
-          {/* ── ROW 3: Location on Left + 3 Icon Buttons on Right (Hidden in Preview) ── */}
-          <div className="flex items-center justify-between text-xs text-slate-600 border-t border-slate-100/90 pt-2 mt-1 gap-2">
+          {/* ── ROW 3: Location on Left + Share & Report Buttons on Right (Hidden in Preview) ── */}
+          <div className="flex items-center justify-between text-xs text-slate-600 pt-1 mt-0.5 gap-2">
             {/* Location Tag */}
-            <div className="flex items-center gap-1 text-xs text-slate-600 font-medium truncate">
+            <div className="flex items-center gap-1 text-xs text-slate-600 font-medium min-w-0 truncate">
               <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-              <span className="truncate">{listing.location || "Medical College Rd, Thanjavur"}</span>
+              <span className="font-medium text-slate-600 text-xs line-clamp-1 truncate">{listing.location || "Medical College Rd, Thanjavur"}</span>
             </div>
 
             {/* 3 Square Action Icon Buttons (Save, Share, Report) - Hidden on Own Posts & Live Preview */}

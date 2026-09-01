@@ -37,16 +37,13 @@ export default function LocalitySelector({
       </div>
 
       {/* P2: Specific Location / Street / Landmark */}
-      <div className="w-full flex flex-col gap-1">
-        <label className="text-[11px] font-black text-slate-700 uppercase tracking-wider">
-          Specific Street / Landmark (P2) <span className="text-red-500">*</span>
-        </label>
+      <div className="w-full">
         <input
           type="text"
           required
           value={p2Specific}
           onChange={(e) => setP2Specific(e.target.value)}
-          placeholder="e.g. Ramnagar Street, Near Head Post Office"
+          placeholder="Street name, landmark, near temple/school/hospital * (P2)"
           className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal"
         />
       </div>

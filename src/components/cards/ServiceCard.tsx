@@ -194,9 +194,21 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
 
         {/* ── TOP HEADER BLOCK: Full-Width Title + Category Badge & Rating ── */}
         <div className="flex flex-col gap-2 w-full">
-          {/* Top Row: Category Badge (left) + Skill Badge / Real Ratings (right) */}
+          {/* Top Row: Category Badge + Bookmark Save Icon (left) + Skill Badge / Real Ratings (right) */}
           <div className="flex items-center justify-between gap-2 w-full">
-            <CategoryIcon category={post.skill_category} />
+            <div className="flex items-center gap-2 min-w-0">
+              <CategoryIcon category={post.skill_category} />
+              {!isOwnPost && !isPreview && (
+                <button
+                  type="button"
+                  onClick={handleToggleSave}
+                  className="p-1 text-slate-400 hover:text-amber-500 transition-colors cursor-pointer"
+                  title={saved ? "Saved" : "Save provider"}
+                >
+                  <Bookmark className={`w-4 h-4 ${saved ? "fill-amber-500 text-amber-500" : "text-slate-400"}`} />
+                </button>
+              )}
+            </div>
             {hasRealReviews && (
               <span className="flex items-center gap-1 bg-amber-50 text-amber-700 border border-amber-200 font-extrabold text-[10px] px-2 py-0.5 rounded-md shrink-0">
                 <Star className="w-3 h-3 fill-amber-500 text-amber-500 shrink-0" />
@@ -218,12 +230,12 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
           </p>
         </div>
 
-        {/* ── ROW 3: Location + Posted Date on Left + 3 Utility Icon Buttons on Right (Hidden in Preview) ── */}
-        <div className="flex items-center justify-between text-xs text-slate-600 border-t border-slate-100/90 pt-2 mt-1 gap-2">
+        {/* ── ROW 3: Location + Posted Date on Left + Share & Report Buttons on Right (Hidden in Preview) ── */}
+        <div className="flex items-center justify-between text-xs text-slate-600 pt-1 mt-0.5 gap-2">
           {/* Location & Posted Month */}
           <div className="flex items-center gap-1.5 text-[11px] text-slate-600 font-medium truncate min-w-0">
             <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-            <span className="truncate">{post.area_tag || "Thanjavur"}</span>
+            <span className="font-medium text-slate-600 text-xs line-clamp-1 truncate">{post.area_tag || "Thanjavur"}</span>
             <span className="text-slate-300">•</span>
             <span className="text-slate-400 font-normal shrink-0">{postedMonthText}</span>
           </div>

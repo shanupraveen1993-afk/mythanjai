@@ -888,15 +888,15 @@ export default function PostForm({ segment }: PostFormProps) {
       <div className="w-full bg-white text-slate-900 border-b border-slate-200/90 py-3 px-4 sm:px-8 flex items-center justify-between shadow-sm shrink-0 sticky top-0 z-50 pt-[calc(0.75rem+env(safe-area-inset-top,0px))]">
         <div className="max-w-6xl mx-auto w-full flex items-center justify-between gap-4">
           <div className="flex items-center gap-3 min-w-0 flex-1">
-            {/* Mobile Web App & APK: Back Button */}
+            {/* Mobile Web App & APK: Icon-Only Chevron Back Button */}
             <button
               type="button"
               onClick={handleBackClick}
-              className="md:hidden px-3 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-800 font-heading font-bold text-xs sm:text-sm flex items-center gap-1.5 border border-slate-200 transition-all cursor-pointer active:scale-95 shrink-0"
+              className="md:hidden w-9 h-9 rounded-full flex items-center justify-center text-slate-900 hover:bg-slate-100 transition-colors cursor-pointer shrink-0 p-0 border-0"
               title="Back to feed"
+              aria-label="Back"
             >
-              <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
-              <span>Back</span>
+              <ArrowLeft className="w-6 h-6 stroke-[2.5]" />
             </button>
 
             {/* Desktop Website: Namma Thanjai Logo */}

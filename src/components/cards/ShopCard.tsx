@@ -29,17 +29,8 @@ function formatOfferValidity(validFrom?: any, validTo?: any, createdAt?: any) {
       return `Valid till ${toMonth} ${toDate.getDate()}`;
     } catch (e) {}
   }
-  try {
-    const baseDate = createdAt
-      ? new Date(createdAt.seconds ? createdAt.seconds * 1000 : createdAt)
-      : new Date();
-    const endDate = new Date(baseDate.getTime() + 30 * 24 * 60 * 60 * 1000);
-    const m1 = baseDate.toLocaleString("default", { month: "short" });
-    const m2 = endDate.toLocaleString("default", { month: "short" });
-    return `Valid: ${m1} ${baseDate.getDate()} – ${m2} ${endDate.getDate()}`;
-  } catch (e) {
-    return "Valid 30 Days";
-  }
+  if (!validFrom && !validTo) return null;
+  return null;
 }
 
 interface ShopCardProps {
@@ -264,10 +255,10 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
           )}
 
           {/* Location + Action Buttons Row */}
-          <div className="flex items-center justify-between text-xs text-slate-600 border-t border-slate-100/90 pt-2 mt-1 gap-2">
-            <div className="flex items-center text-slate-600 text-[11px] font-semibold gap-1">
+          <div className="flex items-center justify-between text-xs text-slate-600 pt-1 mt-0.5 gap-2">
+            <div className="flex items-center text-slate-600 text-xs font-medium gap-1 min-w-0 truncate">
               <MapPin className="w-3.5 h-3.5 text-amber-600 shrink-0" />
-              <span className="truncate">{post.address_text || post.area_tag || "Thanjavur"}</span>
+              <span className="font-medium text-slate-600 text-xs line-clamp-1 truncate">{post.address_text || post.area_tag || "Thanjavur"}</span>
             </div>
 
             {/* 3 Square Action Icon Buttons (Save, Share, Report) - Hidden on Own Posts & Live Preview */}
