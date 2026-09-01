@@ -27,11 +27,12 @@ export default function FloatingPostButton() {
     }
   }, [scrollDirection, isAtTop]);
 
-  // Hide FAB on Chat, Profile, My Listings & Post pages per user directive
+  // Hide FAB on Chat, Profile, My Listings, Search & Post pages per user directive
   if (
     pathname.startsWith("/chat") ||
     pathname.startsWith("/profile") ||
     pathname.startsWith("/listings") ||
+    pathname.startsWith("/search") ||
     pathname.startsWith("/post")
   ) {
     return null;

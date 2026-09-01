@@ -417,20 +417,10 @@ export default function ListingCard({ listing, isPreview }: { listing: ListingIt
 
             {/* RIGHT COLUMN: Category Badge (left) + Price (right) + Title (Directly Underneath) */}
             <div className="flex-1 min-w-0 flex flex-col justify-start gap-0">
-              {/* Top Row: Category Name on Left + Bookmark Save Icon, Price on Right */}
+              {/* Top Row: Category Name on Left + Price on Right */}
               <div className="flex items-center justify-between gap-2 w-full mb-0.5">
                 <div className="flex items-center gap-2 min-w-0">
                   <CategoryIcon category={listing.category || listing.type} />
-                  {!isOwnPost && !isPreview && (
-                    <button
-                      type="button"
-                      onClick={handleSaveToggle}
-                      className="p-1 text-slate-400 hover:text-amber-500 transition-colors cursor-pointer"
-                      title={isSaved ? "Saved" : "Save post"}
-                    >
-                      <Bookmark className={`w-4 h-4 ${isSaved ? "fill-amber-500 text-amber-500" : "text-slate-400"}`} />
-                    </button>
-                  )}
                 </div>
                 <div className="font-heading font-black text-base sm:text-lg text-amber-700 tracking-tight shrink-0">
                   {formattedPrice}
