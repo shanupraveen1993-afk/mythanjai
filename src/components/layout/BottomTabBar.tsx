@@ -6,6 +6,8 @@ import { useRouter, usePathname } from "next/navigation";
 import { useLanguage } from "@/context/LanguageContext";
 import { useScrollDirection } from "@/hooks/use-scroll-direction";
 
+import { useAuth } from "@/hooks/use-auth";
+
 export type AppTab = "home" | "sell" | "need" | "services" | "shops" | "profile" | "chat" | "post" | "listings";
 
 interface BottomTabBarProps {
@@ -17,36 +19,48 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
   const router = useRouter();
   const pathname = usePathname() || "";
   const { t } = useLanguage();
+  const { user, profile } = useAuth();
   const { scrollDirection, isAtTop } = useScrollDirection();
   const [shouldHide, setShouldHide] = useState(false);
   const [isIndividualChatOpen, setIsIndividualChatOpen] = useState(false);
   const [hasUnreadMessages, setHasUnreadMessages] = useState(false);
 
-  // Dynamic real-time snapshot listener for unread chat messages for logged in user
+  // Dynamic real-time snapshot listener for unread chat messages & notifications for logged in user
   useEffect(() => {
     if (typeof window === "undefined") return;
-    let unsubscribe: any = null;
-    const cleanPhone = (localStorage.getItem("namma_thanjai_phone") || localStorage.getItem("my_thanjai_phone") || "").replace(/\D/g, "").slice(-10);
+    let unsubscribeNotif: any = null;
+    let unsubscribeChats: any = null;
+
+    const currentUid = user?.uid || "";
+    const cleanPhone = (profile?.phone || localStorage.getItem("namma_thanjai_phone") || localStorage.getItem("my_thanjai_phone") || "").replace(/\D/g, "").slice(-10);
 
     import("firebase/firestore").then(({ collection, onSnapshot }) => {
       import("@/lib/firebase").then(({ db }) => {
+        // 1. Listen to notifications
         const notifRef = collection(db, "notifications");
-        unsubscribe = onSnapshot(notifRef, (snapshot) => {
+        unsubscribeNotif = onSnapshot(notifRef, (snapshot) => {
           let foundUnread = false;
           snapshot.forEach((docSnap) => {
             const d = docSnap.data();
             const recipPhone = (d.recipientPhone || "").replace(/\D/g, "").slice(-10);
-            if (!d.read && (cleanPhone && recipPhone === cleanPhone || d.recipientId === "all")) {
-              foundUnread = true;
-            }
+            const isForUser = Boolean(
+              !d.read && (
+                (cleanPhone && recipPhone === cleanPhone) ||
+                (currentUid && d.recipientId === currentUid)
+              )
+            );
+            if (isForUser) foundUnread = true;
           });
           setHasUnreadMessages(foundUnread);
         });
       });
     });
 
-    return () => { if (unsubscribe) unsubscribe(); };
-  }, []);
+    return () => {
+      if (unsubscribeNotif) unsubscribeNotif();
+      if (unsubscribeChats) unsubscribeChats();
+    };
+  }, [user?.uid, profile?.phone]);
 
   // Detect if an individual chat conversation thread is currently active
   useEffect(() => {
