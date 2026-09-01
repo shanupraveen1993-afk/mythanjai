@@ -1177,6 +1177,13 @@ export default function ChatClientPage() {
 
                       <div className="flex items-center justify-end gap-1 mt-1 text-[10px] text-slate-400 font-semibold leading-none">
                         <span>{formatTime(msg.timestamp)}</span>
+                        {isMe && (
+                          (msg as any).read ? (
+                            <span title="Read"><CheckCheck className="w-3.5 h-3.5 text-blue-500 stroke-[2.5] ml-0.5 shrink-0" /></span>
+                          ) : (
+                            <span title="Delivered / Unread"><Check className="w-3.5 h-3.5 text-slate-400 opacity-60 stroke-[2.5] ml-0.5 shrink-0" /></span>
+                          )
+                        )}
                       </div>
 
                       {activeChatId === "nt_service_assistant" && msgIndex === messages.length - 1 && (

@@ -76,8 +76,7 @@ export default function TopHeader({
             const recipPhone = (d.recipientPhone || "").replace(/\D/g, "").slice(-10);
             const isRecip = (user?.uid && d.recipientId === user.uid) ||
               (memberId && d.recipientId === memberId) ||
-              (cleanPhone && recipPhone === cleanPhone) ||
-              d.recipientId === "all";
+              (cleanPhone && recipPhone === cleanPhone);
             if (isRecip && !d.read) {
               count++;
             }
@@ -138,7 +137,6 @@ export default function TopHeader({
   const handleDynamicPostClick = () => {
     if (!isAuthVerified) {
       if (typeof window !== "undefined") {
-        sessionStorage.setItem("namma_thanjai_target_post_route", postInfo.route);
         window.dispatchEvent(new Event("namma_thanjai_open_signin"));
       }
       return;
@@ -171,7 +169,7 @@ export default function TopHeader({
 
   return (
     <header
-      className={`relative w-full z-50 bg-[#1F244A]/[0.03] backdrop-blur-xl text-slate-900 flex-col justify-end border-b border-slate-200/90 shadow-2xs rounded-b-2xl sm:rounded-b-3xl md:rounded-b-none overflow-hidden ${
+      className={`relative w-full z-50 bg-[#1F244A]/[0.03] backdrop-blur-xl text-slate-900 flex-col justify-end border-b border-slate-200/90 shadow-2xs rounded-b-2xl sm:rounded-b-3xl md:rounded-b-none ${
         pathname?.startsWith("/post") ? "hidden" : pathname?.startsWith("/chat") ? "hidden md:flex" : "flex"
       }`}
       style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
