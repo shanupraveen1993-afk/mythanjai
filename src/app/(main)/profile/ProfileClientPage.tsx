@@ -568,14 +568,22 @@ function ProfileContent() {
 
             {/* Sign Out Button */}
             <button
+              type="button"
               onClick={async () => {
-                await signOutUser();
+                try {
+                  await signOutUser();
+                } catch (e) {}
                 if (typeof window !== "undefined") {
                   localStorage.removeItem("my_thanjai_verified");
                   localStorage.removeItem("my_thanjai_phone");
+                  localStorage.removeItem("namma_thanjai_phone");
+                  localStorage.removeItem("namma_thanjai_user_verified");
+                  localStorage.removeItem("namma_thanjai_verified");
+                  localStorage.removeItem("namma_thanjai_member_id");
                   localStorage.removeItem("namma_thanjai_guest_mode");
+                  sessionStorage.clear();
                 }
-                toast.success("Logged out successfully.");
+                toast.success("Logged out as guest.");
                 router.push("/");
               }}
               className="w-full py-2 px-3 text-rose-600 hover:text-rose-700 font-extrabold text-xs underline decoration-rose-600 decoration-2 underline-offset-4 transition-colors cursor-pointer text-center border-t border-slate-100 mt-1"

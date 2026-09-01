@@ -54,13 +54,8 @@ function SearchParamSync({
       } else {
         onAreaSync("All Areas");
       }
-
-      const authParam = searchParams.get("auth");
-      if (authParam === "popup" || authParam === "signin" || authParam === "register") {
-        onAuthSync(true);
-      }
     }
-  }, [pathname, onAreaSync, onAuthSync]);
+  }, [pathname, onAreaSync]);
 
   useEffect(() => {
     const handleCustomOpen = () => onAuthSync(true);
