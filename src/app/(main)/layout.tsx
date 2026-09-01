@@ -135,41 +135,6 @@ function MainLayoutContent({
     }
   }, [pathname, router]);
 
-  // 1-Minute Post-Login Curated Greeting & Feedback Notification Trigger
-  useEffect(() => {
-    if (!isAuthVerified || !profile?.phone || typeof window === "undefined") return;
-
-    const todayDate = new Date().toISOString().slice(0, 10);
-    const sentKey = `namma_thanjai_greeting_sent_${profile.phone}_${todayDate}`;
-
-    if (localStorage.getItem(sentKey)) return;
-
-    const timer = setTimeout(async () => {
-      try {
-        localStorage.setItem(sentKey, "true");
-        const { collection, addDoc, serverTimestamp } = await import("firebase/firestore");
-        const { db } = await import("@/lib/firebase");
-        const notifRef = collection(db, "notifications");
-        await addDoc(notifRef, {
-          recipientId: user?.uid || profile.phone,
-          recipientPhone: profile.phone,
-          senderId: "namma_thanjai_admin",
-          senderName: "Namma Thanjai Team",
-          type: "chat",
-          title: "👋 Vanakkam! Welcome to Namma Thanjai",
-          message: "Thank you for connecting with Thanjavur's local marketplace! We would love your feedback to help us grow together.",
-          actionUrl: "/chat",
-          read: false,
-          timestamp: serverTimestamp(),
-        });
-      } catch (e) {
-        console.warn("Post-login notification note:", e);
-      }
-    }, 60000); // 1 minute (60,000ms)
-
-    return () => clearTimeout(timer);
-  }, [isAuthVerified, profile?.phone, user?.uid]);
-
   // Native Android Hardware Back Button Exit Confirmation Handler (Exact 1-Time Confirmation)
   useEffect(() => {
     if (typeof window === "undefined") return;

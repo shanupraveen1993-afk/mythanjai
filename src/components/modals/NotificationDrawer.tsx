@@ -86,34 +86,6 @@ export default function NotificationDrawer() {
               phone: data.senderPhone,
             };
             list.push(item);
-
-            // Native Android System Status Bar Alert (Capacitor LocalNotifications)
-            if (!data.read && typeof window !== "undefined") {
-              const isNative = Boolean((window as any).Capacitor?.isNativePlatform() || window.navigator.userAgent.includes("Capacitor"));
-              if (isNative) {
-                const notifiedKey = `namma_thanjai_notified_${docSnap.id}`;
-                if (!sessionStorage.getItem(notifiedKey)) {
-                  sessionStorage.setItem(notifiedKey, "true");
-                  import("@capacitor/local-notifications")
-                    .then(({ LocalNotifications }) => {
-                      LocalNotifications.schedule({
-                        notifications: [
-                          {
-                            title: data.title || "Namma Thanjai Alert",
-                            body: data.message || "You have a new message",
-                            id: Math.floor(Math.random() * 1000000),
-                            channelId: "namma_thanjai_alerts",
-                            schedule: { at: new Date(Date.now() + 100) },
-                            sound: "default",
-                            extra: { actionUrl: data.actionUrl || "/chat" },
-                          },
-                        ],
-                      }).catch(() => {});
-                    })
-                    .catch(() => {});
-                }
-              }
-            }
           }
         });
 
