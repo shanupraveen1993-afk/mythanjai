@@ -578,7 +578,7 @@ function ProfileContent() {
                 toast.success("Logged out successfully.");
                 router.push("/");
               }}
-              className="w-full py-2 px-3 text-slate-400 hover:text-red-600 font-semibold text-xs transition-colors cursor-pointer text-center border-t border-slate-100 mt-1"
+              className="w-full py-2 px-3 text-rose-600 hover:text-rose-700 font-extrabold text-xs underline decoration-rose-600 decoration-2 underline-offset-4 transition-colors cursor-pointer text-center border-t border-slate-100 mt-1"
             >
               Sign Out Account
             </button>
@@ -640,7 +640,7 @@ function ProfileContent() {
 
 
 
-          {/* Relocated Sign Out at Bottom of Screen (unhighlighted text button) */}
+          {/* Relocated Sign Out at Bottom of Screen (red underline text button) */}
           <div className="w-full flex flex-col items-center justify-center gap-3 pt-6 pb-12">
             <button
               onClick={async () => {
@@ -653,7 +653,7 @@ function ProfileContent() {
                 toast.success("Logged out successfully.");
                 router.push("/");
               }}
-              className="text-slate-400 font-medium hover:text-red-500 text-xs transition-colors cursor-pointer"
+              className="text-rose-600 hover:text-rose-700 font-extrabold text-xs underline decoration-rose-600 decoration-2 underline-offset-4 transition-colors cursor-pointer"
             >
               Sign Out
             </button>

@@ -188,7 +188,7 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
                       : "w-6 h-6 text-slate-300 stroke-[2] fill-transparent hover:text-white"
                   }`}
                 />
-                {item.id === "chat" && hasUnreadMessages && (
+                {item.id === "chat" && hasUnreadMessages && !pathname.startsWith("/chat") && !pathname.startsWith("/profile") && !pathname.startsWith("/listings") && (
                   <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-rose-500 rounded-full border border-[#1E244A] animate-pulse" />
                 )}
               </div>

@@ -326,7 +326,7 @@ export default function TopHeader({
                   aria-label="View messages"
                 >
                   <MessageSquare className={`w-4 h-4 ${pathname === "/chat" ? "text-slate-950 stroke-[2.5]" : "text-slate-700 stroke-[2]"}`} />
-                  {unreadChatCount > 0 && (
+                  {unreadChatCount > 0 && !pathname.startsWith("/chat") && !pathname.startsWith("/profile") && !pathname.startsWith("/listings") && (
                     <span className="absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 bg-rose-500 text-white text-[10px] font-black rounded-full border border-white flex items-center justify-center animate-pulse">
                       {unreadChatCount}
                     </span>

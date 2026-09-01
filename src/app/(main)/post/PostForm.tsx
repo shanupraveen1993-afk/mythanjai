@@ -42,6 +42,7 @@ import {
   UserCheck,
   ShoppingBag,
   Search,
+  Sparkles,
 } from "lucide-react";
 import ListingCard from "@/components/cards/ListingCard";
 import ServiceCard from "@/components/cards/ServiceCard";
@@ -1225,12 +1226,21 @@ export default function PostForm({ segment }: PostFormProps) {
                   />
                 </div>
 
-                {/* 7. PHONE NUMBER VISIBILITY TOGGLE */}
-                <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 flex items-center justify-between gap-3">
-                  <span className="text-xs font-bold text-slate-800 flex items-center gap-2">
-                    <Phone className="w-4 h-4 text-amber-600" />
-                    <span>Show Phone Number on Card</span>
-                  </span>
+                {/* 7. PHONE NUMBER VISIBILITY TOGGLE (HIGHLIGHTED GOLDEN ACCENT CARD) */}
+                <div className="bg-amber-500/10 border-2 border-amber-400/80 rounded-2xl p-4 flex items-center justify-between gap-3 shadow-2xs">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-black shrink-0 shadow-2xs">
+                      <Phone className="w-4.5 h-4.5 text-slate-950 stroke-[2.5]" />
+                    </div>
+                    <div className="flex flex-col text-left">
+                      <span className="text-xs font-heading font-black text-slate-900">
+                        Display My Phone Number on Ad
+                      </span>
+                      <span className="text-[11px] font-medium text-slate-600">
+                        Allows interested buyers to call your store directly
+                      </span>
+                    </div>
+                  </div>
                   <label className="relative inline-flex items-center cursor-pointer shrink-0">
                     <input
                       type="checkbox"
@@ -1252,50 +1262,59 @@ export default function PostForm({ segment }: PostFormProps) {
                     required
                     maxLength={config.maxTitleChars}
                     placeholder={
-                      segment === "sell"
+                      segment === "service"
+                        ? "Your Name or Business Name * (e.g. Shanmugam Plumber)"
+                        : segment === "sell"
                         ? "Posting title or item name * (e.g. 2 BHK House, Hero Splendor)"
-                        : segment === "need"
-                        ? "Posting title or requirement name * (e.g. Need 2 BHK House)"
-                        : "Your Full Name * (e.g. Senthil Kumar)"
+                        : "Posting title or requirement name * (e.g. Need 2 BHK House)"
                     }
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal pr-12"
+                    className="w-full px-3.5 py-2.5 text-sm font-semibold border border-slate-300 focus:border-amber-500 bg-slate-50 focus:bg-white rounded-xl focus:outline-none text-slate-900 transition-all placeholder:text-slate-400 placeholder:font-normal pr-12"
                   />
-                  <span className="absolute right-0 top-3 text-[11px] font-medium text-slate-400">
+                  <span className="absolute right-3 top-3 text-[11px] font-medium text-slate-400">
                     {title.length}/{config.maxTitleChars}
                   </span>
                 </div>
 
                 {/* SERVICE AVAILABILITY */}
                 {segment === "service" && (
-                  <div className="flex flex-col gap-1.5">
-                    <div className="grid grid-cols-2 gap-2 bg-slate-100 p-1 rounded-xl border border-slate-200">
+                  <div className="w-full flex flex-col gap-1.5 bg-slate-50/90 border border-slate-200/80 p-3 rounded-xl">
+                    <label className="text-xs font-bold text-slate-700 flex items-center justify-between">
+                      <span className="flex items-center gap-1.5">
+                        <Clock className="w-4 h-4 text-amber-600" /> Working Hours / Availability (Optional)
+                      </span>
+                      <span className="text-[10px] text-slate-400 font-normal">Tap preset below</span>
+                    </label>
+
+                    <input
+                      type="text"
+                      placeholder="e.g. 9 AM - 8 PM (All Days) or 24/7 Available"
+                      value={validFrom}
+                      onChange={(e) => setValidFrom(e.target.value)}
+                      className="w-full px-3 py-2 text-xs font-bold border border-slate-300 rounded-lg bg-white focus:outline-none focus:border-amber-500 text-slate-900"
+                    />
+
+                    {/* Quick Preset Buttons */}
+                    <div className="flex flex-wrap gap-1.5 pt-1">
                       <button
                         type="button"
-                        onClick={() => {
-                          setAllWorkingDays("Yes");
-                          setSundayLeave("No");
-                        }}
-                        className={`py-2 px-3 rounded-lg text-xs font-bold transition-all cursor-pointer text-center ${
-                          allWorkingDays === "Yes"
-                            ? "bg-amber-400 text-slate-950 font-black border border-amber-500 shadow-xs"
-                            : "text-slate-600 hover:text-slate-900"
-                        }`}
+                        onClick={() => setValidFrom("24/7 Emergency Service")}
+                        className="text-[10px] font-extrabold bg-amber-500/10 text-amber-800 border border-amber-300 hover:bg-amber-500/20 px-2.5 py-1 rounded-md transition-colors cursor-pointer"
                       >
-                        Available 7 Days
+                        🚨 24/7 Emergency Service
                       </button>
                       <button
                         type="button"
-                        onClick={() => {
-                          setAllWorkingDays("No");
-                          setSundayLeave("Yes");
-                        }}
-                        className={`py-2 px-3 rounded-lg text-xs font-bold transition-all cursor-pointer text-center ${
-                          sundayLeave === "Yes"
-                            ? "bg-amber-400 text-slate-950 font-black border border-amber-500 shadow-xs"
-                            : "text-slate-600 hover:text-slate-900"
-                        }`}
+                        onClick={() => setValidFrom("9:00 AM - 8:00 PM (Mon-Sat)")}
+                        className="text-[10px] font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 px-2.5 py-1 rounded-md transition-colors cursor-pointer"
+                      >
+                        9 AM - 8 PM (Mon-Sat)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setValidFrom("Sunday Holiday")}
+                        className="text-[10px] font-bold bg-slate-100 text-slate-700 hover:bg-slate-200 px-2.5 py-1 rounded-md transition-colors cursor-pointer"
                       >
                         Sunday Holiday
                       </button>
@@ -1312,10 +1331,10 @@ export default function PostForm({ segment }: PostFormProps) {
                       placeholder="Price or Rate (e.g. 5000, 5000rs)"
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
-                      className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal pr-20"
+                      className="w-full px-3.5 py-2.5 text-sm font-semibold border border-slate-300 focus:border-amber-500 bg-slate-50 focus:bg-white rounded-xl focus:outline-none text-slate-900 transition-all placeholder:text-slate-400 placeholder:font-normal pr-20"
                     />
                     {formattedPriceBadge && (
-                      <span className="absolute right-0 top-2.5 text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
+                      <span className="absolute right-3 top-2.5 text-xs font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200">
                         {formattedPriceBadge}
                       </span>
                     )}
@@ -1331,7 +1350,7 @@ export default function PostForm({ segment }: PostFormProps) {
                       placeholder="Budget (e.g. 5000, 5000rs - Optional)"
                       value={price}
                       onChange={(e) => setPrice(e.target.value)}
-                      className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal"
+                      className="w-full px-3.5 py-2.5 text-sm font-semibold border border-slate-300 focus:border-amber-500 bg-slate-50 focus:bg-white rounded-xl focus:outline-none text-slate-900 transition-all placeholder:text-slate-400 placeholder:font-normal"
                     />
                   </div>
                 )}
@@ -1354,7 +1373,7 @@ export default function PostForm({ segment }: PostFormProps) {
                     placeholder="📞 Contact phone number * (e.g. 9994837342)"
                     value={phone}
                     onChange={(e) => { userEditedPhone.current = true; setPhone(e.target.value); }}
-                    className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal"
+                    className="w-full px-3.5 py-2.5 text-sm font-semibold border border-slate-300 focus:border-amber-500 bg-slate-50 focus:bg-white rounded-xl focus:outline-none text-slate-900 transition-all placeholder:text-slate-400 placeholder:font-normal"
                   />
                 </div>
 
@@ -1380,7 +1399,7 @@ export default function PostForm({ segment }: PostFormProps) {
                       }
                       value={description}
                       onChange={(e) => setDescription(e.target.value)}
-                      className="w-full px-3.5 py-2.5 text-sm font-medium border border-slate-200 rounded-xl bg-slate-50 focus:outline-none focus:border-amber-500 focus:bg-white text-slate-900 transition-all resize-y min-h-[100px] max-h-56 overflow-y-auto leading-relaxed"
+                      className="w-full px-3.5 py-2.5 text-sm font-medium border border-slate-300 rounded-xl bg-slate-50 focus:outline-none focus:border-amber-500 focus:bg-white text-slate-900 transition-all resize-y min-h-[100px] max-h-56 overflow-y-auto leading-relaxed"
                     />
                   </div>
 
@@ -1390,17 +1409,10 @@ export default function PostForm({ segment }: PostFormProps) {
                       type="button"
                       onClick={handleManualRefine}
                       disabled={isAiRewriting || !description.trim()}
-                      className="px-3.5 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-500 text-slate-950 font-heading font-black text-xs flex items-center gap-1.5 transition-all shadow-xs cursor-pointer border border-amber-300 active:scale-95 disabled:opacity-40"
-                      title="Click to auto-format and push refined description to Live Preview"
+                      className="bg-amber-500/10 hover:bg-amber-500/20 text-amber-800 text-xs font-black px-3.5 py-1.5 rounded-lg border border-amber-300 transition-all flex items-center gap-1.5 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shadow-2xs"
                     >
-                      {isAiRewriting ? (
-                        <>
-                          <Loader2 className="w-3.5 h-3.5 animate-spin text-slate-950" />
-                          <span>Refining...</span>
-                        </>
-                      ) : (
-                        <span>✨ AI Refine</span>
-                      )}
+                      {isAiRewriting ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Sparkles className="w-3.5 h-3.5 text-amber-600 stroke-[2.5]" />}
+                      <span>Format with AI</span>
                     </button>
                   </div>
                 </div>
@@ -1418,18 +1430,27 @@ export default function PostForm({ segment }: PostFormProps) {
                   placeholder="https://maps.google.com/..."
                   value={googleMapsUrl}
                   onChange={(e) => setGoogleMapsUrl(e.target.value)}
-                  className="w-full py-2.5 text-xs font-medium border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors"
+                  className="w-full px-3.5 py-2 text-xs font-medium border border-slate-300 rounded-xl bg-slate-50 focus:bg-white focus:border-amber-500 focus:outline-none text-slate-900 transition-all"
                 />
               </div>
             )}
 
-            {/* Sell/Need Phone Toggle */}
-            {(segment === "sell" || segment === "need") && (
-              <div className="bg-slate-50 border border-slate-200/80 rounded-xl p-3.5 flex items-center justify-between gap-3 mt-1">
-                <span className="text-xs font-bold text-slate-800 flex items-center gap-2">
-                  <Phone className="w-4 h-4 text-amber-600" />
-                  <span>Display your phone number publicly</span>
-                </span>
+            {/* Sell/Need/Service Phone Visibility Toggle (HIGHLIGHTED GOLDEN ACCENT CARD) */}
+            {(segment === "sell" || segment === "need" || segment === "service") && (
+              <div className="bg-amber-500/10 border-2 border-amber-400/80 rounded-2xl p-4 flex items-center justify-between gap-3 mt-1 shadow-2xs">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-amber-500 text-slate-950 flex items-center justify-center font-black shrink-0 shadow-2xs">
+                    <Phone className="w-4.5 h-4.5 text-slate-950 stroke-[2.5]" />
+                  </div>
+                  <div className="flex flex-col text-left">
+                    <span className="text-xs font-heading font-black text-slate-900">
+                      Display Phone Number on Ad
+                    </span>
+                    <span className="text-[11px] font-medium text-slate-600">
+                      Allows interested buyers to call you directly
+                    </span>
+                  </div>
+                </div>
                 <label className="relative inline-flex items-center cursor-pointer shrink-0">
                   <input
                     type="checkbox"
