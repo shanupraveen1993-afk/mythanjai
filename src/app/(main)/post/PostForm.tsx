@@ -463,13 +463,14 @@ export default function PostForm({ segment }: PostFormProps) {
         const res = await fetch(apiEndpoint, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ imageBase64: compressed.base64, mimeType: compressed.blob.type }) });
         const result = await res.json();
         if (result.success && result.data) {
-          const { shop_name, detected_area, phone: ocrPhone, phone2: ocrPhone2, address_text } = result.data;
+          const { shop_name, detected_area, phone: ocrPhone, phone2: ocrPhone2, address_text, description: ocrDesc } = result.data;
           if (shop_name) setTitle(shop_name);
           if (detected_area) setArea(detected_area);
           if (ocrPhone) setPhone(ocrPhone);
           if (ocrPhone2) setPhone2(ocrPhone2);
           if (address_text) setAddress(address_text);
-          toast.success("✓ Auto-filled Store Name, Address & Contact Phones from Visiting Card!");
+          if (ocrDesc) setDescription(ocrDesc);
+          toast.success("✓ Auto-filled Store Name, Address, Description & Phones from Visiting Card!");
         }
       } catch (err) {
         console.warn("OCR auto-extraction skipped:", err);
@@ -1138,18 +1139,18 @@ export default function PostForm({ segment }: PostFormProps) {
                   )}
                 </div>
 
-                {/* 2. SHOP NAME LINE */}
+                {/* 2. SHOP NAME LINE (AUTO-FILLED BY AI OCR OR MANUAL TYPING) */}
                 <div className="relative w-full">
                   <input
                     type="text"
                     required
                     maxLength={config.maxTitleChars}
-                    placeholder="Shop Name * (e.g. GLEN Exclusive Gallery / Sri Kumaran Silks)"
+                    placeholder="Shop Name * (e.g. Sri Kumaran Silks / GLEN Exclusive Gallery)"
                     value={title}
                     onChange={(e) => setTitle(e.target.value)}
-                    className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal pr-12"
+                    className="w-full px-3.5 py-2.5 text-sm font-semibold border border-slate-300 focus:border-amber-500 bg-slate-50 focus:bg-white rounded-xl focus:outline-none text-slate-900 transition-all placeholder:text-slate-400 placeholder:font-normal pr-12"
                   />
-                  <span className="absolute right-0 top-3 text-[11px] font-medium text-slate-400">
+                  <span className="absolute right-3 top-3 text-[11px] font-medium text-slate-400">
                     {title.length}/{config.maxTitleChars}
                   </span>
                 </div>
@@ -1159,50 +1160,54 @@ export default function PostForm({ segment }: PostFormProps) {
                   <input
                     type="text"
                     required
-                    placeholder="📍 Shop Location / Full Address * (e.g. Medical College Road, Thanjavur)"
+                    placeholder="📍 Shop Location / Full Address * (e.g. South Main St, Thanjavur)"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
-                    className="w-full py-2.5 text-sm font-semibold border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors placeholder:text-slate-400 placeholder:font-normal"
+                    className="w-full px-3.5 py-2.5 text-sm font-semibold border border-slate-300 focus:border-amber-500 bg-slate-50 focus:bg-white rounded-xl focus:outline-none text-slate-900 transition-all placeholder:text-slate-400 placeholder:font-normal"
                   />
                 </div>
 
-                {/* 3. OFFER DESCRIPTION LINE */}
+                {/* 4. BUSINESS DESCRIPTION / PRODUCTS & SERVICES (AUTO-FILLED BY AI OCR) */}
                 <div className="relative w-full">
                   <textarea
                     rows={3}
                     maxLength={config.maxDescChars}
-                    placeholder="Offer Description (Optional — Describe discount, terms, packages, or items)"
+                    placeholder="Business Description / Products & Services Offered (Auto-filled from Visiting Card or enter manually)"
                     value={description}
                     onChange={(e) => setDescription(e.target.value)}
-                    className="w-full py-2.5 text-sm font-medium border-b-2 border-slate-200 focus:border-amber-500 bg-transparent rounded-none focus:outline-none text-slate-900 transition-colors leading-relaxed placeholder:text-slate-400"
+                    className="w-full px-3.5 py-2.5 text-sm font-medium border border-slate-300 rounded-xl bg-slate-50 focus:outline-none focus:border-amber-500 focus:bg-white text-slate-900 transition-all resize-y min-h-[90px] leading-relaxed placeholder:text-slate-400"
                   />
-                  <span className="absolute right-0 bottom-3 text-[11px] font-medium text-slate-400">
+                  <span className="absolute right-3 bottom-3 text-[11px] font-medium text-slate-400">
                     {description.length}/{config.maxDescChars}
                   </span>
                 </div>
 
-                {/* 4. OFFER VALIDITY DATES */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 bg-slate-50 border border-slate-200/80 p-3.5 rounded-xl">
-                  <div className="flex flex-col gap-1">
-                    <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-amber-600" /> Valid From Date (Optional)
-                    </label>
-                    <input
-                      type="date"
-                      value={validFrom}
-                      onChange={(e) => setValidFrom(e.target.value)}
-                      className="w-full py-1.5 text-xs font-bold border-b border-slate-300 bg-transparent focus:outline-none focus:border-amber-500 text-slate-900"
-                    />
+                {/* 5. SEPARATE OPTIONAL OFFER / DISCOUNT HEADING */}
+                <div className="bg-amber-50/80 border border-amber-300/80 rounded-2xl p-4 flex flex-col gap-3">
+                  <div className="flex items-center gap-2">
+                    <Tag className="w-4.5 h-4.5 text-amber-700 stroke-[2.5]" />
+                    <span className="font-heading font-black text-xs text-amber-950 uppercase tracking-wide">
+                      🎁 Add Special Offer / Festival Deal (Optional)
+                    </span>
                   </div>
+                  <input
+                    type="text"
+                    placeholder="Offer Heading (e.g. 15% Flat Discount on Wedding Collections / Buy 1 Get 1 Free)"
+                    value={previewDescription}
+                    onChange={(e) => setPreviewDescription(e.target.value)}
+                    className="w-full px-3.5 py-2.5 text-sm font-bold border border-amber-300 rounded-xl bg-white focus:outline-none focus:border-amber-500 text-slate-900 placeholder:text-slate-400 placeholder:font-normal"
+                  />
+
+                  {/* OPTIONAL VALIDITY UNTIL DATE */}
                   <div className="flex flex-col gap-1">
                     <label className="text-xs font-bold text-slate-700 flex items-center gap-1.5">
-                      <Calendar className="w-3.5 h-3.5 text-amber-600" /> Valid To Date (Optional)
+                      <Calendar className="w-3.5 h-3.5 text-amber-600" /> Valid Until Date (Optional)
                     </label>
                     <input
                       type="date"
                       value={validTo}
                       onChange={(e) => setValidTo(e.target.value)}
-                      className="w-full py-1.5 text-xs font-bold border-b border-slate-300 bg-transparent focus:outline-none focus:border-amber-500 text-slate-900"
+                      className="w-full px-3 py-2 text-xs font-bold border border-slate-300 rounded-lg bg-white focus:outline-none focus:border-amber-500 text-slate-900"
                     />
                   </div>
                 </div>

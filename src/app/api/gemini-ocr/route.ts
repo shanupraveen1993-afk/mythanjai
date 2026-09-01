@@ -29,6 +29,7 @@ export async function POST(request: NextRequest) {
         "phone": "Extracted primary 10-digit phone number without spaces or country code",
         "phone2": "Extracted secondary 10-digit phone number if present on visiting card (or empty string)",
         "address_text": "Extracted full street address line in Tamil or English",
+        "description": "Extracted business description, products, or services listed on the visiting card",
         "detected_area": "Must match the closest Tanjore area from this list: ${TANJORE_LOCALITIES.join(", ")}"
       }
 
