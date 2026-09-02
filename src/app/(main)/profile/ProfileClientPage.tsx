@@ -507,7 +507,9 @@ function ProfileContent() {
                   {/* Clean Metadata Permanent NT ID */}
                   <div className="flex items-center gap-2 text-xs font-mono text-slate-600">
                     <span className="font-medium text-[11px] text-slate-400 uppercase tracking-wide font-sans">Namma Thanjai ID:</span>
-                    <span className="font-bold text-slate-800">{(profile as any)?.nt_id || profile?.memberId || "Loading..."}</span>
+                    <span className="font-bold text-slate-800">
+                      {(profile as any)?.nt_id || profile?.memberId || (profile?.phone ? `NT-${profile.phone.replace(/\D/g, "").slice(-10)}` : typeof window !== "undefined" ? (localStorage.getItem("namma_thanjai_member_id") || "NT-MEMBER") : "NT-MEMBER")}
+                    </span>
                     <button
                       type="button"
                       onClick={() => {
