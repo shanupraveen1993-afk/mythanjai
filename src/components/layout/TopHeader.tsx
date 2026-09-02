@@ -76,7 +76,7 @@ export default function TopHeader({
             let count = 0;
             snapshot.forEach((docSnap) => {
               const d = docSnap.data();
-              if (!d.read) {
+              if (d.type === "CHAT" && !d.read) {
                 count++;
               }
             });

@@ -55,7 +55,7 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
             let foundUnread = false;
             snapshot.forEach((docSnap) => {
               const d = docSnap.data();
-              if (!d.read) foundUnread = true;
+              if (d.type === "CHAT" && !d.read) foundUnread = true;
             });
             setHasUnreadMessages(foundUnread);
           },

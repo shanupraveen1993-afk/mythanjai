@@ -5,18 +5,16 @@ import { randomUUID } from "crypto";
 /**
  * Claim lease duration: 5 minutes.
  * A claim older than this is considered stale (server likely crashed) and is reclaimable.
- * This must always be strictly greater than FCM_TIMEOUT_MS to guarantee that no active
- * FCM attempt can ever outlive its own claim lease.
- * Invariant: FCM_TIMEOUT_MS (90 s) << CLAIM_LEASE_MS (300 s)
+ * This duration is chosen to be comfortably larger than any practical FCM send operation.
  */
 const CLAIM_LEASE_MS = 5 * 60 * 1000;
 
 /**
- * Maximum time allowed for a single FCM sendEachForMulticast call: 90 seconds.
- * The FCM operation is wrapped in a Promise.race() with this timeout so that
- * the claim lease (5 min) always outlives any in-flight FCM request.
- * If the timeout fires, the FCM attempt is considered failed and our claims are released.
- * Invariant: FCM_TIMEOUT_MS < CLAIM_LEASE_MS
+ * Worker-side FCM timeout: 90 seconds.
+ * Note: Promise.race() stops the worker from waiting after 90 seconds; it does NOT cancel
+ * the underlying HTTP connection to Google FCM servers. The delivery contract remains
+ * AT-LEAST-ONCE. Stale claim recovery and cycle ID verification protect Firestore state
+ * against late-completing FCM responses.
  */
 const FCM_TIMEOUT_MS = 90 * 1000;
 
@@ -48,34 +46,31 @@ interface ServerNotificationParams {
 export type PushStatus = "NO_DEVICES" | "PENDING" | "DELIVERED" | "FAILED";
 
 /**
- * Authoritative Server Notification Engine — v46
+ * Authoritative Server Notification Engine — v46.1 Corrected
  * Powered by Firebase Admin SDK.
  *
  * Delivery contract:
  *   AT-LEAST-ONCE delivery with duplicate prevention during normal concurrent execution.
  *
- *   This engine guarantees that:
- *   - Under normal operation (no mid-flight crashes), each device token receives the FCM
- *     push exactly once per notification.
- *   - Two concurrent /api/chat/notify calls for the same conversation will not both send
- *     FCM to the same device token.
- *   - Stale claims (from crashed server instances) are automatically recovered after the
- *     claim lease expires (CLAIM_LEASE_MS = 2 minutes).
- *   - Tokens confirmed as successfully delivered are recorded in `deliveredTokens` and
- *     are never retargeted by future retries.
+ * Reliability guarantees:
+ * 1. Notification Versioning / Cycle ID Protection (notificationVersion: string).
+ *    - Every read -> unread reset cycle generates a new notificationVersion (UUID).
+ *    - FCM attempts record the version at claim time.
+ *    - Post-FCM state updates verify that the document's notificationVersion is still equal
+ *      to the claimed version. If the user opened the chat or a new cycle started, late FCM
+ *      completions discard their state update to prevent corrupting the new cycle.
  *
- *   Unavoidable edge case (at-least-once):
- *   - If the server delivers FCM successfully but crashes before writing `deliveredTokens`
- *     back to Firestore, a later retry will resend to that token. This is an inherent
- *     tradeoff of at-least-once delivery across two independent systems (FCM + Firestore)
- *     without a distributed lock. Exactly-once FCM delivery is not achievable here.
+ * 2. Worker-side Timeout & At-Least-Once Semantics.
+ *    - Promise.race() applies a 90s worker-side timeout boundary.
+ *    - The architecture explicitly acknowledges at-least-once delivery; stale claim recovery
+ *      (5-minute TTL) allows safe retries while cycle IDs prevent cross-cycle corruption.
  *
- * Document fields used by this engine:
- *   claims:           TokenClaim[]  — active per-token claim leases (2-min TTL)
- *   deliveredTokens:  string[]      — tokens that confirmed FCM receipt
- *   pushStatus:       PushStatus    — overall delivery state
- *   processedMessageIds: string[]   — messageIds that have already been processed (chat only)
- *   messageCount:     number        — grouped unread count (chat only)
+ * 3. Atomic Per-Token Leased Claiming (claims: TokenClaim[]).
+ *    - Device tokens are claimed inside a transaction before FCM is sent.
+ *    - Concurrent requests targeting the same notification document serialize on the transaction.
+ *
+ * 4. Message-Idempotent Chat Notifications (processedMessageIds: string[]).
+ *    - Duplicate calls for the same messageId do NOT increment messageCount twice.
  */
 export async function dispatchServerNotification({
   recipientUid,
@@ -103,11 +98,13 @@ export async function dispatchServerNotification({
       const targetDocRef = adminDb.collection("notifications").doc(deterministicNotifId);
 
       // Phase A: create or update the notification document
-      // (message content grouping + messageId deduplication)
+      // (message content grouping + messageId deduplication + cycle versioning)
       await adminDb.runTransaction(async (tx) => {
         const notifDoc = await tx.get(targetDocRef);
 
         if (!notifDoc.exists || notifDoc.data()?.read === true) {
+          // Fresh notification OR new unread cycle after user opened chat
+          const newCycleVersion = randomUUID();
           const updatedMessage = senderName ? `${senderName}: "${message}"` : `"${message}"`;
           tx.set(
             targetDocRef,
@@ -127,6 +124,7 @@ export async function dispatchServerNotification({
               pushStatus: "PENDING",
               deliveredTokens: [],
               claims: [],
+              notificationVersion: newCycleVersion,
               processedMessageIds: messageId ? [messageId] : [],
               createdAt: new Date(),
               updatedAt: new Date(),
@@ -134,6 +132,7 @@ export async function dispatchServerNotification({
             { merge: true }
           );
         } else {
+          // Ongoing unread cycle
           const currentData = notifDoc.data() || {};
           const currentProcessedMsgIds: string[] = currentData.processedMessageIds || [];
           const alreadyProcessed = messageId ? currentProcessedMsgIds.includes(messageId) : false;
@@ -159,7 +158,7 @@ export async function dispatchServerNotification({
         }
       });
 
-      // Phase B: FCM delivery with leased per-token claiming
+      // Phase B: FCM delivery with leased per-token claiming & cycle version verification
       const pushResult = await executeServerPushWithClaim({
         recipientUid,
         notifDocRef: targetDocRef,
@@ -187,6 +186,7 @@ export async function dispatchServerNotification({
     await adminDb.runTransaction(async (tx) => {
       const docSnap = await tx.get(systemNotifRef);
       if (!docSnap.exists) {
+        const newCycleVersion = randomUUID();
         tx.set(systemNotifRef, {
           recipientUid,
           recipientPhone: recipientPhone || "",
@@ -203,6 +203,7 @@ export async function dispatchServerNotification({
           pushStatus: "PENDING",
           deliveredTokens: [],
           claims: [],
+          notificationVersion: newCycleVersion,
           createdAt: new Date(),
           updatedAt: new Date(),
         });
@@ -240,7 +241,6 @@ export async function dispatchServerNotification({
 
 /**
  * Resolves a raw Firestore Timestamp or JavaScript Date to epoch milliseconds.
- * Firestore Admin SDK deserializes Timestamps as objects with `.toMillis()`.
  */
 function toMs(value: unknown): number {
   if (!value) return 0;
@@ -251,24 +251,7 @@ function toMs(value: unknown): number {
 }
 
 /**
- * FCM delivery with leased per-token claiming.
- *
- * Concurrency & recovery contract:
- * - Each attempt generates a unique claimId (UUID).
- * - Before claiming, stale claims (> CLAIM_LEASE_MS old) are purged from the document.
- *   This recovers tokens stuck by previously crashed server instances.
- * - Only tokens that are not delivered and not actively claimed are targeted.
- * - After FCM, our claims are released by claimId. Successful tokens are added to
- *   deliveredTokens. Failed tokens remain unclaimed and retryable.
- *
- * NO_DEVICES contract:
- * - Zero registered device tokens → pushStatus = "NO_DEVICES", success: true.
- *   In-app notification document was created and is visible in the drawer.
- *
- * At-least-once edge case:
- * - If the server delivers FCM successfully but crashes before writing deliveredTokens,
- *   a later retry will resend to that token. This is an inherent tradeoff and is
- *   accepted as part of the at-least-once delivery contract.
+ * FCM delivery with leased per-token claiming & cycle version verification.
  */
 async function executeServerPushWithClaim({
   recipientUid,
@@ -287,7 +270,6 @@ async function executeServerPushWithClaim({
   chatId: string;
   type: string;
 }): Promise<{ success: boolean; error?: string }> {
-
   // ── Step 1: Query device tokens BEFORE the claim transaction ────────────
   const devicesSnap = await adminDb
     .collection("users")
@@ -307,40 +289,36 @@ async function executeServerPushWithClaim({
   });
 
   // NO_DEVICES: recipient has zero registered push targets.
-  // In-app notification is still visible in the drawer.
   if (allTokens.length === 0) {
     await notifDocRef.update({ pushStatus: "NO_DEVICES", updatedAt: new Date() });
     return { success: true };
   }
 
-  // ── Step 2: Atomic leased claim transaction ──────────────────────────────
-  // Firestore serializes transactions on the same document. Two concurrent calls
-  // will be serialized; the second will see the first's active claims and skip.
-  // Expired claims (server crash recovery) are purged before new claims are issued.
+  // ── Step 2: Atomic leased claim transaction + read notificationVersion ───────
   const claimId = randomUUID();
   const now = Date.now();
   let tokensToClaim: string[] = [];
+  let claimedVersion: string | null = null;
 
   await adminDb.runTransaction(async (tx) => {
     const doc = await tx.get(notifDocRef);
     const data = doc.data() || {};
+    claimedVersion = data.notificationVersion || null;
+
     const deliveredTokens: string[] = data.deliveredTokens || [];
     const existingClaims: TokenClaim[] = data.claims || [];
 
-    // Partition existing claims: active (within lease) vs stale (reclaimable)
     const activeClaims = existingClaims.filter(
       (c) => now - toMs(c.claimedAt) < CLAIM_LEASE_MS
     );
     const activelyClaimedTokens = new Set(activeClaims.map((c) => c.token));
 
-    // Tokens eligible for this attempt: not delivered and not currently active-claimed
     tokensToClaim = allTokens.filter(
       (t) => !deliveredTokens.includes(t) && !activelyClaimedTokens.has(t)
     );
 
-    if (tokensToClaim.length === 0) return; // Nothing to do
+    if (tokensToClaim.length === 0) return;
 
-    // Create our claim records (stale claims are implicitly purged by only writing activeClaims)
     const newClaims: TokenClaim[] = tokensToClaim.map((token) => ({
       token,
       claimedAt: new Date(),
@@ -348,26 +326,22 @@ async function executeServerPushWithClaim({
     }));
 
     tx.update(notifDocRef, {
-      claims: [...activeClaims, ...newClaims], // purge stale + add ours
+      claims: [...activeClaims, ...newClaims],
       updatedAt: new Date(),
     });
   });
 
   if (tokensToClaim.length === 0) {
-    // All tokens either delivered or actively claimed by a live concurrent attempt.
     return { success: true };
   }
 
-  // ── Step 3: Send FCM to our claimed tokens ────────────────────────────────
+  // ── Step 3: Send FCM to our claimed tokens with worker-side 90s timeout ───
   let successTokens: string[] = [];
   let failedTokenCount = 0;
 
   try {
-    // Wrap FCM call in a timeout to guarantee it completes within FCM_TIMEOUT_MS (90 s).
-    // This ensures the claim lease (5 min) always outlives the FCM operation.
-    // If the timeout fires, the error is caught below and our claims are released.
     const fcmTimeoutPromise = new Promise<never>((_, reject) =>
-      setTimeout(() => reject(new Error(`FCM sendEachForMulticast timed out after ${FCM_TIMEOUT_MS / 1000}s`)), FCM_TIMEOUT_MS)
+      setTimeout(() => reject(new Error(`FCM worker timeout after ${FCM_TIMEOUT_MS / 1000}s`)), FCM_TIMEOUT_MS)
     );
 
     const response = await Promise.race([
@@ -406,7 +380,6 @@ async function executeServerPushWithClaim({
       }
     });
 
-    // Remove invalid/unregistered device tokens from Firestore
     const cleanupPromises: Promise<any>[] = [];
     response.responses.forEach((resp, idx) => {
       if (!resp.success && resp.error) {
@@ -433,12 +406,16 @@ async function executeServerPushWithClaim({
     });
     await Promise.all(cleanupPromises);
   } catch (fcmErr: any) {
-    // SDK/network-level error: release only our specific claims (by claimId)
-    // so the next retry can reclaim and retry these tokens.
-    console.error("executeServerPushWithClaim FCM SDK error:", fcmErr);
+    console.error("executeServerPushWithClaim FCM error:", fcmErr);
     await adminDb.runTransaction(async (tx) => {
       const doc = await tx.get(notifDocRef);
       const data = doc.data() || {};
+
+      // Cycle protection: check if notificationVersion changed while FCM was in flight
+      if (claimedVersion && data.notificationVersion && data.notificationVersion !== claimedVersion) {
+        return; // Discard state update — belongs to a stale cycle
+      }
+
       const currentClaims: TokenClaim[] = data.claims || [];
       tx.update(notifDocRef, {
         claims: currentClaims.filter((c) => c.claimId !== claimId),
@@ -449,22 +426,20 @@ async function executeServerPushWithClaim({
     return { success: false, error: fcmErr?.message || "FCM SDK error" };
   }
 
-  // ── Step 4: Atomic post-FCM state write ──────────────────────────────────
-  // Release our specific claims (by claimId) and record successful deliveries.
-  //
-  // At-least-once edge case: if the server crashes between Step 3 (FCM send) and
-  // this write, a later retry will re-send to successTokens. This is accepted as
-  // part of the at-least-once delivery contract. deliveredTokens prevents resends
-  // under normal conditions (no mid-flight crash).
+  // ── Step 4: Atomic post-FCM state write with cycle version verification ──
   await adminDb.runTransaction(async (tx) => {
     const doc = await tx.get(notifDocRef);
     const data = doc.data() || {};
+
+    // Cycle protection: check if notificationVersion changed while FCM was in flight
+    if (claimedVersion && data.notificationVersion && data.notificationVersion !== claimedVersion) {
+      return; // Discard state update — user opened chat or new cycle started
+    }
+
     const currentClaims: TokenClaim[] = data.claims || [];
     const currentDelivered: string[] = data.deliveredTokens || [];
 
-    // Release only our claimId, leave other concurrent attempts' claims intact
     const newClaims = currentClaims.filter((c) => c.claimId !== claimId);
-    // Record tokens that FCM confirmed as delivered
     const newDelivered = Array.from(new Set([...currentDelivered, ...successTokens]));
     const newStatus: PushStatus = failedTokenCount > 0 ? "FAILED" : "DELIVERED";
 
