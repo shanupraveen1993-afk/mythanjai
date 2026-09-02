@@ -198,16 +198,6 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
           <div className="flex items-center justify-between gap-2 w-full">
             <div className="flex items-center gap-2 min-w-0">
               <CategoryIcon category={post.skill_category} />
-              {!isOwnPost && !isPreview && (
-                <button
-                  type="button"
-                  onClick={handleToggleSave}
-                  className="p-1 text-slate-400 hover:text-amber-500 transition-colors cursor-pointer"
-                  title={saved ? "Saved" : "Save provider"}
-                >
-                  <Bookmark className={`w-4 h-4 ${saved ? "fill-amber-500 text-amber-500" : "text-slate-400"}`} />
-                </button>
-              )}
             </div>
             {hasRealReviews && (
               <span className="flex items-center gap-1 bg-amber-50 text-amber-700 border border-amber-200 font-extrabold text-[10px] px-2 py-0.5 rounded-md shrink-0">

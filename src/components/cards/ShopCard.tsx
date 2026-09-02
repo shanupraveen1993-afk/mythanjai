@@ -213,13 +213,7 @@ export default function ShopCard({ post, isPreview = false, index = 0, isGuest =
             <Tag className="w-2.5 h-2.5 fill-current" />
             <span>Featured Store</span>
           </div>
-        ) : (
-          <div className="absolute top-2.5 left-2.5 z-20">
-            <span className="bg-slate-950/40 backdrop-blur-md text-white font-semibold text-[11px] px-2.5 py-1 rounded-md border border-white/20 shadow-2xs">
-              {post.category || "Store Offer"}
-            </span>
-          </div>
-        )}
+        ) : null}
 
         {/* Media: visiting card photo */}
         <div className="relative w-full bg-slate-900 overflow-hidden" style={{ height: 200 }}>
