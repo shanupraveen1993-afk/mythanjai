@@ -1,4 +1,4 @@
-import { collection, query, where, getDocs, addDoc, updateDoc, doc, serverTimestamp, runTransaction } from "firebase/firestore";
+import { collection, doc, addDoc, serverTimestamp, runTransaction } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { NotificationType } from "@/types/notification";
 
@@ -16,9 +16,9 @@ interface DispatchNotificationParams {
 }
 
 /**
- * Centralized Production Notification Dispatch Service
- * Handles atomic chat grouping transactions, updates unread message counts,
- * throttles push spam (FCM push sent ONLY on 1st unread message), and dispatches system notifications.
+ * Production Centralized Notification Engine
+ * Uses deterministic document IDs (${recipientUid}_${conversationId}) to guarantee 100% atomic grouping
+ * transactions, update unread message counts, and throttle FCM push alerts to the 1st unread message.
  */
 export async function dispatchNotification({
   recipientUid,
@@ -37,28 +37,45 @@ export async function dispatchNotification({
   try {
     const finalActionUrl = actionUrl || (conversationId ? `/chat?chatId=${conversationId}` : "/chat");
 
-    // For CHAT notifications, atomically check and group existing unread notification
+    // For CHAT notifications, use a deterministic document ID for atomic grouping
     if (type === "CHAT" && conversationId) {
-      const notifRef = collection(db, "notifications");
-      const q = query(
-        notifRef,
-        where("recipientUid", "==", recipientUid),
-        where("conversationId", "==", conversationId),
-        where("read", "==", false)
-      );
+      const deterministicNotifId = `${recipientUid}_${conversationId}`;
+      const targetDocRef = doc(db, "notifications", deterministicNotifId);
 
-      const querySnapshot = await getDocs(q);
+      let isFirstUnread = false;
 
-      if (!querySnapshot.empty) {
-        const existingDoc = querySnapshot.docs[0];
-        const targetDocRef = doc(db, "notifications", existingDoc.id);
+      // Atomic Transaction on Deterministic Document ID
+      await runTransaction(db, async (transaction) => {
+        const notifDoc = await transaction.get(targetDocRef);
 
-        // Atomic Transaction for Incrementing Message Count
-        await runTransaction(db, async (transaction) => {
-          const sfDoc = await transaction.get(targetDocRef);
-          if (!sfDoc.exists()) return;
+        if (!notifDoc.exists() || notifDoc.data().read === true) {
+          // 1st Unread Message: Create/reset notification document
+          isFirstUnread = true;
+          const updatedMessage = senderName ? `${senderName}: "${message}"` : `"${message}"`;
 
-          const currentCount = sfDoc.data().messageCount || 1;
+          transaction.set(
+            targetDocRef,
+            {
+              recipientUid,
+              recipientPhone: recipientPhone || "",
+              type: "CHAT",
+              title: title || "New Message",
+              message: updatedMessage,
+              senderUid: senderUid || "",
+              senderName: senderName || "",
+              senderPhone: senderPhone || "",
+              conversationId,
+              messageCount: 1,
+              actionUrl: finalActionUrl,
+              read: false,
+              createdAt: serverTimestamp(),
+              updatedAt: serverTimestamp(),
+            },
+            { merge: true }
+          );
+        } else {
+          // Subsequent Unread Messages: Increment messageCount atomically
+          const currentCount = notifDoc.data().messageCount || 1;
           const newCount = currentCount + 1;
           const updatedMessage = senderName
             ? `${senderName} (${newCount} new messages): "${message}"`
@@ -69,14 +86,27 @@ export async function dispatchNotification({
             messageCount: newCount,
             updatedAt: serverTimestamp(),
           });
-        });
+        }
+      });
 
-        // Push Spam Throttling: Do NOT trigger another push alert for subsequent unread messages in the same thread
-        return;
+      // Push Spam Throttling: Trigger FCM push ONLY on 1st unread message
+      if (isFirstUnread) {
+        triggerPushApi({
+          callerUid: senderUid,
+          recipientUid,
+          recipientPhone,
+          type: "CHAT",
+          title,
+          message,
+          actionUrl: finalActionUrl,
+          chatId: conversationId,
+          conversationId,
+        });
       }
+      return;
     }
 
-    // Create new notification document
+    // Non-chat notifications (System events / Activity updates)
     await addDoc(collection(db, "notifications"), {
       recipientUid,
       recipientPhone: recipientPhone || "",
@@ -94,8 +124,17 @@ export async function dispatchNotification({
       updatedAt: serverTimestamp(),
     });
 
-    // Trigger Push API (First unread message / non-chat event)
-    triggerPushApi({ recipientUid, recipientPhone, type, title, message, actionUrl: finalActionUrl, chatId: conversationId });
+    triggerPushApi({
+      callerUid: senderUid,
+      recipientUid,
+      recipientPhone,
+      type,
+      title,
+      message,
+      actionUrl: finalActionUrl,
+      chatId: conversationId,
+      conversationId,
+    });
   } catch (error) {
     console.warn("Centralized dispatchNotification error:", error);
   }
