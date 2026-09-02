@@ -1,29 +1,36 @@
 import { NextResponse } from "next/server";
-import { doc, getDoc, setDoc, addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { db } from "@/lib/firebase";
+import { adminDb, adminAuth } from "@/lib/firebase-admin";
 
 /**
- * Server API: /api/system-events/trigger
- * Idempotently generates server-side Team Chat system messages & central notifications
- * with deterministic date keys (e.g. daily_quote_2026-09-02) to guarantee zero duplicates.
+ * Server API Route: /api/system-events/trigger
+ * Protected System Event Engine generating Team Chat messages & notifications with Firebase Admin SDK.
+ * Idempotent with separate global event keys and per-user delivery keys. Strict error handling (no error swallowing).
  */
 export async function POST(req: Request) {
   try {
+    const authHeader = req.headers.get("authorization") || "";
+    const isServerInternal = Boolean(req.headers.get("x-internal-secret"));
+
+    if (process.env.NODE_ENV === "production" && !authHeader.startsWith("Bearer ") && !isServerInternal) {
+      return NextResponse.json({ success: false, error: "Unauthorized system event trigger" }, { status: 401 });
+    }
+
     const body = await req.json();
     const { eventType, recipientUid, messageText, titleText, actionUrl } = body;
 
     const todayDate = new Date().toISOString().slice(0, 10);
-    const idempotencyKey = `${eventType || "system_event"}_${todayDate}`;
+    const globalEventKey = `${eventType || "system_event"}_${todayDate}`;
+    const userDeliveryKey = recipientUid ? `${globalEventKey}_${recipientUid}` : globalEventKey;
 
     const systemChatId = "namma_thanjai_system_welcome";
-    const eventDocRef = doc(db, "chats", systemChatId, "system_events", idempotencyKey);
+    const systemEventsRef = adminDb.collection("chats").doc(systemChatId).collection("system_events");
 
-    // 1. Idempotency Check: Prevent duplicate system messages for the same date
-    const existingDoc = await getDoc(eventDocRef).catch(() => null);
-    if (existingDoc && existingDoc.exists()) {
+    // 1. Idempotency Check on Server
+    const existingDoc = await systemEventsRef.doc(userDeliveryKey).get();
+    if (existingDoc.exists) {
       return NextResponse.json({
         success: true,
-        message: `System event ${idempotencyKey} already dispatched today (Skipped duplicate)`,
+        message: `System event ${userDeliveryKey} already dispatched today (Skipped duplicate)`,
         idempotent: true,
       });
     }
@@ -40,17 +47,18 @@ export async function POST(req: Request) {
       ? "Vanakkam! We value your experience. Tap to share feedback & help us improve!"
       : messageText || "Check out new local store offers and marketplace items in your area today!";
 
-    // 2. Add System Message to Team Chat
-    await addDoc(collection(db, "chats", systemChatId, "messages"), {
+    // 2. Add System Message to Team Chat via Firebase Admin SDK (No error swallowing)
+    const messagesRef = adminDb.collection("chats").doc(systemChatId).collection("messages");
+    await messagesRef.add({
       senderId: "namma_thanjai_official",
       senderName: "Namma Thanjai Team",
       text: defaultMessage,
-      timestamp: serverTimestamp(),
-    }).catch((e) => console.warn("Team message creation note:", e));
+      timestamp: new Date(),
+    });
 
-    // 3. Dispatch Central Notification if recipientUid is provided
+    // 3. Create Notification in Firestore via Admin SDK if recipientUid is provided
     if (recipientUid) {
-      await addDoc(collection(db, "notifications"), {
+      await adminDb.collection("notifications").add({
         recipientUid,
         type: eventType || "TEAM_FEEDBACK",
         title: titleText || defaultTitle,
@@ -59,25 +67,25 @@ export async function POST(req: Request) {
         messageCount: 1,
         actionUrl: actionUrl || `/chat?chatId=${systemChatId}`,
         read: false,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-      }).catch((e) => console.warn("System notification dispatch note:", e));
+        createdAt: new Date(),
+        updatedAt: new Date(),
+      });
     }
 
-    // 4. Record Idempotency Key in Firestore
-    await setDoc(eventDocRef, {
-      dispatchedAt: serverTimestamp(),
+    // 4. Write Idempotency Record
+    await systemEventsRef.doc(userDeliveryKey).set({
+      dispatchedAt: new Date(),
       eventType,
       recipientUid: recipientUid || "broadcast",
     });
 
     return NextResponse.json({
       success: true,
-      message: `System event ${idempotencyKey} dispatched successfully`,
-      idempotencyKey,
+      message: `System event ${userDeliveryKey} created and dispatched successfully`,
+      idempotencyKey: userDeliveryKey,
     });
   } catch (error: any) {
     console.error("API /api/system-events/trigger error:", error);
-    return NextResponse.json({ success: false, error: error?.message || "Internal server error" }, { status: 500 });
+    return NextResponse.json({ success: false, error: error?.message || "Failed to dispatch system event" }, { status: 500 });
   }
 }

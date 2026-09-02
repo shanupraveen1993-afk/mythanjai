@@ -286,15 +286,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const signOutUser = async () => {
-    // Delete FCM device push token documents for current user on logout
+    // Delete FCM device push token documents for current user on logout (Awaited with Promise.all)
     if (user?.uid) {
       try {
         const { collection, getDocs, deleteDoc } = await import("firebase/firestore");
         const devicesRef = collection(db, "users", user.uid, "devices");
         const snap = await getDocs(devicesRef);
-        snap.forEach(async (docSnap) => {
-          await deleteDoc(docSnap.ref).catch(() => {});
-        });
+        await Promise.all(snap.docs.map((docSnap) => deleteDoc(docSnap.ref).catch(() => {})));
       } catch (e) {
         console.warn("Logout device token cleanup note:", e);
       }

@@ -143,9 +143,16 @@ export async function dispatchNotification({
 async function triggerPushApi(payload: any) {
   try {
     if (typeof window !== "undefined") {
+      const { auth } = await import("@/lib/firebase");
+      const idToken = auth.currentUser ? await auth.currentUser.getIdToken().catch(() => "") : "";
+      const headers: Record<string, string> = { "Content-Type": "application/json" };
+      if (idToken) {
+        headers["Authorization"] = `Bearer ${idToken}`;
+      }
+
       fetch("/api/send-push", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers,
         body: JSON.stringify(payload),
       }).catch((e) => console.warn("Push API trigger note:", e));
     }

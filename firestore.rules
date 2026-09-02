@@ -4,7 +4,7 @@ service cloud.firestore {
     // 1. Strict Recipient-Scoped Notification Security (P0 Privacy Enforced)
     match /notifications/{notifId} {
       allow read, update, delete: if request.auth != null && resource.data.recipientUid == request.auth.uid;
-      allow create: if request.auth != null;
+      allow create: if request.auth != null && request.resource.data.recipientUid == request.auth.uid;
     }
 
     // 2. Strict User Device Push Token Security
@@ -22,25 +22,25 @@ service cloud.firestore {
       }
     }
 
-    // 4. Public Marketplace Posts (Read Public, Write Owner Only)
+    // 4. Public Marketplace Posts (Read Public, Write/Create Owner Only)
     match /listings/{id} {
       allow read: if true;
-      allow create: if request.auth != null;
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
       allow update, delete: if request.auth != null && resource.data.userId == request.auth.uid;
     }
     match /needs/{id} {
       allow read: if true;
-      allow create: if request.auth != null;
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
       allow update, delete: if request.auth != null && resource.data.userId == request.auth.uid;
     }
     match /services/{id} {
       allow read: if true;
-      allow create: if request.auth != null;
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
       allow update, delete: if request.auth != null && resource.data.userId == request.auth.uid;
     }
     match /shops/{id} {
       allow read: if true;
-      allow create: if request.auth != null;
+      allow create: if request.auth != null && request.resource.data.userId == request.auth.uid;
       allow update, delete: if request.auth != null && resource.data.userId == request.auth.uid;
     }
 
