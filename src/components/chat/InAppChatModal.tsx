@@ -2,10 +2,10 @@
 
 import React, { useState, useEffect } from "react";
 import { X, Send, MessageSquare, ShieldCheck, User, AlertTriangle, ShieldAlert } from "lucide-react";
-import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "firebase/firestore";
+import { collection, addDoc, doc, setDoc, query, orderBy, onSnapshot, serverTimestamp } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/hooks/use-auth";
-import { dispatchNotification } from "@/lib/notification-service";
 
 interface InAppChatModalProps {
   isOpen: boolean;
@@ -91,27 +91,59 @@ export default function InAppChatModal({
 
     setLoading(true);
     try {
+      // Ensure the parent chat document exists with a participants array
+      // so /api/chat/notify can derive the recipient authoritatively.
+      if (user?.uid && sellerId) {
+        const chatDocRef = doc(db, "chats", chatId);
+        await setDoc(
+          chatDocRef,
+          {
+            participants: [[user.uid, sellerId].sort()[0], [user.uid, sellerId].sort()[1]],
+            listingId,
+            listingTitle,
+            createdAt: serverTimestamp(),
+          },
+          { merge: true }
+        );
+      }
+
       const messagesRef = collection(db, "chats", chatId, "messages");
-      await addDoc(messagesRef, {
-        senderId: user?.uid || "buyer_guest",
+      const msgDocRef = await addDoc(messagesRef, {
+        senderId: user?.uid || "",
         senderName: profile?.displayName || "Buyer",
         text: inputText.trim(),
         timestamp: serverTimestamp(),
       });
 
-      // Dispatch centralized grouped notification to seller
-      if (sellerId) {
-        dispatchNotification({
-          recipientUid: sellerId,
-          type: "CHAT",
-          title: `New Message regarding ${listingTitle}`,
-          message: `${profile?.displayName || "A buyer"}: "${inputText.trim()}"`,
-          senderUid: user?.uid || "",
-          senderName: profile?.displayName || "Buyer",
-          senderPhone: profile?.phone || "",
-          conversationId: chatId,
-          actionUrl: `/chat?chatId=${chatId}`,
-        });
+      // Dispatch server-authoritative push notification to seller via /api/chat/notify
+      // Server verifies sender ownership, derives recipient, and reads text from Firestore.
+      if (user?.uid && sellerId && chatId !== "namma_thanjai_system_welcome") {
+        const notifyWithRetry = async (retriesLeft = 3) => {
+          try {
+            const firebaseAuth = getAuth();
+            const idToken = firebaseAuth.currentUser
+              ? await firebaseAuth.currentUser.getIdToken()
+              : "";
+            if (idToken) {
+              const res = await fetch("/api/chat/notify", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${idToken}`,
+                },
+                body: JSON.stringify({ chatId, messageId: msgDocRef.id }),
+              });
+              if (!res.ok && retriesLeft > 1) {
+                setTimeout(() => notifyWithRetry(retriesLeft - 1), 1500);
+              }
+            }
+          } catch {
+            if (retriesLeft > 1) {
+              setTimeout(() => notifyWithRetry(retriesLeft - 1), 1500);
+            }
+          }
+        };
+        notifyWithRetry();
       }
 
       setInputText("");
