@@ -2,10 +2,17 @@
 
 import { useEffect } from "react";
 import { useAuth } from "@/hooks/use-auth";
-import { collection, query, where, getDocs } from "firebase/firestore";
-import { db } from "@/lib/firebase";
-import { dispatchNotification } from "@/lib/notification-service";
 
+/**
+ * Hook: useScheduledNotifications
+ * Enforces Section 23 of Namma Thanjai Notification Specification:
+ * - Rule #23: Welcome greeting stays inside Team Chat (ZERO push notification on login).
+ * - Step 1 (0m): In-App Team Chat Greeting (No Push).
+ * - Step 2 (+10m): Daily Tip / Local Quote Push (id: 2001).
+ * - Step 3 (+20m): Team Feedback Prompt (id: 2002).
+ * - Step 4 (+24h): Daily Activity Update (id: 2003).
+ * - Minimum 10-minute gap between automated system notification dispatches.
+ */
 export function useScheduledNotifications() {
   const { user, isVerified, profile } = useAuth();
 
@@ -15,44 +22,14 @@ export function useScheduledNotifications() {
     const userPhone = profile?.phone || localStorage.getItem("namma_thanjai_phone") || localStorage.getItem("my_thanjai_phone") || "";
     if (!userPhone) return;
 
-    const setupTimers = async () => {
+    const setupStaggeredTimers = async () => {
       try {
         const todayDate = new Date().toISOString().slice(0, 10);
-        const sessionKey = `namma_thanjai_notif_scheduled_${userPhone}_${todayDate}`;
+        const sessionKey = `namma_thanjai_staggered_notif_${userPhone}_${todayDate}`;
         if (sessionStorage.getItem(sessionKey)) return;
         sessionStorage.setItem(sessionKey, "true");
 
-        // Calculate date-scoped daily activity counters
-        let todayViews = 0;
-        let todaySaves = 0;
-
-        if (user?.uid) {
-          try {
-            const listingsQuery = query(collection(db, "listings"), where("userId", "==", user.uid));
-            const snapshot = await getDocs(listingsQuery);
-            snapshot.forEach((docSnap) => {
-              const data = docSnap.data();
-              if (data.dailyViews && typeof data.dailyViews === "object") {
-                todayViews += Number(data.dailyViews[todayDate] || 0);
-              } else {
-                todayViews += Number(data.viewsCount || data.views || 0);
-              }
-              if (data.dailySaves && typeof data.dailySaves === "object") {
-                todaySaves += Number(data.dailySaves[todayDate] || 0);
-              } else {
-                todaySaves += Number(data.savesCount || data.saves || 0);
-              }
-            });
-          } catch (e) {
-            console.warn("Analytics fetch note:", e);
-          }
-        }
-
-        const activityMessage = todayViews > 0 || todaySaves > 0
-          ? `Your active posts received ${todayViews} member views and ${todaySaves} saves in Thanjavur today!`
-          : "Discover new local marketplace listings and store offers in your area today!";
-
-        // Schedule Native Local Timers
+        // Schedule Native Local Notifications on Android / iOS with exact staggered intervals
         const isNative = Boolean((window as any).Capacitor?.isNativePlatform() || window.navigator.userAgent.includes("Capacitor"));
         if (isNative) {
           const { LocalNotifications } = await import("@capacitor/local-notifications");
@@ -64,8 +41,8 @@ export function useScheduledNotifications() {
                 {
                   id: 2001,
                   title: "✨ Namma Thanjai Daily Tip",
-                  body: "Explore top festival offers and community listings in Medical College Road & Big Temple areas!",
-                  schedule: { at: new Date(now + 10 * 60 * 1000) },
+                  body: "Explore top festival offers & community listings in Medical College Road & Big Temple areas!",
+                  schedule: { at: new Date(now + 10 * 60 * 1000) }, // +10 Minutes
                   sound: "default",
                   actionTypeId: "DAILY_QUOTE",
                   extra: { actionUrl: "/chat?chatId=namma_thanjai_system_welcome" },
@@ -74,7 +51,7 @@ export function useScheduledNotifications() {
                   id: 2002,
                   title: "💬 How is Namma Thanjai?",
                   body: "Vanakkam! We value your experience. Tap to share feedback & help us improve!",
-                  schedule: { at: new Date(now + 20 * 60 * 1000) },
+                  schedule: { at: new Date(now + 20 * 60 * 1000) }, // +20 Minutes
                   sound: "default",
                   actionTypeId: "TEAM_FEEDBACK",
                   extra: { actionUrl: "/chat?chatId=namma_thanjai_system_welcome" },
@@ -82,8 +59,8 @@ export function useScheduledNotifications() {
                 {
                   id: 2003,
                   title: "📊 Your Daily Activity Update",
-                  body: activityMessage,
-                  schedule: { at: new Date(now + 24 * 60 * 60 * 1000), repeats: true, every: "day" },
+                  body: "Discover new local marketplace listings and store offers in your area today!",
+                  schedule: { at: new Date(now + 24 * 60 * 60 * 1000), repeats: true, every: "day" }, // +24 Hours (Next Day)
                   sound: "default",
                   actionTypeId: "DAILY_ACTIVITY",
                   extra: { actionUrl: "/listings" },
@@ -93,22 +70,14 @@ export function useScheduledNotifications() {
           }
         }
 
-        // Dispatch Centralized System Notifications if user is logged in
-        if (user?.uid) {
-          dispatchNotification({
-            recipientUid: user.uid,
-            type: "DAILY_ACTIVITY",
-            title: "📊 Your Daily Activity Update",
-            message: activityMessage,
-            conversationId: "namma_thanjai_system_welcome",
-            actionUrl: "/listings",
-          });
-        }
+        // NOTE: No immediate dispatchNotification() on login.
+        // Rule #23: Initial welcome greeting is inside Team Chat without push distraction.
+        // Daily activity and feedback prompts are scheduled for +20m / +24h to avoid notification spam on boot.
       } catch (e) {
         console.warn("Scheduled notification setup note:", e);
       }
     };
 
-    setupTimers();
+    setupStaggeredTimers();
   }, [user?.uid, isVerified, profile?.phone]);
 }
