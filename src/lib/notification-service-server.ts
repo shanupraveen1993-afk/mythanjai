@@ -20,6 +20,7 @@ interface ServerNotificationParams {
  * Powered by Firebase Admin SDK.
  * Handles deterministic document IDs for chat & system notifications, atomic transactions,
  * unread count grouping, push spam throttling, and direct FCM multicast delivery.
+ * Strict Error Propagation: FCM push failures throw exceptions so system event triggers receive success: false.
  */
 export async function dispatchServerNotification({
   recipientUid,
@@ -91,7 +92,12 @@ export async function dispatchServerNotification({
 
       // Push Spam Throttling: Send FCM push ONLY on 1st unread message
       if (isFirstUnread) {
-        await executeServerPush({ recipientUid, title, message, actionUrl: finalActionUrl, chatId: conversationId, type });
+        try {
+          await executeServerPush({ recipientUid, title, message, actionUrl: finalActionUrl, chatId: conversationId, type });
+        } catch (pushErr: any) {
+          console.error("FCM Push delivery error for chat notification:", pushErr);
+          return { success: false, error: pushErr?.message || "FCM push delivery failed" };
+        }
       }
       return { success: true, grouped: true };
     }
@@ -126,7 +132,12 @@ export async function dispatchServerNotification({
     });
 
     if (isNewSystemDoc) {
-      await executeServerPush({ recipientUid, title, message, actionUrl: finalActionUrl, chatId: conversationId || "namma_thanjai_system_welcome", type });
+      try {
+        await executeServerPush({ recipientUid, title, message, actionUrl: finalActionUrl, chatId: conversationId || "namma_thanjai_system_welcome", type });
+      } catch (pushErr: any) {
+        console.error("FCM Push delivery error for system notification:", pushErr);
+        return { success: false, error: pushErr?.message || "FCM push delivery failed" };
+      }
     }
 
     return { success: true, newDoc: isNewSystemDoc };
@@ -177,6 +188,7 @@ async function executeServerPush({ recipientUid, title, message, actionUrl, chat
       },
     });
 
+    // Clean Up Stale / Invalid Device Tokens from Firestore
     if (response.failureCount > 0) {
       const cleanupPromises: Promise<any>[] = [];
       response.responses.forEach((resp, idx) => {
@@ -197,8 +209,14 @@ async function executeServerPush({ recipientUid, title, message, actionUrl, chat
         }
       });
       await Promise.all(cleanupPromises);
+
+      // Strict Error Propagation: Throw error if all FCM tokens failed
+      if (response.failureCount === tokens.length) {
+        throw new Error(`FCM multicast failed completely: ${response.failureCount} tokens failed`);
+      }
     }
   } catch (e) {
-    console.warn("executeServerPush note:", e);
+    console.error("executeServerPush FCM error:", e);
+    throw e;
   }
 }
