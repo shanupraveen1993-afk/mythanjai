@@ -39,7 +39,7 @@ export default function UniversalSearchBar() {
   return (
     <div
       onClick={handleLaunchSearch}
-      className="relative flex items-center w-full h-10 bg-slate-100/90 hover:bg-slate-100 border border-slate-200/90 rounded-xl px-3 shadow-2xs transition-all cursor-pointer select-none overflow-hidden group"
+      className="relative flex items-center w-full min-h-[44px] h-10 bg-slate-100/90 hover:bg-slate-100 border border-slate-200/90 rounded-xl px-3.5 shadow-2xs transition-all cursor-pointer select-none overflow-hidden group"
     >
       <Search className="w-4 h-4 text-slate-400 group-hover:text-slate-600 shrink-0 mr-2 transition-colors" />
       

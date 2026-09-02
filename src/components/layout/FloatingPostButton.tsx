@@ -61,7 +61,8 @@ export default function FloatingPostButton() {
 
   return (
     <div
-      className="fixed left-1/2 -translate-x-1/2 bottom-[calc(4.8rem+max(env(safe-area-inset-bottom,0px),12px))] z-40 md:hidden select-none active:scale-95 transition-all duration-200 ease-in-out"
+      className="fixed left-1/2 -translate-x-1/2 z-40 md:hidden select-none active:scale-95 transition-all duration-200 ease-in-out"
+      style={{ bottom: "calc(4.5rem + env(safe-area-inset-bottom, 0px) + 0.5rem)" }}
     >
       <button
         type="button"

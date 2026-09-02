@@ -196,9 +196,15 @@ function SearchContent() {
   const isFullCategoryView = Boolean(activeCategory && activeCategory !== "all");
 
   return (
-    <div className="w-full min-h-screen bg-white text-slate-900 font-sans pb-24">
-      {/* Dedicated Search Header Bar (No Horizontal Tabs) */}
-      <div className="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-xs py-3 px-4 sm:px-6 lg:px-8">
+    <div className="w-full min-h-screen bg-white text-slate-900 font-sans pb-[calc(6rem+env(safe-area-inset-bottom,0px))]">
+      {/* Dedicated Search Header Bar — safe-area-inset-top ensures no collision with punch-hole/notch */}
+      <div
+        className="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-xs px-4 sm:px-6 lg:px-8"
+        style={{
+          paddingTop: "calc(0.75rem + env(safe-area-inset-top, 0px))",
+          paddingBottom: "0.75rem",
+        }}
+      >
         <div className="max-w-7xl mx-auto flex items-center gap-3">
           {/* Smart Back Button */}
           <button

@@ -172,7 +172,7 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
         paddingBottom: "calc(0.5rem + env(safe-area-inset-bottom, 0px))",
       }}
     >
-      <div className="flex items-center justify-around px-2 sm:px-6 w-full max-w-md mx-auto py-0">
+      <div className="flex items-center justify-around px-4 sm:px-6 w-full max-w-md mx-auto py-0">
         {navItems.map((item) => {
           const Icon = item.icon;
           const isActive =

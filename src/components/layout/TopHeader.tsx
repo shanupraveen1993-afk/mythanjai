@@ -175,9 +175,8 @@ export default function TopHeader({
       className={`relative w-full z-50 bg-[#1F244A]/[0.03] backdrop-blur-xl text-slate-900 flex-col justify-end border-b border-slate-200/90 shadow-2xs rounded-b-2xl sm:rounded-b-3xl md:rounded-b-none ${
         pathname?.startsWith("/post") ? "hidden" : pathname?.startsWith("/chat") ? "hidden md:flex" : "flex"
       }`}
-      style={{ paddingTop: "env(safe-area-inset-top, 0px)" }}
     >
-      <div className="w-full max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 h-14 sm:h-16 py-2 flex items-center justify-between gap-2.5 sm:gap-4 relative">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 sm:h-16 py-2 flex items-center justify-between gap-2.5 sm:gap-4 relative">
 
         {/* Left Side Cluster: Logo Image + Desktop Search Bar */}
         <div className="flex items-center gap-3 sm:gap-4 shrink-0 z-20">
