@@ -2,11 +2,13 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     // 1. Strict Recipient-Scoped Notifications (Creation Allowed Exclusively via Server Admin SDK)
+    // Clients can ONLY update the 'read' field (mark read/unread). All other fields are immutable to clients.
     match /notifications/{notifId} {
       allow read, delete: if request.auth != null && resource.data.recipientUid == request.auth.uid;
       allow update: if request.auth != null && 
         resource.data.recipientUid == request.auth.uid && 
-        request.resource.data.recipientUid == request.auth.uid;
+        request.resource.data.recipientUid == request.auth.uid &&
+        request.resource.data.diff(resource.data).affectedKeys().hasOnly(['read']);
       allow create: if false;
     }
 

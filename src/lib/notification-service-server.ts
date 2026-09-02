@@ -46,31 +46,34 @@ interface ServerNotificationParams {
 export type PushStatus = "NO_DEVICES" | "PENDING" | "DELIVERED" | "FAILED";
 
 /**
- * Authoritative Server Notification Engine — v46.1 Corrected
+ * Authoritative Server Notification Engine — v46.4
  * Powered by Firebase Admin SDK.
  *
  * Delivery contract:
  *   AT-LEAST-ONCE delivery with duplicate prevention during normal concurrent execution.
  *
  * Reliability guarantees:
- * 1. Notification Versioning / Cycle ID Protection (notificationVersion: string).
+ * 1. Cumulative Message-Idempotency Protection (allNotifiedMessageIds: string[]).
+ *    - Message notification idempotency is tracked permanently in `allNotifiedMessageIds`.
+ *    - Even after a notification cycle is marked `read: true`, replaying `/api/chat/notify` for an
+ *      already-notified `messageId` will be detected and skipped — preventing replay attacks or late retries
+ *      from creating brand-new unread notification cycles or duplicate FCM push sends.
+ *
+ * 2. Notification Versioning / Cycle ID Protection (notificationVersion: string).
  *    - Every read -> unread reset cycle generates a new notificationVersion (UUID).
  *    - FCM attempts record the version at claim time.
  *    - Post-FCM state updates verify that the document's notificationVersion is still equal
  *      to the claimed version. If the user opened the chat or a new cycle started, late FCM
  *      completions discard their state update to prevent corrupting the new cycle.
  *
- * 2. Worker-side Timeout & At-Least-Once Semantics.
- *    - Promise.race() applies a 90s worker-side timeout boundary.
- *    - The architecture explicitly acknowledges at-least-once delivery; stale claim recovery
- *      (5-minute TTL) allows safe retries while cycle IDs prevent cross-cycle corruption.
+ * 3. Safe Invalid-Token Cleanup.
+ *    - Failed FCM tokens are deleted ONLY if the current device document in Firestore still
+ *      contains that exact failed token — preventing race conditions where a refreshed token registration
+ *      is accidentally deleted.
  *
- * 3. Atomic Per-Token Leased Claiming (claims: TokenClaim[]).
+ * 4. Atomic Per-Token Leased Claiming (claims: TokenClaim[]).
  *    - Device tokens are claimed inside a transaction before FCM is sent.
  *    - Concurrent requests targeting the same notification document serialize on the transaction.
- *
- * 4. Message-Idempotent Chat Notifications (processedMessageIds: string[]).
- *    - Duplicate calls for the same messageId do NOT increment messageCount twice.
  */
 export async function dispatchServerNotification({
   recipientUid,
@@ -97,12 +100,26 @@ export async function dispatchServerNotification({
       const deterministicNotifId = `${recipientUid}_${conversationId}`;
       const targetDocRef = adminDb.collection("notifications").doc(deterministicNotifId);
 
+      let isReplay = false;
+
       // Phase A: create or update the notification document
       // (message content grouping + messageId deduplication + cycle versioning)
       await adminDb.runTransaction(async (tx) => {
         const notifDoc = await tx.get(targetDocRef);
+        const currentData = notifDoc.data() || {};
+        const allNotifiedIds: string[] = currentData.allNotifiedMessageIds || [];
 
-        if (!notifDoc.exists || notifDoc.data()?.read === true) {
+        // Check permanent message-level idempotency across all read/unread cycles
+        if (messageId && allNotifiedIds.includes(messageId)) {
+          isReplay = true;
+          return; // Message has already been notified — abort transaction
+        }
+
+        const updatedAllMsgIds = messageId
+          ? Array.from(new Set([...allNotifiedIds, messageId]))
+          : allNotifiedIds;
+
+        if (!notifDoc.exists || currentData.read === true) {
           // Fresh notification OR new unread cycle after user opened chat
           const newCycleVersion = randomUUID();
           const updatedMessage = senderName ? `${senderName}: "${message}"` : `"${message}"`;
@@ -126,6 +143,7 @@ export async function dispatchServerNotification({
               claims: [],
               notificationVersion: newCycleVersion,
               processedMessageIds: messageId ? [messageId] : [],
+              allNotifiedMessageIds: updatedAllMsgIds,
               createdAt: new Date(),
               updatedAt: new Date(),
             },
@@ -133,7 +151,6 @@ export async function dispatchServerNotification({
           );
         } else {
           // Ongoing unread cycle
-          const currentData = notifDoc.data() || {};
           const currentProcessedMsgIds: string[] = currentData.processedMessageIds || [];
           const alreadyProcessed = messageId ? currentProcessedMsgIds.includes(messageId) : false;
 
@@ -153,10 +170,15 @@ export async function dispatchServerNotification({
             message: updatedMessage,
             messageCount: newCount,
             processedMessageIds: updatedMsgIds,
+            allNotifiedMessageIds: updatedAllMsgIds,
             updatedAt: new Date(),
           });
         }
       });
+
+      if (isReplay) {
+        return { success: true, skipped: "message_already_notified" };
+      }
 
       // Phase B: FCM delivery with leased per-token claiming & cycle version verification
       const pushResult = await executeServerPushWithClaim({
@@ -380,6 +402,7 @@ async function executeServerPushWithClaim({
       }
     });
 
+    // Safe invalid token cleanup: verify document STILL holds failedToken before deleting
     const cleanupPromises: Promise<any>[] = [];
     response.responses.forEach((resp, idx) => {
       if (!resp.success && resp.error) {
@@ -391,13 +414,20 @@ async function executeServerPushWithClaim({
           const failedToken = tokensToClaim[idx];
           const failedDocId = docIdsByToken[failedToken];
           if (failedDocId) {
+            const deviceRef = adminDb
+              .collection("users")
+              .doc(recipientUid)
+              .collection("devices")
+              .doc(failedDocId);
+
             cleanupPromises.push(
               adminDb
-                .collection("users")
-                .doc(recipientUid)
-                .collection("devices")
-                .doc(failedDocId)
-                .delete()
+                .runTransaction(async (tx) => {
+                  const devSnap = await tx.get(deviceRef);
+                  if (devSnap.exists && devSnap.data()?.token === failedToken) {
+                    tx.delete(deviceRef);
+                  }
+                })
                 .catch(() => {})
             );
           }
