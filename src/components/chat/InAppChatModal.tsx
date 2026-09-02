@@ -5,6 +5,7 @@ import { X, Send, MessageSquare, ShieldCheck, User, AlertTriangle, ShieldAlert }
 import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/hooks/use-auth";
+import { dispatchNotification } from "@/lib/notification-service";
 
 interface InAppChatModalProps {
   isOpen: boolean;
@@ -98,17 +99,18 @@ export default function InAppChatModal({
         timestamp: serverTimestamp(),
       });
 
-      // Push real-time alert to recipient's Notification Hub
+      // Dispatch centralized grouped notification to seller
       if (sellerId) {
-        await addDoc(collection(db, "notifications"), {
-          type: "chat",
-          recipientId: sellerId,
+        dispatchNotification({
+          recipientUid: sellerId,
+          type: "CHAT",
           title: `New Message regarding ${listingTitle}`,
           message: `${profile?.displayName || "A buyer"}: "${inputText.trim()}"`,
+          senderUid: user?.uid || "",
+          senderName: profile?.displayName || "Buyer",
           senderPhone: profile?.phone || "",
-          actionUrl: `/chat`,
-          read: false,
-          timestamp: serverTimestamp(),
+          conversationId: chatId,
+          actionUrl: `/chat?chatId=${chatId}`,
         });
       }
 

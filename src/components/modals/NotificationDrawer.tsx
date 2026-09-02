@@ -5,7 +5,7 @@ import { X, Bell, Phone, MessageSquare, ShieldCheck, Clock, ArrowRight, Trash2, 
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/context/ToastContext";
-import { collection, onSnapshot, doc, updateDoc, deleteDoc } from "firebase/firestore";
+import { collection, onSnapshot, query, where, limit, doc, updateDoc, deleteDoc } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
 interface NotificationItem {
@@ -41,52 +41,39 @@ export default function NotificationDrawer() {
     };
   }, []);
 
-  // Real-Time Firestore Notification Listener across current user UID & Phone Number
+  // Strict Recipient-Scoped Firestore Query (P0 Security Enforced)
   useEffect(() => {
     const currentUid = user?.uid || "";
-    const currentPhone = profile?.phone ? profile.phone.replace(/\D/g, "") : "";
-    const cleanCurrentPhone = currentPhone.slice(-10);
-    const currentMemberId = profile?.memberId || "";
-
-    if (!currentUid && !cleanCurrentPhone && !currentMemberId) return;
+    if (!currentUid) return;
 
     const notifRef = collection(db, "notifications");
-    const unsubscribe = onSnapshot(
+    const q = query(
       notifRef,
+      where("recipientUid", "==", currentUid),
+      limit(20)
+    );
+
+    const unsubscribe = onSnapshot(
+      q,
       (snapshot) => {
         const list: NotificationItem[] = [];
         snapshot.forEach((docSnap) => {
           const data = docSnap.data();
-          const cleanRecipPhone = (data.recipientPhone || "").replace(/\D/g, "").slice(-10);
-
-          const isRecipient = Boolean(
-            data.recipientId === "all" ||
-            data.recipientId === "broadcast" ||
-            data.recipientPhone === "all" ||
-            !data.recipientId ||
-            (currentUid && data.recipientId === currentUid) ||
-            (currentMemberId && (data.recipientId === currentMemberId || data.recipientPhone === currentMemberId)) ||
-            (cleanCurrentPhone && (
-              cleanRecipPhone === cleanCurrentPhone ||
-              (data.recipientId && String(data.recipientId).replace(/\D/g, "").endsWith(cleanCurrentPhone))
-            ))
-          );
-
-          if (isRecipient) {
-            const item: NotificationItem = {
-              id: docSnap.id,
-              type: data.type || "chat",
-              title: data.title || "New Alert",
-              message: data.message || "",
-              timestamp: data.timestamp?.seconds
-                ? new Date(data.timestamp.seconds * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-                : "Just now",
-              read: Boolean(data.read),
-              actionUrl: data.actionUrl || "/chat",
-              phone: data.senderPhone,
-            };
-            list.push(item);
-          }
+          const item: NotificationItem = {
+            id: docSnap.id,
+            type: data.type || "chat",
+            title: data.title || "New Alert",
+            message: data.message || "",
+            timestamp: data.createdAt?.seconds
+              ? new Date(data.createdAt.seconds * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+              : data.updatedAt?.seconds
+              ? new Date(data.updatedAt.seconds * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
+              : "Just now",
+            read: Boolean(data.read),
+            actionUrl: data.actionUrl || (data.conversationId ? `/chat?chatId=${data.conversationId}` : "/chat"),
+            phone: data.senderPhone,
+          };
+          list.push(item);
         });
 
         // Unread first, then sorted by newest, capped at recent 10 items
@@ -94,12 +81,12 @@ export default function NotificationDrawer() {
         setNotifications(list.slice(0, 10));
       },
       (err) => {
-        console.warn("Notifications real-time listener note:", err);
+        console.warn("Notifications recipient-scoped listener note:", err);
       }
     );
 
     return () => unsubscribe();
-  }, [user?.uid, profile?.phone]);
+  }, [user?.uid]);
 
   if (!isOpen) return null;
 

@@ -2,9 +2,11 @@
 
 import { useEffect } from "react";
 import { useAuth } from "@/hooks/use-auth";
+import { collection, query, where, getDocs } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 export function useScheduledNotifications() {
-  const { isVerified, profile } = useAuth();
+  const { user, isVerified, profile } = useAuth();
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -29,39 +31,61 @@ export function useScheduledNotifications() {
 
         const now = Date.now();
 
-        // Notification 1: 20 Minutes Post-Login Feedback Request
+        // Notification 1: 10 Minutes Post-Login Daily Quote / Tip (Namma Thanjai Team)
+        const time10m = new Date(now + 10 * 60 * 1000);
+
+        // Notification 2: 20 Minutes Post-Login Feedback Request (Namma Thanjai Team)
         const time20m = new Date(now + 20 * 60 * 1000);
 
-        // Notification 2: 40 Minutes Post-Login Daily Quote / Tip
-        const time40m = new Date(now + 40 * 60 * 1000);
-
-        // Notification 3: Daily Activity Update (Zomato-level DAU Nudge)
+        // Notification 3: Daily Activity Summary (Real analytics calculation)
         const timeDaily = new Date(now + 24 * 60 * 60 * 1000);
+
+        // Fetch real analytics activity across user listings in Firestore
+        let totalViews = 0;
+        let totalSaves = 0;
+
+        if (user?.uid) {
+          try {
+            const listingsQuery = query(collection(db, "listings"), where("userId", "==", user.uid));
+            const snapshot = await getDocs(listingsQuery);
+            snapshot.forEach((docSnap) => {
+              const data = docSnap.data();
+              totalViews += Number(data.viewsCount || data.views || 0);
+              totalSaves += Number(data.savesCount || data.saves || 0);
+            });
+          } catch (e) {
+            console.warn("Analytics fetch note:", e);
+          }
+        }
+
+        const activityMessage = totalViews > 0 || totalSaves > 0
+          ? `Your active posts received ${totalViews} member views and ${totalSaves} saves in Thanjavur today!`
+          : "Discover new local marketplace listings and store offers in your area today!";
 
         await LocalNotifications.schedule({
           notifications: [
             {
               id: 2001,
+              title: "✨ Namma Thanjai Daily Tip",
+              body: "Explore top festival offers and community listings in Medical College Road & Big Temple areas!",
+              schedule: { at: time10m },
+              sound: "default",
+              actionTypeId: "QUOTE",
+              extra: { actionUrl: "/chat?chatId=namma_thanjai_system_welcome" },
+            },
+            {
+              id: 2002,
               title: "💬 How is Namma Thanjai?",
-              body: "Vanakkam! We value your feedback. Tap to share your thoughts & help us improve!",
+              body: "Vanakkam! We value your experience. Tap to share feedback & help us improve!",
               schedule: { at: time20m },
               sound: "default",
               actionTypeId: "FEEDBACK",
               extra: { actionUrl: "/chat?chatId=namma_thanjai_system_welcome" },
             },
             {
-              id: 2002,
-              title: "✨ Daily Thanjavur Tip",
-              body: "Discover the newest festival offers and discount deals in Medical College Road & Big Temple areas!",
-              schedule: { at: time40m },
-              sound: "default",
-              actionTypeId: "QUOTE",
-              extra: { actionUrl: "/shops" },
-            },
-            {
               id: 2003,
               title: "📊 Your Daily Activity Update",
-              body: "Your post was viewed by 42 members in Thanjavur today! 2 buyers saved your listing.",
+              body: activityMessage,
               schedule: { at: timeDaily, repeats: true, every: "day" },
               sound: "default",
               actionTypeId: "ACTIVITY",
@@ -75,5 +99,5 @@ export function useScheduledNotifications() {
     };
 
     setupTimers();
-  }, [isVerified, profile?.phone]);
+  }, [user?.uid, isVerified, profile?.phone]);
 }

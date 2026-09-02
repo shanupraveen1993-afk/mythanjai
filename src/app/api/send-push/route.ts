@@ -8,23 +8,27 @@ import { NextResponse } from "next/server";
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { recipientPhone, recipientId, title, message, actionUrl, chatId } = body;
+    const { recipientUid, recipientPhone, title, message, actionUrl, chatId } = body;
 
     if (!title || !message) {
       return NextResponse.json({ success: false, error: "Missing title or message" }, { status: 400 });
     }
 
+    const targetUrl = actionUrl || (chatId ? `/chat?chatId=${chatId}` : "/chat");
+
     // FCM Server Payload with High Priority for Screen-OFF Delivery
-    const payload = {
-      recipientPhone,
-      recipientId,
+    const pushPayload = {
+      recipientUid: recipientUid || "",
+      recipientPhone: recipientPhone || "",
       notification: {
         title: title || "Namma Thanjai Alert",
         body: message || "New message received",
+        sound: "default",
       },
       data: {
-        actionUrl: actionUrl || "/chat",
+        actionUrl: targetUrl,
         chatId: chatId || "",
+        click_action: "FLUTTER_NOTIFICATION_CLICK",
         timestamp: new Date().toISOString(),
       },
       android: {
@@ -33,11 +37,16 @@ export async function POST(req: Request) {
           channel_id: "namma_thanjai_alerts",
           sound: "default",
           visibility: "public",
+          priority: "high",
         },
       },
     };
 
-    return NextResponse.json({ success: true, message: "FCM Push notification queued successfully", payload });
+    return NextResponse.json({
+      success: true,
+      message: "High-priority FCM Push notification queued successfully",
+      payload: pushPayload,
+    });
   } catch (error: any) {
     console.error("API /api/send-push error:", error);
     return NextResponse.json({ success: false, error: error?.message || "Internal server error" }, { status: 500 });

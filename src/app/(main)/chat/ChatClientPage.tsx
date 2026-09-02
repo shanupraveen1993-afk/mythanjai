@@ -26,23 +26,11 @@ import {
   Loader2,
 } from "lucide-react";
 import NotificationDrawer from "@/components/modals/NotificationDrawer";
-import {
-  collection,
-  addDoc,
-  query,
-  orderBy,
-  onSnapshot,
-  serverTimestamp,
-  doc,
-  getDoc,
-  setDoc,
-  deleteDoc,
-  getDocs,
-  where,
-} from "firebase/firestore";
+import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, setDoc, doc, getDocs, updateDoc, deleteDoc, getDoc, where } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/context/ToastContext";
+import { dispatchNotification } from "@/lib/notification-service";
 import BottomTabBar from "@/components/layout/BottomTabBar";
 
 export function generate5DigitMemberId(val?: string): string {
@@ -636,6 +624,22 @@ export default function ChatClientPage() {
         }
         return updated;
       });
+
+      // Dispatch centralized grouped notification to recipient peer
+      if (activePeerId && activePeerId !== currentUid) {
+        dispatchNotification({
+          recipientUid: activePeerId,
+          recipientPhone: activePeerPhone,
+          type: "CHAT",
+          title: `New Message regarding ${activeListingTitle || "Listing"}`,
+          message: `${profile?.displayName || "Member"}: "${currentText}"`,
+          senderUid: currentUid,
+          senderName: profile?.displayName || "Member",
+          senderPhone: profile?.phone || "",
+          conversationId: activeChatId,
+          actionUrl: `/chat?chatId=${activeChatId}`,
+        });
+      }
 
       // 🤖 GEMINI AI CUSTOMER ASSISTANT: Auto-reply to customer queries on Namma Thanjai Admin thread
       if (activeChatId === "namma_thanjai_system_welcome") {

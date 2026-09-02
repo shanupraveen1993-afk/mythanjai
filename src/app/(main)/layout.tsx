@@ -18,6 +18,7 @@ import SwipeUpOnboarding from "@/components/ui/SwipeUpOnboarding";
 
 import { useNativeApp } from "@/hooks/use-native-app";
 import { useScheduledNotifications } from "@/hooks/use-scheduled-notifications";
+import { useFcmToken } from "@/hooks/use-fcm-token";
 import FloatingPostButton from "@/components/layout/FloatingPostButton";
 import PendingFeedbackPrompt from "@/components/modals/PendingFeedbackPrompt";
 import NativePermissionsModal from "@/components/native/NativePermissionsModal";
@@ -78,9 +79,10 @@ function MainLayoutContent({
   const { toast } = useToast();
   const isAuthVerified = Boolean(profile?.isVerified);
 
-  // Attach native Android event listeners (Back button, Keyboard, Status Bar)
+  // Attach native Android event listeners & push token handlers
   useNativeApp();
   useScheduledNotifications();
+  useFcmToken();
 
   // Selected Area filter state, synced with URL query params
   const [selectedArea, setSelectedArea] = useState<TanjoreLocality | "All Areas">("All Areas");
