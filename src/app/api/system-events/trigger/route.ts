@@ -14,10 +14,9 @@ function getISTDateString(): string {
 
 /**
  * Server API Route: /api/system-events/trigger
- * System-Only Event Trigger Engine.
- * Requires internal secret header (INTERNAL_PUSH_SECRET). Accepts allowed event types ONLY.
- * Uses concurrency-safe atomic transactions for idempotency (ABSENT -> PROCESSING -> COMPLETED)
- * and creates exactly ONE deterministic Team Chat message document per event/date.
+ * System-Only Event Trigger Engine for Live Production.
+ * Fix 2: Strict System Event Failure Handling. Any failed recipient dispatch throws an error,
+ * marking status = FAILED and returning HTTP 500 so the event can be safely retried.
  */
 export async function POST(req: Request) {
   try {
@@ -42,7 +41,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // Fix 6: IST Date Key Calculation
+    // IST Date Key Calculation
     const todayDate = getISTDateString();
     const globalEventKey = `${eventType}_${todayDate}`;
 
@@ -52,7 +51,7 @@ export async function POST(req: Request) {
 
     let alreadyHandled = false;
 
-    // Fix 4: Concurrency-Safe Atomic Claim Transaction (ABSENT -> PROCESSING -> COMPLETED)
+    // Concurrency-Safe Atomic Claim Transaction (ABSENT -> PROCESSING -> COMPLETED)
     await adminDb.runTransaction(async (transaction) => {
       const docSnap = await transaction.get(eventDocRef);
       if (docSnap.exists) {
@@ -99,61 +98,73 @@ export async function POST(req: Request) {
       ? "Vanakkam! We value your experience. Tap to share feedback & help us improve!"
       : messageText || "Check out new local store offers and marketplace items in your area today!";
 
-    // Create EXACTLY ONE Deterministic Team Chat Message Document
-    const messageDocRef = adminDb.collection("chats").doc(systemChatId).collection("messages").doc(globalEventKey);
-    await messageDocRef.set(
-      {
-        senderId: "namma_thanjai_official",
-        senderName: "Namma Thanjai Team",
-        text: defaultMessage,
-        timestamp: new Date(),
-      },
-      { merge: true }
-    );
-
-    // Fix 5: Batched Broadcast Query Across All Registered Users (No .limit(100) cap)
-    const targetRecipients: string[] = [];
     try {
+      // 1. Create EXACTLY ONE Deterministic Team Chat Message Document
+      const messageDocRef = adminDb.collection("chats").doc(systemChatId).collection("messages").doc(globalEventKey);
+      await messageDocRef.set(
+        {
+          senderId: "namma_thanjai_official",
+          senderName: "Namma Thanjai Team",
+          text: defaultMessage,
+          timestamp: new Date(),
+        },
+        { merge: true }
+      );
+
+      // 2. Query All Target Registered Users
+      const targetRecipients: string[] = [];
       const usersSnap = await adminDb.collection("users").get();
       usersSnap.forEach((docSnap) => {
         if (docSnap.id) targetRecipients.push(docSnap.id);
       });
-    } catch (e) {
-      console.warn("User broadcast query note:", e);
+
+      // 3. Dispatch Notifications & FCM in Batches (Strict error propagation - NO CATCH SWALLOWING)
+      const BATCH_SIZE = 50;
+      for (let i = 0; i < targetRecipients.length; i += BATCH_SIZE) {
+        const batch = targetRecipients.slice(i, i + BATCH_SIZE);
+        const results = await Promise.all(
+          batch.map((uid) =>
+            dispatchServerNotification({
+              recipientUid: uid,
+              type: eventType,
+              title: titleText || defaultTitle,
+              message: defaultMessage,
+              conversationId: systemChatId,
+              actionUrl: actionUrl || `/chat?chatId=${systemChatId}`,
+              dateKey: todayDate,
+            })
+          )
+        );
+
+        // Check if any dispatch in batch failed
+        const failedDispatch = results.find((res) => res && res.success === false);
+        if (failedDispatch) {
+          throw new Error(`Dispatch failed for recipient: ${failedDispatch.error || "Unknown dispatch error"}`);
+        }
+      }
+
+      // 4. Mark Event as COMPLETED ONLY when 100% of dispatches succeeded
+      await eventDocRef.update({
+        status: "COMPLETED",
+        completedAt: new Date(),
+        recipientsCount: targetRecipients.length,
+      });
+
+      return NextResponse.json({
+        success: true,
+        message: `System event ${globalEventKey} completed and dispatched successfully`,
+        idempotencyKey: globalEventKey,
+        recipientsCount: targetRecipients.length,
+      });
+    } catch (dispatchErr: any) {
+      // Mark Event as FAILED (retryable safely due to deterministic IDs)
+      await eventDocRef.update({
+        status: "FAILED",
+        error: dispatchErr?.message || "Execution error",
+        failedAt: new Date(),
+      });
+      throw dispatchErr;
     }
-
-    // Dispatch Notifications & FCM via Server Notification Engine in Batches of 50
-    const BATCH_SIZE = 50;
-    for (let i = 0; i < targetRecipients.length; i += BATCH_SIZE) {
-      const batch = targetRecipients.slice(i, i + BATCH_SIZE);
-      await Promise.all(
-        batch.map((uid) =>
-          dispatchServerNotification({
-            recipientUid: uid,
-            type: eventType,
-            title: titleText || defaultTitle,
-            message: defaultMessage,
-            conversationId: systemChatId,
-            actionUrl: actionUrl || `/chat?chatId=${systemChatId}`,
-            dateKey: todayDate,
-          }).catch((e) => console.warn(`Dispatch error for user ${uid}:`, e))
-        )
-      );
-    }
-
-    // Mark Event as COMPLETED
-    await eventDocRef.update({
-      status: "COMPLETED",
-      completedAt: new Date(),
-      recipientsCount: targetRecipients.length,
-    });
-
-    return NextResponse.json({
-      success: true,
-      message: `System event ${globalEventKey} completed and dispatched successfully`,
-      idempotencyKey: globalEventKey,
-      recipientsCount: targetRecipients.length,
-    });
   } catch (error: any) {
     console.error("API /api/system-events/trigger error:", error);
     return NextResponse.json({ success: false, error: error?.message || "Failed to dispatch system event" }, { status: 500 });
