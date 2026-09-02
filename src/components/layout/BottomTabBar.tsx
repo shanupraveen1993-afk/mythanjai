@@ -39,39 +39,37 @@ export default function BottomTabBar({ activeTab, onTabChange }: BottomTabBarPro
   // Dynamic real-time snapshot listener for unread chat messages & notifications for logged in user
   useEffect(() => {
     if (typeof window === "undefined") return;
+    const currentUid = user?.uid;
+    if (!currentUid) { setHasUnreadMessages(false); return; }
+
     let unsubscribeNotif: any = null;
-    let unsubscribeChats: any = null;
 
-    const currentUid = user?.uid || "";
-    const cleanPhone = (profile?.phone || localStorage.getItem("namma_thanjai_phone") || localStorage.getItem("my_thanjai_phone") || "").replace(/\D/g, "").slice(-10);
-
-    import("firebase/firestore").then(({ collection, onSnapshot }) => {
+    import("firebase/firestore").then(({ collection, query, where, onSnapshot }) => {
       import("@/lib/firebase").then(({ db }) => {
-        // 1. Listen to notifications
         const notifRef = collection(db, "notifications");
-        unsubscribeNotif = onSnapshot(notifRef, (snapshot) => {
-          let foundUnread = false;
-          snapshot.forEach((docSnap) => {
-            const d = docSnap.data();
-            const recipPhone = (d.recipientPhone || "").replace(/\D/g, "").slice(-10);
-            const isForUser = Boolean(
-              !d.read && (
-                (cleanPhone && recipPhone === cleanPhone) ||
-                (currentUid && d.recipientId === currentUid)
-              )
-            );
-            if (isForUser) foundUnread = true;
-          });
-          setHasUnreadMessages(foundUnread);
-        });
+        const q = query(notifRef, where("recipientUid", "==", currentUid));
+
+        unsubscribeNotif = onSnapshot(
+          q,
+          (snapshot) => {
+            let foundUnread = false;
+            snapshot.forEach((docSnap) => {
+              const d = docSnap.data();
+              if (!d.read) foundUnread = true;
+            });
+            setHasUnreadMessages(foundUnread);
+          },
+          (err) => {
+            console.warn("BottomTabBar notifications listener note:", err);
+          }
+        );
       });
     });
 
     return () => {
       if (unsubscribeNotif) unsubscribeNotif();
-      if (unsubscribeChats) unsubscribeChats();
     };
-  }, [user?.uid, profile?.phone]);
+  }, [user?.uid]);
 
   // Detect if an individual chat conversation thread is currently active
   useEffect(() => {

@@ -457,6 +457,18 @@ export default function ChatClientPage() {
     }
   }, [queryAutoSend, activeChatId, queryAutoMsg, user?.uid, profile?.displayName, profile?.phone, activePeerId, activePeerName, activePeerPhone, activeListingTitle, queryListingId]);
 
+  // Mark chat notification as read when user opens the conversation (Specification Section 14)
+  useEffect(() => {
+    if (!activeChatId || !user?.uid) return;
+
+    const notifId = `${user.uid}_${activeChatId}`;
+    const notifDocRef = doc(db, "notifications", notifId);
+
+    updateDoc(notifDocRef, { read: true }).catch(() => {
+      // Ignored if document does not exist yet for caller
+    });
+  }, [activeChatId, user?.uid]);
+
   // Firestore Messages Snapshot Listener for Active Chat
   useEffect(() => {
     if (!activeChatId) return;

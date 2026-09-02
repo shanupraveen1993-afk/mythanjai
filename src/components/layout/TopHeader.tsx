@@ -61,33 +61,36 @@ export default function TopHeader({
 
   // Dynamic real-time snapshot listener for unread chat messages for logged in user
   useEffect(() => {
-    if (!user && !profile?.phone) { setUnreadChatCount(0); return; }
+    const currentUid = user?.uid;
+    if (!currentUid) { setUnreadChatCount(0); return; }
     let unsubscribe: any = null;
-    const cleanPhone = (profile?.phone || "").replace(/\D/g, "").slice(-10);
-    const memberId = profile?.memberId || "";
 
-    import("firebase/firestore").then(({ collection, onSnapshot }) => {
+    import("firebase/firestore").then(({ collection, query, where, onSnapshot }) => {
       import("@/lib/firebase").then(({ db }) => {
         const notifRef = collection(db, "notifications");
-        unsubscribe = onSnapshot(notifRef, (snapshot) => {
-          let count = 0;
-          snapshot.forEach((docSnap) => {
-            const d = docSnap.data();
-            const recipPhone = (d.recipientPhone || "").replace(/\D/g, "").slice(-10);
-            const isRecip = (user?.uid && d.recipientId === user.uid) ||
-              (memberId && d.recipientId === memberId) ||
-              (cleanPhone && recipPhone === cleanPhone);
-            if (isRecip && !d.read) {
-              count++;
-            }
-          });
-          setUnreadChatCount(count);
-        });
+        const q = query(notifRef, where("recipientUid", "==", currentUid));
+
+        unsubscribe = onSnapshot(
+          q,
+          (snapshot) => {
+            let count = 0;
+            snapshot.forEach((docSnap) => {
+              const d = docSnap.data();
+              if (!d.read) {
+                count++;
+              }
+            });
+            setUnreadChatCount(count);
+          },
+          (err) => {
+            console.warn("TopHeader notifications listener note:", err);
+          }
+        );
       });
     });
 
     return () => { if (unsubscribe) unsubscribe(); };
-  }, [user, profile?.phone, profile?.memberId]);
+  }, [user?.uid]);
 
   useEffect(() => {
     if (typeof window !== "undefined") {
