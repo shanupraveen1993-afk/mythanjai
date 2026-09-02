@@ -314,10 +314,10 @@ export default function CategoryFeedClient({ segmentType }: CategoryFeedClientPr
             </button>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 md:gap-4 pb-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 md:gap-4 pb-4 items-stretch">
             {sortedPosts.map((post: any, index: number) => (
               <React.Fragment key={post.id}>
-                <div className="transition-all duration-300">
+                <div className="transition-all duration-300 h-full">
                   {renderCard(post, index)}
                 </div>
                 {/* Crisp 100% Visible Light-Grey Separator Bar between post cards on Mobile App / APK */}

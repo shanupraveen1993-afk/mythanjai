@@ -544,9 +544,11 @@ function ListingsContent() {
             <p className="text-xs text-slate-500 max-w-sm">Tap the bookmark icon on any post across Thanjavur to save it for quick access later.</p>
           </div>
         ) : (
-          <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 items-stretch">
             {savedPosts.map((savedItem) => (
-              <ListingCard key={savedItem.id} listing={savedItem} />
+              <div key={savedItem.id} className="h-full">
+                <ListingCard listing={savedItem} />
+              </div>
             ))}
           </div>
         )

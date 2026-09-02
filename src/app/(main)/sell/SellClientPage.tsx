@@ -141,11 +141,13 @@ export default function SellClientPage() {
         </div>
       ) : (
         <div className="flex flex-col gap-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 sm:gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-0 sm:gap-4 items-stretch">
             {paginatedPosts.map((post, idx) => (
               <React.Fragment key={post.id}>
                 {idx > 0 && <div className="h-3 bg-slate-100 border-y border-slate-200/80 -mx-3 my-0 sm:hidden" />}
-                <ListingCard listing={post as unknown as ListingItem} />
+                <div className="h-full">
+                  <ListingCard listing={post as unknown as ListingItem} />
+                </div>
               </React.Fragment>
             ))}
           </div>
