@@ -1,19 +1,21 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { X, Bell, Phone, MessageSquare, ShieldCheck, Clock, ArrowRight, Trash2, CheckCheck } from "lucide-react";
+import { X, Bell, Phone, MessageSquare, ShieldCheck, Clock, CheckCheck, Sparkles, Activity } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/context/ToastContext";
-import { collection, onSnapshot, query, where, limit, doc, updateDoc, deleteDoc } from "firebase/firestore";
+import { collection, onSnapshot, query, where, limit, doc, updateDoc, writeBatch } from "firebase/firestore";
 import { db } from "@/lib/firebase";
+import { NotificationType } from "@/types/notification";
 
 interface NotificationItem {
   id: string;
-  type: "call_request" | "chat" | "price_drop" | "system";
+  type: NotificationType;
   title: string;
   message: string;
   timestamp: string;
+  rawTime: number;
   read: boolean;
   actionUrl?: string;
   phone?: string;
@@ -21,11 +23,11 @@ interface NotificationItem {
 
 export default function NotificationDrawer() {
   const router = useRouter();
-  const { user, profile } = useAuth();
+  const { user } = useAuth();
   const { toast } = useToast();
 
   const [isOpen, setIsOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState<"all" | "call_request" | "chat" | "system">("all");
+  const [activeTab, setActiveTab] = useState<"all" | "CHAT" | "TEAM" | "ACTIVITY">("all");
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
 
   useEffect(() => {
@@ -50,7 +52,7 @@ export default function NotificationDrawer() {
     const q = query(
       notifRef,
       where("recipientUid", "==", currentUid),
-      limit(20)
+      limit(30)
     );
 
     const unsubscribe = onSnapshot(
@@ -59,16 +61,14 @@ export default function NotificationDrawer() {
         const list: NotificationItem[] = [];
         snapshot.forEach((docSnap) => {
           const data = docSnap.data();
+          const rawSeconds = data.createdAt?.seconds || data.updatedAt?.seconds || Date.now() / 1000;
           const item: NotificationItem = {
             id: docSnap.id,
-            type: data.type || "chat",
+            type: (data.type as NotificationType) || "CHAT",
             title: data.title || "New Alert",
             message: data.message || "",
-            timestamp: data.createdAt?.seconds
-              ? new Date(data.createdAt.seconds * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-              : data.updatedAt?.seconds
-              ? new Date(data.updatedAt.seconds * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-              : "Just now",
+            timestamp: rawSeconds ? new Date(rawSeconds * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "Just now",
+            rawTime: rawSeconds,
             read: Boolean(data.read),
             actionUrl: data.actionUrl || (data.conversationId ? `/chat?chatId=${data.conversationId}` : "/chat"),
             phone: data.senderPhone,
@@ -76,8 +76,11 @@ export default function NotificationDrawer() {
           list.push(item);
         });
 
-        // Unread first, then sorted by newest, capped at recent 10 items
-        list.sort((a, b) => (a.read === b.read ? 0 : a.read ? 1 : -1));
+        // Multi-tier sort: Unread items first, then secondary sort by newest timestamp
+        list.sort((a, b) => {
+          if (a.read !== b.read) return a.read ? 1 : -1;
+          return b.rawTime - a.rawTime;
+        });
         setNotifications(list.slice(0, 10));
       },
       (err) => {
@@ -90,16 +93,26 @@ export default function NotificationDrawer() {
 
   if (!isOpen) return null;
 
-  const markAllAsRead = () => {
+  // Persist "Read All" in Firestore using writeBatch
+  const markAllAsRead = async () => {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })));
-    toast.success("All notifications marked as read!");
+    try {
+      const batch = writeBatch(db);
+      notifications.filter((n) => !n.read).forEach((n) => {
+        batch.update(doc(db, "notifications", n.id), { read: true });
+      });
+      await batch.commit();
+      toast.success("All notifications marked as read!");
+    } catch (e) {
+      console.warn("Batch read update note:", e);
+    }
   };
 
   const filteredNotifications = notifications.filter((n) => {
     if (activeTab === "all") return true;
-    if (activeTab === "call_request") return n.type === "call_request";
-    if (activeTab === "chat") return n.type === "chat";
-    if (activeTab === "system") return n.type === "system" || n.type === "price_drop";
+    if (activeTab === "CHAT") return n.type === "CHAT";
+    if (activeTab === "TEAM") return n.type === "TEAM_WELCOME" || n.type === "TEAM_FEEDBACK" || n.type === "DAILY_QUOTE";
+    if (activeTab === "ACTIVITY") return n.type === "DAILY_ACTIVITY" || n.type === "POST_ACTIVITY";
     return true;
   }).slice(0, 10);
 
@@ -176,27 +189,39 @@ export default function NotificationDrawer() {
           </button>
           <button
             type="button"
-            onClick={() => setActiveTab("call_request")}
+            onClick={() => setActiveTab("CHAT")}
             className={`px-3 py-1.5 rounded-xl font-heading font-extrabold text-xs transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
-              activeTab === "call_request"
-                ? "bg-[#0F172A] text-white shadow-2xs"
-                : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-100"
-            }`}
-          >
-            <Phone className="w-3 h-3 text-amber-500" />
-            <span>Call Requests</span>
-          </button>
-          <button
-            type="button"
-            onClick={() => setActiveTab("chat")}
-            className={`px-3 py-1.5 rounded-xl font-heading font-extrabold text-xs transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
-              activeTab === "chat"
+              activeTab === "CHAT"
                 ? "bg-[#0F172A] text-white shadow-2xs"
                 : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-100"
             }`}
           >
             <MessageSquare className="w-3 h-3 text-emerald-500" />
             <span>Chat Alerts</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("TEAM")}
+            className={`px-3 py-1.5 rounded-xl font-heading font-extrabold text-xs transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+              activeTab === "TEAM"
+                ? "bg-[#0F172A] text-white shadow-2xs"
+                : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-100"
+            }`}
+          >
+            <Sparkles className="w-3 h-3 text-amber-500" />
+            <span>Team Updates</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setActiveTab("ACTIVITY")}
+            className={`px-3 py-1.5 rounded-xl font-heading font-extrabold text-xs transition-all cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+              activeTab === "ACTIVITY"
+                ? "bg-[#0F172A] text-white shadow-2xs"
+                : "bg-white text-slate-700 border border-slate-200 hover:bg-slate-100"
+            }`}
+          >
+            <Activity className="w-3 h-3 text-blue-500" />
+            <span>Activity</span>
           </button>
         </div>
 
@@ -227,18 +252,18 @@ export default function NotificationDrawer() {
                 }`}
               >
                 <div className={`w-9 h-9 rounded-xl flex items-center justify-center shrink-0 border ${
-                  n.type === "call_request"
-                    ? "bg-amber-100 text-amber-900 border-amber-200"
-                    : n.type === "chat"
+                  n.type === "CHAT"
                     ? "bg-emerald-100 text-emerald-900 border-emerald-200"
+                    : n.type === "TEAM_WELCOME" || n.type === "TEAM_FEEDBACK" || n.type === "DAILY_QUOTE"
+                    ? "bg-amber-100 text-amber-900 border-amber-200"
                     : "bg-blue-100 text-blue-900 border-blue-200"
                 }`}>
-                  {n.type === "call_request" ? (
-                    <Phone className="w-4 h-4 text-amber-700" />
-                  ) : n.type === "chat" ? (
+                  {n.type === "CHAT" ? (
                     <MessageSquare className="w-4 h-4 text-emerald-700" />
+                  ) : n.type === "TEAM_WELCOME" || n.type === "TEAM_FEEDBACK" || n.type === "DAILY_QUOTE" ? (
+                    <Sparkles className="w-4 h-4 text-amber-700" />
                   ) : (
-                    <ShieldCheck className="w-4 h-4 text-blue-700" />
+                    <Activity className="w-4 h-4 text-blue-700" />
                   )}
                 </div>
 

@@ -1,4 +1,4 @@
-import { collection, query, where, getDocs, addDoc, updateDoc, doc, serverTimestamp } from "firebase/firestore";
+import { collection, query, where, getDocs, addDoc, updateDoc, doc, serverTimestamp, runTransaction } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { NotificationType } from "@/types/notification";
 
@@ -16,9 +16,9 @@ interface DispatchNotificationParams {
 }
 
 /**
- * Centralized Notification Dispatch Service
- * Handles grouped chat notifications by conversationId, updates unread message counts,
- * and triggers high-priority FCM Push delivery via /api/send-push.
+ * Centralized Production Notification Dispatch Service
+ * Handles atomic chat grouping transactions, updates unread message counts,
+ * throttles push spam (FCM push sent ONLY on 1st unread message), and dispatches system notifications.
  */
 export async function dispatchNotification({
   recipientUid,
@@ -37,7 +37,7 @@ export async function dispatchNotification({
   try {
     const finalActionUrl = actionUrl || (conversationId ? `/chat?chatId=${conversationId}` : "/chat");
 
-    // For CHAT notifications, check if an unread notification document already exists for this conversation
+    // For CHAT notifications, atomically check and group existing unread notification
     if (type === "CHAT" && conversationId) {
       const notifRef = collection(db, "notifications");
       const q = query(
@@ -50,25 +50,28 @@ export async function dispatchNotification({
       const querySnapshot = await getDocs(q);
 
       if (!querySnapshot.empty) {
-        // Group & update existing notification document
         const existingDoc = querySnapshot.docs[0];
-        const existingData = existingDoc.data();
-        const currentCount = existingData.messageCount || 1;
-        const newCount = currentCount + 1;
+        const targetDocRef = doc(db, "notifications", existingDoc.id);
 
-        const updatedMessage = senderName
-          ? `${senderName} (${newCount} new messages): "${message}"`
-          : `${newCount} new messages: "${message}"`;
+        // Atomic Transaction for Incrementing Message Count
+        await runTransaction(db, async (transaction) => {
+          const sfDoc = await transaction.get(targetDocRef);
+          if (!sfDoc.exists()) return;
 
-        await updateDoc(doc(db, "notifications", existingDoc.id), {
-          title: `New Message regarding ${existingData.title?.replace("New Message regarding ", "") || "Listing"}`,
-          message: updatedMessage,
-          messageCount: newCount,
-          updatedAt: serverTimestamp(),
+          const currentCount = sfDoc.data().messageCount || 1;
+          const newCount = currentCount + 1;
+          const updatedMessage = senderName
+            ? `${senderName} (${newCount} new messages): "${message}"`
+            : `${newCount} new messages: "${message}"`;
+
+          transaction.update(targetDocRef, {
+            message: updatedMessage,
+            messageCount: newCount,
+            updatedAt: serverTimestamp(),
+          });
         });
 
-        // Trigger Push API
-        triggerPushApi({ recipientUid, recipientPhone, title: `Chat Alert (${newCount})`, message: updatedMessage, actionUrl: finalActionUrl, chatId: conversationId });
+        // Push Spam Throttling: Do NOT trigger another push alert for subsequent unread messages in the same thread
         return;
       }
     }
@@ -91,8 +94,8 @@ export async function dispatchNotification({
       updatedAt: serverTimestamp(),
     });
 
-    // Trigger Push API
-    triggerPushApi({ recipientUid, recipientPhone, title, message, actionUrl: finalActionUrl, chatId: conversationId });
+    // Trigger Push API (First unread message / non-chat event)
+    triggerPushApi({ recipientUid, recipientPhone, type, title, message, actionUrl: finalActionUrl, chatId: conversationId });
   } catch (error) {
     console.warn("Centralized dispatchNotification error:", error);
   }

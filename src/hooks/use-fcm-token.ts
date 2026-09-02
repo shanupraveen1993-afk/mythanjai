@@ -5,15 +5,30 @@ import { useAuth } from "@/hooks/use-auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 
+async function sha256Hash(message: string): Promise<string> {
+  if (typeof window === "undefined" || !window.crypto?.subtle) {
+    return btoa(message).replace(/=/g, "").slice(0, 32);
+  }
+  const msgBuffer = new TextEncoder().encode(message);
+  const hashBuffer = await window.crypto.subtle.digest("SHA-256", msgBuffer);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+}
+
 export function useFcmToken() {
   const { user } = useAuth();
 
   useEffect(() => {
     if (typeof window === "undefined" || !user?.uid) return;
 
-    const setupFcmToken = async () => {
+    const registerPushToken = async () => {
       try {
         const isNative = Boolean((window as any).Capacitor?.isNativePlatform() || window.navigator.userAgent.includes("Capacitor"));
+        const platform = isNative
+          ? window.navigator.userAgent.includes("iPhone") || window.navigator.userAgent.includes("iPad")
+            ? "ios"
+            : "android"
+          : "web";
 
         if (isNative) {
           const { PushNotifications } = await import("@capacitor/push-notifications");
@@ -28,14 +43,19 @@ export function useFcmToken() {
 
             PushNotifications.addListener("registration", async (tokenData) => {
               if (tokenData?.value) {
-                const tokenHash = btoa(tokenData.value).replace(/=/g, "").slice(0, 20);
+                const tokenHash = await sha256Hash(tokenData.value);
                 const deviceRef = doc(db, "users", user.uid, "devices", tokenHash);
 
-                await setDoc(deviceRef, {
-                  token: tokenData.value,
-                  platform: "android",
-                  lastUpdated: serverTimestamp(),
-                }, { merge: true });
+                await setDoc(
+                  deviceRef,
+                  {
+                    token: tokenData.value,
+                    platform,
+                    userId: user.uid,
+                    lastUpdated: serverTimestamp(),
+                  },
+                  { merge: true }
+                );
               }
             });
           }
@@ -45,6 +65,6 @@ export function useFcmToken() {
       }
     };
 
-    setupFcmToken();
+    registerPushToken();
   }, [user?.uid]);
 }
