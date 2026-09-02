@@ -551,7 +551,8 @@ export default function ChatClientPage() {
       });
 
       // 🔔 Server-authoritative notification + FCM via /api/chat/notify
-      // The server derives the recipient from trusted Firestore chat data and validates messageId.
+      // Server verifies messageId ownership and reads notification content from Firestore.
+      // Client sends only chatId + messageId. Text and senderName come from trusted Firestore data.
       if (activePeerId && activeChatId !== "namma_thanjai_system_welcome") {
         try {
           const firebaseAuth = getAuth();
@@ -568,8 +569,6 @@ export default function ChatClientPage() {
               body: JSON.stringify({
                 chatId: activeChatId,
                 messageId: msgDocRef.id,
-                senderName: currentName,
-                text: currentText,
               }),
             });
             if (!notifyRes.ok) {

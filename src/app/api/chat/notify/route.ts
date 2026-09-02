@@ -7,10 +7,17 @@ import { dispatchServerNotification } from "@/lib/notification-service-server";
  *
  * Called by ChatClientPage after creating a chat message.
  * Authenticates caller via Firebase ID token (Bearer header).
- * Verifies that messageId exists in chats/{chatId}/messages/{messageId} and senderId === verifiedSenderUid.
- * Derives recipient UID strictly from trusted chat participants in Firestore.
  *
- * Body: { chatId: string; messageId: string; senderName: string; text: string }
+ * Security guarantees:
+ * - Verifies caller via Firebase ID token.
+ * - Verifies messageId exists in chats/{chatId}/messages/{messageId}.
+ * - Verifies message.senderId === verifiedSenderUid (caller owns the message).
+ * - Derives recipient UID exclusively from trusted chat participants in Firestore.
+ * - Uses Firestore message document for notification text and senderName —
+ *   NEVER trusts client-supplied notification content.
+ *
+ * Body: { chatId: string; messageId: string }
+ * (text and senderName are read from the verified Firestore message document, not from the request body)
  */
 export async function POST(req: Request) {
   try {
@@ -37,26 +44,27 @@ export async function POST(req: Request) {
     }
 
     // ── 2. Parse and validate request body ──────────────────────────────────
+    // Only chatId and messageId are accepted from the client.
+    // Notification text and senderName are read from the verified Firestore message document.
     const body = await req.json();
-    const { chatId, messageId, senderName, text } = body as {
+    const { chatId, messageId } = body as {
       chatId: string;
       messageId: string;
-      senderName: string;
-      text: string;
     };
 
-    if (!chatId || !messageId || !text) {
+    if (!chatId || !messageId) {
       return NextResponse.json(
-        { success: false, error: "Missing chatId, messageId, or text" },
+        { success: false, error: "Missing chatId or messageId" },
         { status: 400 }
       );
     }
 
+    // System chat room does not need peer notifications.
     if (chatId === "namma_thanjai_system_welcome") {
       return NextResponse.json({ success: true, skipped: "system_chat" });
     }
 
-    // ── 3. Verify message existence and sender ownership in Firestore ──────
+    // ── 3. Verify message existence and sender ownership in Firestore ───────
     const msgRef = adminDb.collection("chats").doc(chatId).collection("messages").doc(messageId);
     const msgSnap = await msgRef.get();
 
@@ -68,6 +76,7 @@ export async function POST(req: Request) {
     }
 
     const msgData = msgSnap.data() || {};
+
     if (msgData.senderId !== verifiedSenderUid) {
       return NextResponse.json(
         { success: false, error: "Sender UID does not match verified token" },
@@ -75,7 +84,12 @@ export async function POST(req: Request) {
       );
     }
 
-    // ── 4. Derive recipient UID strictly from trusted chat document ──────────
+    // ── 4. Read authoritative notification content from the verified message doc ──
+    // NEVER use request-body text or senderName — always use what is in Firestore.
+    const authoritative_text: string = (msgData.text || "").slice(0, 100);
+    const authoritative_senderName: string = msgData.senderName || "Member";
+
+    // ── 5. Derive recipient UID strictly from trusted chat document ──────────
     const chatDoc = await adminDb.collection("chats").doc(chatId).get();
     if (!chatDoc.exists) {
       return NextResponse.json(
@@ -94,6 +108,7 @@ export async function POST(req: Request) {
       );
     }
 
+    // Recipient = the other participant (never from request body)
     const recipientUid = participants.find((uid) => uid !== verifiedSenderUid);
     if (!recipientUid) {
       return NextResponse.json(
@@ -102,14 +117,14 @@ export async function POST(req: Request) {
       );
     }
 
-    // ── 5. Dispatch server-authoritative notification + FCM ──────────────────
+    // ── 6. Dispatch server-authoritative notification + FCM ──────────────────
     const result = await dispatchServerNotification({
       recipientUid,
       type: "CHAT",
-      title: `💬 New message from ${senderName || "Member"}`,
-      message: text.slice(0, 100),
+      title: `💬 New message from ${authoritative_senderName}`,
+      message: authoritative_text,
       senderUid: verifiedSenderUid,
-      senderName: senderName || "Member",
+      senderName: authoritative_senderName,
       conversationId: chatId,
       messageId,
       actionUrl: `/chat?chatId=${chatId}`,
