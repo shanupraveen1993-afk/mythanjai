@@ -277,13 +277,7 @@ function MainLayoutContent({
     );
   }
 
-  if (showWalkthrough) {
-    return (
-      <div className="w-full min-h-screen bg-white">
-        <SwipeUpOnboarding onComplete={handleWalkthroughComplete} />
-      </div>
-    );
-  }
+
 
   if (showPermissionsModal) {
     return (

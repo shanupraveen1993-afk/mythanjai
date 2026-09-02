@@ -22,7 +22,7 @@ import {
   Users,
 } from "lucide-react";
 
-type OnboardingStage = "splash" | "walkthrough1" | "login";
+type OnboardingStage = "splash" | "login";
 
 export default function OnboardingClientPage() {
   const router = useRouter();
@@ -33,12 +33,12 @@ export default function OnboardingClientPage() {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [phoneUpdating, setPhoneUpdating] = useState(false);
 
-  // Auto-advance Splash Screen to Walkthrough 1 after 2.2 seconds
+  // Auto-advance Splash Screen directly to Login after 2.0 seconds (Walkthrough Removed)
   useEffect(() => {
     if (stage === "splash") {
       const timer = setTimeout(() => {
-        setStage("walkthrough1");
-      }, 2200);
+        setStage("login");
+      }, 2000);
       return () => clearTimeout(timer);
     }
   }, [stage]);
@@ -87,7 +87,7 @@ export default function OnboardingClientPage() {
       {/* ========================================================= */}
       {stage === "splash" && (
         <div 
-          onClick={() => setStage("walkthrough1")}
+          onClick={() => setStage("login")}
           className="flex-1 flex flex-col items-center justify-between text-center gap-8 cursor-pointer animate-fade-in py-12 my-auto"
         >
           <div className="my-auto flex flex-col items-center gap-6">
@@ -116,72 +116,6 @@ export default function OnboardingClientPage() {
               <div className="h-full bg-gradient-to-r from-amber-400 to-yellow-300 rounded-full animate-pulse w-3/4" />
             </div>
             <span className="text-[11px] text-slate-300 font-medium">Opening...</span>
-          </div>
-        </div>
-      )}
-
-      {/* ========================================================= */}
-      {/* STAGE 2: SINGLE WALKTHROUGH SCREEN (SIMPLE, PRECISE & SHARP) */}
-      {/* ========================================================= */}
-      {stage === "walkthrough1" && (
-        <div className="flex-1 flex flex-col items-center justify-between max-w-md mx-auto w-full py-6 animate-fade-in">
-          {/* Header */}
-          <div className="w-full text-center pt-2">
-            <span className="text-[10px] font-black tracking-widest text-amber-400 uppercase bg-amber-400/10 px-3.5 py-1 rounded-full border border-amber-400/20">
-              WELCOME TO NAMMA THANJAI
-            </span>
-            <h2 className="font-heading font-black text-2xl sm:text-3xl text-white tracking-tight mt-3">
-              Thanjavur's Local Hub
-            </h2>
-          </div>
-
-          {/* 2 Precise Category Highlights */}
-          <div className="w-full flex flex-col gap-4 my-auto py-4">
-            {/* Category 1: Buy, Sell & Wanted */}
-            <div className="bg-white/10 border border-white/15 p-4 rounded-2xl flex items-center gap-4 text-left shadow-lg">
-              <div className="w-12 h-12 rounded-xl bg-[#FBBF24] text-slate-950 flex items-center justify-center shrink-0 shadow-md">
-                <ShoppingBag className="w-6 h-6 stroke-[2.2]" />
-              </div>
-              <div className="flex flex-col">
-                <h3 className="font-heading font-black text-base text-white">Buy, Sell &amp; Wanted</h3>
-                <p className="text-xs text-slate-300 font-medium mt-0.5">Post ads to sell or request items you need locally</p>
-              </div>
-            </div>
-
-            {/* Category 2: Local Services & Offers */}
-            <div className="bg-white/10 border border-white/15 p-4 rounded-2xl flex items-center gap-4 text-left shadow-lg">
-              <div className="w-12 h-12 rounded-xl bg-emerald-400 text-slate-950 flex items-center justify-center shrink-0 shadow-md">
-                <Wrench className="w-6 h-6 stroke-[2.2]" />
-              </div>
-              <div className="flex flex-col">
-                <h3 className="font-heading font-black text-base text-white">Services &amp; Store Offers</h3>
-                <p className="text-xs text-slate-300 font-medium mt-0.5">Find local skilled services &amp; exclusive shop deals</p>
-              </div>
-            </div>
-          </div>
-
-          {/* Bottom Action Button */}
-          <div className="w-full flex flex-col gap-2.5">
-            <button
-              type="button"
-              onClick={() => setStage("login")}
-              className="w-full py-4 bg-[#FBBF24] hover:bg-amber-400 text-slate-950 font-heading font-black text-sm uppercase tracking-wider rounded-2xl flex items-center justify-center gap-2 shadow-xl cursor-pointer transition-all active:scale-98"
-            >
-              <span>Get Started →</span>
-              <ArrowRight className="w-5 h-5 text-slate-950 stroke-[3]" />
-            </button>
-            <button
-              type="button"
-              onClick={() => {
-                if (typeof window !== "undefined") {
-                  localStorage.setItem("namma_thanjai_onboarding_completed_v10", "true");
-                }
-                router.push("/");
-              }}
-              className="text-xs text-slate-400 font-bold hover:text-white transition-colors py-1 text-center"
-            >
-              Skip
-            </button>
           </div>
         </div>
       )}
