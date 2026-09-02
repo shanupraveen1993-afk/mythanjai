@@ -44,10 +44,9 @@ service cloud.firestore {
       allow update, delete: if request.auth != null && resource.data.userId == request.auth.uid;
     }
 
-    // 5. User Profiles
+    // 5. User Profiles (Owner Read & Write Only)
     match /users/{userId} {
-      allow read: if true;
-      allow write: if request.auth != null && request.auth.uid == userId;
+      allow read, write: if request.auth != null && request.auth.uid == userId;
     }
   }
 }

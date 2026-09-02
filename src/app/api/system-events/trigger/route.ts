@@ -1,15 +1,20 @@
 import { NextResponse } from "next/server";
-import { adminDb, adminAuth } from "@/lib/firebase-admin";
+import { adminAuth, adminDb } from "@/lib/firebase-admin";
+import { dispatchServerNotification } from "@/lib/notification-service-server";
 
 /**
  * Server API Route: /api/system-events/trigger
  * Protected System Event Engine generating Team Chat messages & notifications with Firebase Admin SDK.
- * Idempotent with separate global event keys and per-user delivery keys. Strict error handling (no error swallowing).
+ * Atomic transaction idempotency with deterministic message IDs (msg_daily_quote_YYYY-MM-DD_UID) preventing duplicates.
  */
 export async function POST(req: Request) {
   try {
     const authHeader = req.headers.get("authorization") || "";
-    const isServerInternal = Boolean(req.headers.get("x-internal-secret"));
+    const internalSecretHeader = req.headers.get("x-internal-secret");
+    const configuredSecret = process.env.INTERNAL_PUSH_SECRET || process.env.INTERNAL_SECRET || "nt_internal_server_push_secret_2026";
+
+    // P0-2: Strict String Comparison for Server Secret Header
+    const isServerInternal = Boolean(internalSecretHeader && internalSecretHeader === configuredSecret);
 
     if (process.env.NODE_ENV === "production" && !authHeader.startsWith("Bearer ") && !isServerInternal) {
       return NextResponse.json({ success: false, error: "Unauthorized system event trigger" }, { status: 401 });
@@ -24,10 +29,26 @@ export async function POST(req: Request) {
 
     const systemChatId = "namma_thanjai_system_welcome";
     const systemEventsRef = adminDb.collection("chats").doc(systemChatId).collection("system_events");
+    const targetEventDocRef = systemEventsRef.doc(userDeliveryKey);
 
-    // 1. Idempotency Check on Server
-    const existingDoc = await systemEventsRef.doc(userDeliveryKey).get();
-    if (existingDoc.exists) {
+    let alreadyDispatched = false;
+
+    // P0-3: Atomic Transaction to Claim System Event Idempotency Key
+    await adminDb.runTransaction(async (transaction) => {
+      const docSnap = await transaction.get(targetEventDocRef);
+      if (docSnap.exists) {
+        alreadyDispatched = true;
+        return;
+      }
+      transaction.set(targetEventDocRef, {
+        dispatchedAt: new Date(),
+        eventType: eventType || "SYSTEM",
+        recipientUid: recipientUid || "broadcast",
+        status: "DISPATCHED",
+      });
+    });
+
+    if (alreadyDispatched) {
       return NextResponse.json({
         success: true,
         message: `System event ${userDeliveryKey} already dispatched today (Skipped duplicate)`,
@@ -47,37 +68,29 @@ export async function POST(req: Request) {
       ? "Vanakkam! We value your experience. Tap to share feedback & help us improve!"
       : messageText || "Check out new local store offers and marketplace items in your area today!";
 
-    // 2. Add System Message to Team Chat via Firebase Admin SDK (No error swallowing)
-    const messagesRef = adminDb.collection("chats").doc(systemChatId).collection("messages");
-    await messagesRef.add({
+    // P1-2: Deterministic Message ID in Team Chat Messages Subcollection
+    const deterministicMessageId = `msg_${userDeliveryKey}`;
+    const messageDocRef = adminDb.collection("chats").doc(systemChatId).collection("messages").doc(deterministicMessageId);
+
+    // Write Team Chat Message via Admin SDK (No Error Swallowing)
+    await messageDocRef.set({
       senderId: "namma_thanjai_official",
       senderName: "Namma Thanjai Team",
       text: defaultMessage,
       timestamp: new Date(),
     });
 
-    // 3. Create Notification in Firestore via Admin SDK if recipientUid is provided
+    // P1-1: Route Notification via Centralized Server Notification Engine
     if (recipientUid) {
-      await adminDb.collection("notifications").add({
+      await dispatchServerNotification({
         recipientUid,
         type: eventType || "TEAM_FEEDBACK",
         title: titleText || defaultTitle,
         message: defaultMessage,
         conversationId: systemChatId,
-        messageCount: 1,
         actionUrl: actionUrl || `/chat?chatId=${systemChatId}`,
-        read: false,
-        createdAt: new Date(),
-        updatedAt: new Date(),
       });
     }
-
-    // 4. Write Idempotency Record
-    await systemEventsRef.doc(userDeliveryKey).set({
-      dispatchedAt: new Date(),
-      eventType,
-      recipientUid: recipientUid || "broadcast",
-    });
 
     return NextResponse.json({
       success: true,

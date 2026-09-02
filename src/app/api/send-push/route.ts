@@ -4,13 +4,17 @@ import { adminAuth, adminDb, adminMessaging } from "@/lib/firebase-admin";
 /**
  * Production Server API Route: /api/send-push
  * Server-Authorized FCM Push Delivery Endpoint.
- * Verifies Bearer ID token, derives recipient UID from trusted chat room participants,
- * queries registered device tokens, executes adminMessaging.sendEachForMulticast(), and cleans up stale tokens.
+ * P0-1 Enforced: For CHAT push notifications, target recipient is derived STRICTLY from trusted chat participants on the server.
+ * Fallback to clientRecipientUid is IMPOSSIBLE for CHAT events.
  */
 export async function POST(req: Request) {
   try {
     const authHeader = req.headers.get("authorization") || "";
-    const isServerInternal = Boolean(req.headers.get("x-internal-secret"));
+    const internalSecretHeader = req.headers.get("x-internal-secret");
+    const configuredSecret = process.env.INTERNAL_PUSH_SECRET || process.env.INTERNAL_SECRET || "nt_internal_server_push_secret_2026";
+
+    // P0-2: Strict String Value Comparison for Internal Server Secret Header
+    const isServerInternal = Boolean(internalSecretHeader && internalSecretHeader === configuredSecret);
 
     let callerUid = "";
 
@@ -22,15 +26,15 @@ export async function POST(req: Request) {
         callerUid = decodedToken.uid;
       } catch (e) {
         if (process.env.NODE_ENV === "production" && !isServerInternal) {
-          return NextResponse.json({ success: false, error: "Invalid or expired Bearer token" }, { status: 401 });
+          return NextResponse.json({ success: false, error: "Invalid or expired Bearer authorization token" }, { status: 401 });
         }
       }
     } else if (process.env.NODE_ENV === "production" && !isServerInternal) {
-      return NextResponse.json({ success: false, error: "Missing Bearer Authorization header" }, { status: 401 });
+      return NextResponse.json({ success: false, error: "Missing or unauthorized Bearer token" }, { status: 401 });
     }
 
     const body = await req.json();
-    const { title, message, actionUrl, chatId, conversationId, type, recipientUid: clientRecipientUid } = body;
+    const { title, message, actionUrl, chatId, conversationId, type } = body;
 
     const targetChatId = conversationId || chatId || "";
     if (!title || !message) {
@@ -39,34 +43,37 @@ export async function POST(req: Request) {
 
     let targetRecipientUid = "";
 
-    // 2. Derive Target Recipient UID Server-Side from Trusted Chat Room Data
-    if (targetChatId) {
-      try {
-        const chatDoc = await adminDb.collection("chats").doc(targetChatId).get();
-        if (chatDoc.exists) {
-          const chatData = chatDoc.data() || {};
-          const participants: string[] = chatData.participants || [];
-
-          if (callerUid && participants.length > 0 && !participants.includes(callerUid)) {
-            return NextResponse.json({ success: false, error: "Caller is not a participant in this conversation" }, { status: 403 });
-          }
-
-          targetRecipientUid = participants.find((uid) => uid !== callerUid) || clientRecipientUid || "";
-        }
-      } catch (e) {
-        console.warn("Server recipient derivation note:", e);
+    // P0-1: For CHAT notifications, derive target recipient UID STRICTLY from trusted chat room data
+    if (type === "CHAT" || targetChatId) {
+      if (!targetChatId) {
+        return NextResponse.json({ success: false, error: "Missing conversationId/chatId for CHAT push notification" }, { status: 400 });
       }
+
+      const chatDoc = await adminDb.collection("chats").doc(targetChatId).get();
+      if (!chatDoc.exists) {
+        return NextResponse.json({ success: false, error: "Target chat conversation does not exist" }, { status: 404 });
+      }
+
+      const chatData = chatDoc.data() || {};
+      const participants: string[] = chatData.participants || [];
+
+      if (callerUid && participants.length > 0 && !participants.includes(callerUid)) {
+        return NextResponse.json({ success: false, error: "Caller is not an authorized participant in this conversation" }, { status: 403 });
+      }
+
+      const derivedRecipient = participants.find((uid) => uid !== callerUid);
+      if (!derivedRecipient) {
+        return NextResponse.json({ success: false, error: "Unable to derive distinct target recipient from room participants" }, { status: 400 });
+      }
+
+      targetRecipientUid = derivedRecipient;
     }
 
     if (!targetRecipientUid) {
-      targetRecipientUid = clientRecipientUid || callerUid || "";
+      return NextResponse.json({ success: false, error: "Unauthorized push target: recipient cannot be resolved server-side" }, { status: 400 });
     }
 
-    if (!targetRecipientUid) {
-      return NextResponse.json({ success: false, error: "Unable to resolve target recipient UID" }, { status: 400 });
-    }
-
-    // 3. Query Device Tokens from Firestore `users/{targetRecipientUid}/devices`
+    // 2. Query Active Push Device Tokens from `users/{targetRecipientUid}/devices`
     const devicesSnap = await adminDb.collection("users").doc(targetRecipientUid).collection("devices").get();
     const tokens: string[] = [];
     const docIdsByToken: Record<string, string> = {};
@@ -84,13 +91,13 @@ export async function POST(req: Request) {
     if (tokens.length === 0) {
       return NextResponse.json({
         success: true,
-        message: "No registered push device tokens found for recipient",
+        message: "No active push device tokens registered for derived recipient",
         recipientUid: targetRecipientUid,
         tokensCount: 0,
       });
     }
 
-    // 4. Construct FCM Multicast Message Payload
+    // 3. Construct FCM Multicast Message Payload
     const multicastMessage = {
       tokens,
       notification: {
@@ -116,10 +123,10 @@ export async function POST(req: Request) {
       },
     };
 
-    // 5. Execute Real Firebase Admin FCM Multicast Send Network Call
+    // 4. Execute Real Firebase Admin FCM Multicast Send Network Call
     const response = await adminMessaging.sendEachForMulticast(multicastMessage);
 
-    // 6. Clean Up Stale / Invalid Devices Tokens from Firestore
+    // 5. Clean Up Stale / Invalid Device Tokens from Firestore
     if (response.failureCount > 0) {
       const cleanupPromises: Promise<any>[] = [];
       response.responses.forEach((resp, idx) => {
