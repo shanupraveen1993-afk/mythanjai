@@ -27,10 +27,10 @@ import {
 } from "lucide-react";
 import NotificationDrawer from "@/components/modals/NotificationDrawer";
 import { collection, addDoc, query, orderBy, onSnapshot, serverTimestamp, setDoc, doc, getDocs, updateDoc, deleteDoc, getDoc, where } from "firebase/firestore";
+import { getAuth } from "firebase/auth";
 import { db } from "@/lib/firebase";
 import { useAuth } from "@/hooks/use-auth";
 import { useToast } from "@/context/ToastContext";
-import { dispatchNotification } from "@/lib/notification-service";
 import BottomTabBar from "@/components/layout/BottomTabBar";
 
 export function generate5DigitMemberId(val?: string): string {
@@ -550,36 +550,29 @@ export default function ChatClientPage() {
         timestamp: serverTimestamp(),
       });
 
-      // 🔔 REAL-TIME NOTIFICATION RECORD: Notify recipient user of new message
+      // 🔔 Server-authoritative notification + FCM via /api/chat/notify
+      // The server derives the recipient from trusted Firestore chat data.
+      // Client never writes to the notifications collection directly.
       if (activePeerId && activeChatId !== "namma_thanjai_system_welcome") {
         try {
-          const notifRef = collection(db, "notifications");
-          await addDoc(notifRef, {
-            recipientId: activePeerId,
-            recipientPhone: activePeerPhone,
-            senderId: currentUid,
-            senderName: currentName,
-            type: "chat",
-            title: `New message from ${currentName}`,
-            message: `"${currentText.slice(0, 50)}${currentText.length > 50 ? "..." : ""}" re: ${activeListingTitle}`,
-            actionUrl: `/chat?chatId=${activeChatId}&listingId=${queryListingId || ""}`,
-            read: false,
-            timestamp: serverTimestamp(),
-          });
-
-          // Trigger high-priority FCM Push Notification for Screen-OFF Delivery
-          fetch("/api/send-push", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              recipientId: activePeerId,
-              recipientPhone: activePeerPhone,
-              title: `💬 New message from ${currentName}`,
-              message: currentText.slice(0, 60),
-              chatId: activeChatId,
-              actionUrl: `/chat?chatId=${activeChatId}`,
-            }),
-          }).catch(() => {});
+          const firebaseAuth = getAuth();
+          const idToken = firebaseAuth.currentUser
+            ? await firebaseAuth.currentUser.getIdToken()
+            : "";
+          if (idToken) {
+            fetch("/api/chat/notify", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${idToken}`,
+              },
+              body: JSON.stringify({
+                chatId: activeChatId,
+                senderName: currentName,
+                text: currentText,
+              }),
+            }).catch(() => {});
+          }
         } catch (e) {}
       }
 
@@ -625,21 +618,7 @@ export default function ChatClientPage() {
         return updated;
       });
 
-      // Dispatch centralized grouped notification to recipient peer
-      if (activePeerId && activePeerId !== currentUid) {
-        dispatchNotification({
-          recipientUid: activePeerId,
-          recipientPhone: activePeerPhone,
-          type: "CHAT",
-          title: `New Message regarding ${activeListingTitle || "Listing"}`,
-          message: `${profile?.displayName || "Member"}: "${currentText}"`,
-          senderUid: currentUid,
-          senderName: profile?.displayName || "Member",
-          senderPhone: profile?.phone || "",
-          conversationId: activeChatId,
-          actionUrl: `/chat?chatId=${activeChatId}`,
-        });
-      }
+      // Notification dispatch is handled server-side by /api/chat/notify above.
 
       // 🤖 GEMINI AI CUSTOMER ASSISTANT: Auto-reply to customer queries on Namma Thanjai Admin thread
       if (activeChatId === "namma_thanjai_system_welcome") {

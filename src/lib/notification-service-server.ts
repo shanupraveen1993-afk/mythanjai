@@ -16,11 +16,17 @@ interface ServerNotificationParams {
 }
 
 /**
- * Authoritative Server Notification Engine
+ * Authoritative Server Notification Engine — v43
  * Powered by Firebase Admin SDK.
- * Handles deterministic document IDs for chat & system notifications, atomic transactions,
- * unread count grouping, push spam throttling, and direct FCM multicast delivery.
- * Strict Error Propagation: FCM push failures throw exceptions so system event triggers receive success: false.
+ *
+ * Key reliability guarantees:
+ * 1. pushDelivered: boolean field on every notification document tracks FCM delivery state.
+ *    - Created as false. Updated to true only after successful FCM delivery.
+ *    - On retry: if doc exists and pushDelivered is false, FCM is attempted again.
+ *    - This makes FAILED → retry cycles fully reliable without duplicate docs.
+ * 2. executeServerPush throws on ANY FCM failure (failureCount > 0), not just full failure.
+ * 3. dispatchServerNotification returns success: false whenever FCM has any failed token.
+ * 4. system-events/trigger therefore reaches FAILED whenever any FCM delivery fails.
  */
 export async function dispatchServerNotification({
   recipientUid,
@@ -41,18 +47,23 @@ export async function dispatchServerNotification({
     const finalActionUrl = actionUrl || (conversationId ? `/chat?chatId=${conversationId}` : "/chat");
     const todayDate = dateKey || new Date().toISOString().slice(0, 10);
 
-    // 1. CHAT Notifications: Atomic grouping on deterministic doc ID `${recipientUid}_${conversationId}`
+    // ─── CHAT NOTIFICATIONS ──────────────────────────────────────────────────
+    // Deterministic doc ID: `${recipientUid}_${conversationId}`
+    // Atomic grouping: increment messageCount on existing unread, create on new/already-read.
+    // FCM retry: if doc exists unread but pushDelivered=false → attempt FCM again.
     if (type === "CHAT" && conversationId) {
       const deterministicNotifId = `${recipientUid}_${conversationId}`;
       const targetDocRef = adminDb.collection("notifications").doc(deterministicNotifId);
 
-      let isFirstUnread = false;
+      // Tracks whether we need to attempt (or re-attempt) FCM for this notification.
+      let shouldAttemptPush = false;
 
       await adminDb.runTransaction(async (transaction) => {
         const notifDoc = await transaction.get(targetDocRef);
 
         if (!notifDoc.exists || notifDoc.data()?.read === true) {
-          isFirstUnread = true;
+          // New notification or previously-read: create fresh doc.
+          shouldAttemptPush = true;
           const updatedMessage = senderName ? `${senderName}: "${message}"` : `"${message}"`;
 
           transaction.set(
@@ -70,17 +81,23 @@ export async function dispatchServerNotification({
               messageCount: 1,
               actionUrl: finalActionUrl,
               read: false,
+              pushDelivered: false,   // Will be set true after successful FCM
               createdAt: new Date(),
               updatedAt: new Date(),
             },
             { merge: true }
           );
         } else {
-          const currentCount = notifDoc.data()?.messageCount || 1;
+          // Existing unread notification: increment count.
+          const currentData = notifDoc.data() || {};
+          const currentCount = currentData.messageCount || 1;
           const newCount = currentCount + 1;
           const updatedMessage = senderName
             ? `${senderName} (${newCount} new messages): "${message}"`
             : `${newCount} new messages: "${message}"`;
+
+          // Re-attempt FCM only if previous push delivery failed.
+          shouldAttemptPush = currentData.pushDelivered === false;
 
           transaction.update(targetDocRef, {
             message: updatedMessage,
@@ -90,28 +107,41 @@ export async function dispatchServerNotification({
         }
       });
 
-      // Push Spam Throttling: Send FCM push ONLY on 1st unread message
-      if (isFirstUnread) {
+      if (shouldAttemptPush) {
         try {
-          await executeServerPush({ recipientUid, title, message, actionUrl: finalActionUrl, chatId: conversationId, type });
+          await executeServerPush({
+            recipientUid,
+            title,
+            message,
+            actionUrl: finalActionUrl,
+            chatId: conversationId,
+            type,
+          });
+          // Mark push as delivered only after fully successful FCM execution.
+          await targetDocRef.update({ pushDelivered: true });
         } catch (pushErr: any) {
-          console.error("FCM Push delivery error for chat notification:", pushErr);
+          console.error("FCM Push delivery error for CHAT notification:", pushErr);
+          // Leave pushDelivered: false so next retry re-attempts FCM.
           return { success: false, error: pushErr?.message || "FCM push delivery failed" };
         }
       }
+
       return { success: true, grouped: true };
     }
 
-    // 2. System & Activity Notifications: Deterministic doc ID `${type}_${todayDate}_${recipientUid}`
+    // ─── SYSTEM / ACTIVITY NOTIFICATIONS ─────────────────────────────────────
+    // Deterministic doc ID: `${type}_${todayDate}_${recipientUid}`
+    // On retry: if doc exists with pushDelivered=false → attempt FCM again.
     const deterministicSystemId = `${type}_${todayDate}_${recipientUid}`;
     const systemNotifRef = adminDb.collection("notifications").doc(deterministicSystemId);
 
-    let isNewSystemDoc = false;
+    let shouldAttemptSystemPush = false;
 
     await adminDb.runTransaction(async (transaction) => {
       const docSnap = await transaction.get(systemNotifRef);
       if (!docSnap.exists) {
-        isNewSystemDoc = true;
+        // First attempt: create doc with pushDelivered: false.
+        shouldAttemptSystemPush = true;
         transaction.set(systemNotifRef, {
           recipientUid,
           recipientPhone: recipientPhone || "",
@@ -125,98 +155,139 @@ export async function dispatchServerNotification({
           messageCount: 1,
           actionUrl: finalActionUrl,
           read: false,
+          pushDelivered: false,   // Will be set true after successful FCM
           createdAt: new Date(),
           updatedAt: new Date(),
         });
+      } else {
+        // Doc already exists — retry FCM only if previous push failed.
+        const existingData = docSnap.data() || {};
+        shouldAttemptSystemPush = existingData.pushDelivered === false;
       }
     });
 
-    if (isNewSystemDoc) {
+    if (shouldAttemptSystemPush) {
       try {
-        await executeServerPush({ recipientUid, title, message, actionUrl: finalActionUrl, chatId: conversationId || "namma_thanjai_system_welcome", type });
+        await executeServerPush({
+          recipientUid,
+          title,
+          message,
+          actionUrl: finalActionUrl,
+          chatId: conversationId || "namma_thanjai_system_welcome",
+          type,
+        });
+        // Mark push as delivered only after fully successful FCM execution.
+        await systemNotifRef.update({ pushDelivered: true });
       } catch (pushErr: any) {
         console.error("FCM Push delivery error for system notification:", pushErr);
+        // Leave pushDelivered: false so next retry re-attempts FCM.
         return { success: false, error: pushErr?.message || "FCM push delivery failed" };
       }
     }
 
-    return { success: true, newDoc: isNewSystemDoc };
+    return { success: true };
   } catch (error: any) {
     console.error("dispatchServerNotification error:", error);
     return { success: false, error: error?.message || "Server notification error" };
   }
 }
 
-async function executeServerPush({ recipientUid, title, message, actionUrl, chatId, type }: any) {
-  try {
-    const devicesSnap = await adminDb.collection("users").doc(recipientUid).collection("devices").get();
-    const tokens: string[] = [];
-    const docIdsByToken: Record<string, string> = {};
+/**
+ * Internal FCM multicast delivery.
+ * Throws on ANY token failure (failureCount > 0), not only when all tokens fail.
+ * Cleans up stale/invalid tokens before throwing.
+ */
+async function executeServerPush({
+  recipientUid,
+  title,
+  message,
+  actionUrl,
+  chatId,
+  type,
+}: {
+  recipientUid: string;
+  title: string;
+  message: string;
+  actionUrl: string;
+  chatId: string;
+  type: string;
+}) {
+  const devicesSnap = await adminDb
+    .collection("users")
+    .doc(recipientUid)
+    .collection("devices")
+    .get();
 
-    devicesSnap.forEach((docSnap) => {
-      const data = docSnap.data();
-      if (data.token) {
-        tokens.push(data.token);
-        docIdsByToken[data.token] = docSnap.id;
-      }
-    });
+  const tokens: string[] = [];
+  const docIdsByToken: Record<string, string> = {};
 
-    if (tokens.length === 0) return;
+  devicesSnap.forEach((docSnap) => {
+    const data = docSnap.data();
+    if (data.token) {
+      tokens.push(data.token);
+      docIdsByToken[data.token] = docSnap.id;
+    }
+  });
 
-    const response = await adminMessaging.sendEachForMulticast({
-      tokens,
+  // No registered devices — not an error; recipient simply has no push targets.
+  if (tokens.length === 0) return;
+
+  const response = await adminMessaging.sendEachForMulticast({
+    tokens,
+    notification: {
+      title: title || "Namma Thanjai Alert",
+      body: message || "New update received",
+    },
+    data: {
+      type: type || "CHAT",
+      actionUrl: actionUrl || "/chat",
+      chatId: chatId || "",
+      conversationId: chatId || "",
+      click_action: "FLUTTER_NOTIFICATION_CLICK",
+      timestamp: new Date().toISOString(),
+    },
+    android: {
+      priority: "high",
       notification: {
-        title: title || "Namma Thanjai Alert",
-        body: message || "New update received",
-      },
-      data: {
-        type: type || "CHAT",
-        actionUrl: actionUrl || "/chat",
-        chatId: chatId || "",
-        conversationId: chatId || "",
-        click_action: "FLUTTER_NOTIFICATION_CLICK",
-        timestamp: new Date().toISOString(),
-      },
-      android: {
+        channelId: "namma_thanjai_alerts",
+        sound: "default",
+        visibility: "public",
         priority: "high",
-        notification: {
-          channelId: "namma_thanjai_alerts",
-          sound: "default",
-          visibility: "public",
-          priority: "high",
-        },
       },
-    });
+    },
+  });
 
-    // Clean Up Stale / Invalid Device Tokens from Firestore
-    if (response.failureCount > 0) {
-      const cleanupPromises: Promise<any>[] = [];
-      response.responses.forEach((resp, idx) => {
-        if (!resp.success && resp.error) {
-          const errCode = resp.error.code;
-          if (
-            errCode === "messaging/registration-token-not-registered" ||
-            errCode === "messaging/invalid-registration-token"
-          ) {
-            const failedToken = tokens[idx];
-            const failedDocId = docIdsByToken[failedToken];
-            if (failedDocId) {
-              cleanupPromises.push(
-                adminDb.collection("users").doc(recipientUid).collection("devices").doc(failedDocId).delete().catch(() => {})
-              );
-            }
+  // ── Clean up stale / invalid tokens regardless of whether we throw ──────────
+  if (response.failureCount > 0) {
+    const cleanupPromises: Promise<any>[] = [];
+    response.responses.forEach((resp, idx) => {
+      if (!resp.success && resp.error) {
+        const errCode = resp.error.code;
+        if (
+          errCode === "messaging/registration-token-not-registered" ||
+          errCode === "messaging/invalid-registration-token"
+        ) {
+          const failedToken = tokens[idx];
+          const failedDocId = docIdsByToken[failedToken];
+          if (failedDocId) {
+            cleanupPromises.push(
+              adminDb
+                .collection("users")
+                .doc(recipientUid)
+                .collection("devices")
+                .doc(failedDocId)
+                .delete()
+                .catch(() => {})
+            );
           }
         }
-      });
-      await Promise.all(cleanupPromises);
-
-      // Strict Error Propagation: Throw error if all FCM tokens failed
-      if (response.failureCount === tokens.length) {
-        throw new Error(`FCM multicast failed completely: ${response.failureCount} tokens failed`);
       }
-    }
-  } catch (e) {
-    console.error("executeServerPush FCM error:", e);
-    throw e;
+    });
+    await Promise.all(cleanupPromises);
+
+    // ── v43 strict contract: ANY failure → throw ────────────────────────────
+    throw new Error(
+      `FCM multicast partial/full failure: ${response.failureCount}/${tokens.length} tokens failed`
+    );
   }
 }
