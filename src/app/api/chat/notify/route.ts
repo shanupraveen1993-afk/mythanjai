@@ -5,12 +5,12 @@ import { dispatchServerNotification } from "@/lib/notification-service-server";
 /**
  * POST /api/chat/notify
  *
- * Called by ChatClientPage after successfully writing a chat message to Firestore.
- * Authenticates the caller via Firebase ID token (Bearer header).
- * Derives the recipient UID entirely from server-side trusted chat document data —
- * the caller cannot select an arbitrary recipient.
+ * Called by ChatClientPage after creating a chat message.
+ * Authenticates caller via Firebase ID token (Bearer header).
+ * Verifies that messageId exists in chats/{chatId}/messages/{messageId} and senderId === verifiedSenderUid.
+ * Derives recipient UID strictly from trusted chat participants in Firestore.
  *
- * Body: { chatId: string; senderName: string; text: string }
+ * Body: { chatId: string; messageId: string; senderName: string; text: string }
  */
 export async function POST(req: Request) {
   try {
@@ -36,27 +36,46 @@ export async function POST(req: Request) {
       );
     }
 
-    // ── 2. Parse request body ───────────────────────────────────────────────
+    // ── 2. Parse and validate request body ──────────────────────────────────
     const body = await req.json();
-    const { chatId, senderName, text } = body as {
+    const { chatId, messageId, senderName, text } = body as {
       chatId: string;
+      messageId: string;
       senderName: string;
       text: string;
     };
 
-    if (!chatId || !text) {
+    if (!chatId || !messageId || !text) {
       return NextResponse.json(
-        { success: false, error: "Missing chatId or text" },
+        { success: false, error: "Missing chatId, messageId, or text" },
         { status: 400 }
       );
     }
 
-    // System chat room does not need peer notifications.
     if (chatId === "namma_thanjai_system_welcome") {
       return NextResponse.json({ success: true, skipped: "system_chat" });
     }
 
-    // ── 3. Derive recipient UID from trusted server-side chat document ───────
+    // ── 3. Verify message existence and sender ownership in Firestore ──────
+    const msgRef = adminDb.collection("chats").doc(chatId).collection("messages").doc(messageId);
+    const msgSnap = await msgRef.get();
+
+    if (!msgSnap.exists) {
+      return NextResponse.json(
+        { success: false, error: "Message document not found in Firestore" },
+        { status: 404 }
+      );
+    }
+
+    const msgData = msgSnap.data() || {};
+    if (msgData.senderId !== verifiedSenderUid) {
+      return NextResponse.json(
+        { success: false, error: "Sender UID does not match verified token" },
+        { status: 403 }
+      );
+    }
+
+    // ── 4. Derive recipient UID strictly from trusted chat document ──────────
     const chatDoc = await adminDb.collection("chats").doc(chatId).get();
     if (!chatDoc.exists) {
       return NextResponse.json(
@@ -68,7 +87,6 @@ export async function POST(req: Request) {
     const chatData = chatDoc.data() || {};
     const participants: string[] = chatData.participants || [];
 
-    // Verify the caller is actually a participant in this chat.
     if (!participants.includes(verifiedSenderUid)) {
       return NextResponse.json(
         { success: false, error: "Caller is not a participant in this chat" },
@@ -76,7 +94,6 @@ export async function POST(req: Request) {
       );
     }
 
-    // Recipient = the other participant (not the verified sender).
     const recipientUid = participants.find((uid) => uid !== verifiedSenderUid);
     if (!recipientUid) {
       return NextResponse.json(
@@ -85,7 +102,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // ── 4. Dispatch server-authoritative notification + FCM ──────────────────
+    // ── 5. Dispatch server-authoritative notification + FCM ──────────────────
     const result = await dispatchServerNotification({
       recipientUid,
       type: "CHAT",
@@ -94,6 +111,7 @@ export async function POST(req: Request) {
       senderUid: verifiedSenderUid,
       senderName: senderName || "Member",
       conversationId: chatId,
+      messageId,
       actionUrl: `/chat?chatId=${chatId}`,
     });
 

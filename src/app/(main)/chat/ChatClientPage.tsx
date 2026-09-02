@@ -542,7 +542,7 @@ export default function ChatClientPage() {
       const currentPhone = (profile?.phone || user?.phoneNumber || "").replace(/\D/g, "");
 
       const messagesRef = collection(db, "chats", activeChatId, "messages");
-      await addDoc(messagesRef, {
+      const msgDocRef = await addDoc(messagesRef, {
         senderId: currentUid,
         senderPhone: currentPhone,
         senderName: currentName,
@@ -551,8 +551,7 @@ export default function ChatClientPage() {
       });
 
       // 🔔 Server-authoritative notification + FCM via /api/chat/notify
-      // The server derives the recipient from trusted Firestore chat data.
-      // Client never writes to the notifications collection directly.
+      // The server derives the recipient from trusted Firestore chat data and validates messageId.
       if (activePeerId && activeChatId !== "namma_thanjai_system_welcome") {
         try {
           const firebaseAuth = getAuth();
@@ -560,7 +559,7 @@ export default function ChatClientPage() {
             ? await firebaseAuth.currentUser.getIdToken()
             : "";
           if (idToken) {
-            fetch("/api/chat/notify", {
+            const notifyRes = await fetch("/api/chat/notify", {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -568,12 +567,19 @@ export default function ChatClientPage() {
               },
               body: JSON.stringify({
                 chatId: activeChatId,
+                messageId: msgDocRef.id,
                 senderName: currentName,
                 text: currentText,
               }),
-            }).catch(() => {});
+            });
+            if (!notifyRes.ok) {
+              const errData = await notifyRes.json().catch(() => ({}));
+              console.error("Server chat notification dispatch error:", errData.error || notifyRes.statusText);
+            }
           }
-        } catch (e) {}
+        } catch (notifyErr) {
+          console.error("Error triggering server chat notification:", notifyErr);
+        }
       }
 
       const threadRef = doc(db, "chats", activeChatId);
