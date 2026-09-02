@@ -133,6 +133,17 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             await setDoc(userRef, newProfile, { merge: true });
             setProfile(newProfile);
           }
+
+          // Ensure FCM token is saved to users/{currentUser.uid}/devices
+          if (typeof window !== "undefined") {
+            const cachedToken = localStorage.getItem("namma_thanjai_fcm_token");
+            if (cachedToken) {
+              try {
+                const deviceRef = doc(db, "users", currentUser.uid, "devices", activeVerifiedPhone || currentUser.uid);
+                await setDoc(deviceRef, { token: cachedToken, platform: "android", updatedAt: new Date().toISOString() }, { merge: true });
+              } catch (e) {}
+            }
+          }
         } catch (error) {
           console.error("Error fetching user profile:", error);
           const fallbackMemberId = `NT-${activeVerifiedPhone.slice(-5)}`;
@@ -259,7 +270,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       createdAt: prev?.createdAt || new Date(),
     }));
 
-    // 2. NON-BLOCKING BACKGROUND FIREBASE SYNC
+    // 2. NON-BLOCKING BACKGROUND FIREBASE SYNC & FCM TOKEN REGISTRATION
     (async () => {
       try {
         let activeUser = user;
@@ -278,6 +289,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             phone: targetPhone,
             isVerified: true,
           }, { merge: true });
+
+          // Sync FCM push token to Firestore under activeUser.uid and cleanPhone
+          const cachedFcmToken = localStorage.getItem("namma_thanjai_fcm_token");
+          const cleanPhone = targetPhone.replace(/\D/g, "").slice(-10);
+          if (cachedFcmToken && cleanPhone) {
+            const deviceRef = doc(db, "users", activeUser.uid, "devices", cleanPhone);
+            await setDoc(deviceRef, { token: cachedFcmToken, platform: "android", updatedAt: new Date().toISOString() }, { merge: true });
+
+            const phoneDeviceRef = doc(db, "users", cleanPhone, "devices", cleanPhone);
+            await setDoc(phoneDeviceRef, { token: cachedFcmToken, platform: "android", updatedAt: new Date().toISOString() }, { merge: true });
+
+            const tokenDocRef = doc(db, "user_fcm_tokens", cleanPhone);
+            await setDoc(tokenDocRef, { fcmToken: cachedFcmToken, updatedAt: new Date().toISOString() }, { merge: true });
+          }
+
+          // Trigger native Capacitor PushNotification registration refresh on native APK
+          if (typeof window !== "undefined" && Boolean((window as any).Capacitor?.isNativePlatform())) {
+            import("@capacitor/push-notifications")
+              .then(({ PushNotifications }) => {
+                PushNotifications.requestPermissions()
+                  .then((res) => {
+                    if (res.receive === "granted") {
+                      PushNotifications.register().catch(() => {});
+                    }
+                  })
+                  .catch(() => {});
+              })
+              .catch(() => {});
+          }
         }
       } catch (e) {}
     })();
