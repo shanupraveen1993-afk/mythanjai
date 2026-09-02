@@ -537,7 +537,7 @@ export default function PostForm({ segment }: PostFormProps) {
     setLoading(true);
 
     const timestamp = serverTimestamp();
-    const uid = profile?.memberId || user?.uid || (profile?.phone ? `NT-${profile.phone.replace(/\D/g, "").slice(-10)}` : "guest_user");
+    const uid = user?.uid || profile?.memberId || (profile?.phone ? `NT-${profile.phone.replace(/\D/g, "").slice(-10)}` : "guest_user");
     const cleanDesc = description.trim();
 
     const defaultCoverImage =

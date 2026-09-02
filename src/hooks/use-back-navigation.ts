@@ -21,8 +21,12 @@ export function useBackNavigation() {
             // Home feed: Exit app on back
             App.exitApp();
           } else {
-            // Subpages (/shops, /chat, /listings, /profile, /post, etc): Cleanly return to Home
-            router.push("/");
+            // Subpages: Return to previous screen in stack if available, otherwise fallback to Home
+            if (typeof window !== "undefined" && window.history.length > 1) {
+              router.back();
+            } else {
+              router.push("/");
+            }
           }
         });
       } catch (e) {

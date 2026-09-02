@@ -215,6 +215,7 @@ function SearchContent() {
               } else {
                 const referrer = typeof window !== "undefined" ? sessionStorage.getItem("namma_thanjai_search_referrer") : null;
                 if (referrer && referrer !== "/search" && referrer !== "/onboarding") {
+                  sessionStorage.removeItem("namma_thanjai_search_referrer");
                   router.push(referrer);
                 } else if (typeof window !== "undefined" && window.history.length > 1) {
                   router.back();

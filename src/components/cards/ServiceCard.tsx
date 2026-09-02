@@ -330,23 +330,6 @@ export default function ServiceCard({ post, isPreview = false }: ServiceCardProp
                       }
                       const chatMsg = `Hello! I am interested in your service "${post.name}". Please call me back when free.`;
 
-                      // Push real-time notification to service provider's notification hub
-                      try {
-                        const { collection, addDoc, serverTimestamp } = await import("firebase/firestore");
-                        const { db } = await import("@/lib/firebase");
-                        const notifRef = collection(db, "notifications");
-                        await addDoc(notifRef, {
-                          recipientId: post.userId || post.phone || "provider",
-                          recipientPhone: post.phone,
-                          senderName: profile?.displayName || "Interested Client",
-                          type: "chat",
-                          title: `New Service Inquiry for ${post.name}`,
-                          message: `"${chatMsg}"`,
-                          read: false,
-                          timestamp: serverTimestamp(),
-                        });
-                      } catch (err) {}
-
                       router.push(`/chat?listingId=${post.id}&sellerId=${post.userId || ""}&title=${encodeURIComponent(post.name)}&autoMsg=${encodeURIComponent(chatMsg)}&autoSend=true`);
                     }}
                     className={`w-[128px] shrink-0 border-2 border-slate-900 bg-white hover:bg-slate-50 text-slate-900 font-heading font-black text-xs sm:text-sm py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 min-h-[46px] shadow-2xs cursor-pointer transition-colors ${isPreview ? "opacity-60 pointer-events-none" : ""}`}

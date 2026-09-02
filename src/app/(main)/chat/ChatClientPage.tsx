@@ -388,6 +388,12 @@ export default function ChatClientPage() {
           setInputText("");
         }
 
+        // 1-Time Consumption: Immediately clear query preset state so navigating back/between threads never resurrects preset text
+        setQueryAutoMsg("");
+        setQueryTitle("Classified Item");
+        setQueryListingId("");
+        setQuerySellerId("");
+
         // Clean up URL query parameters so returning to this chat room leaves input 100% empty
         if (typeof window !== "undefined" && window.location.search) {
           window.history.replaceState({}, document.title, window.location.pathname);
@@ -613,15 +619,7 @@ export default function ChatClientPage() {
           lastMessage: currentText,
           lastTimestamp: serverTimestamp(),
           participants: Array.from(
-            new Set(
-              [
-                currentUid,
-                profile?.memberId,
-                currentPhone ? currentPhone.slice(-10) : "",
-                activePeerId,
-                activePeerPhone ? activePeerPhone.replace(/\D/g, "").slice(-10) : ""
-              ].filter(Boolean)
-            )
+            new Set([currentUid, activePeerId].filter(Boolean))
           ),
         },
         { merge: true }
