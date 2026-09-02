@@ -123,17 +123,17 @@ function MainLayoutContent({
       );
 
       if (isNative) {
-        import("@capacitor/splash-screen")
-          .then(({ SplashScreen: CapSplash }) => {
-            CapSplash.hide().catch(() => {});
-          })
-          .catch(() => {});
-
         if (!hasCompletedOnboarding && pathname !== "/onboarding") {
           setIsOnboardingRedirecting(true);
           router.replace("/onboarding");
         } else {
           setIsOnboardingRedirecting(false);
+          // Hide native splash screen only AFTER target route is mounted & active
+          import("@capacitor/splash-screen")
+            .then(({ SplashScreen: CapSplash }) => {
+              CapSplash.hide().catch(() => {});
+            })
+            .catch(() => {});
         }
       }
     }
@@ -288,14 +288,7 @@ function MainLayoutContent({
   }
 
   if (isOnboardingRedirecting) {
-    return (
-      <div className="fixed inset-0 z-[999999] bg-[#1E244A] flex flex-col items-center justify-center select-none">
-        <div className="flex flex-col items-center gap-3 animate-pulse">
-          <img src="/namma_thanjai_logo.png" alt="Namma Thanjai" className="h-20 w-auto object-contain" />
-          <span className="text-amber-400 font-heading font-black text-xs tracking-wider">தஞ்சாவூரின் #1 உள்ளூர் தளம்</span>
-        </div>
-      </div>
-    );
+    return null;
   }
 
   return (

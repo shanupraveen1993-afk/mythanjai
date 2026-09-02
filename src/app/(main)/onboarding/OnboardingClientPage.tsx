@@ -22,26 +22,16 @@ import {
   Users,
 } from "lucide-react";
 
-type OnboardingStage = "splash" | "login";
+type OnboardingStage = "login";
 
 export default function OnboardingClientPage() {
   const router = useRouter();
   const { toast } = useToast();
   const { updatePhone } = useAuth();
 
-  const [stage, setStage] = useState<OnboardingStage>("splash");
+  const [stage, setStage] = useState<OnboardingStage>("login");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [phoneUpdating, setPhoneUpdating] = useState(false);
-
-  // Auto-advance Splash Screen directly to Login after 2.0 seconds (Walkthrough Removed)
-  useEffect(() => {
-    if (stage === "splash") {
-      const timer = setTimeout(() => {
-        setStage("login");
-      }, 2000);
-      return () => clearTimeout(timer);
-    }
-  }, [stage]);
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -83,45 +73,7 @@ export default function OnboardingClientPage() {
       <div className="absolute bottom-0 right-0 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
 
       {/* ========================================================= */}
-      {/* STAGE 1: SPLASH SCREEN (CLEAN & SHARP - NO EXTRA CONTENT) */}
-      {/* ========================================================= */}
-      {stage === "splash" && (
-        <div 
-          onClick={() => setStage("login")}
-          className="flex-1 flex flex-col items-center justify-between text-center gap-8 cursor-pointer animate-fade-in py-12 my-auto"
-        >
-          <div className="my-auto flex flex-col items-center gap-6">
-            {/* Glowing Logo Badge */}
-            <div className="relative group">
-              <div className="absolute -inset-3 bg-gradient-to-r from-amber-400 via-yellow-400 to-amber-500 rounded-3xl blur-lg opacity-80 animate-pulse" />
-              <div className="w-32 h-32 rounded-3xl bg-[#121633] p-4 shadow-2xl border-2 border-amber-400 flex items-center justify-center relative z-10">
-                <img src="/namma_thanjai_logo.png" alt="Namma Thanjai Logo" className="w-full h-full object-contain animate-scale-up" />
-              </div>
-            </div>
-
-            {/* Brand Title */}
-            <div className="flex flex-col items-center gap-2 max-w-sm px-4">
-              <h1 className="font-heading font-black text-3xl sm:text-4xl text-white tracking-tight">
-                Namma Thanjai
-              </h1>
-              <span className="bg-[#FBBF24] text-slate-950 font-heading font-black text-xs uppercase tracking-wider px-4 py-1 rounded-full shadow-lg border border-amber-300">
-                தஞ்சாவூர்
-              </span>
-            </div>
-          </div>
-
-          {/* Animated Gold Loading Line */}
-          <div className="w-full max-w-xs flex flex-col items-center gap-2 pb-4">
-            <div className="w-full h-1.5 bg-white/15 rounded-full overflow-hidden relative">
-              <div className="h-full bg-gradient-to-r from-amber-400 to-yellow-300 rounded-full animate-pulse w-3/4" />
-            </div>
-            <span className="text-[11px] text-slate-300 font-medium">Opening...</span>
-          </div>
-        </div>
-      )}
-
-      {/* ========================================================= */}
-      {/* STAGE 4: LOGIN PAGE (CLEAN MINIMALIST UI - NO ICONS)      */}
+      {/* LOGIN PAGE (CLEAN MINIMALIST UI - NO ICONS)               */}
       {/* ========================================================= */}
       {stage === "login" && (
         <div className="flex-1 flex flex-col justify-between max-w-md mx-auto w-full py-4 animate-fade-in">
