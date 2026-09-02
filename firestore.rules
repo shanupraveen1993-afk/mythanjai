@@ -55,11 +55,11 @@ service cloud.firestore {
       allow update, delete: if request.auth != null && resource.data.userId == request.auth.uid;
     }
 
-    // 5. User Profiles (Owner Read/Write Only, Immutable memberId Enforcement)
+    // 5. User Profiles (Owner Read/Write Only, Immutable nt_id Enforcement)
     match /users/{userId} {
       allow read, create: if request.auth != null && request.auth.uid == userId;
       allow update: if request.auth != null && request.auth.uid == userId &&
-        (!('memberId' in resource.data) || request.resource.data.memberId == resource.data.memberId);
+        (!('nt_id' in resource.data) || request.resource.data.nt_id == resource.data.nt_id);
       allow delete: if false;
     }
   }
