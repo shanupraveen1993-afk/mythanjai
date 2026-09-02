@@ -310,6 +310,23 @@ async function executeServerPushWithClaim({
     }
   });
 
+  // Fallback: Check user_fcm_tokens collection if devices subcollection has no tokens
+  if (allTokens.length === 0) {
+    try {
+      const cleanPhone = recipientUid.replace(/\D/g, "").slice(-10);
+      if (cleanPhone) {
+        const tokenDoc = await adminDb.collection("user_fcm_tokens").doc(cleanPhone).get();
+        if (tokenDoc.exists) {
+          const fcmTok = tokenDoc.data()?.fcmToken;
+          if (fcmTok && !allTokens.includes(fcmTok)) {
+            allTokens.push(fcmTok);
+            docIdsByToken[fcmTok] = cleanPhone;
+          }
+        }
+      }
+    } catch (e) {}
+  }
+
   // NO_DEVICES: recipient has zero registered push targets.
   if (allTokens.length === 0) {
     await notifDocRef.update({ pushStatus: "NO_DEVICES", updatedAt: new Date() });

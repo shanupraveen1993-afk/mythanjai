@@ -137,12 +137,18 @@ export function useNativeApp() {
             if (typeof window !== "undefined" && token?.value) {
               localStorage.setItem("namma_thanjai_fcm_token", token.value);
               const userPhone = localStorage.getItem("namma_thanjai_phone") || localStorage.getItem("my_thanjai_phone");
-              if (userPhone) {
+              const cleanPhone = userPhone ? userPhone.replace(/\D/g, "").slice(-10) : "";
+              if (cleanPhone) {
                 try {
-                  const { collection, addDoc, setDoc, doc } = await import("firebase/firestore");
+                  const { setDoc, doc } = await import("firebase/firestore");
                   const { db } = await import("@/lib/firebase");
-                  const tokenDocRef = doc(db, "user_fcm_tokens", userPhone.replace(/\D/g, "").slice(-10));
+                  // 1. Save to user_fcm_tokens/{phone}
+                  const tokenDocRef = doc(db, "user_fcm_tokens", cleanPhone);
                   await setDoc(tokenDocRef, { fcmToken: token.value, updatedAt: new Date().toISOString() }, { merge: true });
+
+                  // 2. Save to users/{phone}/devices/{token} for canonical FCM engine
+                  const deviceDocRef = doc(db, "users", cleanPhone, "devices", cleanPhone);
+                  await setDoc(deviceDocRef, { token: token.value, platform: "android", updatedAt: new Date().toISOString() }, { merge: true });
                 } catch (e) {}
               }
             }
