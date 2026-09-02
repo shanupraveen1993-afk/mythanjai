@@ -1,14 +1,23 @@
 import { NextResponse } from "next/server";
-import { adminAuth, adminDb } from "@/lib/firebase-admin";
+import { adminDb } from "@/lib/firebase-admin";
 import { dispatchServerNotification } from "@/lib/notification-service-server";
 
 const ALLOWED_EVENT_TYPES = ["DAILY_QUOTE", "TEAM_FEEDBACK", "DAILY_ACTIVITY"];
 
+function getISTDateString(): string {
+  try {
+    return new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
+  } catch (e) {
+    return new Date().toISOString().slice(0, 10);
+  }
+}
+
 /**
  * Server API Route: /api/system-events/trigger
  * System-Only Event Trigger Engine.
- * Requires internal secret header (INTERNAL_PUSH_SECRET). Accepts allowed event types only.
- * Uses atomic Firestore transactions for idempotency and creates exactly ONE deterministic Team Chat message document (daily_quote_YYYY-MM-DD).
+ * Requires internal secret header (INTERNAL_PUSH_SECRET). Accepts allowed event types ONLY.
+ * Uses concurrency-safe atomic transactions for idempotency (ABSENT -> PROCESSING -> COMPLETED)
+ * and creates exactly ONE deterministic Team Chat message document per event/date.
  */
 export async function POST(req: Request) {
   try {
@@ -16,7 +25,6 @@ export async function POST(req: Request) {
     const internalSecretHeader = req.headers.get("x-internal-secret");
     const configuredSecret = process.env.INTERNAL_PUSH_SECRET;
 
-    // Strict internal secret header comparison
     const isServerInternal = Boolean(configuredSecret && internalSecretHeader && internalSecretHeader === configuredSecret);
 
     if (process.env.NODE_ENV === "production" && !isServerInternal) {
@@ -24,9 +32,9 @@ export async function POST(req: Request) {
     }
 
     const body = await req.json();
-    const { eventType, recipientUid: requestedRecipientUid, messageText, titleText, actionUrl } = body;
+    const { eventType, messageText, titleText, actionUrl } = body;
 
-    // Validate Event Type
+    // Validate Event Type Strictly
     if (!eventType || !ALLOWED_EVENT_TYPES.includes(eventType)) {
       return NextResponse.json(
         { success: false, error: `Invalid eventType. Allowed types: ${ALLOWED_EVENT_TYPES.join(", ")}` },
@@ -34,22 +42,31 @@ export async function POST(req: Request) {
       );
     }
 
-    const todayDate = new Date().toISOString().slice(0, 10);
+    // Fix 6: IST Date Key Calculation
+    const todayDate = getISTDateString();
     const globalEventKey = `${eventType}_${todayDate}`;
 
     const systemChatId = "namma_thanjai_system_welcome";
     const systemEventsRef = adminDb.collection("chats").doc(systemChatId).collection("system_events");
     const eventDocRef = systemEventsRef.doc(globalEventKey);
 
-    let alreadyCompleted = false;
+    let alreadyHandled = false;
 
-    // 1. Atomic Transaction to Claim System Event Key (PROCESSING -> COMPLETED)
+    // Fix 4: Concurrency-Safe Atomic Claim Transaction (ABSENT -> PROCESSING -> COMPLETED)
     await adminDb.runTransaction(async (transaction) => {
       const docSnap = await transaction.get(eventDocRef);
-      if (docSnap.exists && docSnap.data()?.status === "COMPLETED") {
-        alreadyCompleted = true;
-        return;
+      if (docSnap.exists) {
+        const data = docSnap.data() || {};
+        const status = data.status;
+        const updatedAt = data.updatedAt ? data.updatedAt.toDate().getTime() : 0;
+        const isStale = Date.now() - updatedAt > 10 * 60 * 1000; // Stale after 10m
+
+        if ((status === "PROCESSING" || status === "COMPLETED") && !isStale) {
+          alreadyHandled = true;
+          return;
+        }
       }
+
       transaction.set(
         eventDocRef,
         {
@@ -62,10 +79,10 @@ export async function POST(req: Request) {
       );
     });
 
-    if (alreadyCompleted) {
+    if (alreadyHandled) {
       return NextResponse.json({
         success: true,
-        message: `System event ${globalEventKey} already completed today (Skipped duplicate)`,
+        message: `System event ${globalEventKey} already processing or completed today (Skipped duplicate)`,
         idempotent: true,
       });
     }
@@ -82,7 +99,7 @@ export async function POST(req: Request) {
       ? "Vanakkam! We value your experience. Tap to share feedback & help us improve!"
       : messageText || "Check out new local store offers and marketplace items in your area today!";
 
-    // 2. Create EXACTLY ONE Deterministic Team Chat Message Document
+    // Create EXACTLY ONE Deterministic Team Chat Message Document
     const messageDocRef = adminDb.collection("chats").doc(systemChatId).collection("messages").doc(globalEventKey);
     await messageDocRef.set(
       {
@@ -94,39 +111,37 @@ export async function POST(req: Request) {
       { merge: true }
     );
 
-    // 3. Resolve Target Recipients Server-Side
-    let targetRecipients: string[] = [];
-
-    if (requestedRecipientUid) {
-      targetRecipients = [requestedRecipientUid];
-    } else {
-      // Query users from Firestore Admin for broadcast dispatch
-      try {
-        const usersSnap = await adminDb.collection("users").limit(100).get();
-        usersSnap.forEach((docSnap) => {
-          if (docSnap.id) targetRecipients.push(docSnap.id);
-        });
-      } catch (e) {
-        console.warn("Target user query note:", e);
-      }
+    // Fix 5: Batched Broadcast Query Across All Registered Users (No .limit(100) cap)
+    const targetRecipients: string[] = [];
+    try {
+      const usersSnap = await adminDb.collection("users").get();
+      usersSnap.forEach((docSnap) => {
+        if (docSnap.id) targetRecipients.push(docSnap.id);
+      });
+    } catch (e) {
+      console.warn("User broadcast query note:", e);
     }
 
-    // 4. Dispatch Notifications & FCM via Authoritative Server Notification Engine
-    const dispatchPromises = targetRecipients.map((uid) =>
-      dispatchServerNotification({
-        recipientUid: uid,
-        type: eventType,
-        title: titleText || defaultTitle,
-        message: defaultMessage,
-        conversationId: systemChatId,
-        actionUrl: actionUrl || `/chat?chatId=${systemChatId}`,
-        dateKey: todayDate,
-      }).catch((e) => console.warn(`Dispatch error for user ${uid}:`, e))
-    );
+    // Dispatch Notifications & FCM via Server Notification Engine in Batches of 50
+    const BATCH_SIZE = 50;
+    for (let i = 0; i < targetRecipients.length; i += BATCH_SIZE) {
+      const batch = targetRecipients.slice(i, i + BATCH_SIZE);
+      await Promise.all(
+        batch.map((uid) =>
+          dispatchServerNotification({
+            recipientUid: uid,
+            type: eventType,
+            title: titleText || defaultTitle,
+            message: defaultMessage,
+            conversationId: systemChatId,
+            actionUrl: actionUrl || `/chat?chatId=${systemChatId}`,
+            dateKey: todayDate,
+          }).catch((e) => console.warn(`Dispatch error for user ${uid}:`, e))
+        )
+      );
+    }
 
-    await Promise.all(dispatchPromises);
-
-    // 5. Mark System Event as COMPLETED in Firestore
+    // Mark Event as COMPLETED
     await eventDocRef.update({
       status: "COMPLETED",
       completedAt: new Date(),

@@ -1,10 +1,18 @@
 import { NextResponse } from "next/server";
 import { adminAuth, adminDb, adminMessaging } from "@/lib/firebase-admin";
 
+function getISTDateString(): string {
+  try {
+    return new Date().toLocaleDateString("en-CA", { timeZone: "Asia/Kolkata" });
+  } catch (e) {
+    return new Date().toISOString().slice(0, 10);
+  }
+}
+
 /**
  * Production Server API Route: /api/send-push
  * Server-Authorized FCM Push Delivery Endpoint.
- * Strict CHAT Recipient Derivation: Target recipient is derived strictly from trusted chat room participants.
+ * Strict CHAT Recipient Derivation: Target recipient is derived STRICTLY from trusted chat participants on the server.
  * Zero fallback to client-supplied recipientUid.
  */
 export async function POST(req: Request) {
@@ -115,6 +123,7 @@ export async function POST(req: Request) {
         conversationId: targetChatId,
         click_action: "FLUTTER_NOTIFICATION_CLICK",
         timestamp: new Date().toISOString(),
+        istDate: getISTDateString(),
       },
       android: {
         priority: "high" as const,
