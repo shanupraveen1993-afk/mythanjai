@@ -3,11 +3,22 @@ import { NotificationType } from "@/types/notification";
 import { randomUUID } from "crypto";
 
 /**
- * Claim lease duration: 2 minutes.
+ * Claim lease duration: 5 minutes.
  * A claim older than this is considered stale (server likely crashed) and is reclaimable.
- * New claims that arrive after expiry will purge stale entries and issue fresh claims.
+ * This must always be strictly greater than FCM_TIMEOUT_MS to guarantee that no active
+ * FCM attempt can ever outlive its own claim lease.
+ * Invariant: FCM_TIMEOUT_MS (90 s) << CLAIM_LEASE_MS (300 s)
  */
-const CLAIM_LEASE_MS = 2 * 60 * 1000;
+const CLAIM_LEASE_MS = 5 * 60 * 1000;
+
+/**
+ * Maximum time allowed for a single FCM sendEachForMulticast call: 90 seconds.
+ * The FCM operation is wrapped in a Promise.race() with this timeout so that
+ * the claim lease (5 min) always outlives any in-flight FCM request.
+ * If the timeout fires, the FCM attempt is considered failed and our claims are released.
+ * Invariant: FCM_TIMEOUT_MS < CLAIM_LEASE_MS
+ */
+const FCM_TIMEOUT_MS = 90 * 1000;
 
 /**
  * A per-token FCM claim record.
@@ -352,30 +363,40 @@ async function executeServerPushWithClaim({
   let failedTokenCount = 0;
 
   try {
-    const response = await adminMessaging.sendEachForMulticast({
-      tokens: tokensToClaim,
-      notification: {
-        title: title || "Namma Thanjai Alert",
-        body: message || "New update received",
-      },
-      data: {
-        type: type || "CHAT",
-        actionUrl: actionUrl || "/chat",
-        chatId: chatId || "",
-        conversationId: chatId || "",
-        click_action: "FLUTTER_NOTIFICATION_CLICK",
-        timestamp: new Date().toISOString(),
-      },
-      android: {
-        priority: "high",
+    // Wrap FCM call in a timeout to guarantee it completes within FCM_TIMEOUT_MS (90 s).
+    // This ensures the claim lease (5 min) always outlives the FCM operation.
+    // If the timeout fires, the error is caught below and our claims are released.
+    const fcmTimeoutPromise = new Promise<never>((_, reject) =>
+      setTimeout(() => reject(new Error(`FCM sendEachForMulticast timed out after ${FCM_TIMEOUT_MS / 1000}s`)), FCM_TIMEOUT_MS)
+    );
+
+    const response = await Promise.race([
+      adminMessaging.sendEachForMulticast({
+        tokens: tokensToClaim,
         notification: {
-          channelId: "namma_thanjai_alerts",
-          sound: "default",
-          visibility: "public",
-          priority: "high",
+          title: title || "Namma Thanjai Alert",
+          body: message || "New update received",
         },
-      },
-    });
+        data: {
+          type: type || "CHAT",
+          actionUrl: actionUrl || "/chat",
+          chatId: chatId || "",
+          conversationId: chatId || "",
+          click_action: "FLUTTER_NOTIFICATION_CLICK",
+          timestamp: new Date().toISOString(),
+        },
+        android: {
+          priority: "high",
+          notification: {
+            channelId: "namma_thanjai_alerts",
+            sound: "default",
+            visibility: "public",
+            priority: "high",
+          },
+        },
+      }),
+      fcmTimeoutPromise,
+    ]);
 
     response.responses.forEach((resp, idx) => {
       if (resp.success) {
