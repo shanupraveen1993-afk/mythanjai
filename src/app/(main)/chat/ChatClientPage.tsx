@@ -564,33 +564,37 @@ export default function ChatClientPage() {
 
       // 🔔 Server-authoritative notification + FCM via /api/chat/notify
       // Server verifies messageId ownership and reads notification content from Firestore.
-      // Client sends only chatId + messageId. Text and senderName come from trusted Firestore data.
+      // Retries up to 3 times on network glitch to ensure delivery reliability.
       if (activePeerId && activeChatId !== "namma_thanjai_system_welcome") {
-        try {
-          const firebaseAuth = getAuth();
-          const idToken = firebaseAuth.currentUser
-            ? await firebaseAuth.currentUser.getIdToken()
-            : "";
-          if (idToken) {
-            const notifyRes = await fetch("/api/chat/notify", {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${idToken}`,
-              },
-              body: JSON.stringify({
-                chatId: activeChatId,
-                messageId: msgDocRef.id,
-              }),
-            });
-            if (!notifyRes.ok) {
-              const errData = await notifyRes.json().catch(() => ({}));
-              console.error("Server chat notification dispatch error:", errData.error || notifyRes.statusText);
+        const triggerNotificationWithRetry = async (retriesLeft = 3) => {
+          try {
+            const firebaseAuth = getAuth();
+            const idToken = firebaseAuth.currentUser
+              ? await firebaseAuth.currentUser.getIdToken()
+              : "";
+            if (idToken) {
+              const notifyRes = await fetch("/api/chat/notify", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${idToken}`,
+                },
+                body: JSON.stringify({
+                  chatId: activeChatId,
+                  messageId: msgDocRef.id,
+                }),
+              });
+              if (!notifyRes.ok && retriesLeft > 1) {
+                setTimeout(() => triggerNotificationWithRetry(retriesLeft - 1), 1500);
+              }
+            }
+          } catch (notifyErr) {
+            if (retriesLeft > 1) {
+              setTimeout(() => triggerNotificationWithRetry(retriesLeft - 1), 1500);
             }
           }
-        } catch (notifyErr) {
-          console.error("Error triggering server chat notification:", notifyErr);
-        }
+        };
+        triggerNotificationWithRetry();
       }
 
       const threadRef = doc(db, "chats", activeChatId);

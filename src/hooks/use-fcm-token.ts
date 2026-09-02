@@ -59,6 +59,43 @@ export function useFcmToken() {
               }
             });
           }
+        } else {
+          // Web / PWA Push Notification Registration
+          if ("Notification" in window && "serviceWorker" in navigator) {
+            let perm = Notification.permission;
+            if (perm === "default") {
+              perm = await Notification.requestPermission();
+            }
+
+            if (perm === "granted") {
+              try {
+                const { getMessaging, getToken } = await import("firebase/messaging");
+                const app = (await import("@/lib/firebase")).default;
+                const messaging = getMessaging(app);
+
+                const vapidKey = process.env.NEXT_PUBLIC_FIREBASE_VAPID_KEY;
+                const token = await getToken(messaging, vapidKey ? { vapidKey } : undefined);
+
+                if (token) {
+                  const tokenHash = await sha256Hash(token);
+                  const deviceRef = doc(db, "users", user.uid, "devices", tokenHash);
+
+                  await setDoc(
+                    deviceRef,
+                    {
+                      token,
+                      platform: "web",
+                      userId: user.uid,
+                      lastUpdated: serverTimestamp(),
+                    },
+                    { merge: true }
+                  );
+                }
+              } catch (webPushErr) {
+                console.warn("Web FCM token registration note:", webPushErr);
+              }
+            }
+          }
         }
       } catch (e) {
         console.warn("FCM token registration note:", e);
