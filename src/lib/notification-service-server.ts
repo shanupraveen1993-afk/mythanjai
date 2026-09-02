@@ -12,12 +12,14 @@ interface ServerNotificationParams {
   senderPhone?: string;
   conversationId?: string;
   actionUrl?: string;
+  dateKey?: string;
 }
 
 /**
- * Server-Side Centralized Notification Engine
- * Unified pipeline for creating Firestore notification documents and delivering
- * high-priority FCM Push notifications via Firebase Admin SDK.
+ * Authoritative Server Notification Engine
+ * Powered by Firebase Admin SDK.
+ * Handles deterministic document IDs for chat & system notifications, atomic transactions,
+ * unread count grouping, push spam throttling, and direct FCM multicast delivery.
  */
 export async function dispatchServerNotification({
   recipientUid,
@@ -30,13 +32,15 @@ export async function dispatchServerNotification({
   senderPhone,
   conversationId,
   actionUrl,
+  dateKey,
 }: ServerNotificationParams) {
   if (!recipientUid) return { success: false, error: "Missing recipientUid" };
 
   try {
     const finalActionUrl = actionUrl || (conversationId ? `/chat?chatId=${conversationId}` : "/chat");
+    const todayDate = dateKey || new Date().toISOString().slice(0, 10);
 
-    // 1. For CHAT notifications, use deterministic document ID for atomic grouping
+    // 1. CHAT Notifications: Atomic grouping on deterministic doc ID `${recipientUid}_${conversationId}`
     if (type === "CHAT" && conversationId) {
       const deterministicNotifId = `${recipientUid}_${conversationId}`;
       const targetDocRef = adminDb.collection("notifications").doc(deterministicNotifId);
@@ -85,33 +89,47 @@ export async function dispatchServerNotification({
         }
       });
 
-      // Push Spam Throttling: Trigger FCM push ONLY on 1st unread message
+      // Push Spam Throttling: Send FCM push ONLY on 1st unread message
       if (isFirstUnread) {
         await executeServerPush({ recipientUid, title, message, actionUrl: finalActionUrl, chatId: conversationId, type });
       }
       return { success: true, grouped: true };
     }
 
-    // 2. Non-chat notifications (System events / Activity updates)
-    await adminDb.collection("notifications").add({
-      recipientUid,
-      recipientPhone: recipientPhone || "",
-      type,
-      title,
-      message,
-      senderUid: senderUid || "",
-      senderName: senderName || "",
-      senderPhone: senderPhone || "",
-      conversationId: conversationId || "",
-      messageCount: 1,
-      actionUrl: finalActionUrl,
-      read: false,
-      createdAt: new Date(),
-      updatedAt: new Date(),
+    // 2. System & Activity Notifications: Deterministic doc ID `${type}_${todayDate}_${recipientUid}`
+    const deterministicSystemId = `${type}_${todayDate}_${recipientUid}`;
+    const systemNotifRef = adminDb.collection("notifications").doc(deterministicSystemId);
+
+    let isNewSystemDoc = false;
+
+    await adminDb.runTransaction(async (transaction) => {
+      const docSnap = await transaction.get(systemNotifRef);
+      if (!docSnap.exists) {
+        isNewSystemDoc = true;
+        transaction.set(systemNotifRef, {
+          recipientUid,
+          recipientPhone: recipientPhone || "",
+          type,
+          title,
+          message,
+          senderUid: senderUid || "namma_thanjai_official",
+          senderName: senderName || "Namma Thanjai Team",
+          senderPhone: senderPhone || "",
+          conversationId: conversationId || "namma_thanjai_system_welcome",
+          messageCount: 1,
+          actionUrl: finalActionUrl,
+          read: false,
+          createdAt: new Date(),
+          updatedAt: new Date(),
+        });
+      }
     });
 
-    await executeServerPush({ recipientUid, title, message, actionUrl: finalActionUrl, chatId: conversationId, type });
-    return { success: true };
+    if (isNewSystemDoc) {
+      await executeServerPush({ recipientUid, title, message, actionUrl: finalActionUrl, chatId: conversationId || "namma_thanjai_system_welcome", type });
+    }
+
+    return { success: true, newDoc: isNewSystemDoc };
   } catch (error: any) {
     console.error("dispatchServerNotification error:", error);
     return { success: false, error: error?.message || "Server notification error" };

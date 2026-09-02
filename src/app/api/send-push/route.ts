@@ -4,33 +4,33 @@ import { adminAuth, adminDb, adminMessaging } from "@/lib/firebase-admin";
 /**
  * Production Server API Route: /api/send-push
  * Server-Authorized FCM Push Delivery Endpoint.
- * P0-1 Enforced: For CHAT push notifications, target recipient is derived STRICTLY from trusted chat participants on the server.
- * Fallback to clientRecipientUid is IMPOSSIBLE for CHAT events.
+ * Strict CHAT Recipient Derivation: Target recipient is derived strictly from trusted chat room participants.
+ * Zero fallback to client-supplied recipientUid.
  */
 export async function POST(req: Request) {
   try {
     const authHeader = req.headers.get("authorization") || "";
     const internalSecretHeader = req.headers.get("x-internal-secret");
-    const configuredSecret = process.env.INTERNAL_PUSH_SECRET || process.env.INTERNAL_SECRET || "nt_internal_server_push_secret_2026";
+    const configuredSecret = process.env.INTERNAL_PUSH_SECRET;
 
-    // P0-2: Strict String Value Comparison for Internal Server Secret Header
-    const isServerInternal = Boolean(internalSecretHeader && internalSecretHeader === configuredSecret);
+    // Strict internal secret comparison
+    const isServerInternal = Boolean(configuredSecret && internalSecretHeader && internalSecretHeader === configuredSecret);
 
     let callerUid = "";
 
-    // 1. Authenticate Request with Firebase Admin Auth
+    // 1. Authenticate Request via Bearer Firebase ID Token
     if (authHeader.startsWith("Bearer ")) {
       try {
         const idToken = authHeader.substring(7);
         const decodedToken = await adminAuth.verifyIdToken(idToken);
         callerUid = decodedToken.uid;
       } catch (e) {
-        if (process.env.NODE_ENV === "production" && !isServerInternal) {
+        if (!isServerInternal) {
           return NextResponse.json({ success: false, error: "Invalid or expired Bearer authorization token" }, { status: 401 });
         }
       }
-    } else if (process.env.NODE_ENV === "production" && !isServerInternal) {
-      return NextResponse.json({ success: false, error: "Missing or unauthorized Bearer token" }, { status: 401 });
+    } else if (!isServerInternal) {
+      return NextResponse.json({ success: false, error: "Missing or unauthorized Bearer authorization token" }, { status: 401 });
     }
 
     const body = await req.json();
@@ -43,10 +43,14 @@ export async function POST(req: Request) {
 
     let targetRecipientUid = "";
 
-    // P0-1: For CHAT notifications, derive target recipient UID STRICTLY from trusted chat room data
+    // 2. Strict CHAT Recipient Derivation (Zero Client Recipient Fallback)
     if (type === "CHAT" || targetChatId) {
+      if (!callerUid && !isServerInternal) {
+        return NextResponse.json({ success: false, error: "Authentication required for CHAT push delivery" }, { status: 401 });
+      }
+
       if (!targetChatId) {
-        return NextResponse.json({ success: false, error: "Missing conversationId/chatId for CHAT push notification" }, { status: 400 });
+        return NextResponse.json({ success: false, error: "Missing conversationId/chatId for CHAT push delivery" }, { status: 400 });
       }
 
       const chatDoc = await adminDb.collection("chats").doc(targetChatId).get();
@@ -73,7 +77,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ success: false, error: "Unauthorized push target: recipient cannot be resolved server-side" }, { status: 400 });
     }
 
-    // 2. Query Active Push Device Tokens from `users/{targetRecipientUid}/devices`
+    // 3. Query Device Push Tokens from `users/{targetRecipientUid}/devices`
     const devicesSnap = await adminDb.collection("users").doc(targetRecipientUid).collection("devices").get();
     const tokens: string[] = [];
     const docIdsByToken: Record<string, string> = {};
@@ -97,7 +101,7 @@ export async function POST(req: Request) {
       });
     }
 
-    // 3. Construct FCM Multicast Message Payload
+    // 4. Construct FCM Multicast Payload
     const multicastMessage = {
       tokens,
       notification: {
@@ -123,10 +127,10 @@ export async function POST(req: Request) {
       },
     };
 
-    // 4. Execute Real Firebase Admin FCM Multicast Send Network Call
+    // 5. Execute Real Firebase Admin FCM Multicast Send Network Call
     const response = await adminMessaging.sendEachForMulticast(multicastMessage);
 
-    // 5. Clean Up Stale / Invalid Device Tokens from Firestore
+    // 6. Clean Up Stale / Invalid Device Tokens from Firestore
     if (response.failureCount > 0) {
       const cleanupPromises: Promise<any>[] = [];
       response.responses.forEach((resp, idx) => {

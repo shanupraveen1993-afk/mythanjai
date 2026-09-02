@@ -1,10 +1,10 @@
 rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
-    // 1. Strict Recipient-Scoped Notification Security (P0 Privacy Enforced)
+    // 1. Strict Recipient-Scoped Notifications (Creation Allowed Exclusively via Server Admin SDK)
     match /notifications/{notifId} {
       allow read, update, delete: if request.auth != null && resource.data.recipientUid == request.auth.uid;
-      allow create: if request.auth != null && request.resource.data.recipientUid == request.auth.uid;
+      allow create: if false;
     }
 
     // 2. Strict User Device Push Token Security

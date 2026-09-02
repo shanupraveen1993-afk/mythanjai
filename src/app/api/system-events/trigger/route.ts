@@ -2,56 +2,70 @@ import { NextResponse } from "next/server";
 import { adminAuth, adminDb } from "@/lib/firebase-admin";
 import { dispatchServerNotification } from "@/lib/notification-service-server";
 
+const ALLOWED_EVENT_TYPES = ["DAILY_QUOTE", "TEAM_FEEDBACK", "DAILY_ACTIVITY"];
+
 /**
  * Server API Route: /api/system-events/trigger
- * Protected System Event Engine generating Team Chat messages & notifications with Firebase Admin SDK.
- * Atomic transaction idempotency with deterministic message IDs (msg_daily_quote_YYYY-MM-DD_UID) preventing duplicates.
+ * System-Only Event Trigger Engine.
+ * Requires internal secret header (INTERNAL_PUSH_SECRET). Accepts allowed event types only.
+ * Uses atomic Firestore transactions for idempotency and creates exactly ONE deterministic Team Chat message document (daily_quote_YYYY-MM-DD).
  */
 export async function POST(req: Request) {
   try {
     const authHeader = req.headers.get("authorization") || "";
     const internalSecretHeader = req.headers.get("x-internal-secret");
-    const configuredSecret = process.env.INTERNAL_PUSH_SECRET || process.env.INTERNAL_SECRET || "nt_internal_server_push_secret_2026";
+    const configuredSecret = process.env.INTERNAL_PUSH_SECRET;
 
-    // P0-2: Strict String Comparison for Server Secret Header
-    const isServerInternal = Boolean(internalSecretHeader && internalSecretHeader === configuredSecret);
+    // Strict internal secret header comparison
+    const isServerInternal = Boolean(configuredSecret && internalSecretHeader && internalSecretHeader === configuredSecret);
 
-    if (process.env.NODE_ENV === "production" && !authHeader.startsWith("Bearer ") && !isServerInternal) {
+    if (process.env.NODE_ENV === "production" && !isServerInternal) {
       return NextResponse.json({ success: false, error: "Unauthorized system event trigger" }, { status: 401 });
     }
 
     const body = await req.json();
-    const { eventType, recipientUid, messageText, titleText, actionUrl } = body;
+    const { eventType, recipientUid: requestedRecipientUid, messageText, titleText, actionUrl } = body;
+
+    // Validate Event Type
+    if (!eventType || !ALLOWED_EVENT_TYPES.includes(eventType)) {
+      return NextResponse.json(
+        { success: false, error: `Invalid eventType. Allowed types: ${ALLOWED_EVENT_TYPES.join(", ")}` },
+        { status: 400 }
+      );
+    }
 
     const todayDate = new Date().toISOString().slice(0, 10);
-    const globalEventKey = `${eventType || "system_event"}_${todayDate}`;
-    const userDeliveryKey = recipientUid ? `${globalEventKey}_${recipientUid}` : globalEventKey;
+    const globalEventKey = `${eventType}_${todayDate}`;
 
     const systemChatId = "namma_thanjai_system_welcome";
     const systemEventsRef = adminDb.collection("chats").doc(systemChatId).collection("system_events");
-    const targetEventDocRef = systemEventsRef.doc(userDeliveryKey);
+    const eventDocRef = systemEventsRef.doc(globalEventKey);
 
-    let alreadyDispatched = false;
+    let alreadyCompleted = false;
 
-    // P0-3: Atomic Transaction to Claim System Event Idempotency Key
+    // 1. Atomic Transaction to Claim System Event Key (PROCESSING -> COMPLETED)
     await adminDb.runTransaction(async (transaction) => {
-      const docSnap = await transaction.get(targetEventDocRef);
-      if (docSnap.exists) {
-        alreadyDispatched = true;
+      const docSnap = await transaction.get(eventDocRef);
+      if (docSnap.exists && docSnap.data()?.status === "COMPLETED") {
+        alreadyCompleted = true;
         return;
       }
-      transaction.set(targetEventDocRef, {
-        dispatchedAt: new Date(),
-        eventType: eventType || "SYSTEM",
-        recipientUid: recipientUid || "broadcast",
-        status: "DISPATCHED",
-      });
+      transaction.set(
+        eventDocRef,
+        {
+          eventType,
+          date: todayDate,
+          status: "PROCESSING",
+          updatedAt: new Date(),
+        },
+        { merge: true }
+      );
     });
 
-    if (alreadyDispatched) {
+    if (alreadyCompleted) {
       return NextResponse.json({
         success: true,
-        message: `System event ${userDeliveryKey} already dispatched today (Skipped duplicate)`,
+        message: `System event ${globalEventKey} already completed today (Skipped duplicate)`,
         idempotent: true,
       });
     }
@@ -68,34 +82,62 @@ export async function POST(req: Request) {
       ? "Vanakkam! We value your experience. Tap to share feedback & help us improve!"
       : messageText || "Check out new local store offers and marketplace items in your area today!";
 
-    // P1-2: Deterministic Message ID in Team Chat Messages Subcollection
-    const deterministicMessageId = `msg_${userDeliveryKey}`;
-    const messageDocRef = adminDb.collection("chats").doc(systemChatId).collection("messages").doc(deterministicMessageId);
+    // 2. Create EXACTLY ONE Deterministic Team Chat Message Document
+    const messageDocRef = adminDb.collection("chats").doc(systemChatId).collection("messages").doc(globalEventKey);
+    await messageDocRef.set(
+      {
+        senderId: "namma_thanjai_official",
+        senderName: "Namma Thanjai Team",
+        text: defaultMessage,
+        timestamp: new Date(),
+      },
+      { merge: true }
+    );
 
-    // Write Team Chat Message via Admin SDK (No Error Swallowing)
-    await messageDocRef.set({
-      senderId: "namma_thanjai_official",
-      senderName: "Namma Thanjai Team",
-      text: defaultMessage,
-      timestamp: new Date(),
-    });
+    // 3. Resolve Target Recipients Server-Side
+    let targetRecipients: string[] = [];
 
-    // P1-1: Route Notification via Centralized Server Notification Engine
-    if (recipientUid) {
-      await dispatchServerNotification({
-        recipientUid,
-        type: eventType || "TEAM_FEEDBACK",
+    if (requestedRecipientUid) {
+      targetRecipients = [requestedRecipientUid];
+    } else {
+      // Query users from Firestore Admin for broadcast dispatch
+      try {
+        const usersSnap = await adminDb.collection("users").limit(100).get();
+        usersSnap.forEach((docSnap) => {
+          if (docSnap.id) targetRecipients.push(docSnap.id);
+        });
+      } catch (e) {
+        console.warn("Target user query note:", e);
+      }
+    }
+
+    // 4. Dispatch Notifications & FCM via Authoritative Server Notification Engine
+    const dispatchPromises = targetRecipients.map((uid) =>
+      dispatchServerNotification({
+        recipientUid: uid,
+        type: eventType,
         title: titleText || defaultTitle,
         message: defaultMessage,
         conversationId: systemChatId,
         actionUrl: actionUrl || `/chat?chatId=${systemChatId}`,
-      });
-    }
+        dateKey: todayDate,
+      }).catch((e) => console.warn(`Dispatch error for user ${uid}:`, e))
+    );
+
+    await Promise.all(dispatchPromises);
+
+    // 5. Mark System Event as COMPLETED in Firestore
+    await eventDocRef.update({
+      status: "COMPLETED",
+      completedAt: new Date(),
+      recipientsCount: targetRecipients.length,
+    });
 
     return NextResponse.json({
       success: true,
-      message: `System event ${userDeliveryKey} created and dispatched successfully`,
-      idempotencyKey: userDeliveryKey,
+      message: `System event ${globalEventKey} completed and dispatched successfully`,
+      idempotencyKey: globalEventKey,
+      recipientsCount: targetRecipients.length,
     });
   } catch (error: any) {
     console.error("API /api/system-events/trigger error:", error);

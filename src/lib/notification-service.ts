@@ -1,4 +1,4 @@
-import { collection, doc, addDoc, serverTimestamp, runTransaction } from "firebase/firestore";
+import { doc, serverTimestamp, runTransaction } from "firebase/firestore";
 import { db } from "@/lib/firebase";
 import { NotificationType } from "@/types/notification";
 
@@ -16,9 +16,9 @@ interface DispatchNotificationParams {
 }
 
 /**
- * Production Centralized Notification Engine
- * Uses deterministic document IDs (${recipientUid}_${conversationId}) to guarantee 100% atomic grouping
- * transactions, update unread message counts, and throttle FCM push alerts to the 1st unread message.
+ * Client Notification Helper
+ * Handles client-side unread message count grouping on deterministic doc ID (${recipientUid}_${conversationId}).
+ * Does NOT directly create cross-user notifications or make unauthenticated FCM push calls.
  */
 export async function dispatchNotification({
   recipientUid,
@@ -37,7 +37,7 @@ export async function dispatchNotification({
   try {
     const finalActionUrl = actionUrl || (conversationId ? `/chat?chatId=${conversationId}` : "/chat");
 
-    // For CHAT notifications, use a deterministic document ID for atomic grouping
+    // For CHAT notifications, use deterministic document ID for atomic grouping
     if (type === "CHAT" && conversationId) {
       const deterministicNotifId = `${recipientUid}_${conversationId}`;
       const targetDocRef = doc(db, "notifications", deterministicNotifId);
@@ -49,7 +49,6 @@ export async function dispatchNotification({
         const notifDoc = await transaction.get(targetDocRef);
 
         if (!notifDoc.exists() || notifDoc.data().read === true) {
-          // 1st Unread Message: Create/reset notification document
           isFirstUnread = true;
           const updatedMessage = senderName ? `${senderName}: "${message}"` : `"${message}"`;
 
@@ -74,7 +73,6 @@ export async function dispatchNotification({
             { merge: true }
           );
         } else {
-          // Subsequent Unread Messages: Increment messageCount atomically
           const currentCount = notifDoc.data().messageCount || 1;
           const newCount = currentCount + 1;
           const updatedMessage = senderName
@@ -89,12 +87,10 @@ export async function dispatchNotification({
         }
       });
 
-      // Push Spam Throttling: Trigger FCM push ONLY on 1st unread message
+      // Trigger Push via Server Push API with Bearer Authorization token ONLY on 1st unread message
       if (isFirstUnread) {
-        triggerPushApi({
+        triggerAuthorizedPushApi({
           callerUid: senderUid,
-          recipientUid,
-          recipientPhone,
           type: "CHAT",
           title,
           message,
@@ -103,56 +99,25 @@ export async function dispatchNotification({
           conversationId,
         });
       }
-      return;
     }
-
-    // Non-chat notifications (System events / Activity updates)
-    await addDoc(collection(db, "notifications"), {
-      recipientUid,
-      recipientPhone: recipientPhone || "",
-      type,
-      title,
-      message,
-      senderUid: senderUid || "",
-      senderName: senderName || "",
-      senderPhone: senderPhone || "",
-      conversationId: conversationId || "",
-      messageCount: 1,
-      actionUrl: finalActionUrl,
-      read: false,
-      createdAt: serverTimestamp(),
-      updatedAt: serverTimestamp(),
-    });
-
-    triggerPushApi({
-      callerUid: senderUid,
-      recipientUid,
-      recipientPhone,
-      type,
-      title,
-      message,
-      actionUrl: finalActionUrl,
-      chatId: conversationId,
-      conversationId,
-    });
   } catch (error) {
-    console.warn("Centralized dispatchNotification error:", error);
+    console.warn("Client dispatchNotification note:", error);
   }
 }
 
-async function triggerPushApi(payload: any) {
+async function triggerAuthorizedPushApi(payload: any) {
   try {
     if (typeof window !== "undefined") {
       const { auth } = await import("@/lib/firebase");
       const idToken = auth.currentUser ? await auth.currentUser.getIdToken().catch(() => "") : "";
-      const headers: Record<string, string> = { "Content-Type": "application/json" };
-      if (idToken) {
-        headers["Authorization"] = `Bearer ${idToken}`;
-      }
+      if (!idToken) return;
 
       fetch("/api/send-push", {
         method: "POST",
-        headers,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${idToken}`,
+        },
         body: JSON.stringify(payload),
       }).catch((e) => console.warn("Push API trigger note:", e));
     }
